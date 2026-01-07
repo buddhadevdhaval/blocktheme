@@ -1,0 +1,170 @@
+@mixin site-btn-style {
+    background-color: var(--gb_theme_btn_bgcolor);
+    border: 1px solid transparent;
+    border-radius: 100px;
+    color: var(--gb_theme_btn_color);
+    display: inline-flex;
+    outline: none;
+    overflow: hidden;
+    padding: 14px 24px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: 0.35s;
+    font-size: 18px;
+
+    &:hover {
+        background-color: var(--gb_theme_btn_bgcolor_hover);
+        color: var(--gb_theme_btn_color_hover);
+    }
+}
+
+@mixin site-border-btn-style {
+    background-color: var(--gb_transparent);
+    box-shadow: inset 0 0px 0px 1px var(--gb_button_border_color);
+    color: var(--gb_button_border_color);
+
+    &:hover {
+        background: var(--gb_button_bgcolor_hover);
+        box-shadow: inset 0 0px 0px 1px var(--gb_button_bgcolor_hover);
+        color: var(--gb_button_color_hover);
+    }
+}
+
+@mixin site-secondary-btn {
+    background-color: #000;
+    color: #FFF;
+
+    &:hover {
+        background-color: red;
+        color: #FFF;
+    }
+
+    &.sm-btn {
+        padding: 9px 16px;
+
+        @media(max-width: 640px) {
+            padding: 9px 14px 8px;
+        }
+    }
+}
+
+
+@mixin site-text-btn {
+    background-color: transparent;
+    color: #000;
+
+    &:hover {
+        color: red;
+    }
+}
+
+
+@mixin site-arrow-btn {
+    align-items: center;
+
+    &::after {
+        background-image: url("../images/site-btn-arrow.svg");
+        background-repeat: no-repeat;
+        background-size: contain;
+        content: "";
+        flex: 14px 0 0;
+        height: 14px;
+        margin-left: 8px;
+        position: relative;
+        top: 1px;
+        transition: all 0.2s ease-in-out;
+        width: 14px;
+
+        @media (max-width: 375px) {
+            flex: 13px 0 0;
+            height: 13px;
+            width: 13px;
+        }
+    }
+
+    &:hover {
+        &:after {
+            background-image: url("../images/site-btn-arrow-black.svg");
+        }
+    }
+}
+
+
+body {
+
+    .site-btn {
+        @include site-btn-style;
+
+        &.is-style-site-border-btn {
+            @include site-border-btn-style;
+        }
+
+        &.is-style-site-secondary-btn {
+            @include site-secondary-btn;
+        }
+
+        &.is-style-site-text-btn {
+            @include site-text-btn;
+        }
+
+        &.is-style-site-arrow-btn {
+            @include site-arrow-btn;
+        }
+    }
+
+    // Backend Buttons - Use the Same Classname which used in Frontend
+    .wp-block-button {
+        .wp-block-button__link {
+            @include site-btn-style;
+        }
+
+        &.is-style-site-border-btn {
+            .wp-block-button__link {
+                @include site-border-btn-style;
+            }
+        }
+
+        &.is-style-site-secondary-btn {
+            .wp-block-button__link {
+                @include site-secondary-btn;
+            }
+        }
+
+        &.is-style-site-text-btn {
+            .wp-block-button__link {
+                @include site-text-btn;
+            }
+        }
+
+        &.is-style-site-arrow-btn {
+            .wp-block-button__link {
+                @include site-arrow-btn;
+            }
+        }
+    }
+}
+
+
+
+
+
+
+/* Styles for the disabled button */
+button[disabled] {
+    background-color: #dddddd;
+    border: none;
+    color: #999999;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+button[disabled]:hover {
+    background-color: #dddddd;
+}
+
+.two-btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}

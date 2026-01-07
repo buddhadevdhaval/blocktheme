@@ -1,0 +1,152 @@
+/****
+ *
+ * containers
+ *
+****/
+
+// ==========================
+// Define container map
+// ==========================
+$containers: (
+    1260: 1320px,
+    720: 780px,
+    full: 100%
+);
+
+
+// ==========================
+// Container mixin (Frontend)
+// ==========================
+@mixin container($max-width) {
+    .wrapper {
+        margin: 0 auto;
+        width: 100%;
+        position: relative;
+
+        @if $max-width ==100% {
+            max-width: 100%;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        @else {
+            max-width: $max-width;
+            padding-left: 30px;
+            padding-right: 30px;
+
+            @media (max-width: 1220px) {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
+    }
+}
+
+// ==========================
+// Editor container mixin (Backend)
+// ==========================
+@mixin editor-container($max-width) {
+    .block-editor-inner-blocks {
+        .wp-block {
+            margin: 0 auto;
+            max-width: $max-width !important;
+        }
+    }
+}
+
+// ==========================
+// Editor container base style (for visual dashed border, padding)
+// ==========================
+@mixin editor-container-styles {
+    padding: 50px 20px;
+    max-width: 100% !important;
+    border: 3px dashed #7b7b7b;
+}
+
+// ==========================
+// Auto-generate FRONTEND + EDITOR containers
+// ==========================
+@each $name,
+$width in $containers {
+
+    // 🔹 Frontend containers
+    .container-#{$name} {
+        @include container($width);
+    }
+
+    // 🔹 Editor containers (structure version)
+    .editor-container-#{$name} {
+        .container-#{$name} {
+            @include editor-container($width);
+        }
+    }
+}
+
+// ==========================
+// Backend-only visual styles (Gutenberg editor)
+// ==========================
+.editor-styles-wrapper {
+    .wp-block-group {
+        .block-editor-block-list__block {
+
+            @each $name,
+            $width in $containers {
+                &.editor-container-#{$name} {
+                    @include editor-container-styles;
+                    width: 100% !important;
+                }
+            }
+        }
+    }
+
+    .wp-block-post-content {
+        >.block-editor-block-list__block {
+
+            @each $name,
+            $width in $containers {
+                &.editor-container-#{$name} {
+                    @include editor-container-styles;
+                    width: auto !important;
+                }
+            }
+        }
+    }
+}
+
+// ==========================
+// Global editor container widths (Dynamic)
+// ==========================
+@each $name,
+$width in $containers {
+    .editor-container-#{$name} {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+}
+
+// ==========================
+// Explicit FULL-WIDTH editor fix
+// ==========================
+.editor-container-full {
+    max-width: 100% !important;
+    width: 100% !important;
+
+    .block-editor-inner-blocks {
+        max-width: 100% !important;
+
+        .wp-block {
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+    }
+}
+
+// ==========================
+// Additional static/global editor rules
+// ==========================
+.editor-full-width-container,
+.wp-block-acf-spacer,
+.wp-block-acf-spacer .acf-input select {
+    max-width: 100% !important;
+    width: 100% !important;
+}

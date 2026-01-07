@@ -1,0 +1,51 @@
+/* -------------------------------------------------
+>> Base Styles
+---------------------------------------------------
+>> Edit these styles as required
+------------------------------------------------- */
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	font-smoothing: antialiased;
+	outline: none;
+	text-rendering: optimizeLegibility;
+}
+
+html {
+	box-sizing: border-box;
+}
+
+body {
+
+	@include font(axi, reg, family weight);
+	position: relative;
+	font-size: var(--gb_font_size_6);
+	color: var(--gb_body_color);
+	background-color: var(--gb_body_bg);
+	line-height: 1.5;
+}
+
+body,
+html {
+	overflow-x: hidden;
+}
+
+p {
+	margin: 0 0 30px;
+
+	&:last-child {
+		margin: 0 0 0;
+	}
+}
+
+::selection {
+	color: var(--gb_highlight_color);
+	background-color: var(--gb_highlight_bg);
+}
+
+
+strong {
+	color: var(--gb_text_strong) !important;
+}

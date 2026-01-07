@@ -1,0 +1,118 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 2,
+	"settings": {
+		"appearanceTools": true,
+		"useRootPaddingAwareAlignments": true,
+		"border": {
+			"color": [],
+			"radius": [],
+			"style": [],
+			"width": true
+		},
+		"color": {
+			"custom": false,
+			"defaultPalette": false,
+			"defaultGradients": false,
+			"defaultDuotone": false,
+			"customGradient": false,
+			"customDuotone": false,
+			"gradients": [],
+			"palette": [
+				{ "slug": "white", "color": "var(--gb_white)", "name": "White" },
+				{ "slug": "black", "color": "var(--gb_black1)", "name": "Black" },
+				{ "slug": "primary", "color": "var(--gb_color_primary)", "name": "Primary" },
+				{ "slug": "secondary", "color": "var(--gb_color_secondary)", "name": "Secondary" },
+				{ "slug": "danger", "color": "var(--gb_danger)", "name": "Danger" },
+				{ "slug": "success", "color": "var(--gb_success)", "name": "Success" },
+				{ "slug": "warning", "color": "var(--gb_warning)", "name": "Warning" },
+				{ "slug": "info", "color": "var(--gb_info)", "name": "Info" },
+				{ "slug": "transparent", "color": "var(--gb_transparent)", "name": "Transparent" }
+			],
+			"text": "var(--gb_black1)",
+			"link": "var(--gb_color_primary)"
+		},
+		"layout": {
+			"contentSize": "1180px",
+			"wideSize": "1380px"
+		},
+		"spacing": {
+			"margin": true,
+			"padding": [],
+			"customSpacingSize": true,
+			"spacingSizes": [
+				{ "name": "2 Pixels", "size": "var(--gb_space_1)", "slug": "2-pixels", "default": true },
+				{ "name": "4 Pixels", "size": "var(--gb_space_2)", "slug": "4-pixels" },
+				{ "name": "6 Pixels", "size": "var(--gb_space_3)", "slug": "6-pixels" },
+				{ "name": "8 Pixels", "size": "var(--gb_space_4)", "slug": "8-pixels" },
+				{ "name": "12 Pixels", "size": "var(--gb_space_5)", "slug": "12-pixels" },
+				{ "name": "16 Pixels", "size": "var(--gb_space_6)", "slug": "16-pixels" },
+				{ "name": "20 Pixels", "size": "var(--gb_space_7)", "slug": "20-pixels" },
+				{ "name": "24 Pixels", "size": "var(--gb_space_8)", "slug": "24-pixels" },
+				{ "name": "30 Pixels", "size": "var(--gb_space_9)", "slug": "30-pixels" },
+				{ "name": "36 Pixels", "size": "var(--gb_space_10)", "slug": "36-pixels" },
+				{ "name": "48 Pixels", "size": "var(--gb_space_11)", "slug": "48-pixels" },
+				{ "name": "72 Pixels", "size": "var(--gb_space_12)", "slug": "72-pixels" },
+				{ "name": "96 Pixels", "size": "var(--gb_space_13)", "slug": "96-pixels" },
+				{ "name": "128 Pixels", "size": "var(--gb_space_14)", "slug": "128-pixels" },
+				{ "name": "156 Pixels", "size": "var(--gb_space_15)", "slug": "156-pixels" },
+				{ "name": "200 Pixels", "size": "var(--gb_space_16)", "slug": "200-pixels" },
+				{ "name": "236 Pixels", "size": "var(--gb_space_17)", "slug": "236-pixels" }
+			]
+		},
+		"typography": {
+			"customFontSize": false,
+			"fontStyle": false,
+			"fontWeight": [300, 400, 500, 600, 700],
+			"letterSpacing": [],
+			"lineHeight": [
+				{ "slug": "line-height-heading", "size": "var(--line_height_medium)", "name": "Line Height heading" }
+			],
+			"textDecoration": [],
+			"textTransform": [],
+			"dropCap": false,
+			"fontSizes": [
+				{ "slug": "font-size-1", "size": "var(--gb_font_size_1)", "name": "Heading 1" },
+				{ "slug": "font-size-2", "size": "var(--gb_font_size_2)", "name": "Heading 2" },
+				{ "slug": "font-size-3", "size": "var(--gb_font_size_3)", "name": "Heading 3" },
+				{ "slug": "font-size-4", "size": "var(--gb_font_size_4)", "name": "Heading 4" },
+				{ "slug": "font-size-5", "size": "var(--gb_font_size_5)", "name": "Heading 5" },
+				{ "slug": "font-size-6", "size": "var(--gb_font_size_6)", "name": "Heading 6" },
+				{ "slug": "font-size-7", "size": "var(--gb_font_size_1)", "name": "Large Text" },
+				{ "slug": "font-size-8", "size": "var(--gb_font_size_5)", "name": "Small Text" },
+				{ "slug": "font-size-9", "size": "var(--gb_font_size_4)", "name": "Regular Text" }
+			]
+		},
+		"blocks": {
+			"core/button": {
+				"color": {
+					"text": [],
+					"background": [],
+					"customDuotone": [],
+					"customGradient": [],
+					"defaultDuotone": [],
+					"defaultGradients": [],
+					"duotone": [],
+					"gradients": []
+				},
+				"typography": {
+					"customFontSize": [],
+					"fontSizes": []
+				},
+				"border": {
+					"radius": []
+				}
+			},
+			"core/navigation": {
+				"color": {
+					"text": ["black"]
+				}
+			},
+			"core/paragraph": {
+				"color": {
+					"text": ["black"]
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,52 @@
+.not-found {
+    text-align: center;
+}
+
+.error-404 {
+    text-align: center;
+    width: 100%;
+
+    .menu {
+        margin: 0;
+    }
+
+    ul li {
+        display: inline-block;
+        margin: 0 0 0 20px;
+        font-weight: 700;
+        padding: 0;
+
+        &::before {
+            display: none;
+        }
+
+        a {
+            padding: 10px;
+            border-bottom: 0;
+
+            &:hover {
+                color: var(--gb_error_menu_color);
+            }
+        }
+
+        ul {
+            display: none;
+        }
+    }
+}
+
+.form-404 {
+    margin: 0 auto 0;
+    max-width: 720px;
+
+    p {
+        margin-bottom: 20px;
+    }
+}
+
+.not-found {
+    .page-content {
+        max-width: 550px;
+        margin: 0 auto;
+    }
+}

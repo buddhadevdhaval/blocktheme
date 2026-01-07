@@ -1,0 +1,19 @@
+.cky-consent-container,
+.cky-footer-wrapper {
+
+    .cky-notice-btn-wrapper,
+    .cky-prefrence-btn-wrapper {
+        .cky-btn {
+            border-radius: 9999px;
+            justify-content: center;
+            border: 1px solid;
+            opacity: 1 !important;
+
+            &:hover {
+                background: var(--gb_color_on_primary) !important;
+                border-color: var(--gb_color_on_primary) !important;
+                color: var(--gb_white) !important;
+            }
+        }
+    }
+}

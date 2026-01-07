@@ -1,0 +1,262 @@
+/*! Lity - v2.4.1 - 2020-04-26
+* http://sorgalla.com/lity/
+* Copyright (c) 2015-2020 Jan Sorgalla; Licensed MIT */
+.lity {
+    -o-transition: opacity .3s ease;
+    -webkit-transition: opacity .3s ease;
+    background: rgba(9, 44, 101, 0.8);
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    outline: none !important;
+    position: fixed;
+    right: 0;
+    top: 0;
+    white-space: nowrap;
+    z-index: 9990;
+
+    transition: opacity .3s ease
+}
+
+.lity.lity-opened {
+    opacity: 1
+}
+
+.lity.lity-closed {
+    opacity: 0
+}
+
+.lity * {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+
+    box-sizing: border-box
+}
+
+.lity-wrap {
+    bottom: 0;
+    left: 0;
+    margin-bottom: 30px;
+    margin-top: 96px;
+    outline: none !important;
+    position: fixed;
+    right: 0;
+    text-align: center;
+    top: 0;
+    z-index: 9990;
+
+    @media(max-width: 991px) {
+        margin-top: 60px;
+    }
+}
+
+.lity-wrap:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+
+    margin-right: -0.25em
+}
+
+.lity-loader {
+    -o-transition: opacity .3s ease;
+    -webkit-transition: opacity .3s ease;
+    color: #fff;
+    font-size: 14px;
+    margin-top: -0.8em;
+    opacity: 0;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    width: 100%;
+    z-index: 9991;
+
+    transition: opacity .3s ease
+}
+
+.lity-loading .lity-loader {
+    opacity: 1
+}
+
+.lity-container {
+    display: inline-block;
+    max-height: 100%;
+    max-width: 100%;
+    position: relative;
+    text-align: left;
+    vertical-align: middle;
+    white-space: normal;
+    z-index: 9992;
+
+    outline: none !important
+}
+
+.lity-content {
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    -o-transition: -o-transform .3s ease;
+    -webkit-transform: scale(1);
+    -webkit-transition: -webkit-transform .3s ease;
+    transform: scale(1);
+    transition: -webkit-transform .3s ease;
+    transition: transform .3s ease;
+    width: 100%;
+    z-index: 9993;
+
+    transition: transform .3s ease, -webkit-transform .3s ease, -o-transform .3s ease
+}
+
+.lity-loading .lity-content,
+.lity-closed .lity-content {
+    -ms-transform: scale(.8);
+    -o-transform: scale(.8);
+    -webkit-transform: scale(.8);
+
+    transform: scale(.8)
+}
+
+.lity-content:after {
+    bottom: 0;
+    content: '';
+    display: block;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+    z-index: -1;
+}
+
+.lity-close {
+    -webkit-appearance: none;
+    -webkit-box-shadow: none;
+    align-items: center;
+    background: none;
+    background: var(--gb_white);
+    border: 0;
+    border: 1px solid var(--gb_color_secondary);
+    border-radius: 9999px;
+    box-shadow: none;
+    cursor: pointer;
+    display: flex;
+    font-size: 0;
+    height: clamp(40px, calc(2.5rem + ((1vw - 7.68px) * 1.3746)), 48px);
+    justify-content: center;
+    margin: 0;
+    outline: none;
+    padding: 0;
+    position: absolute;
+    right: 11px;
+    stroke-width: 1px;
+    text-align: center;
+    text-decoration: none;
+    top: -19px;
+    width: clamp(40px, calc(2.5rem + ((1vw - 7.68px) * 1.3746)), 48px);
+    z-index: 9994;
+
+    @media(max-width: 991px) {
+        bottom: calc(100% + 12px);
+        right: 30px;
+        top: inherit;
+    }
+
+    @media(max-width: 640px) {
+        right: 20px;
+    }
+
+    &:after {
+        background-image: url(../images/lity-popup-close.svg);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: clamp(16px, calc(1rem + ((1vw - 7.68px) * 0.6873)), 20px);
+        content: '';
+        height: 100%;
+        position: absolute;
+        width: 100%;
+    }
+}
+
+.lity-close::-moz-focus-inner {
+    border: 0;
+
+    padding: 0
+}
+
+.lity-close:hover,
+.lity-close:focus,
+.lity-close:active,
+.lity-close:visited {
+    background: var(--gb_color_secondary);
+    border-color: var(--gb_white);
+
+    &:after {
+        background-image: url(../images/lity-popup-close-white.svg);
+    }
+}
+
+.lity-image img {
+    display: block;
+    line-height: 0;
+    max-width: 100%;
+
+    border: 0
+}
+
+.lity-iframe .lity-container,
+.lity-youtube .lity-container,
+.lity-vimeo .lity-container,
+.lity-facebookvideo .lity-container,
+.lity-googlemaps .lity-container {
+    width: 100%;
+
+    max-width: 964px
+}
+
+.lity-iframe-container {
+    -webkit-overflow-scrolling: touch;
+    -webkit-transform: translateZ(0);
+    align-items: center;
+    background-image: url(../images/loader-icon.svg);
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: 90px;
+    border-radius: 2px;
+    border-radius: 20px;
+    display: flex;
+    height: 0;
+    justify-content: center;
+    margin: 0 auto;
+    overflow: auto;
+    padding-top: 56.25%;
+    pointer-events: auto;
+    transform: translateZ(0);
+    width: 95% !important;
+}
+
+.lity-iframe-container iframe {
+    display: block;
+    height: 100%;
+    left: 0;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    width: 100%;
+
+    background: #000
+}
+
+.lity-hide {
+    display: none
+}
+
+.lity-wrap {
+    &:before {
+        margin: 0;
+    }
+}
+
+.lity-active {
+    overflow: hidden;
+}

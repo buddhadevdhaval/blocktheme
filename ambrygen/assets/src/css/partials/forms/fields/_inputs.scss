@@ -1,0 +1,278 @@
+/* -------------------------------------------------
+>> Base Styles
+---------------------------------------------------
+>> Edit these styles as required
+------------------------------------------------- */
+form {
+	margin: 0 0 0;
+}
+
+label {
+	display: inline-block;
+	line-height: 1.2;
+	margin: 0 0 6px;
+}
+
+fieldset {
+	display: block;
+	margin: 0 0 24px;
+
+	@media(max-width: 767px) {
+		margin-bottom: 24px;
+	}
+}
+
+legend {
+	display: block;
+	margin: 0 0 10px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+input[type="password"],
+input[type="time"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="week"],
+input[type="month"],
+input[type="file"],
+input[type="range"],
+input[list],
+input[type="string"],
+select,
+textarea,
+.gform-text-input-reset {
+	@include font(raleway, reg);
+	@include transition(all, 0.2s, ease-in-out);
+	background: var(--gb_white);
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.10);
+	box-sizing: border-box;
+	color: var(--gb_input_color);
+	font-size: 18px;
+	font-style: normal;
+	font-weight: 400;
+	height: 50px;
+	line-height: 120%;
+	margin: 0;
+	max-width: 100%;
+	outline: none;
+	padding: 14px 16px 14px 16px;
+	width: 100%;
+
+	&:focus {
+		background-color: var(--gb_white);
+		border-color: var(--gb_Secondary_Dark_Beige);
+		box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+	}
+
+	@media(max-width: 640px) {
+		font-size: 16px;
+		height: 44px;
+		padding: 12px 12px 13px 12px;
+	}
+}
+
+// Placeholder Style
+::input-placeholder {
+	color: var(--gb_placeholder_color);
+	opacity: 0.5;
+}
+
+input:focus::input-placeholder {
+	opacity: 1;
+}
+
+::input-placeholder {
+	color: var(--gb_placeholder_color);
+	opacity: 0.5;
+}
+
+::placeholder {
+	color: var(--gb_placeholder_color);
+	opacity: 0.5;
+}
+
+input:focus::placeholder {
+	opacity: 1;
+}
+
+input[type="text"]:disabled {
+	background-color: var(--gb_disabled_input_bgcolor);
+	border: 1px solid var(--gb_disabled_input_border_color);
+}
+
+input[type="hidden"],
+datalist {
+	display: none;
+}
+
+input[type="file"] {
+	padding: 9px;
+}
+
+// Search Field Style
+input[type="search"] {
+	background-position: center right 10px;
+	background-repeat: no-repeat;
+	padding-right: 45px;
+
+	// background-image: url(../images/search-icon.svg);
+}
+
+/* clears the ‘X’ from Internet Explorer */
+input[type="search"]::-ms-clear {
+	display: none;
+	height: 0;
+	width: 0;
+}
+
+input[type="search"]::-ms-reveal {
+	display: none;
+	height: 0;
+	width: 0;
+}
+
+/* clears the ‘X’ from Chrome */
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+	display: none;
+}
+
+input[type="color"] {
+	appearance: none;
+	background-color: var(--gb_color_field_bgcolor);
+	border: 1px solid var(--gb_color_field_border_color);
+	box-sizing: border-box;
+	cursor: pointer;
+	height: 25px;
+	margin: 0 0 20px;
+	padding: 3px;
+	width: 50px;
+}
+
+::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+
+::-webkit-color-swatch {
+	border: 0;
+	border-radius: 0;
+}
+
+::-moz-color-swatch,
+::-moz-focus-inner {
+	border: 0;
+}
+
+::-moz-focus-inner {
+	padding: 0;
+}
+
+select {
+	appearance: none;
+	background-image: url(../images/arrow-down.svg);
+	background-position: center right 16px;
+	background-repeat: no-repeat;
+	background-size: 16px;
+	cursor: pointer;
+	padding-bottom: 5px;
+	padding-top: 5px;
+
+	@media(max-width: 640px) {
+		background-position: center right 12px;
+		background-size: 14px;
+	}
+}
+
+.ginput_container_multiselect select {
+	min-height: 77px;
+}
+
+textarea {
+	height: 200px;
+	overflow: auto;
+	padding: 14px 16px 14px 16px;
+	resize: none;
+
+	@media(max-width: 640px) {
+		padding: 8px 14px 12px 14px;
+	}
+}
+
+.gfield,
+.hs-form-field {
+	box-sizing: border-box;
+	grid-column: span 12;
+	margin-bottom: 24px;
+	position: relative;
+
+	@media(max-width: 640px) {
+		margin-bottom: 20px;
+	}
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+.gform_wrapper {
+	&.gform-theme {
+		fieldset {
+			margin-bottom: 0;
+			margin-bottom: 24px;
+
+			@media(max-width: 640px) {
+				margin-bottom: 20px;
+			}
+
+			&:first-child {
+				margin-top: 0;
+			}
+
+			&.gfield {
+				.gform-grid-col {
+					display: flex;
+					flex-wrap: wrap;
+					margin-bottom: 24px;
+
+					@media(max-width: 640px) {
+						margin-bottom: 20px;
+					}
+
+					&:last-of-type {
+						margin-bottom: 0;
+					}
+
+					.gform-field-label {
+						margin-bottom: 8px;
+						margin-top: 0;
+					}
+				}
+
+				.gf_clear {
+					display: none;
+				}
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+		}
+	}
+}
+
+.ginput_container_textarea {
+	display: flex;
+}
+
+.gfield_list_icons {
+	margin-top: 20px;
+}

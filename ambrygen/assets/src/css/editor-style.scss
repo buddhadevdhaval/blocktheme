@@ -1,0 +1,413 @@
+/* stylelint-disable no-invalid-position-at-import-rule */
+
+/* Mixins */
+@import "admin/dashicons.scss";
+
+/* Mixins */
+@import "partials/mixins/mixins";
+
+/* Fonts */
+@import "partials/fonts/fonts";
+
+/* Variables */
+@import "partials/variables/variables";
+
+@import "partials/site/layout/button";
+
+.wp-block-spacer .components-resizable-box__handle {
+    display: none !important;
+}
+
+.your-spacer-class .block-editor-block-inspector {
+    display: none !important;
+}
+
+@import "partials/site/layout/spacers";
+
+// Admin Block styles
+
+.block-editor-block-list__layout {
+    margin-bottom: 30px;
+}
+
+.editor-styles-wrapper {
+    @include font(axi, reg);
+    font-size: var(--gb_font_size_5);
+    color: var(--gb_body_color);
+    line-height: 1.5;
+
+    .acf-block-body {
+        margin-block-end: 50px !important;
+        margin-block-start: 50px !important;
+    }
+
+    /* Editor style */
+
+    @import "editor-static";
+
+    /* Typography */
+
+    @import "partials/typography/typography";
+
+    /* Elements */
+
+    @import "partials/elements/lists";
+    @import "partials/elements/quotes";
+    @import "partials/elements/tables";
+
+    /* Media */
+
+    @import "partials/media/media";
+
+    /* Core */
+
+    @import "partials/core/core";
+
+    /* Blocks */
+
+    @import "partials/wp-blocks/wp-blocks";
+
+    /*  Vendor CSS Magnific popup */
+
+    @import "vendors/magnific-popup.css";
+
+    ol li,
+    ul li {
+        margin: 0;
+    }
+
+    .block-editor-block-list__layout {
+        @include custom-list-styles;
+    }
+}
+
+
+.acf-block-preview {
+    /* site */
+    // @import "partials/site/site";
+    @import "partials/site/layout/fluid-margins";
+    @import "partials/site/layout/fluid-spacers";
+
+    /*-------------------------------------------------
+	>> Styles for Spacers
+	-------------------------------------------------*/
+    @import "partials/site/layout/spacers";
+
+    /*-------------------------------------------------
+	>> Basic styles for theme
+	-------------------------------------------------*/
+    @import "partials/site/theme";
+
+    /*-------------------------------------------------
+	>> Styles for Website Blocks
+	-------------------------------------------------*/
+    @import "partials/site/blocks/blocks";
+
+    /* Forms */
+    @import "partials/forms/forms";
+
+}
+
+@import "vendors/daterangepicker.css";
+
+.daterangepicker {
+    .btn-sm {
+        align-items: center;
+        -webkit-appearance: none;
+        border: 0;
+        border-radius: 2px;
+        box-sizing: border-box;
+        cursor: pointer;
+        display: inline-flex;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 400;
+        height: 36px;
+        margin: 0;
+        padding: 6px 12px;
+        text-decoration: none;
+        transition: box-shadow 0.1s linear;
+        background: var(--wp-components-color-accent);
+        color: #fff;
+        outline: 1px solid transparent;
+        text-decoration: none;
+        text-shadow: none;
+        white-space: nowrap;
+    }
+
+    .applyBtn {
+        --wp-components-color-accent: #3858e9;
+    }
+
+    .cancelBtn {
+        --wp-components-color-accent: #cc1818;
+    }
+}
+
+.components-tab-panel__tab-content {
+
+    .acf-field-block-title,
+    .acf-field-spacers {
+        padding: 0px !important;
+
+        .acf-label {
+            display: none;
+        }
+
+        .acf-input {
+            .acf-label {
+                display: initial;
+            }
+        }
+    }
+
+    .acf-field {
+        margin: 5px 10px !important;
+
+        &.acf-field-spacers {
+            margin: 5px !important;
+        }
+    }
+}
+
+.interface-interface-skeleton__sidebar {
+
+    .acf-field-block-title,
+    .acf-field-spacers {
+        padding: 0px !important;
+
+        .acf-label {
+            display: none;
+        }
+
+        .acf-input {
+            .acf-label {
+                display: initial;
+            }
+        }
+    }
+
+    .acf-fields {
+        &.acf-clone-fields {
+            .description {
+                padding: initial !important;
+                border-top: initial;
+                margin-top: 6px !important;
+                margin-bottom: 5px !important;
+            }
+        }
+    }
+
+    .description {
+        padding: 6px 20px 16px !important;
+        margin-top: 0px !important;
+        border-top: 1px solid #eeeeee;
+    }
+}
+
+.acf-icon {
+    text-decoration: none !important;
+
+    &.-minus:before {
+        top: 3px;
+        position: relative;
+    }
+
+
+}
+
+.acf-field-object[data-type="block_label"] {
+    .acf-field-setting-name {
+        display: none;
+    }
+}
+
+.is-padding {
+    select {
+        margin-top: 28px !important;
+    }
+}
+
+.acf-field-advance-form,
+.acf-field-advance-video {
+    padding: 0px !important;
+
+    .acf-label {
+        display: none;
+    }
+
+    .acf-input {
+        .acf-label {
+            display: initial;
+        }
+    }
+}
+
+.is-style-fill-boxed {
+    .wp-block-button__link {
+        border-radius: inherit;
+    }
+}
+
+#the-list {
+    &.ui-sortable {
+        .ui-sortable-handle {
+            cursor: grab;
+        }
+    }
+}
+
+html :where(.editor-styles-wrapper) {
+    padding: 8px;
+}
+
+/*** NEW ***/
+
+@import "partials/site/layout/containers";
+
+html body .editor-styles-wrapper :where(.wp-block) {
+    margin-bottom: 28px;
+}
+
+.acf-block-preview {
+    .site-btn {
+        &.arrow-btn {
+            text-decoration: none;
+        }
+    }
+}
+
+
+.acf-field input[type="text"],
+.acf-field input[type="password"],
+.acf-field input[type="date"],
+.acf-field input[type="datetime"],
+.acf-field input[type="datetime-local"],
+.acf-field input[type="email"],
+.acf-field input[type="month"],
+.acf-field input[type="number"],
+.acf-field input[type="search"],
+.acf-field input[type="tel"],
+.acf-field input[type="time"],
+.acf-field input[type="url"],
+.acf-field input[type="week"],
+.acf-field textarea,
+.acf-field select {
+    margin: 0 !important;
+}
+
+.editor-styles-wrapper .acf-field-block-label .acf-label label {
+    // font-size: 26px;
+}
+
+.interface-interface-skeleton__content {
+    overflow-x: hidden;
+}
+
+body {
+    .acf-button-group {
+        label {
+            border: #e1e1e1 solid 2px;
+
+            &.selected {
+                border-color: #000;
+                color: #000;
+                background-color: var(--gb_color_secondary);
+            }
+        }
+    }
+}
+
+.editor-styles-wrapper {
+
+    a:where(:not(.wp-element-button)) {
+        // text-decoration: none !important;
+    }
+
+    thead {
+        tr {
+            &:last-child {
+                border-bottom: 0;
+            }
+        }
+    }
+
+    tbody {
+        tr {
+            border-bottom: 0;
+        }
+    }
+
+    tr {
+        border-bottom: 0;
+    }
+
+    .block-editor-block-list__block {
+        margin-bottom: 35px !important;
+
+        .block-editor-block-list__layout {
+            >.block-editor-block-list__block {
+                margin-bottom: 20px !important;
+
+                figcaption {
+                    display: block;
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+    table {
+        table-layout: auto;
+    }
+
+
+
+    .wp-block-spacer {
+        border: 1px solid #adb2ad;
+    }
+
+}
+
+.components-panel__body {
+    .block-editor-line-height-control {
+        margin-top: 10px;
+    }
+}
+
+.block-editor-line-height-control {
+    .components-input-control__container {
+        width: 100%;
+    }
+}
+
+.acf-block-body {
+    .acf-fields {
+        .acf-field {
+            padding: 16px 20px;
+        }
+    }
+}
+
+
+.design-option .design-option-item div {
+    display: none;
+}
+
+.post-type-project {
+    .editor-styles-wrapper {
+        .wp-block-post-featured-image {
+            &.alignright {
+                float: none;
+            }
+
+            &.alignleft {
+                float: none;
+            }
+        }
+    }
+}
+
+#imagify-pricing-modal {
+    display: none;
+}

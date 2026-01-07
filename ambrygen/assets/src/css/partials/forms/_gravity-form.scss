@@ -1,0 +1,612 @@
+/* -------------------------------------------------
+>> Project Styles
+---------------------------------------------------
+>> Edit these styles as required
+------------------------------------------------- */
+.gfields {
+	margin: 0;
+}
+
+.gf_clear {
+	clear: both;
+}
+
+.gfield_time_hour,
+.gfield_time_minute,
+.gfield_time_ampm {
+	display: inline-block;
+	width: calc(33.33% - 3px);
+}
+
+.gfield_time_minute {
+	margin: 0 10px;
+	width: calc(33.33% - 23px);
+}
+
+.below.hour_minute_colon {
+	display: none;
+}
+
+.gfield_post_tags_hint {
+	font-size: 0.875rem;
+	margin-top: 0;
+}
+
+.gfield.half-input-field {
+	display: inline-block;
+	margin-right: calc(4% - 5px);
+	vertical-align: top;
+	width: 48%;
+
+	&.last {
+		margin-right: 0;
+	}
+}
+
+.gfield_list_group {
+	margin-bottom: 0;
+}
+
+button {
+
+	&.add_list_item,
+	&.delete_list_item {
+		font-size: 90%;
+		height: auto;
+		margin: 0;
+		padding: 4px 11px;
+		position: relative;
+	}
+
+	&.delete_list_item {}
+}
+
+.gform_fileupload_rules {
+	display: inline-block;
+	font-size: var(--gb_font_size_17);
+	font-style: normal;
+	font-weight: 500;
+	line-height: var(--line_height_130per);
+	margin-bottom: 10px;
+	position: relative;
+	top: 0;
+}
+
+.gfield_description {
+	font-size: var(--gb_font_size_17);
+	font-style: normal;
+	font-weight: 500;
+	line-height: var(--line_height_130per);
+}
+
+.gform_wrapper.gform-theme .gfield--type-consent .gfield_label {
+	display: none;
+}
+
+#ui-datepicker-div {
+	background-color: var(--gb_datepicker_bg_color);
+	border: none;
+	max-width: 480px;
+	width: 100%;
+}
+
+.ui-datepicker-header.ui-widget-header.ui-helper-clearfix.ui-corner-all {
+	background-color: var(--gb_datepicker_bg_color);
+	padding: 10px 12px;
+}
+
+.ui-datepicker-title select {
+	background-color: var(--gb_datepicker_select_bgcolor);
+	border: 2px solid var(--gb_datepicker_border_color);
+	height: 46px;
+	margin-bottom: 0;
+	margin-right: 2%;
+	padding: 0 35px 0 18px;
+	width: 49%;
+}
+
+.ui-state-default {
+	color: var(--gb_datepicker_link_color);
+
+	&.ui-state-active {
+		color: var(--gb_datepicker_link_active_color);
+	}
+}
+
+.ui-state-disabled {
+	color: var(--gb_datepicker_date_color);
+}
+
+a.ui-datepicker-prev.ui-corner-all,
+a.ui-datepicker-next.ui-corner-all {
+	position: relative;
+}
+
+a.ui-datepicker-next.ui-corner-all {
+	float: right;
+}
+
+.ui-datepicker-header {
+
+	a,
+	a:visited {
+		cursor: pointer;
+		display: inline-block;
+		font-size: var(--gb_font_size_3);
+		margin-bottom: 10px;
+	}
+}
+
+select.ui-datepicker-year {
+	margin-right: 0;
+}
+
+#ui-datepicker-div table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	font-size: var(--gb_font_size_3);
+	margin: 0 0 10px;
+}
+
+.ui-datepicker_calendar a {
+	color: var(--gb_datepicker_date_color);
+	font-size: var(--gb_font_size_3);
+}
+
+.ginput_container_date {
+	position: relative;
+
+	img.ui-datepicker-trigger {
+		bottom: 0;
+		position: absolute;
+		right: 10px;
+		top: 15px;
+	}
+}
+
+.gform_wrapper {
+	fieldset {
+
+		&.gfield--type-radio,
+		&.gfield--type-checkbox {
+			margin-bottom: 36px;
+			margin-top: 0;
+
+			@media(max-width: 767px) {
+				margin-bottom: 30px;
+			}
+		}
+
+		&.gfield--type-time {
+			.ginput_complex {
+				&.gform-grid-row {
+					column-gap: 16px;
+					display: flex;
+					flex-wrap: wrap;
+
+					@media(max-width: 319px) {
+						column-gap: 10px;
+					}
+
+					.gform-grid-col {
+						margin: 0;
+						width: calc(33.33% - 18px);
+
+						@media(max-width: 991px) {
+							width: auto;
+						}
+
+						&.gfield_time_ampm {
+							@media(max-width: 991px) {
+								width: 100px;
+							}
+
+							@media(max-width: 319px) {
+								flex: 1 0 0;
+							}
+						}
+
+						&.hour_minute_colon {
+							align-self: center;
+							width: auto;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.gfield_radio,
+	.gfield_checkbox {
+		display: flex;
+		flex-wrap: wrap;
+
+		.gchoice {
+			margin-bottom: 16px;
+			width: 100%;
+
+			@media(max-width: 767px) {
+				margin-bottom: 12px;
+			}
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+
+			.gform-field-label {
+				font-size: 16px;
+				letter-spacing: 0;
+				margin: 0;
+				text-transform: inherit;
+			}
+		}
+	}
+}
+
+table.ui-datepicker_calendar {
+	background-color: var(--gb_datepicker_calendar);
+	max-width: 410px;
+}
+
+.validation_error {
+	@include font-size(14);
+	background-color: var(--gb_valiation_error_bg_color);
+	color: var(--gb_valiation_error_color);
+	margin-bottom: 20px;
+	padding: 2px 10px 6px;
+	text-align: center;
+}
+
+.validation_message {
+	background: transparent;
+	border-radius: 0px;
+	bottom: inherit;
+	color: var(--gb_red);
+	display: inline-block;
+	font-size: 16px;
+	margin-top: 6px;
+	padding: 0;
+	position: relative;
+	right: 0;
+	text-align: left;
+	top: 0;
+	width: 100%;
+
+	@media (max-width: 1199px) {
+		position: static;
+	}
+
+	&:empty {
+		display: none;
+	}
+}
+
+.ginput_container_phone {
+	.instruction.validation_message {
+		display: none;
+	}
+}
+
+.gform_validation_error_link {
+	font-size: 0.875rem;
+}
+
+.gfield_error {
+
+	input,
+	textarea {
+		background-color: #FFF1F1;
+		border-color: #D30000;
+		color: var(--gb_regular_text);
+
+		&::placeholder {
+			color: var(--gb_regular_text);
+			opacity: 1;
+		}
+
+		&:focus {
+			background-color: var(--gb_white);
+			border-color: var(--gb_Secondary_Dark_Beige);
+			box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+		}
+	}
+
+	select {
+		background-color: #FFF1F1;
+		border-color: #D30000;
+		color: var(--gb_valiation_message_color);
+
+		&:focus {
+			background-color: var(--gb_white);
+			border-color: var(--gb_Secondary_Dark_Beige);
+			box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+		}
+	}
+}
+
+.gform_confirmation_message {
+	background-color: var(--gb_success);
+	border: 1px solid var(--gb_success);
+	border-radius: 2px;
+	border-radius: 10px;
+	color: var(--gb_white);
+	font-size: 18px;
+	padding: 16px;
+	text-align: center;
+}
+
+.gform_validation_errors {
+	background-color: var(--gb_valiation_message_color);
+	border-radius: 3px;
+	display: none;
+	font-weight: 700;
+	margin: 10px 0 30px;
+	padding: 1px 6px;
+	text-align: center;
+
+	h2 {
+		color: var(--gb_white);
+		font-size: 16px;
+		font-weight: 400;
+		line-height: 22px;
+		margin-bottom: 0;
+		padding: 10px;
+	}
+
+	ol {
+		margin-top: 20px;
+	}
+}
+
+.gfield_required_text {
+	color: var(--gb_required_text_color);
+	font-size: 0.875rem;
+	margin-left: 5px;
+	position: relative;
+}
+
+.gform_wrapper {
+	&.gform-theme {
+		.gfield--type-fileupload {
+			@media (min-width: 1200px) {
+				display: flex;
+				flex-direction: column;
+			}
+
+			.validation_message {
+				margin-left: auto;
+				max-width: 410px;
+				order: 1;
+				top: 80px;
+
+				@media (min-width: 1200px) {
+					margin-top: 37px;
+				}
+			}
+
+			.ginput_container_fileupload {
+				@media (min-width: 1200px) {
+					order: 2;
+				}
+			}
+
+			.gform_fileupload_rules {
+				@media (min-width: 1200px) {
+					text-align: left;
+					width: 100%;
+				}
+			}
+
+			.ginput_preview {
+				font-size: var(--gb_font_size_17);
+				font-style: normal;
+				font-weight: 500;
+				line-height: var(--line_height_130per);
+
+				.gfield_fileupload_filename {
+					margin-right: 5px;
+				}
+
+				.gform_delete_file {
+					color: #fff;
+					height: auto;
+					line-height: normal;
+					padding: 0 10px;
+				}
+			}
+		}
+	}
+}
+
+.gfield_visibility_hidden {
+	display: none !important;
+}
+
+.gform_ajax_spinner,
+.gform-loader {
+	-webkit-animation: spin 1s ease-in-out infinite;
+	animation: spin 1s ease-in-out infinite;
+	border: 3px solid rgb(115 115 115 / 30%);
+	border-radius: 50%;
+	border-top-color: #fff;
+	display: none;
+	height: 12px;
+	margin-left: 0;
+	margin-top: 0;
+	position: absolute;
+	width: 12px;
+}
+
+@keyframes spin {
+	to {
+		-webkit-transform: rotate(360deg);
+	}
+}
+
+@-webkit-keyframes spin {
+	to {
+		-webkit-transform: rotate(360deg);
+	}
+}
+
+.gform_wrapper {
+	.hidden_label {
+		text-align: right;
+
+		.gfield_label,
+		.gform-field-label {
+			display: none;
+		}
+
+		&:has(.gfield_label, .gform-field-label) {
+			.validation_message {
+				bottom: 0;
+				display: inline-flex;
+				position: inherit;
+				top: inherit;
+			}
+		}
+	}
+
+	.gfield-choice-image-wrapper {
+		font-size: 16px;
+	}
+
+	fieldset {
+
+		&.gfield--type-radio,
+		&.gfield--type-checkbox {
+
+			.gfield_label,
+			.gform-field-label {
+				margin-bottom: 20px;
+
+				@media(max-width: 767px) {
+					margin-bottom: 16px;
+				}
+			}
+		}
+	}
+
+	.gfield_required {
+		display: none;
+	}
+}
+
+.gform_body {
+	.gform_fields {
+		column-gap: 16px;
+		display: grid;
+		grid-template-columns: repeat(12, 1fr);
+
+		@media (max-width: 767px) {
+			column-gap: 0px;
+		}
+
+		.gfield {
+			&.gfield--width-half {
+				grid-column: span 6;
+
+				@media(max-width: 767px) {
+					grid-column: span 12;
+				}
+
+				&:nth-last-child(2) {
+					@media(min-width: 768px) {
+						margin-bottom: 0;
+					}
+				}
+			}
+
+			&.gfield--width-full {
+				grid-column: 1 / -1;
+			}
+		}
+	}
+}
+
+.gform_wrapper {
+
+	.gfield_label,
+	.gform-field-label {
+		display: flex;
+		font-size: 16px;
+		margin-bottom: 8px;
+	}
+}
+
+.gform_footer {
+	margin-top: 48px;
+	overflow: hidden;
+	position: relative;
+	text-align: left;
+
+	input[type="submit"] {
+		background-color: var(--gb_theme_btn_bgcolor);
+		border: none;
+		border-radius: 100px;
+		color: var(--gb_theme_btn_color);
+		cursor: pointer;
+		display: inline-flex;
+		font-size: 18px;
+		margin: 0;
+		outline: none;
+		overflow: hidden;
+		padding: 14px 50px;
+		position: relative;
+		text-align: center;
+		text-decoration: none;
+		transform: translate(0);
+		transition: all .2s ease-in-out;
+		transition: 0.35s;
+
+		@media(max-width: 640px) {
+			height: 44px;
+			min-height: inherit;
+			padding: 13px 53px 12px;
+		}
+
+		&:last-child {
+			margin-right: 0;
+		}
+
+		&:hover {
+			background-color: var(--gb_theme_btn_bgcolor_hover);
+			color: var(--gb_theme_btn_color_hover);
+		}
+	}
+
+	@media(max-width: 991px) {
+		margin-top: 36px;
+	}
+}
+
+.theme-form-block {
+	position: relative;
+	z-index: 1;
+
+	.block-title {
+		@media(max-width: 480px) {
+			margin: 0 auto;
+			max-width: 213px;
+		}
+	}
+}
+
+.error-top {
+	.validation_message {
+		background: var(--gb_valiation_message_color);
+		border-radius: 3px;
+		bottom: inherit;
+		color: var(--gb_white);
+		display: inline-block;
+		font-size: .875rem;
+		padding: 1px 6px;
+		position: absolute;
+		right: 0;
+		text-align: center;
+		top: calc(100% - 78px);
+		width: auto;
+		margin: 0;
+	}
+}

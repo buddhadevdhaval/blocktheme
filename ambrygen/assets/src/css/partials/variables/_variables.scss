@@ -1,0 +1,457 @@
+:root {
+
+    // --gb_base_unit: 0.125rem; // 2px
+    // --base_unit-half: math.div(var(--gb_base_unit), 2); // 1px
+
+    /*-------------------------------------------------
+	>> Variables for Spaces
+	-------------------------------------------------*/
+
+    // --space_base_unit: var(--gb_base_unit);
+
+    /* ------- [ D-2 to M-2 ] - [ gl-s2 ] ------- */
+    --gb_space_1: clamp(1px, calc(0.125rem + ((1vw - 7.68px) * 0)), 1px);
+
+    /* ------- [ D-4 to M-4] - [ gl-s4] ------- */
+    --gb_space_2: clamp(4px, calc(0.25rem + ((1vw - 7.68px) * 0)), 4px);
+
+    /* ------- [ D-6 to M-6] - [ gl-s6] ------- */
+    --gb_space_3: clamp(6px, calc(0.375rem + ((1vw - 7.68px) * 0)), 6px);
+
+    /* ------- [ D-8 to M-8] - [ gl-s8] ------- */
+    --gb_space_4: clamp(8px, calc(0.5rem + ((1vw - 7.68px) * 0)), 8px);
+
+    /* ------- [ D-12 to M-10] - [ gl-s12] ------- */
+    --gb_space_5: clamp(10px, calc(0.625rem + ((1vw - 7.68px) * 0.3436)), 12px);
+
+    /* ------- [ D-16 to M-12] - [ gl-s16] ------- */
+    --gb_space_6: clamp(12px, calc(0.75rem + ((1vw - 7.68px) * 0.6873)), 16px);
+
+    /* ------- [ D-20 to M-16] - [ gl-s20] ------- */
+    --gb_space_7: clamp(16px, calc(1rem + ((1vw - 7.68px) * 0.6873)), 20px);
+
+    /* ------- [ D-24 to M-20] - [ gl-s24] ------- */
+    --gb_space_8: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 0.6873)), 24px);
+
+    /* ------- [ D-30 to M-24] - [ gl-s30] ------- */
+    --gb_space_9: clamp(24px, calc(1.5rem + ((1vw - 7.68px) * 1.0309)), 30px);
+
+    /* ------- [ D-36 to M-30] - [ gl-s36] ------- */
+    --gb_space_10: clamp(30px, calc(1.875rem + ((1vw - 7.68px) * 1.0309)), 36px);
+
+    /* ------- [ D-48 to M-36] - [ gl-s48] ------- */
+    --gb_space_11: clamp(36px, calc(2.25rem + ((1vw - 7.68px) * 2.0619)), 48px);
+
+    /* ------- [ D-72 to M-44] - [ gl-s72] ------- */
+    --gb_space_12: clamp(44px, calc(2.75rem + ((1vw - 7.68px) * 4.811)), 72px);
+
+    /* ------- [ D-96 to M-52] - [ gl-s96] ------- */
+    --gb_space_13: clamp(52px, calc(3.25rem + ((1vw - 7.68px) * 7.5601)), 96px);
+
+    /* ------- [ D-128 to M-64] - [ gl-s128] ------- */
+    --gb_space_14: clamp(64px, calc(4rem + ((1vw - 7.68px) * 10.9966)), 128px);
+
+    /* ------- [ D-156 to M-72] - [ gl-s156] ------- */
+    --gb_space_15: clamp(72px, calc(4.5rem + ((1vw - 7.68px) * 14.433)), 156px);
+
+    /* ------- [ D-200 to M-84] - [ gl-s200] ------- */
+    --gb_space_16: clamp(84px, calc(5.25rem + ((1vw - 7.68px) * 19.9313)), 200px);
+
+    /* ------- [ D-236 to M-98] - [ gl-s236] ------- */
+    --gb_space_17: clamp(98px, calc(6.125rem + ((1vw - 7.68px) * 23.7113)), 236px);
+
+
+    /* -------------------------------------------------
+	>> Font Sizes
+	------------------------------------------------- */
+
+    // --font_base_unit: var(--gb_base_unit);
+
+    /* ------- [ D-64 to M-40 ] - [ Text-64 ] ------- */
+    --gb_font_size_1: clamp(40px, calc(2.5rem + ((1vw - 7.68px) * 4.1237)), 64px);
+
+    /* ------- [ D-48 to M-34 ] - [ Text-48 ] ------- */
+    --gb_font_size_2: clamp(34px, calc(2.125rem + ((1vw - 7.68px) * 2.4055)), 48px);
+
+    /* ------- [ D-40 to M-30 ] - [ Text-40 ] ------- */
+    --gb_font_size_3: clamp(30px, calc(1.875rem + ((1vw - 7.68px) * 1.7182)), 40px);
+
+    /* ------- [ D-34 to M-26 ] - [ Text-34 ] ------- */
+    --gb_font_size_4: clamp(26px, calc(1.625rem + ((1vw - 7.68px) * 1.3746)), 34px);
+
+    /* ------- [ D-28 to M-22 ] - [ Text-28 ] ------- */
+    --gb_font_size_5: clamp(22px, calc(1.375rem + ((1vw - 7.68px) * 1.0309)), 28px);
+
+    /* ------- [ D-18 to M-16 ] - [ Text-18 ] ------- */
+    --gb_font_size_6: clamp(16px, calc(1rem + ((1vw - 7.68px) * 0.3436)), 18px);
+
+    /* ------- [ D-16 to M-15 ] - [ Text-16 ] ------- */
+    --gb_font_size_7: clamp(15px, calc(0.9375rem + ((1vw - 7.68px) * 0.1718)), 16px);
+
+    /* ------- [ D-22 to M-20 ] - [ Text-22 ] ------- */
+    --gb_font_size_8: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 0.3436)), 22px);
+
+    /* ------- [ D-20 to M-18 ] - [ Text-20 ] ------- */
+    --gb_font_size_10: clamp(18px, calc(1.125rem + ((1vw - 7.68px) * 0.3436)), 20px);
+
+    /* ------- [ D-14 to M-13 ] - [ Text-14 ] ------- */
+    --gb_font_size_13: clamp(13px, calc(0.8125rem + ((1vw - 7.68px) * 0.1718)), 14px);
+
+
+
+    /* -------------------------------------------------
+		>> Line Height
+	------------------------------------------------- */
+
+    // Base Line Height
+    --gb_line_height_base_unit: 1;
+
+    // Fluid Line Heights
+    --line_height_xsmall: 1;
+    --line_height_small: 1.1;
+    --line_height_medium: 1.3;
+    --line_height_large: 1.4;
+    --line_height_xlarge: 1.5;
+    --line_height_105per: 105%;
+    --line_height_110per: 110%;
+    --line_height_115per: 115%;
+    --line_height_120per: 120%;
+    --line_height_125per: 125%;
+    --line_height_130per: 130%;
+    --line_height_140per: 140%;
+    --line_height_160per: 160%;
+
+    /* -------------------------------------------------
+		>> Letter Spacing
+	------------------------------------------------- */
+
+    // Base Letter Spacing
+    // --gb_letter_spacing_base_unit: 1px;
+
+    // Fluid Letter Spacings
+    --letter_spacing_xsmall: 0px;
+    --letter_spacing_small: -0.5px;
+    --letter_spacing_medium: normal;
+    --letter_spacing_large: 1px;
+    --letter_spacing_xlarge: 1.5px;
+
+
+    /* -------------------------------------------------
+			>> Border Radius
+		------------------------------------------------- */
+    --border_radius_small: 1px;
+    --border_radius_medium: 2px;
+    --border_radius_large: 4px;
+
+    /* -------------------------------------------------
+	>> Color variables
+	------------------------------------------------- */
+
+    /*
+	>> Base Colors
+	*/
+
+    // Theme Primary
+    --gb_color_primary: #00a4eb;
+    --gb_color_on_primary: #ffffff;
+    --gb_Primary_White: #ffffff;
+    --gb_Primary_Pale_Blue: #B9DCFC;
+
+    // Theme Secondary
+    --gb_color_secondary: #0013ff;
+
+    // Theme Dark
+    --gb_black: #000000;
+    --gb_black_1: #14191f;
+    --gb_black_2: #606364;
+
+    // Theme Light
+    --gb_white: #ffffff;
+    --gb_white_1: #f1f1f1;
+    --gb_white_2: #f1e9e9;
+
+    // Theme Colors
+    --gb_gray: #e0e0e0;
+    --gb_gray_1: #e6e6e6;
+    --gb_gray_2: #eee;
+
+    --gb_blue: #0013ff;
+    --gb_blue_1: #00a4eb;
+    --gb_blue_2: #2ca8dd;
+
+    --gb_navy: #091a17;
+    --gb_navy_1: #15332e;
+    --gb_navy_2: #2f655c;
+
+    --gb_red: #ff0000;
+    --gb_sea_green: #04c3b4;
+
+    --gb_transparent: transparent;
+
+    // Text Variations
+    --gb_regular_text: #14191f;
+    --gb_dark_text: #14191f;
+    --gb_white_text: #f7f7f7;
+    --gb_light_text: #606364;
+
+    // fixed variable Colors
+
+    --gb_success: #198754;
+    --gb_info: #0dcaf0;
+    --gb_warning: #ffc107;
+    --gb_danger: #dc3545;
+    --gb_light: #f8f9fa;
+    --gb_dark: #212529;
+
+
+    --gb_signal: #d14b3c;
+    --gb_signal_bg: #fbede9;
+
+
+    --gb_color_background: #ffffff;
+    --gb_color_on_background: #14191f;
+
+    // Borders
+    --gb_border: #30353c;
+    --gb_border_1: #545454;
+    --gb_border_2: #adadad;
+    --gb_border_3: #e0e0e0;
+
+
+    /* -------------------------------------------------
+	>> Base Colors
+	>> Base colors are used for essential elements
+	such as the logo, tables, links, blockquote,
+	default buttons styling and this should't conflict
+	with theme colors
+	------------------------------------------------- */
+
+    // text Colors
+    --gb_body_color: var(--gb_color_on_background);
+    --gb_body_bg: var(--gb_color_background);
+    --gb_text_strong: var(--gb_black);
+
+    --gb_dark_text: var(--gb_black);
+    --gb_white_text: var(--gb_white);
+
+    --gb_highlight_color: var(--gb_color_on_primary);
+    --gb_highlight_bg: var(--gb_color_primary);
+
+    --gb_caption: var(--gb_black_2);
+
+    // Headings
+
+    --gb_heading_color: inherit;
+    --gb_heading_link_color: var(--gb_dark_text);
+    --gb_heading_link_color_hover: var(--gb_dark_text);
+
+    // link colors
+    --gb_link_color: var(--gb_color_primary);
+    --gb_link_color_hover: var(--gb_color_primary);
+    --gb_link_border_color: var(--gb_color_primary);
+    --gb_link_border_color_hover: transparent;
+
+    // lists Colors
+    --gb_list_ul_marker_color: var(--gb_color_primary);
+    --gb_list_ol_marker_color: var(--gb_color_primary);
+
+
+    // Blockquote Colors
+    --gb_blockquote_color: var(--gb_regular_text);
+    --gb_blockquote_border_color: var(--gb_regular_text);
+    --gb_quote_color: var(--gb_regular_text);
+    --gb_blockqoute_cite_color: var(--gb_light_text);
+
+    // Tables Colors
+    --gb_table_border_color: var(--gb_border);
+    --gb_table_head_border_color: var(--gb_dark_text);
+    --gb_table_foot_border_color: var(--gb_dark_text);
+
+    // Formating
+    --gb_strong_color: var(--gb_regular_text);
+    --gb_underline_border_color: var(--gb_regular_text);
+    --gb_abbr_border_color: var(--gb_regular_text);
+    --gb_delete_color: var(--gb_danger);
+    --gb_insert_color: var(--gb_success);
+    --gb_insert_border_color: var(--gb_success);
+
+    // Code
+    --gb_code_color: var(--gb_white_text);
+    --gb_code_bgcolor: var(--gb_dark_text);
+    --gb_pre_color: var(--gb_white_text);
+    --gb_pre_bgcolor: var(--gb_dark_text);
+    --gb_mark_bgcolor: var(--gb_dark_text);
+    --gb_mark_color: var(--gb_white_text);
+
+    // Graphical elements
+    --gb_hr_color: var(--gb_border_2);
+
+    // Form Fields
+
+    --gb_input_color: var(--gb_regular_text);
+    --gb_input_bg: var(--gb_light_field_bg);
+    --gb_input_border_color: var(--gb_border);
+
+    --gb_input_focus_color: var(--gb_black);
+    --gb_input_focus_bgcolor: var(--gb_white);
+    --gb_input_focus_border_color: var(--gb_border_2);
+
+    --gb_disabled_input_bgcolor: var(--gb_field_bg);
+    --gb_disabled_input_border_color: var(--gb_border_1);
+
+    --gb_placeholder_color: var(--gb_light_text);
+    --gb_range_track_bgcolor: var(--gb_field_bg);
+    --gb_range_thumb_bgcolor: var(--gb_color_primary);
+    --gb_color_field_border_color: var(--gb_border);
+    --gb_color_field_bgcolor: var(--gb_field_bg);
+    --gb_radio_color: var(--gb_regular_text);
+    --gb_radio_border_color: var(--gb_border);
+    --gb_radio_bgcolor: var(--gb_field_bg);
+    --gb_radio_after_bgcolor: var(--gb_color_primary);
+    --gb_checkbox_color: var(--gb_regular_text);
+    --gb_checkbox_border_color: var(--gb_border);
+    --gb_checkbox_bgcolor: var(--gb_field_bg);
+    --gb_checkbox_after_bgcolor: var(--gb_color_primary);
+    --gb_progress_bgcolor: var(--gb_field_bg);
+    --gb_progress_value_bgcolor: var(--gb_color_primary);
+    --gb_meter_bgcolor: var(--gb_field_bg);
+    --gb_meter_value_bgcolor: var(--gb_color_primary);
+
+    // Button
+    --gb_button_color: var(--gb_white_text);
+    --gb_button_bgcolor: var(--gb_color_secondary);
+    --gb_button_color_hover: var(--gb_black);
+    --gb_button_bgcolor_hover: var(--gb_Primary_Pale_Blue);
+    --gb_button_border_color: var(--gb_color_secondary);
+    --gb_button_border_color_hover: var(--gb_border);
+
+    --gb_reset_button_bgcolor: var(--gb_button_bgcolor);
+    --gb_reset_button_color: var(--gb_white_text);
+
+    // Buttons layer
+    --gb_theme_btn_color: var(--gb_button_color);
+    --gb_theme_btn_bgcolor: var(--gb_button_bgcolor);
+    --gb_theme_btn_color_hover: var(--gb_button_color_hover);
+    --gb_theme_btn_bgcolor_hover: var(--gb_button_bgcolor_hover);
+    --gb_theme_btn_border_color: var(--gb_button_border_color);
+    --gb_theme_btn_border_color_hover: var(--gb_button_border_color_hover);
+
+    // --gb_wp_btn_color: var(--gb_white_text);
+    // --gb_wp_btn_bgcolor: var(--gb_button_bg);
+
+    // --gb_wp_outline_btn_color: var(--gb_white_text);
+    // --gb_wp_outline_btn_border_color: var(--gb_dark_text);
+    // --gb_wp_outline_btn_bgcolor: var(--gb_dark_text);
+
+    // Date Picker
+    --gb_datepicker_bg_color: var(--gb_gray);
+    --gb_datepicker_select_bgcolor: var(--gb_white);
+    --gb_datepicker_link_color: var(--gb_color_secondary);
+    --gb_datepicker_link_active_color: var(--gb_color_primary);
+    --gb_datepicker_calendar: var(--gb_white_text);
+    --gb_datepicker_th_bgcolor: var(--gb_border_1);
+    --gb_datepicker_even_tr_td_bgcolor: var(--gb_border_1);
+    --gb_datepicker_border_color: var(--gb_border_1);
+    --gb_datepicker_date_color: var(--gb_dark_text);
+
+    // Errors & Confirmation
+    --gb_valiation_error_bg_color: var(--gb_danger_bg);
+    --gb_valiation_message_color: var(--gb_danger);
+    --gb_error_field_border_color: var(--gb_danger);
+    --gb_valiation_error_color: var(--gb_danger);
+    --gb_confirmation_message_bgcolor: var(--gb_success_bg);
+    --gb_confirmation_message_color: var(--gb_dark_text);
+    --gb_confirmation_message_border_color: var(--gb_danger);
+    --gb_required_text_color: var(--gb_danger);
+    --gb_invalid_error_border_color: var(--gb_danger);
+    --gb_hubspot_error_label_color: var(--gb_danger);
+    --gb_hubspot_required_color: var(--gb_danger);
+    --gb_fileupload_rule_color: var(--gb_light_text);
+    --gb_error_menu_color: var(--gb_dark_text);
+
+    // Accessibility
+    --gb_acc_btn_color: var(--gb_white_text);
+    --gb_acc_btn_bgcolor: var(--gb_button_bg);
+    --gb_acc_btn_shadow: var(--gb_danger);
+
+    // Comments Box
+    --gb_comments_reply_btn_bgcolor: var(--gb_button_bg);
+    --gb_comments_reply_btn_color: var(--gb_white_text);
+    --gb_comments_reply_btn_bgcolor_hover: var(--gb_button_bg_hover);
+    --gb_comments_reply_btn_color_hover: var(--gb_white_text);
+    --gb_comment_meta_color: var(--gb_dark_text);
+    --gb_comment_metadata_color: var(--gb_light_text);
+    --gb_comments_list_border_color: var(--gb_border);
+    --gb_widget_comments_meta_color: var(--gb_light_text);
+
+    // Pagination
+    --gb_pagination_bgcolor: var(--gb_blue_1);
+    --gb_pagination_color: var(--gb_white);
+    --gb_pagination_color_hover: var(--gb_white);
+    --gb_pagination_bgcolor_hover: var(--gb_border_1);
+    --gb_pagination_bgcolor_current: var(--gb_border_1);
+    --gb_pagination_color_current: var(--gb_white);
+    --gb_pagination_first_bgcolor: var(--gb_border_1);
+    --gb_pagination_first_color: var(--gb_dark_text);
+    --gb_pagination_border: var(--gb_transparent);
+
+    // Widgets
+    --gb_widget_latest_post_meta_color: var(--gb_danger);
+    --gb_widget_rss_feed_meta_color: var(--gb_danger);
+    --gb_widget_search_button_color: var(--gb_pure_black);
+    --gb_wp_table_block_stripe_bg_color: var(--gb_gray);
+
+    // Breadcrumbs
+    --gb_breadcrumb_color: var(--gb_pure_black);
+    --gb_breadcrumb_link_color: var(--gb_pure_black);
+    --gb_breadcrumb_border_color: transparent;
+    --gb_breadcrumb_border_color_hover: var(--gb_pure_black);
+    --gb_breadcrumb_span_color: var(--gb_pure_black);
+
+    // Header
+    --gb_header_bgcolor: var(--gb_transparent);
+    --gb_header_color: var(--gb_black);
+    --gb_header_color_hover: var(--gb_black);
+    --gb_header_bgcolor_sticky: var(--gb_white);
+    --gb_header_nav_border_color: var(--gb_dark_text);
+
+    --gb_header_submenu_bgcolor: var(--gb_gray);
+    --gb_header_submenu_color: var(--gb_header_color);
+    --gb_header_submenu_color_hover: var(--gb_header_color_hover);
+
+    --gb_header_mobile_color: var(--gb_dark_text);
+    --gb_header_mobile_submenu_color: var(--gb_dark_text);
+
+    --gb_nav_overlay_bgcolor: var(--gb_white);
+    --gb_mobile_nav_icon_bgcolor: var(--gb_dark_text);
+    --gb_abbr_border: var(--gb_dark_text);
+
+    // Top Bar
+    --gb_topbar_bgcolor: var(--gb_color_primary);
+    --gb_topbar_color: var(--gb_white);
+    --gb_topbar_link_color: var(--gb_white);
+
+
+    // Footer
+    --gb_footer_bgcolor: var(--gb_dark_text);
+    --gb_footer_color: var(--gb_white_text);
+
+    --gb_footer_color_hover: var(--gb_white_text);
+
+    --gb_f_nav_color: var(--gb_footer_color);
+    --gb_f_nav_color_hover: var(--gb_footer_color_hover);
+    --gb_f_nav_border_color: var(--gb_footer_color);
+    --gb_f_nav_border_color_hover: var(--gb_footer_color_hover);
+
+    --gb_copyright_color: var(--gb_white_text);
+    --gb_legal_nav_color: var(--gb_white_text);
+    --gb_legal_nav_border_color: var(--gb_white_text);
+    --gb_legal_nav_border_color_hover: var(--gb_white_text);
+    --gb_legal_text_color: var(--gb_white_text);
+
+    // Containers
+
+    --gb_ctn_red: var(--gb_red);
+    --gb_ctn_black: var(--gb_black);
+    --gb_ctn_sea_green: var(--gb_sea_green);
+}

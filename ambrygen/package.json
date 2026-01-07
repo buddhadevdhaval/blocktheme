@@ -1,0 +1,52 @@
+{
+  "name": "Ambrygen",
+  "version": "1.0.0",
+  "theme-version": "2.2.3",
+  "description": "A WordPress custom theme",
+  "scripts": {
+    "create:block": "node ./bin/create-block.js",
+    "build:dev": "wp-scripts build --config webpack.config.js && wp-scripts build --config ./node_modules/@wordpress/scripts/config/webpack.config.js --webpack-src-dir=./assets/src/blocks/ --output-path=./assets/build/blocks/ && npm run build-blocks-manifest",
+    "build:prod": "wp-scripts build && npm run build-blocks-manifest",
+    "build": "npm run build:prod",
+    "build:blocks": "wp-scripts build --config ./node_modules/@wordpress/scripts/config/webpack.config.js --webpack-src-dir=./assets/src/blocks/ --output-path=./assets/build/blocks/ && npm run build-blocks-manifest",
+    "build-blocks-manifest": "wp-scripts build-blocks-manifest --input=./assets/build/blocks --output=./assets/build/blocks/blocks-manifest.php",
+    "build:theme": "wp-scripts build --config webpack.config.js --mode=production",
+    "start": "wp-scripts start && npm run build-blocks-manifest",
+    "lint:css": "wp-scripts lint-style",
+    "lint:js": "wp-scripts lint-js",
+    "lint:php": "if [ -d vendor ]; then vendor/bin/phpcs --standard=WordPress-VIP; else echo 'PHP CodeSniffer not installed - run composer install'; fi",
+    "format:css": "npm run lint:css -- --fix",
+    "format:js": "npm run lint:js -- --fix",
+    "phpcs:report": "if [ -d vendor ]; then vendor/bin/phpcs --standard=WordPress-VIP --report=summary; else echo 'PHP CodeSniffer not installed - run composer install'; fi",
+    "phpcs:fix": "if [ -d vendor ]; then vendor/bin/phpcbf --standard=WordPress-VIP; else echo 'PHP CodeSniffer not installed - run composer install'; fi",
+    "test:php": "if [ -d vendor ]; then vendor/bin/phpunit; else echo 'PHPUnit not installed - run composer install'; fi",
+    "test:vip-compliance": "node scripts/vip-compliance-check.js",
+    "validate:vip": "npm run lint:php && npm run lint:js && npm run lint:css && npm run test:vip-compliance",
+    "setup": "npm install && composer install",
+    "npm:install": "npm install",
+    "composer:clean": "composer install --no-dev"
+  },
+  "devDependencies": {
+    "@wordpress/compose": "^7.0.0",
+    "@wordpress/create-block": "^4.80.0",
+    "@wordpress/dom-ready": "^4.0.0",
+    "@wordpress/icons": "^10.0.0",
+    "@wordpress/scripts": "^31.2.0",
+    "copy-webpack-plugin": "^12.0.2",
+    "eslint-plugin-html": "^8.1.1",
+    "html-loader": "^5.0.0",
+    "imagemin-webp-webpack-plugin": "^3.3.6",
+    "imagemin-webpack-plugin": "^2.4.2",
+    "mini-css-extract-plugin": "^2.9.0",
+    "remove-files-webpack-plugin": "^1.5.0",
+    "webpack-fix-style-only-entries": "^0.6.1"
+  },
+  "dependencies": {
+    "swiper": "^11.1.14"
+  },
+  "engines": {
+    "node": ">=20.14.0 <21"
+  },
+  "author": "Ambrygen",
+  "license": "GPL-2.0-or-later"
+}

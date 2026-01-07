@@ -1,0 +1,137 @@
+.faq {
+	&.max-779 {
+		max-width: 779px;
+		margin: 0 auto;
+	}
+
+	.block-desc {
+		max-width: 580px;
+		margin: 0 auto;
+	}
+}
+
+.faq_container {
+	margin: 0;
+	padding: 0;
+	transition: all 0.5s ease;
+	background: rgba(241, 232, 226, 0.6);
+	border: 1px solid transparent;
+	border-radius: 20px;
+	margin-bottom: 20px;
+
+	@media (max-width: 767px) {
+		border-radius: 10px;
+		margin-bottom: 16px;
+	}
+
+	&:hover {
+		background: rgba(241, 232, 226, 1);
+		border: 1px solid var(--gb_black_1);
+	}
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+
+	.faq_question {
+		align-items: start;
+		cursor: pointer;
+		display: flex;
+		gap: 31px;
+		justify-content: space-between;
+		padding: 22px 24px;
+		position: relative;
+
+		@media (max-width: 767px) {
+			padding: 16px 18px;
+		}
+	}
+
+	.answercont {
+		max-height: 0;
+		overflow: hidden;
+		transition: 0.3s;
+	}
+
+	.answer {
+		color: var(--gb_black_1);
+		padding: 2px 24px 24px;
+
+		@media (max-width: 767px) {
+			padding: 2px 16px 18px;
+		}
+
+		ul {
+			&:last-child {
+				margin: 0;
+			}
+		}
+	}
+
+	.icon {
+		&.active {
+			background: transparent;
+			border: 1px solid var(--gb_color_primary);
+		}
+
+		&:hover {
+			cursor: pointer;
+		}
+
+		.icon-shape {
+			height: 18px;
+			position: relative;
+			width: 18px;
+
+			&::before {
+				background: var(--gb_black_1);
+				border-radius: 0px;
+				content: "";
+				height: 2px;
+				left: 0px;
+				position: absolute;
+				top: 13px;
+				transition: all 0.5s ease;
+				width: 18px;
+				border-radius: 30px;
+
+				@media (max-width: 767px) {
+					width: 16px;
+					left: 2px;
+					top: 12px;
+				}
+			}
+
+			&:after {
+				background: var(--gb_black_1);
+				border-radius: 0px;
+				content: "";
+				height: 18px;
+				left: 8px;
+				position: absolute;
+				top: 5px;
+				transition: all 0.5s ease;
+				width: 2px;
+				border-radius: 30px;
+
+				@media (max-width: 767px) {
+					height: 16px;
+					top: 5px;
+					left: 9px;
+				}
+			}
+
+			&.active {
+				&::before {
+					transform: rotate(45deg);
+					transition: all 0.5s ease;
+				}
+
+				&::after {
+					transform: rotate(45deg);
+					transition: all 0.5s ease;
+				}
+			}
+		}
+	}
+}

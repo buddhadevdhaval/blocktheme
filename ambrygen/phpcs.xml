@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<ruleset name="WordPress VIP Theme">
+	<description>PHPCS Ruleset following WordPress VIP Go Coding Standards</description>
+
+	<!-- Scan theme -->
+	<file>.</file>
+
+	<!-- Excluded directories -->
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/blocks/section-container/*</exclude-pattern>
+	<exclude-pattern>*editor.min.asset.php</exclude-pattern>
+
+	<!-- Only PHP files -->
+	<arg name="extensions" value="php" />
+	<arg name="parallel" value="8" />
+	<arg value="psv" />
+
+	<!-- MAIN VIP GO STANDARD -->
+	<rule ref="WordPress-VIP-Go" />
+
+	<!-- Additional optional rules -->
+	<rule ref="WordPress-Extra" />
+
+	<!-- Ignore commented-out code -->
+	<rule ref="Squiz.PHP.CommentedOutCode">
+		<severity>0</severity>
+	</rule>
+
+	<!-- Allow special template naming -->
+	<rule ref="WordPress.Files.FileName.NotHyphenatedLowercase">
+		<exclude-pattern>page_landing.php</exclude-pattern>
+	</rule>
+
+	<!-- Prefix requirements -->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="WP_Theme" />
+				<element value="Ambrygen" />
+			</property>
+		</properties>
+	</rule>
+
+	<!-- Theme filenames -->
+	<rule ref="WordPress.Files.FileName">
+		<properties>
+			<property name="is_theme" value="true" />
+		</properties>
+	</rule>
+
+	<!-- Custom escaping functions -->
+	<rule ref="WordPress.Security.EscapeOutput">
+		<properties>
+			<property name="customAutoEscapedFunctions" type="array">
+				<element value="Ambrygen" />
+				<element value="html_entity_decode" />
+				<element value="html_entity_remove" />
+				<element value="build_acf_button" />
+				<element value="build_excerpt" />
+				<element value="build_excerpt_nomore" />
+			</property>
+		</properties>
+	</rule>
+
+	<!-- Custom sanitization functions -->
+	<rule ref="WordPress.Security.ValidatedSanitizedInput">
+		<properties>
+			<property name="customSanitizingFunctions" type="array">
+				<element value="recursive_sanitize_text_field" />
+			</property>
+		</properties>
+	</rule>
+
+	<!-- Allow custom posts_per_page behaviour -->
+	<rule ref="WordPress.WP">
+		<exclude name="WordPress.WP.PostsPerPage.PostsPerPage" />
+	</rule>
+
+</ruleset>

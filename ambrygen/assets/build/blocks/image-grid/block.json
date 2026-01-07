@@ -1,0 +1,47 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "ambrygen/image-grid",
+	"title": "Image Grid",
+	"category": "layout",
+	"icon": "grid-view",
+	"description": "A block to show multiple images in a grid with title and link.",
+	"supports": {
+		"html": false
+	},
+	"attributes": {
+		"columns": {
+			"type": "number",
+			"default": 2
+		},
+		"items": {
+			"type": "array",
+			"default": [],
+			"source": "query",
+			"selector": ".grid-item",
+			"query": {
+				"imageUrl": {
+					"type": "string",
+					"source": "attribute",
+					"selector": "img",
+					"attribute": "src"
+				},
+				"title": {
+					"type": "string",
+					"source": "html",
+					"selector": "h4"
+				},
+				"link": {
+					"type": "string",
+					"source": "attribute",
+					"selector": "a",
+					"attribute": "href"
+				}
+			}
+		}
+	},
+	"textdomain": "ambrygen-vip-web",
+	"editorScript": "file:./index.min.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

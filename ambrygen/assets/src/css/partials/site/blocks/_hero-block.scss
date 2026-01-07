@@ -1,0 +1,26 @@
+.hero-form {
+    .row-flex {
+        display: flex;
+        gap: clamp(64px, calc(4rem + ((1vw - 7.68px) * 9.622)), 120px);
+
+        @media (max-width: 992px) {
+            flex-wrap: wrap;
+        }
+
+        .col-left {
+            flex: clamp(335px, calc(20.9375rem + ((1vw - 7.68px) * 24.9141)), 480px) 0 0;
+
+            @media (max-width: 992px) {
+                flex: 100% 0 0;
+            }
+        }
+
+        .col-right {
+            flex: 1 0 0;
+
+            @media (max-width: 992px) {
+                flex: 100% 0 0;
+            }
+        }
+    }
+}

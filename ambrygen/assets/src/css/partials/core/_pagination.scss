@@ -1,0 +1,57 @@
+/* -------------------------------------------------
+>> Base Styles
+---------------------------------------------------
+>> Edit these styles as required
+------------------------------------------------- */
+
+.page-section .pagination,
+.pagination {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	justify-content: center;
+	margin: 0;
+	text-align: center;
+
+	a,
+	a:visited,
+	span.current {
+		@include font-size(15);
+		@include font(axi, reg);
+		@include transition(all, 0.4s, ease-in-out);
+		align-items: center;
+		background-color: var(--gb_pagination_bgcolor);
+		border-radius: 2px;
+		color: var(--gb_pagination_color);
+		display: flex;
+		height: 44px;
+		justify-content: center;
+		padding: 11px 0 10px;
+		text-decoration: none;
+		width: 44px;
+
+		&:hover {
+			background-color: var(--gb_pagination_bgcolor_hover);
+			color: var(--gb_pagination_color_hover);
+		}
+	}
+
+	span.current {
+		background-color: var(--gb_pagination_bgcolor_current);
+		color: var(--gb_pagination_color_current);
+
+		&:hover {
+			background-color: var(--gb_pagination_bgcolor_current);
+			color: var(--gb_pagination_color_current);
+		}
+	}
+
+	>span.current {
+		border: none;
+
+		&:hover {
+			background-color: var(--gb_pagination_first_bgcolor);
+			color: var(--gb_pagination_first_color);
+		}
+	}
+}

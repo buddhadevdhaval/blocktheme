@@ -1,0 +1,31 @@
+
+
+.wp-block-ambrygen-hero {
+	border: 1px solid #ddd;
+	background-color: #f8f9fa;
+	padding: 2rem;
+	text-align: center;
+
+	.hero-heading {
+		color: #21759b;
+		margin-bottom: 1rem;
+		border: none;
+		background: transparent;
+	}
+
+	.hero-content {
+		color: #333;
+		font-size: 1.1rem;
+		line-height: 1.6;
+		margin: 0;
+		border: none;
+		background: transparent;
+	}
+
+	// RichText editor focus styles
+	.hero-heading:focus,
+	.hero-content:focus {
+		outline: 2px solid #0073aa;
+		outline-offset: 2px;
+	}
+}

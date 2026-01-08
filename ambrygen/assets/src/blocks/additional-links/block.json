@@ -1,0 +1,40 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 2,
+    "name": "ambrygen/additional-links",
+    "title": "Additional Links",
+    "category": "layout",
+    "icon": "align-wide",
+    "description": "A block with heading, editor, image, and left/right layout.",
+    "supports": {
+        "html": false
+    },
+    "editorScript": "file:./block.js",
+    "attributes": {
+        "heading": {
+            "type": "string",
+            "source": "html",
+            "selector": "h2"
+        },
+        "headingTag": {
+            "type": "string",
+            "default": "h2"
+        },
+        "content": {
+            "type": "string",
+            "source": "html",
+            "selector": "div.content"
+        },
+        "imageUrl": {
+            "type": "string"
+        },
+        "imagePosition": {
+            "type": "string",
+            "default": "left"
+        }
+    },
+	"textdomain": "ambrygen-vip-web",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./editor.css",
+	"style": "file:./style.css"
+}

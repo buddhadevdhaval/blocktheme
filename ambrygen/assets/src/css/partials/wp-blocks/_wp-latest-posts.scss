@@ -1,5 +1,4 @@
 .wp-block-latest-posts__featured-image {
-
 	a {
 		border-bottom: none;
 	}
@@ -20,7 +19,7 @@
 .wp-block-latest-posts__post-author,
 .wp-block-latest-posts__post-date {
 	font-size: 90%;
-	color: var(--gb_widget_latest_post_meta_color);
+	color: var(--theme_widget_latest_post_meta_color);
 }
 
 .wp-block-latest-posts.is-grid li {

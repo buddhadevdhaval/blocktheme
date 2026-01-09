@@ -3,37 +3,32 @@
 	"apiVersion": 2,
 	"name": "ambrygen/left-right-content",
 	"title": "Left Right Content",
-	"category": "layout",
+	"category": "ambrygen",
 	"icon": "align-wide",
-	"description": "A block with heading, editor, image, and left/right layout.",
+	"description": "A block with heading, content, image, and left/right layout.",
+	"textdomain": "ambrygen-vip-web",
 	"supports": {
 		"html": false
 	},
 	"editorScript": "file:./index.min.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
 	"attributes": {
 		"heading": {
 			"type": "string",
-			"source": "html",
-			"selector": "h2"
+			"default": ""
 		},
 		"headingTag": {
 			"type": "string",
 			"default": "h2"
 		},
-		"content": {
-			"type": "string",
-			"source": "html",
-			"selector": "div.content"
-		},
 		"imageUrl": {
-			"type": "string"
+			"type": "string",
+			"default": ""
 		},
 		"imagePosition": {
 			"type": "string",
 			"default": "left"
 		}
-	},
-	"textdomain": "ambrygen-vip-web",
-	"editorStyle": "file:./index.css",
-	"style": "file:./style-index.css"
+	}
 }

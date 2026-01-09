@@ -8,9 +8,10 @@
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
-	font-smoothing: antialiased;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 	outline: none;
-	text-rendering: optimizeLegibility;
+	text-rendering: optimizelegibility;
 }
 
 html {
@@ -18,12 +19,12 @@ html {
 }
 
 body {
-
-	@include font(axi, reg, family weight);
+	font-family: var(--font__main);
+	font-weight: 400;
 	position: relative;
-	font-size: var(--gb_font_size_6);
-	color: var(--gb_body_color);
-	background-color: var(--gb_body_bg);
+	font-size: var(--theme_font_size_6);
+	color: var(--theme_body_color);
+	background-color: var(--theme_body_bg);
 	line-height: 1.5;
 }
 
@@ -36,16 +37,16 @@ p {
 	margin: 0 0 30px;
 
 	&:last-child {
-		margin: 0 0 0;
+		margin: 0;
 	}
 }
 
 ::selection {
-	color: var(--gb_highlight_color);
-	background-color: var(--gb_highlight_bg);
+	color: var(--theme_highlight_color);
+	background-color: var(--theme_highlight_bg);
 }
 
 
 strong {
-	color: var(--gb_text_strong) !important;
+	color: var(--theme_text_strong) !important;
 }

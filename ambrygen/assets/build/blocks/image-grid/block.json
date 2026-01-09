@@ -3,12 +3,16 @@
 	"apiVersion": 2,
 	"name": "ambrygen/image-grid",
 	"title": "Image Grid",
-	"category": "layout",
+	"category": "ambrygen",
 	"icon": "grid-view",
 	"description": "A block to show multiple images in a grid with title and link.",
+	"textdomain": "ambrygen-vip-web",
 	"supports": {
 		"html": false
 	},
+	"editorScript": "file:./index.min.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
 	"attributes": {
 		"columns": {
 			"type": "number",
@@ -16,32 +20,13 @@
 		},
 		"items": {
 			"type": "array",
-			"default": [],
-			"source": "query",
-			"selector": ".grid-item",
-			"query": {
-				"imageUrl": {
-					"type": "string",
-					"source": "attribute",
-					"selector": "img",
-					"attribute": "src"
-				},
-				"title": {
-					"type": "string",
-					"source": "html",
-					"selector": "h4"
-				},
-				"link": {
-					"type": "string",
-					"source": "attribute",
-					"selector": "a",
-					"attribute": "href"
+			"default": [
+				{
+					"imageUrl": "",
+					"title": "Grid Item Title",
+					"link": ""
 				}
-			}
+			]
 		}
-	},
-	"textdomain": "ambrygen-vip-web",
-	"editorScript": "file:./index.min.js",
-	"editorStyle": "file:./index.css",
-	"style": "file:./style-index.css"
+	}
 }

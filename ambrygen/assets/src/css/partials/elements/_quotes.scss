@@ -11,14 +11,14 @@ q {
 
 blockquote {
 	position: relative;
-	color: var(--gb_blockquote_color);
+	color: var(--theme_blockquote_color);
 	padding: 0 0 0 100px;
-	margin: 0 0 0;
+	margin: 0;
 	font-size: 32px;
 
 
-	@media(max-width: 640px) {
-		padding: 55px 0 0 0;
+	@media (width <= 640px) {
+		padding: 55px 0 0;
 	}
 
 	p {
@@ -29,18 +29,18 @@ blockquote {
 		}
 	}
 
-	&:after {
-		background-image: url(../images/quote-orange-icon.svg);
+	&::after {
+		background-image: url("../images/quote-orange-icon.svg");
 		background-repeat: no-repeat;
 		background-size: contain;
-		content: '';
+		content: "";
 		height: 64px;
 		left: 0;
 		position: absolute;
 		top: 0;
 		width: 64px;
 
-		@media(max-width: 640px) {
+		@media (width <= 640px) {
 			height: 40px;
 			width: 40px;
 		}
@@ -48,10 +48,9 @@ blockquote {
 }
 
 .wp-block-quote {
-
 	&.has-text-align-right {
 		border-left: none;
-		border-right: 3px solid var(--gb_blockquote_border_color);
+		border-right: 3px solid var(--theme_blockquote_border_color);
 		padding: 5px 20px 5px 0;
 
 		&.is-style-plain {
@@ -79,10 +78,9 @@ blockquote {
 }
 
 figure {
-
 	&.wp-block-pullquote {
-		border-top: 3px solid var(--gb_blockquote_border_color);
-		border-bottom: 3px solid var(--gb_blockquote_border_color);
+		border-top: 3px solid var(--theme_blockquote_border_color);
+		border-bottom: 3px solid var(--theme_blockquote_border_color);
 		padding-left: 10px;
 		padding-right: 10px;
 
@@ -101,7 +99,7 @@ figure {
 
 q {
 	quotes: "\201C" "\201D";
-	color: var(--gb_quote_color);
+	color: var(--theme_quote_color);
 	position: relative;
 }
 
@@ -111,7 +109,7 @@ cite {
 	font-size: 80%;
 	text-transform: uppercase;
 	font-weight: 500;
-	color: var(--gb_blockqoute_cite_color);
+	color: var(--theme_blockqoute_cite_color);
 	font-family: "IBM Plex Mono", monospace;
 	font-style: italic;
 	position: relative;

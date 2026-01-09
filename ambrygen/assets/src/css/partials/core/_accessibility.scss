@@ -5,19 +5,18 @@
 ------------------------------------------------- */
 
 .screen-reader-text {
-	margin: 0px;
+	margin: 0;
 	overflow: hidden;
 	width: 1px;
 	position: absolute !important;
-	word-wrap: normal !important;
-	color: var(--gb_acc_btn_color);
-	background-color: var(--gb_acc_btn_bgcolor);
+	overflow-wrap: normal !important;
+	color: var(--theme_acc_btn_color);
+	background-color: var(--theme_acc_btn_bgcolor);
 	clip: auto !important;
 	border: unset !important;
 	border-radius: 0;
 	left: -100%;
-	@include font-size(14);
-
+	font-size: var(--theme_font_size_13);
 	clip-path: none;
 	font-weight: 700;
 	height: auto;
@@ -54,7 +53,6 @@ input[type="submit"] {
 }
 
 .contact-details {
-
 	a {
 		outline-offset: 0;
 	}
@@ -67,7 +65,6 @@ input[type="submit"] {
 .hero-ctn,
 .topbar,
 .header-nav ul li {
-
 	a:focus-visible {
 		outline-color: var(--wp--preset--color--black);
 	}

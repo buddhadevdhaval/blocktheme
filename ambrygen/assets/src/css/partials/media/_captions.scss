@@ -30,10 +30,8 @@
 	}
 
 	p.wp-caption-text {
-
-		@include font(axi, reg);
-
-		font-size: var(--gb_font_size_4);
+		// @include font(axi, reg);
+		font-size: var(--theme_font_size_4);
 		margin: 0;
 		text-transform: uppercase;
 		word-spacing: 2.5px;

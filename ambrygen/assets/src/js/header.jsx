@@ -1,4 +1,3 @@
-
 requireAll( require.context( './header/', true, /\.js$/ ) );
 
 function requireAll( r ) {

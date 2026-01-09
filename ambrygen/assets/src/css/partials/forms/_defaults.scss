@@ -12,7 +12,7 @@ button,
 [type="button"],
 [type="reset"],
 [type="submit"] {
-	appearance: button;
+	appearance: auto;
 }
 
 /**
@@ -67,7 +67,7 @@ button:-moz-focusring,
 }
 
 ::-webkit-file-upload-button {
-	appearance: button;
+	appearance: auto;
 	font: inherit;
 }
 

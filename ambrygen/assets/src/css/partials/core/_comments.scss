@@ -48,7 +48,7 @@
 
 .comment-meta {
 	margin-bottom: 30px;
-	color: var(--gb_comment_meta_color);
+	color: var(--theme_comment_meta_color);
 }
 
 .comment-author.vcard {
@@ -59,7 +59,7 @@
 	}
 
 	span {
-		@include font(axi, reg);
+		// @include font(axi, reg);
 	}
 }
 
@@ -67,7 +67,7 @@
 	font-size: 90%;
 
 	a {
-		color: var(--gb_comment_metadata_color);
+		color: var(--theme_comment_metadata_color);
 		border-bottom: transparent;
 	}
 }
@@ -88,7 +88,7 @@ ol.comment-list {
 	li.comment {
 		margin-bottom: 30px;
 		padding: 30px 0 0;
-		border-top: 1px solid var(--gb_comments_list_border_color);
+		border-top: 1px solid var(--theme_comments_list_border_color);
 
 		&::before {
 			display: none !important;
@@ -134,8 +134,8 @@ ol.comment-list {
 }
 
 a.comment-reply-link {
-	background-color: var(--gb_comments_reply_btn_bgcolor);
-	color: var(--gb_comments_reply_btn_color);
+	background-color: var(--theme_comments_reply_btn_bgcolor);
+	color: var(--theme_comments_reply_btn_color);
 	padding: 6px 11px 5px;
 	font-size: 90%;
 	height: 37px;
@@ -144,7 +144,7 @@ a.comment-reply-link {
 	border: 2px solid transparent;
 
 	&:hover {
-		background-color: var(--gb_comments_reply_btn_bgcolor_hover);
-		color: var(--gb_comments_reply_btn_color_hover);
+		background-color: var(--theme_comments_reply_btn_bgcolor_hover);
+		color: var(--theme_comments_reply_btn_color_hover);
 	}
 }

@@ -1,8 +1,7 @@
-@import "header";
-@import "menu-desktop";
-@import "menu-mobile";
-@import "footer";
-@import "containers";
-@import "spacers";
-@import "button";
-@import "modal";
+@use "header";
+@use "menu-desktop";
+@use "menu-mobile";
+@use "footer";
+@use "containers";
+@use "spacers";
+@use "button";

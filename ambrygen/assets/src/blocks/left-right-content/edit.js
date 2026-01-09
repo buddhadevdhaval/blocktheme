@@ -22,18 +22,16 @@ const INNER_BLOCKS_TEMPLATE = [
 	[
 		'core/paragraph',
 		{
-			content: __( 'Add your content here. This text can be changed.', 'ambrygen' ),
+			content: __(
+				'Add your content here. This text can be changed.',
+				'ambrygen'
+			),
 		},
 	],
 ];
 
 export default function Edit( { attributes, setAttributes } ) {
-	const {
-		heading,
-		headingTag,
-		imageUrl,
-		imagePosition,
-	} = attributes;
+	const { heading, headingTag, imageUrl, imagePosition } = attributes;
 
 	const blockProps = useBlockProps( {
 		className: `left-right-block ${ imagePosition }`,
@@ -75,20 +73,19 @@ export default function Edit( { attributes, setAttributes } ) {
 
 			<div { ...blockProps }>
 				<div className="content-wrapper">
-
-					{/* Left image */}
+					{ /* Left image */ }
 					{ imagePosition === 'left' && imageUrl && (
 						<div className="image-wrapper">
 							<img src={ imageUrl } alt="" />
 						</div>
 					) }
 
-					{/* Text content */}
+					{ /* Text content */ }
 					<div className="text-wrapper">
 						<RichText
 							tagName={ headingTag }
 							value={ heading }
-							placeholder={ __( 'Heading...', 'ambrygen' ) }
+							placeholder={ __( 'Heading…', 'ambrygen' ) }
 							onChange={ ( value ) =>
 								setAttributes( { heading: value } )
 							}
@@ -106,14 +103,14 @@ export default function Edit( { attributes, setAttributes } ) {
 						/>
 					</div>
 
-					{/* Right image */}
+					{ /* Right image */ }
 					{ imagePosition === 'right' && imageUrl && (
 						<div className="image-wrapper">
 							<img src={ imageUrl } alt="" />
 						</div>
 					) }
 
-					{/* Image selector */}
+					{ /* Image selector */ }
 					{ ! imageUrl && (
 						<MediaUploadCheck>
 							<MediaUpload
@@ -131,11 +128,8 @@ export default function Edit( { attributes, setAttributes } ) {
 							/>
 						</MediaUploadCheck>
 					) }
-
 				</div>
 			</div>
 		</Fragment>
 	);
 }
-
-console.log( 'Left Right Content Block Edit Loaded' );

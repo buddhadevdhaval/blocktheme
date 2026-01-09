@@ -38,7 +38,7 @@ final class Blocks {
 		$blocks_dir = get_template_directory() . '/assets/build/blocks';
 
 
-		$manifest_file = $blocks_dir . '/blocks-manifest.php';
+		$manifest_file = get_template_directory() . '/assets/build/blocks-manifest.php'; 
 
 		if ( file_exists( $manifest_file ) ) {
 
@@ -49,7 +49,6 @@ final class Blocks {
 					$manifest_file
 				);
 			}
-			
 		}
 	}
 }

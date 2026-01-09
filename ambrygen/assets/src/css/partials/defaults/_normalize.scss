@@ -1,8 +1,8 @@
-/*-------------------------------------------------
+/* -------------------------------------------------
 >> Base Styles
 ---------------------------------------------------
 >> Do not edit these styles
--------------------------------------------------*/
+------------------------------------------------- */
 html,
 body,
 div,
@@ -90,7 +90,6 @@ video {
 	font-size: 100%;
 	outline: 0;
 	vertical-align: baseline;
-	// background: transparent;
 }
 
 *,
@@ -100,9 +99,8 @@ video {
 }
 
 html {
-	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
 	-webkit-font-smoothing: antialiased;
-	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
 	scroll-padding: 100px;
 	scroll-behavior: smooth;
 }
@@ -124,7 +122,6 @@ section {
 a {
 	background-color: transparent;
 	-webkit-font-smoothing: antialiased;
-	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
 }
 
 img {

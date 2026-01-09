@@ -37,4 +37,3 @@ registerBlockType( metadata.name, {
 	 */
 	save,
 } );
-console.log("Hero Block");

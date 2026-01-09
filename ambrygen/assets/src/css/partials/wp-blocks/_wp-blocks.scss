@@ -1,64 +1,64 @@
 /* -------------------------------------------------
 >> Accessibility styles for WordPress Gallery Block
 ------------------------------------------------- */
-@import "wp-gallery";
+@use "wp-gallery";
 
 /* -------------------------------------------------
 >> Accessibility styles for WordPress Cover Block
 ------------------------------------------------- */
-@import "wp-cover";
+@use "wp-cover";
 
 /* -------------------------------------------------
 >> Accessibility styles for WordPress Calender Block
 ------------------------------------------------- */
-@import "wp-calendar";
+@use "wp-calendar";
 
 /* -------------------------------------------------
 >> Accessibility styles for WordPress Categories Block
 ------------------------------------------------- */
-@import "wp-categories";
+@use "wp-categories";
 
 /* -------------------------------------------------
 >> Accessibility styles for WordPress Image Block
 ------------------------------------------------- */
-@import "wp-image";
+@use "wp-image";
 
 /* -------------------------------------------------
 >> Accessibility styles for WordPress Latest Comments Block
 ------------------------------------------------- */
-@import "wp-latest-comments";
+@use "wp-latest-comments";
 
 /* -------------------------------------------------
 >> Accessibility styles for WordPress Latest Posts Block
 ------------------------------------------------- */
-@import "wp-latest-posts";
+@use "wp-latest-posts";
 
 /* -------------------------------------------------
 >> Accessibility styles for WordPress Quote Block
 ------------------------------------------------- */
-@import "wp-quote";
+@use "wp-quote";
 
 /* -------------------------------------------------
 >> Accessibility styles for WordPress PullQuote Block
 ------------------------------------------------- */
-@import "wp-pullquote";
+@use "wp-pullquote";
 
 /* -------------------------------------------------
 >> Accessibility styles for WordPress RSS Feed Block
 ------------------------------------------------- */
-@import "wp-rss-feed";
+@use "wp-rss-feed";
 
 /* -------------------------------------------------
 >> Accessibility styles for WordPress Search Block
 ------------------------------------------------- */
-@import "wp-search";
+@use "wp-search";
 
 /* -------------------------------------------------
 >> Accessibility styles for WordPress Social-links Block
 ------------------------------------------------- */
-@import "wp-social-links";
+@use "wp-social-links";
 
 /* -------------------------------------------------
 >> Accessibility styles for WordPress Tag Cloud Block
 ------------------------------------------------- */
-@import "wp-tag-cloud";
+@use "wp-tag-cloud";

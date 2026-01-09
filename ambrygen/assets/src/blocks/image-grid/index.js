@@ -1,4 +1,3 @@
-
 import edit from './edit';
 import save from './save';
 import metadata from './block.json';
@@ -7,9 +6,7 @@ import './editor.scss';
 
 import { registerBlockType } from '@wordpress/blocks';
 
-registerBlockType(metadata.name, {
-    edit,
-    save,
-});
-console.log('Image Grid block registered 12.');
-
+registerBlockType( metadata.name, {
+	edit,
+	save,
+} );

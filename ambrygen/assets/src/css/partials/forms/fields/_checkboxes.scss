@@ -10,12 +10,12 @@
 	position: absolute;
 }
 
-[type="checkbox"]:checked+label,
-[type="checkbox"]:not(:checked)+label,
-[type="checkbox"]:checked+span,
-[type="checkbox"]:not(:checked)+span {
+[type="checkbox"]:checked + label,
+[type="checkbox"]:not(:checked) + label,
+[type="checkbox"]:checked + span,
+[type="checkbox"]:not(:checked) + span {
 	box-sizing: border-box;
-	color: var(--gb_radio_color);
+	color: var(--theme_radio_color);
 	cursor: pointer;
 	display: inline-block;
 	line-height: 20px;
@@ -24,13 +24,13 @@
 	position: relative;
 }
 
-[type="checkbox"]:checked+label::before,
-[type="checkbox"]:not(:checked)+label::before,
-[type="checkbox"]:checked+span::before,
-[type="checkbox"]:not(:checked)+span::before {
-	background-color: var(--gb_radio_bgcolor);
+[type="checkbox"]:checked + label::before,
+[type="checkbox"]:not(:checked) + label::before,
+[type="checkbox"]:checked + span::before,
+[type="checkbox"]:not(:checked) + span::before {
+	background-color: var(--theme_radio_bgcolor);
 	border-radius: 4px;
-	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.10);
+	box-shadow: 0 2px 2px rgb(0 0 0 / 10%);
 	content: "";
 	height: 20px;
 	left: 0;
@@ -40,11 +40,11 @@
 	border: 1px solid #ccc;
 }
 
-[type="checkbox"]:checked+label::after,
-[type="checkbox"]:not(:checked)+label::after,
-[type="checkbox"]:checked+span::after,
-[type="checkbox"]:not(:checked)+span::after {
-	background-color: var(--gb_radio_after_bgcolor);
+[type="checkbox"]:checked + label::after,
+[type="checkbox"]:not(:checked) + label::after,
+[type="checkbox"]:checked + span::after,
+[type="checkbox"]:not(:checked) + span::after {
+	background-color: var(--theme_radio_after_bgcolor);
 	border-radius: 2px;
 	content: "";
 	height: 10px;
@@ -55,14 +55,14 @@
 	width: 10px;
 }
 
-[type="checkbox"]:not(:checked)+label::after,
-[type="checkbox"]:not(:checked)+span::after {
+[type="checkbox"]:not(:checked) + label::after,
+[type="checkbox"]:not(:checked) + span::after {
 	opacity: 0;
 	transform: scale(0);
 }
 
-[type="checkbox"]:checked+label::after,
-[type="checkbox"]:checked+span::after {
+[type="checkbox"]:checked + label::after,
+[type="checkbox"]:checked + span::after {
 	opacity: 1;
 	transform: scale(1);
 }

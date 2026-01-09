@@ -96,14 +96,19 @@ module.exports = {
 				{
 					from: 'assets/src/blocks/**/block.json',
 					to( { absoluteFilename } ) {
-						const normalized = absoluteFilename.replace( /\\/g, '/' );
-						const match = normalized.match( /blocks\/([^/]+)\/block\.json$/ );
+						const normalized = absoluteFilename.replace(
+							/\\/g,
+							'/'
+						);
+						const match = normalized.match(
+							/blocks\/([^/]+)\/block\.json$/
+						);
 
 						if ( ! match ) {
 							throw new Error( 'Invalid block.json path' );
 						}
 
-						return `blocks/${ match[1] }/block.json`;
+						return `blocks/${ match[ 1 ] }/block.json`;
 					},
 
 					transform( content ) {

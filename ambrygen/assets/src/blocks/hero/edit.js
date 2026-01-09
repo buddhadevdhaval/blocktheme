@@ -27,8 +27,8 @@ import './editor.scss';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
  *
- * @param {Object} props Block properties
- * @param {Object} props.attributes Block attributes
+ * @param {Object}   props               Block properties
+ * @param {Object}   props.attributes    Block attributes
  * @param {Function} props.setAttributes Function to set attributes
  * @return {Element} Element to render.
  */
@@ -41,18 +41,24 @@ export default function Edit( { attributes, setAttributes } ) {
 				tagName="h2"
 				value={ heading }
 				onChange={ ( value ) => setAttributes( { heading: value } ) }
-				placeholder={ __( 'Hero heading...', 'hero' ) }
+				placeholder={ __( 'Hero heading…', 'hero' ) }
 				className="hero-heading"
 			/>
 			<RichText
 				tagName="p"
 				value={ content }
 				onChange={ ( value ) => setAttributes( { content: value } ) }
-				placeholder={ __( 'Hero content...', 'hero' ) }
+				placeholder={ __( 'Hero content…', 'hero' ) }
 				className="hero-content"
 			/>
 
-			<div { ...useBlockProps.save({className: 'body-small heading-6'}) }>This is Priiyank</div>
+			<div
+				{ ...useBlockProps.save( {
+					className: 'body-small heading-6',
+				} ) }
+			>
+				This is Priiyank
+			</div>
 		</div>
 	);
 }

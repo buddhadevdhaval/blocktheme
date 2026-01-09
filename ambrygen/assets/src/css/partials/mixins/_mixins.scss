@@ -1,90 +1,54 @@
 @use "sass:math";
 
-/*
-Rem output with px fallback
-*/
-@mixin font-size($sizeValue: 1) {
-	font-size: ($sizeValue * 10) * 1px;
-	font-size: $sizeValue * 10px;
-}
+/* -------------------------------------------------
+   Grid / column helpers
+------------------------------------------------- */
 
-/*
-Rem output with px fallback with !important
-*/
-@mixin font-size-imp($sizeValue: 1) {
-	font-size: ($sizeValue * 10) * 1px !important;
-	font-size: $sizeValue * 10px !important;
-}
+@mixin fluid-columns($columns, $min-width, $gap, $row-gap: 0) {
+	$column-width: 100% / $columns;
+	$min-width-calc: min(clamp($min-width, #{$column-width} - #{$gap}, 100%), 100%);
 
-/*
-Column width with margin
-*/
+	grid-template-columns: repeat(auto-fit, minmax($min-width-calc, 1fr));
 
-
-/*
-Column width with margin
-*/
-@mixin fluidColumns($numberColumns, $minWidth, $gap, $rowGap: 0) {
-	$noOfColumns: 100% / $numberColumns;
-	$minWidthCalc: min(clamp($minWidth, #{$noOfColumns} - #{$gap}, 100%), 100%);
-
-	grid-template-columns: repeat(auto-fit, minmax($minWidthCalc, 1fr));
-
-	@if $rowGap !=0 {
-		row-gap: $rowGap;
-		column-gap: $gap;
-	}
-
-	@else {
+	@if $row-gap != 0 {
+		gap: $row-gap $gap;
+	} @else {
 		gap: $gap;
 	}
 }
 
-@mixin column($numberColumns, $gap) {
-	width: math.div(100%, $numberColumns) - math.div(($gap * ($numberColumns - 1)), $numberColumns);
+@mixin column($columns, $gap) {
+	width: math.div(100%, $columns) - math.div(($gap * ($columns - 1)), $columns);
 	margin-right: $gap;
 
-
-	@if $numberColumns ==2 {
-
+	@if $columns == 2 {
 		&:nth-child(even) {
 			margin-right: 0;
 		}
-	}
-
-	@else {
-		&:nth-child(#{$numberColumns}n + #{$numberColumns}) {
+	} @else {
+		&:nth-child(#{$columns}n + #{$columns}) {
 			margin-right: 0;
 		}
 	}
 }
 
-/*
-Mixin for transition
-*/
-@mixin transition($property, $duration, $animation) {
-	transition: $property $duration $animation;
-}
+/* -------------------------------------------------
+   Utility helpers
+------------------------------------------------- */
 
-@mixin background-image($image, $background_position, $background_size, $background_repeat, $background_height, $background_width) {
-
-	@if $image !="" {
+@mixin background-image($image,
+$position,
+$size,
+$repeat,
+$height,
+$width) {
+	@if $image != "" {
 		background-image: url("../images/#{$image}");
 	}
 
-	background-repeat: $background_repeat;
-	background-position: $background_position;
-	background-size: $background_size;
-	height: $background_height;
-	width: $background_width;
-}
-
-
-// PX to Rem
-
-@mixin font-size($value) {
-	$baseFontSize: 16; // Set your base font size here
-	$remValue: math.div($value , $baseFontSize);
-
-	font-size: #{$remValue}rem;
+	background-repeat: $repeat;
+	background-position: $position;
+	background-size: $size;
+	height: $height;
+	width: $width;
 }

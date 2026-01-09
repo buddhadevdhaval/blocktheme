@@ -13,7 +13,7 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#save
  *
- * @param {Object} props Block properties
+ * @param {Object} props            Block properties
  * @param {Object} props.attributes Block attributes
  * @return {Element} Element to render.
  */
@@ -32,7 +32,13 @@ export default function save( { attributes } ) {
 				value={ content }
 				className="hero-content"
 			/>
-			<div { ...useBlockProps.save({className: 'body-small heading-6'}) }>This is Priiyank</div>
+			<div
+				{ ...useBlockProps.save( {
+					className: 'body-small heading-6',
+				} ) }
+			>
+				This is Priiyank
+			</div>
 		</div>
 	);
 }

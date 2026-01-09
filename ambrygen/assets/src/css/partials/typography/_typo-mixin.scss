@@ -1,0 +1,9 @@
+@mixin body-small(
+	$color: var(--theme_blue),
+	$size: var(--theme_font_size_6),
+	$line-height: 1.6
+) {
+	font-size: $size;
+	line-height: $line-height;
+	color: $color;
+}

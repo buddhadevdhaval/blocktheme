@@ -1,0 +1,111 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ambrygen/ai-health-hero",
+	"title": "AI Health Hero",
+	"category": "design",
+	"icon": "heart",
+	"description": "Hero section with AI healthcare visuals, stats counters, and flexible media placement.",
+	"supports": {
+		"html": false,
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"__experimentalLayout": {
+			"allowSwitching": false,
+			"allowInheriting": false
+		}
+	},
+	"attributes": {
+		"heading": {
+			"type": "string",
+			"default": "Transforming Healthcare with AI Innovation"
+		},
+		"content": {
+			"type": "string",
+			"default": "Leveraging artificial intelligence to revolutionize patient care, diagnostics, and medical research."
+		},
+		"counter1Number": {
+			"type": "string",
+			"default": "100"
+		},
+		"counter1Prefix": {
+			"type": "string",
+			"default": ""
+		},
+		"counter1Suffix": {
+			"type": "string",
+			"default": ""
+		},
+		"counter1Label": {
+			"type": "string",
+			"default": "Publications"
+		},
+		"counter2Number": {
+			"type": "string",
+			"default": "50"
+		},
+		"counter2Prefix": {
+			"type": "string",
+			"default": ""
+		},
+		"counter2Suffix": {
+			"type": "string",
+			"default": "+"
+		},
+		"counter2Label": {
+			"type": "string",
+			"default": "Partners"
+		},
+		"counter3Number": {
+			"type": "string",
+			"default": ""
+		},
+		"counter3Prefix": {
+			"type": "string",
+			"default": ""
+		},
+		"counter3Suffix": {
+			"type": "string",
+			"default": ""
+		},
+		"counter3Label": {
+			"type": "string",
+			"default": ""
+		},
+		"counter4Number": {
+			"type": "string",
+			"default": ""
+		},
+		"counter4Prefix": {
+			"type": "string",
+			"default": ""
+		},
+		"counter4Suffix": {
+			"type": "string",
+			"default": ""
+		},
+		"counter4Label": {
+			"type": "string",
+			"default": ""
+		},
+		"imageTop": {
+			"type": "string",
+			"default": ""
+		},
+		"imageBottom": {
+			"type": "string",
+			"default": ""
+		},
+		"logoImage": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"editorScript": "file:./index.min.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"textdomain": "ambrygen",
+	"viewScript": "file:./view.js"
+}

@@ -1,0 +1,39 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "ambrygen/newsletter-signup",
+	"title": "Newsletter Signup",
+	"category": "design",
+	"icon": "email",
+	"description": "Newsletter signup layout with image + heading.",
+	"supports": {
+		"html": false,
+		"align": [
+			"wide",
+			"full"
+		],
+		"color": {
+			"background": true,
+			"text": true
+		}
+	},
+	"attributes": {
+		"heading": {
+			"type": "string",
+			"default": "Stay Informed"
+		},
+		"image": {
+			"type": "string",
+			"default": ""
+		},
+		"backgroundColor": {
+			"type": "string"
+		},
+		"style": {
+			"type": "object"
+		}
+	},
+	"editorScript": "file:./index.min.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

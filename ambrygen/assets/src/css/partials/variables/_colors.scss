@@ -1,0 +1,270 @@
+// Theme Primary
+$theme_color_primary: #00a4eb;
+$theme_color_on_primary: #fff;
+$theme_primary_white: #fff;
+$theme_primary_pale_blue: #B9DCFC;
+
+// Theme Secondary
+$theme_color_secondary: #0013ff;
+
+// Theme Dark
+$theme_black: #000;
+$theme_black_1: #14191f;
+$theme_black_2: #606364;
+
+// Theme Light
+$theme_white: #fff;
+$theme_white_1: #f1f1f1;
+$theme_white_2: #f1e9e9;
+
+// Theme Colors
+$theme_gray: #e0e0e0;
+$theme_gray_1: #e6e6e6;
+$theme_gray_2: #eee;
+$theme_blue: #0013ff;
+$theme_blue_1: #00a4eb;
+$theme_blue_2: #2ca8dd;
+$theme_navy: #091a17;
+$theme_navy_1: #15332e;
+$theme_navy_2: #2f655c;
+$theme_red: #f00;
+$theme_sea_green: #04c3b4;
+$theme_transparent: transparent;
+
+// Text Variations
+$theme_regular_text: #14191f;
+$theme_dark_text: #14191f;
+$theme_white_text: #f7f7f7;
+$theme_light_text: #606364;
+
+// Fixed variable Colors
+$theme_success: #198754;
+$theme_info: #0dcaf0;
+$theme_warning: #ffc107;
+$theme_danger: #dc3545;
+$theme_light: #f8f9fa;
+$theme_dark: #212529;
+$theme_signal: #d14b3c;
+$theme_signal_bg: #fbede9;
+$theme_color_background: #fff;
+$theme_color_on_background: #14191f;
+
+// Borders
+$theme_border: #30353c;
+$theme_border_1: #545454;
+$theme_border_2: #adadad;
+$theme_border_3: #e0e0e0;
+
+// Pure Colors
+$theme_pure_black: #000;
+
+// Form Fields
+$theme_field_bg: #fff;
+$theme_light_field_bg: #fff;
+$theme_danger_bg: #f8d7da;
+$theme_success_bg: #d4edda;
+
+/* -------------------------------------------------
+>> Semantic Colors (Composed from base colors)
+------------------------------------------------- */
+
+// Text Colors
+$theme_body_color: $theme_color_on_background;
+$theme_body_bg: $theme_color_background;
+$theme_text_strong: $theme_black;
+$theme_highlight_color: $theme_color_on_primary;
+$theme_highlight_bg: $theme_color_primary;
+$theme_caption: $theme_black_2;
+
+// Headings
+$theme_heading_color: inherit;
+$theme_heading_link_color: $theme_dark_text;
+$theme_heading_link_color_hover: $theme_dark_text;
+
+// Link colors
+$theme_link_color: $theme_color_primary;
+$theme_link_color_hover: $theme_color_primary;
+$theme_link_border_color: $theme_color_primary;
+$theme_link_border_color_hover: transparent;
+
+// Lists Colors
+$theme_list_ul_marker_color: $theme_color_primary;
+$theme_list_ol_marker_color: $theme_color_primary;
+
+// Blockquote Colors
+$theme_blockquote_color: $theme_regular_text;
+$theme_blockquote_border_color: $theme_regular_text;
+$theme_quote_color: $theme_regular_text;
+$theme_blockqoute_cite_color: $theme_light_text;
+
+// Tables Colors
+$theme_table_border_color: $theme_border;
+$theme_table_head_border_color: $theme_dark_text;
+$theme_table_foot_border_color: $theme_dark_text;
+
+// Formatting
+$theme_strong_color: $theme_regular_text;
+$theme_underline_border_color: $theme_regular_text;
+$theme_abbr_border_color: $theme_regular_text;
+$theme_delete_color: $theme_danger;
+$theme_insert_color: $theme_success;
+$theme_insert_border_color: $theme_success;
+
+// Code
+$theme_code_color: $theme_white_text;
+$theme_code_bgcolor: $theme_dark_text;
+$theme_pre_color: $theme_white_text;
+$theme_pre_bgcolor: $theme_dark_text;
+$theme_mark_bgcolor: $theme_dark_text;
+$theme_mark_color: $theme_white_text;
+
+// Graphical elements
+$theme_hr_color: $theme_border_2;
+
+// Form Fields
+$theme_input_color: $theme_regular_text;
+$theme_input_bg: $theme_light_field_bg;
+$theme_input_border_color: $theme_border;
+$theme_input_focus_color: $theme_black;
+$theme_input_focus_bgcolor: $theme_white;
+$theme_input_focus_border_color: $theme_border_2;
+$theme_disabled_input_bgcolor: $theme_field_bg;
+$theme_disabled_input_border_color: $theme_border_1;
+$theme_placeholder_color: $theme_light_text;
+$theme_range_track_bgcolor: $theme_field_bg;
+$theme_range_thumb_bgcolor: $theme_color_primary;
+$theme_color_field_border_color: $theme_border;
+$theme_color_field_bgcolor: $theme_field_bg;
+$theme_radio_color: $theme_regular_text;
+$theme_radio_border_color: $theme_border;
+$theme_radio_bgcolor: $theme_field_bg;
+$theme_radio_after_bgcolor: $theme_color_primary;
+$theme_checkbox_color: $theme_regular_text;
+$theme_checkbox_border_color: $theme_border;
+$theme_checkbox_bgcolor: $theme_field_bg;
+$theme_checkbox_after_bgcolor: $theme_color_primary;
+$theme_progress_bgcolor: $theme_field_bg;
+$theme_progress_value_bgcolor: $theme_color_primary;
+$theme_meter_bgcolor: $theme_field_bg;
+$theme_meter_value_bgcolor: $theme_color_primary;
+
+// Button
+$theme_button_color: $theme_white_text;
+$theme_button_bgcolor: $theme_color_secondary;
+$theme_button_color_hover: $theme_black;
+$theme_button_bgcolor_hover: $theme_primary_pale_blue;
+$theme_button_border_color: $theme_color_secondary;
+$theme_button_border_color_hover: $theme_border;
+$theme_reset_button_bgcolor: $theme_button_bgcolor;
+$theme_reset_button_color: $theme_white_text;
+
+// Buttons layer
+$theme_theme_btn_color: $theme_button_color;
+$theme_theme_btn_bgcolor: $theme_button_bgcolor;
+$theme_theme_btn_color_hover: $theme_button_color_hover;
+$theme_theme_btn_bgcolor_hover: $theme_button_bgcolor_hover;
+$theme_theme_btn_border_color: $theme_button_border_color;
+$theme_theme_btn_border_color_hover: $theme_button_border_color_hover;
+
+// Button hover
+$theme_button_bg: $theme_button_bgcolor;
+$theme_button_bg_hover: $theme_color_secondary;
+
+// Date Picker
+$theme_datepicker_bg_color: $theme_gray;
+$theme_datepicker_select_bgcolor: $theme_white;
+$theme_datepicker_link_color: $theme_color_secondary;
+$theme_datepicker_link_active_color: $theme_color_primary;
+$theme_datepicker_calendar: $theme_white_text;
+$theme_datepicker_th_bgcolor: $theme_border_1;
+$theme_datepicker_even_tr_td_bgcolor: $theme_border_1;
+$theme_datepicker_border_color: $theme_border_1;
+$theme_datepicker_date_color: $theme_dark_text;
+
+// Errors & Confirmation
+$theme_valiation_error_bg_color: $theme_danger_bg;
+$theme_valiation_message_color: $theme_danger;
+$theme_error_field_border_color: $theme_danger;
+$theme_valiation_error_color: $theme_danger;
+$theme_confirmation_message_bgcolor: $theme_success_bg;
+$theme_confirmation_message_color: $theme_dark_text;
+$theme_confirmation_message_border_color: $theme_danger;
+$theme_required_text_color: $theme_danger;
+$theme_invalid_error_border_color: $theme_danger;
+$theme_hubspot_error_label_color: $theme_danger;
+$theme_hubspot_required_color: $theme_danger;
+$theme_fileupload_rule_color: $theme_light_text;
+$theme_error_menu_color: $theme_dark_text;
+
+// Accessibility
+$theme_acc_btn_color: $theme_white_text;
+$theme_acc_btn_bgcolor: $theme_button_bg;
+$theme_acc_btn_shadow: $theme_danger;
+
+// Comments Box
+$theme_comments_reply_btn_bgcolor: $theme_button_bg;
+$theme_comments_reply_btn_color: $theme_white_text;
+$theme_comments_reply_btn_bgcolor_hover: $theme_button_bg_hover;
+$theme_comments_reply_btn_color_hover: $theme_white_text;
+$theme_comment_meta_color: $theme_dark_text;
+$theme_comment_metadata_color: $theme_light_text;
+$theme_comments_list_border_color: $theme_border;
+$theme_widget_comments_meta_color: $theme_light_text;
+
+// Pagination
+$theme_pagination_bgcolor: $theme_blue_1;
+$theme_pagination_color: $theme_white;
+$theme_pagination_color_hover: $theme_white;
+$theme_pagination_bgcolor_hover: $theme_border_1;
+$theme_pagination_bgcolor_current: $theme_border_1;
+$theme_pagination_color_current: $theme_white;
+$theme_pagination_first_bgcolor: $theme_border_1;
+$theme_pagination_first_color: $theme_dark_text;
+$theme_pagination_border: $theme_transparent;
+
+// Widgets
+$theme_widget_latest_post_meta_color: $theme_danger;
+$theme_widget_rss_feed_meta_color: $theme_danger;
+$theme_widget_search_button_color: $theme_pure_black;
+$theme_wp_table_block_stripe_bg_color: $theme_gray;
+
+// Breadcrumbs
+$theme_breadcrumb_color: $theme_pure_black;
+$theme_breadcrumb_link_color: $theme_pure_black;
+$theme_breadcrumb_border_color: transparent;
+$theme_breadcrumb_border_color_hover: $theme_pure_black;
+$theme_breadcrumb_span_color: $theme_pure_black;
+
+// Header
+$theme_header_bgcolor: $theme_transparent;
+$theme_header_color: $theme_black;
+$theme_header_color_hover: $theme_black;
+$theme_header_bgcolor_sticky: $theme_white;
+$theme_header_nav_border_color: $theme_dark_text;
+$theme_header_submenu_bgcolor: $theme_gray;
+$theme_header_submenu_color: $theme_header_color;
+$theme_header_submenu_color_hover: $theme_header_color_hover;
+$theme_header_mobile_color: $theme_dark_text;
+$theme_header_mobile_submenu_color: $theme_dark_text;
+$theme_nav_overlay_bgcolor: $theme_white;
+$theme_mobile_nav_icon_bgcolor: $theme_dark_text;
+$theme_abbr_border: $theme_dark_text;
+
+// Top Bar
+$theme_topbar_bgcolor: $theme_color_primary;
+$theme_topbar_color: $theme_white;
+$theme_topbar_link_color: $theme_white;
+
+// Footer
+$theme_footer_bgcolor: $theme_dark_text;
+$theme_footer_color: $theme_white_text;
+$theme_footer_color_hover: $theme_white_text;
+$theme_f_nav_color: $theme_footer_color;
+$theme_f_nav_color_hover: $theme_footer_color_hover;
+$theme_f_nav_border_color: $theme_footer_color;
+$theme_f_nav_border_color_hover: $theme_footer_color_hover;
+$theme_copyright_color: $theme_white_text;
+$theme_legal_nav_color: $theme_white_text;
+$theme_legal_nav_border_color: $theme_white_text;
+$theme_legal_nav_border_color_hover: $theme_white_text;
+$theme_legal_text_color: $theme_white_text;

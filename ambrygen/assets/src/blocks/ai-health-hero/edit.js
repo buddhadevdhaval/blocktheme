@@ -30,6 +30,11 @@ import {
 import { Button } from '@wordpress/components';
 
 /**
+ * Import validation utilities
+ */
+import { validateNumber } from '../../utils/validation.js';
+
+/**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
  *
@@ -54,34 +59,26 @@ export default function Edit( { attributes, setAttributes } ) {
 	const {
 		heading,
 		content,
-		counter1Number,
-		counter1Prefix,
-		counter1Suffix,
-		counter1Label,
-		counter2Number,
-		counter2Prefix,
-		counter2Suffix,
-		counter2Label,
-		counter3Number,
-		counter3Prefix,
-		counter3Suffix,
-		counter3Label,
-		counter4Number,
-		counter4Prefix,
-		counter4Suffix,
-		counter4Label,
+		counters,
 		imageTop,
+		imageTopAlt,
 		imageBottom,
+		imageBottomAlt,
 		logoImage,
+		logoImageAlt,
 	} = attributes;
 
 	/**
-	 * Utility function to restrict input to numeric values only.
-	 *
-	 * @param {string} value Input string to filter
-	 * @return {string} Numeric-only string
+	 * Updates a specific counter in counters array
+	 * @param {number} index Counter index
+	 * @param {string} field Field name (number, prefix, suffix, label)
+	 * @param {string} value New value
 	 */
-	const updateNumber = ( value ) => value.replace( /[^0-9]/g, '' );
+	const updateCounter = ( index, field, value ) => {
+		const newCounters = [ ...counters ];
+		newCounters[ index ] = { ...newCounters[ index ], [ field ]: value };
+		setAttributes( { counters: newCounters } );
+	};
 
 	return (
 		<div { ...useBlockProps() }>
@@ -91,11 +88,15 @@ export default function Edit( { attributes, setAttributes } ) {
 					<MediaUploadCheck>
 						<MediaUpload
 							onSelect={ ( img ) =>
-								setAttributes( { logoImage: img.url } )
+								setAttributes( {
+									logoImage: img.url,
+									logoImageId: img.id,
+									logoImageAlt: img.alt || '',
+								} )
 							}
 							allowedTypes={ [ 'image' ] }
 							render={ ( { open } ) => (
-								<Button onClick={ open } isSecondary>
+								<Button onClick={ open } variant="secondary">
 									{ logoImage
 										? 'Change Logo'
 										: 'Upload Logo' }
@@ -103,7 +104,15 @@ export default function Edit( { attributes, setAttributes } ) {
 							) }
 						/>
 					</MediaUploadCheck>
-					{ logoImage && <img src={ logoImage } alt="Logo" /> }
+					{ logoImage && (
+						<img
+							src={ logoImage }
+							alt={
+								logoImageAlt ||
+								__( 'Company logo', 'ambrygen-web' )
+							}
+						/>
+					) }
 				</div>
 
 				{ /* Top media */ }
@@ -111,11 +120,15 @@ export default function Edit( { attributes, setAttributes } ) {
 					<MediaUploadCheck>
 						<MediaUpload
 							onSelect={ ( img ) =>
-								setAttributes( { imageTop: img.url } )
+								setAttributes( {
+									imageTop: img.url,
+									imageTopId: img.id,
+									imageTopAlt: img.alt || '',
+								} )
 							}
 							allowedTypes={ [ 'image' ] }
 							render={ ( { open } ) => (
-								<Button onClick={ open } isSecondary>
+								<Button onClick={ open } variant="secondary">
 									{ imageTop
 										? 'Change Image'
 										: 'Upload Top Image' }
@@ -123,7 +136,15 @@ export default function Edit( { attributes, setAttributes } ) {
 							) }
 						/>
 					</MediaUploadCheck>
-					{ imageTop && <img src={ imageTop } alt="Top Media" /> }
+					{ imageTop && (
+						<img
+							src={ imageTop }
+							alt={
+								imageTopAlt ||
+								__( 'Hero top image', 'ambrygen-web' )
+							}
+						/>
+					) }
 				</div>
 
 				{ /* Bottom media */ }
@@ -131,11 +152,15 @@ export default function Edit( { attributes, setAttributes } ) {
 					<MediaUploadCheck>
 						<MediaUpload
 							onSelect={ ( img ) =>
-								setAttributes( { imageBottom: img.url } )
+								setAttributes( {
+									imageBottom: img.url,
+									imageBottomId: img.id,
+									imageBottomAlt: img.alt || '',
+								} )
 							}
 							allowedTypes={ [ 'image' ] }
 							render={ ( { open } ) => (
-								<Button onClick={ open } isSecondary>
+								<Button onClick={ open } variant="secondary">
 									{ imageBottom
 										? 'Change Image'
 										: 'Upload Bottom Image' }
@@ -144,7 +169,13 @@ export default function Edit( { attributes, setAttributes } ) {
 						/>
 					</MediaUploadCheck>
 					{ imageBottom && (
-						<img src={ imageBottom } alt="Bottom Media" />
+						<img
+							src={ imageBottom }
+							alt={
+								imageBottomAlt ||
+								__( 'Hero bottom image', 'ambrygen-web' )
+							}
+						/>
 					) }
 				</div>
 
@@ -156,7 +187,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) =>
 							setAttributes( { heading: value } )
 						}
-						placeholder={ __( 'Hero heading…', 'ambrygen' ) }
+						placeholder={ __( 'Hero heading…', 'ambrygen-web' ) }
 						className="hero-heading"
 					/>
 					<RichText
@@ -165,92 +196,37 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) =>
 							setAttributes( { content: value } )
 						}
-						placeholder={ __( 'Hero content…', 'ambrygen' ) }
+						placeholder={ __( 'Hero content…', 'ambrygen-web' ) }
 						className="hero-description"
 					/>
 
-					{ /* Fixed Counters with Prefix/Suffix */ }
+					{ /* Dynamic Counters with Prefix/Suffix */ }
 					<div className="hero-counters">
-						<CounterItem
-							prefix={ counter1Prefix }
-							number={ counter1Number }
-							suffix={ counter1Suffix }
-							label={ counter1Label }
-							onChangePrefix={ ( value ) =>
-								setAttributes( { counter1Prefix: value } )
-							}
-							onChangeNumber={ ( value ) =>
-								setAttributes( {
-									counter1Number: updateNumber( value ),
-								} )
-							}
-							onChangeSuffix={ ( value ) =>
-								setAttributes( { counter1Suffix: value } )
-							}
-							onChangeLabel={ ( value ) =>
-								setAttributes( { counter1Label: value } )
-							}
-						/>
-						<CounterItem
-							prefix={ counter2Prefix }
-							number={ counter2Number }
-							suffix={ counter2Suffix }
-							label={ counter2Label }
-							onChangePrefix={ ( value ) =>
-								setAttributes( { counter2Prefix: value } )
-							}
-							onChangeNumber={ ( value ) =>
-								setAttributes( {
-									counter2Number: updateNumber( value ),
-								} )
-							}
-							onChangeSuffix={ ( value ) =>
-								setAttributes( { counter2Suffix: value } )
-							}
-							onChangeLabel={ ( value ) =>
-								setAttributes( { counter2Label: value } )
-							}
-						/>
-						<CounterItem
-							prefix={ counter3Prefix }
-							number={ counter3Number }
-							suffix={ counter3Suffix }
-							label={ counter3Label }
-							onChangePrefix={ ( value ) =>
-								setAttributes( { counter3Prefix: value } )
-							}
-							onChangeNumber={ ( value ) =>
-								setAttributes( {
-									counter3Number: updateNumber( value ),
-								} )
-							}
-							onChangeSuffix={ ( value ) =>
-								setAttributes( { counter3Suffix: value } )
-							}
-							onChangeLabel={ ( value ) =>
-								setAttributes( { counter3Label: value } )
-							}
-						/>
-						<CounterItem
-							prefix={ counter4Prefix }
-							number={ counter4Number }
-							suffix={ counter4Suffix }
-							label={ counter4Label }
-							onChangePrefix={ ( value ) =>
-								setAttributes( { counter4Prefix: value } )
-							}
-							onChangeNumber={ ( value ) =>
-								setAttributes( {
-									counter4Number: updateNumber( value ),
-								} )
-							}
-							onChangeSuffix={ ( value ) =>
-								setAttributes( { counter4Suffix: value } )
-							}
-							onChangeLabel={ ( value ) =>
-								setAttributes( { counter4Label: value } )
-							}
-						/>
+						{ counters.map( ( counter, index ) => (
+							<CounterItem
+								key={ index }
+								prefix={ counter.prefix }
+								number={ counter.number }
+								suffix={ counter.suffix }
+								label={ counter.label }
+								onChangePrefix={ ( value ) =>
+									updateCounter( index, 'prefix', value )
+								}
+								onChangeNumber={ ( value ) =>
+									updateCounter(
+										index,
+										'number',
+										validateNumber( value )
+									)
+								}
+								onChangeSuffix={ ( value ) =>
+									updateCounter( index, 'suffix', value )
+								}
+								onChangeLabel={ ( value ) =>
+									updateCounter( index, 'label', value )
+								}
+							/>
+						) ) }
 					</div>
 				</div>
 			</div>
@@ -260,6 +236,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 /**
  * Reusable Counter Item component for the hero block.
+ * Includes validation feedback for numeric inputs.
  *
  * @param {Object}   props
  * @param {string}   props.prefix         Counter prefix text
@@ -282,6 +259,19 @@ function CounterItem( {
 	onChangeSuffix,
 	onChangeLabel,
 } ) {
+	/**
+	 * Validates if a number is within reasonable range
+	 * @param {string} value Number string to validate
+	 * @return {boolean} True if valid range
+	 */
+	const isValidNumber = ( value ) => {
+		if ( ! value ) {
+			return true;
+		} // Empty is valid
+		const num = parseInt( value, 10 );
+		return ! isNaN( num ) && num >= 0 && num <= 999999999;
+	};
+
 	return (
 		<div className="counter-item">
 			<div className="counter-number">
@@ -297,7 +287,9 @@ function CounterItem( {
 					value={ number }
 					onChange={ onChangeNumber }
 					placeholder="100"
-					className="counter-value"
+					className={ `counter-value ${
+						number && ! isValidNumber( number ) ? 'has-error' : ''
+					}` }
 				/>
 				<RichText
 					tagName="span"
@@ -307,6 +299,14 @@ function CounterItem( {
 					className="counter-suffix"
 				/>
 			</div>
+			{ number && ! isValidNumber( number ) && (
+				<small className="counter-error">
+					{ __(
+						'Please enter a number between 0 and 999,999,999',
+						'ambrygen-web'
+					) }
+				</small>
+			) }
 			<RichText
 				tagName="p"
 				value={ label }

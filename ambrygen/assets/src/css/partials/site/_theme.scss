@@ -198,24 +198,28 @@
 }
 
 picture {
+
 	img.loaded {
 		opacity: 1;
 	}
 }
 
 .mx-none {
+
 	@media (width <= 767px) {
 		display: none;
 	}
 }
 
 .sm-none {
+
 	@media (width <= 640px) {
 		display: none;
 	}
 }
 
 .md-none {
+
 	@media (width <= 991px) {
 		display: none;
 	}

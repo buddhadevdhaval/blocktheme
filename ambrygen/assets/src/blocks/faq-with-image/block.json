@@ -1,6 +1,6 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
-	"apiVersion": 2,
+	"apiVersion": 3,
 	"name": "ambrygen/faq-with-image",
 	"title": "FAQ with Image",
 	"category": "design",
@@ -15,6 +15,14 @@
 			"default": "#007fa3"
 		},
 		"imageUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"imageId": {
+			"type": "number",
+			"default": 0
+		},
+		"imageAlt": {
 			"type": "string",
 			"default": ""
 		},
@@ -33,6 +41,7 @@
 		}
 	},
 	"editorScript": "file:./index.js",
-	"editorStyle": "file:./editor.css",
-	"style": "file:./style.css"
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js"
 }

@@ -32,13 +32,6 @@ export default function save( { attributes } ) {
 				value={ content }
 				className="hero-content"
 			/>
-			<div
-				{ ...useBlockProps.save( {
-					className: 'body-small heading-6',
-				} ) }
-			>
-				This is Priiyank
-			</div>
 		</div>
 	);
 }

@@ -6,6 +6,7 @@
 
 header,
 footer {
+
 	ul,
 	ol {
 		list-style: none;
@@ -16,6 +17,7 @@ footer {
 // lists.scss
 
 @mixin custom-list-styles {
+
 	/* -------------------------------------------------
 	>> Project Styles
 	---------------------------------------------------
@@ -179,5 +181,6 @@ footer {
 
 
 .page-section {
+
 	@include custom-list-styles;
 }

@@ -27,6 +27,7 @@
 }
 
 .daterangepicker {
+
 	.btn-sm {
 		align-items: center;
 		appearance: none;
@@ -60,6 +61,7 @@
 }
 
 .interface-interface-skeleton__sidebar {
+
 	.description {
 		padding: 6px 20px 16px !important;
 		margin-top: 0 !important;
@@ -72,8 +74,11 @@ html :where(.editor-styles-wrapper) {
 }
 
 html {
+
 	body {
+
 		.editor-styles-wrapper {
+
 			:where(.wp-block) {
 				margin-bottom: 28px;
 			}
@@ -98,6 +103,7 @@ html {
 	}
 
 	.block-editor-block-list__layout {
+
 		@include lists.custom-list-styles;
 	}
 
@@ -105,6 +111,7 @@ html {
 		margin-bottom: 35px !important;
 
 		.block-editor-block-list__layout {
+
 			>.block-editor-block-list__block {
 				margin-bottom: 20px !important;
 
@@ -121,7 +128,9 @@ html {
 	}
 
 	thead {
+
 		tr {
+
 			&:last-child {
 				border-bottom: 0;
 			}
@@ -133,6 +142,7 @@ html {
 	}
 
 	tbody {
+
 		tr {
 			border-bottom: 0;
 		}
@@ -145,6 +155,7 @@ html {
 }
 
 .components-panel__body {
+
 	.block-editor-line-height-control {
 		margin-top: 10px;
 	}

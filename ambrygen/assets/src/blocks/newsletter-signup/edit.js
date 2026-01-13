@@ -46,7 +46,7 @@ import './editor.scss';
  * @return {JSX.Element}                  Editor interface element
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const { heading, image, backgroundColor, style } = attributes;
+	const { heading, image, imageAlt, backgroundColor, style } = attributes;
 
 	/**
 	 * Block props with dynamic background color and padding.
@@ -66,18 +66,22 @@ export default function Edit( { attributes, setAttributes } ) {
 					<MediaUploadCheck>
 						<MediaUpload
 							onSelect={ ( img ) =>
-								setAttributes( { image: img.url } )
+								setAttributes( {
+									image: img.url,
+									imageId: img.id,
+									imageAlt: img.alt || '',
+								} )
 							}
 							allowedTypes={ [ 'image' ] }
 							render={ ( { open } ) => (
 								<Button
 									onClick={ open }
-									isSecondary
+									variant="secondary"
 									className="upload-button"
 								>
 									{ image
-										? __( 'Change Image', 'ambrygen' )
-										: __( 'Upload Image', 'ambrygen' ) }
+										? __( 'Change Image', 'ambrygen-web' )
+										: __( 'Upload Image', 'ambrygen-web' ) }
 								</Button>
 							) }
 						/>
@@ -85,7 +89,9 @@ export default function Edit( { attributes, setAttributes } ) {
 					{ image && (
 						<img
 							src={ image }
-							alt={ __( 'Newsletter', 'ambrygen' ) }
+							alt={
+								imageAlt || __( 'Newsletter', 'ambrygen-web' )
+							}
 							style={ {
 								maxWidth: '100%',
 								height: 'auto',
@@ -103,7 +109,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) =>
 							setAttributes( { heading: value } )
 						}
-						placeholder={ __( 'Stay Informed', 'ambrygen' ) }
+						placeholder={ __( 'Stay Informed', 'ambrygen-web' ) }
 						className="newsletter-heading"
 					/>
 
@@ -112,13 +118,13 @@ export default function Edit( { attributes, setAttributes } ) {
 							<p>
 								📝{ ' ' }
 								<strong>
-									{ __( 'Add Form Here', 'ambrygen' ) }
+									{ __( 'Add Form Here', 'ambrygen-web' ) }
 								</strong>
 							</p>
 							<p className="placeholder-instructions">
 								{ __(
 									'Insert Gravity Forms block below',
-									'ambrygen'
+									'ambrygen-web'
 								) }
 							</p>
 						</div>

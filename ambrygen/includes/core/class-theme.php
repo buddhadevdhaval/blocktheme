@@ -9,28 +9,34 @@ namespace Ambrygen\Theme\Core;
 
 defined( 'ABSPATH' ) || exit;
 
-
-
 final class Theme {
 
+	use Singleton;
+
 	/**
-	 * Initialize theme.
+	 * Constructor.
+	 */
+	protected function __construct() {
+		$this->setup_hooks();
+	}
+
+	/**
+	 * Setup core theme hooks.
 	 *
 	 * @return void
 	 */
-	public static function init(): void {
-
+	private function setup_hooks(): void {
 		/**
 		 * Components that hook into admin_menu MUST be loaded early.
 		 */
-		add_action( 'init', array( __CLASS__, 'load_components' ) );
+		add_action( 'init', array( $this, 'load_components' ) );
 
 		/**
-		 * Theme supports, patterns, etc.
+		 * Theme supports, image sizes, etc.
+		 *
+		 * Use `after_setup_theme`
 		 */
-		//add_action( 'after_setup_theme', array( __CLASS__, 'theme_setup' ) );
-
-		add_action( 'wp', array( __CLASS__, 'theme_setup' ) );
+		add_action( 'after_setup_theme', array( $this, 'theme_setup' ) );
 	}
 
 	/**
@@ -38,12 +44,12 @@ final class Theme {
 	 *
 	 * @return void
 	 */
-	public static function load_components(): void {
+	public function load_components(): void {
 
 		// Frontend + shared components.
-		Blocks::init();
-		Assets::init();
-		Patterns::init();
+		Blocks::instance();
+		Assets::instance();
+		Patterns::instance();
 	}
 
 	/**
@@ -51,5 +57,5 @@ final class Theme {
 	 *
 	 * @return void
 	 */
-	public static function theme_setup(): void { }
+	public function theme_setup(): void { }
 }

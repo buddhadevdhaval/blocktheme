@@ -41,24 +41,16 @@ export default function Edit( { attributes, setAttributes } ) {
 				tagName="h2"
 				value={ heading }
 				onChange={ ( value ) => setAttributes( { heading: value } ) }
-				placeholder={ __( 'Hero heading…', 'hero' ) }
+				placeholder={ __( 'Hero heading…', 'ambrygen-web' ) }
 				className="hero-heading"
 			/>
 			<RichText
 				tagName="p"
 				value={ content }
 				onChange={ ( value ) => setAttributes( { content: value } ) }
-				placeholder={ __( 'Hero content…', 'hero' ) }
+				placeholder={ __( 'Hero content…', 'ambrygen-web' ) }
 				className="hero-content"
 			/>
-
-			<div
-				{ ...useBlockProps.save( {
-					className: 'body-small heading-6',
-				} ) }
-			>
-				This is Priiyank
-			</div>
 		</div>
 	);
 }

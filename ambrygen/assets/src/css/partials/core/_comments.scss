@@ -5,6 +5,7 @@
 ------------------------------------------------- */
 
 #commentform {
+
 	label {
 		display: block;
 	}
@@ -73,6 +74,7 @@
 }
 
 .comment-content {
+
 	p {
 		margin-bottom: 20px;
 	}
@@ -99,6 +101,7 @@ ol.comment-list {
 		}
 
 		div {
+
 			&.vcard cite.fn {
 				font-style: normal;
 			}

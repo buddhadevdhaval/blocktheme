@@ -8,6 +8,7 @@ $containers: (
 
 
 @mixin container($max-width) {
+
     .wrapper {
         margin: 0 auto;
         width: 100%;
@@ -31,7 +32,9 @@ $containers: (
 }
 
 @mixin editor-container($max-width) {
+
     .block-editor-inner-blocks {
+
         .wp-block {
             margin: 0 auto;
             max-width: $max-width !important;
@@ -48,22 +51,28 @@ $containers: (
 @each $name,
 $width in $containers {
     .container-#{$name} {
+
         @include container($width);
     }
 
     .editor-container-#{$name} {
         .container-#{$name} {
+
             @include editor-container($width);
         }
     }
 }
 
 .editor-styles-wrapper {
+
     .wp-block-group {
+
         .block-editor-block-list__block {
+
             @each $name,
             $width in $containers {
                 &.editor-container-#{$name} {
+
                     @include editor-container-styles;
 
                     width: 100% !important;
@@ -73,10 +82,13 @@ $width in $containers {
     }
 
     .wp-block-post-content {
+
         >.block-editor-block-list__block {
+
             @each $name,
             $width in $containers {
                 &.editor-container-#{$name} {
+
                     @include editor-container-styles;
 
                     width: auto !important;

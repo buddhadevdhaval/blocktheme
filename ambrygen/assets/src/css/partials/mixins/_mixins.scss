@@ -1,35 +1,37 @@
 @use "sass:math";
+@use "../variables/breakpoints"as bp;
 
 /* -------------------------------------------------
    Grid / column helpers
 ------------------------------------------------- */
 
 @mixin fluid-columns($columns, $min-width, $gap, $row-gap: 0) {
-	$column-width: 100% / $columns;
-	$min-width-calc: min(clamp($min-width, #{$column-width} - #{$gap}, 100%), 100%);
+    $column-width: 100% / $columns;
+    $min-width-calc: min(clamp($min-width, #{$column-width} - #{$gap}, 100%), 100%);
 
-	grid-template-columns: repeat(auto-fit, minmax($min-width-calc, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax($min-width-calc, 1fr));
 
-	@if $row-gap != 0 {
-		gap: $row-gap $gap;
-	} @else {
-		gap: $gap;
-	}
+    @if $row-gap != 0 {
+        gap: $row-gap $gap;
+    } @else {
+        gap: $gap;
+    }
 }
 
 @mixin column($columns, $gap) {
-	width: math.div(100%, $columns) - math.div(($gap * ($columns - 1)), $columns);
-	margin-right: $gap;
+    width: math.div(100%, $columns) - math.div(($gap * ($columns - 1)), $columns);
+    margin-right: $gap;
 
-	@if $columns == 2 {
-		&:nth-child(even) {
-			margin-right: 0;
-		}
-	} @else {
-		&:nth-child(#{$columns}n + #{$columns}) {
-			margin-right: 0;
-		}
-	}
+    @if $columns == 2 {
+
+        &:nth-child(even) {
+            margin-right: 0;
+        }
+    } @else {
+        &:nth-child(#{$columns}n + #{$columns}) {
+            margin-right: 0;
+        }
+    }
 }
 
 /* -------------------------------------------------
@@ -37,18 +39,19 @@
 ------------------------------------------------- */
 
 @mixin background-image($image,
-$position,
-$size,
-$repeat,
-$height,
-$width) {
-	@if $image != "" {
-		background-image: url("../images/#{$image}");
-	}
+    $position,
+    $size,
+    $repeat,
+    $height,
+    $width) {
 
-	background-repeat: $repeat;
-	background-position: $position;
-	background-size: $size;
-	height: $height;
-	width: $width;
+    @if $image != "" {
+        background-image: url("../images/#{$image}");
+    }
+
+    background-repeat: $repeat;
+    background-position: $position;
+    background-size: $size;
+    height: $height;
+    width: $width;
 }

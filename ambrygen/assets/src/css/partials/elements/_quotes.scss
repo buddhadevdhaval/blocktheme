@@ -30,7 +30,7 @@ blockquote {
 	}
 
 	&::after {
-		background-image: url("../images/quote-orange-icon.svg");
+		background-image: url(../images/quote-orange-icon.svg);
 		background-repeat: no-repeat;
 		background-size: contain;
 		content: "";
@@ -48,6 +48,7 @@ blockquote {
 }
 
 .wp-block-quote {
+
 	&.has-text-align-right {
 		border-left: none;
 		border-right: 3px solid var(--theme_blockquote_border_color);
@@ -78,6 +79,7 @@ blockquote {
 }
 
 figure {
+
 	&.wp-block-pullquote {
 		border-top: 3px solid var(--theme_blockquote_border_color);
 		border-bottom: 3px solid var(--theme_blockquote_border_color);

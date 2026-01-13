@@ -1,13 +1,14 @@
 {
-	"$schema": "https://schemas.wp.org/trunk/theme.json",
-	"version": 2,
+	"$schema": "https://schemas.wp.org/wp/6.9/theme.json",
+	"version": 3,
+	"themeVersion": "4",
 	"settings": {
 		"appearanceTools": true,
 		"useRootPaddingAwareAlignments": true,
 		"border": {
-			"color": [],
-			"radius": [],
-			"style": [],
+			"color": false,
+			"radius": false,
+			"style": false,
 			"width": true
 		},
 		"color": {
@@ -18,99 +19,220 @@
 			"customGradient": false,
 			"customDuotone": false,
 			"gradients": [],
+
 			"palette": [
-				{ "slug": "white", "color": "var(--theme_white)", "name": "White" },
-				{ "slug": "black", "color": "var(--theme_black1)", "name": "Black" },
-				{ "slug": "primary", "color": "var(--theme_color_primary)", "name": "Primary" },
-				{ "slug": "secondary", "color": "var(--theme_color_secondary)", "name": "Secondary" },
-				{ "slug": "danger", "color": "var(--theme_danger)", "name": "Danger" },
-				{ "slug": "success", "color": "var(--theme_success)", "name": "Success" },
-				{ "slug": "warning", "color": "var(--theme_warning)", "name": "Warning" },
-				{ "slug": "info", "color": "var(--theme_info)", "name": "Info" },
-				{ "slug": "transparent", "color": "var(--theme_transparent)", "name": "Transparent" }
-			],
-			"text": "var(--theme_black1)",
-			"link": "var(--theme_color_primary)"
+				{
+					"slug": "white",
+					"color": "var(--theme_white)",
+					"name": "White"
+				},
+				{
+					"slug": "black",
+					"color": "var(--theme_black1)",
+					"name": "Black"
+				},
+				{
+					"slug": "primary",
+					"color": "var(--theme_color_primary)",
+					"name": "Primary"
+				},
+				{
+					"slug": "secondary",
+					"color": "var(--theme_color_secondary)",
+					"name": "Secondary"
+				},
+				{
+					"slug": "danger",
+					"color": "var(--theme_danger)",
+					"name": "Danger"
+				},
+				{
+					"slug": "success",
+					"color": "var(--theme_success)",
+					"name": "Success"
+				},
+				{
+					"slug": "warning",
+					"color": "var(--theme_warning)",
+					"name": "Warning"
+				},
+				{
+					"slug": "info",
+					"color": "var(--theme_info)",
+					"name": "Info"
+				},
+				{
+					"slug": "transparent",
+					"color": "var(--theme_transparent)",
+					"name": "Transparent"
+				}
+			]
 		},
+
 		"layout": {
 			"contentSize": "1180px",
 			"wideSize": "1380px"
 		},
 		"spacing": {
 			"margin": true,
-			"padding": [],
+			"padding": false,
 			"customSpacingSize": true,
 			"spacingSizes": [
-				{ "name": "2 Pixels", "size": "var(--theme_space_1)", "slug": "2-pixels", "default": true },
-				{ "name": "4 Pixels", "size": "var(--theme_space_2)", "slug": "4-pixels" },
-				{ "name": "6 Pixels", "size": "var(--theme_space_3)", "slug": "6-pixels" },
-				{ "name": "8 Pixels", "size": "var(--theme_space_4)", "slug": "8-pixels" },
-				{ "name": "12 Pixels", "size": "var(--theme_space_5)", "slug": "12-pixels" },
-				{ "name": "16 Pixels", "size": "var(--theme_space_6)", "slug": "16-pixels" },
-				{ "name": "20 Pixels", "size": "var(--theme_space_7)", "slug": "20-pixels" },
-				{ "name": "24 Pixels", "size": "var(--theme_space_8)", "slug": "24-pixels" },
-				{ "name": "30 Pixels", "size": "var(--theme_space_9)", "slug": "30-pixels" },
-				{ "name": "36 Pixels", "size": "var(--theme_space_10)", "slug": "36-pixels" },
-				{ "name": "48 Pixels", "size": "var(--theme_space_11)", "slug": "48-pixels" },
-				{ "name": "72 Pixels", "size": "var(--theme_space_12)", "slug": "72-pixels" },
-				{ "name": "96 Pixels", "size": "var(--theme_space_13)", "slug": "96-pixels" },
-				{ "name": "128 Pixels", "size": "var(--theme_space_14)", "slug": "128-pixels" },
-				{ "name": "156 Pixels", "size": "var(--theme_space_15)", "slug": "156-pixels" },
-				{ "name": "200 Pixels", "size": "var(--theme_space_16)", "slug": "200-pixels" },
-				{ "name": "236 Pixels", "size": "var(--theme_space_17)", "slug": "236-pixels" }
+				{
+					"name": "2 Pixels",
+					"size": "var(--theme_space_1)",
+					"slug": "2-pixels",
+					"default": true
+				},
+				{
+					"name": "4 Pixels",
+					"size": "var(--theme_space_2)",
+					"slug": "4-pixels"
+				},
+				{
+					"name": "6 Pixels",
+					"size": "var(--theme_space_3)",
+					"slug": "6-pixels"
+				},
+				{
+					"name": "8 Pixels",
+					"size": "var(--theme_space_4)",
+					"slug": "8-pixels"
+				},
+				{
+					"name": "12 Pixels",
+					"size": "var(--theme_space_5)",
+					"slug": "12-pixels"
+				},
+				{
+					"name": "16 Pixels",
+					"size": "var(--theme_space_6)",
+					"slug": "16-pixels"
+				},
+				{
+					"name": "20 Pixels",
+					"size": "var(--theme_space_7)",
+					"slug": "20-pixels"
+				},
+				{
+					"name": "24 Pixels",
+					"size": "var(--theme_space_8)",
+					"slug": "24-pixels"
+				},
+				{
+					"name": "30 Pixels",
+					"size": "var(--theme_space_9)",
+					"slug": "30-pixels"
+				},
+				{
+					"name": "36 Pixels",
+					"size": "var(--theme_space_10)",
+					"slug": "36-pixels"
+				},
+				{
+					"name": "48 Pixels",
+					"size": "var(--theme_space_11)",
+					"slug": "48-pixels"
+				},
+				{
+					"name": "72 Pixels",
+					"size": "var(--theme_space_12)",
+					"slug": "72-pixels"
+				},
+				{
+					"name": "96 Pixels",
+					"size": "var(--theme_space_13)",
+					"slug": "96-pixels"
+				},
+				{
+					"name": "128 Pixels",
+					"size": "var(--theme_space_14)",
+					"slug": "128-pixels"
+				},
+				{
+					"name": "156 Pixels",
+					"size": "var(--theme_space_15)",
+					"slug": "156-pixels"
+				},
+				{
+					"name": "200 Pixels",
+					"size": "var(--theme_space_16)",
+					"slug": "200-pixels"
+				},
+				{
+					"name": "236 Pixels",
+					"size": "var(--theme_space_17)",
+					"slug": "236-pixels"
+				}
 			]
 		},
 		"typography": {
 			"customFontSize": false,
 			"fontStyle": false,
 			"fontWeight": [300, 400, 500, 600, 700],
-			"letterSpacing": [],
+			"letterSpacing": false,
 			"lineHeight": [
-				{ "slug": "line-height-heading", "size": "var(--line_height_medium)", "name": "Line Height heading" }
+				{
+					"slug": "line-height-xsmall",
+					"size": "var(--theme_line_height_xsmall)",
+					"name": "Line Height XS Small"
+				}
 			],
-			"textDecoration": [],
-			"textTransform": [],
+			"textDecoration": false,
+			"textTransform": false,
 			"dropCap": false,
 			"fontSizes": [
-				{ "slug": "font-size-1", "size": "var(--theme_font_size_1)", "name": "Heading 1" },
-				{ "slug": "font-size-2", "size": "var(--theme_font_size_2)", "name": "Heading 2" },
-				{ "slug": "font-size-3", "size": "var(--theme_font_size_3)", "name": "Heading 3" },
-				{ "slug": "font-size-4", "size": "var(--theme_font_size_4)", "name": "Heading 4" },
-				{ "slug": "font-size-5", "size": "var(--theme_font_size_5)", "name": "Heading 5" },
-				{ "slug": "font-size-6", "size": "var(--theme_font_size_6)", "name": "Heading 6" },
-				{ "slug": "font-size-7", "size": "var(--theme_font_size_1)", "name": "Large Text" },
-				{ "slug": "font-size-8", "size": "var(--theme_font_size_5)", "name": "Small Text" },
-				{ "slug": "font-size-9", "size": "var(--theme_font_size_4)", "name": "Regular Text" }
+				{
+					"slug": "font-size-1",
+					"size": "var(--theme_font_size_1)",
+					"name": "Heading 1"
+				},
+				{
+					"slug": "font-size-2",
+					"size": "var(--theme_font_size_2)",
+					"name": "Heading 2"
+				},
+				{
+					"slug": "font-size-3",
+					"size": "var(--theme_font_size_3)",
+					"name": "Heading 3"
+				},
+				{
+					"slug": "font-size-4",
+					"size": "var(--theme_font_size_4)",
+					"name": "Heading 4"
+				},
+				{
+					"slug": "font-size-5",
+					"size": "var(--theme_font_size_5)",
+					"name": "Heading 5"
+				},
+				{
+					"slug": "font-size-6",
+					"size": "var(--theme_font_size_6)",
+					"name": "Heading 6"
+				}
 			]
 		},
 		"blocks": {
 			"core/button": {
 				"color": {
-					"text": [],
-					"background": [],
-					"customDuotone": [],
-					"customGradient": [],
-					"defaultDuotone": [],
-					"defaultGradients": [],
+					"text": false,
+					"background": false,
+					"customDuotone": false,
+					"customGradient": false,
+					"defaultDuotone": false,
+					"defaultGradients": false,
 					"duotone": [],
 					"gradients": []
 				},
 				"typography": {
-					"customFontSize": [],
+					"customFontSize": false,
 					"fontSizes": []
 				},
+
 				"border": {
-					"radius": []
-				}
-			},
-			"core/navigation": {
-				"color": {
-					"text": ["black"]
-				}
-			},
-			"core/paragraph": {
-				"color": {
-					"text": ["black"]
+					"radius": false
 				}
 			}
 		}

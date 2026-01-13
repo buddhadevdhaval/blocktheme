@@ -14,13 +14,14 @@ defined( 'ABSPATH' ) || exit;
  * @package Ambrygen
  */
 final class Patterns {
+
+	use Singleton;
+
 	/**
-	 * Bootstraps hooks.
-	 *
-	 * @return void
+	 * Constructor.
 	 */
-	public static function init(): void {
-		self::register_categories();
+	protected function __construct() {
+		$this->register_categories();
 	}
 
 	/**
@@ -28,7 +29,7 @@ final class Patterns {
 	 *
 	 * @return void
 	 */
-	public static function register_categories(): void {
+	public function register_categories(): void {
 		if ( function_exists( 'register_block_pattern_category' ) ) {
 			register_block_pattern_category(
 				'ambrygen',

@@ -30,8 +30,8 @@
 .hero-image-bottom {
     border-radius: 20px;
     overflow: hidden;
-    background: #ffffff;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    background: #fff;
+    box-shadow: 0 20px 40px rgb(0 0 0 / 8%);
 
     img {
         width: 100%;
@@ -97,7 +97,8 @@
 }
 
 /* RESPONSIVE */
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
+
     .hero-layout {
         grid-template-columns: 1fr;
         gap: 48px;
@@ -108,7 +109,8 @@
     }
 }
 
-@media (max-width: 600px) {
+@media (width <= 600px) {
+
     .hero-heading {
         font-size: 36px;
     }

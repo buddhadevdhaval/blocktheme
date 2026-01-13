@@ -348,6 +348,7 @@
 
 /*  Larger Screen Styling */
 @media (width >= 564px) {
+
 	.daterangepicker {
 		width: auto;
 	}
@@ -398,6 +399,7 @@
 }
 
 @media (width >= 730px) {
+
 	.daterangepicker .ranges {
 		width: auto;
 		float: left;

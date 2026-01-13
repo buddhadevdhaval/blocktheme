@@ -16,15 +16,15 @@ defined( 'ABSPATH' ) || exit;
  */
 final class Blocks {
 
+	use Singleton;
+
 	/**
-	 * Initialize block registration.
+	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @return void
 	 */
-	public static function init(): void {
-		// Register blocks immediately.
-		self::register_blocks();
+	protected function __construct() {
+		$this->register_blocks();
 	}
 
 	/**
@@ -33,12 +33,12 @@ final class Blocks {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public static function register_blocks(): void {
-	
+	public function register_blocks(): void {
+
 		$blocks_dir = get_template_directory() . '/assets/build/blocks';
 
 
-		$manifest_file = get_template_directory() . '/assets/build/blocks-manifest.php'; 
+		$manifest_file = $blocks_dir . '/blocks-manifest.php'; 
 
 		if ( file_exists( $manifest_file ) ) {
 
@@ -50,5 +50,6 @@ final class Blocks {
 				);
 			}
 		}
+
 	}
 }

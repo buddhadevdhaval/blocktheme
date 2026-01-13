@@ -1,20 +1,20 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
-	"apiVersion": 2,
+	"apiVersion": 3,
 	"name": "ambrygen/left-right-content",
 	"title": "Left Right Content",
-	"category": "ambrygen",
+	"category": "design",
 	"icon": "align-wide",
 	"description": "A block with heading, content, image, and left/right layout.",
-	"textdomain": "ambrygen-vip-web",
+	"textdomain": "ambrygen-web",
 
 	"supports": {
 		"html": false
 	},
 
 	"editorScript": "file:./index.js",
-	"editorStyle": "file:./editor.css",
-	"style": "file:./style.css",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
 
 	"attributes": {
 		"heading": {
@@ -26,6 +26,14 @@
 			"default": "h2"
 		},
 		"imageUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"imageId": {
+			"type": "number",
+			"default": 0
+		},
+		"imageAlt": {
 			"type": "string",
 			"default": ""
 		},

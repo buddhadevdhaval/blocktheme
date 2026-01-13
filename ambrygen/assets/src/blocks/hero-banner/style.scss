@@ -11,6 +11,7 @@
 	}
 
 	&__content {
+
 		h2 {
 			font-size: 48px;
 			margin-bottom: 20px;
@@ -28,7 +29,8 @@
 	}
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
+
 	.contact-banner__inner {
 		grid-template-columns: 1fr;
 	}

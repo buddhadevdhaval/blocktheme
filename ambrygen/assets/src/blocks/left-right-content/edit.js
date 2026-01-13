@@ -24,14 +24,15 @@ const INNER_BLOCKS_TEMPLATE = [
 		{
 			content: __(
 				'Add your content here. This text can be changed.',
-				'ambrygen'
+				'ambrygen-web'
 			),
 		},
 	],
 ];
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { heading, headingTag, imageUrl, imagePosition } = attributes;
+	const { heading, headingTag, imageUrl, imageAlt, imagePosition } =
+		attributes;
 
 	const blockProps = useBlockProps( {
 		className: `left-right-block ${ imagePosition }`,
@@ -40,9 +41,9 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<Fragment>
 			<InspectorControls>
-				<PanelBody title={ __( 'Settings', 'ambrygen' ) }>
+				<PanelBody title={ __( 'Settings', 'ambrygen-web' ) }>
 					<SelectControl
-						label={ __( 'Heading Tag', 'ambrygen' ) }
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag }
 						options={ [
 							{ label: 'H1', value: 'h1' },
@@ -60,7 +61,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 
 					<ToggleControl
-						label={ __( 'Show Image on Right', 'ambrygen' ) }
+						label={ __( 'Show Image on Right', 'ambrygen-web' ) }
 						checked={ imagePosition === 'right' }
 						onChange={ ( value ) =>
 							setAttributes( {
@@ -76,7 +77,10 @@ export default function Edit( { attributes, setAttributes } ) {
 					{ /* Left image */ }
 					{ imagePosition === 'left' && imageUrl && (
 						<div className="image-wrapper">
-							<img src={ imageUrl } alt="" />
+							<img
+								src={ imageUrl }
+								alt={ imageAlt || heading || undefined }
+							/>
 						</div>
 					) }
 
@@ -85,7 +89,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						<RichText
 							tagName={ headingTag }
 							value={ heading }
-							placeholder={ __( 'Heading…', 'ambrygen' ) }
+							placeholder={ __( 'Heading…', 'ambrygen-web' ) }
 							onChange={ ( value ) =>
 								setAttributes( { heading: value } )
 							}
@@ -106,7 +110,10 @@ export default function Edit( { attributes, setAttributes } ) {
 					{ /* Right image */ }
 					{ imagePosition === 'right' && imageUrl && (
 						<div className="image-wrapper">
-							<img src={ imageUrl } alt="" />
+							<img
+								src={ imageUrl }
+								alt={ imageAlt || heading || undefined }
+							/>
 						</div>
 					) }
 
@@ -117,12 +124,17 @@ export default function Edit( { attributes, setAttributes } ) {
 								onSelect={ ( media ) =>
 									setAttributes( {
 										imageUrl: media.url,
+										imageId: media.id,
+										imageAlt: media.alt || '',
 									} )
 								}
 								allowedTypes={ [ 'image' ] }
 								render={ ( { open } ) => (
-									<Button onClick={ open } isSecondary>
-										{ __( 'Select Image', 'ambrygen' ) }
+									<Button
+										onClick={ open }
+										variant="secondary"
+									>
+										{ __( 'Select Image', 'ambrygen-web' ) }
 									</Button>
 								) }
 							/>

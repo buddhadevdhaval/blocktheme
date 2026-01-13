@@ -1,0 +1,151 @@
+/*
+>> Standard SCSS Breakpoints
+>> Device-Specific Breakpoints
+*/
+
+/* Device Specific Breakpoints */
+$breakpoint-mobile: 767px;              // Mobile: 0 - 767px
+$breakpoint-tablet: 768px;              // Tablet/iPad: 768px+
+$breakpoint-tablet-max: 991px;          // Tablet Max: up to 991px
+$breakpoint-tablet-landscape: 1024px;   // iPad Landscape: 1024px+
+$breakpoint-desktop: 1024px;            // Desktop: 1024px+
+
+/* Additional Granular Breakpoints */
+$breakpoint-xs: 375px;                  // Extra Small
+$breakpoint-sm: 576px;                  // Small
+$breakpoint-md: 767px;                  // Medium (Mobile Max)
+$breakpoint-lg: 1024px;                 // Large (Tablet Landscape)
+$breakpoint-xl: 1280px;                 // Extra Large (Desktop)
+$breakpoint-xxl: 1350px;                // Extra Extra Large (Large Desktop)
+
+
+
+
+/*
+   Device-Specific Breakpoint Mixins
+
+   Device Ranges:
+   - Mobile:  0 - 767px
+   - Tablet:  768px - 1023px (or up to 991px)
+   - Desktop: 1024px+
+
+   Usage:
+   @include mobile { ... }              -> Mobile: 0 - 767px
+   @include tablet { ... }              -> Tablet: 768px - 1023px
+   @include desktop { ... }             -> Desktop: 1024px+
+   @include between(768px, 991px) { }   -> Custom range: 768px - 991px
+
+   Examples:
+   // Mobile only
+   @include mobile {
+       font-size: 14px;
+   }
+
+   // iPad/Tablet (768px - 991px)
+   @include between(768px, 991px) {
+       font-size: 16px;
+   }
+   // OR using @media syntax
+   // @media only screen and (min-width: 768px) and (max-width: 991px) { }
+
+   // Tablet (768px - 1023px)
+   @include tablet-range {
+       font-size: 16px;
+   }
+
+   // Desktop
+   @include desktop {
+       font-size: 18px;
+   }
+ */
+
+@mixin mobile {
+
+    @media (max-width: $breakpoint-mobile) {
+        @content;
+    }
+}
+
+@mixin tablet {
+
+    @media (min-width: $breakpoint-tablet) and (width <= 1023px) {
+        @content;
+    }
+}
+
+@mixin tablet-range {
+
+    @media (min-width: $breakpoint-tablet) and (width <= 1023px) {
+        @content;
+    }
+}
+
+@mixin desktop {
+
+    @media (min-width: $breakpoint-desktop) {
+        @content;
+    }
+}
+
+@mixin between($min, $max) {
+
+    @media (min-width: $min) and (max-width: $max) {
+        @content;
+    }
+}
+
+@mixin mobile-tablet {
+
+    @media (width <= 1023px) {
+        @content;
+    }
+}
+
+@mixin tablet-desktop {
+
+    @media (min-width: $breakpoint-tablet) {
+        @content;
+    }
+}
+
+/*
+   Min-Width Approach (Mobile-First)
+
+   Usage:
+   @include tablet-up { ... }      -> 768px and above
+   @include desktop-up { ... }     -> 1024px and above
+
+   This is the modern approach - define mobile first,
+   then add enhancements for larger screens
+
+   Example:
+   body {
+       // Mobile base styles
+       font-size: 14px;
+
+       // Tablet styles
+       @include tablet-up {
+           font-size: 16px;
+       }
+
+       // Desktop styles
+       @include desktop-up {
+           font-size: 18px;
+       }
+   }
+   // Compiles to: @media (min-width: 768px) { ... }
+*/
+
+@mixin tablet-up {
+
+    @media (min-width: $breakpoint-tablet) {
+        @content;
+    }
+}
+
+@mixin desktop-up {
+
+    @media (min-width: $breakpoint-desktop) {
+        @content;
+    }
+}

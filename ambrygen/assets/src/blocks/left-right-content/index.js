@@ -29,15 +29,7 @@ import edit from './edit';
 import save from './save';
 import metadata from './block.json';
 
-/**
- * Side-effect free block initialization
- * Moves block registration into a function to avoid top-level side effects
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
- */
-export function initializeLeftRightContentBlock() {
-	registerBlockType( metadata.name, {
-		edit,
-		save,
-	} );
-}
+registerBlockType( metadata.name, {
+	edit,
+	save,
+} );

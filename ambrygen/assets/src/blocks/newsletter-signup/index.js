@@ -22,21 +22,18 @@ import save from './save';
 import metadata from './block.json';
 
 /**
- * Side-effect free block initialization
- * Moves block registration into a function to avoid top-level side effects
+ * Every block starts by registering a new block type definition.
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
-export function initializeNewsletterSignupBlock() {
-	registerBlockType( metadata.name, {
-		/**
-		 * @see ./edit.js
-		 */
-		edit: Edit,
+registerBlockType( metadata.name, {
+	/**
+	 * @see ./edit.js
+	 */
+	edit: Edit,
 
-		/**
-		 * @see ./save.js
-		 */
-		save,
-	} );
-}
+	/**
+	 * @see ./save.js
+	 */
+	save,
+} );

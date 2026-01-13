@@ -16,8 +16,7 @@ import {
 import { Fragment } from '@wordpress/element';
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { heading, headingTag, imageUrl, imageAlt, imagePosition } =
-		attributes;
+	const { heading, headingTag, imageUrl, imagePosition } = attributes;
 	const blockProps = useBlockProps( {
 		className: `left-right-block ${ imagePosition }`,
 	} );
@@ -25,9 +24,9 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<Fragment>
 			<InspectorControls>
-				<PanelBody title={ __( 'Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Settings', 'mytheme' ) }>
 					<SelectControl
-						label={ __( 'Heading Tag', 'ambrygen-web' ) }
+						label={ __( 'Heading Tag', 'mytheme' ) }
 						value={ headingTag }
 						options={ [
 							{ label: 'H1', value: 'h1' },
@@ -44,7 +43,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						}
 					/>
 					<ToggleControl
-						label={ __( 'Show Image on Right', 'ambrygen-web' ) }
+						label={ __( 'Show Image on Right', 'mytheme' ) }
 						checked={ imagePosition === 'right' }
 						onChange={ ( value ) =>
 							setAttributes( {
@@ -59,10 +58,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				<div className="content-wrapper">
 					{ imagePosition === 'left' && imageUrl && (
 						<div className="image-wrapper">
-							<img
-								src={ imageUrl }
-								alt={ imageAlt || heading || undefined }
-							/>
+							<img src={ imageUrl } alt="" />
 						</div>
 					) }
 
@@ -70,7 +66,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						<RichText
 							tagName={ headingTag }
 							value={ heading }
-							placeholder={ __( 'Heading…', 'ambrygen-web' ) }
+							placeholder={ __( 'Heading…', 'mytheme' ) }
 							onChange={ ( value ) =>
 								setAttributes( { heading: value } )
 							}
@@ -88,10 +84,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 					{ imagePosition === 'right' && imageUrl && (
 						<div className="image-wrapper">
-							<img
-								src={ imageUrl }
-								alt={ imageAlt || heading || undefined }
-							/>
+							<img src={ imageUrl } alt="" />
 						</div>
 					) }
 
@@ -99,19 +92,12 @@ export default function Edit( { attributes, setAttributes } ) {
 						<MediaUploadCheck>
 							<MediaUpload
 								onSelect={ ( media ) =>
-									setAttributes( {
-										imageUrl: media.url,
-										imageId: media.id,
-										imageAlt: media.alt || '',
-									} )
+									setAttributes( { imageUrl: media.url } )
 								}
 								allowedTypes={ [ 'image' ] }
 								render={ ( { open } ) => (
-									<Button
-										onClick={ open }
-										variant="secondary"
-									>
-										{ __( 'Select Image', 'ambrygen-web' ) }
+									<Button onClick={ open } isSecondary>
+										{ __( 'Select Image', 'mytheme' ) }
 									</Button>
 								) }
 							/>

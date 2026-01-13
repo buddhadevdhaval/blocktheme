@@ -26,44 +26,71 @@
             "type": "string", 
             "default": "Leveraging artificial intelligence to revolutionize patient care, diagnostics, and medical research." 
         },
-        "counters": {
-            "type": "array",
-            "default": [
-                {
-                    "number": "100",
-                    "prefix": "",
-                    "suffix": "",
-                    "label": "Publications"
-                },
-                {
-                    "number": "50",
-                    "prefix": "",
-                    "suffix": "+",
-                    "label": "Partners"
-                },
-                {
-                    "number": "",
-                    "prefix": "",
-                    "suffix": "",
-                    "label": ""
-                },
-                {
-                    "number": "",
-                    "prefix": "",
-                    "suffix": "",
-                    "label": ""
-                }
-            ]
+        "counter1Number": { 
+            "type": "string", 
+            "default": "100" 
         },
-        "imageTop": { 
+        "counter1Prefix": { 
             "type": "string", 
             "default": "" 
         },
-        "imageTopId": { 
-            "type": "number", 
-            "default": 0 
+        "counter1Suffix": { 
+            "type": "string", 
+            "default": "" 
         },
-        "imageTopAlt": { 
+        "counter1Label": { 
+            "type": "string", 
+            "default": "Publications" 
+        },
+        "counter2Number": { 
+            "type": "string", 
+            "default": "50" 
+        },
+        "counter2Prefix": { 
+            "type": "string", 
+            "default": "" 
+        },
+        "counter2Suffix": { 
+            "type": "string", 
+            "default": "+" 
+        },
+        "counter2Label": { 
+            "type": "string", 
+            "default": "Partners" 
+        },
+        "counter3Number": { 
+            "type": "string", 
+            "default": "" 
+        },
+        "counter3Prefix": { 
+            "type": "string", 
+            "default": "" 
+        },
+        "counter3Suffix": { 
+            "type": "string", 
+            "default": "" 
+        },
+        "counter3Label": { 
+            "type": "string", 
+            "default": "" 
+        },
+        "counter4Number": { 
+            "type": "string", 
+            "default": "" 
+        },
+        "counter4Prefix": { 
+            "type": "string", 
+            "default": "" 
+        },
+        "counter4Suffix": { 
+            "type": "string", 
+            "default": "" 
+        },
+        "counter4Label": { 
+            "type": "string", 
+            "default": "" 
+        },
+        "imageTop": { 
             "type": "string", 
             "default": "" 
         },
@@ -71,23 +98,7 @@
             "type": "string", 
             "default": "" 
         },
-        "imageBottomId": { 
-            "type": "number", 
-            "default": 0 
-        },
-        "imageBottomAlt": { 
-            "type": "string", 
-            "default": "" 
-        },
         "logoImage": { 
-            "type": "string", 
-            "default": "" 
-        },
-        "logoImageId": { 
-            "type": "number", 
-            "default": 0 
-        },
-        "logoImageAlt": { 
             "type": "string", 
             "default": "" 
         }
@@ -95,6 +106,6 @@
     "editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css",
-    "textdomain": "ambrygen-web",
+    "textdomain": "ambrygen",
     "viewScript": "file:./view.js"
 }

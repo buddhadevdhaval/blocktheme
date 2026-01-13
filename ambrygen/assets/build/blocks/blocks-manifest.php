@@ -3,7 +3,7 @@
 return array(
 	'additional-links' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
-		'apiVersion' => 3,
+		'apiVersion' => 2,
 		'name' => 'ambrygen/additional-links',
 		'title' => 'Additional Links',
 		'category' => 'layout',
@@ -30,20 +30,12 @@ return array(
 			'imageUrl' => array(
 				'type' => 'string'
 			),
-			'imageId' => array(
-				'type' => 'number',
-				'default' => 0
-			),
-			'imageAlt' => array(
-				'type' => 'string',
-				'default' => ''
-			),
 			'imagePosition' => array(
 				'type' => 'string',
 				'default' => 'left'
 			)
 		),
-		'textdomain' => 'ambrygen-web',
+		'textdomain' => 'ambrygen-vip-web',
 		'editorScript' => 'file:./index.js',
 		'editorStyle' => 'file:./index.css',
 		'style' => 'file:./style-index.css'
@@ -76,44 +68,71 @@ return array(
 				'type' => 'string',
 				'default' => 'Leveraging artificial intelligence to revolutionize patient care, diagnostics, and medical research.'
 			),
-			'counters' => array(
-				'type' => 'array',
-				'default' => array(
-					array(
-						'number' => '100',
-						'prefix' => '',
-						'suffix' => '',
-						'label' => 'Publications'
-					),
-					array(
-						'number' => '50',
-						'prefix' => '',
-						'suffix' => '+',
-						'label' => 'Partners'
-					),
-					array(
-						'number' => '',
-						'prefix' => '',
-						'suffix' => '',
-						'label' => ''
-					),
-					array(
-						'number' => '',
-						'prefix' => '',
-						'suffix' => '',
-						'label' => ''
-					)
-				)
+			'counter1Number' => array(
+				'type' => 'string',
+				'default' => '100'
 			),
-			'imageTop' => array(
+			'counter1Prefix' => array(
 				'type' => 'string',
 				'default' => ''
 			),
-			'imageTopId' => array(
-				'type' => 'number',
-				'default' => 0
+			'counter1Suffix' => array(
+				'type' => 'string',
+				'default' => ''
 			),
-			'imageTopAlt' => array(
+			'counter1Label' => array(
+				'type' => 'string',
+				'default' => 'Publications'
+			),
+			'counter2Number' => array(
+				'type' => 'string',
+				'default' => '50'
+			),
+			'counter2Prefix' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'counter2Suffix' => array(
+				'type' => 'string',
+				'default' => '+'
+			),
+			'counter2Label' => array(
+				'type' => 'string',
+				'default' => 'Partners'
+			),
+			'counter3Number' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'counter3Prefix' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'counter3Suffix' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'counter3Label' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'counter4Number' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'counter4Prefix' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'counter4Suffix' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'counter4Label' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'imageTop' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -121,23 +140,7 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
-			'imageBottomId' => array(
-				'type' => 'number',
-				'default' => 0
-			),
-			'imageBottomAlt' => array(
-				'type' => 'string',
-				'default' => ''
-			),
 			'logoImage' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'logoImageId' => array(
-				'type' => 'number',
-				'default' => 0
-			),
-			'logoImageAlt' => array(
 				'type' => 'string',
 				'default' => ''
 			)
@@ -145,12 +148,12 @@ return array(
 		'editorScript' => 'file:./index.js',
 		'editorStyle' => 'file:./index.css',
 		'style' => 'file:./style-index.css',
-		'textdomain' => 'ambrygen-web',
+		'textdomain' => 'ambrygen',
 		'viewScript' => 'file:./view.js'
 	),
 	'faq-with-image' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
-		'apiVersion' => 3,
+		'apiVersion' => 2,
 		'name' => 'ambrygen/faq-with-image',
 		'title' => 'FAQ with Image',
 		'category' => 'design',
@@ -165,14 +168,6 @@ return array(
 				'default' => '#007fa3'
 			),
 			'imageUrl' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'imageId' => array(
-				'type' => 'number',
-				'default' => 0
-			),
-			'imageAlt' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -192,12 +187,11 @@ return array(
 		),
 		'editorScript' => 'file:./index.js',
 		'editorStyle' => 'file:./index.css',
-		'style' => 'file:./style-index.css',
-		'viewScript' => 'file:./view.js'
+		'style' => 'file:./style-index.css'
 	),
 	'genetic-testing' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
-		'apiVersion' => 3,
+		'apiVersion' => 2,
 		'name' => 'ambrygen/genetic-testing',
 		'title' => 'Genetic Testing Info',
 		'category' => 'design',
@@ -271,14 +265,14 @@ return array(
 				'background' => true
 			)
 		),
-		'textdomain' => 'ambrygen-web',
+		'textdomain' => 'ambrygen-vip-web',
 		'editorScript' => 'file:./index.js',
 		'editorStyle' => 'file:./index.css',
 		'style' => 'file:./style-index.css'
 	),
 	'hero-banner' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
-		'apiVersion' => 3,
+		'apiVersion' => 2,
 		'name' => 'ambrygen/hero-banner',
 		'title' => 'Hero Banner',
 		'category' => 'design',
@@ -314,13 +308,13 @@ return array(
 	),
 	'image-grid' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
-		'apiVersion' => 3,
+		'apiVersion' => 2,
 		'name' => 'ambrygen/image-grid',
 		'title' => 'Image Grid',
-		'category' => 'design',
+		'category' => 'ambrygen',
 		'icon' => 'grid-view',
 		'description' => 'A block to show multiple images in a grid with title and link.',
-		'textdomain' => 'ambrygen-web',
+		'textdomain' => 'ambrygen-vip-web',
 		'supports' => array(
 			'html' => false
 		),
@@ -337,7 +331,6 @@ return array(
 				'default' => array(
 					array(
 						'imageUrl' => '',
-						'imageId' => 0,
 						'title' => 'Grid Item Title',
 						'link' => ''
 					)
@@ -347,13 +340,13 @@ return array(
 	),
 	'left-right-content' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
-		'apiVersion' => 3,
+		'apiVersion' => 2,
 		'name' => 'ambrygen/left-right-content',
 		'title' => 'Left Right Content',
-		'category' => 'design',
+		'category' => 'ambrygen',
 		'icon' => 'align-wide',
 		'description' => 'A block with heading, content, image, and left/right layout.',
-		'textdomain' => 'ambrygen-web',
+		'textdomain' => 'ambrygen-vip-web',
 		'supports' => array(
 			'html' => false
 		),
@@ -373,23 +366,44 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
-			'imageId' => array(
-				'type' => 'number',
-				'default' => 0
-			),
-			'imageAlt' => array(
-				'type' => 'string',
-				'default' => ''
-			),
 			'imagePosition' => array(
 				'type' => 'string',
 				'default' => 'left'
 			)
 		)
 	),
+	'mega-menu-item' => array(
+		'apiVersion' => 3,
+		'name' => 'ambrygen/mega-menu-item',
+		'title' => 'Mega Menu Item',
+		'category' => 'design',
+		'icon' => 'menu',
+		'description' => 'Navigation item with mega menu dropdown.',
+		'parent' => array(
+			'core/navigation'
+		),
+		'supports' => array(
+			'html' => false,
+			'reusable' => false
+		),
+		'attributes' => array(
+			'label' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'templatePart' => array(
+				'type' => 'string',
+				'default' => ''
+			)
+		),
+		'textdomain' => 'ambrygen-vip-web',
+		'editorScript' => 'file:./index.js',
+		'editorStyle' => 'file:./index.css',
+		'style' => 'file:./style-index.css'
+	),
 	'newsletter-signup' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
-		'apiVersion' => 3,
+		'apiVersion' => 2,
 		'name' => 'ambrygen/newsletter-signup',
 		'title' => 'Newsletter Signup',
 		'category' => 'design',
@@ -415,14 +429,6 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
-			'imageId' => array(
-				'type' => 'number',
-				'default' => 0
-			),
-			'imageAlt' => array(
-				'type' => 'string',
-				'default' => ''
-			),
 			'backgroundColor' => array(
 				'type' => 'string'
 			),
@@ -433,5 +439,49 @@ return array(
 		'editorScript' => 'file:./index.js',
 		'editorStyle' => 'file:./index.css',
 		'style' => 'file:./style-index.css'
+	),
+	'testimonial' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'ambrygen/testimonial',
+		'title' => 'Testimonial Block',
+		'category' => 'widgets',
+		'icon' => 'admin-comments',
+		'description' => 'Display selected testimonials from the testimonial post type.',
+		'keywords' => array(
+			'testimonial',
+			'review',
+			'feedback'
+		),
+		'version' => '1.0.0',
+		'textdomain' => 'ambrygen-vip-web',
+		'supports' => array(
+			'html' => true,
+			'align' => array(
+				'wide',
+				'full'
+			)
+		),
+		'attributes' => array(
+			'selectedTestimonials' => array(
+				'type' => 'array',
+				'default' => array(
+					
+				),
+				'items' => array(
+					'type' => 'number'
+				)
+			),
+			'testimonialsData' => array(
+				'type' => 'array',
+				'default' => array(
+					
+				)
+			)
+		),
+		'editorScript' => 'file:./index.js',
+		'editorStyle' => 'file:./index.css',
+		'style' => 'file:./style-index.css',
+		'viewScript' => 'file:./view.js'
 	)
 );

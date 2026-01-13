@@ -1,8 +1,5 @@
 import { useBlockProps } from '@wordpress/block-editor';
 
-// Import validation utilities
-import { isValidUrl } from '../../utils/validation.js';
-
 export default function Save( { attributes } ) {
 	const { columns, items } = attributes;
 	const blockProps = useBlockProps.save( {
@@ -11,43 +8,17 @@ export default function Save( { attributes } ) {
 
 	return (
 		<div { ...blockProps }>
-			<div
-				className="grid-wrapper savecodeonly"
-				role="grid"
-				aria-label="Image gallery"
-			>
+			<div className="grid-wrapper savecodeonly">
 				{ items.map( ( item, index ) => (
-					<div className="grid-item" key={ index } role="gridcell">
-						{ item.link && isValidUrl( item.link ) ? (
-							<a
-								href={ item.link }
-								aria-label={
-									item.title
-										? `View more about ${ item.title }`
-										: `View image ${ index + 1 }`
-								}
-							>
-								<img
-									src={ item.imageUrl }
-									alt={
-										item.title ||
-										`Grid image ${ index + 1 }`
-									}
-									loading="lazy"
-								/>
+					<div className="grid-item" key={ index }>
+						{ item.link ? (
+							<a href={ item.link }>
+								<img src={ item.imageUrl } alt={ item.title } />
 							</a>
 						) : (
-							<img
-								src={ item.imageUrl }
-								alt={
-									item.title || `Grid image ${ index + 1 }`
-								}
-								loading="lazy"
-							/>
+							<img src={ item.imageUrl } alt={ item.title } />
 						) }
-						{ item.title && (
-							<h4 className="grid-item-title">{ item.title }</h4>
-						) }
+						{ item.title && <h4>{ item.title }</h4> }
 					</div>
 				) ) }
 			</div>

@@ -19,11 +19,6 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
 import { TextControl } from '@wordpress/components';
 
 /**
- * Video validation utilities
- */
-import { isValidVideoUrl, getIframeSrc } from '../../utils/validation.js';
-
-/**
  * Editor styles for the genetic testing block.
  *
  * @see [https://www.npmjs.com/package/@wordpress/scripts#using-css](https://www.npmjs.com/package/@wordpress/scripts#using-css)
@@ -54,9 +49,39 @@ export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps( {
 		style: {
 			backgroundColor: getBackgroundColor(),
-			padding: '80px 40px', // Consistent with save.js
+			padding: '60px 40px',
 		},
 	} );
+
+	/**
+	 * Converts YouTube/Vimeo URLs to embed iframe src.
+	 *
+	 * @param {string} url Video URL
+	 * @return {string} Embed iframe src or empty string
+	 */
+	const getIframeSrc = ( url ) => {
+		if ( ! url ) {
+			return '';
+		}
+
+		// YouTube
+		if ( url.includes( 'youtube.com' ) || url.includes( 'youtu.be' ) ) {
+			const videoId =
+				url.split( 'v=' )[ 1 ]?.split( '&' )[ 0 ] ||
+				url.split( 'youtu.be/' )[ 1 ]?.split( '?' )[ 0 ];
+			return videoId
+				? `https://www.youtube.com/embed/${ videoId }?rel=0&modestbranding=1`
+				: '';
+		}
+
+		// Vimeo
+		if ( url.includes( 'vimeo.com' ) ) {
+			const videoId = url.split( '/' ).pop();
+			return videoId ? `https://player.vimeo.com/video/${ videoId }` : '';
+		}
+
+		return url || '';
+	};
 
 	const iframeSrc = getIframeSrc( videoUrl ) || '';
 
@@ -72,7 +97,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						}
 						placeholder={ __(
 							'What is genetic testing?',
-							'ambrygen-web'
+							'ambrygen'
 						) }
 						className="genetic-heading"
 					/>
@@ -85,7 +110,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						}
 						placeholder={ __(
 							'Genetic testing studies your genes…',
-							'ambrygen-web'
+							'ambrygen'
 						) }
 						className="genetic-description"
 					/>
@@ -93,31 +118,16 @@ export default function Edit( { attributes, setAttributes } ) {
 
 				<div className="genetic-video">
 					<TextControl
-						label={ __(
-							'Video URL (YouTube/Vimeo)',
-							'ambrygen-web'
-						) }
+						label={ __( 'Video URL (YouTube/Vimeo)', 'ambrygen' ) }
 						value={ videoUrl }
 						onChange={ ( value ) =>
 							setAttributes( { videoUrl: value || '' } )
 						}
-						help={
-							videoUrl && ! isValidVideoUrl( videoUrl )
-								? __(
-										'Invalid URL. Please use a valid YouTube or Vimeo URL.',
-										'ambrygen-web'
-								  )
-								: __(
-										'Paste YouTube/Vimeo URL - auto embeds',
-										'ambrygen-web'
-								  )
-						}
+						help={ __(
+							'Paste YouTube/Vimeo URL - auto embeds',
+							'ambrygen'
+						) }
 						placeholder="https://www.youtube.com/watch?v=..."
-						className={
-							videoUrl && ! isValidVideoUrl( videoUrl )
-								? 'has-error'
-								: ''
-						}
 					/>
 
 					{ iframeSrc && (
@@ -126,7 +136,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								src={ iframeSrc }
 								title={ __(
 									'Genetic testing video',
-									'ambrygen-web'
+									'ambrygen'
 								) }
 								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 								allowFullScreen

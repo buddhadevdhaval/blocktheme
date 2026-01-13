@@ -3,17 +3,43 @@
  */
 import { useBlockProps, RichText } from '@wordpress/block-editor';
 
-/**
- * Video validation utilities
- */
-import { getIframeSrc } from '../../utils/validation.js';
-
 export default function Save( { attributes } ) {
 	const { heading, description, videoUrl, backgroundColor, style } =
 		attributes;
 
 	const getBackgroundColor = () =>
 		backgroundColor || style?.color?.background || '#f8fafc';
+
+	const getIframeSrc = ( url ) => {
+		if ( ! url ) {
+			return '';
+		}
+
+		try {
+			// YouTube
+			if ( url.includes( 'youtube.com' ) || url.includes( 'youtu.be' ) ) {
+				const videoId =
+					url.split( 'v=' )[ 1 ]?.split( '&' )[ 0 ] ||
+					url.split( 'youtu.be/' )[ 1 ]?.split( '?' )[ 0 ];
+				return videoId
+					? `https://www.youtube.com/embed/${ videoId }?rel=0&modestbranding=1&playsinline=1`
+					: '';
+			}
+
+			// Vimeo
+			if ( url.includes( 'vimeo.com' ) ) {
+				const parts = url.split( '/' );
+				const videoId = parts.pop() || parts.pop();
+				return videoId
+					? `https://player.vimeo.com/video/${ videoId }?dnt=1`
+					: '';
+			}
+
+			return url;
+		} catch ( error ) {
+			return '';
+		}
+	};
 
 	const iframeSrc = getIframeSrc( videoUrl );
 	const blockProps = useBlockProps.save( {
@@ -26,38 +52,25 @@ export default function Save( { attributes } ) {
 	return (
 		<div { ...blockProps }>
 			<div className="genetic-testing-block">
-				{ /* Only render content section if there's heading or description */ }
-				{ ( heading || description ) && (
-					<div className="genetic-content">
-						{ heading && (
-							<RichText.Content
-								tagName="h2"
-								value={ heading }
-								className="genetic-heading"
-								id="genetic-testing-heading"
-							/>
-						) }
-						{ description && (
-							<RichText.Content
-								tagName="div"
-								value={ description }
-								className="genetic-description"
-								role="group"
-								aria-labelledby={
-									heading ? 'genetic-testing-heading' : null
-								}
-							/>
-						) }
-					</div>
-				) }
+				<div className="genetic-content">
+					{ heading && (
+						<RichText.Content
+							tagName="h2"
+							value={ heading }
+							className="genetic-heading"
+						/>
+					) }
+					{ description && (
+						<RichText.Content
+							tagName="div"
+							value={ description }
+							className="genetic-description"
+						/>
+					) }
+				</div>
 
-				{ /* Only render video section if there's a valid iframe */ }
 				{ iframeSrc && (
-					<div
-						className="genetic-video"
-						role="region"
-						aria-label="Genetic testing video"
-					>
+					<div className="genetic-video">
 						<div className="video-container">
 							<iframe
 								src={ iframeSrc }
@@ -66,8 +79,6 @@ export default function Save( { attributes } ) {
 								allowFullScreen
 								loading="lazy"
 								className="video-iframe"
-								role="application"
-								aria-label="Video player"
 							/>
 						</div>
 					</div>

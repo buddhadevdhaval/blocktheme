@@ -11,7 +11,7 @@ import { PanelBody, Button, ColorPicker } from '@wordpress/components';
 const MAX_FAQS = 10;
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { backgroundColor, imageUrl, imageAlt, faqs = [] } = attributes;
+	const { backgroundColor, imageUrl, faqs = [] } = attributes;
 
 	const blockProps = useBlockProps( {
 		style: { backgroundColor },
@@ -50,9 +50,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody
-					title={ __( 'Background Settings', 'ambrygen-web' ) }
-				>
+				<PanelBody title={ __( 'Background Settings' ) }>
 					<ColorPicker
 						color={ backgroundColor }
 						onChange={ ( color ) =>
@@ -68,11 +66,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						<MediaUploadCheck>
 							<MediaUpload
 								onSelect={ ( media ) =>
-									setAttributes( {
-										imageUrl: media.url,
-										imageId: media.id,
-										imageAlt: media.alt || '',
-									} )
+									setAttributes( { imageUrl: media.url } )
 								}
 								allowedTypes={ [ 'image' ] }
 								render={ ( { open } ) => (
@@ -81,41 +75,22 @@ export default function Edit( { attributes, setAttributes } ) {
 										variant="secondary"
 									>
 										{ imageUrl
-											? __(
-													'Change Image',
-													'ambrygen-web'
-											  )
-											: __(
-													'Upload Image',
-													'ambrygen-web'
-											  ) }
+											? __( 'Change Image' )
+											: __( 'Upload Image' ) }
 									</Button>
 								) }
 							/>
 						</MediaUploadCheck>
 
-						{ imageUrl && (
-							<img
-								src={ imageUrl }
-								alt={
-									imageAlt ||
-									__( 'FAQ illustration', 'ambrygen-web' )
-								}
-							/>
-						) }
+						{ imageUrl && <img src={ imageUrl } alt="" /> }
 					</div>
 
 					<div className="faq-content">
-						<h2>
-							{ __(
-								'Frequently Asked Questions',
-								'ambrygen-web'
-							) }
-						</h2>
+						<h2>{ __( 'Frequently Asked Questions' ) }</h2>
 
 						{ faqs.length === 0 && (
 							<p className="faq-empty">
-								{ __( 'No FAQs added yet.', 'ambrygen-web' ) }
+								{ __( 'No FAQs added yet.' ) }
 							</p>
 						) }
 
@@ -127,10 +102,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									onChange={ ( value ) =>
 										updateFaq( index, 'question', value )
 									}
-									placeholder={ __(
-										'FAQ Question',
-										'ambrygen-web'
-									) }
+									placeholder={ __( 'FAQ Question' ) }
 								/>
 
 								<RichText
@@ -139,17 +111,15 @@ export default function Edit( { attributes, setAttributes } ) {
 									onChange={ ( value ) =>
 										updateFaq( index, 'answer', value )
 									}
-									placeholder={ __(
-										'FAQ Answer',
-										'ambrygen-web'
-									) }
+									placeholder={ __( 'FAQ Answer' ) }
 								/>
 
 								<Button
-									variant="destructive"
+									isDestructive
+									variant="link"
 									onClick={ () => removeFaq( index ) }
 								>
-									{ __( 'Remove', 'ambrygen-web' ) }
+									{ __( 'Remove' ) }
 								</Button>
 							</div>
 						) ) }
@@ -160,7 +130,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								onClick={ addFaq }
 								style={ { marginTop: '16px' } }
 							>
-								{ __( 'Add FAQ', 'ambrygen-web' ) }
+								{ __( 'Add FAQ' ) }
 							</Button>
 						) }
 					</div>

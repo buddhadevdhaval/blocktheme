@@ -8,11 +8,6 @@
 import { useBlockProps, RichText } from '@wordpress/block-editor';
 
 /**
- * Import validation utilities
- */
-import { validateNumber } from '../../utils/validation.js';
-
-/**
  * Save component for the AI Health Hero block.
  * Defines the frontend markup structure using block attributes.
  * Only renders elements that have content to optimize output.
@@ -27,18 +22,30 @@ export default function Save( { attributes } ) {
 	const {
 		heading,
 		content,
-		counters,
+		counter1Number,
+		counter1Prefix,
+		counter1Suffix,
+		counter1Label,
+		counter2Number,
+		counter2Prefix,
+		counter2Suffix,
+		counter2Label,
+		counter3Number,
+		counter3Prefix,
+		counter3Suffix,
+		counter3Label,
+		counter4Number,
+		counter4Prefix,
+		counter4Suffix,
+		counter4Label,
 		imageTop,
-		imageTopAlt,
 		imageBottom,
-		imageBottomAlt,
 		logoImage,
-		logoImageAlt,
 	} = attributes;
 
 	/**
-	 * Renders a single counter item only if it has valid content.
-	 * Includes prefix, number, suffix, and label conditionally with validation.
+	 * Renders a single counter item only if it has content.
+	 * Includes prefix, number, suffix, and label conditionally.
 	 *
 	 * @param {string} number Counter number value
 	 * @param {string} prefix Counter prefix text
@@ -46,16 +53,8 @@ export default function Save( { attributes } ) {
 	 * @param {string} label  Counter label text
 	 * @return {JSX.Element|null} Counter markup or null if empty
 	 */
-	const renderCounter = ( number, prefix, suffix, label ) => {
-		// Only render if we have content and number is valid
-		const hasContent = number || prefix || suffix || label;
-		const numberValid = ! number || validateNumber( number ) === number;
-
-		if ( ! hasContent || ! numberValid ) {
-			return null;
-		}
-
-		return (
+	const renderCounter = ( number, prefix, suffix, label ) =>
+		( number || prefix || suffix || label ) && (
 			<div className="counter-item">
 				<div className="counter-number" data-counter={ number }>
 					{ prefix && (
@@ -77,132 +76,74 @@ export default function Save( { attributes } ) {
 				) }
 			</div>
 		);
-	};
 
 	return (
 		<div { ...useBlockProps.save() }>
-			<div
-				className="hero-layout"
-				role="region"
-				aria-label="AI Health Hero section"
-			>
+			<div className="hero-layout">
 				{ /* Logo */ }
 				{ logoImage && (
 					<div className="hero-logo">
-						<img
-							src={ logoImage }
-							alt={ logoImageAlt || 'Company logo' }
-							onError={ ( e ) => {
-								e.target.style.display = 'none';
-								// eslint-disable-next-line no-console
-								console.warn(
-									'Failed to load logo image:',
-									logoImage
-								);
-							} }
-						/>
+						<img src={ logoImage } alt="Logo" />
 					</div>
 				) }
 
 				{ /* Top media */ }
 				{ imageTop && (
-					<div
-						className="hero-image-top"
-						role="img"
-						aria-label="Hero top image"
-					>
-						<img
-							src={ imageTop }
-							alt={ imageTopAlt || 'Hero top image' }
-							loading="lazy"
-							onError={ ( e ) => {
-								e.target.style.display = 'none';
-								// eslint-disable-next-line no-console
-								console.warn(
-									'Failed to load top image:',
-									imageTop
-								);
-							} }
-						/>
+					<div className="hero-image-top">
+						<img src={ imageTop } alt="Top Media" />
 					</div>
 				) }
 
 				{ /* Bottom media */ }
 				{ imageBottom && (
-					<div
-						className="hero-image-bottom"
-						role="img"
-						aria-label="Hero bottom image"
-					>
-						<img
-							src={ imageBottom }
-							alt={ imageBottomAlt || 'Hero bottom image' }
-							loading="lazy"
-							onError={ ( e ) => {
-								e.target.style.display = 'none';
-								// eslint-disable-next-line no-console
-								console.warn(
-									'Failed to load bottom image:',
-									imageBottom
-								);
-							} }
-						/>
+					<div className="hero-image-bottom">
+						<img src={ imageBottom } alt="Bottom Media" />
 					</div>
 				) }
 
-				{ /* Hero content - only render if there's content */ }
-				{ ( heading ||
-					content ||
-					counters.some(
-						( counter ) =>
-							counter.number &&
-							validateNumber( counter.number ) === counter.number
-					) ) && (
-					<div className="hero-content" role="main">
-						{ heading && (
-							<RichText.Content
-								tagName="h1"
-								value={ heading }
-								className="hero-heading"
-								id="hero-heading"
-							/>
+				{ /* Hero content */ }
+				<div className="hero-content">
+					{ heading && (
+						<RichText.Content
+							tagName="h1"
+							value={ heading }
+							className="hero-heading"
+						/>
+					) }
+					{ content && (
+						<RichText.Content
+							tagName="p"
+							value={ content }
+							className="hero-description"
+						/>
+					) }
+					<div className="hero-counters">
+						{ renderCounter(
+							counter1Number,
+							counter1Prefix,
+							counter1Suffix,
+							counter1Label
 						) }
-						{ content && (
-							<RichText.Content
-								tagName="p"
-								value={ content }
-								className="hero-description"
-								role="group"
-								aria-labelledby="hero-heading"
-							/>
+						{ renderCounter(
+							counter2Number,
+							counter2Prefix,
+							counter2Suffix,
+							counter2Label
 						) }
-						{ /* Counters - only render if at least one has valid content */ }
-						{ counters.some( ( counter ) =>
-							renderCounter(
-								counter.number,
-								counter.prefix,
-								counter.suffix,
-								counter.label
-							)
-						) && (
-							<div
-								className="hero-counters"
-								role="region"
-								aria-labelledby="hero-heading"
-								aria-label="Health statistics"
-							>
-								{ counters.map( ( counter ) =>
-									renderCounter(
-										counter.number,
-										counter.prefix,
-										counter.suffix,
-										counter.label
-									)
-								) }
-							</div>
+						{ renderCounter(
+							counter3Number,
+							counter3Prefix,
+							counter3Suffix,
+							counter3Label
+						) }
+						{ renderCounter(
+							counter4Number,
+							counter4Prefix,
+							counter4Suffix,
+							counter4Label
 						) }
 					</div>
-				) }
+				</div>
 			</div>
 		</div>
 	);

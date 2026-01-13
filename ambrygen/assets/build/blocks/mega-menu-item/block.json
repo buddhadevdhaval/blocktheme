@@ -1,0 +1,29 @@
+{
+  "apiVersion": 3,
+  "name": "ambrygen/mega-menu-item",
+  "title": "Mega Menu Item",
+  "category": "design",
+  "icon": "menu",
+  "description": "Navigation item with mega menu dropdown.",
+  "parent": [
+    "core/navigation"
+  ],
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
+  "attributes": {
+    "label": {
+      "type": "string",
+      "default": ""
+    },
+    "templatePart": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "textdomain": "ambrygen-vip-web",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css"
+}

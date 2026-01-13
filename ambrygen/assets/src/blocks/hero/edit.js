@@ -41,14 +41,14 @@ export default function Edit( { attributes, setAttributes } ) {
 				tagName="h2"
 				value={ heading }
 				onChange={ ( value ) => setAttributes( { heading: value } ) }
-				placeholder={ __( 'Hero heading…', 'ambrygen-web' ) }
+				placeholder={ __( 'Hero heading…', 'hero' ) }
 				className="hero-heading"
 			/>
 			<RichText
 				tagName="p"
 				value={ content }
 				onChange={ ( value ) => setAttributes( { content: value } ) }
-				placeholder={ __( 'Hero content…', 'ambrygen-web' ) }
+				placeholder={ __( 'Hero content…', 'hero' ) }
 				className="hero-content"
 			/>
 		</div>

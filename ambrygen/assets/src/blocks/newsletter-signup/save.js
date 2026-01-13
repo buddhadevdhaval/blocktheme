@@ -19,8 +19,7 @@ import { useBlockProps, RichText, InnerBlocks } from '@wordpress/block-editor';
  * @return {JSX.Element}                  Frontend markup element
  */
 export default function Save( { attributes } ) {
-	const { heading, image, imageId, imageAlt, backgroundColor, style } =
-		attributes;
+	const { heading, image, backgroundColor, style } = attributes;
 
 	/**
 	 * Block props with dynamic background color for frontend.
@@ -38,12 +37,7 @@ export default function Save( { attributes } ) {
 				{ /* Image section - conditional render */ }
 				{ image && (
 					<div className="newsletter-image">
-						<img
-							src={ image }
-							alt={ imageAlt || 'Newsletter illustration' }
-							data-image-id={ imageId }
-							className="responsive-image"
-						/>
+						<img src={ image } alt="Newsletter illustration" />
 					</div>
 				) }
 

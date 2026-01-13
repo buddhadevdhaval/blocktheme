@@ -1,12 +1,12 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
-  "apiVersion": 3,
+  "apiVersion": 2,
   "name": "ambrygen/image-grid",
   "title": "Image Grid",
-  "category": "design",
+  "category": "ambrygen",
   "icon": "grid-view",
   "description": "A block to show multiple images in a grid with title and link.",
-  "textdomain": "ambrygen-web",
+  "textdomain": "ambrygen-vip-web",
   "supports": {
     "html": false
   },
@@ -23,7 +23,6 @@
       "default": [
         {
           "imageUrl": "",
-          "imageId": 0,
           "title": "Grid Item Title",
           "link": ""
         }

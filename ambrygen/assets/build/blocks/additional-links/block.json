@@ -1,6 +1,6 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
-  "apiVersion": 3,
+  "apiVersion": 2,
   "name": "ambrygen/additional-links",
   "title": "Additional Links",
   "category": "layout",
@@ -27,20 +27,12 @@
     "imageUrl": {
       "type": "string"
     },
-    "imageId": {
-      "type": "number",
-      "default": 0
-    },
-    "imageAlt": {
-      "type": "string",
-      "default": ""
-    },
     "imagePosition": {
       "type": "string",
       "default": "left"
     }
   },
-  "textdomain": "ambrygen-web",
+  "textdomain": "ambrygen-vip-web",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css"

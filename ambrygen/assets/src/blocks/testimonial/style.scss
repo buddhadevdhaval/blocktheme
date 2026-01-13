@@ -1,0 +1,34 @@
+.testimonial-block-editor,
+.testimonial-block-frontend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+
+    .testimonial-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 1rem;
+        flex: 1 1 300px;
+        display: flex;
+        gap: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+        .testimonial-image img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+
+        .testimonial-content {
+            h4 {
+                font-weight: bold;
+                margin-bottom: 0.5rem;
+            }
+            p {
+                font-size: 0.95rem;
+                color: #555;
+            }
+        }
+    }
+}

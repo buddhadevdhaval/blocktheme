@@ -19,8 +19,7 @@ import { useBlockProps, RichText, InnerBlocks } from '@wordpress/block-editor';
  */
 
 export default function Save( { attributes } ) {
-	const { heading, headingTag, imageUrl, imageId, imageAlt, imagePosition } =
-		attributes;
+	const { heading, headingTag, imageUrl, imagePosition } = attributes;
 	const blockProps = useBlockProps.save( {
 		className: `left-right-block ${ imagePosition }`,
 	} );
@@ -31,12 +30,7 @@ export default function Save( { attributes } ) {
 				{ /* Left image */ }
 				<div className="image-wrapper">
 					{ imagePosition === 'left' && imageUrl && (
-						<img
-							src={ imageUrl }
-							alt={ imageAlt || heading || '' }
-							data-image-id={ imageId }
-							className="responsive-image"
-						/>
+						<img src={ imageUrl } alt="" />
 					) }
 				</div>
 
@@ -52,12 +46,7 @@ export default function Save( { attributes } ) {
 				{ /* Right image */ }
 				<div className="image-wrapper">
 					{ imagePosition === 'right' && imageUrl && (
-						<img
-							src={ imageUrl }
-							alt={ imageAlt || heading || '' }
-							data-image-id={ imageId }
-							className="responsive-image"
-						/>
+						<img src={ imageUrl } alt="" />
 					) }
 				</div>
 			</div>

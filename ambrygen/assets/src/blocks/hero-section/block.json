@@ -1,0 +1,80 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ambrygen/hero-section",
+	"title": "Hero Section",
+	"category": "ambrygen",
+	"icon": "cover-image",
+	"description": "Hero section with rounded background image, heading, tagline, description, and dual call-to-action buttons.",
+	"supports": {
+		"html": false,
+		"align": [
+			"wide",
+			"full"
+		],
+		"spacing": {
+			"margin": true,
+			"padding": true,
+			"blockGap": true
+		},
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		}
+	},
+	"keywords": [
+		"hero",
+		"banner",
+		"intro"
+	],
+	"attributes": {
+		"heading": {
+			"type": "string",
+			"default": "Industry-leading genetic testing"
+		},
+		"content": {
+			"type": "string",
+			"default": "For over 25 years..."
+		},
+		"tagline": {
+			"type": "string",
+			"default": "This brings the Ambry mindset to life..."
+		},
+		"backgroundImage": {
+			"type": "string",
+			"default": ""
+		},
+		"backgroundImageId": {
+			"type": "number",
+			"default": 0
+		},
+		"backgroundImageAlt": {
+			"type": "string",
+			"default": ""
+		},
+		"buttonPrimaryText": {
+			"type": "string",
+			"default": "Start Your Order"
+		},
+		"buttonPrimaryUrl": {
+			"type": "string",
+			"default": "#"
+		},
+		"buttonSecondaryText": {
+			"type": "string",
+			"default": "Who We Are"
+		},
+		"buttonSecondaryUrl": {
+			"type": "string",
+			"default": "#"
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"textdomain": "ambrygen-web"
+}

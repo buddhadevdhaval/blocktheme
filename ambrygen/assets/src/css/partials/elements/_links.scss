@@ -19,16 +19,15 @@ a {
 
 .page-section {
 
-	a,
-	&:visited {
+	a {
 		color: var(--theme_link_color);
-		border-bottom: 1px solid var(--theme_link_border_color);
-		padding-bottom: 2px;
+		// border-bottom: 1px solid var(--theme_link_border_color);
+		// padding-bottom: 2px;
 
 		&:hover,
 		&:active {
 			color: var(--theme_link_color_hover);
-			border-color: var(--theme_link_border_color_hover);
+			// border-color: var(--theme_link_border_color_hover);
 		}
 	}
 }
@@ -37,8 +36,7 @@ a {
 .post-image,
 .post-title {
 
-	a,
-	&:visited {
+	a {
 		border-bottom: none;
 	}
 }

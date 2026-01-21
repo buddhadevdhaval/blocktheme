@@ -1,0 +1,155 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+
+.hero-section {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+	background-color: #fff;
+
+	&__container {
+		display: grid;
+		grid-template-columns: 1fr;
+		width: 100%;
+		max-width: 1920px;
+		margin: 0 auto;
+
+		@include bp.desktop {
+			grid-template-columns: 1.2fr 1fr;
+			align-items: center;
+			min-height: 680px;
+		}
+	}
+
+	&__background {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		min-height: 400px;
+
+		@include bp.desktop {
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 0;
+		}
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+
+			@include bp.desktop {
+				border-bottom-left-radius: 225px;
+			}
+		}
+	}
+
+	&__content {
+		position: relative;
+		padding: clamp(40px, 5vw, 80px) clamp(20px, 5vw, 60px);
+		z-index: 1;
+		background: #fff;
+
+		@include bp.desktop {
+			grid-column: 2;
+			padding-left: clamp(40px, 5vw, 100px);
+			padding-right: clamp(40px, 5vw, 120px);
+		}
+	}
+
+	&__heading {
+		font-family: Inter, sans-serif;
+		font-style: normal;
+		font-weight: 600;
+		font-size: clamp(32px, 4vw, 56px);
+		line-height: 1.1;
+		letter-spacing: -0.02em;
+		color: var(--theme_color_secondary);
+
+		/* Dark Blue from theme likely to be used, but using color from image for now */
+		margin-bottom: 24px;
+	}
+
+	&__description {
+		font-family: Inter, sans-serif;
+		font-style: normal;
+		font-weight: 400;
+		font-size: clamp(16px, 1.5vw, 18px);
+		line-height: 1.6;
+		color: var(--theme_gray_600);
+		margin-bottom: 24px;
+		max-width: 600px;
+	}
+
+	&__tagline {
+		font-family: Inter, sans-serif;
+		font-style: normal;
+		font-weight: 600;
+		font-size: 16px;
+		line-height: 24px;
+		color: var(--theme_gray_700);
+		margin-bottom: 40px;
+		max-width: 600px;
+	}
+
+	&__actions {
+		display: flex;
+		// flex-direction: column;
+		gap: 16px;
+
+		@include bp.tablet {
+			flex-direction: row;
+			align-items: center;
+		}
+	}
+
+	&__button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 12px 24px;
+		border-radius: 8px;
+		font-family: Inter, sans-serif;
+		font-weight: 600;
+		font-size: 16px;
+		line-height: 24px;
+		text-decoration: none;
+		transition: all 0.3s ease;
+		cursor: pointer;
+
+		&-text {
+			margin-right: 8px;
+		}
+
+		&-icon {
+			font-size: 20px;
+			line-height: 1;
+		}
+
+		&--primary {
+			background-color: var(--theme_button_bgcolor);
+			color: var(--theme_button_color);
+			border: 1px solid var(--theme_button_bgcolor);
+			box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+
+			&:hover {
+				background-color: var(--theme_button_bgcolor_hover);
+				color: var(--theme_button_color_hover);
+			}
+		}
+
+		&--secondary {
+			background-color: var(--theme_white);
+			color: var(--theme_gray_700);
+			border: 1px solid var(--theme_gray_300);
+			box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+
+			&:hover {
+				background-color: var(--theme_gray_100);
+				color: var(--theme_gray_700);
+			}
+		}
+	}
+}

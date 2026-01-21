@@ -1,0 +1,55 @@
+.ambrygen-faq {
+	padding: 60px 20px;
+	color: #fff;
+}
+
+.faq-inner {
+	display: grid;
+	grid-template-columns: 1fr 1.2fr;
+	gap: 40px;
+	align-items: center;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.faq-image img {
+	width: 100%;
+	border-radius: 12px;
+}
+
+.faq-content h2 {
+	font-size: 32px;
+	margin-bottom: 30px;
+}
+
+.faq-item {
+	border-bottom: 1px solid #e5e7eb;
+	padding: 0.75rem 0;
+}
+
+.faq-item summary {
+	cursor: pointer;
+	font-weight: 600;
+	list-style: none;
+}
+
+.faq-item summary::-webkit-details-marker {
+	display: none;
+}
+
+/* wrapper animation */
+.faq-item .faq-answer {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows 300ms ease;
+}
+
+.faq-item .faq-answer > * {
+	overflow: hidden;
+}
+
+/* open state */
+.faq-item[open] .faq-answer {
+	grid-template-rows: 1fr;
+	margin-top: 0.5rem;
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/banner",
+  "title": "Banner",
+  "category": "ambrygen",
+  "icon": "format-image",
+  "description": "Banner section with text content and background image.",
+  "supports": {
+    "html": false,
+    "color": {
+      "background": true
+    }
+  },
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "Title Goes Here"
+    },
+    "content": {
+      "type": "string",
+      "default": "Ambry Genetics focuses on quality and accuracy within the genetic testing process by employing a multi-step verification process."
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css"
+}

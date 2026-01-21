@@ -1,0 +1,121 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/genetic-testing-cards",
+  "title": "Genetic Testing Cards",
+  "category": "ambrygen",
+  "icon": "grid-view",
+  "description": "A layout with two stacked cards on the left and one large featured card on the right.",
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "spacing": {
+      "margin": true,
+      "padding": true,
+      "blockGap": true
+    },
+    "color": {
+      "background": true,
+      "text": true
+    }
+  },
+  "keywords": [
+    "cards",
+    "genetic",
+    "layout",
+    "grid"
+  ],
+  "attributes": {
+    "cardOneImage": {
+      "type": "string",
+      "default": ""
+    },
+    "cardOneImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "cardOneImageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "cardOneTitle": {
+      "type": "string",
+      "default": "Considering genetic testing for yourself or a family member?"
+    },
+    "cardOneDescription": {
+      "type": "string",
+      "default": "At Ambry Genetics, we want to empower you to navigate your healthcare with confidence."
+    },
+    "cardOneLinkText": {
+      "type": "string",
+      "default": "Learn more"
+    },
+    "cardOneLinkUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "cardTwoImage": {
+      "type": "string",
+      "default": ""
+    },
+    "cardTwoImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "cardTwoImageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "cardTwoTitle": {
+      "type": "string",
+      "default": "Classifi"
+    },
+    "cardTwoDescription": {
+      "type": "string",
+      "default": "How Ambry transforms raw genetic data into actionable clinical insights."
+    },
+    "cardTwoLinkText": {
+      "type": "string",
+      "default": "Discover Classifi"
+    },
+    "cardTwoLinkUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "cardMainImage": {
+      "type": "string",
+      "default": ""
+    },
+    "cardMainImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "cardMainImageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "cardMainTitle": {
+      "type": "string",
+      "default": "Patient for Life"
+    },
+    "cardMainDescription": {
+      "type": "string",
+      "default": "Our promise to patients living with rare and undiagnosed conditions, today and in the future."
+    },
+    "cardMainLinkText": {
+      "type": "string",
+      "default": "Explore the Program"
+    },
+    "cardMainLinkUrl": {
+      "type": "string",
+      "default": "#"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web"
+}

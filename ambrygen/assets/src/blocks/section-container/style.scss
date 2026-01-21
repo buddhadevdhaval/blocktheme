@@ -1,0 +1,78 @@
+/**
+ * Section Container Block Styles
+ * 
+ * Shared styles for both frontend and editor.
+ */
+
+@use "../../css/partials/variables/breakpoints" as bp;
+@use "../../css/partials/site/layout/containers" as c;
+
+.wp-block-ambrygen-section-container {
+    position: relative;
+    width: 100%;
+    margin: 0;
+
+    // Container width variations
+    &.container-1340 {
+
+        @include c.container(1400px); // Matches theme '1340' container definition
+        max-width: none; // Ensure outer container is full width
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    &.container-1280 {
+
+        @include c.container(1280px);
+        max-width: none;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    &.container-full {
+
+        @include c.container(100%);
+        max-width: 100%;
+    }
+
+    // Background style variations
+    &.bg-primary {
+        background: var(--theme_color_primary);
+        color: var(--theme_white);
+    }
+
+    &.bg-secondary {
+        background: var(--theme_color_secondary);
+        color: var(--theme_white);
+    }
+
+    &.bg-light {
+        background: var(--theme_bg_light, #f5f5f5);
+        color: var(--theme_text_color);
+    }
+
+    &.bg-dark {
+        background: var(--theme_bg_dark, #142533);
+        color: var(--theme_white);
+    }
+
+    // Background Options
+    &.bg-fixed {
+        background-attachment: fixed;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    // Wrapper for inner content
+    .wrapper {
+        position: relative;
+        z-index: 1;
+    }
+
+    // Remove bottom margin from last child
+    >*:last-child,
+    .wrapper>*:last-child {
+        margin-bottom: 0;
+    }
+}

@@ -1,0 +1,63 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ambrygen/flexible-content",
+	"title": "Flexible Content Layout",
+	"category": "ambrygen",
+	"icon": "align-wide",
+	"description": "A flexible block with heading, content, image, and multiple layout options (standard, overlap, stacked).",
+	"textdomain": "ambrygen-web",
+
+	"supports": {
+		"html": false,
+		"align": ["wide", "full"],
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+
+	"attributes": {
+		"heading": {
+			"type": "string",
+			"default": ""
+		},
+		"headingTag": {
+			"type": "string",
+			"default": "h2"
+		},
+		"imageUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"imageId": {
+			"type": "number",
+			"default": 0
+		},
+		"imageAlt": {
+			"type": "string",
+			"default": ""
+		},
+		"imagePosition": {
+			"type": "string",
+			"default": "left"
+		},
+		"layoutStyle": {
+			"type": "string",
+			"default": "standard",
+			"enum": ["standard", "overlap", "stacked"]
+		},
+		"imageSize": {
+			"type": "string",
+			"default": "medium"
+		},
+		"contentAlignment": {
+			"type": "string",
+			"default": "left"
+		}
+	}
+}

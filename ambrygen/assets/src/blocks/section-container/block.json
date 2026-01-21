@@ -1,0 +1,57 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "ambrygen/section-container",
+    "title": "Section Container",
+    "category": "ambrygen",
+    "icon": "align-center",
+    "description": "Flexible container block with width controls, background options, and spacing settings for organizing content sections.",
+    "keywords": [
+        "section",
+        "container",
+        "wrapper",
+        "layout"
+    ],
+    "supports": {
+        "html": false,
+        "align": [
+            "wide",
+            "full"
+        ],
+        "spacing": {
+            "margin": true,
+            "padding": true,
+            "blockGap": false
+        },
+        "color": {
+            "background": true,
+            "text": false,
+            "link": false
+        }
+    },
+    "attributes": {
+        "tagName": {
+            "type": "string",
+            "default": "section"
+        },
+        "containerWidth": {
+            "type": "string",
+            "default": "container-1340"
+        },
+        "backgroundStyle": {
+            "type": "string",
+            "default": ""
+        },
+        "isFixedBackground": {
+            "type": "boolean",
+            "default": false
+        }
+    },
+    "providesContext": {
+        "ambrygen/containerWidth": "containerWidth"
+    },
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./index.css",
+    "style": "file:./style-index.css",
+    "textdomain": "ambrygen-web"
+}

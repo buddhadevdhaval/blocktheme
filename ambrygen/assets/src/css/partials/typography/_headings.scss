@@ -20,7 +20,7 @@ h5,
 h6,
 .heading-6 {
 	font-family: var(--font__main);
-	font-weight: 400;
+	font-weight: 500;
 	margin: 0 0 20px;
 	color: var(--theme_heading_color);
 	line-height: var(--line_height_medium);
@@ -34,39 +34,89 @@ h6,
 			color: var(--theme_heading_link_color_hover);
 		}
 	}
+
+	span {
+		color: var(--theme_cg_blue);
+	}
 }
 
 h1,
 .heading-1 {
 	font-size: var(--theme_font_size_1);
+	letter-spacing: -1.44px;
+	line-height: 1.25;
 }
 
 h2,
 .heading-2 {
 	font-size: var(--theme_font_size_2);
+	letter-spacing: -1.2px;
+	line-height: 1.20;
 }
 
 h3,
 .heading-3 {
 	font-size: var(--theme_font_size_3);
+	letter-spacing: -0.96px;
+	line-height: 1.25;
 }
 
 h4,
 .heading-4 {
 	font-size: var(--theme_font_size_4);
+	letter-spacing: -0.72px;
+	line-height: 1.22;
 }
 
 h5,
 .heading-5 {
 	font-size: var(--theme_font_size_5);
+	line-height: 1.26;
 }
 
 h6,
 .heading-6 {
 	font-size: var(--theme_font_size_6);
+	line-height: 1.33;
 }
 
-.body-small {
+.body1 {
+	font-size: var(--theme_font_size_7);
+	font-weight: 400;
+	line-height: 1.50;
+	letter-spacing: -0.24px;
+}
 
-	@include body-small;
+.body2 {
+	font-size: var(--theme_font_size_8);
+	font-weight: 300;
+	line-height: 1.42;
+	letter-spacing: -0.21px;
+}
+
+.subtitle1 {
+	font-size: var(--theme_font_size_9);
+	font-weight: 300;
+	line-height: 1.50;
+	letter-spacing: -0.3px;
+}
+
+.subtitle2 {
+	font-size: var(--theme_font_size_10);
+	font-weight: 300;
+	line-height: 1.55;
+	letter-spacing: -0.27px;
+}
+
+.caption-text {
+	font-size: var(--theme_font_size_11);
+	font-weight: 300;
+	line-height: 1.50;
+	letter-spacing: -0.18px;
+}
+
+.text-small {
+	font-size: var(--theme_font_size_14);
+	font-weight: 400;
+	line-height: 1.33;
 }

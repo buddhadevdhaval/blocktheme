@@ -1,0 +1,147 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/ai-hero-section",
+  "title": "AI Hero Section",
+  "category": "ambrygen",
+  "icon": "networking",
+  "description": "Advanced hero section with AI healthcare visuals, animated counters, and multi-media layout system.",
+  "supports": {
+    "html": false,
+    "align": true,
+    "spacing": {
+      "margin": true,
+      "padding": true,
+      "blockGap": true
+    },
+    "color": {
+      "background": true,
+      "text": true,
+      "link": false
+    },
+    "typography": {
+      "fontSize": false,
+      "lineHeight": false
+    }
+  },
+  "keywords": [
+    "hero",
+    "ai",
+    "healthcare",
+    "counter",
+    "statistics"
+  ],
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "Transforming Healthcare with AI Innovation"
+    },
+    "content": {
+      "type": "string",
+      "default": "Leveraging artificial intelligence to revolutionize patient care, diagnostics, and medical research."
+    },
+    "counters": {
+      "type": "array",
+      "default": [
+        {
+          "number": "100",
+          "prefix": "",
+          "suffix": "",
+          "label": "Publications"
+        },
+        {
+          "number": "50",
+          "prefix": "",
+          "suffix": "+",
+          "label": "Partners"
+        },
+        {
+          "number": "50",
+          "prefix": "",
+          "suffix": "k",
+          "label": "Variants to ClinVar"
+        },
+        {
+          "number": "100",
+          "prefix": "",
+          "suffix": "k+",
+          "label": "Tests Conducted"
+        }
+      ]
+    },
+    "imageTop": {
+      "type": "string",
+      "default": ""
+    },
+    "imageTopId": {
+      "type": "number",
+      "default": 0
+    },
+    "imageTopAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "imageBottom": {
+      "type": "string",
+      "default": ""
+    },
+    "imageBottomId": {
+      "type": "number",
+      "default": 0
+    },
+    "imageBottomAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "logoImage": {
+      "type": "string",
+      "default": ""
+    },
+    "logoImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "logoImageAlt": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "variations": [
+    {
+      "name": "ai-hero-simple",
+      "title": "AI Hero (Simple)",
+      "description": "Hero section without counters",
+      "attributes": {
+        "counters": []
+      },
+      "scope": [
+        "inserter"
+      ]
+    }
+  ],
+  "example": {
+    "attributes": {
+      "heading": "Transforming Healthcare with AI Innovation",
+      "content": "Leveraging artificial intelligence to revolutionize patient care.",
+      "counters": [
+        {
+          "number": "100",
+          "prefix": "",
+          "suffix": "",
+          "label": "Publications"
+        },
+        {
+          "number": "50",
+          "prefix": "",
+          "suffix": "+",
+          "label": "Partners"
+        }
+      ]
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "viewScript": "file:./view.js"
+}

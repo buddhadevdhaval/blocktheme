@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/faq-accordion",
+  "title": "FAQ Accordion",
+  "category": "ambrygen",
+  "icon": "editor-help",
+  "description": "Interactive FAQ accordion with image and expandable questions.",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "backgroundColor": {
+      "type": "string",
+      "default": "#007fa3"
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "imageId": {
+      "type": "number",
+      "default": 0
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "faqs": {
+      "type": "array",
+      "default": [
+        {
+          "question": "What is genetic testing?",
+          "answer": "Genetic testing involves examining your DNA to identify changes that may cause illness."
+        },
+        {
+          "question": "Is genetic testing for everyone?",
+          "answer": "Genetic testing may not be necessary for everyone and depends on medical history."
+        }
+      ]
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css"
+}

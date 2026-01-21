@@ -24,7 +24,39 @@ final class Blocks {
 	 * @since 1.0.0
 	 */
 	protected function __construct() {
+		$this->setup_hooks();
+	}
+
+	/**
+	 * Setup hooks.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	private function setup_hooks(): void {
+		$this->register_block_category();
 		$this->register_blocks();
+	}
+
+	/**
+	 * Register custom block category.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function register_block_category(): void {
+		add_filter( 'block_categories_all', function ( $categories, $post ) {
+	
+			return array_merge(
+				[
+					[
+						'slug'  => 'ambrygen',
+						'title' => __( 'Ambrygen Blocks', 'ambrygen-web' ),
+					]
+				],
+				$categories
+			);
+		}, 10, 2 );
 	}
 
 	/**

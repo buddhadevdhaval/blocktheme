@@ -6,7 +6,7 @@
 
 :root {
     // Global theme font.
-    $font__main: "Axiforma-Regular", sans-serif;
+    --font__main: "Inter", sans-serif;
 
     /* -------------------------------------------------
 	>> Spacing Variables (from SCSS)
@@ -40,8 +40,12 @@
     --theme_font_size_6: #{typography.$theme_font_size_6};
     --theme_font_size_7: #{typography.$theme_font_size_7};
     --theme_font_size_8: #{typography.$theme_font_size_8};
+    --theme_font_size_9: #{typography.$theme_font_size_9};
     --theme_font_size_10: #{typography.$theme_font_size_10};
+    --theme_font_size_11: #{typography.$theme_font_size_11};
+    --theme_font_size_12: #{typography.$theme_font_size_12};
     --theme_font_size_13: #{typography.$theme_font_size_13};
+    --theme_font_size_14: #{typography.$theme_font_size_14};
 
 
     /* -------------------------------------------------
@@ -105,6 +109,23 @@
     --theme_red: #{colors.$theme_red};
     --theme_sea_green: #{colors.$theme_sea_green};
     --theme_transparent: #{colors.$theme_transparent};
+
+
+    --theme_aliceblue: #{colors.$theme_aliceblue};
+    --theme_lightblue: #{colors.$theme_lightblue};
+    --theme_lightblueText: #{colors.$theme_lightblueText};
+    --theme_gray_100: #{colors.$theme_gray_100};
+    --theme_gray_300: #{colors.$theme_gray_300};
+    --theme_gray_400: #{colors.$theme_gray_400};
+    --theme_gray_500: #{colors.$theme_gray_500};
+    --theme_gray_600: #{colors.$theme_gray_600};
+    --theme_gray_700: #{colors.$theme_gray_700};
+    --theme_gray_800: #{colors.$theme_gray_800};
+    --theme_gray_900: #{colors.$theme_gray_900};
+
+    --theme_primary_200: #{colors.$theme_primary_200};
+    --theme_cg_blue: #{colors.$theme_cg_blue};
+
     --theme_regular_text: #{colors.$theme_regular_text};
     --theme_dark_text: #{colors.$theme_dark_text};
     --theme_white_text: #{colors.$theme_white_text};

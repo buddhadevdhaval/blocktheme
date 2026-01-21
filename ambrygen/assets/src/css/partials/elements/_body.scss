@@ -43,7 +43,7 @@ body {
     /* Tablet/iPad: 768px and above */
     @include bp.tablet-up {
         font-size: 16px;
-        padding: 15px;
+        // padding: 15px;
     }
 
     /* Desktop: 1024px and above */
@@ -80,7 +80,7 @@ body {
 
 body,
 html {
-    overflow-x: hidden;
+    // overflow-x: hidden;
 }
 
 p {

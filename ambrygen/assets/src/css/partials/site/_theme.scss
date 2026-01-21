@@ -163,6 +163,10 @@
 }
 
 // background
+.bg-aliceblue {
+	background: var(--theme_aliceblue);
+}
+
 .bg-cover {
 	background-size: cover;
 }
@@ -206,21 +210,21 @@ picture {
 
 .mx-none {
 
-	@media (width <= 767px) {
+	@media (width <=767px) {
 		display: none;
 	}
 }
 
 .sm-none {
 
-	@media (width <= 640px) {
+	@media (width <=640px) {
 		display: none;
 	}
 }
 
 .md-none {
 
-	@media (width <= 991px) {
+	@media (width <=991px) {
 		display: none;
 	}
 }
@@ -228,7 +232,7 @@ picture {
 .desktop-none {
 	display: none;
 
-	@media (width <= 767px) {
+	@media (width <=767px) {
 		display: block;
 	}
 }

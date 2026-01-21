@@ -1,0 +1,252 @@
+/**
+ * Frontend styles for Content with Image block
+ * Responsive layouts with proper aspect ratios
+ */
+
+.flexible-content {
+    // Main content wrapper
+    .content-wrapper {
+        display: grid;
+        gap: 2rem;
+        align-items: center;
+
+        // Standard layout (default)
+        &.standard {
+
+            @media (min-width: 768px) {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        // Overlap layout
+        &.overlap {
+            position: relative;
+            
+            @media (min-width: 768px) {
+                grid-template-columns: 1fr;
+            }
+            
+            .image-wrapper {
+
+                @media (min-width: 768px) {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    width: 50%;
+                    height: 100%;
+                    z-index: 1;
+                }
+            }
+            
+            .text-wrapper {
+
+                @media (min-width: 768px) {
+                    z-index: 2;
+                    padding-right: 25%;
+                }
+            }
+        }
+
+        // Stacked layout
+        &.stacked {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    // Image wrapper
+    .image-wrapper {
+        position: relative;
+        overflow: hidden;
+        border-radius: 12px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        // Hover effects
+        &:hover img {
+            transform: scale(1.02);
+        }
+    }
+
+    // Text wrapper
+    .text-wrapper {
+        padding: 2rem 0;
+
+        h2, h3, h4, h5, h6 {
+            margin-bottom: 1.5rem;
+            color: #1a202c;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        h2 { font-size: 2rem; }
+
+        h3 { font-size: 1.75rem; }
+
+        h4 { font-size: 1.5rem; }
+
+        h5 { font-size: 1.25rem; }
+
+        h6 { font-size: 1.125rem; }
+
+        p {
+            line-height: 1.6;
+            color: #4a5568;
+            margin-bottom: 1rem;
+        }
+
+        // Content alignment
+        &[style*="--content-alignment: center"] {
+            text-align: center;
+        }
+
+        &[style*="--content-alignment: right"] {
+            text-align: right;
+        }
+    }
+
+    // Left position
+    &.left {
+
+        .content-wrapper {
+            grid-template-columns: 1fr 1fr;
+            
+            @media (max-width: 767px) {
+                grid-template-columns: 1fr;
+            }
+            
+            @media (min-width: 768px) {
+
+                .image-wrapper {
+                    order: 1;
+                }
+                
+                .text-wrapper {
+                    order: 2;
+                }
+            }
+        }
+    }
+
+    // Right position
+    &.right {
+
+        .content-wrapper {
+            grid-template-columns: 1fr 1fr;
+            
+            @media (max-width: 767px) {
+                grid-template-columns: 1fr;
+            }
+            
+            @media (min-width: 768px) {
+
+                .image-wrapper {
+                    order: 2;
+                }
+                
+                .text-wrapper {
+                    order: 1;
+                }
+            }
+        }
+    }
+
+    // Image size variations
+    &.small .image-wrapper {
+        min-height: 150px;
+
+        img {
+            border-radius: 8px;
+        }
+    }
+
+    &.medium .image-wrapper {
+        min-height: 200px;
+
+        img {
+            border-radius: 12px;
+        }
+    }
+
+    &.large .image-wrapper {
+        min-height: 250px;
+
+        img {
+            border-radius: 16px;
+        }
+    }
+
+    &.full .image-wrapper {
+        min-height: 300px;
+
+        img {
+            border-radius: 20px;
+        }
+    }
+
+    // Responsive adjustments
+    @media (max-width: 767px) {
+
+        .content-wrapper {
+            gap: 1.5rem;
+        }
+
+        .text-wrapper {
+            padding: 1.5rem 0;
+        }
+
+        h2 { font-size: 1.75rem; }
+
+        h3 { font-size: 1.5rem; }
+
+        h4 { font-size: 1.25rem; }
+
+        h5 { font-size: 1.125rem; }
+
+        h6 { font-size: 1rem; }
+    }
+
+    @media (min-width: 1024px) {
+
+        .content-wrapper {
+            gap: 3rem;
+        }
+
+        .text-wrapper {
+            padding: 2.5rem 0;
+        }
+
+        h2 { font-size: 2.25rem; }
+
+        h3 { font-size: 2rem; }
+
+        h4 { font-size: 1.75rem; }
+
+        h5 { font-size: 1.5rem; }
+
+        h6 { font-size: 1.25rem; }
+    }
+}
+
+// Responsive image handling
+.responsive-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: inherit;
+}
+
+// Image loading states
+.responsive-image:not(.loaded) {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.responsive-image.loaded {
+    opacity: 1;
+}

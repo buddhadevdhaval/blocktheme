@@ -1,0 +1,244 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+
+.ai-hero {
+    margin: 0;
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 30px clamp(25px, calc(1.5625rem + ((1vw - 7.68px) * 4.2955)), 50px);
+        align-items: center;
+    }
+
+    &__col-images {
+        grid-column: span 6;
+
+        @include bp.mobile-tablet {
+            grid-column: span 12;
+            order: 2;
+        }
+    }
+
+    &__col-content {
+        grid-column: span 6;
+
+        @include bp.mobile-tablet {
+            grid-column: span 12;
+            order: 1;
+        }
+    }
+
+    &__images {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: clamp(15px, calc(0.9375rem + ((1vw - 7.68px) * 1.5464)), 24px);
+    }
+
+    &__image-wrapper {
+        grid-column: span 6;
+        display: flex;
+
+        &:last-child {
+            grid-column: span 12;
+        }
+    }
+
+    &__logo {
+        height: clamp(150px, calc(9.375rem + ((1vw - 7.68px) * 27.4914)), 310px);
+        background: var(--theme_color_primary);
+        border-radius: clamp(12px, calc(0.75rem + ((1vw - 7.68px) * 0.6873)), 16px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        background-image: url(../../images/dot-lines.png);
+        background-repeat: repeat;
+        background-size: cover;
+
+        @include bp.tablet {
+            height: 200px;
+        }
+
+        .ai-hero__logo-inner {
+            background: var(--White, #FFF);
+            filter: drop-shadow(0 30.745px 40px rgba(0, 62, 105, 0.25));
+            width: clamp(70px, calc(4.375rem + ((1vw - 7.68px) * 5.1546)), 100px);
+            height: clamp(70px, calc(4.375rem + ((1vw - 7.68px) * 5.1546)), 100px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: clamp(18px, calc(1.125rem + ((1vw - 7.68px) * 0.8591)), 23px);
+
+            @include bp.tablet {
+                height: 80px;
+                width: 80px;
+            }
+        }
+
+        img {
+            width: clamp(46px, calc(2.875rem + ((1vw - 7.68px) * 3.4364)), 66px);
+            height: clamp(46px, calc(2.875rem + ((1vw - 7.68px) * 3.4364)), 66px);
+            object-fit: contain;
+
+            @include bp.tablet {
+                height: 56px;
+                width: 56px;
+            }
+        }
+    }
+
+    &__image {
+        display: flex;
+        height: clamp(150px, calc(9.375rem + ((1vw - 7.68px) * 27.4914)), 310px);
+        overflow: hidden;
+        width: 100%;
+
+        @include bp.tablet {
+            height: 200px;
+        }
+
+        img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            border-radius: clamp(12px, calc(0.75rem + ((1vw - 7.68px) * 0.6873)), 16px);
+        }
+    }
+
+    &__heading {
+        max-width: 545px;
+    }
+
+    &__description {
+        margin-top: 25px;
+    }
+
+    &__counters {
+        margin-top: 25px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 6.701)), 59px);
+        justify-content: space-between;
+
+        @include bp.mobile-tablet {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        @include bp.mobile {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    &__counter {
+        padding: 9px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+
+    &__counter-number {
+        margin: 0;
+
+        .count {
+            color: var(--theme_heading_color);
+        }
+    }
+}
+
+.ai-hero__cards {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 30px clamp(25px, calc(1.5625rem + ((1vw - 7.68px) * 4.2955)), 50px);
+    margin-top: 32px;
+
+    @include bp.mobile {
+        column-gap: 0;
+    }
+}
+
+.ai-hero__card {
+    grid-column: span 6;
+    overflow: hidden;
+    position: relative;
+    display: block; // anchor tag
+
+    @include bp.mobile {
+        grid-column: span 12;
+    }
+
+    .image-block {
+        overflow: hidden;
+        min-height: clamp(324px, calc(20.25rem + ((1vw - 7.68px) * 27.4914)), 484px);
+        display: flex;
+
+        img {
+            border-radius: clamp(12px, calc(0.75rem + ((1vw - 7.68px) * 0.6873)), 16px);
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .card-info {
+        display: flex;
+        flex-direction: column;
+        padding: 32px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.30);
+        background: rgba(0, 0, 0, 0.30);
+        backdrop-filter: blur(20px);
+        position: absolute;
+        bottom: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 5.1546)), 50px);
+        left: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 7.5601)), 64px);
+        right: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 7.5601)), 64px);
+        transition: all 0.3s ease;
+
+        .link-btn,
+        .card-description {
+            color: var(--theme_white);
+        }
+
+        .link-btn {
+            position: relative;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+
+            &::after {
+                content: '';
+                background-image: url(../../images/right-arrow.svg);
+                background-size: 20px;
+                width: 20px;
+                height: 20px;
+                display: inline-block;
+                flex: 20px 0 0;
+            }
+        }
+
+        .card-description {
+            padding-top: 10px;
+        }
+    }
+
+    // Hover states
+    &:hover {
+
+        &:nth-child(odd) .card-info {
+            background: rgba(20, 37, 51, 0.7);
+        }
+
+        &:nth-child(even) .card-info {
+            background: rgba(255, 255, 255, 0.7);
+
+            .link-btn,
+            .card-description {
+                color: var(--theme_color_secondary);
+            }
+
+            .link-btn::after {
+                filter: brightness(0) saturate(100%) invert(12%) sepia(97%) saturate(2690%) hue-rotate(187deg) brightness(98%) contrast(105%);
+            }
+        }
+    }
+}

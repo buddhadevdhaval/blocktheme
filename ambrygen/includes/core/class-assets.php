@@ -17,13 +17,6 @@ final class Assets {
 	use Singleton;
 
 	/**
-	 * Cached theme version.
-	 *
-	 * @var string
-	 */
-	private $version;
-
-	/**
 	 * Log debug messages when WP_DEBUG is enabled.
 	 *
 	 * @param string $message Message.
@@ -39,7 +32,6 @@ final class Assets {
 	 * Boot hooks on construct.
 	 */
 	protected function __construct() {
-		$this->version = wp_get_theme()->get( 'Version' );
 		$this->setup_hooks();
 	}
 

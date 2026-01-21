@@ -61,6 +61,7 @@ import { validateNumber } from '../../utils/validation.js';
  * @param {string}   props.placeholderAlt Default alt text for placeholder.
  * @return {JSX.Element} MediaUploadPanel component.
  */
+
 function MediaUploadPanel( {
 	title,
 	imageUrl,
@@ -276,10 +277,14 @@ export default function Edit( { attributes, setAttributes } ) {
 	 */
 	const handleLogoSelect = useCallback(
 		( media ) => {
+			const sizes = media?.sizes || media?.media_details?.sizes || {};
+
 			setAttributes( {
 				logoImage: media.url,
 				logoImageId: media.id,
 				logoImageAlt: media.alt || '',
+				logoImageSrcSet: buildSrcSet( sizes ),
+				logoImageSizes: '(max-width: 768px) 50vw, 200px',
 			} );
 		},
 		[ setAttributes ]
@@ -298,17 +303,35 @@ export default function Edit( { attributes, setAttributes } ) {
 	}, [ setAttributes ] );
 
 	/**
+	 * Builds a srcset string from WordPress media sizes.
+	 *
+	 * @param {Object<string, {url: string, width: number}>} sizes
+	 *                                                             Media sizes object returned by Media Library.
+	 *
+	 * @return {string} Generated srcset string.
+	 */
+	const buildSrcSet = ( sizes = {} ) => {
+		return Object.values( sizes )
+			.filter( ( size ) => size?.url && size?.width )
+			.map( ( size ) => `${ size.url } ${ size.width }w` )
+			.join( ', ' );
+	};
+	/**
 	 * Handles top image selection.
 	 * Memoized with useCallback for performance.
 	 *
 	 * @param {Object} media Selected media object.
 	 */
+
 	const handleTopImageSelect = useCallback(
 		( media ) => {
+			const sizes = media?.sizes || media?.media_details?.sizes || {};
 			setAttributes( {
 				imageTop: media.url,
 				imageTopId: media.id,
 				imageTopAlt: media.alt || '',
+				imageTopSrcSet: buildSrcSet( sizes ),
+				imageTopSizes: '(max-width: 768px) 100vw, 50vw',
 			} );
 		},
 		[ setAttributes ]
@@ -334,10 +357,13 @@ export default function Edit( { attributes, setAttributes } ) {
 	 */
 	const handleBottomImageSelect = useCallback(
 		( media ) => {
+			const sizes = media?.sizes || media?.media_details?.sizes || {};
 			setAttributes( {
 				imageBottom: media.url,
 				imageBottomId: media.id,
 				imageBottomAlt: media.alt || '',
+				imageBottomSrcSet: buildSrcSet( sizes ),
+				imageBottomSizes: '(max-width: 768px) 100vw, 50vw',
 			} );
 		},
 		[ setAttributes ]

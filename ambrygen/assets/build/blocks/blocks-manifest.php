@@ -107,6 +107,30 @@ return array(
 			'logoImageAlt' => array(
 				'type' => 'string',
 				'default' => ''
+			),
+			'imageTopSrcSet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'imageTopSizes' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'imageBottomSrcSet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'imageBottomSizes' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'logoImageSrcSet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'logoImageSizes' => array(
+				'type' => 'string',
+				'default' => ''
 			)
 		),
 		'variations' => array(
@@ -321,7 +345,7 @@ return array(
 		'attributes' => array(
 			'variation' => array(
 				'type' => 'string',
-				'default' => 'two-column'
+				'default' => 'default'
 			),
 			'columns' => array(
 				'type' => 'number',

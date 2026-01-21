@@ -104,6 +104,30 @@
     "logoImageAlt": {
       "type": "string",
       "default": ""
+    },
+    "imageTopSrcSet": {
+      "type": "string",
+      "default": ""
+    },
+    "imageTopSizes": {
+      "type": "string",
+      "default": ""
+    },
+    "imageBottomSrcSet": {
+      "type": "string",
+      "default": ""
+    },
+    "imageBottomSizes": {
+      "type": "string",
+      "default": ""
+    },
+    "logoImageSrcSet": {
+      "type": "string",
+      "default": ""
+    },
+    "logoImageSizes": {
+      "type": "string",
+      "default": ""
     }
   },
   "variations": [

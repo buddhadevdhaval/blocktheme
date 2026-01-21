@@ -30,17 +30,12 @@ import { validateNumber } from '../../utils/validation.js';
  * @param {string} props.label  Counter label text.
  * @return {JSX.Element|null} Counter markup or null if invalid.
  */
-function CounterItem( { number, prefix, suffix, label } ) {
-	// Validate presence - require at least number or label
+// ----- CounterItem -----
+const CounterItem = ( { number, prefix, suffix, label } ) => {
 	if ( ! number && ! label ) {
 		return null;
 	}
-
-	// Validate number format
-	if ( number && validateNumber( number ) !== number ) {
-		return null;
-	}
-
+	const safeNumber = validateNumber( number ) || '0';
 	return (
 		<div className="counter-item">
 			<div className="counter-number heading-3">
@@ -49,20 +44,13 @@ function CounterItem( { number, prefix, suffix, label } ) {
 						<RichText.Content value={ prefix } />
 					</span>
 				) }
-
-				{ number && (
-					<span className="count">
-						<RichText.Content value={ number } />
-					</span>
-				) }
-
+				{ number && <span className="count">{ safeNumber }</span> }
 				{ suffix && (
 					<span className="counter-suffix">
 						<RichText.Content value={ suffix } />
 					</span>
 				) }
 			</div>
-
 			{ label && (
 				<div className="counter-title body1">
 					<RichText.Content value={ label } />
@@ -70,43 +58,38 @@ function CounterItem( { number, prefix, suffix, label } ) {
 			) }
 		</div>
 	);
-}
+};
 
 /**
- * ImageWrapper Component
+ * ImageWrapper component.
  *
- * Renders an image with error handling and accessibility features.
- * Hides the image on load error and logs a warning.
+ * @param {Object} props
+ * @param {string} props.src                Image source URL.
+ * @param {string} props.alt                Image alt text.
+ * @param {string} [props.className]        Image class name.
+ * @param {string} [props.wrapperClassName] Wrapper class name.
+ * @param {string} [props.fallbackAlt]      Fallback alt text.
+ * @param {string} [props.srcSet]           Responsive image srcset.
+ * @param {string} [props.sizes]            Responsive image sizes attribute.
  *
- * @param {Object} props                  Component properties.
- * @param {string} props.src              Image source URL.
- * @param {string} props.alt              Image alt text.
- * @param {string} props.className        CSS class name.
- * @param {string} props.wrapperClassName Wrapper CSS class name.
- * @param {string} props.fallbackAlt      Fallback alt text if alt is empty.
- * @return {JSX.Element|null} Image wrapper or null if no src.
+ * @return {JSX.Element} Rendered image wrapper.
  */
-function ImageWrapper( {
+// ----- ImageWrapper with lazy load and srcSet -----
+const ImageWrapper = ( {
 	src,
 	alt,
 	className,
 	wrapperClassName,
 	fallbackAlt,
-} ) {
+	srcSet, // optional
+	sizes, // optional
+} ) => {
 	if ( ! src ) {
 		return null;
 	}
 
-	/**
-	 * Handles image load errors.
-	 * Hides the image and logs a warning to the console.
-	 *
-	 * @param {Event} e Error event.
-	 */
 	const handleImageError = ( e ) => {
 		e.target.style.display = 'none';
-		// eslint-disable-next-line no-console
-		console.warn( 'Failed to load image:', src );
 	};
 
 	return (
@@ -119,11 +102,15 @@ function ImageWrapper( {
 				src={ src }
 				alt={ alt || fallbackAlt }
 				className={ className }
+				loading="lazy" // <-- lazy load
+				srcSet={ srcSet } // <-- responsive srcSet
+				sizes={ sizes } // <-- responsive sizes
 				onError={ handleImageError }
+				style={ { maxWidth: '100%', height: 'auto' } }
 			/>
 		</div>
 	);
-}
+};
 
 /**
  * Save component for the AI Hero Section block.
@@ -147,10 +134,16 @@ export default function Save( { attributes } ) {
 		counters,
 		imageTop,
 		imageTopAlt,
+		imageTopSrcSet,
+		imageTopSizes,
 		imageBottom,
 		imageBottomAlt,
+		imageBottomSrcSet,
+		imageBottomSizes,
 		logoImage,
 		logoImageAlt,
+		logoImageSrcSet,
+		logoImageSizes,
 		backgroundColor,
 		textColor,
 	} = attributes;
@@ -174,22 +167,23 @@ export default function Save( { attributes } ) {
 									<div className="ai-hero__image-wrapper">
 										<div className="ai-hero__logo">
 											<div className="ai-hero__logo-inner">
-												{ logoImage && (
-													<img
-														src={ logoImage }
-														alt={
-															logoImageAlt ||
-															__(
-																'Company logo',
-																'ambrygen-web'
-															)
-														}
-														style={ {
-															maxWidth: '100%',
-															height: 'auto',
-														} }
-													/>
-												) }
+												<img
+													src={ logoImage }
+													srcSet={ logoImageSrcSet }
+													sizes={ logoImageSizes }
+													alt={
+														logoImageAlt ||
+														__(
+															'Company logo',
+															'ambrygen-web'
+														)
+													}
+													loading="lazy"
+													style={ {
+														maxWidth: '100%',
+														height: 'auto',
+													} }
+												/>
 											</div>
 										</div>
 									</div>
@@ -200,10 +194,13 @@ export default function Save( { attributes } ) {
 												alt={ imageTopAlt }
 												className="hero-top-img"
 												wrapperClassName="hero-image-top"
+												loading="lazy"
 												fallbackAlt={ __(
 													'Hero top image',
 													'ambrygen-web'
 												) }
+												srcSet={ imageTopSrcSet } // generated via wp_get_attachment_image_srcset in PHP
+												sizes={ imageTopSizes }
 											/>
 										</div>
 									</div>
@@ -214,10 +211,13 @@ export default function Save( { attributes } ) {
 												alt={ imageBottomAlt }
 												className="hero-bottom-img"
 												wrapperClassName="hero-image-bottom"
+												loading="lazy"
 												fallbackAlt={ __(
 													'Hero bottom image',
 													'ambrygen-web'
 												) }
+												srcSet={ imageBottomSrcSet }
+												sizes={ imageBottomSizes }
 											/>
 										</div>
 									</div>

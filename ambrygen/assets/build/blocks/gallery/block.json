@@ -20,7 +20,7 @@
   "attributes": {
     "variation": {
       "type": "string",
-      "default": "two-column"
+      "default": "default"
     },
     "columns": {
       "type": "number",

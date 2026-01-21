@@ -11,7 +11,7 @@ import {
 	SelectControl,
 	TextControl,
 } from '@wordpress/components';
-import { Fragment, useState, useEffect } from '@wordpress/element';
+import { Fragment, useState } from '@wordpress/element';
 
 const PLACEHOLDER_IMAGE =
 	'/wp-content/themes/ambrygen/assets/src/images/uploads/default-image.webp';
@@ -44,88 +44,49 @@ const GALLERY_VARIATIONS = [
 ];
 
 export default function Edit( { attributes, setAttributes } ) {
-	const [ selectedIndex, setSelectedIndex ] = useState( 0 );
-
-	const { columns = 2, items = [], variation = 'default' } = attributes;
-
-	// Add default 2 items when block is first inserted
-	useEffect( () => {
-		if ( items.length === 0 ) {
-			setAttributes( {
-				items: [
-					{
-						imageUrl: '',
-						imageId: 0,
-						title: __( 'Grid Item Title', 'ambrygen-web' ),
-						headingTag: 'h5',
-						description: '',
-						link: '',
-					},
-					{
-						imageUrl: '',
-						imageId: 0,
-						title: __( 'Grid Item Title', 'ambrygen-web' ),
-						headingTag: 'h5',
-						description: '',
-						link: '',
-					},
-				],
-			} );
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [ items.length, setAttributes ] );
-
-	// Reset selected index if out-of-bounds
-	useEffect( () => {
-		if (
-			items.length &&
-			( selectedIndex >= items.length || ! items[ selectedIndex ] )
-		) {
-			setSelectedIndex( 0 );
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [ items ] );
-	// safe, won't loop
-
-	// Add new grid items
 	const addItem = () => {
-		const count = columns || 2;
-		const newItems = Array.from( { length: count }, () => ( {
-			imageUrl: '',
-			imageId: 0,
-			title: __( 'Grid Item Title', 'ambrygen-web' ),
-			headingTag: 'h5',
-			description: '',
-			link: '',
-		} ) );
-
 		setAttributes( {
-			items: [ ...items, ...newItems ],
+			items: [
+				...items,
+				{
+					imageUrl: '',
+					imageId: 0,
+					title: __( 'Grid Item Title', 'ambrygen-web' ),
+					headingTag: 'h5',
+					description: '',
+					link: '',
+				},
+			],
 		} );
+
 		setSelectedIndex( items.length );
 	};
-
-	// Remove a grid item
 	const removeItem = ( index ) => {
 		const newItems = [ ...items ];
 		newItems.splice( index, 1 );
+
 		setAttributes( { items: newItems } );
+
 		setSelectedIndex( Math.max( 0, index - 1 ) );
 	};
 
-	// Update a specific field of the selected item
 	const updateItem = ( key, value ) => {
 		const newItems = [ ...items ];
 		newItems[ selectedIndex ] = {
 			...newItems[ selectedIndex ],
 			[ key ]: value,
 		};
+
 		setAttributes( { items: newItems } );
 	};
+
+	const { columns, items = [], variation = 'default' } = attributes;
 
 	const blockProps = useBlockProps( {
 		className: `image-grid-block variation-${ variation } columns-${ columns }`,
 	} );
+
+	const [ selectedIndex, setSelectedIndex ] = useState( 0 );
 
 	return (
 		<Fragment>
@@ -173,7 +134,9 @@ export default function Edit( { attributes, setAttributes } ) {
 							{ label: '4', value: 4 },
 						] }
 						onChange={ ( value ) =>
-							setAttributes( { columns: parseInt( value, 10 ) } )
+							setAttributes( {
+								columns: parseInt( value, 10 ),
+							} )
 						}
 					/>
 				</PanelBody>
@@ -226,7 +189,6 @@ export default function Edit( { attributes, setAttributes } ) {
 					</PanelBody>
 				) }
 
-				{ /* Selected Item Content */ }
 				{ items[ selectedIndex ] && (
 					<PanelBody
 						title={ __( 'Selected Item Content', 'ambrygen-web' ) }
@@ -262,7 +224,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							}
 						/>
 
-						{ /* Show description only if columns > 2 */ }
+						{ /* Show description ONLY if columns > 2 */ }
 						{ columns > 2 && (
 							<TextControl
 								label={ __( 'Description', 'ambrygen-web' ) }
@@ -283,7 +245,6 @@ export default function Edit( { attributes, setAttributes } ) {
 					</PanelBody>
 				) }
 
-				{ /* Add New Item */ }
 				<PanelBody>
 					<Button variant="primary" onClick={ addItem }>
 						{ __( 'Add Grid Item', 'ambrygen-web' ) }

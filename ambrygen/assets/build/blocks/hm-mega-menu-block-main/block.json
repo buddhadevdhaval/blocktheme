@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "hm-blocks/hm-mega-menu-block",
+  "version": "1.0.1",
+  "title": "HM Megamenu Block",
+  "category": "theme",
+  "icon": "columns",
+  "supports": {
+    "html": false,
+    "reusable": false,
+    "inserter": true,
+    "__experimentalNavigationBlock": true
+  },
+  "parent": [
+    "core/navigation"
+  ],
+  "attributes": {
+    "label": {
+      "type": "string",
+      "default": ""
+    },
+    "menuSlug": {
+      "type": "string"
+    },
+    "justifyMenu": {
+      "type": "string"
+    },
+    "width": {
+      "type": "string"
+    }
+  },
+  "description": "Add a mega menu to your navigation.",
+  "textdomain": "hm-mega-menu-block",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "viewScript": "file:./view.js",
+  "viewStyle": "file:./index.css"
+}

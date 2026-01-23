@@ -1,33 +1,39 @@
-/**
- * Block editor components for frontend rendering.
- * useBlockProps: Marks block wrapper with necessary props for save output.
- * RichText.Content: Renders saved rich text content.
- *
- * @see [https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops)
- */
 import { useBlockProps, RichText, InnerBlocks } from '@wordpress/block-editor';
 import { __ } from '@wordpress/i18n';
 
-/**
- * Save component for Newsletter Signup block.
- * Renders frontend markup with conditional image and heading.
- * Provides form placeholder for inner blocks like Gravity Forms.
- *
- * @see [https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#save](https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#save)
- *
- * @param {Object} root0            Block properties
- * @param {Object} root0.attributes Block attributes (heading, image, backgroundColor, style)
- * @return {JSX.Element}                  Frontend markup element
- */
-export default function Save( { attributes } ) {
-	const { heading, image, imageAlt, backgroundColor, style } = attributes;
+const DEFAULT_IMAGE =
+	'/wp-content/themes/ambrygen/assets/src/images/news-latter.jpg';
 
-	/**
-	 * Block props with dynamic background color for frontend.
-	 */
+function buildSrcSet( sizes ) {
+	if ( ! sizes ) {
+		return undefined;
+	}
+	return Object.values( sizes )
+		.filter( ( size ) => size?.url && size?.width )
+		.map( ( size ) => `${ size.url } ${ size.width }w` )
+		.join( ', ' );
+}
+
+export default function Save( { attributes } ) {
+	const {
+		eyebrow,
+		heading,
+		description,
+		image,
+		imageAlt,
+		imageSizes,
+		backgroundColor = '#005E7F',
+		textColor = '#8AD8F4',
+		style,
+	} = attributes;
+
+	const displayImage = image || DEFAULT_IMAGE;
+	const srcSet = buildSrcSet( imageSizes );
+
 	const blockProps = useBlockProps.save( {
 		style: {
 			backgroundColor: backgroundColor || style?.color?.background,
+			color: textColor,
 			padding: '60px 20px',
 		},
 	} );
@@ -35,30 +41,29 @@ export default function Save( { attributes } ) {
 	return (
 		<div { ...blockProps }>
 			<div className="newsletter-signup">
-				{ /* Image section - conditional render */ }
-				{ image && (
-					<div className="newsletter-image">
-						<img
-							src={ image }
-							alt={
-								imageAlt ||
-								__( 'Newsletter illustration', 'ambrygen-web' )
-							}
-							className="newsletter-img"
-							aria-label={
-								imageAlt
-									? imageAlt
-									: __(
-											'Newsletter illustration',
-											'ambrygen-web'
-									  )
-							}
-						/>
-					</div>
-				) }
+				<div className="newsletter-image">
+					<img
+						src={ displayImage }
+						srcSet={ srcSet }
+						sizes="(max-width: 768px) 100vw, 600px"
+						alt={
+							imageAlt || __( 'Newsletter Image', 'ambrygen-web' )
+						}
+						className="newsletter-img"
+						loading="lazy"
+						decoding="async"
+					/>
+				</div>
 
-				{ /* Form section with heading and placeholder */ }
 				<div className="newsletter-form-section">
+					{ eyebrow && (
+						<RichText.Content
+							tagName="span"
+							value={ eyebrow }
+							className="newsletter-eyebrow"
+						/>
+					) }
+
 					{ heading && (
 						<RichText.Content
 							tagName="h3"
@@ -67,7 +72,14 @@ export default function Save( { attributes } ) {
 						/>
 					) }
 
-					{ /* Placeholder for Gravity Forms or other blocks */ }
+					{ description && (
+						<RichText.Content
+							tagName="p"
+							value={ description }
+							className="newsletter-description"
+						/>
+					) }
+
 					<div className="newsletter-form-placeholder">
 						<InnerBlocks.Content />
 					</div>

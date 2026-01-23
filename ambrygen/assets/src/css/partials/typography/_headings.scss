@@ -35,8 +35,11 @@ h6,
 		}
 	}
 
-	span {
+	span,
+	mark {
 		color: var(--theme_cg_blue);
+		margin: 0;
+		padding: 0;
 	}
 }
 

@@ -43,6 +43,10 @@
         }
     }
 
+    &__image-bottom {
+        width: 100%;
+    }
+
     &__logo {
         height: clamp(150px, calc(9.375rem + ((1vw - 7.68px) * 27.4914)), 310px);
         background: var(--theme_color_primary);
@@ -109,16 +113,12 @@
         max-width: 545px;
     }
 
-    &__description {
-        margin-top: 25px;
-    }
-
     &__counters {
-        margin-top: 25px;
         display: flex;
         flex-wrap: wrap;
         gap: 20px clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 6.701)), 59px);
         justify-content: space-between;
+		text-align: center;
 
         @include bp.mobile-tablet {
             display: grid;
@@ -135,11 +135,11 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
-        text-align: center;
     }
 
     &__counter-number {
         margin: 0;
+		text-align: center;
 
         .count {
             color: var(--theme_heading_color);
@@ -162,7 +162,7 @@
     grid-column: span 6;
     overflow: hidden;
     position: relative;
-    display: block; // anchor tag
+    display: block;
 
     @include bp.mobile {
         grid-column: span 12;

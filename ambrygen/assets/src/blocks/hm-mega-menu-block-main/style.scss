@@ -1,0 +1,24 @@
+.has-mega-menu {
+	position: relative;
+}
+
+.has-mega-menu .mega-menu-panel {
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	background: #fff;
+	z-index: 999;
+}
+
+.has-mega-menu.is-open .mega-menu-panel {
+	display: block;
+}
+
+/* Desktop hover support */
+@media (hover: hover) {
+	.has-mega-menu:hover > .mega-menu-panel {
+		display: block;
+	}
+}

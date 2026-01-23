@@ -1,78 +1,94 @@
-.genetic-testing-block {
-    display: flex;
-    gap: 60px;
-    align-items: flex-start;
-    max-width: 1200px;
-    margin: 0 auto;
+/**
+ * Newsletter Signup Block Styles
+ * Editor + Frontend Compatible
+ */
+
+.newsletter-signup {
+	display: flex;
+	gap: 30px;
+	align-items: flex-start;
+	min-height: 300px;
+
+	// Responsive stack
+	@media (max-width: 991px) {
+		flex-direction: column;
+	}
 }
 
-.genetic-content {
-    flex: 1;
+.newsletter-image {
+	flex: 1;
+	min-width: 300px;
+
+	img {
+		width: 100%;
+		height: 250px;
+		object-fit: cover;
+		border-radius: 12px;
+		display: block;
+	}
+
+	.upload-button {
+		width: 100%;
+	}
 }
 
-.genetic-heading {
-    font-size: 48px;
-    font-weight: 800;
-    color: #1e40af;
-    margin: 0 0 30px;
-    line-height: 1.2;
-}
+.newsletter-form-section {
+	flex: 1;
+	padding: 30px;
 
-.genetic-description {
-    font-size: 20px;
-    line-height: 1.8;
-    color: #64748b;
-    max-width: 500px;
-}
+	// Eyebrow / label text
+	.newsletter-eyebrow {
+		display: block;
+		margin-bottom: 8px;
+		font-size: 13px;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: #2563eb;
+	}
 
-.genetic-image {
-    flex: 0.7;
-    position: relative;
-}
+	.newsletter-heading {
+		margin: 0 0 16px;
+		color: #1e40af;
+		font-size: 28px;
+		font-weight: 700;
+		line-height: 1.2;
+	}
 
-.genetic-image .image-wrapper {
-    position: relative;
-    width: 380px;
-    height: 420px;
-}
+	// Gravity Forms Drop Zone
+	.newsletter-form-placeholder {
+		background: #ffffff;
+		padding: 25px;
+		border-radius: 10px;
+		border: 2px dashed #d1d5db;
+		text-align: center;
 
-.genetic-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 24px;
-    box-shadow: 0 25px 50px rgb(0 0 0 / 10%);
-}
+		.form-hint {
+			color: #6b7280;
+			font-size: 14px;
+			line-height: 1.5;
+			margin-top: 10px;
+		}
+	}
 
-.play-button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(135deg, #10b981, #059669);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 28px;
-    font-weight: 700;
-    box-shadow: 0 20px 40px rgb(16 185 129 / 40%);
-    border: 4px solid rgb(255 255 255 / 30%);
-    backdrop-filter: blur(10px);
-}
+	// Old placeholder support (if still used anywhere)
+	.form-placeholder {
+		background: #ffffff;
+		padding: 25px;
+		border-radius: 10px;
+		border: 2px dashed #d1d5db;
+		text-align: center;
 
-@media (width <= 768px) {
+		.placeholder-content {
+			p {
+				margin: 0 0 10px;
+				color: #6b7280;
+			}
 
-    .genetic-testing-block {
-        flex-direction: column;
-        gap: 40px;
-        padding: 40px 20px;
-    }
-    
-    .genetic-heading {
-        font-size: 36px;
-    }
+			.placeholder-instructions {
+				font-size: 13px;
+				line-height: 1.5;
+			}
+		}
+	}
 }

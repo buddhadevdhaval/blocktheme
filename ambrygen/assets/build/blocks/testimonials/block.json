@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/testimonials",
+  "title": "Testimonials Section",
+  "category": "ambrygen",
+  "icon": "format-quote",
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "Read About Ambry’s Impact on Patient Lives"
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2"
+    },
+    "backgroundImage": {
+      "type": "string",
+      "default": "/wp-content/themes/ambrygen/assets/images/testimonials-background.jpg"
+    },
+    "backgroundImageSizes": {
+      "type": "object",
+      "default": {}
+    },
+    "mainImage": {
+      "type": "string",
+      "default": "/wp-content/themes/ambrygen/assets/src/images/testimonial/testimonial-main.png"
+    },
+    "mainImageSizes": {
+      "type": "object",
+      "default": {}
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "viewScript": "file:./view.js"
+}

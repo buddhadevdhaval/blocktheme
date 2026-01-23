@@ -38,17 +38,17 @@ const CounterItem = ( { number, prefix, suffix, label } ) => {
 	const safeNumber = validateNumber( number ) || '0';
 	return (
 		<div className="counter-item">
-			<div className="counter-number heading-3">
+			<div className="counter-number heading-3 mb-0">
 				{ prefix && (
-					<span className="counter-prefix">
+					<div className="counter-prefix">
 						<RichText.Content value={ prefix } />
-					</span>
+					</div>
 				) }
-				{ number && <span className="count">{ safeNumber }</span> }
-				{ suffix && (
-					<span className="counter-suffix">
-						<RichText.Content value={ suffix } />
-					</span>
+				{ number && (
+					<div className="count">
+						{ safeNumber }
+						{ suffix && <RichText.Content value={ suffix } /> }
+					</div>
 				) }
 			</div>
 			{ label && (
@@ -106,7 +106,6 @@ const ImageWrapper = ( {
 				srcSet={ srcSet } // <-- responsive srcSet
 				sizes={ sizes } // <-- responsive sizes
 				onError={ handleImageError }
-				style={ { maxWidth: '100%', height: 'auto' } }
 			/>
 		</div>
 	);
@@ -132,6 +131,7 @@ export default function Save( { attributes } ) {
 		heading,
 		content,
 		counters,
+		headingLevel,
 		imageTop,
 		imageTopAlt,
 		imageTopSrcSet,
@@ -147,7 +147,7 @@ export default function Save( { attributes } ) {
 		backgroundColor,
 		textColor,
 	} = attributes;
-
+	const HeadingTag = headingLevel || 'h2';
 	const blockProps = useBlockProps.save( {
 		style: {
 			backgroundColor: backgroundColor || undefined,
@@ -179,10 +179,6 @@ export default function Save( { attributes } ) {
 														)
 													}
 													loading="lazy"
-													style={ {
-														maxWidth: '100%',
-														height: 'auto',
-													} }
 												/>
 											</div>
 										</div>
@@ -210,7 +206,7 @@ export default function Save( { attributes } ) {
 												src={ imageBottom }
 												alt={ imageBottomAlt }
 												className="hero-bottom-img"
-												wrapperClassName="hero-image-bottom"
+												wrapperClassName="ai-hero__image-bottom"
 												loading="lazy"
 												fallbackAlt={ __(
 													'Hero bottom image',
@@ -225,27 +221,29 @@ export default function Save( { attributes } ) {
 							</div>
 							<div className="ai-hero__col-content">
 								<div className="ai-hero__content">
-									<h2 className="ai-hero__heading heading-2 mb-0">
+									<HeadingTag className="ai-hero__heading heading-2 mb-0">
 										{ heading && (
 											<RichText.Content
-												tagName="h1"
+												tagName=""
 												value={ heading }
 												className="hero-heading"
 												id="hero-heading"
 											/>
 										) }
-									</h2>
+									</HeadingTag>
+									<div className="is-style-gl-s24"></div>
 									<div className="ai-hero__description body1">
 										{ content && (
 											<RichText.Content
 												tagName="p"
 												value={ content }
-												className="hero-description"
+												className=""
 												role="group"
 												aria-labelledby="hero-heading"
 											/>
 										) }
 									</div>
+									<div className="is-style-gl-s24"></div>
 									<div className="ai-hero__counters">
 										{ counters.map( ( counter, index ) => (
 											<CounterItem

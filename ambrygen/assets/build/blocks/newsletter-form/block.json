@@ -18,13 +18,25 @@
     }
   },
   "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": "Newsletter"
+    },
+    "description": {
+      "type": "string",
+      "default": "Subscribe to the Ambry Newsletter and other updates."
+    },
     "heading": {
       "type": "string",
       "default": "Stay Informed"
     },
     "image": {
       "type": "string",
-      "default": ""
+      "default": "/wp-content/themes/ambrygen/assets/src/images/news-latter/news-latter.jpg"
+    },
+    "imageSizes": {
+      "type": "object",
+      "default": {}
     },
     "imageId": {
       "type": "number",
@@ -35,10 +47,15 @@
       "default": ""
     },
     "backgroundColor": {
-      "type": "string"
+      "type": "string",
+      "default": "#005E7F"
     },
     "style": {
       "type": "object"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#8AD8F4"
     }
   },
   "editorScript": "file:./index.js",

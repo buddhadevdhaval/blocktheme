@@ -2,7 +2,7 @@
 
 $containers: (
     1340: 1400px,
-    // 720: 780px,
+	1280: 1340px,
     full: 100%
 );
 
@@ -42,7 +42,7 @@ $containers: (
     }
 }
 
-@mixin editor-container-styles {
+@mixin wp-block-post-content {
     padding: 50px 20px;
     max-width: 100% !important;
     border: 3px dashed #7b7b7b;
@@ -65,23 +65,23 @@ $width in $containers {
 
 .editor-styles-wrapper {
 
-    .wp-block-group {
+    // .wp-block-group {
 
         .block-editor-block-list__block {
 
             @each $name,
             $width in $containers {
-                &.editor-container-#{$name} {
+                &.container-#{$name} {
 
-                    @include editor-container-styles;
+                    @include wp-block-post-content;
 
                     width: 100% !important;
                 }
             }
         }
-    }
+    // }
 
-    .wp-block-post-content {
+    .wp-block-post-contentt {
 
         >.block-editor-block-list__block {
 
@@ -89,7 +89,7 @@ $width in $containers {
             $width in $containers {
                 &.editor-container-#{$name} {
 
-                    @include editor-container-styles;
+                    @include wp-block-post-content;
 
                     width: auto !important;
                 }

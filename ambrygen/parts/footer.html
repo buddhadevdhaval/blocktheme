@@ -1,39 +1,113 @@
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->
-<div class="wp-block-group has-contrast-background-color has-base-text-color" style="padding-top:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40)">
-	<!-- wp:group {"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between"}} -->
-	<div class="wp-block-group">
-		<!-- wp:group {"layout":{"type":"default"}} -->
-		<div class="wp-block-group">
-			<!-- wp:site-logo {"width":40,"shouldLinkExternally":false} /-->
-			
-			<!-- wp:site-title {"level":0,"style":{"typography":{"fontSize":"var:preset|font-size|medium"}}} /-->
-			
-			<!-- wp:site-tagline {"style":{"typography":{"fontSize":"var:preset|font-size|small"}}} /-->
-		</div>
-		<!-- /wp:group -->
-		
-		<!-- wp:group {"layout":{"type":"default"}} -->
-		<div class="wp-block-group">
-			<!-- wp:heading {"level":3,"style":{"typography":{"fontSize":"var:preset|font-size|medium"}}} -->
-			<h3><?php echo esc_html_e( 'Quick Links', 'ambrygen' ); ?></h3>
-			<!-- /wp:heading -->
-			
-			<!-- wp:navigation {"layout":{"type":"vertical"}} -->
-				<!-- wp:navigation-link {"label":"Privacy Policy","url":"/privacy-policy/"} /-->
-				<!-- wp:navigation-link {"label":"Terms of Service","url":"/terms-of-service/"} /-->
-				<!-- wp:navigation-link {"label":"Contact","url":"/contact/"} /-->
-			<!-- /wp:navigation -->
-		</div>
-		<!-- /wp:group -->
-	</div>
-	<!-- /wp:group -->
-	
-	<!-- wp:separator {"opacity":"border","style":{"spacing":{"margin":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}}}} -->
-	<hr class="wp-block-separator has-border-opacity" style="margin-top:var(--wp--preset--spacing--30);margin-bottom:var(--wp--preset--spacing--30)"/>
-	<!-- /wp:separator -->
-	
-	<!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"var:preset|font-size|small"}}} -->
-	<p class="has-text-align-center"><?php echo esc_html_e( '© 2024 Ambrygen. All rights reserved.', 'ambrygen' ); ?></p>
-	<!-- /wp:paragraph -->
-</div>
+<!-- wp:group {"tagName":"footer","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
+<footer class="wp-block-group has-base-background-color" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50);">
+  <!-- wp:columns {"style":{"spacing":{"blockGap":"var:preset|spacing|40"}}} -->
+  <div class="wp-block-columns">
+    <!-- wp:column {"width":"16.6667%"} -->
+    <div class="wp-block-column" style="flex-basis:16.6667%">
+      <!-- wp:heading {"level":5} -->
+      <h5 class="wp-block-heading">PATIENTS</h5>
+      <!-- /wp:heading -->
+      <!-- wp:navigation {"overlayMenu":"never","layout":{"type":"vertical"}} -->
+        <!-- wp:navigation-link {"label":"Take Action","url":"/take-action/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Billing & Insurance","url":"/billing-insurance/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Patient Blog","url":"/patient-blog/","kind":"custom","isTopLevelLink":true} /-->
+      <!-- /wp:navigation -->
+    </div>
+    <!-- /wp:column -->
+
+    <!-- wp:column {"width":"16.6667%"} -->
+    <div class="wp-block-column" style="flex-basis:16.6667%">
+      <!-- wp:heading {"level":5} -->
+      <h5 class="wp-block-heading">PARTNERS</h5>
+      <!-- /wp:heading -->
+      <!-- wp:navigation {"overlayMenu":"never","layout":{"type":"vertical"}} -->
+        <!-- wp:navigation-link {"label":"Ordering","url":"/ordering/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Additional Resources","url":"/additional-resources/","kind":"custom","isTopLevelLink":true} /-->
+      <!-- /wp:navigation -->
+    </div>
+    <!-- /wp:column -->
+
+    <!-- wp:column {"width":"16.6667%"} -->
+    <div class="wp-block-column" style="flex-basis:16.6667%">
+      <!-- wp:heading {"level":5} -->
+      <h5 class="wp-block-heading">SOLUTIONS</h5>
+      <!-- /wp:heading -->
+      <!-- wp:navigation {"overlayMenu":"never","layout":{"type":"vertical"}} -->
+        <!-- wp:navigation-link {"label":"Patient for Life","url":"/patient-for-life/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Classifi","url":"/classifi/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Our Tests","url":"/tests/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Pharma Services","url":"/pharma-services/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Our Technology","url":"/technology/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Family Studies","url":"/family-studies/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Research & Collaborations","url":"/research-collaborations/","kind":"custom","isTopLevelLink":true} /-->
+      <!-- /wp:navigation -->
+    </div>
+    <!-- /wp:column -->
+
+    <!-- wp:column {"width":"16.6667%"} -->
+    <div class="wp-block-column" style="flex-basis:16.6667%">
+      <!-- wp:heading {"level":5} -->
+      <h5 class="wp-block-heading">RESOURCES</h5>
+      <!-- /wp:heading -->
+      <!-- wp:navigation {"overlayMenu":"never","layout":{"type":"vertical"}} -->
+        <!-- wp:navigation-link {"label":"Media Relations","url":"/media-relations/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Conferences","url":"/conferences/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"In the News","url":"/news/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Press Releases","url":"/press-releases/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Videos","url":"/videos/","kind":"custom","isTopLevelLink":true} /-->
+      <!-- /wp:navigation -->
+    </div>
+    <!-- /wp:column -->
+
+    <!-- wp:column {"width":"16.6667%"} -->
+    <div class="wp-block-column" style="flex-basis:16.6667%">
+      <!-- wp:heading {"level":5} -->
+      <h5 class="wp-block-heading">COMPANY</h5>
+      <!-- /wp:heading -->
+      <!-- wp:navigation {"overlayMenu":"never","layout":{"type":"vertical"}} -->
+        <!-- wp:navigation-link {"label":"About Ambry","url":"/about/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Leadership","url":"/leadership/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Careers","url":"/careers/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Contact","url":"/contact/","kind":"custom","isTopLevelLink":true} /-->
+      <!-- /wp:navigation -->
+    </div>
+    <!-- /wp:column -->
+
+    <!-- wp:column {"width":"16.6667%"} -->
+    <div class="wp-block-column" style="flex-basis:16.6667%">
+      <!-- wp:heading {"level":5} -->
+      <h5 class="wp-block-heading">INFORMATION</h5>
+      <!-- /wp:heading -->
+      <!-- wp:navigation {"overlayMenu":"never","layout":{"type":"vertical"}} -->
+        <!-- wp:navigation-link {"label":"Privacy Policy","url":"/privacy-policy/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Cookie Policy","url":"/cookie-policy/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Information & Security Statement","url":"/security/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Terms & Conditions","url":"/terms/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Licenses","url":"/licenses/","kind":"custom","isTopLevelLink":true} /-->
+        <!-- wp:navigation-link {"label":"Payor Relations","url":"/payor-relations/","kind":"custom","isTopLevelLink":true} /-->
+      <!-- /wp:navigation -->
+    </div>
+    <!-- /wp:column -->
+  </div>
+  <!-- /wp:columns -->
+
+  <!-- wp:separator {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|30"}}}} /-->
+
+  <!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap"}} -->
+  <div class="wp-block-group">
+    <!-- wp:paragraph {"fontSize":"small"} -->
+    <p class="has-small-font-size">© 2026 Ambry Genetics. All rights reserved.</p>
+    <!-- /wp:paragraph -->
+
+    <!-- wp:social-links {"iconColor":"contrast","iconColorValue":"#005f7f","size":"has-small-icon-size","layout":{"type":"flex"}} -->
+    <ul class="wp-block-social-links has-small-icon-size" style="--wp--preset--color--contrast:#005f7f;">
+      <!-- wp:social-link {"service":"facebook","url":"https://www.facebook.com/AmbryGenetics","rel":"nofollow noopener"} /-->
+      <!-- wp:social-link {"service":"linkedin","url":"https://www.linkedin.com/company/ambry-genetics","rel":"nofollow noopener"} /-->
+      <!-- wp:social-link {"service":"x","url":"https://twitter.com/AmbryGenetics","rel":"nofollow noopener"} /-->
+      <!-- wp:social-link {"service":"instagram","url":"https://www.instagram.com/ambrygenetics","rel":"nofollow noopener"} /-->
+    </ul>
+    <!-- /wp:social-links -->
+  </div>
+  <!-- /wp:group -->
+</footer>
 <!-- /wp:group -->

@@ -5,63 +5,38 @@
 	"title": "Image Gallery",
 	"category": "ambrygen",
 	"icon": "grid-view",
-	"description": "Responsive image gallery with customizable columns and titles.",
+	"description": "Responsive image gallery with design variants.",
 	"textdomain": "ambrygen-web",
 
 	"supports": {
 		"html": false,
-		"align":true,
-		 "color": {
-        "background": true
-        }
-
+		"align": true,
+		"color": {
+			"background": true
+		}
 	},
 
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css",
+
 	"attributes": {
+		"heading": {
+	"type": "string",
+	"default": "Get Started with Ambry"
+},
+
 		"variation": {
-		"type": "string",
-		"default": "default"
-	},
-	
-		"columns": {
-			"type": "number",
-			"default": 2
+			"type": "string",
+			"default": "two-column"
 		},
 		"items": {
 			"type": "array",
-			"default": [],
-			"items": {
-				"type": "object",
-				"properties": {
-					"headingTag": {
-						"type": "string",
-						"default": "h5"
-					},
-					"imageUrl": {
-						"type": "string",
-						"default": ""
-					},
-					"imageId": {
-						"type": "number",
-						"default": 0
-					},
-					"title": {
-						"type": "string",
-						"default": ""
-					},
-					"description": {
-						"type": "string",
-						"default": ""
-					},
-					"link": {
-						"type": "string",
-						"default": ""
-					}
-				}
-			}
-		}
+			"default": []
+		},
+		"imageAlt": { "type": "string", "default": "" },
+"imageSrcSet": { "type": "string", "default": "" },
+"imageSizes": { "type": "string", "default": "" }
+
 	}
 }

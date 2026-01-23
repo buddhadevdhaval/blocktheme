@@ -1,5 +1,9 @@
 @use "partials/site/layout/containers";
 
+.mb-0 {
+	margin-bottom: 0 !important;
+}
+
 .theme-spacer {
 	background-image: url(../images/spacer.jpg);
 }
@@ -9,15 +13,38 @@
 }
 
 .editor-ctn {
-	border: 3px dashed #575757;
+	border: 3px dashed var(--theme_gray_3);
 }
 
 .editor-no-design {
-	border: 3px dashed #7b7b7b;
+	border: 3px dashed var(--theme_gray_4);
 }
 
 .description {
-	border-top: 1px solid #eee;
+	border-top: 1px solid var(--theme_gray_2);
 	margin-top: 0 !important;
 	padding: 6px 20px 16px !important;
+}
+
+
+.wp-block {
+
+	&.is-selected {
+		outline: 1.5px solid var(--theme_color_primary);
+		border-radius: 2px;
+		box-shadow: none;
+		outline-offset: -1.5px;
+	}
+
+	&.bg-primary {
+		background-color: var(--theme_color_primary);
+	}
+
+	&.bg-aliceblue {
+		background-color: var(--theme_aliceblue);
+	}
+
+	.block-editor-inner-blocks {
+		border: var(--theme_black_2) solid 1px;
+	}
 }

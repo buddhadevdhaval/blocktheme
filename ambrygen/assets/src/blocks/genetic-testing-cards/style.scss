@@ -12,17 +12,35 @@
 
         @include bp.desktop {
             grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, auto);
+        }
+
+        // Handle InnerBlocks wrapper in editor
+        .block-editor-inner-blocks,
+        .block-editor-block-list__layout {
+            display: contents;
+        }
+
+        >.genetic-cards__card {
+
+            @include bp.desktop {
+
+                &--small {
+                    grid-column: 1;
+                }
+
+                &--main {
+                    grid-column: 2;
+                    grid-row: 1 / span 2;
+                }
+            }
         }
     }
 
-    &__column-left {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-    }
-
+    // These are now handled by grid on parent
+    &__column-left,
     &__column-right {
-        display: flex;
+        display: contents;
     }
 
     &__card {

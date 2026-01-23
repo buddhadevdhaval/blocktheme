@@ -10,8 +10,7 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://react.dev/reference/react
  */
-import { useCallback } from '@wordpress/element';
-
+import { useCallback, useState, useEffect } from '@wordpress/element';
 /**
  * Core block editor components for building the block interface.
  *
@@ -35,7 +34,10 @@ import {
 	Placeholder,
 	PanelBody,
 	PanelRow,
+	SelectControl,
 } from '@wordpress/components';
+
+import { dispatch, select } from '@wordpress/data';
 
 /**
  * Import validation utilities.
@@ -73,9 +75,10 @@ function MediaUploadPanel( {
 	removeLabel,
 	uploadedLabel,
 	placeholderAlt,
+	isOpen,
 } ) {
 	return (
-		<PanelBody title={ title } initialOpen={ false }>
+		<PanelBody title={ title } initialOpen={ isOpen } onToggle={ () => {} }>
 			<PanelRow>
 				{ ! imageUrl ? (
 					<MediaUploadCheck>
@@ -94,11 +97,6 @@ function MediaUploadPanel( {
 						<img
 							src={ imageUrl }
 							alt={ imageAlt || placeholderAlt }
-							style={ {
-								maxWidth: '100px',
-								height: 'auto',
-								marginBottom: '10px',
-							} }
 						/>
 						<div className="image-info">
 							<p className="image-size">{ uploadedLabel }</p>
@@ -151,52 +149,46 @@ function MediaUploadPanel( {
  */
 function CounterItem( { counter, index, updateCounter } ) {
 	return (
-		<div className="ai-hero__counter" key={ index }>
-			<div className="ai-hero__counter-number heading-3">
+		<>
+			<div className="counter-item" key={ index }>
+				<div className="counter-number heading-3 mb-0">
+					<RichText
+						tagName="div"
+						className="count counter-data"
+						value={ counter.number }
+						onChange={ ( value ) =>
+							updateCounter(
+								index,
+								'number',
+								validateNumber( value )
+							)
+						}
+						placeholder="0"
+						aria-label={ __( 'Counter number', 'ambrygen-web' ) }
+					/>
+					<RichText
+						tagName="div"
+						className="counter-suffix counter-data"
+						value={ counter.suffix }
+						onChange={ ( value ) =>
+							updateCounter( index, 'suffix', value )
+						}
+						placeholder=""
+						aria-label={ __( 'Counter suffix', 'ambrygen-web' ) }
+					/>
+				</div>
 				<RichText
-					tagName="span"
-					className="counter-prefix"
-					value={ counter.prefix }
+					tagName="div"
+					className="counter-title body1"
+					value={ counter.label }
 					onChange={ ( value ) =>
-						updateCounter( index, 'prefix', value )
+						updateCounter( index, 'label', value )
 					}
-					placeholder=""
-					aria-label={ __( 'Counter prefix', 'ambrygen-web' ) }
-				/>
-				<RichText
-					tagName="span"
-					className="count"
-					value={ counter.number }
-					onChange={ ( value ) =>
-						updateCounter(
-							index,
-							'number',
-							validateNumber( value )
-						)
-					}
-					placeholder="0"
-					aria-label={ __( 'Counter number', 'ambrygen-web' ) }
-				/>
-				<RichText
-					tagName="span"
-					className="counter-suffix"
-					value={ counter.suffix }
-					onChange={ ( value ) =>
-						updateCounter( index, 'suffix', value )
-					}
-					placeholder=""
-					aria-label={ __( 'Counter suffix', 'ambrygen-web' ) }
+					placeholder={ __( 'Label', 'ambrygen-web' ) }
+					aria-label={ __( 'Counter label', 'ambrygen-web' ) }
 				/>
 			</div>
-			<RichText
-				tagName="div"
-				className="ai-hero__counter-label body1"
-				value={ counter.label }
-				onChange={ ( value ) => updateCounter( index, 'label', value ) }
-				placeholder={ __( 'Label', 'ambrygen-web' ) }
-				aria-label={ __( 'Counter label', 'ambrygen-web' ) }
-			/>
-		</div>
+		</>
 	);
 }
 
@@ -247,7 +239,10 @@ export default function Edit( { attributes, setAttributes } ) {
 		imageBottomAlt,
 		logoImage,
 		logoImageAlt,
+		headingLevel,
 	} = attributes;
+
+	const [ openPanel, setOpenPanel ] = useState( null );
 
 	/**
 	 * Updates a specific counter in the counters array.
@@ -394,6 +389,21 @@ export default function Edit( { attributes, setAttributes } ) {
 		[ setAttributes ]
 	);
 
+	useEffect( () => {
+		const isOpen = select( 'core/edit-post' ).isEditorSidebarOpened();
+
+		if ( ! isOpen ) {
+			dispatch( 'core/edit-post' ).openGeneralSidebar(
+				'edit-post/block'
+			);
+		}
+	}, [] );
+
+	const handlePanelOpen = ( panel ) => {
+		dispatch( 'core/edit-post' ).openGeneralSidebar( 'edit-post/block' );
+		setOpenPanel( panel );
+	};
+
 	/**
 	 * Handles content change.
 	 * Memoized with useCallback for performance.
@@ -408,10 +418,32 @@ export default function Edit( { attributes, setAttributes } ) {
 	);
 
 	const blockProps = useBlockProps();
+	const HeadingTag = headingLevel || 'h2';
 
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
+				<PanelBody
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen={ openPanel === 'heading' }
+					onToggle={ () => {} }
+				>
+					<SelectControl
+						label={ __( 'Heading Level', 'ambrygen-web' ) }
+						value={ headingLevel }
+						options={ [
+							{ label: 'H1', value: 'h1' },
+							{ label: 'H2', value: 'h2' },
+							{ label: 'H3', value: 'h3' },
+							{ label: 'H4', value: 'h4' },
+							{ label: 'H5', value: 'h5' },
+							{ label: 'H6', value: 'h6' },
+						] }
+						onChange={ ( value ) =>
+							setAttributes( { headingLevel: value } )
+						}
+					/>
+				</PanelBody>
 				<MediaUploadPanel
 					title={ __( 'Logo Image', 'ambrygen-web' ) }
 					imageUrl={ logoImage }
@@ -423,6 +455,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					removeLabel={ __( 'Remove Logo', 'ambrygen-web' ) }
 					uploadedLabel={ __( 'Logo uploaded', 'ambrygen-web' ) }
 					placeholderAlt={ __( 'Company logo', 'ambrygen-web' ) }
+					isOpen={ openPanel === 'logo' }
 				/>
 
 				<MediaUploadPanel
@@ -436,6 +469,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					removeLabel={ __( 'Remove Image', 'ambrygen-web' ) }
 					uploadedLabel={ __( 'Top image uploaded', 'ambrygen-web' ) }
 					placeholderAlt={ __( 'Hero top image', 'ambrygen-web' ) }
+					isOpen={ openPanel === 'top' }
 				/>
 
 				<MediaUploadPanel
@@ -455,6 +489,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						'ambrygen-web'
 					) }
 					placeholderAlt={ __( 'Hero bottom image', 'ambrygen-web' ) }
+					isOpen={ openPanel === 'bottom' }
 				/>
 			</InspectorControls>
 
@@ -466,7 +501,22 @@ export default function Edit( { attributes, setAttributes } ) {
 							<div className="ai-hero__images">
 								<div className="ai-hero__image-wrapper">
 									<div className="ai-hero__logo">
-										<div className="ai-hero__logo-inner">
+										<div
+											className="ai-hero__logo-inner"
+											role="button"
+											tabIndex={ 0 }
+											onClick={ () =>
+												handlePanelOpen( 'logo' )
+											}
+											onKeyDown={ ( e ) => {
+												if (
+													e.key === 'Enter' ||
+													e.key === ' '
+												) {
+													handlePanelOpen( 'logo' );
+												}
+											} }
+										>
 											{ logoImage ? (
 												<img
 													src={ logoImage }
@@ -477,10 +527,6 @@ export default function Edit( { attributes, setAttributes } ) {
 															'ambrygen-web'
 														)
 													}
-													style={ {
-														maxWidth: '100%',
-														height: 'auto',
-													} }
 												/>
 											) : (
 												<ImagePlaceholder
@@ -494,7 +540,22 @@ export default function Edit( { attributes, setAttributes } ) {
 									</div>
 								</div>
 								<div className="ai-hero__image-wrapper">
-									<div className="ai-hero__image">
+									<div
+										className="ai-hero__image"
+										role="button"
+										tabIndex={ 0 }
+										onClick={ () =>
+											handlePanelOpen( 'top' )
+										}
+										onKeyDown={ ( e ) => {
+											if (
+												e.key === 'Enter' ||
+												e.key === ' '
+											) {
+												handlePanelOpen( 'top' );
+											}
+										} }
+									>
 										{ imageTop ? (
 											<img
 												src={ imageTop }
@@ -505,10 +566,6 @@ export default function Edit( { attributes, setAttributes } ) {
 														'ambrygen-web'
 													)
 												}
-												style={ {
-													maxWidth: '100%',
-													height: 'auto',
-												} }
 											/>
 										) : (
 											<ImagePlaceholder
@@ -524,7 +581,22 @@ export default function Edit( { attributes, setAttributes } ) {
 										) }
 									</div>
 								</div>
-								<div className="ai-hero__image-wrapper">
+								<div
+									className="ai-hero__image-wrapper"
+									role="button"
+									tabIndex={ 0 }
+									onClick={ () =>
+										handlePanelOpen( 'bottom' )
+									}
+									onKeyDown={ ( e ) => {
+										if (
+											e.key === 'Enter' ||
+											e.key === ' '
+										) {
+											handlePanelOpen( 'bottom' );
+										}
+									} }
+								>
 									<div className="ai-hero__image">
 										{ imageBottom ? (
 											<img
@@ -536,10 +608,6 @@ export default function Edit( { attributes, setAttributes } ) {
 														'ambrygen-web'
 													)
 												}
-												style={ {
-													maxWidth: '100%',
-													height: 'auto',
-												} }
 											/>
 										) : (
 											<ImagePlaceholder
@@ -559,11 +627,31 @@ export default function Edit( { attributes, setAttributes } ) {
 						</div>
 						<div className="ai-hero__col-content">
 							<div className="ai-hero__content">
-								<h2 className="ai-hero__heading heading-2 mb-0">
+								<HeadingTag
+									className="counter-number heading-3 mb-0"
+									role="button"
+									tabIndex={ 0 }
+									onClick={ () =>
+										handlePanelOpen( 'heading' )
+									}
+									onKeyDown={ ( e ) => {
+										if (
+											e.key === 'Enter' ||
+											e.key === ' '
+										) {
+											handlePanelOpen( 'heading' );
+										}
+									} }
+								>
 									<RichText
-										tagName="h1"
+										tagName="div"
 										value={ heading }
 										onChange={ handleHeadingChange }
+										allowedFormats={ [
+											'core/bold',
+											'core/italic',
+											'core/text-color',
+										] }
 										placeholder={ __(
 											'Hero heading…',
 											'ambrygen-web'
@@ -574,7 +662,8 @@ export default function Edit( { attributes, setAttributes } ) {
 											'ambrygen-web'
 										) }
 									/>
-								</h2>
+								</HeadingTag>
+								<div className="is-style-gl-s24"></div>
 								<div className="ai-hero__description body1">
 									<RichText
 										tagName="p"
@@ -584,13 +673,14 @@ export default function Edit( { attributes, setAttributes } ) {
 											'Hero content…',
 											'ambrygen-web'
 										) }
-										className="hero-description"
+										className=""
 										aria-label={ __(
 											'Hero description',
 											'ambrygen-web'
 										) }
 									/>
 								</div>
+								<div className="is-style-gl-s24"></div>
 								<div className="ai-hero__counters">
 									{ counters.map( ( counter, index ) => (
 										<CounterItem

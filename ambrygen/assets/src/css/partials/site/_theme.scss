@@ -162,11 +162,6 @@
 	justify-content: center;
 }
 
-// background
-.bg-aliceblue {
-	background: var(--theme_aliceblue);
-}
-
 .bg-cover {
 	background-size: cover;
 }
@@ -239,4 +234,15 @@ picture {
 
 :focus {
 	outline: none;
+}
+
+
+
+
+.bg-primary {
+	background-color: var(--theme_color_primary);
+}
+
+.bg-aliceblue {
+	background: var(--theme_aliceblue);
 }

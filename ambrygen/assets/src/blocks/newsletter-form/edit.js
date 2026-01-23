@@ -1,221 +1,186 @@
-/**
- * WordPress i18n for translations.
- *
- * @see [https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/)
- */
 import { __ } from '@wordpress/i18n';
-
-/**
- * Block editor components for media upload and rich text editing.
- * useBlockProps: Marks block wrapper with necessary props.
- * RichText: Rich text content editing.
- * MediaUpload/MediaUploadCheck: Image upload functionality.
- *
- * @see [https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops)
- */
 import {
 	useBlockProps,
 	RichText,
 	MediaUpload,
 	MediaUploadCheck,
 	InspectorControls,
+	InnerBlocks,
 } from '@wordpress/block-editor';
-import {
-	PanelBody,
-	PanelRow,
-	Button,
-	Placeholder,
-} from '@wordpress/components';
+import { PanelBody, PanelRow, Button } from '@wordpress/components';
+import { dispatch } from '@wordpress/data';
 
-/**
- * Edit component for Newsletter Signup block.
- * Provides image upload and heading editor with form placeholder.
- *
- * @see [https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit](https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit)
- *
- * @param {Object}   root0               Block properties
- * @param {Object}   root0.attributes    Block attributes (heading, image, backgroundColor, style)
- * @param {Function} root0.setAttributes Function to update block attributes
- * @return {JSX.Element}                  Editor interface element
- */
+function buildSrcSet( sizes ) {
+	if ( ! sizes ) {
+		return undefined;
+	}
+	return Object.values( sizes )
+		.filter( ( size ) => size?.url && size?.width )
+		.map( ( size ) => `${ size.url } ${ size.width }w` )
+		.join( ', ' );
+}
+
+// Default image path
+const DEFAULT_IMAGE =
+	'/wp-content/themes/ambrygen/assets/src/images/news-latter.jpg';
+
 export default function Edit( { attributes, setAttributes } ) {
-	const { heading, image, imageAlt, backgroundColor, style } = attributes;
+	const {
+		eyebrow,
+		heading,
+		description,
+		image,
+		imageAlt,
+		imageSizes,
+		backgroundColor = '#005E7F',
+		textColor = '#8AD8F4',
+		style,
+	} = attributes;
 
-	/**
-	 * Block props with dynamic background color and padding.
-	 */
+	const displayImage = image || DEFAULT_IMAGE;
+	const srcSet = buildSrcSet( imageSizes );
+
 	const blockProps = useBlockProps( {
 		style: {
 			backgroundColor: backgroundColor || style?.color?.background,
+			color: textColor,
 			padding: '60px 20px',
 		},
 	} );
 
+	const openInspector = () => {
+		dispatch( 'core/edit-post' ).openGeneralSidebar( 'edit-post/block' );
+	};
+
+	const onSelectImage = ( img ) => {
+		setAttributes( {
+			image: img.url,
+			imageId: img.id,
+			imageAlt: img.alt || '',
+			imageSizes: img.sizes || {},
+		} );
+	};
+
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
-				<PanelBody
-					title={ __( 'Newsletter Image', 'ambrygen-web' ) }
-					initialOpen={ false }
-				>
+				<PanelBody title={ __( 'Newsletter Image', 'ambrygen-web' ) }>
 					<PanelRow>
-						{ ! image ? (
-							<MediaUploadCheck>
-								<MediaUpload
-									onSelect={ ( img ) =>
-										setAttributes( {
-											image: img.url,
-											imageId: img.id,
-											imageAlt: img.alt || '',
-										} )
-									}
-									allowedTypes={ [ 'image' ] }
-									render={ ( { open } ) => (
-										<Button
-											onClick={ open }
-											variant="primary"
-											className="upload-button"
-										>
-											{ __(
-												'Upload Image',
-												'ambrygen-web'
-											) }
-										</Button>
-									) }
-								/>
-							</MediaUploadCheck>
-						) : (
-							<div className="image-preview">
-								<img
-									src={ image }
-									alt={
-										imageAlt ||
-										__( 'Newsletter', 'ambrygen-web' )
-									}
-									style={ {
-										maxWidth: '100px',
-										height: 'auto',
-										marginBottom: '10px',
-										borderRadius: '6px',
-									} }
-								/>
-								<div className="image-info">
-									<p className="image-size">
-										{ __(
-											'Newsletter image uploaded',
-											'ambrygen-web'
-										) }
-									</p>
-									{ imageAlt && (
-										<p className="image-alt">
-											{ __(
-												'Alt text:',
-												'ambrygen-web'
-											) }{ ' ' }
-											{ imageAlt }
-										</p>
-									) }
-								</div>
-								<MediaUploadCheck>
-									<MediaUpload
-										onSelect={ ( img ) =>
-											setAttributes( {
-												image: img.url,
-												imageId: img.id,
-												imageAlt: img.alt || '',
-											} )
+						<MediaUploadCheck>
+							<MediaUpload
+								onSelect={ onSelectImage }
+								allowedTypes={ [ 'image' ] }
+								render={ ( { open } ) => (
+									<Button
+										onClick={ open }
+										variant={
+											image ? 'secondary' : 'primary'
 										}
-										allowedTypes={ [ 'image' ] }
-										render={ ( { open } ) => (
-											<Button
-												onClick={ open }
-												variant="secondary"
-												className="upload-button"
-											>
-												{ __(
+									>
+										{ image
+											? __(
 													'Replace Image',
 													'ambrygen-web'
-												) }
-											</Button>
-										) }
-									/>
-								</MediaUploadCheck>
-								<Button
-									onClick={ () =>
-										setAttributes( {
-											image: '',
-											imageId: 0,
-											imageAlt: '',
-										} )
-									}
-									variant="link"
-									isDestructive
-								>
-									{ __( 'Remove Image', 'ambrygen-web' ) }
-								</Button>
-							</div>
+											  )
+											: __(
+													'Upload Image',
+													'ambrygen-web'
+											  ) }
+									</Button>
+								) }
+							/>
+						</MediaUploadCheck>
+
+						{ image && (
+							<Button
+								isDestructive
+								variant="link"
+								onClick={ () =>
+									setAttributes( {
+										image: '',
+										imageId: 0,
+										imageAlt: '',
+										imageSizes: {},
+									} )
+								}
+							>
+								{ __( 'Remove Image', 'ambrygen-web' ) }
+							</Button>
 						) }
 					</PanelRow>
 				</PanelBody>
 			</InspectorControls>
 
 			<div className="newsletter-signup">
-				{ /* Image placeholder */ }
 				<div className="newsletter-image">
-					{ image ? (
-						<img
-							src={ image }
-							alt={
-								imageAlt || __( 'Newsletter', 'ambrygen-web' )
+					<button
+						type="button"
+						className="newsletter-image-button"
+						onClick={ openInspector }
+						onKeyDown={ ( e ) => {
+							if ( e.key === 'Enter' || e.key === ' ' ) {
+								openInspector();
+								e.preventDefault();
 							}
-							style={ {
-								maxWidth: '100%',
-								height: 'auto',
-								borderRadius: '12px',
-							} }
+						} }
+						aria-label={ __(
+							'Open block settings',
+							'ambrygen-web'
+						) }
+						style={ { border: 0, background: 'none', padding: 0 } }
+					>
+						<img
+							src={ displayImage }
+							srcSet={ srcSet }
+							sizes="(max-width: 768px) 100vw, 520px"
+							alt={
+								imageAlt ||
+								__( 'Newsletter Image', 'ambrygen-web' )
+							}
 						/>
-					) : (
-						<Placeholder
-							icon="format-image"
-							label={ __(
-								'No newsletter image selected',
-								'ambrygen-web'
-							) }
-							instructions={ __(
-								'Upload an image from the sidebar settings.',
-								'ambrygen-web'
-							) }
-						/>
-					) }
+					</button>
 				</div>
 
-				{ /* Content section */ }
 				<div className="newsletter-form-section">
+					<RichText
+						tagName="span"
+						value={ eyebrow }
+						onChange={ ( value ) =>
+							setAttributes( { eyebrow: value } )
+						}
+						className="newsletter-eyebrow"
+						placeholder={ __( 'Newsletter', 'ambrygen-web' ) }
+					/>
+
 					<RichText
 						tagName="h3"
 						value={ heading }
 						onChange={ ( value ) =>
 							setAttributes( { heading: value } )
 						}
-						placeholder={ __( 'Stay Informed', 'ambrygen-web' ) }
 						className="newsletter-heading"
+						placeholder={ __( 'Stay informed', 'ambrygen-web' ) }
 					/>
 
-					<div className="form-placeholder">
-						<div className="placeholder-content">
-							<p>
-								📝{ ' ' }
-								<strong>
-									{ __( 'Add Form Here', 'ambrygen-web' ) }
-								</strong>
-							</p>
-							<p className="placeholder-instructions">
-								{ __(
-									'Insert Gravity Forms block below',
-									'ambrygen-web'
-								) }
-							</p>
-						</div>
+					<RichText
+						tagName="p"
+						value={ description }
+						onChange={ ( value ) =>
+							setAttributes( { description: value } )
+						}
+						className="newsletter-description"
+						placeholder={ __( 'Subscribe text…', 'ambrygen-web' ) }
+					/>
+
+					<div className="newsletter-form-placeholder">
+						<InnerBlocks
+							allowedBlocks={ [
+								'gravityforms/form',
+								'core/shortcode',
+								'core/html',
+							] }
+							templateLock={ false }
+						/>
 					</div>
 				</div>
 			</div>

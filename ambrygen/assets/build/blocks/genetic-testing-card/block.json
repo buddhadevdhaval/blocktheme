@@ -1,0 +1,48 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/genetic-testing-card",
+  "title": "Genetic Testing Card",
+  "category": "ambrygen",
+  "parent": [
+    "ambrygen/genetic-testing-cards"
+  ],
+  "icon": "format-image",
+  "description": "An individual card for genetic testing.",
+  "attributes": {
+    "image": {
+      "type": "string",
+      "default": ""
+    },
+    "imageId": {
+      "type": "number",
+      "default": 0
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "linkText": {
+      "type": "string",
+      "default": "Learn more"
+    },
+    "linkUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "type": {
+      "type": "string",
+      "default": "small"
+    }
+  },
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js"
+}

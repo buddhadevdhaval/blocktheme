@@ -100,3 +100,37 @@
         }
     }
 }
+.card-col {
+	position: relative;
+}
+
+.drag-handle--corner {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	z-index: 5;
+	background: rgba(0, 0, 0, 0.55);
+	color: #fff;
+	padding: 4px 6px;
+	border-radius: 6px;
+	font-size: 16px;
+	cursor: grab;
+	line-height: 1;
+	user-select: none;
+	transition: opacity 0.2s ease, transform 0.15s ease;
+}
+
+.drag-handle--corner:hover {
+	opacity: 1;
+	transform: scale(1.05);
+}
+
+.drag-handle--corner:active {
+	cursor: grabbing;
+}
+
+.image-block img {
+	pointer-events: none;
+}
+
+

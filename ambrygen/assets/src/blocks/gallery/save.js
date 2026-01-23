@@ -1,12 +1,11 @@
-import { useBlockProps } from '@wordpress/block-editor';
-import { __ } from '@wordpress/i18n';
+import { useBlockProps, RichText } from '@wordpress/block-editor';
 import { isValidUrl } from '../../utils/validation.js';
 
 export default function Save( { attributes } ) {
-	const { items = [], variation, columns } = attributes;
+	const { items = [], variation = 'two-column', heading = '' } = attributes;
 
 	const blockProps = useBlockProps.save( {
-		className: `image-grid-block variation-${ variation } columns-${ columns }`,
+		className: `image-grid-block variation-${ variation }`,
 	} );
 
 	return (
@@ -17,8 +16,9 @@ export default function Save( { attributes } ) {
 				<div className="wrapper">
 					<div className="get-started-ambry-block">
 						<h2 className="block-title heading-3 mb-0">
-							<span>{ __( 'Get Started', 'ambrygen-web' ) }</span>{ ' ' }
-							{ __( 'with Ambry', 'ambrygen-web' ) }
+							<RichText.Content
+								value={ heading || 'Get Started with Ambry' }
+							/>
 						</h2>
 
 						<div className="card-grid-block">
@@ -35,27 +35,26 @@ export default function Save( { attributes } ) {
 										{ ...( isLink
 											? { href: item.link }
 											: {} ) }
-										aria-label={
-											item.title ||
-											__( 'Card item', 'ambrygen-web' )
-										}
+										aria-label={ item.title || 'Card item' }
 									>
 										{ item.imageUrl && (
 											<div className="image-block">
 												<img
 													src={ item.imageUrl }
+													srcSet={
+														item.imageSrcSet ||
+														undefined
+													}
+													sizes={
+														item.imageSizes ||
+														undefined
+													}
 													alt={
+														item.imageAlt ||
 														item.title ||
-														__(
-															'Company logo',
-															'ambrygen-web'
-														)
+														'Company logo'
 													}
 													loading="lazy"
-													style={ {
-														maxWidth: '100%',
-														height: 'auto',
-													} }
 												/>
 											</div>
 										) }
@@ -63,13 +62,19 @@ export default function Save( { attributes } ) {
 										<div className="card-info">
 											{ item.title && (
 												<HeadingTag className="link-btn mb-0">
-													{ item.title }
+													<RichText.Content
+														value={ item.title }
+													/>
 												</HeadingTag>
 											) }
 
 											{ item.description && (
 												<div className="card-description text-small">
-													{ item.description }
+													<RichText.Content
+														value={
+															item.description
+														}
+													/>
 												</div>
 											) }
 										</div>

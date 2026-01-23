@@ -112,6 +112,10 @@ function BackgroundStyleControl( { value, onChange } ) {
 					value: 'bg-light',
 				},
 				{
+					label: __( 'Alice Blue Background', 'ambrygen-web' ),
+					value: 'bg-aliceblue',
+				},
+				{
 					label: __( 'Dark Background', 'ambrygen-web' ),
 					value: 'bg-dark',
 				},
@@ -244,11 +248,6 @@ export default function Edit( { attributes, setAttributes } ) {
 		className: `${ containerWidth } ${ backgroundStyle } ${
 			isFixedBackground ? 'bg-fixed' : ''
 		}`,
-		style: {
-			border: '2px dashed #ccc',
-			padding: '20px',
-			minHeight: '100px',
-		},
 	} );
 
 	return (

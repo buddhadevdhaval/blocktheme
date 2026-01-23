@@ -32,6 +32,14 @@
         "statistics"
     ],
     "attributes": {
+        "headingLevel": {
+        "type": "string",
+        "default": "h2"
+        },
+        "headingPrimary": { "type": "string" },
+"headingHighlight": { "type": "string" },
+"highlightColor": { "type": "string", "default": "#6d28d9" },
+
         "heading": {
             "type": "string",
             "default": "Transforming Healthcare with AI Innovation"

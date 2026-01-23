@@ -5,7 +5,7 @@
   "title": "Hero Section",
   "category": "ambrygen",
   "icon": "cover-image",
-  "description": "Hero section with rounded background image, heading, tagline, description, and dual call-to-action buttons.",
+  "description": "Hero section with slider, logo overlay, rounded background images, and dual call-to-action buttons.",
   "supports": {
     "html": false,
     "align": [
@@ -29,52 +29,53 @@
   "keywords": [
     "hero",
     "banner",
-    "intro"
+    "slider",
+    "carousel"
   ],
   "attributes": {
-    "heading": {
-      "type": "string",
-      "default": "Industry-leading genetic testing"
+    "slides": {
+      "type": "array",
+      "default": [
+        {
+          "backgroundImage": "",
+          "backgroundImageId": 0,
+          "backgroundImageAlt": "",
+          "overlayImage1": "",
+          "overlayImage1Id": 0,
+          "overlayImage1Alt": "",
+          "overlayImage2": "",
+          "overlayImage2Id": 0,
+          "overlayImage2Alt": "",
+          "heading": "Industry-leading genetic testing",
+          "content": "For over 25 years our high-quality, accessible genetic testing solutions have shaped important care decisions that patients and families make with their healthcare providers.",
+          "tagline": "This brings the Ambry mindset to life: a relentless pursuit to find the answers.",
+          "buttonPrimaryText": "Start Your Order",
+          "buttonPrimaryUrl": "#",
+          "buttonSecondaryText": "Who We Are",
+          "buttonSecondaryUrl": "#"
+        }
+      ]
     },
-    "content": {
-      "type": "string",
-      "default": "For over 25 years..."
+    "showSliderNav": {
+      "type": "boolean",
+      "default": true
     },
-    "tagline": {
-      "type": "string",
-      "default": "This brings the Ambry mindset to life..."
+    "showSliderDots": {
+      "type": "boolean",
+      "default": true
     },
-    "backgroundImage": {
-      "type": "string",
-      "default": ""
+    "autoplay": {
+      "type": "boolean",
+      "default": false
     },
-    "backgroundImageId": {
+    "autoplayDelay": {
       "type": "number",
-      "default": 0
-    },
-    "backgroundImageAlt": {
-      "type": "string",
-      "default": ""
-    },
-    "buttonPrimaryText": {
-      "type": "string",
-      "default": "Start Your Order"
-    },
-    "buttonPrimaryUrl": {
-      "type": "string",
-      "default": "#"
-    },
-    "buttonSecondaryText": {
-      "type": "string",
-      "default": "Who We Are"
-    },
-    "buttonSecondaryUrl": {
-      "type": "string",
-      "default": "#"
+      "default": 5000
     }
   },
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
   "textdomain": "ambrygen-web"
 }

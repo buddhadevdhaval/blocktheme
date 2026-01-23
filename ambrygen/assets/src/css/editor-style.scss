@@ -1,3 +1,4 @@
+
 @use "partials/mixins/mixins";
 @use "partials/fonts/fonts";
 @use "partials/variables/variables";
@@ -5,7 +6,6 @@
 @use "partials/site/layout/spacers";
 @use "vendors/daterangepicker.css";
 @use "partials/site/layout/containers";
-@use "editor-static";
 @use "partials/typography/typography";
 @use "partials/elements/lists";
 @use "partials/elements/quotes";
@@ -13,6 +13,17 @@
 @use "partials/media/media";
 @use "partials/core/core";
 @use "partials/wp-blocks/wp-blocks";
+@use "editor-static";
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    outline: none;
+    text-rendering: optimizelegibility;
+}
 
 .wp-block-spacer .components-resizable-box__handle {
 	display: none !important;
@@ -20,10 +31,6 @@
 
 .your-spacer-class .block-editor-block-inspector {
 	display: none !important;
-}
-
-.block-editor-block-list__layout {
-	margin-bottom: 30px;
 }
 
 .daterangepicker {
@@ -52,11 +59,11 @@
 	}
 
 	.applyBtn {
-		--wp-components-color-accent: #3858e9;
+		--wp-components-color-accent: var(--theme_blue);
 	}
 
 	.cancelBtn {
-		--wp-components-color-accent: #cc1818;
+		--wp-components-color-accent: var(--theme_red);
 	}
 }
 
@@ -65,7 +72,7 @@
 	.description {
 		padding: 6px 20px 16px !important;
 		margin-top: 0 !important;
-		border-top: 1px solid #eee;
+		border-top: 1px solid var(--theme_gray_2);
 	}
 }
 
@@ -108,12 +115,10 @@ html {
 	}
 
 	.block-editor-block-list__block {
-		margin-bottom: 35px !important;
 
 		.block-editor-block-list__layout {
 
 			>.block-editor-block-list__block {
-				margin-bottom: 20px !important;
 
 				figcaption {
 					display: block;
@@ -149,7 +154,7 @@ html {
 	}
 
 	.wp-block-spacer {
-		border: 1px solid #adb2ad;
+		border: 1px solid var(--theme_gray_3);
 	}
 
 }

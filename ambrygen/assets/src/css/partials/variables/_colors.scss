@@ -1,289 +1,154 @@
-// Theme Primary
-$theme_color_primary: #009BD2;
-$theme_color_on_primary: #fff;
-$theme_primary_white: #fff;
-$theme_primary_pale_blue: #B9DCFC;
+:root {
 
-// Theme Secondary
-$theme_color_secondary: #003E69;
+	/* Theme Primary */
+	--theme_color_primary: #009BD2;
+	--theme_color_on-primary: #fff;
+	--theme_primary_white: #fff;
+	--theme_primary_pale-blue: #B9DCFC;
 
-// Theme Dark
-$theme_black: #000;
-$theme_black_1: #14191f;
-$theme_black_2: #606364;
+	/* Theme Secondary */
+	--theme_color_secondary: #003E69;
 
-// Theme Light
-$theme_white: #fff;
-$theme_white_1: #f1f1f1;
-$theme_white_2: #f1e9e9;
+	/* Theme Dark */
+	--theme_black: #000;
+	--theme_black_1: #14191f;
+	--theme_black_2: #606364;
 
-// Theme Colors
-$theme_gray: #e0e0e0;
-$theme_gray_1: #e6e6e6;
-$theme_gray_2: #eee;
-$theme_gray_3: #575757;
-$theme_gray_4: #7b7b7b;
+	/* Theme Light */
+	--theme_white: #fff;
+	--theme_white_1: #f1f1f1;
+	--theme_white_2: #f1e9e9;
 
+	/* Theme Colors */
+	--theme_gray: #e0e0e0;
+	--theme_gray_1: #e6e6e6;
+	--theme_gray_2: #eee;
+	--theme_gray_3: #575757;
+	--theme_gray_4: #7b7b7b;
 
-$theme_blue: #0013ff;
-$theme_blue_1: #00a4eb;
-$theme_blue_2: #2ca8dd;
-$theme_navy: #091a17;
-$theme_navy_1: #15332e;
-$theme_navy_2: #2f655c;
-$theme_red: #f00;
-$theme_sea_green: #04c3b4;
-$theme_transparent: transparent;
+	--theme_blue: #0013ff;
+	--theme_blue_1: #00a4eb;
+	--theme_blue_2: #2ca8dd;
 
-$theme_aliceblue: #F1FAFE;
-$theme_lightblue: #B0E5F8;
-$theme_lightblueText: #005E7F;
-$theme_gray_100: #F2F4F7;
-$theme_gray_300: #D0D5DD;
-$theme_gray_400: #98A2B3;
-$theme_gray_500: #667085;
-$theme_gray_600: #475467;
-$theme_gray_700: #344054;
-$theme_gray_800: #1D2939;
-$theme_gray_900: #101828;
+	--theme_navy: #091a17;
+	--theme_navy_1: #15332e;
+	--theme_navy_2: #2f655c;
 
-$theme_primary_200: #8AD8F4;
-$theme_cg_blue: #0079A4;
+	--theme_red: #f00;
+	--theme_sea_green: #04c3b4;
+	--theme_transparent: transparent;
 
-// Text Variations
-$theme_regular_text: #14191f;
-$theme_dark_text: #14191f;
-$theme_white_text: #f7f7f7;
-$theme_light_text: #606364;
+	--theme_aliceblue: #F1FAFE;
+	--theme_lightblue: #B0E5F8;
+	--theme_lightblue_text: #005E7F;
 
-// Fixed variable Colors
-$theme_success: #198754;
-$theme_info: #0dcaf0;
-$theme_warning: #ffc107;
-$theme_danger: #dc3545;
-$theme_light: #f8f9fa;
-$theme_dark: #212529;
-$theme_signal: #d14b3c;
-$theme_signal_bg: #fbede9;
-$theme_color_background: #fff;
-$theme_color_on_background: #14191f;
+	--theme_gray_100: #F2F4F7;
+	--theme_gray_300: #D0D5DD;
+	--theme_gray_400: #98A2B3;
+	--theme_gray_500: #667085;
+	--theme_gray_600: #475467;
+	--theme_gray_700: #344054;
+	--theme_gray_800: #1D2939;
+	--theme_gray_900: #101828;
 
-// Borders
-$theme_border: #30353c;
-$theme_border_1: #545454;
-$theme_border_2: #adadad;
-$theme_border_3: #e0e0e0;
+	--theme_primary_200: #8AD8F4;
+	--theme_cg_blue: #0079A4;
 
-// Pure Colors
-$theme_pure_black: #000;
+	/* Text Variations */
+	--theme_regular_text: #14191f;
+	--theme_dark_text: #14191f;
+	--theme_white_text: #f7f7f7;
+	--theme_light_text: #606364;
 
-// Form Fields
-$theme_field_bg: #fff;
-$theme_light_field_bg: #fff;
-$theme_danger_bg: #f8d7da;
-$theme_success_bg: #d4edda;
+	/* Fixed Status Colors */
+	--theme_success: #198754;
+	--theme_info: #0dcaf0;
+	--theme_warning: #ffc107;
+	--theme_danger: #dc3545;
+	--theme_light: #f8f9fa;
+	--theme_dark: #212529;
 
-/* -------------------------------------------------
->> Semantic Colors (Composed from base colors)
-------------------------------------------------- */
+	--theme_signal: #d14b3c;
+	--theme_signal_bg: #fbede9;
 
-// Text Colors
-$theme_body_color: $theme_gray_600;
-$theme_body_bg: $theme_color_background;
-$theme_text_strong: $theme_black;
-$theme_highlight_color: $theme_color_on_primary;
-$theme_highlight_bg: $theme_color_primary;
-$theme_caption: $theme_black_2;
+	--theme_color_background: #fff;
+	--theme_color_on_background: #14191f;
 
-// Headings
-$theme_heading_color: $theme_color_secondary;
-$theme_heading_link_color: $theme_dark_text;
-$theme_heading_link_color_hover: $theme_dark_text;
+	/* Borders */
+	--theme_border: #30353c;
+	--theme_border_1: #545454;
+	--theme_border_2: #adadad;
+	--theme_border_3: #e0e0e0;
 
-// Link colors
-$theme_link_color: $theme_color_primary;
-$theme_link_color_hover: $theme_color_primary;
-$theme_link_border_color: $theme_color_primary;
-$theme_link_border_color_hover: transparent;
+	--theme_pure-black: #000;
 
-// Lists Colors
-$theme_list_ul_marker_color: $theme_color_primary;
-$theme_list_ol_marker_color: $theme_color_primary;
+	/* Form Fields */
+	--theme_field_bg: #fff;
+	--theme_light-field_bg: #fff;
+	--theme_danger_bg: #f8d7da;
+	--theme_success_bg: #d4edda;
 
-// Blockquote Colors
-$theme_blockquote_color: $theme_regular_text;
-$theme_blockquote_border_color: $theme_regular_text;
-$theme_quote_color: $theme_regular_text;
-$theme_blockqoute_cite_color: $theme_light_text;
+	/* Semantic Colors */
+	--theme_body_color: var(--theme_gray_600);
+	--theme_body_bg: var(--theme_color_background);
+	--theme_text_strong: var(--theme_black);
+	--theme_highlight_color: var(--theme_color_on_primary);
+	--theme_highlight_bg: var(--theme_color_primary);
+	--theme_caption: var(--theme_black_2);
 
-// Tables Colors
-$theme_table_border_color: $theme_border;
-$theme_table_head_border_color: $theme_dark_text;
-$theme_table_foot_border_color: $theme_dark_text;
+	/* Headings */
+	--theme_heading_color: var(--theme_color_secondary);
+	--theme_heading_link_color: var(--theme_dark_text);
+	--theme_heading_link_color_hover: var(--theme_dark_text);
 
-// Formatting
-$theme_strong_color: $theme_regular_text;
-$theme_underline_border_color: $theme_regular_text;
-$theme_abbr_border_color: $theme_regular_text;
-$theme_delete_color: $theme_danger;
-$theme_insert_color: $theme_success;
-$theme_insert_border_color: $theme_success;
+	/* Links */
+	--theme_link_color: var(--theme_color_primary);
+	--theme_link_color_hover: var(--theme_color_primary);
+	--theme_link_border_color: var(--theme_color_primary);
+	--theme_link_border_color_hover: transparent;
 
-// Code
-$theme_code_color: $theme_white_text;
-$theme_code_bgcolor: $theme_dark_text;
-$theme_pre_color: $theme_white_text;
-$theme_pre_bgcolor: $theme_dark_text;
-$theme_mark_bgcolor: $theme_dark_text;
-$theme_mark_color: $theme_white_text;
+	/* Lists */
+	--theme_list_ul_marker_color: var(--theme_color_primary);
+	--theme_list_ol_marker_color: var(--theme_color_primary);
 
-// Graphical elements
-$theme_hr_color: $theme_border_2;
+	/* Blockquote */
+	--theme_blockquote_color: var(--theme_regular_text);
+	--theme_blockquote_border_color: var(--theme_regular_text);
+	--theme_quote_color: var(--theme_regular_text);
+	--theme_blockquote_cite_color: var(--theme_light_text);
 
-// Form Fields
-$theme_input_color: $theme_regular_text;
-$theme_input_bg: $theme_light_field_bg;
-$theme_input_border_color: $theme_border;
-$theme_input_focus_color: $theme_black;
-$theme_input_focus_bgcolor: $theme_white;
-$theme_input_focus_border_color: $theme_border_2;
-$theme_disabled_input_bgcolor: $theme_field_bg;
-$theme_disabled_input_border_color: $theme_border_1;
-$theme_placeholder_color: $theme_light_text;
-$theme_range_track_bgcolor: $theme_field_bg;
-$theme_range_thumb_bgcolor: $theme_color_primary;
-$theme_color_field_border_color: $theme_border;
-$theme_color_field_bgcolor: $theme_field_bg;
-$theme_radio_color: $theme_regular_text;
-$theme_radio_border_color: $theme_border;
-$theme_radio_bgcolor: $theme_field_bg;
-$theme_radio_after_bgcolor: $theme_color_primary;
-$theme_checkbox_color: $theme_regular_text;
-$theme_checkbox_border_color: $theme_border;
-$theme_checkbox_bgcolor: $theme_field_bg;
-$theme_checkbox_after_bgcolor: $theme_color_primary;
-$theme_progress_bgcolor: $theme_field_bg;
-$theme_progress_value_bgcolor: $theme_color_primary;
-$theme_meter_bgcolor: $theme_field_bg;
-$theme_meter_value_bgcolor: $theme_color_primary;
+	/* Tables */
+	--theme_table_border_color: var(--theme_border);
+	--theme_table_head_border_color: var(--theme_dark_text);
+	--theme_table_foot_border_color: var(--theme_dark_text);
 
-// Button
-$theme_button_color: $theme_white_text;
-$theme_button_bgcolor: $theme_color_secondary;
-$theme_button_color_hover: $theme_black;
-$theme_button_bgcolor_hover: $theme_primary_pale_blue;
-$theme_button_border_color: $theme_color_secondary;
-$theme_button_border_color_hover: $theme_border;
-$theme_reset_button_bgcolor: $theme_button_bgcolor;
-$theme_reset_button_color: $theme_white_text;
+	/* Code */
+	--theme_code_color: var(--theme_white_text);
+	--theme_code_bgcolor: var(--theme_dark_text);
+	--theme_pre_color: var(--theme_white_text);
+	--theme_pre_bgcolor: var(--theme_dark_text);
+	--theme_mark_bgcolor: var(--theme_dark_text);
+	--theme_mark_color: var(--theme_white_text);
 
-// Buttons layer
-$theme_theme_btn_color: $theme_button_color;
-$theme_theme_btn_bgcolor: $theme_button_bgcolor;
-$theme_theme_btn_color_hover: $theme_button_color_hover;
-$theme_theme_btn_bgcolor_hover: $theme_button_bgcolor_hover;
-$theme_theme_btn_border_color: $theme_button_border_color;
-$theme_theme_btn_border_color_hover: $theme_button_border_color_hover;
+	/* HR */
+	--theme_hr_color: var(--theme_border_2);
 
-// Button hover
-$theme_button_bg: $theme_button_bgcolor;
-$theme_button_bg_hover: $theme_color_secondary;
+	/* Buttons */
+	--theme_button_color: var(--theme_white_text);
+	--theme_button_bgcolor: var(--theme_color_secondary);
+	--theme_button_color_hover: var(--theme_black);
+	--theme_button_bgcolor_hover: var(--theme_primary_pale_blue);
+	--theme_button_border_color: var(--theme_color_secondary);
+	--theme_button_border_color_hover: var(--theme_border);
 
-// Date Picker
-$theme_datepicker_bg_color: $theme_gray;
-$theme_datepicker_select_bgcolor: $theme_white;
-$theme_datepicker_link_color: $theme_color_secondary;
-$theme_datepicker_link_active_color: $theme_color_primary;
-$theme_datepicker_calendar: $theme_white_text;
-$theme_datepicker_th_bgcolor: $theme_border_1;
-$theme_datepicker_even_tr_td_bgcolor: $theme_border_1;
-$theme_datepicker_border_color: $theme_border_1;
-$theme_datepicker_date_color: $theme_dark_text;
+	/* Header */
+	--theme_header_bgcolor: var(--theme_transparent);
+	--theme_header_color: var(--theme_black);
+	--theme_header_color_hover: var(--theme_black);
+	--theme_header_bgcolor_sticky: var(--theme_white);
 
-// Errors & Confirmation
-$theme_valiation_error_bg_color: $theme_danger_bg;
-$theme_valiation_message_color: $theme_danger;
-$theme_error_field_border_color: $theme_danger;
-$theme_valiation_error_color: $theme_danger;
-$theme_confirmation_message_bgcolor: $theme_success_bg;
-$theme_confirmation_message_color: $theme_dark_text;
-$theme_confirmation_message_border_color: $theme_danger;
-$theme_required_text_color: $theme_danger;
-$theme_invalid_error_border_color: $theme_danger;
-$theme_hubspot_error_label_color: $theme_danger;
-$theme_hubspot_required_color: $theme_danger;
-$theme_fileupload_rule_color: $theme_light_text;
-$theme_error_menu_color: $theme_dark_text;
-
-// Accessibility
-$theme_acc_btn_color: $theme_white_text;
-$theme_acc_btn_bgcolor: $theme_button_bg;
-$theme_acc_btn_shadow: $theme_danger;
-
-// Comments Box
-$theme_comments_reply_btn_bgcolor: $theme_button_bg;
-$theme_comments_reply_btn_color: $theme_white_text;
-$theme_comments_reply_btn_bgcolor_hover: $theme_button_bg_hover;
-$theme_comments_reply_btn_color_hover: $theme_white_text;
-$theme_comment_meta_color: $theme_dark_text;
-$theme_comment_metadata_color: $theme_light_text;
-$theme_comments_list_border_color: $theme_border;
-$theme_widget_comments_meta_color: $theme_light_text;
-
-// Pagination
-$theme_pagination_bgcolor: $theme_blue_1;
-$theme_pagination_color: $theme_white;
-$theme_pagination_color_hover: $theme_white;
-$theme_pagination_bgcolor_hover: $theme_border_1;
-$theme_pagination_bgcolor_current: $theme_border_1;
-$theme_pagination_color_current: $theme_white;
-$theme_pagination_first_bgcolor: $theme_border_1;
-$theme_pagination_first_color: $theme_dark_text;
-$theme_pagination_border: $theme_transparent;
-
-// Widgets
-$theme_widget_latest_post_meta_color: $theme_danger;
-$theme_widget_rss_feed_meta_color: $theme_danger;
-$theme_widget_search_button_color: $theme_pure_black;
-$theme_wp_table_block_stripe_bg_color: $theme_gray;
-
-// Breadcrumbs
-$theme_breadcrumb_color: $theme_pure_black;
-$theme_breadcrumb_link_color: $theme_pure_black;
-$theme_breadcrumb_border_color: transparent;
-$theme_breadcrumb_border_color_hover: $theme_pure_black;
-$theme_breadcrumb_span_color: $theme_pure_black;
-
-// Header
-$theme_header_bgcolor: $theme_transparent;
-$theme_header_color: $theme_black;
-$theme_header_color_hover: $theme_black;
-$theme_header_bgcolor_sticky: $theme_white;
-$theme_header_nav_border_color: $theme_dark_text;
-$theme_header_submenu_bgcolor: $theme_gray;
-$theme_header_submenu_color: $theme_header_color;
-$theme_header_submenu_color_hover: $theme_header_color_hover;
-$theme_header_mobile_color: $theme_dark_text;
-$theme_header_mobile_submenu_color: $theme_dark_text;
-$theme_nav_overlay_bgcolor: $theme_white;
-$theme_mobile_nav_icon_bgcolor: $theme_dark_text;
-$theme_abbr_border: $theme_dark_text;
-
-// Top Bar
-$theme_topbar_bgcolor: $theme_color_primary;
-$theme_topbar_color: $theme_white;
-$theme_topbar_link_color: $theme_white;
-
-// Footer
-$theme_footer_bgcolor: $theme_dark_text;
-$theme_footer_color: $theme_white_text;
-$theme_footer_color_hover: $theme_white_text;
-$theme_f_nav_color: $theme_footer_color;
-$theme_f_nav_color_hover: $theme_footer_color_hover;
-$theme_f_nav_border_color: $theme_footer_color;
-$theme_f_nav_border_color_hover: $theme_footer_color_hover;
-$theme_copyright_color: $theme_white_text;
-$theme_legal_nav_color: $theme_white_text;
-$theme_legal_nav_border_color: $theme_white_text;
-$theme_legal_nav_border_color_hover: $theme_white_text;
-$theme_legal_text_color: $theme_white_text;
+	/* Footer */
+	--theme_footer_bgcolor: var(--theme_dark_text);
+	--theme_footer_color: var(--theme_white_text);
+	--theme_footer_color_hover: var(--theme_white_text);
+}

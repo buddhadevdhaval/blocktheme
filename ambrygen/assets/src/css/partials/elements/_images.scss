@@ -36,7 +36,7 @@ figure {
 		padding: 16px 20px;
 		position: relative;
 
-		@media (width <= 767px) {
+		@media (width <=767px) {
 			margin: -20px 12px 0;
 			padding: 12px 13px 12px 16px;
 		}
@@ -50,9 +50,9 @@ picture {
 	height: 100%;
 }
 
-svg {
-	margin: 0 0 30px;
-}
+// svg {
+// 	margin: 0 0 30px;
+// }
 
 .gallery .gallery-item a {
 	border-bottom: none;
@@ -66,15 +66,15 @@ figure.wp-block-image {
 		height: 484px;
 		object-fit: cover;
 
-		@media (width <= 992px) {
+		@media (width <=992px) {
 			height: 384px;
 		}
 
-		@media (width <= 767px) {
+		@media (width <=767px) {
 			border-radius: 10px;
 		}
 
-		@media (width <= 540px) {
+		@media (width <=540px) {
 			height: 208px;
 		}
 	}

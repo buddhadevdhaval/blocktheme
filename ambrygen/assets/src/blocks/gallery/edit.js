@@ -8,14 +8,13 @@ import {
 	URLInput,
 } from '@wordpress/block-editor';
 import { PanelBody, Button, SelectControl } from '@wordpress/components';
-import { Fragment, useEffect, useCallback, useRef } from '@wordpress/element';
-import { dispatch } from '@wordpress/data';
-
+import { Fragment, useEffect, useCallback } from '@wordpress/element';
+import { dispatch, select } from '@wordpress/data';
 /**
  * Placeholder image fallback.
  */
 const PLACEHOLDER_IMAGE =
-	'/wp-content/themes/ambrygen/assets/src/images/uploads/default.png';
+	'/wp-content/themes/ambrygen/assets/src/images/uploads/default-image.webp';
 
 /**
  * Gallery layout variations.
@@ -39,24 +38,20 @@ const GALLERY_VARIATIONS = [
 
 /**
  * Media Upload Panel component.
- *
- * @param {Object}   props                    Component props.
- * @param {string}   props.title              Panel title.
- * @param {string}   props.imageUrl           Image URL.
- * @param {string}   props.imageAlt           Image alt text.
- * @param {Function} props.onSelect           Media select handler.
- * @param {Function} props.onRemove           Remove image handler.
- * @param {string}   props.selectLabel        Select button label.
- * @param {string}   props.replaceLabel       Replace button label.
- * @param {string}   props.removeLabel        Remove button label.
- * @param {string}   props.headingTag         Heading tag value.
- * @param {Function} props.onHeadingTagChange Heading change handler.
- * @param {string}   props.link               Link URL.
- * @param {Function} props.onLinkChange       Link change handler.
- *
- * @return {JSX.Element} MediaUploadPanel component.
+ * @param root0
+ * @param root0.title
+ * @param root0.imageUrl
+ * @param root0.imageAlt
+ * @param root0.onSelect
+ * @param root0.onRemove
+ * @param root0.selectLabel
+ * @param root0.replaceLabel
+ * @param root0.removeLabel
+ * @param root0.headingTag
+ * @param root0.onHeadingTagChange
+ * @param root0.link
+ * @param root0.onLinkChange
  */
-
 function MediaUploadPanel( {
 	title,
 	imageUrl,
@@ -88,7 +83,6 @@ function MediaUploadPanel( {
 			) : (
 				<div className="image-preview">
 					<img src={ imageUrl } alt={ imageAlt } />
-
 					<div className="image-actions">
 						<MediaUploadCheck>
 							<MediaUpload
@@ -104,7 +98,6 @@ function MediaUploadPanel( {
 								) }
 							/>
 						</MediaUploadCheck>
-
 						<Button
 							variant="link"
 							isDestructive
@@ -114,6 +107,7 @@ function MediaUploadPanel( {
 						</Button>
 					</div>
 
+					{ /* Heading Tag Selector */ }
 					<SelectControl
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag || 'h5' }
@@ -128,29 +122,19 @@ function MediaUploadPanel( {
 						onChange={ onHeadingTagChange }
 					/>
 
+					{ /* Internal Link Picker */ }
 					<URLInput
 						label={ __( 'Link', 'ambrygen-web' ) }
 						value={ link || '' }
 						onChange={ onLinkChange }
 						className="components-base-control"
-						__experimentalSuggestions={ true }
+						__experimentalSuggestions={ true } // allows searching posts/pages
 					/>
 				</div>
 			) }
 		</PanelBody>
 	);
 }
-/**
- * Build srcset attribute from media sizes.
- *
- * @param {Object} sizes Media sizes object.
- * @return {string} Srcset string.
- */
-const buildSrcSet = ( sizes = {} ) =>
-	Object.values( sizes )
-		.filter( ( size ) => size?.source_url && size?.width )
-		.map( ( size ) => `${ size.source_url } ${ size.width }w` )
-		.join( ', ' );
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { items = [], variation = 'two-column', heading = '' } = attributes;
@@ -158,45 +142,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const currentVariant =
 		GALLERY_VARIATIONS.find( ( v ) => v.key === variation ) ||
 		GALLERY_VARIATIONS[ 0 ];
-
 	const requiredCount = currentVariant.itemCount;
 
-	/**
-	 * DRAG STATE
-	 */
-	const dragItemIndex = useRef( null );
-
-	const onDragStart = ( index, e ) => {
-		dragItemIndex.current = index;
-		e.dataTransfer.effectAllowed = 'move';
-	};
-
-	const onDragOver = ( e ) => {
-		e.preventDefault();
-		e.dataTransfer.dropEffect = 'move';
-	};
-
-	const onDrop = ( dropIndex ) => {
-		const dragIndex = dragItemIndex.current;
-
-		if ( dragIndex === null || dragIndex === dropIndex ) {
-			return;
-		}
-
-		const reordered = [ ...items ];
-		const moved = reordered.splice( dragIndex, 1 )[ 0 ];
-		reordered.splice( dropIndex, 0, moved );
-
-		setAttributes( { items: reordered } );
-		dragItemIndex.current = null;
-	};
-
-	/**
-	 * Ensure item count matches variation
-	 */
 	useEffect( () => {
 		let newItems = [ ...items ];
-
 		while ( newItems.length < requiredCount ) {
 			newItems.push( {
 				imageUrl: '',
@@ -210,11 +159,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				link: '',
 			} );
 		}
-
 		if ( newItems.length > requiredCount ) {
 			newItems = newItems.slice( 0, requiredCount );
 		}
-
 		if ( newItems.length !== items.length ) {
 			setAttributes( { items: newItems } );
 		}
@@ -232,8 +179,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const handleImageSelect = useCallback(
 		( index, media ) => {
 			const sizes = media?.sizes || media?.media_details?.sizes || {};
-
 			const newItems = [ ...items ];
+
 			newItems[ index ] = {
 				...newItems[ index ],
 				imageUrl: media.url,
@@ -249,21 +196,17 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	);
 
 	const handlePanelOpen = ( blockClientId ) => {
-		dispatch( 'core/block-editor' ).selectBlock( blockClientId );
-		dispatch( 'core/edit-post' ).openGeneralSidebar( 'edit-post/block' );
+		if ( blockClientId ) {
+			dispatch( 'core/block-editor' ).selectBlock( blockClientId );
+			dispatch( 'core/edit-post' ).openGeneralSidebar(
+				'edit-post/block'
+			);
+		}
 	};
 
 	const blockProps = useBlockProps( {
 		className: `image-grid-block variation-${ variation }`,
 	} );
-
-	const handleImageClick = useCallback(
-		( e ) => {
-			e.stopPropagation();
-			handlePanelOpen( clientId );
-		},
-		[ clientId ]
-	);
 
 	return (
 		<Fragment>
@@ -294,48 +237,37 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					</div>
 				</PanelBody>
 
-				{ items.map( ( item, index ) => {
-					const panelTitle = sprintf(
-						/* translators: %d = image number */
-						__( 'Image Grid %d', 'ambrygen-web' ),
-						index + 1
-					);
-
-					return (
-						<MediaUploadPanel
-							key={ index }
-							title={ panelTitle }
-							imageUrl={ item.imageUrl }
-							imageAlt={ item.imageAlt }
-							selectLabel={ __( 'Select Image', 'ambrygen-web' ) }
-							replaceLabel={ __(
-								'Replace Image',
-								'ambrygen-web'
-							) }
-							removeLabel={ __( 'Remove Image', 'ambrygen-web' ) }
-							onSelect={ ( media ) =>
-								handleImageSelect( index, media )
-							}
-							onRemove={ () =>
-								updateItem( index, 'imageUrl', '' )
-							}
-							headingTag={ item.headingTag }
-							onHeadingTagChange={ ( value ) =>
-								updateItem( index, 'headingTag', value )
-							}
-							link={ item.link }
-							onLinkChange={ ( value ) =>
-								updateItem( index, 'link', value )
-							}
-						/>
-					);
-				} ) }
+				{ items.map( ( item, index ) => (
+					<MediaUploadPanel
+						key={ index }
+						title={ sprintf(
+							__( 'Image Grid %d', 'ambrygen-web' ),
+							index + 1
+						) }
+						imageUrl={ item.imageUrl }
+						imageAlt={ item.imageAlt }
+						selectLabel={ __( 'Select Image', 'ambrygen-web' ) }
+						replaceLabel={ __( 'Replace Image', 'ambrygen-web' ) }
+						removeLabel={ __( 'Remove Image', 'ambrygen-web' ) }
+						onSelect={ ( media ) =>
+							handleImageSelect( index, media )
+						}
+						onRemove={ () => updateItem( index, 'imageUrl', '' ) }
+						headingTag={ item.headingTag }
+						onHeadingTagChange={ ( value ) =>
+							updateItem( index, 'headingTag', value )
+						}
+						link={ item.link }
+						onLinkChange={ ( value ) =>
+							updateItem( index, 'link', value )
+						}
+					/>
+				) ) }
 			</InspectorControls>
 
 			<div { ...blockProps } className="wp-block-group">
 				<section className="container-1340">
 					<div className="is-style-gl-s48" />
-
 					<div className="wrapper">
 						<div className="get-started-ambry-block">
 							<h2 className="block-title heading-3 mb-0">
@@ -345,8 +277,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									onChange={ ( value ) =>
 										setAttributes( { heading: value } )
 									}
-									/* translators: Main gallery heading */
-
 									placeholder={ __(
 										'Get Started with Ambry',
 										'ambrygen-web'
@@ -358,51 +288,26 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							<div className="card-grid-block">
 								{ items.map( ( item, idx ) => {
 									const HeadingTag = item.headingTag || 'h5';
+									// In edit mode, do NOT wrap with <a> to avoid redirect
+									const Tag = 'div';
 
 									return (
-										<div
-											key={ idx }
-											className="card-col is-sortable"
-											role="group"
-											onDragOver={ onDragOver }
-											onDrop={ () => onDrop( idx ) }
-										>
-											<span
-												className="drag-handle drag-handle--corner"
-												draggable="true"
+										<Tag key={ idx } className="card-col">
+											<div
+												className="image-block"
 												role="button"
 												tabIndex={ 0 }
-												onDragStart={ ( e ) =>
-													onDragStart( idx, e )
+												onClick={ () =>
+													handlePanelOpen( clientId )
 												}
 												onKeyDown={ ( e ) => {
 													if (
 														e.key === 'Enter' ||
 														e.key === ' '
 													) {
-														onDragStart( idx, e );
-													}
-												} }
-												/* translators: Drag icon title */
-												title={ __(
-													'Drag to reorder',
-													'ambrygen-web'
-												) }
-											>
-												⋮⋮
-											</span>
-
-											<div
-												className="image-block"
-												role="button"
-												tabIndex={ 0 }
-												onClick={ handleImageClick }
-												onKeyDown={ ( e ) => {
-													if (
-														e.key === 'Enter' ||
-														e.key === ' '
-													) {
-														handleImageClick( e );
+														handlePanelOpen(
+															clientId
+														);
 													}
 												} }
 											>
@@ -464,13 +369,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 													/>
 												</div>
 											</div>
-										</div>
+										</Tag>
 									);
 								} ) }
 							</div>
 						</div>
 					</div>
-
 					<div className="is-style-gl-s48" />
 				</section>
 			</div>

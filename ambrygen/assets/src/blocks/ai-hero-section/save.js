@@ -31,31 +31,31 @@ import { validateNumber } from '../../utils/validation.js';
  * @return {JSX.Element|null} Counter markup or null if invalid.
  */
 // ----- CounterItem -----
-const CounterItem = ( { number, prefix, suffix, label } ) => {
-	if ( ! number && ! label ) {
+const CounterItem = ({ number, prefix, suffix, label }) => {
+	if (!number && !label) {
 		return null;
 	}
-	const safeNumber = validateNumber( number ) || '0';
+	const safeNumber = validateNumber(number) || '0';
 	return (
 		<div className="counter-item">
 			<div className="counter-number heading-3 mb-0">
-				{ prefix && (
+				{prefix && (
 					<div className="counter-prefix">
-						<RichText.Content value={ prefix } />
+						<RichText.Content value={prefix} />
 					</div>
-				) }
-				{ number && (
+				)}
+				{number && (
 					<div className="count">
-						{ safeNumber }
-						{ suffix && <RichText.Content value={ suffix } /> }
+						{safeNumber}
+						{suffix && <RichText.Content value={suffix} />}
 					</div>
-				) }
+				)}
 			</div>
-			{ label && (
+			{label && (
 				<div className="counter-title body1">
-					<RichText.Content value={ label } />
+					<RichText.Content value={label} />
 				</div>
-			) }
+			)}
 		</div>
 	);
 };
@@ -75,7 +75,7 @@ const CounterItem = ( { number, prefix, suffix, label } ) => {
  * @return {JSX.Element} Rendered image wrapper.
  */
 // ----- ImageWrapper with lazy load and srcSet -----
-const ImageWrapper = ( {
+const ImageWrapper = ({
 	src,
 	alt,
 	className,
@@ -83,29 +83,29 @@ const ImageWrapper = ( {
 	fallbackAlt,
 	srcSet, // optional
 	sizes, // optional
-} ) => {
-	if ( ! src ) {
+}) => {
+	if (!src) {
 		return null;
 	}
 
-	const handleImageError = ( e ) => {
+	const handleImageError = (e) => {
 		e.target.style.display = 'none';
 	};
 
 	return (
 		<div
-			className={ wrapperClassName }
+			className={wrapperClassName}
 			role="img"
-			aria-label={ alt || fallbackAlt }
+			aria-label={alt || fallbackAlt}
 		>
 			<img
-				src={ src }
-				alt={ alt || fallbackAlt }
-				className={ className }
+				src={src}
+				alt={alt || fallbackAlt}
+				className={className}
 				loading="lazy" // <-- lazy load
-				srcSet={ srcSet } // <-- responsive srcSet
-				sizes={ sizes } // <-- responsive sizes
-				onError={ handleImageError }
+				srcSet={srcSet} // <-- responsive srcSet
+				sizes={sizes} // <-- responsive sizes
+				onError={handleImageError}
 			/>
 		</div>
 	);
@@ -126,7 +126,7 @@ const ImageWrapper = ( {
  * @param {Object} props.attributes Block attributes.
  * @return {JSX.Element} Saved block markup.
  */
-export default function Save( { attributes } ) {
+export default function Save({ attributes }) {
 	const {
 		heading,
 		content,
@@ -148,29 +148,29 @@ export default function Save( { attributes } ) {
 		textColor,
 	} = attributes;
 	const HeadingTag = headingLevel || 'h2';
-	const blockProps = useBlockProps.save( {
+	const blockProps = useBlockProps.save({
 		style: {
 			backgroundColor: backgroundColor || undefined,
 			color: textColor || undefined,
 		},
-	} );
+	});
 
 	return (
-		<div { ...blockProps }>
+		<div {...blockProps}>
 			<div className="ai-hero">
 				<div className="container-1340">
 					<div className="is-style-gl-s48" />
 					<div className="wrapper">
 						<div className="ai-hero__grid">
-							<div className="ai-hero__col-images">
+							<div className="ai-hero__col ai-hero__col--images">
 								<div className="ai-hero__images">
 									<div className="ai-hero__image-wrapper">
 										<div className="ai-hero__logo">
 											<div className="ai-hero__logo-inner">
 												<img
-													src={ logoImage }
-													srcSet={ logoImageSrcSet }
-													sizes={ logoImageSizes }
+													src={logoImage}
+													srcSet={logoImageSrcSet}
+													sizes={logoImageSizes}
 													alt={
 														logoImageAlt ||
 														__(
@@ -186,74 +186,74 @@ export default function Save( { attributes } ) {
 									<div className="ai-hero__image-wrapper">
 										<div className="ai-hero__image">
 											<ImageWrapper
-												src={ imageTop }
-												alt={ imageTopAlt }
-												className="hero-top-img"
-												wrapperClassName="hero-image-top"
+												src={imageTop}
+												alt={imageTopAlt}
+												className="ai-hero__image-img"
+												wrapperClassName="ai-hero__image-container"
 												loading="lazy"
-												fallbackAlt={ __(
+												fallbackAlt={__(
 													'Hero top image',
 													'ambrygen-web'
-												) }
-												srcSet={ imageTopSrcSet } // generated via wp_get_attachment_image_srcset in PHP
-												sizes={ imageTopSizes }
+												)}
+												srcSet={imageTopSrcSet}
+												sizes={imageTopSizes}
 											/>
 										</div>
 									</div>
-									<div className="ai-hero__image-wrapper">
-										<div className="ai-hero__image">
+									<div className="ai-hero__image-wrapper ai-hero__image-wrapper--full">
+										<div className="ai-hero__image ai-hero__image--bottom">
 											<ImageWrapper
-												src={ imageBottom }
-												alt={ imageBottomAlt }
-												className="hero-bottom-img"
-												wrapperClassName="ai-hero__image-bottom"
+												src={imageBottom}
+												alt={imageBottomAlt}
+												className="ai-hero__image-img"
+												wrapperClassName="ai-hero__image-container"
 												loading="lazy"
-												fallbackAlt={ __(
+												fallbackAlt={__(
 													'Hero bottom image',
 													'ambrygen-web'
-												) }
-												srcSet={ imageBottomSrcSet }
-												sizes={ imageBottomSizes }
+												)}
+												srcSet={imageBottomSrcSet}
+												sizes={imageBottomSizes}
 											/>
 										</div>
 									</div>
 								</div>
 							</div>
-							<div className="ai-hero__col-content">
+							<div className="ai-hero__col ai-hero__col--content">
 								<div className="ai-hero__content">
 									<HeadingTag className="ai-hero__heading heading-2 mb-0">
-										{ heading && (
+										{heading && (
 											<RichText.Content
 												tagName=""
-												value={ heading }
-												className="hero-heading"
+												value={heading}
+												className="ai-hero__heading-text"
 												id="hero-heading"
 											/>
-										) }
+										)}
 									</HeadingTag>
 									<div className="is-style-gl-s24"></div>
 									<div className="ai-hero__description body1">
-										{ content && (
+										{content && (
 											<RichText.Content
 												tagName="p"
-												value={ content }
-												className=""
+												value={content}
+												className="ai-hero__description-text"
 												role="group"
 												aria-labelledby="hero-heading"
 											/>
-										) }
+										)}
 									</div>
 									<div className="is-style-gl-s24"></div>
 									<div className="ai-hero__counters">
-										{ counters.map( ( counter, index ) => (
+										{counters.map((counter, index) => (
 											<CounterItem
-												key={ index }
-												number={ counter.number }
-												prefix={ counter.prefix }
-												suffix={ counter.suffix }
-												label={ counter.label }
+												key={index}
+												number={counter.number}
+												prefix={counter.prefix}
+												suffix={counter.suffix}
+												label={counter.label}
 											/>
-										) ) }
+										))}
 									</div>
 								</div>
 							</div>

@@ -1,1 +1,24 @@
-// Editor-specific styles
+@use "../../css/partials/variables/breakpoints" as bp;
+
+.genetic-cards__container {
+
+    .block-editor-inner-blocks,
+    .block-editor-block-list__layout {
+        display: contents;
+    }
+
+    .block-editor-block-list__layout>.genetic-cards__card {
+
+        @include bp.desktop {
+
+            &--small {
+                grid-column: 1;
+            }
+
+            &--main {
+                grid-column: 2;
+                grid-row: 1 / span 2;
+            }
+        }
+    }
+}

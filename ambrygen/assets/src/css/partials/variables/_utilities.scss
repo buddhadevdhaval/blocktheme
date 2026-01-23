@@ -1,36 +1,32 @@
-/* -------------------------------------------------
->> Utility Variables (Line Height, Letter Spacing, Border Radius)
-------------------------------------------------- */
+:root {
 
-/*
->> Line Heights
-*/
-$theme_line_height_xsmall: 1;
-$theme_line_height_small: 1.1;
-$theme_line_height_medium: 1.3;
-$theme_line_height_large: 1.4;
-$theme_line_height_xlarge: 1.5;
-$theme_line_height_105per: 105%;
-$theme_line_height_110per: 110%;
-$theme_line_height_115per: 115%;
-$theme_line_height_120per: 120%;
-$theme_line_height_125per: 125%;
-$theme_line_height_130per: 130%;
-$theme_line_height_140per: 140%;
-$theme_line_height_160per: 160%;
+	/* Utility Variables (Line Height, Letter Spacing, Border Radius) */
 
-/*
->> Letter Spacing
-*/
-$theme_letter_spacing_xsmall: 0px;
-$theme_letter_spacing_small: -0.5px;
-$theme_letter_spacing_medium: normal;
-$theme_letter_spacing_large: 1px;
-$theme_letter_spacing_xlarge: 1.5px;
+	/* Line Heights */
+	--theme_line_height_xsmall: 1;
+	--theme_line_height_small: 1.1;
+	--theme_line_height_medium: 1.3;
+	--theme_line_height_large: 1.4;
+	--theme_line_height_xlarge: 1.5;
 
-/*
->> Border Radius
-*/
-$theme_border_radius_small: 1px;
-$theme_border_radius_medium: 2px;
-$theme_border_radius_large: 4px;
+	--theme_line_height_105per: 105%;
+	--theme_line_height_110per: 110%;
+	--theme_line_height_115per: 115%;
+	--theme_line_height_120per: 120%;
+	--theme_line_height_125per: 125%;
+	--theme_line_height_130per: 130%;
+	--theme_line_height_140per: 140%;
+	--theme_line_height_160per: 160%;
+
+	/* Letter Spacing */
+	--theme_letter_spacing_xsmall: 0;
+	--theme_letter_spacing_small: -0.5px;
+	--theme_letter_spacing_medium: normal;
+	--theme_letter_spacing_large: 1px;
+	--theme_letter_spacing_xlarge: 1.5px;
+
+	/* Border Radius */
+	--theme_border_radius_small: 1px;
+	--theme_border_radius_medium: 2px;
+	--theme_border_radius_large: 4px;
+}

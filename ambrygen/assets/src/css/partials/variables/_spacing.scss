@@ -1,54 +1,55 @@
-/* -------------------------------------------------
->> Variables for Spaces
-------------------------------------------------- */
+:root {
 
-/* ------- [ D-2 to M-2 ] - [ gl-s2 ] ------- */
-$theme_space_1: clamp(1px, calc(0.125rem + ((1vw - 7.68px) * 0)), 1px);
+	/* Spaces (Spacing Scale) */
 
-/* ------- [ D-4 to M-4] - [ gl-s4] ------- */
-$theme_space_2: clamp(4px, calc(0.25rem + ((1vw - 7.68px) * 0)), 4px);
+	/* ------- [ D-2 to M-2 ] - [ gl-s2 ] ------- */
+	--theme_space_1: clamp(1px, calc(0.125rem + ((1vw - 7.68px) * 0)), 1px);
 
-/* ------- [ D-6 to M-6] - [ gl-s6] ------- */
-$theme_space_3: clamp(6px, calc(0.375rem + ((1vw - 7.68px) * 0)), 6px);
+	/* ------- [ D-4 to M-4 ] - [ gl-s4 ] ------- */
+	--theme_space_2: clamp(4px, calc(0.25rem + ((1vw - 7.68px) * 0)), 4px);
 
-/* ------- [ D-8 to M-8] - [ gl-s8] ------- */
-$theme_space_4: clamp(8px, calc(0.5rem + ((1vw - 7.68px) * 0)), 8px);
+	/* ------- [ D-6 to M-6 ] - [ gl-s6 ] ------- */
+	--theme_space_3: clamp(6px, calc(0.375rem + ((1vw - 7.68px) * 0)), 6px);
 
-/* ------- [ D-12 to M-10] - [ gl-s12] ------- */
-$theme_space_5: clamp(10px, calc(0.625rem + ((1vw - 7.68px) * 0.3436)), 12px);
+	/* ------- [ D-8 to M-8 ] - [ gl-s8 ] ------- */
+	--theme_space_4: clamp(8px, calc(0.5rem + ((1vw - 7.68px) * 0)), 8px);
 
-/* ------- [ D-16 to M-12] - [ gl-s16] ------- */
-$theme_space_6: clamp(12px, calc(0.75rem + ((1vw - 7.68px) * 0.6873)), 16px);
+	/* ------- [ D-12 to M-10 ] - [ gl-s12 ] ------- */
+	--theme_space_5: clamp(10px, calc(0.625rem + ((1vw - 7.68px) * 0.3436)), 12px);
 
-/* ------- [ D-20 to M-16] - [ gl-s20] ------- */
-$theme_space_7: clamp(16px, calc(1rem + ((1vw - 7.68px) * 0.6873)), 20px);
+	/* ------- [ D-16 to M-12 ] - [ gl-s16 ] ------- */
+	--theme_space_6: clamp(12px, calc(0.75rem + ((1vw - 7.68px) * 0.6873)), 16px);
 
-/* ------- [ D-24 to M-20] - [ gl-s24] ------- */
-$theme_space_8: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 0.6873)), 24px);
+	/* ------- [ D-20 to M-16 ] - [ gl-s20 ] ------- */
+	--theme_space_7: clamp(16px, calc(1rem + ((1vw - 7.68px) * 0.6873)), 20px);
 
-/* ------- [ D-30 to M-24] - [ gl-s30] ------- */
-$theme_space_9: clamp(24px, calc(1.5rem + ((1vw - 7.68px) * 1.0309)), 32px);
+	/* ------- [ D-24 to M-20 ] - [ gl-s24 ] ------- */
+	--theme_space_8: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 0.6873)), 24px);
 
-/* ------- [ D-36 to M-30] - [ gl-s36] ------- */
-$theme_space_10: clamp(30px, calc(1.875rem + ((1vw - 7.67px) * 1.7153)), 40px);
+	/* ------- [ D-30 to M-24 ] - [ gl-s30 ] ------- */
+	--theme_space_9: clamp(24px, calc(1.5rem + ((1vw - 7.68px) * 1.0309)), 32px);
 
-/* ------- [ D-48 to M-36] - [ gl-s48] ------- */
-$theme_space_11: clamp(36px, calc(2.25rem + ((1vw - 7.68px) * 2.0619)), 48px);
+	/* ------- [ D-36 to M-30 ] - [ gl-s36 ] ------- */
+	--theme_space_10: clamp(30px, calc(1.875rem + ((1vw - 7.67px) * 1.7153)), 40px);
 
-/* ------- [ D-72 to M-44] - [ gl-s72] ------- */
-$theme_space_12: clamp(44px, calc(2.75rem + ((1vw - 7.68px) * 4.811)), 72px);
+	/* ------- [ D-48 to M-36 ] - [ gl-s48 ] ------- */
+	--theme_space_11: clamp(36px, calc(2.25rem + ((1vw - 7.68px) * 2.0619)), 48px);
 
-/* ------- [ D-96 to M-52] - [ gl-s96] ------- */
-$theme_space_13: clamp(54px, calc(3.375rem + ((1vw - 7.67px) * 7.8902)), 100px);
+	/* ------- [ D-72 to M-44 ] - [ gl-s72 ] ------- */
+	--theme_space_12: clamp(44px, calc(2.75rem + ((1vw - 7.68px) * 4.811)), 72px);
 
-/* ------- [ D-128 to M-64] - [ gl-s128] ------- */
-$theme_space_14: clamp(64px, calc(4rem + ((1vw - 7.68px) * 10.9966)), 128px);
+	/* ------- [ D-96 to M-52 ] - [ gl-s96 ] ------- */
+	--theme_space_13: clamp(54px, calc(3.375rem + ((1vw - 7.67px) * 7.8902)), 100px);
 
-/* ------- [ D-156 to M-72] - [ gl-s156] ------- */
-$theme_space_15: clamp(72px, calc(4.5rem + ((1vw - 7.68px) * 14.433)), 156px);
+	/* ------- [ D-128 to M-64 ] - [ gl-s128 ] ------- */
+	--theme_space_14: clamp(64px, calc(4rem + ((1vw - 7.68px) * 10.9966)), 128px);
 
-/* ------- [ D-200 to M-84] - [ gl-s200] ------- */
-$theme_space_16: clamp(84px, calc(5.25rem + ((1vw - 7.68px) * 19.9313)), 200px);
+	/* ------- [ D-156 to M-72 ] - [ gl-s156 ] ------- */
+	--theme_space_15: clamp(72px, calc(4.5rem + ((1vw - 7.68px) * 14.433)), 156px);
 
-/* ------- [ D-236 to M-98] - [ gl-s236] ------- */
-$theme_space_17: clamp(98px, calc(6.125rem + ((1vw - 7.68px) * 23.7113)), 236px);
+	/* ------- [ D-200 to M-84 ] - [ gl-s200 ] ------- */
+	--theme_space_16: clamp(84px, calc(5.25rem + ((1vw - 7.68px) * 19.9313)), 200px);
+
+	/* ------- [ D-236 to M-98 ] - [ gl-s236 ] ------- */
+	--theme_space_17: clamp(98px, calc(6.125rem + ((1vw - 7.68px) * 23.7113)), 236px);
+}

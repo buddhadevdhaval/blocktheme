@@ -1,0 +1,28 @@
+@mixin bg-scope($name, $css-var) {
+
+	.bg-#{$name},
+	.wp-block.bg-#{$name} {
+		background-color: var(#{$css-var});
+		@content;
+	}
+}
+
+@include bg-scope("primary", --theme_color_primary) {
+
+	/* Inside Classes SCSS will goes here */
+}
+
+@include bg-scope("Secondary", --theme_color_secondary) {
+
+	/* Inside Classes SCSS will goes here */
+}
+
+@include bg-scope("aliceblue", --theme_aliceblue) {
+
+	/* Inside Classes SCSS will goes here */
+}
+
+@include bg-scope("paleblue", --theme_primary_pale_blue) {
+
+	/* Inside Classes SCSS will goes here */
+}

@@ -497,7 +497,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				<div className="is-style-gl-s48" />
 				<div className="wrapper">
 					<div className="ai-hero__grid">
-						<div className="ai-hero__col-images">
+						<div className="ai-hero__col ai-hero__col--images">
 							<div className="ai-hero__images">
 								<div className="ai-hero__image-wrapper">
 									<div className="ai-hero__logo">
@@ -582,7 +582,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									</div>
 								</div>
 								<div
-									className="ai-hero__image-wrapper"
+									className="ai-hero__image-wrapper ai-hero__image-wrapper--full"
 									role="button"
 									tabIndex={ 0 }
 									onClick={ () =>
@@ -625,10 +625,10 @@ export default function Edit( { attributes, setAttributes } ) {
 								</div>
 							</div>
 						</div>
-						<div className="ai-hero__col-content">
+						<div className="ai-hero__col ai-hero__col--content">
 							<div className="ai-hero__content">
 								<HeadingTag
-									className="counter-number heading-3 mb-0"
+									className="ai-hero__heading heading-2 mb-0"
 									role="button"
 									tabIndex={ 0 }
 									onClick={ () =>

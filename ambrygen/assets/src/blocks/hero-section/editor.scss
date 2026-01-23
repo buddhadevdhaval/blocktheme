@@ -54,7 +54,7 @@
         &--1 {
             top: clamp(-80px, calc(-5rem + ((1vw - 7.68px) * -4.4643)), -50px);
             left: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 5.6548)), 58px);
-            width: clamp(100px, calc(6.25rem + ((1vw - 7.68px) * 7.4405)), 150px); // Smaller in editor to avoid clutter
+            width: clamp(100px, calc(6.25rem + ((1vw - 7.68px) * 7.4405)), 150px);
             height: auto;
             opacity: 0.8;
         }
@@ -62,7 +62,7 @@
         &--2 {
             bottom: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 4.4643)), 50px);
             left: clamp(200px, calc(12.5rem + ((1vw - 7.68px) * 29.7619)), 400px);
-            width: clamp(80px, calc(5rem + ((1vw - 7.68px) * 5.9524)), 120px); // Smaller in editor
+            width: clamp(80px, calc(5rem + ((1vw - 7.68px) * 5.9524)), 120px);
             height: auto;
         }
 

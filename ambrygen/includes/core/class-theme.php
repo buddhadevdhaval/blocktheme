@@ -37,7 +37,24 @@ final class Theme {
 		 * Use `after_setup_theme`
 		 */
 		add_action( 'after_setup_theme', array( $this, 'theme_setup' ) );
+
+		add_filter('upload_mimes', array($this, 'ambry_allow_svg_uploads'));
+
 	}
+
+	
+	/**
+	 * Allow SVG uploads.
+	 *
+	 * @param array $mimes Allowed MIME types.
+	 * @return array
+	 */
+	public function ambry_allow_svg_uploads($mimes)
+	{
+		$mimes['svg'] = 'image/svg+xml';
+		return $mimes;
+	}
+
 
 	/**
 	 * Load theme components.

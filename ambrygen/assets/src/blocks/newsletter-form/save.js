@@ -3,6 +3,10 @@ import { __ } from '@wordpress/i18n';
 
 const DEFAULT_IMAGE =
 	'/wp-content/themes/ambrygen/assets/src/images/news-latter.jpg';
+const DEFAULT_OVERLAY_TOP =
+	'/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-top.svg';
+const DEFAULT_OVERLAY_BOTTOM =
+	'/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-bottom.svg';
 
 function buildSrcSet( sizes ) {
 	if ( ! sizes ) {
@@ -18,12 +22,15 @@ export default function Save( { attributes } ) {
 	const {
 		eyebrow,
 		heading,
+		headingTag = 'h2',
 		description,
 		image,
-		imageAlt,
+		imageAlt = '',
 		imageSizes,
-		backgroundColor = '#005E7F',
-		textColor = '#8AD8F4',
+		overlayTopImage = DEFAULT_OVERLAY_TOP,
+		overlayBottomImage = DEFAULT_OVERLAY_BOTTOM,
+		backgroundColor = '',
+		textColor = '',
 		style,
 	} = attributes;
 
@@ -34,52 +41,99 @@ export default function Save( { attributes } ) {
 		style: {
 			backgroundColor: backgroundColor || style?.color?.background,
 			color: textColor,
-			padding: '60px 20px',
 		},
 	} );
 
 	return (
 		<div { ...blockProps }>
-			<div className="newsletter-signup">
-				<div className="newsletter-image">
+			<div className="newsletter newsletter-signup">
+				{ /* Image Section */ }
+				<div className="newsletter__image-block">
 					<img
 						src={ displayImage }
-						srcSet={ srcSet }
+						srcSet={ srcSet || undefined }
 						sizes="(max-width: 768px) 100vw, 600px"
 						alt={
 							imageAlt || __( 'Newsletter Image', 'ambrygen-web' )
 						}
-						className="newsletter-img"
+						className="newsletter__img"
 						loading="lazy"
 						decoding="async"
 					/>
+
+					{ /* Overlay Top */ }
+					{ overlayTopImage && (
+						<div className="newsletter__image-block__overlay newsletter__image-block__overlay-top">
+							<img
+								src={ overlayTopImage }
+								srcSet={
+									overlayTopImage.endsWith( '.svg' )
+										? undefined
+										: overlayTopImage
+								}
+								alt={ __( 'Overlay Top', 'ambrygen-web' ) }
+								className="overlay__img"
+								loading="lazy"
+								decoding="async"
+							/>
+						</div>
+					) }
+
+					{ /* Overlay Bottom */ }
+					{ overlayBottomImage && (
+						<div className="newsletter__image-block__overlay newsletter__image-block__overlay-bottom">
+							<img
+								src={ overlayBottomImage }
+								srcSet={
+									overlayBottomImage.endsWith( '.svg' )
+										? undefined
+										: overlayBottomImage
+								}
+								alt={ __( 'Overlay Bottom', 'ambrygen-web' ) }
+								className="overlay__img"
+								loading="lazy"
+								decoding="async"
+							/>
+						</div>
+					) }
 				</div>
 
-				<div className="newsletter-form-section">
+				{ /* Content Section */ }
+				<div className="newsletter__content-block">
+					{ /* Eyebrow */ }
 					{ eyebrow && (
 						<RichText.Content
 							tagName="span"
 							value={ eyebrow }
-							className="newsletter-eyebrow"
+							className="newsletter__content-block__eyebrow-text eyebrow"
 						/>
 					) }
 
+					<div className="is-style-gl-s12"></div>
+
+					{ /* Heading */ }
 					{ heading && (
 						<RichText.Content
-							tagName="h3"
+							tagName={ headingTag }
 							value={ heading }
-							className="newsletter-heading"
+							className="newsletter__content-block__heading heading-3 mb-0"
 						/>
 					) }
 
-					{ description && (
-						<RichText.Content
-							tagName="p"
-							value={ description }
-							className="newsletter-description"
-						/>
-					) }
+					<div className="is-style-gl-s12"></div>
 
+					<div className="newsletter__content-block__description text-medium">
+						{ /* Description */ }
+						{ description && (
+							<RichText.Content
+								tagName="p"
+								value={ description }
+								className="newsletter__content-block__description-text"
+							/>
+						) }
+					</div>
+
+					{ /* Form Slot */ }
 					<div className="newsletter-form-placeholder">
 						<InnerBlocks.Content />
 					</div>

@@ -28,9 +28,19 @@
     "layout",
     "grid"
   ],
-  "attributes": {},
+  "attributes": {
+    "sectionTitle": {
+      "type": "string",
+      "default": "Why We’re <span>Different</span>"
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2"
+    }
+  },
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
+  "render": "file:./render.php",
   "textdomain": "ambrygen-web"
 }

@@ -1,0 +1,37 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "ambrygen/icon-grids-item",
+    "title": "Icon Grid Item",
+    "category": "ambrygen",
+    "icon": "format-image",
+    "parent": ["ambrygen/icon-grids"],
+    "description": "Individual icon card item for icon grids",
+    "supports": {
+        "html": false,
+        "reusable": false,
+        "color": {
+            "background": true,
+            "link": true
+        }
+    },
+    "attributes": {
+        "icon": {
+            "type": "object",
+            "default": { "url": "", "id": 0, "alt": "" }
+        },
+        "title": {
+            "type": "string",
+            "default": "Title"
+        },
+        "links": {
+            "type": "array",
+            "default": []
+        }
+    },
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./index.css",
+    "style": "file:./style-index.css",
+    "textdomain": "ambrygen-web",
+    "render": "file:./render.php"
+}

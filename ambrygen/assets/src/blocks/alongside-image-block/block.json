@@ -1,0 +1,28 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/alongside-image-block",
+  "title": "Alongside Image Block",
+  "category": "ambrygen",
+  "icon": "location-alt",
+  "description": "Block with Google Maps and location list",
+  "supports": {
+    "html": false
+  },
+"attributes": {
+    "title": { "type": "string", "default": "Our Locations" },
+    "titleColor": { "type": "string", "default": "" },
+    "iframe": { "type": "string", "default": "https://www.google.com/maps/embed?pb=..." },
+    "locations": { "type": "array", "default": [ { "name": "Headquarters", "address": "1 Enterprise, Aliso Viejo, CA 92656" }, { "name": "Lab (For specimen shipments)", "address": "7 Argonaut, Aliso Viejo, CA 92656" } ] },
+  "headingLevel": {
+    "type": "string",
+    "default": "h2"
+  }
+},
+  "render": "file:./render.php",
+   "editorScript": "file:./index.js",
+    "editorStyle": "file:./index.css",
+    "style": "file:./style-index.css"
+}
+
+

@@ -15,12 +15,17 @@
     }
   },
   "editorScript": "file:./index.js",
+  "render": "file:./render.php",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
   "attributes": {
     "heading": {
       "type": "string",
       "default": "Get Started with Ambry"
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2"
     },
     "variation": {
       "type": "string",

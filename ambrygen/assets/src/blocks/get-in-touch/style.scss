@@ -1,0 +1,16 @@
+
+@use "../../css/partials/variables/breakpoints" as bp;
+
+.heading-center {
+
+    .heading-content {
+
+        p {
+            margin-bottom: 20px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}

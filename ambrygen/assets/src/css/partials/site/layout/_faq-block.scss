@@ -1,0 +1,105 @@
+@use "../../variables/breakpoints" as bp;
+
+.alongside-faq {
+
+    &__row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 50px;
+    }
+
+    &__title {
+        font-weight: 600;
+        line-height: 1.22;
+    }
+
+    &__col {
+
+        &--left {
+            flex: clamp(480px, calc(30rem + ((1vw - 7.68px) * 16.8385)), 578px) 0 0;
+
+            @include bp.max(lg) {
+                flex: 100% 0 0;
+            }
+        }
+
+        &--right {
+            flex: 1 0 0;
+
+            @include bp.max(lg) {
+                flex: 100% 0 0;
+            }
+        }
+    }
+
+    &__media {
+        display: flex;
+        height: clamp(270px, calc(16.875rem + ((1vw - 7.68px) * 25.0859)), 416px);
+        overflow: hidden;
+        border-radius: 16px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+
+.faq {
+
+    &__item {
+        padding: 24px 0;
+        border-top: 1px solid var(--theme_body_color);
+
+        &:first-child {
+            padding-top: 0;
+            border-top: 0;
+        }
+
+        &:last-child {
+            padding-bottom: 0;
+        }
+
+        &[open] {
+
+            .faq__icon::after {
+                background-image: url(../images/minus-circle.svg);
+            }
+        }
+    }
+
+    &__header {
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+        gap: 12px;
+    }
+
+    &__question {
+        flex: 1 0 0;
+    }
+
+    &__icon {
+        position: relative;
+        flex: 24px 0 0;
+        align-self: center;
+        display: flex;
+
+        &::after {
+            content: '';
+            position: relative;
+            width: 24px;
+            height: 24px;
+            background-image: url(../images/plus-circle.svg);
+            background-size: cover;
+            background-position: center;
+        }
+    }
+
+    &__answer {
+        margin-top: 8px;
+        max-width: calc(100% - 30px);
+    }
+}

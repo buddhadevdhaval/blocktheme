@@ -1,8 +1,29 @@
-// .wp-block-ambrygen-testimonials {
-// 	outline: 2px dashed rgba(59, 130, 246, 0.3);
-// 	padding: 20px;
-// }
+.wp-block-ambrygen-testimonials {
 
-// .wp-block-ambrygen-testimonial-item {
-// 	cursor: grab;
-// }
+    .ambry-testimonials__grid {
+
+        >.block-editor-inner-blocks,
+        >.block-editor-inner-blocks>.block-editor-block-list__layout {
+            display: contents;
+        }
+
+        .block-editor-block-list__layout>.wp-block-ambrygen-testimonial-item {
+            flex: 0 0 calc((100% - 2 * 24px) / 3);
+
+            &:first-child {
+                flex: 0 0 calc(100% - 24px - 332px);
+                margin-left: auto;
+
+                .ambry-testimonials__grid__item {
+                    padding: 50px;
+
+                    &__quote {
+                        margin-bottom: 28px;
+                        font-size: clamp(19px, calc(1.1875rem + ((1vw - 7.68px) * 0.8591)), 24px);
+                        line-height: 1.33;
+                    }
+                }
+            }
+        }
+    }
+}

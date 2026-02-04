@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/icon-grids",
+  "title": "Icon Grids",
+  "category": "ambrygen",
+  "icon": "grid-view",
+  "description": "Grid layout for icon cards with contact information",
+  "supports": {
+    "html": false,
+    "layout": {
+      "allowSwitching": true,
+      "allowInheriting": true
+    }
+  },
+  "attributes": {},
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php"
+}

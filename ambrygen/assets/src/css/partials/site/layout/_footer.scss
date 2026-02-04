@@ -1,1 +1,150 @@
 /* Footer layout styles */
+
+@use "../../variables/breakpoints" as bp;
+
+.site-footer {
+	background-color: #fff;
+
+	&__row {
+		max-width: 1140px;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		gap: clamp(32px, calc(1.875rem + ((1vw - 7.68px) * 5.1546)), 60px);
+	}
+
+	&__nav {
+		display: grid;
+		grid-template-columns: repeat(6, 1fr);
+		gap: 32px clamp(18px, calc(0.9375rem + ((1vw - 7.68px) * 2.5773)), 30px);
+
+		@include bp.max(lg) {
+			grid-template-columns: repeat(3, 1fr);
+		}
+
+		@include bp.max(md) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	&__bottom {
+		position: relative;
+
+		&::before {
+			content: '';
+			background-color: var(--theme_gray_400);
+			width: 100%;
+			height: 1px;
+			opacity: 0.35;
+			display: block;
+		}
+	}
+
+	&__bottom-inner {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: clamp(24px, calc(1.375rem + ((1vw - 7.68px) * 1.7182)), 32px) 0 0;
+
+		@include bp.max(md) {
+			flex-direction: column-reverse;
+			gap: 24px;
+		}
+	}
+
+	&__copyright {
+		color: var(--theme_gray_900);
+
+		@include bp.max(md) {
+			text-align: center;
+			font-size: 13px;
+		}
+	}
+}
+
+.footer-menu {
+
+	&__title {
+		color: var(--theme_cg_blue);
+		margin-bottom: clamp(10px, calc(0.9375rem + ((1vw - 7.68px) * 1.7182)), 25px);
+
+		@include bp.max(xl-large) {
+			font-size: 13px;
+			line-height: 1.53;
+			letter-spacing: 1px;
+		}
+	}
+
+	&__list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	&__item+&__item {
+		margin-top: 16px;
+
+		@include bp.max(xl-large) {
+			margin-top: 10px;
+		}
+	}
+
+	&__item {
+		padding-left: 0;
+
+		&::before {
+			display: none;
+		}
+	}
+
+	&__link {
+		color: var(--theme_gray_700);
+		border-bottom: 1px solid transparent;
+		text-decoration: none;
+
+		&:hover {
+			color: var(--theme_color_primary);
+			border-color: var(--theme_color_primary);
+		}
+
+		@include bp.max(xl-large) {
+			font-size: 13px;
+			font-weight: 400;
+			line-height: 1.38;
+			letter-spacing: -0.195px;
+		}
+	}
+}
+
+
+
+.social-links {
+	display: flex;
+	gap: 20px;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	flex-wrap: wrap;
+
+	&__item {
+		display: flex;
+		align-items: center;
+	}
+
+	&__link {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		height: 20px;
+		text-decoration: none;
+
+		figure {
+			margin: 0;
+
+			img {
+				display: block;
+			}
+		}
+	}
+}

@@ -1,57 +1,77 @@
 {
-    "$schema": "https://schemas.wp.org/trunk/block.json",
-    "apiVersion": 3,
-    "name": "ambrygen/newsletter-form",
-    "title": "Newsletter Form",
-    "category": "ambrygen",
-    "icon": "email",
-    "description": "Newsletter subscription form with image and customizable styling.",
-    "supports": {
-        "html": false,
-        "align": ["wide", "full"],
-        "color": {
-            "background": true,
-            "text": true
-        }
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/newsletter-form",
+  "title": "Newsletter Form",
+  "category": "ambrygen",
+  "icon": "email",
+  "description": "Newsletter subscription form with image and customizable styling.",
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "color": {
+      "background": true,
+      "text": true
+    }
+  },
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": "Newsletter"
     },
-    "attributes": {
-
-        "eyebrow": { "type": "string", "default": "Newsletter" },
-        "description": { "type": "string", "default": "Subscribe to the Ambry Newsletter and other updates." },
-        "heading": {
-            "type": "string",
-            "default": "Stay Informed"
-        },
-        "image": {
-            "type": "string",
+    "heading": {
+      "type": "string",
+      "default": "Stay Informed"
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2"
+    },
+    "description": {
+      "type": "string",
+      "default": "Subscribe to the Ambry Newsletter and other updates."
+    },
+    "image": {
+      "type": "string",
       "default": "/wp-content/themes/ambrygen/assets/src/images/news-latter/news-latter.jpg"
-        },
-        "imageSizes": {
-            "type": "object",
-            "default": {}
-        },
-        "imageId": {
-            "type": "number",
-            "default": 0
-        },
-        "imageAlt": {
-            "type": "string",
-            "default": ""
-        },
-        "backgroundColor": {
-            "type": "string",
-            "default": "#005E7F"
-
-        },
-        "style": {
-            "type": "object"
-        },
-           "textColor": {
-            "type": "string",
-            "default": "#8AD8F4"
-        }
     },
-   "editorScript": "file:./index.js",
-	"editorStyle": "file:./index.css",
-	"style": "file:./style-index.css"
+    "imageSizes": {
+      "type": "object",
+      "default": {}
+    },
+    "imageId": {
+      "type": "number",
+      "default": 0
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "overlayTopImage": {
+      "type": "string",
+      "default": "/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-top.svg"
+    },
+    "overlayBottomImage": {
+      "type": "string",
+      "default": "/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-bottom.svg"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#005E7F"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#8AD8F4"
+    },
+    "style": {
+      "type": "object"
+    }
+  },
+  "editorScript": "file:./index.js",
+	"render": "file:./render.php",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css"
 }

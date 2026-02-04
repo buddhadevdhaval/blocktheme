@@ -12,36 +12,36 @@ input[type="submit"],
 button,
 input[type="button"],
 input[type="reset"] {
-	padding: 0 30px;
-	display: inline-block;
-	line-height: 1;
+	background-color: var(--theme_cg_blue);
+	border: 1px solid transparent;
 	box-sizing: border-box;
-	transition: all 0.4s ease-in-out;
-	background-color: var(--theme_button_bgcolor);
-	border: 1px solid var(--theme_button_bgcolor);
-	color: var(--theme_button_color);
-	font-family: var(--font__main);
-	font-weight: 400;
-	font-size: var(--theme_font_size_3);
-	height: 50px;
-	outline: none;
+	color: var(--theme_white);
 	cursor: pointer;
+	display: inline-block;
+	font-family: var(--font__main);
+	font-size: var(--theme_font_size_7);
+	font-weight: 400;
+	height: 50px;
+	line-height: 1;
 	margin: 0 10px 10px 0;
+	outline: none;
+	padding: 0 30px;
+	transition: all 0.4s ease-in-out;
 }
 
 input[type="submit"]:hover,
 button:hover,
 input[type="button"]:hover {
-	color: var(--theme_button_color_hover);
-	background-color: var(--theme_button_bgcolor_hover);
+	background-color: var(--theme_primary_800);
+	color: var(--theme_white);
 }
 
 input[type="reset"] {
-	background-color: var(--theme_theme_btn_bgcolor);
-	color: var(--theme_theme_btn_color);
+	background-color: var(--theme_cg_blue);
+	color: var(--theme_white);
 
 	&:hover {
-		color: var(--theme_theme_btn_color);
-		background-color: var(--theme_theme_btn_bgcolor_hover);
+		background-color: var(--theme_primary_800);
+		color: var(--theme_white);
 	}
 }

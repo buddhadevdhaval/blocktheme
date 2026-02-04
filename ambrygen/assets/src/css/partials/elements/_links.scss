@@ -17,21 +17,25 @@ a {
 >> Edit these styles as required
 ------------------------------------------------- */
 
-.page-section {
 
-	a {
-		color: var(--theme_link_color);
-		// border-bottom: 1px solid var(--theme_link_border_color);
-		// padding-bottom: 2px;
+a {
+	color: var(--theme_link_color);
+	border-bottom: 1px solid var(--theme_link_border_color);
+	padding-bottom: 2px;
 
-		&:hover,
-		&:active {
-			color: var(--theme_link_color_hover);
-			// border-color: var(--theme_link_border_color_hover);
-		}
+	&:hover,
+	&:active {
+		color: var(--theme_link_color_hover);
+		border-color: var(--theme_link_border_color_hover);
 	}
 }
 
+header a,
+footer a {
+	border-bottom: none;
+	color: inherit;
+	padding-bottom: 0;
+}
 
 .post-image,
 .post-title {

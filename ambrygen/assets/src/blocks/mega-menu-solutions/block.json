@@ -1,0 +1,110 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ambrygen/mega-menu-solutions",
+	"version": "1.0.0",
+	"title": "Mega Menu Solutions",
+	"category": "ambrygen",
+	"icon": "share",
+	"description": "Solutions Mega Menu Block",
+	"attributes": {
+		"leftTitle": {
+			"type": "string",
+			"default": "Solutions"
+		},
+		"items": {
+			"type": "array",
+			"default": [
+				{
+					"label": "Patient for Life Program",
+					"url": "#",
+					"icon": "/wp-content/themes/ambrygen/assets/src/images/certificate.svg",
+					"image": "https://placehold.co/800x600/102334/ffffff?text=Solutions",
+					"rightTitle": "Patient for Life Program",
+					"rightText": "Ambry Genetics Patient for Life Program focuses on fostering robust pharmaceutical collaborations to advance innovative genetic testing solutions, propelling the future of personalized medicine.",
+					"rightUrl": "#"
+				},
+				{
+					"label": "Classifi Variant Program",
+					"url": "#",
+					"icon": "/wp-content/themes/ambrygen/assets/src/images/rows-icon.svg",
+					"image": "https://placehold.co/800x600/102334/ffffff?text=Classifi",
+					"rightTitle": "Classifi Variant Program",
+					"rightText": "Advanced variant classification program.",
+					"rightUrl": "#"
+				},
+				{
+					"label": "Our Tests",
+					"url": "#",
+					"icon": "/wp-content/themes/ambrygen/assets/src/images/genetic-testing-icon.svg",
+					"image": "https://placehold.co/800x600/102334/ffffff?text=Our+Tests",
+					"rightTitle": "Our Tests",
+					"rightText": "Comprehensive genetic testing solutions.",
+					"rightUrl": "#"
+				},
+				{
+					"label": "Pharma Services",
+					"url": "#",
+					"icon": "/wp-content/themes/ambrygen/assets/src/images/pharma-icon.svg",
+					"image": "https://placehold.co/800x600/102334/ffffff?text=Pharma",
+					"rightTitle": "Pharma Services",
+					"rightText": "Supporting pharmaceutical partners.",
+					"rightUrl": "#"
+				},
+				{
+					"label": "Our Technology",
+					"url": "#",
+					"icon": "/wp-content/themes/ambrygen/assets/src/images/cpu-chip-icon.svg",
+					"image": "https://placehold.co/800x600/102334/ffffff?text=Technology",
+					"rightTitle": "Our Technology",
+					"rightText": "State-of-the-art genetic sequencing.",
+					"rightUrl": "#"
+				},
+				{
+					"label": "Family Studies",
+					"url": "#",
+					"icon": "/wp-content/themes/ambrygen/assets/src/images/relatives-icon.svg",
+					"image": "https://placehold.co/800x600/102334/ffffff?text=Family",
+					"rightTitle": "Family Studies",
+					"rightText": "Helping families understand their genetics.",
+					"rightUrl": "#"
+				},
+				{
+					"label": "Research & Collaboration",
+					"url": "#",
+					"icon": "/wp-content/themes/ambrygen/assets/src/images/microscope-icon.svg",
+					"image": "https://placehold.co/800x600/102334/ffffff?text=Research",
+					"rightTitle": "Research & Collaboration",
+					"rightText": "Collaborating for scientific advancement.",
+					"rightUrl": "#"
+				}
+			]
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [
+			"full",
+			"wide"
+		],
+		"spacing": {
+			"margin": true,
+			"padding": true,
+			"blockGap": true
+		},
+		"layout": {
+			"allowSwitching": true,
+			"allowInheriting": true,
+			"allowEditing": true
+		},
+		"color": {
+			"text": true,
+			"background": true,
+			"link": true
+		},
+		"typography": true
+	},
+	"textdomain": "ambrygen-web",
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

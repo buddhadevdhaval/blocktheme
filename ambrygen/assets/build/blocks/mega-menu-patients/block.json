@@ -1,0 +1,107 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/mega-menu-patients",
+  "version": "1.0.0",
+  "title": "Mega Menu Patients",
+  "category": "ambrygen",
+  "icon": "groups",
+  "description": "Patients Mega Menu Block",
+  "attributes": {
+    "items": {
+      "type": "array",
+      "default": [
+        {
+          "image": "",
+          "imageId": 0,
+          "title": "Take Action",
+          "url": "#",
+          "text": "For over 25 years our high-quality, accessible genetic testing solutions have shaped important care decisions.",
+          "hasSubmenu": true,
+          "submenuTitle": "Our Tests",
+          "submenuLinks": [
+            {
+              "label": "Patient for Life Program",
+              "url": "#",
+              "icon": "/wp-content/themes/ambrygen/assets/src/images/certificate.svg"
+            },
+            {
+              "label": "Classifi Variant Program",
+              "url": "#",
+              "icon": "/wp-content/themes/ambrygen/assets/src/images/rows-icon.svg"
+            },
+            {
+              "label": "Our Tests",
+              "url": "#",
+              "icon": "/wp-content/themes/ambrygen/assets/src/images/genetic-testing-icon.svg"
+            },
+            {
+              "label": "Pharma Services",
+              "url": "#",
+              "icon": "/wp-content/themes/ambrygen/assets/src/images/pharma-icon.svg"
+            },
+            {
+              "label": "Our Technology",
+              "url": "#",
+              "icon": "/wp-content/themes/ambrygen/assets/src/images/cpu-chip-icon.svg"
+            },
+            {
+              "label": "Family Studies",
+              "url": "#",
+              "icon": "/wp-content/themes/ambrygen/assets/src/images/relatives-icon.svg"
+            },
+            {
+              "label": "Research & Collaboration",
+              "url": "#",
+              "icon": "/wp-content/themes/ambrygen/assets/src/images/microscope-icon.svg"
+            }
+          ]
+        },
+        {
+          "image": "",
+          "imageId": 0,
+          "title": "Take Action",
+          "url": "#",
+          "text": "For over 25 years our high-quality, accessible genetic testing solutions have shaped important care decisions.",
+          "hasSubmenu": false,
+          "submenuLinks": []
+        },
+        {
+          "image": "",
+          "imageId": 0,
+          "title": "Take Action",
+          "url": "#",
+          "text": "For over 25 years our high-quality, accessible genetic testing solutions have shaped important care decisions.",
+          "hasSubmenu": false,
+          "submenuLinks": []
+        }
+      ]
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": [
+      "full",
+      "wide"
+    ],
+    "spacing": {
+      "margin": true,
+      "padding": true,
+      "blockGap": true
+    },
+    "layout": {
+      "allowSwitching": true,
+      "allowInheriting": true,
+      "allowEditing": true
+    },
+    "color": {
+      "text": true,
+      "background": true,
+      "link": true
+    },
+    "typography": true
+  },
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

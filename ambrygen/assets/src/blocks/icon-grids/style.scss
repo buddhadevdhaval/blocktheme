@@ -1,0 +1,83 @@
+
+@use "../../css/partials/variables/breakpoints" as bp;
+
+.info-list {
+
+    &__row {
+        background: var(--theme_primary_25);
+        border-radius: 32px;
+        padding: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 5.1546)), 50px);
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        width: 100%;
+        gap: clamp(18px, calc(1.125rem + ((1vw - 7.68px) * 1.0309)), 24px);
+
+        @include bp.max(xl-large) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @include bp.max(lg) {
+            grid-template-columns: 1fr;
+            border-radius: 16px;
+        }
+    }
+
+    &__card {
+        background: var(--theme_primary_white);
+        border: 1px solid #E4E7EC;
+        border-radius: 16px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: clamp(10px, calc(0.625rem + ((1vw - 7.68px) * 1.3746)), 18px);
+        padding: clamp(16px, calc(1rem + ((1vw - 7.68px) * 1.3746)), 24px);
+        height: 100%;
+    }
+
+    &__image {
+        align-self: center;
+        display: flex;
+        flex: clamp(60px, calc(3.75rem + ((1vw - 7.68px) * 10.3093)), 120px) 0 0;
+        justify-content: center;
+
+        img {
+            width: clamp(60px, calc(3.75rem + ((1vw - 7.68px) * 6.8729)), 100px);
+            height: clamp(60px, calc(3.75rem + ((1vw - 7.68px) * 6.8729)), 100px);
+            object-fit: contain;
+        }
+    }
+
+    &__content {
+        flex: 1 0 0;
+
+        @include bp.max(xs) {
+            flex: 100% 0 0;
+        }
+
+    }
+
+    &__title {
+        color: var(--theme_gray_900);
+        overflow-wrap: anywhere;
+    }
+
+    &__links {
+        margin-top: 8px;
+    }
+
+    &__link-col {
+        margin-bottom: 8px;
+        color: var(--theme_link_color);
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    &__link {
+        text-decoration: none;
+        padding: 0;
+        border: 0;
+        overflow-wrap: anywhere;
+    }
+}
+

@@ -36,7 +36,24 @@
 		outline-offset: -1.5px;
 	}
 
+	&.block-editor-block-list__block {
+		margin-bottom: 40px;
+
+		&.wp-block-spacer {
+			margin-bottom: 20px;
+			margin-top: 20px;
+		}
+	}
+
 	.block-editor-inner-blocks {
-		border: var(--theme_black_2) solid 1px;
+
+		.block-editor-block-list__block {
+			border: var(--theme_black_2) solid 1px;
+		}
 	}
 }
+
+// :root :where(.is-layout-flow) > * {
+//     margin-block-start: 0 !important;
+//     margin-block-end: 0;
+// }

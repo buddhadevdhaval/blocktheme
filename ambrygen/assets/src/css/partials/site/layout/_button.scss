@@ -1,96 +1,180 @@
+@use "../../variables/breakpoints" as bp;
+
 @mixin site-btn-style {
-	background-color: var(--theme_theme_btn_bgcolor);
+	background-color: var(--theme_color_primary);
 	border: 1px solid transparent;
-	border-radius: 100px;
-	color: var(--theme_theme_btn_color);
+	border-radius: 8px;
+	box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+	color: var(--theme_button_color);
 	display: inline-flex;
+	font-size: var(--theme_font_size_10);
+	font-weight: 500;
+	letter-spacing: -0.24px;
+	line-height: 1.5;
 	outline: none;
 	overflow: hidden;
-	padding: 14px 24px;
+	padding: 12px 20px;
 	position: relative;
 	text-align: center;
 	text-decoration: none;
+	text-transform: capitalize;
 	transition: 0.35s;
-	font-size: 18px;
 
-	&:hover {
-		background-color: var(--theme_theme_btn_bgcolor_hover);
-		color: var(--theme_theme_btn_color_hover);
+	@include bp.max(md) {
+		font-size: 15px;
+		letter-spacing: -0.22px;
 	}
-}
 
-@mixin site-border-btn-style {
-	background-color: var(--theme_transparent);
-	box-shadow: inset 0 0 0 1px var(--theme_button_border_color);
-	color: var(--theme_button_border_color);
 
 	&:hover {
-		background: var(--theme_button_bgcolor_hover);
-		box-shadow: inset 0 0 0 1px var(--theme_button_bgcolor_hover);
+		background-color: var(--theme_button_bgcolor_hover);
 		color: var(--theme_button_color_hover);
+	}
+
+	&:focus {
+		box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05), 0 0 0 4px var(--theme_lightblue);
+	}
+
+	&.btn-medium {
+		font-size: var(--theme_font_size_8);
+		letter-spacing: -0.21px;
+		line-height: 1.42;
+		padding: 10px 16px;
+
+		@include bp.max(md) {
+			letter-spacing: -0.18px;
+		}
+	}
+
+	&.btn-small {
+		font-size: var(--theme_font_size_8);
+		letter-spacing: -0.21px;
+		line-height: 1.42;
+		padding: 8px 16px;
+
+		@include bp.max(md) {
+			letter-spacing: -0.18px;
+		}
 	}
 }
 
 @mixin site-secondary-btn {
-	background-color: #000;
-	color: #fff;
+	background-color: var(--theme_secondary_button_bgcolor);
+	color: var(--theme_secondary_button_color);
 
 	&:hover {
-		background-color: #f00;
-		color: #fff;
+		background-color: var(--theme_lynx_screen_blue);
+		color: var(--theme_clean_pool);
 	}
 
-	&.sm-btn {
-		padding: 9px 16px;
+	&:focus {
+		background-color: var(--theme_lynx_screen_blue);
+		box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05), 0 0 0 4px var(--theme_lightblue);
+	}
 
-		@media (width <= 640px) {
-			padding: 9px 14px 8px;
+	&.is-style-site-trailing-icon {
+
+		&::after {
+			filter: brightness(0) saturate(100%) invert(64%) sepia(95%) saturate(707%) hue-rotate(167deg) brightness(103%) contrast(87%);
 		}
 	}
 }
 
-
-@mixin site-text-btn {
-	background-color: transparent;
-	color: #000;
+@mixin site-tertiary-btn {
+	background-color: var(--theme_white);
+	border: 1px solid var(--theme_gray_300);
+	box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+	color: var(--theme_gray_700);
 
 	&:hover {
-		color: #f00;
+		border-color: var(--theme_cg_blue);
+		color: var(--theme_cg_blue);
+	}
+
+	&:focus {
+		border: 1px solid var(--theme_cg_blue);
+		box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05), 0 0 0 4px var(--theme_gray_100);
+	}
+
+	&.is-style-site-trailing-icon {
+
+		&::after {
+			background-image: url(../images/chevron-right-icon.svg);
+		}
+
+		&:hover {
+
+			&::after {
+				background-image: url(../images/chevron-right-icon-hover.svg);
+			}
+		}
 	}
 }
 
+@mixin site-text-btn {
+	align-items: center;
+	border: none;
+	background-color: transparent;
+	box-shadow: none;
+	color: var(--theme_color_primary);
+	letter-spacing: normal;
+	line-height: 1.5;
+	padding: 0;
 
-@mixin site-arrow-btn {
+	&:hover {
+		color: var(--theme_cg_blue);
+
+		&.has-icon {
+
+			&::after {
+				background-image: url(../images/btn-arrow-right-icon-cg_blue.svg);
+				transition: 0.35s;
+			}
+		}
+	}
+
+	&.has-icon {
+		gap: 8px;
+
+		&::after {
+			background-image: url(../images/btn-arrow-right-icon.svg);
+			background-position: right center;
+			background-repeat: no-repeat;
+			background-size: 16px 16px;
+			content: "";
+			display: block;
+			height: 20px;
+			transition: 0.35s;
+			width: 20px;
+		}
+	}
+}
+
+@mixin site-trailing-icon {
 	align-items: center;
 
+	@include bp.max(md) {
+		text-align: left;
+	}
+
 	&::after {
-		background-image: url(../images/site-btn-arrow.svg);
+		background-image: url(../images/right-icon.svg);
 		background-repeat: no-repeat;
 		background-size: contain;
 		content: "";
-		flex: 14px 0 0;
-		height: 14px;
-		margin-left: 8px;
+		flex: 12px 0 0;
+		height: 12px;
+		margin-left: 17px;
 		position: relative;
 		top: 1px;
 		transition: all 0.2s ease-in-out;
-		width: 14px;
+		width: 12px;
 
-		@media (width <= 375px) {
-			flex: 13px 0 0;
-			height: 13px;
-			width: 13px;
-		}
-	}
-
-	&:hover {
-
-		&::after {
-			background-image: url(../images/site-btn-arrow-black.svg);
+		@include bp.max(md) {
+			margin-left: 10px;
 		}
 	}
 }
-
 
 body {
 
@@ -98,14 +182,14 @@ body {
 
 		@include site-btn-style;
 
-		&.is-style-site-border-btn {
-
-			@include site-border-btn-style;
-		}
-
 		&.is-style-site-secondary-btn {
 
 			@include site-secondary-btn;
+		}
+
+		&.is-style-site-tertiary-btn {
+
+			@include site-tertiary-btn;
 		}
 
 		&.is-style-site-text-btn {
@@ -113,9 +197,9 @@ body {
 			@include site-text-btn;
 		}
 
-		&.is-style-site-arrow-btn {
+		&.is-style-site-trailing-icon {
 
-			@include site-arrow-btn;
+			@include site-trailing-icon;
 		}
 	}
 
@@ -125,14 +209,6 @@ body {
 		.wp-block-button__link {
 
 			@include site-btn-style;
-		}
-
-		&.is-style-site-border-btn {
-
-			.wp-block-button__link {
-
-				@include site-border-btn-style;
-			}
 		}
 
 		&.is-style-site-secondary-btn {
@@ -151,11 +227,11 @@ body {
 			}
 		}
 
-		&.is-style-site-arrow-btn {
+		&.is-style-site-trailing-icon {
 
 			.wp-block-button__link {
 
-				@include site-arrow-btn;
+				@include site-trailing-icon;
 			}
 		}
 	}
@@ -163,15 +239,11 @@ body {
 
 /* Styles for the disabled button */
 button[disabled] {
-	background-color: #ddd;
+	background-color: var(--theme_gray_50);
 	border: none;
-	color: #999;
+	box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+	color: var(--theme_gray_400);
 	cursor: not-allowed;
-	opacity: 0.6;
-}
-
-button[disabled]:hover {
-	background-color: #ddd;
 }
 
 .two-btn-row {

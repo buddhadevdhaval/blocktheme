@@ -33,13 +33,19 @@
     ],
     "attributes": {
         "headingLevel": {
-        "type": "string",
-        "default": "h2"
+            "type": "string",
+            "default": "h2"
         },
-        "headingPrimary": { "type": "string" },
-"headingHighlight": { "type": "string" },
-"highlightColor": { "type": "string", "default": "#6d28d9" },
-
+        "headingPrimary": {
+            "type": "string"
+        },
+        "headingHighlight": {
+            "type": "string"
+        },
+        "highlightColor": {
+            "type": "string",
+            "default": "#6d28d9"
+        },
         "heading": {
             "type": "string",
             "default": "Transforming Healthcare with AI Innovation"
@@ -113,29 +119,29 @@
             "type": "string",
             "default": ""
         },
-        "imageTopSrcSet": { 
-            "type": "string", 
-            "default": "" 
+        "imageTopSrcSet": {
+            "type": "string",
+            "default": ""
         },
-        "imageTopSizes": { 
-            "type": "string", 
-            "default": "" 
+        "imageTopSizes": {
+            "type": "string",
+            "default": ""
         },
-        "imageBottomSrcSet": { 
-            "type": "string", 
-            "default": "" 
+        "imageBottomSrcSet": {
+            "type": "string",
+            "default": ""
         },
-        "imageBottomSizes": { 
-            "type": "string", 
-            "default": "" 
+        "imageBottomSizes": {
+            "type": "string",
+            "default": ""
         },
-         "logoImageSrcSet": { 
-            "type": "string", 
-            "default": "" 
+        "logoImageSrcSet": {
+            "type": "string",
+            "default": ""
         },
-        "logoImageSizes": { 
-            "type": "string", 
-            "default": "" 
+        "logoImageSizes": {
+            "type": "string",
+            "default": ""
         }
     },
     "variations": [
@@ -174,6 +180,6 @@
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
-    "textdomain": "ambrygen-web",
-    "viewScript": "file:./view.js"
+    "render": "file:./render.php",
+    "textdomain": "ambrygen-web"
 }

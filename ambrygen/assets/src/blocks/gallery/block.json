@@ -7,7 +7,6 @@
 	"icon": "grid-view",
 	"description": "Responsive image gallery with design variants.",
 	"textdomain": "ambrygen-web",
-
 	"supports": {
 		"html": false,
 		"align": true,
@@ -15,17 +14,19 @@
 			"background": true
 		}
 	},
-
 	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css",
-
 	"attributes": {
 		"heading": {
-	"type": "string",
-	"default": "Get Started with Ambry"
-},
-
+			"type": "string",
+			"default": "Get Started with Ambry"
+		},
+		"headingTag": {
+			"type": "string",
+			"default": "h2"
+		},
 		"variation": {
 			"type": "string",
 			"default": "two-column"
@@ -34,9 +35,17 @@
 			"type": "array",
 			"default": []
 		},
-		"imageAlt": { "type": "string", "default": "" },
-"imageSrcSet": { "type": "string", "default": "" },
-"imageSizes": { "type": "string", "default": "" }
-
+		"imageAlt": {
+			"type": "string",
+			"default": ""
+		},
+		"imageSrcSet": {
+			"type": "string",
+			"default": ""
+		},
+		"imageSizes": {
+			"type": "string",
+			"default": ""
+		}
 	}
 }

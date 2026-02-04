@@ -32,8 +32,8 @@
 	/* ------- [ D-36 to M-30 ] - [ gl-s36 ] ------- */
 	--theme_space_10: clamp(30px, calc(1.875rem + ((1vw - 7.67px) * 1.7153)), 40px);
 
-	/* ------- [ D-48 to M-36 ] - [ gl-s48 ] ------- */
-	--theme_space_11: clamp(36px, calc(2.25rem + ((1vw - 7.68px) * 2.0619)), 48px);
+	/* ------- [ D-50 to M-36 ] - [ gl-s50 ] ------- */
+	--theme_space_11: clamp(36px, calc(2.25rem + ((1vw - 7.67px) * 2.4014)), 50px);
 
 	/* ------- [ D-72 to M-44 ] - [ gl-s72 ] ------- */
 	--theme_space_12: clamp(44px, calc(2.75rem + ((1vw - 7.68px) * 4.811)), 72px);
@@ -52,4 +52,10 @@
 
 	/* ------- [ D-236 to M-98 ] - [ gl-s236 ] ------- */
 	--theme_space_17: clamp(98px, calc(6.125rem + ((1vw - 7.68px) * 23.7113)), 236px);
+
+	/* ------- [ D-36 to M-28 ] - [ gl-s36 ] ------- */
+	--theme_space_18: clamp(28px, calc(1.75rem + ((1vw - 7.67px) * 1.3722)), 36px);
+
+		/* ------- [ D-64 to M-36 ] - [ gl-s36 ] ------- */
+	--theme_space_19: clamp(36px, calc(2.25rem + ((1vw - 7.68px) * 4.811)), 64px);
 }

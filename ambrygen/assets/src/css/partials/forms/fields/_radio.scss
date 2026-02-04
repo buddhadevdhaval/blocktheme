@@ -32,7 +32,7 @@
 [type="radio"]:not(:checked) + label::before,
 [type="radio"]:checked + span::before,
 [type="radio"]:not(:checked) + span::before {
-	background-color: var(--theme_radio_bgcolor);
+	background-color: var(--theme_white);
 	border-radius: 100%;
 	box-shadow: 0 2px 2px rgb(0 0 0 / 10%);
 	content: "";
@@ -40,7 +40,7 @@
 	left: 0;
 	position: absolute;
 	top: 0;
-	border: 1px solid #ccc;
+	border: 1px solid var(--theme_border_2);
 	width: 20px;
 
 	@media (width <= 640px) {
@@ -53,7 +53,7 @@
 [type="radio"]:not(:checked) + label::after,
 [type="radio"]:checked + span::after,
 [type="radio"]:not(:checked) + span::after {
-	background-color: var(--theme_radio_after_bgcolor);
+	background-color: var(--theme_cg_blue);
 	border-radius: 100%;
 	content: "";
 	height: 10px;

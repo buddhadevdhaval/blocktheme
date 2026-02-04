@@ -1,1 +1,96 @@
+@use "../../variables/breakpoints" as bp;
+
 /* Header layout styles */
+
+header {
+	background-color: var(--gb_header_bgcolor);
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 99;
+}
+
+.header {
+	background-color: var(--theme_color_background);
+
+	@media (max-width: 1350px) {
+		display: none;
+	}
+
+	&__inner {
+		padding: 36px 0;
+		gap: 26px;
+		align-items: center;
+		display: flex;
+	}
+
+	&__logo {
+		align-self: center;
+		display: flex;
+		line-height: 0;
+		position: relative;
+		transition: all .2s ease-in-out;
+		width: 178px;
+		z-index: 9;
+		flex: 178px 0 0;
+
+		figure {
+			margin: 0;
+		}
+
+		a {
+			display: inline-block;
+		}
+
+		img {
+			height: 24px;
+			max-width: 100%;
+		}
+	}
+
+	&__right {
+		flex: 1 0 0;
+
+		&--col {
+			display: flex;
+			align-items: center;
+			gap: 16px;
+		}
+	}
+
+	&__search {
+
+		form {
+			display: flex;
+			align-items: center;
+			position: relative;
+
+			input {
+				width: 280px;
+				padding: 12px 44px 12px 16px;
+
+				&::-webkit-input-placeholder,
+				&::-moz-placeholder,
+				&:-ms-input-placeholder {
+					color: #000;
+					opacity: 1;
+				}
+			}
+
+			button {
+				position: absolute;
+				font-size: 0;
+				background-color: transparent;
+				border: none;
+				background-image: url(../images/search-icon.svg);
+				background-repeat: no-repeat;
+				background-size: 20px;
+				padding: 0;
+				margin: 0;
+				width: 20px;
+				height: 20px;
+				right: 16px;
+			}
+		}
+	}
+}

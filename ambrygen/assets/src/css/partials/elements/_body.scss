@@ -15,88 +15,46 @@
 >> @include desktop { ... }       -> 1024px and above
 */
 
-@use "../variables/breakpoints"as bp;
+@use "../variables/breakpoints" as bp;
 
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    outline: none;
-    text-rendering: optimizelegibility;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	outline: none;
+	text-rendering: optimizelegibility;
 }
 
 html {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 body {
-    font-family: var(--font__main);
-    font-weight: 400;
-    position: relative;
-    font-size: var(--theme_font_size_6);
-    color: var(--theme_body_color);
-    background-color: var(--theme_body_bg);
-    line-height: 1.5;
-
-    /* Tablet/iPad: 768px and above */
-    @include bp.tablet-up {
-        font-size: 16px;
-        // padding: 15px;
-    }
-
-    /* Desktop: 1024px and above */
-    // @include bp.desktop-up {
-    //     font-size: 18px;
-    //     padding: 20px;
-    // }
-
-
-    /* Mobile: 0 - 767px */
-
-    // @include bp.mobile {
-    //     font-size: 14px;
-    //     padding: 10px;
-    // }
-
-
-    /* iPad/Tablet: 768px - 991px */
-
-    // @include bp.between(768px, 991px) {
-    //     font-size: 16px;
-    //     padding: 15px;
-    // }
-
-
-    /* Desktop: 1024px+ */
-
-    // @include bp.desktop {
-    //     font-size: 18px;
-    //     padding: 20px;
-    // }
-
+	font-family: var(--font__main);
+	font-weight: 400;
+	position: relative;
+	font-size: var(--theme_font_size_7);
+	color: var(--theme_body_color);
+	background-color: var(--theme_body_bg);
+	line-height: 1.5;
 }
 
 body,
 html {
-    // overflow-x: hidden;
+	// overflow-x: hidden;
 }
 
 p {
-    margin: 0 0 30px;
+	margin: 0 0 30px;
 
-    &:last-child {
-        margin: 0;
-    }
+	&:last-child {
+		margin: 0;
+	}
 }
 
 ::selection {
-    color: var(--theme_highlight_color);
-    background-color: var(--theme_highlight_bg);
-}
-
-
-strong {
-    color: var(--theme_text_strong) !important;
+	color: var(--theme_color_on-primary);
+	background-color: var(--theme_highlight_bg);
 }

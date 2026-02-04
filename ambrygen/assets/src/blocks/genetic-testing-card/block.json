@@ -41,8 +41,15 @@
         "type": {
             "type": "string",
             "default": "small"
+        },
+        "imageSrcSet": {
+        "type": "string"
+        },
+        "imageSizes": {
+        "type": "string"
         }
     },
     "textdomain": "ambrygen-web",
-    "editorScript": "file:./index.js"
+    "editorScript": "file:./index.js",
+    "render": "file:./render.php"
 }

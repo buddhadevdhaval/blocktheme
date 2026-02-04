@@ -16,7 +16,7 @@
 		},
 		"imageUrl": {
 			"type": "string",
-			"default": ""
+			"default": "http://ambrydevelopment.local/wp-content/uploads/2026/01/79403112e2997f3a27daf701924df7ea962d5131.jpg"
 		},
 		"imageId": {
 			"type": "number",
@@ -24,23 +24,41 @@
 		},
 		"imageAlt": {
 			"type": "string",
-			"default": ""
+			"default": "FAQ illustration"
 		},
 		"faqs": {
 			"type": "array",
 			"default": [
 				{
-					"question": "What is genetic testing?",
-					"answer": "Genetic testing involves examining your DNA to identify changes that may cause illness."
+					 "id": "1",
+					"question": "WHAT IS GENETIC TESTING?",
+					"answer": "Genetic testing involves examining your DNA, the chemical data base that carries instructions for your body’s functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
 				},
 				{
-					"question": "Is genetic testing for everyone?",
-					"answer": "Genetic testing may not be necessary for everyone and depends on medical history."
+					 "id": "2",
+					"question": "IS GENETIC TESTING FOR EVERYONE?",
+					"answer": "Genetic testing involves examining your DNA, the chemical data base that carries instructions for your body’s functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
+				},
+				{
+					"id": "3",
+					"question": "WHY SHOULD SOMEONE BE TESTED?",
+					"answer": "Genetic testing involves examining your DNA, the chemical data base that carries instructions for your body’s functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
+				},
+				{
+					"id": "4",
+					"question": "WHAT IS A GENETIC COUNSELOR?",
+					"answer": "Genetic testing involves examining your DNA, the chemical data base that carries instructions for your body’s functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
+				},
+				{
+					"id": "5",
+					"question": "WHAT MAKES AMBRY DIFFERENT FROM ITS COMPETITORS?",
+					"answer": "Genetic testing involves examining your DNA, the chemical data base that carries instructions for your body’s functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
 				}
 			]
 		}
 	},
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
-	"style": "file:./style-index.css"
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
 }

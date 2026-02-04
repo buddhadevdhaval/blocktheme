@@ -1,0 +1,103 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "ambrygen/header",
+    "version": "1.0.0",
+    "title": "Site Header",
+    "category": "ambrygen",
+    "icon": "admin-home",
+    "description": "Complete site header with navigation and mega menus",
+    "attributes": {
+        "topBarText": {
+            "type": "string",
+            "default": "Find us at ACMG! We're on booth A312, Walk in to connect with us, or use this link to setup a 1:1."
+        },
+        "topBarLinkText": {
+            "type": "string",
+            "default": ""
+        },
+        "topBarLinkUrl": {
+            "type": "string",
+            "default": ""
+        },
+        "topBarVisible": {
+            "type": "boolean",
+            "default": true
+        },
+        "navItems": {
+            "type": "array",
+            "default": [
+                {
+                    "label": "Patients",
+                    "url": "#",
+                    "hasMegaMenu": true,
+                    "megaMenuBlock": "ambrygen/mega-menu-patients"
+                },
+                {
+                    "label": "Providers",
+                    "url": "#",
+                    "hasMegaMenu": true,
+                    "megaMenuBlock": "ambrygen/mega-menu-providers"
+                },
+                {
+                    "label": "Solutions",
+                    "url": "#",
+                    "hasMegaMenu": true,
+                    "megaMenuBlock": "ambrygen/mega-menu-solutions",
+                    "isSecondLevel": true
+                },
+                {
+                    "label": "Company",
+                    "url": "#",
+                    "hasMegaMenu": true,
+                    "megaMenuBlock": "ambrygen/mega-menu-company",
+                    "isSecondLevel": true
+                },
+                {
+                    "label": "Contact",
+                    "url": "#",
+                    "hasMegaMenu": false
+                }
+            ]
+        },
+        "loginUrl": {
+            "type": "string",
+            "default": "#"
+        },
+        "loginText": {
+            "type": "string",
+            "default": "Login"
+        },
+        "mobileCtaText": {
+            "type": "string",
+            "default": "See a Demo"
+        },
+        "mobileCtaUrl": {
+            "type": "string",
+            "default": "#"
+        },
+        "logoUrl": {
+            "type": "string",
+            "default": ""
+        },
+        "logoId": {
+            "type": "number",
+            "default": 0
+        },
+        "logoAlt": {
+            "type": "string",
+            "default": "Ambry Genetics"
+        }
+    },
+    "supports": {
+        "html": false,
+        "align": [
+            "full",
+            "wide"
+        ]
+    },
+    "textdomain": "ambrygen-web",
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./index.css",
+    "render": "file:./render.php"
+}

@@ -15,22 +15,35 @@
   "attributes": {
     "heading": {
       "type": "string",
-      "default": "Title Goes Here"
+      "default": "Contact"
+    },
+    "headingLevel": {
+      "type": "string",
+      "default": "h2"
+    },
+    "highlight": {
+      "type": "string",
+      "default": "Us"
     },
     "content": {
       "type": "string",
-      "default": "Ambry Genetics focuses on quality and accuracy within the genetic testing process by employing a multi-step verification process."
+      "default": "Ambry Genetics focuses on quality and accuracy within the genetic testing process by employing a multi-step verification process. Everything we do is with the patient in mind so that we can deliver the most comprehensive information available."
     },
     "imageUrl": {
       "type": "string",
-      "default": ""
+      "default": "http://ambrygen-local.local/wp-content/uploads/2026/01/contact-us.jpg"
     },
     "imageAlt": {
       "type": "string",
-      "default": ""
+      "default": "Our people"
+    },
+    "shapeUrl": {
+      "type": "string",
+      "default": "http://ambrygen-local.local/wp-content/uploads/2026/01/shape-element-three.svg"
     }
   },
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
-  "style": "file:./style-index.css"
+  "style": "file:./style-index.css",
+  "render": "file:./render.php"
 }

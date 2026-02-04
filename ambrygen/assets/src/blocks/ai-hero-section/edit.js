@@ -150,11 +150,11 @@ function MediaUploadPanel( {
 function CounterItem( { counter, index, updateCounter } ) {
 	return (
 		<>
-			<div className="counter-item" key={ index }>
-				<div className="counter-number heading-3 mb-0">
+			<div className="ai-hero__counters--counter-item" key={ index }>
+				<div className="ai-hero__counters--counter-number heading-3 mb-0">
 					<RichText
 						tagName="div"
-						className="count counter-data"
+						className="ai-hero__counters--count ai-hero__counters--counter-data"
 						value={ counter.number }
 						onChange={ ( value ) =>
 							updateCounter(
@@ -168,7 +168,7 @@ function CounterItem( { counter, index, updateCounter } ) {
 					/>
 					<RichText
 						tagName="div"
-						className="counter-suffix counter-data"
+						className="ai-hero__counters--counter-suffix ai-hero__counters--counter-data"
 						value={ counter.suffix }
 						onChange={ ( value ) =>
 							updateCounter( index, 'suffix', value )
@@ -179,7 +179,7 @@ function CounterItem( { counter, index, updateCounter } ) {
 				</div>
 				<RichText
 					tagName="div"
-					className="counter-title body1"
+					className="ai-hero__counters--counter-title body1"
 					value={ counter.label }
 					onChange={ ( value ) =>
 						updateCounter( index, 'label', value )
@@ -493,76 +493,36 @@ export default function Edit( { attributes, setAttributes } ) {
 				/>
 			</InspectorControls>
 
-			<div className="ai-hero container-1340 bg-aliceblue">
-				<div className="is-style-gl-s48" />
-				<div className="wrapper">
-					<div className="ai-hero__grid">
-						<div className="ai-hero__col ai-hero__col--images">
-							<div className="ai-hero__images">
-								<div className="ai-hero__image-wrapper">
-									<div className="ai-hero__logo">
-										<div
-											className="ai-hero__logo-inner"
-											role="button"
-											tabIndex={ 0 }
-											onClick={ () =>
-												handlePanelOpen( 'logo' )
-											}
-											onKeyDown={ ( e ) => {
-												if (
-													e.key === 'Enter' ||
-													e.key === ' '
-												) {
-													handlePanelOpen( 'logo' );
-												}
-											} }
-										>
-											{ logoImage ? (
-												<img
-													src={ logoImage }
-													alt={
-														logoImageAlt ||
-														__(
-															'Company logo',
-															'ambrygen-web'
-														)
-													}
-												/>
-											) : (
-												<ImagePlaceholder
-													label={ __(
-														'No logo selected',
-														'ambrygen-web'
-													) }
-												/>
-											) }
-										</div>
-									</div>
-								</div>
-								<div className="ai-hero__image-wrapper">
+			<div className="ai-hero">
+				<div className="is-style-gl-s50" />
+				<div className="ai-hero__grid">
+					<div className="ai-hero__col ai-hero__col--images">
+						<div className="ai-hero__images">
+							<div className="ai-hero__image-wrapper">
+								<div className="ai-hero__logo">
 									<div
-										className="ai-hero__image"
+										className="ai-hero__logo-inner"
 										role="button"
 										tabIndex={ 0 }
 										onClick={ () =>
-											handlePanelOpen( 'top' )
+											handlePanelOpen( 'logo' )
 										}
 										onKeyDown={ ( e ) => {
 											if (
 												e.key === 'Enter' ||
 												e.key === ' '
 											) {
-												handlePanelOpen( 'top' );
+												handlePanelOpen( 'logo' );
 											}
 										} }
 									>
-										{ imageTop ? (
+										{ logoImage ? (
 											<img
-												src={ imageTop }
+												src={ logoImage }
 												alt={
-													imageTopAlt ||
+													logoImageAlt ||
 													__(
-														'Hero top image',
+														'Company logo',
 														'ambrygen-web'
 													)
 												}
@@ -570,53 +530,7 @@ export default function Edit( { attributes, setAttributes } ) {
 										) : (
 											<ImagePlaceholder
 												label={ __(
-													'No top image selected',
-													'ambrygen-web'
-												) }
-												instructions={ __(
-													'Upload a top image from the sidebar settings.',
-													'ambrygen-web'
-												) }
-											/>
-										) }
-									</div>
-								</div>
-								<div
-									className="ai-hero__image-wrapper ai-hero__image-wrapper--full"
-									role="button"
-									tabIndex={ 0 }
-									onClick={ () =>
-										handlePanelOpen( 'bottom' )
-									}
-									onKeyDown={ ( e ) => {
-										if (
-											e.key === 'Enter' ||
-											e.key === ' '
-										) {
-											handlePanelOpen( 'bottom' );
-										}
-									} }
-								>
-									<div className="ai-hero__image">
-										{ imageBottom ? (
-											<img
-												src={ imageBottom }
-												alt={
-													imageBottomAlt ||
-													__(
-														'Hero bottom image',
-														'ambrygen-web'
-													)
-												}
-											/>
-										) : (
-											<ImagePlaceholder
-												label={ __(
-													'No bottom image selected',
-													'ambrygen-web'
-												) }
-												instructions={ __(
-													'Upload a bottom image from the sidebar settings.',
+													'No logo selected',
 													'ambrygen-web'
 												) }
 											/>
@@ -624,78 +538,150 @@ export default function Edit( { attributes, setAttributes } ) {
 									</div>
 								</div>
 							</div>
-						</div>
-						<div className="ai-hero__col ai-hero__col--content">
-							<div className="ai-hero__content">
-								<HeadingTag
-									className="ai-hero__heading heading-2 mb-0"
+							<div className="ai-hero__image-wrapper">
+								<div
+									className="ai-hero__image"
 									role="button"
 									tabIndex={ 0 }
-									onClick={ () =>
-										handlePanelOpen( 'heading' )
-									}
+									onClick={ () => handlePanelOpen( 'top' ) }
 									onKeyDown={ ( e ) => {
 										if (
 											e.key === 'Enter' ||
 											e.key === ' '
 										) {
-											handlePanelOpen( 'heading' );
+											handlePanelOpen( 'top' );
 										}
 									} }
 								>
-									<RichText
-										tagName="div"
-										value={ heading }
-										onChange={ handleHeadingChange }
-										allowedFormats={ [
-											'core/bold',
-											'core/italic',
-											'core/text-color',
-										] }
-										placeholder={ __(
-											'Hero heading…',
-											'ambrygen-web'
-										) }
-										className="hero-heading"
-										aria-label={ __(
-											'Hero heading',
-											'ambrygen-web'
-										) }
-									/>
-								</HeadingTag>
-								<div className="is-style-gl-s24"></div>
-								<div className="ai-hero__description body1">
-									<RichText
-										tagName="p"
-										value={ content }
-										onChange={ handleContentChange }
-										placeholder={ __(
-											'Hero content…',
-											'ambrygen-web'
-										) }
-										className=""
-										aria-label={ __(
-											'Hero description',
-											'ambrygen-web'
-										) }
-									/>
-								</div>
-								<div className="is-style-gl-s24"></div>
-								<div className="ai-hero__counters">
-									{ counters.map( ( counter, index ) => (
-										<CounterItem
-											key={ index }
-											counter={ counter }
-											index={ index }
-											updateCounter={ updateCounter }
+									{ imageTop ? (
+										<img
+											src={ imageTop }
+											alt={
+												imageTopAlt ||
+												__(
+													'Hero top image',
+													'ambrygen-web'
+												)
+											}
 										/>
-									) ) }
+									) : (
+										<ImagePlaceholder
+											label={ __(
+												'No top image selected',
+												'ambrygen-web'
+											) }
+											instructions={ __(
+												'Upload a top image from the sidebar settings.',
+												'ambrygen-web'
+											) }
+										/>
+									) }
+								</div>
+							</div>
+							<div
+								className="ai-hero__image-wrapper ai-hero__image-wrapper--full"
+								role="button"
+								tabIndex={ 0 }
+								onClick={ () => handlePanelOpen( 'bottom' ) }
+								onKeyDown={ ( e ) => {
+									if ( e.key === 'Enter' || e.key === ' ' ) {
+										handlePanelOpen( 'bottom' );
+									}
+								} }
+							>
+								<div className="ai-hero__image">
+									{ imageBottom ? (
+										<img
+											src={ imageBottom }
+											alt={
+												imageBottomAlt ||
+												__(
+													'Hero bottom image',
+													'ambrygen-web'
+												)
+											}
+										/>
+									) : (
+										<ImagePlaceholder
+											label={ __(
+												'No bottom image selected',
+												'ambrygen-web'
+											) }
+											instructions={ __(
+												'Upload a bottom image from the sidebar settings.',
+												'ambrygen-web'
+											) }
+										/>
+									) }
 								</div>
 							</div>
 						</div>
 					</div>
+					<div className="ai-hero__col ai-hero__col--content">
+						<div className="ai-hero__content">
+							<HeadingTag
+								className="ai-hero__heading heading-2 mb-0"
+								role="button"
+								tabIndex={ 0 }
+								onClick={ () => handlePanelOpen( 'heading' ) }
+								onKeyDown={ ( e ) => {
+									if ( e.key === 'Enter' || e.key === ' ' ) {
+										handlePanelOpen( 'heading' );
+									}
+								} }
+							>
+								<RichText
+									tagName="div"
+									value={ heading }
+									onChange={ handleHeadingChange }
+									allowedFormats={ [
+										'core/bold',
+										'core/italic',
+										'core/text-color',
+									] }
+									placeholder={ __(
+										'Hero heading…',
+										'ambrygen-web'
+									) }
+									className="hero-heading"
+									aria-label={ __(
+										'Hero heading',
+										'ambrygen-web'
+									) }
+								/>
+							</HeadingTag>
+							<div className="is-style-gl-s24"></div>
+							<div className="ai-hero__description body1">
+								<RichText
+									tagName="p"
+									value={ content }
+									onChange={ handleContentChange }
+									placeholder={ __(
+										'Hero content…',
+										'ambrygen-web'
+									) }
+									className=""
+									aria-label={ __(
+										'Hero description',
+										'ambrygen-web'
+									) }
+								/>
+							</div>
+							<div className="is-style-gl-s24"></div>
+							<div className="ai-hero__counters">
+								{ counters.map( ( counter, index ) => (
+									<CounterItem
+										key={ index }
+										counter={ counter }
+										index={ index }
+										updateCounter={ updateCounter }
+									/>
+								) ) }
+							</div>
+						</div>
+					</div>
 				</div>
-				<div className="is-style-gl-s48" />
+				<div className="is-style-gl-s50" />
 			</div>
 		</div>
 	);

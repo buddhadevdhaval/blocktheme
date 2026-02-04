@@ -13,6 +13,7 @@ import {
 } from '@wordpress/block-editor';
 import { PanelBody, Button, SelectControl } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
+import { useEffect } from '@wordpress/element';
 
 /**
  * Default testimonial template
@@ -79,8 +80,7 @@ function buildSrcSet( sizes ) {
  * Default images used when block is first inserted
  * @type {string}
  */
-const DEFAULT_BACKGROUND =
-	'/wp-content/themes/ambrygen/assets/src/images/testimonials-background.jpg';
+
 const DEFAULT_MAIN =
 	'/wp-content/themes/ambrygen/assets/src/images/testimonials-main.jpg';
 
@@ -95,16 +95,42 @@ const DEFAULT_MAIN =
  */
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	// Destructure attributes for easier usage
-	let { heading, headingTag, backgroundImage, mainImage, mainImageSizes } =
-		attributes;
+	let {
+		heading,
+		headingTag,
+		mainImage,
+		mainImageSizes,
+		secondaryImage,
+		secondaryImageSizes,
+		overlayImage,
+		overlayImageSizes,
+	} = attributes;
+
+	useEffect( () => {
+		if ( ! secondaryImage ) {
+			setAttributes( {
+				secondaryImage:
+					'/wp-content/themes/ambrygen/assets/src/images/testimonial/secondary-image.png',
+			} );
+		}
+
+		if ( ! overlayImage ) {
+			setAttributes( {
+				overlayImage:
+					'/wp-content/themes/ambrygen/assets/src/images/testimonial/overlay-image.png',
+			} );
+		}
+
+		if ( ! mainImage ) {
+			setAttributes( { mainImage: DEFAULT_MAIN } );
+		}
+	}, [] );
 
 	// Determine heading tag, default to H2
 	const Tag = headingTag || 'h2';
 
 	// Apply default images if not already set
-	if ( ! backgroundImage ) {
-		backgroundImage = DEFAULT_BACKGROUND;
-	}
+
 	if ( ! mainImage ) {
 		mainImage = DEFAULT_MAIN;
 	}
@@ -127,11 +153,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		<section
 			{ ...useBlockProps( {
 				className: 'ambry-testimonials',
-				style: {
-					backgroundImage: backgroundImage
-						? `url(${ backgroundImage })`
-						: undefined,
-				},
 			} ) }
 		>
 			{ /* Inspector Controls for sidebar settings */ }
@@ -152,40 +173,99 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 					/>
 				</PanelBody>
-
-				{ /* Background image panel */ }
-				<PanelBody title={ __( 'Background Image', 'ambrygen-web' ) }>
+				{ /* Secondary Image Panel */ }
+				<PanelBody title={ __( 'Secondary Image', 'ambrygen-web' ) }>
 					<MediaUploadCheck>
 						<MediaUpload
 							onSelect={ ( media ) =>
-								setAttributes( { backgroundImage: media?.url } )
+								setAttributes( {
+									secondaryImage: media?.url,
+									secondaryImageSizes: media?.sizes || {},
+								} )
 							}
 							allowedTypes={ [ 'image' ] }
 							render={ ( { open } ) => (
 								<div className="image-panel-preview">
-									{ backgroundImage && (
-										<img src={ backgroundImage } alt="" />
+									{ secondaryImage && (
+										<img src={ secondaryImage } alt="" />
 									) }
+
 									<Button
 										onClick={ open }
 										variant="secondary"
 									>
-										{ backgroundImage
+										{ secondaryImage
 											? __(
-													'Replace Image',
+													'Replace Secondary Image',
 													'ambrygen-web'
 											  )
 											: __(
-													'Select Image',
+													'Select Secondary Image',
 													'ambrygen-web'
 											  ) }
 									</Button>
-									{ backgroundImage && (
+
+									{ secondaryImage && (
 										<Button
 											isDestructive
 											onClick={ () =>
 												setAttributes( {
-													backgroundImage: '',
+													secondaryImage: '',
+													secondaryImageSizes: {},
+												} )
+											}
+										>
+											{ __(
+												'Remove Image',
+												'ambrygen-web'
+											) }
+										</Button>
+									) }
+								</div>
+							) }
+						/>
+					</MediaUploadCheck>
+				</PanelBody>
+
+				{ /* Overlay Image Panel */ }
+				<PanelBody title={ __( 'Overlay Image', 'ambrygen-web' ) }>
+					<MediaUploadCheck>
+						<MediaUpload
+							onSelect={ ( media ) =>
+								setAttributes( {
+									overlayImage: media?.url,
+									overlayImageSizes: media?.sizes || {},
+								} )
+							}
+							allowedTypes={ [ 'image' ] }
+							render={ ( { open } ) => (
+								<div className="image-panel-preview">
+									{ overlayImage && (
+										<img src={ overlayImage } alt="" />
+									) }
+
+									<Button
+										onClick={ open }
+										variant="secondary"
+									>
+										{ overlayImage
+											? __(
+													'Replace Overlay Image',
+													'ambrygen-web'
+											  )
+											: __(
+													'Select Overlay Image',
+													'ambrygen-web'
+											  ) }
+									</Button>
+
+									{ overlayImage && (
+										<Button
+											isDestructive
+											onClick={ () =>
+												setAttributes( {
+													overlayImage: '',
+													overlayImageSizes: {},
 												} )
 											}
 										>
@@ -254,6 +334,32 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 			</InspectorControls>
 
+			{ /* Overlay Graphics - matching save.js */ }
+			<div className="ambry-testimonials__graphic-images">
+				{ overlayImage && (
+					<div className="ambry-testimonials__graphic-images__overlay-left ambry-testimonials__graphic-images__img-block">
+						<img
+							src={ overlayImage }
+							srcSet={ buildSrcSet( overlayImageSizes ) }
+							alt=""
+							className="overlay__img"
+						/>
+					</div>
+				) }
+
+				{ /* Secondary Image */ }
+				{ secondaryImage && (
+					<div className="ambry-testimonials__graphic-images__overlay-right ambry-testimonials__graphic-images__img-block">
+						<img
+							src={ secondaryImage }
+							srcSet={ buildSrcSet( secondaryImageSizes ) }
+							className="overlay__img"
+							alt=""
+						/>
+					</div>
+				) }
+			</div>
+
 			{ /* Heading displayed in editor */ }
 			<RichText
 				tagName={ Tag }
@@ -264,16 +370,18 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 			{ /* Main layout with image and testimonial items */ }
 			<div className="ambry-testimonials__layout">
-				{ mainImage && (
-					<img
-						src={ mainImage }
-						srcSet={ buildSrcSet( mainImageSizes ) }
-						className="ambry-testimonials__main-image"
-						alt=""
-					/>
-				) }
-
 				<div className="ambry-testimonials__grid">
+					<div className="ambry-testimonials__top-inner__image-block">
+						{ mainImage && (
+							<img
+								src={ mainImage }
+								srcSet={ buildSrcSet( mainImageSizes ) }
+								className="ambry-testimonials__main-image"
+								alt=""
+							/>
+						) }
+					</div>
+
 					<InnerBlocks
 						template={ ! hasInnerBlocks ? TEMPLATE : undefined }
 						allowedBlocks={ [ 'ambrygen/testimonial-item' ] }

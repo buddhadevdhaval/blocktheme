@@ -580,96 +580,96 @@ export default function Edit({ attributes, setAttributes }) {
 					</PanelBody>
 				</InspectorControls>
 				<div className="container-1340 ">
-					<div className="wrapper">
-						<div className="hero-section__slider swiper">
-							<div className="swiper-wrapper">
-								<div className="hero-section__slide swiper-slide active">
-									{slides.length > 1 && showSliderNav && (
-										<div className="hero-section__slide-nav">
-											<Button
-												onClick={() =>
-													setCurrentSlide(
-														currentSlide > 0
-															? currentSlide - 1
-															: slides.length - 1
-													)
+
+					<div className="hero-section__slider swiper">
+						<div className="swiper-wrapper">
+							<div className="hero-section__slide swiper-slide active">
+								{slides.length > 1 && showSliderNav && (
+									<div className="hero-section__slide-nav">
+										<Button
+											onClick={() =>
+												setCurrentSlide(
+													currentSlide > 0
+														? currentSlide - 1
+														: slides.length - 1
+												)
+											}
+											variant="secondary"
+										>
+											&larr;
+										</Button>
+										<span>
+											{currentSlide + 1} /{' '}
+											{slides.length}
+										</span>
+										<Button
+											onClick={() =>
+												setCurrentSlide(
+													currentSlide <
+														slides.length - 1
+														? currentSlide + 1
+														: 0
+												)
+											}
+											variant="secondary"
+										>
+											&rarr;
+										</Button>
+									</div>
+								)}
+								<div className="hero-section__background">
+									{slide.backgroundImage ? (
+										<>
+											<img
+												src={
+													slide.backgroundImage
 												}
-												variant="secondary"
-											>
-												&larr;
-											</Button>
-											<span>
-												{currentSlide + 1} /{' '}
-												{slides.length}
-											</span>
-											<Button
-												onClick={() =>
-													setCurrentSlide(
-														currentSlide <
-															slides.length - 1
-															? currentSlide + 1
-															: 0
-													)
+												alt={
+													slide.backgroundImageAlt
 												}
-												variant="secondary"
-											>
-												&rarr;
-											</Button>
+												className="hero-section__image"
+											/>
+											{slide.overlayImage1 && (
+												<div className="hero-section__overlay hero-section__overlay--1 hero-section__overlay--top">
+													<img
+														src={
+															slide.overlayImage1
+														}
+														alt={
+															slide.overlayImage1Alt ||
+															''
+														}
+													/>
+												</div>
+											)}
+											{slide.overlayImage2 && (
+												<div className="hero-section__overlay hero-section__overlay--bottom">
+													<img
+														src={
+															slide.overlayImage2
+														}
+														alt={
+															slide.overlayImage2Alt ||
+															''
+														}
+													/>
+												</div>
+											)}
+										</>
+									) : (
+										<div className="hero-section__placeholder">
+											{__(
+												'Select a background image',
+												'ambrygen-web'
+											)}
 										</div>
 									)}
-									<div className="hero-section__background">
-										{slide.backgroundImage ? (
-											<>
-												<img
-													src={
-														slide.backgroundImage
-													}
-													alt={
-														slide.backgroundImageAlt
-													}
-													className="hero-section__image"
-												/>
-												{slide.overlayImage1 && (
-													<div className="hero-section__overlay hero-section__overlay--1">
-														<img
-															src={
-																slide.overlayImage1
-															}
-															alt={
-																slide.overlayImage1Alt ||
-																''
-															}
-														/>
-													</div>
-												)}
-												{slide.overlayImage2 && (
-													<div className="hero-section__overlay hero-section__overlay--2">
-														<img
-															src={
-																slide.overlayImage2
-															}
-															alt={
-																slide.overlayImage2Alt ||
-																''
-															}
-														/>
-													</div>
-												)}
-											</>
-										) : (
-											<div className="hero-section__placeholder">
-												{__(
-													'Select a background image',
-													'ambrygen-web'
-												)}
-											</div>
-										)}
-									</div>
-
+								</div>
+								<div className='wrapper'>
 									<div className="hero-section__content">
-										<h2 className="hero-section__heading">
+										<div className="hero-section__heading heading-2">
 											<RichText
-												tagName="span"
+												tagName="div"
 												value={slide.heading}
 												onChange={(value) =>
 													updateSlide(
@@ -691,7 +691,7 @@ export default function Edit({ attributes, setAttributes }) {
 													'core/italic',
 												]}
 											/>
-										</h2>
+										</div>
 
 										<div className="hero-section__description">
 											<RichText
@@ -744,33 +744,15 @@ export default function Edit({ attributes, setAttributes }) {
 
 										<div className="hero-section__actions">
 											{slide.buttonSecondaryText && (
-												<div className="hero-section__button hero-section__button--secondary">
-													<span className="hero-section__button-text">
-														{
-															slide.buttonSecondaryText
-														}
-													</span>
-													<span
-														className="hero-section__button-icon"
-														aria-hidden="true"
-													>
-														<ChevronRightIcon />
-													</span>
+												<div className="hero-section__button site-btn is-style-site-tertiary-btn is-style-site-trailing-icon">
+													{
+														slide.buttonSecondaryText
+													}
 												</div>
 											)}
 											{slide.buttonPrimaryText && (
-												<div className="hero-section__button hero-section__button--primary">
-													<span className="hero-section__button-text">
-														{
-															slide.buttonPrimaryText
-														}
-													</span>
-													<span
-														className="hero-section__button-icon"
-														aria-hidden="true"
-													>
-														<ChevronRightIcon />
-													</span>
+												<div className="hero-section__button site-btn is-style-site-trailing-icon">
+													{slide.buttonPrimaryText}
 												</div>
 											)}
 										</div>
@@ -779,6 +761,7 @@ export default function Edit({ attributes, setAttributes }) {
 							</div>
 						</div>
 					</div>
+
 				</div>
 			</div>
 		</>

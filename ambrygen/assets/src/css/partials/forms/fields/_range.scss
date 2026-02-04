@@ -17,7 +17,7 @@ input[type="range"]::-webkit-slider-runnable-track {
 	width: 100%;
 	height: 6px;
 	cursor: pointer;
-	background-color: var(--theme_range_track_bgcolor);
+	background-color: var(--theme_color_primary);
 	border: none;
 	transition: 0.2s;
 	box-shadow: none;
@@ -28,7 +28,7 @@ input[type="range"]::-moz-range-track {
 	width: 100%;
 	height: 6px;
 	cursor: pointer;
-	background-color: var(--theme_range_track_bgcolor);
+	background-color: var(--theme_color_primary);
 	border: none;
 	transition: 0.2s;
 	box-shadow: none;
@@ -38,7 +38,7 @@ input[type="range"]::-moz-range-track {
 input[type="range"]::-webkit-slider-thumb {
 	height: 14px;
 	width: 14px;
-	background-color: var(--theme_range_thumb_bgcolor);
+	background-color: var(--theme_cg_blue);
 	cursor: pointer;
 	appearance: none;
 	margin-top: -4px;
@@ -50,7 +50,7 @@ input[type="range"]::-webkit-slider-thumb {
 input[type="range"]::-moz-range-thumb {
 	height: 14px;
 	width: 14px;
-	background-color: var(--theme_range_thumb_bgcolor);
+	background-color: var(--theme_cg_blue);
 	cursor: pointer;
 	appearance: none;
 	margin-top: -4px;

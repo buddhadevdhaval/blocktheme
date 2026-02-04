@@ -235,3 +235,8 @@ picture {
 :focus {
 	outline: none;
 }
+
+:root :where(.is-layout-flow) > * {
+    margin-block-start: 0 !important;
+    margin-block-end: 0;
+}

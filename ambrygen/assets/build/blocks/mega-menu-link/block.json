@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/mega-menu-link",
+  "version": "1.0.0",
+  "title": "Mega Menu Link",
+  "category": "ambrygen",
+  "icon": "admin-links",
+  "description": "A single link item for mega menus, optionally with an icon.",
+  "parent": [
+    "ambrygen/mega-menu-patients",
+    "ambrygen/mega-menu-solutions",
+    "ambrygen/mega-menu-company",
+    "ambrygen/mega-menu-providers",
+    "core/group"
+  ],
+  "attributes": {
+    "label": {
+      "type": "string",
+      "default": ""
+    },
+    "url": {
+      "type": "string",
+      "default": "#"
+    },
+    "iconId": {
+      "type": "number"
+    },
+    "iconUrl": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

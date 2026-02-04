@@ -37,7 +37,6 @@ address {
 }
 
 mark {
-	background-color: var(--theme_mark_bgcolor);
 	color: var(--theme_mark_color);
 	padding: 3px 7px;
 }
@@ -59,7 +58,6 @@ del {
 b,
 strong {
 	font-weight: 700;
-	color: var(--theme_strong_color);
 }
 
 u {

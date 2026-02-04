@@ -1,0 +1,34 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/get-in-touch",
+  "title": "Get In Touch",
+  "category": "ambrygen",
+  "icon": "email",
+  "description": "Contact block with Gravity Form",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Get in"
+    },
+    "highlightText": {
+      "type": "string",
+      "default": "Touch"
+    },
+    "content": {
+      "type": "string",
+      "default": "<p>Please complete the form if you are a provider, pharma or business development partner, or payor.</p><p>All others, including patients who have received or are seeking genetic testing services, should reach out to the appropriate Ambry team at the email or phone number listed above.</p>"
+    },
+    "headingLevel": {
+      "type": "string",
+      "default": "h2"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php"
+}

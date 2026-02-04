@@ -1,0 +1,127 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ambrygen/mega-menu-company",
+	"version": "1.0.0",
+	"title": "Mega Menu Company",
+	"category": "ambrygen",
+	"icon": "building",
+	"description": "Company Mega Menu Block",
+	"attributes": {
+		"leftTitle": {
+			"type": "string",
+			"default": "Company"
+		},
+		"items": {
+			"type": "array",
+			"default": [
+				{
+					"label": "About Us",
+					"url": "#",
+					"image": "https://placehold.co/800x600/102334/ffffff?text=About+Us",
+					"rightTitle": "About us",
+					"rightText": "Ambry Genetics Patient for Life Program focuses on fostering robust pharmaceutical collaborations to advance innovative genetic testing solutions, propelling the future of personalized medicine.",
+					"rightUrl": "#"
+				},
+				{
+					"label": "Leadership",
+					"url": "#",
+					"image": "https://placehold.co/800x600/102334/ffffff?text=Leadership",
+					"rightTitle": "Leadership",
+					"rightText": "Meet the team driving our mission forward.",
+					"rightUrl": "#"
+				},
+				{
+					"label": "Events",
+					"url": "#",
+					"image": "https://placehold.co/800x600/102334/ffffff?text=Events",
+					"rightTitle": "Events",
+					"rightText": "Join us at upcoming conferences and webinars.",
+					"rightUrl": "#"
+				},
+				{
+					"label": "Media",
+					"url": "#",
+					"image": "https://placehold.co/800x600/102334/ffffff?text=Media",
+					"rightTitle": "Media",
+					"rightText": "Resources for press and media.",
+					"rightUrl": "#"
+				},
+				{
+					"label": "In the News",
+					"url": "#",
+					"image": "https://placehold.co/800x600/102334/ffffff?text=In+the+News",
+					"rightTitle": "In the News",
+					"rightText": "Ambry Genetics in the headlines.",
+					"rightUrl": "#"
+				},
+				{
+					"label": "Press Releases",
+					"url": "#",
+					"image": "https://placehold.co/800x600/102334/ffffff?text=Press+Releases",
+					"rightTitle": "Press Releases",
+					"rightText": "Official announcements and updates.",
+					"rightUrl": "#"
+				},
+				{
+					"label": "Videos",
+					"url": "#",
+					"image": "https://placehold.co/800x600/102334/ffffff?text=Videos",
+					"rightTitle": "Videos",
+					"rightText": "Watch our latest videos and stories.",
+					"rightUrl": "#"
+				},
+				{
+					"label": "Blog",
+					"url": "#",
+					"image": "https://placehold.co/800x600/102334/ffffff?text=Blog",
+					"rightTitle": "Blog",
+					"rightText": "Insights, stories, and updates from Ambry.",
+					"rightUrl": "#"
+				},
+				{
+					"label": "Careers",
+					"url": "#",
+					"image": "https://placehold.co/800x600/102334/ffffff?text=Careers",
+					"rightTitle": "Careers",
+					"rightText": "Join our team and make a difference.",
+					"rightUrl": "#"
+				},
+				{
+					"label": "Contact",
+					"url": "#",
+					"image": "https://placehold.co/800x600/102334/ffffff?text=Contact",
+					"rightTitle": "Contact",
+					"rightText": "Get in touch with us.",
+					"rightUrl": "#"
+				}
+			]
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [
+			"full",
+			"wide"
+		],
+		"spacing": {
+			"margin": true,
+			"padding": true,
+			"blockGap": true
+		},
+		"layout": {
+			"allowSwitching": true,
+			"allowInheriting": true,
+			"allowEditing": true
+		},
+		"color": {
+			"text": true,
+			"background": true,
+			"link": true
+		},
+		"typography": true
+	},
+	"textdomain": "ambrygen-web",
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

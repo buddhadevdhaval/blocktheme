@@ -47,11 +47,11 @@ select,
 textarea {
 	transition: all 0.2s ease-in-out;
 	background: var(--theme_white);
-	border: 1px solid #ccc;
+	border: 1px solid var(--theme_border_2);
 	border-radius: 10px;
 	box-shadow: 0 2px 2px rgb(0 0 0 / 10%);
 	box-sizing: border-box;
-	color: var(--theme_input_color);
+	color: var(--theme_body_color);
 	font-size: 18px;
 	font-style: normal;
 	font-weight: 400;
@@ -65,7 +65,7 @@ textarea {
 
 	&:focus {
 		background-color: var(--theme_white);
-		border-color: var(--theme_Secondary_Dark_Beige);
+		border-color: var(--theme_body_color);
 		box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
 	}
 
@@ -78,7 +78,7 @@ textarea {
 
 // Placeholder Style
 ::placeholder {
-	color: var(--theme_placeholder_color);
+	color: var(--theme_body_color);
 	opacity: 0.5;
 }
 
@@ -87,8 +87,9 @@ input:focus::placeholder {
 }
 
 input[type="text"]:disabled {
-	background-color: var(--theme_disabled_input_bgcolor);
-	border: 1px solid var(--theme_disabled_input_border_color);
+	background-color: var(--theme_gray_50);
+	box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+	border: 1px solid transparent;
 }
 
 input[type="hidden"],
@@ -130,8 +131,8 @@ input[type="search"]::-webkit-search-results-decoration {
 
 input[type="color"] {
 	appearance: none;
-	background-color: var(--theme_color_field_bgcolor);
-	border: 1px solid var(--theme_color_field_border_color);
+	background-color: var(--theme_white);
+	border: 1px solid var(----theme_border_2);
 	box-sizing: border-box;
 	cursor: pointer;
 	height: 25px;

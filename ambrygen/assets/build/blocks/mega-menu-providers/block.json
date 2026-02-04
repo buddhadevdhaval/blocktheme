@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/mega-menu-providers",
+  "version": "1.0.0",
+  "title": "Mega Menu Providers",
+  "category": "ambrygen",
+  "icon": "menu",
+  "description": "Providers Mega Menu Block",
+  "supports": {
+    "html": false,
+    "align": [
+      "full",
+      "wide"
+    ],
+    "spacing": {
+      "margin": true,
+      "padding": true,
+      "blockGap": true
+    },
+    "layout": {
+      "allowSwitching": true,
+      "allowInheriting": true,
+      "allowEditing": true
+    },
+    "color": {
+      "text": true,
+      "background": true,
+      "link": true
+    },
+    "typography": true
+  },
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

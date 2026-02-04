@@ -14,18 +14,14 @@ import { registerBlockType } from '@wordpress/blocks';
  */
 import './style.scss';
 import './editor.scss';
-
-/**
- * Internal dependencies
- */
 import Edit from './edit';
-import save from './save';
+
 import metadata from './block.json';
 
 /**
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
-registerBlockType( metadata.name, {
+registerBlockType(metadata.name, {
 	/**
 	 * @see ./edit.js
 	 */
@@ -34,5 +30,5 @@ registerBlockType( metadata.name, {
 	/**
 	 * @see ./save.js
 	 */
-	save,
-} );
+	save: () => null,
+});

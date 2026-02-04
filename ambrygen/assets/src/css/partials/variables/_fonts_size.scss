@@ -3,13 +3,13 @@
 	/* Font Sizes */
 
 	/* ------- [ D-64 to M-40 ] - [ Text-64 ] ------- */
-	--theme_font_size_1: clamp(40px, calc(2.5rem + ((1vw - 7.67px) * 5.4889)), 72px);
+	--theme_font_size_1: clamp(42px, calc(2.625rem + ((1vw - 7.68px) * 3.0928)), 60px);
 
 	/* ------- [ D-48 to M-34 ] - [ Text-48 ] ------- */
-	--theme_font_size_2: clamp(34px, calc(2.125rem + ((1vw - 7.68px) * 4.4674)), 60px);
+	--theme_font_size_2: clamp(36px, calc(2.25rem + ((1vw - 7.68px) * 3.0928)), 54px);
 
 	/* ------- [ D-40 to M-30 ] - [ Text-40 ] ------- */
-	--theme_font_size_3: clamp(30px, calc(1.875rem + ((1vw - 7.68px) * 3.0928)), 48px);
+	--theme_font_size_3: clamp(28px, calc(1.75rem + ((1vw - 7.68px) * 3.4364)), 48px);
 
 	/* ------- [ D-34 to M-26 ] - [ Text-34 ] ------- */
 	--theme_font_size_4: clamp(26px, calc(1.625rem + ((1vw - 7.68px) * 1.7182)), 36px);
@@ -18,10 +18,10 @@
 	--theme_font_size_5: clamp(24px, calc(1.5rem + ((1vw - 7.68px) * 1.0309)), 30px);
 
 	/* ------- [ D-18 to M-16 ] - [ Text-18 ] ------- */
-	--theme_font_size_6: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 0.6873)), 24px);
+	--theme_font_size_6: clamp(19px, calc(1.1875rem + ((1vw - 7.68px) * 0.8591)), 24px);
 
 	/* ------- Body1 [ D-16 to M-15 ] - [ Text-16 ] ------- */
-	--theme_font_size_7: clamp(15px, calc(0.9375rem + ((1vw - 7.67px) * 0.1715)), 16px);
+	--theme_font_size_7: clamp(15px, calc(0.9375rem + ((1vw - 7.68px) * 0.1718)), 16px);
 
 	/* ------- Body2 [ D-22 to M-20 ] - [ Text-22 ] ------- */
 	--theme_font_size_8: 14px;
@@ -35,12 +35,9 @@
 	/* ------- Caption [ D-20 to M-18 ] - [ Text-20 ] ------- */
 	--theme_font_size_11: 12px;
 
-	/* ------- Button1 [ D-20 to M-18 ] - [ Text-20 ] ------- */
-	--theme_font_size_12: clamp(15px, calc(0.9375rem + ((1vw - 7.67px) * 0.1715)), 16px);
-
-	/* ------- Button2 [ D-14 to M-13 ] - [ Text-14 ] ------- */
-	--theme_font_size_13: 14px;
-
 	/* ------- Text Small [ D-15 to M-15 ] - [ Text-15 ] ------- */
-	--theme_font_size_14: 15px;
+	--theme_font_size_12: 15px;
+
+	/* ------- Heading 7 [ D-13 to M-13 ] - [ Text-13 ] ------- */
+	--theme_font_size_13: 13px;
 }

@@ -2,7 +2,7 @@
 
 	.bg-#{$name},
 	.wp-block.bg-#{$name} {
-		background-color: var(#{$css-var});
+		background: var(#{$css-var});
 		@content;
 	}
 }
@@ -12,12 +12,12 @@
 	/* Inside Classes SCSS will goes here */
 }
 
-@include bg-scope("Secondary", --theme_color_secondary) {
+@include bg-scope("secondary", --theme_color_secondary) {
 
 	/* Inside Classes SCSS will goes here */
 }
 
-@include bg-scope("aliceblue", --theme_aliceblue) {
+@include bg-scope("primary_25", --theme_primary_25) {
 
 	/* Inside Classes SCSS will goes here */
 }
@@ -25,4 +25,131 @@
 @include bg-scope("paleblue", --theme_primary_pale_blue) {
 
 	/* Inside Classes SCSS will goes here */
+}
+
+@include bg-scope("primary_800", --theme_primary_800) {
+
+	p {
+		color: var(--theme_white);
+
+		a {
+			color: #b0e5f8;
+
+			&:hover {
+				color: #54c6ef;
+			}
+		}
+	}
+
+	h1,
+	.heading-1,
+	h2,
+	.heading-2,
+	h3,
+	.heading-3,
+	h4,
+	.heading-4,
+	h5,
+	.heading-5,
+	h6,
+	.heading-6,
+	.text-medium {
+		color: var(--theme_white);
+	}
+
+	ul {
+
+		>li {
+
+			&::before {
+				background-color: var(--theme_white);
+			}
+
+			color: var(--theme_white);
+		}
+	}
+
+	ol {
+
+		>li {
+
+			&::before {
+				color: var(--theme_white);
+			}
+
+			color: var(--theme_white);
+		}
+
+		ul {
+
+			>li {
+
+				&::before {
+					background-color: var(--theme_white);
+				}
+			}
+		}
+	}
+
+	.site-btn {
+
+		&.is-style-site-text-btn {
+			color: var(--theme_link_color);
+
+
+			&:hover {
+				color: var(--theme_link_color_hover);
+
+				&.has-icon {
+
+					&::after {
+						background-image: url(../images/btn-arrow-right-icon-hover-dark.svg);
+					}
+				}
+			}
+		}
+
+		&.is-style-site-tertiary-btn {
+			border-color: var(--theme_white);
+
+			&:hover {
+				border-color: var(--theme_white);
+			}
+		}
+	}
+
+
+}
+
+@include bg-scope("lightblue-gradient", --theme_lightblue_gradient) {
+
+	/* Inside Classes SCSS will goes here */
+}
+
+
+@include bg-scope("blue-gradient", --theme_blue_gradient) {
+
+    .alongside-faq {
+
+        &__title {
+            color: var(--theme_primary_white);
+        }
+    }
+
+
+    .faq {
+
+        &__item {
+            border-top: 1px solid rgba(255, 255, 255, 0.50);
+        }
+
+        &__question {
+            color: var(--theme_primary_white);
+        }
+
+        &__answer {
+            color: var(--theme_primary_white);
+        }
+    }
+
 }

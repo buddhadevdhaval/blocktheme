@@ -1,102 +1,28 @@
+.drag-handle--corner {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	z-index: 5;
+	background: rgba(0, 0, 0, 0.55);
+	color: #fff;
+	padding: 4px 6px;
+	border-radius: 6px;
+	font-size: 16px;
+	cursor: grab;
+	line-height: 1;
+	user-select: none;
+	transition: opacity 0.2s ease, transform 0.15s ease;
+}
 
-.get-started-ambry-block {
+.drag-handle--corner:hover {
+	opacity: 1;
+	transform: scale(1.05);
+}
 
-    .card-grid-block {
-        display: grid;
-        grid-template-columns: repeat(12, 1fr);
-        gap: 30px clamp(25px, calc(1.5625rem + ((1vw - 7.68px) * 4.2955)), 50px);
-        margin-top: 32px;
+.drag-handle--corner:active {
+	cursor: grabbing;
+}
 
-        a {
-
-            &.card-col {
-
-                &:hover {
-
-                    &:nth-child(odd) {
-
-                        .card-info {
-                            background: rgba(20, 37, 51, 0.7);
-                        }
-                    }
-
-                    &:nth-child(even) {
-
-                        .card-info {
-                            background: rgba(255, 255, 255, 0.7);
-
-                            .link-btn,
-                            .card-description {
-                                color: var(--theme_color_secondary);
-                            }
-
-                            .link-btn {
-
-                                &::after {
-                                    filter: brightness(0) saturate(100%) invert(12%) sepia(97%) saturate(2690%) hue-rotate(187deg) brightness(98%) contrast(105%);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        .card-col {
-            grid-column: span 6;
-            overflow: hidden;
-            position: relative;
-
-            .image-block {
-                overflow: hidden;
-                min-height: clamp(324px, calc(20.25rem + ((1vw - 7.68px) * 27.4914)), 484px);
-                display: flex;
-
-                img {
-                    border-radius: clamp(12px, calc(0.75rem + ((1vw - 7.68px) * 0.6873)), 16px);
-                    width: 100%;
-                    object-fit: cover;
-                }
-            }
-
-            .card-info {
-                display: flex;
-                flex-direction: column;
-                padding: 32px;
-                border-radius: 8px;
-                border: 1px solid rgba(255, 255, 255, 0.30);
-                background: rgba(0, 0, 0, 0.30);
-                backdrop-filter: blur(20px);
-                position: absolute;
-                bottom: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 5.1546)), 50px);
-                left: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 7.5601)), 64px);
-                right: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 7.5601)), 64px);
-                transition: all 0.3s ease;
-            }
-
-            .link-btn {
-                color: var(--theme_white);
-                position: relative;
-                display: flex;
-                gap: 8px;
-                align-items: center;
-                margin: 0;
-
-                &::after {
-                    content: '';
-                    background-image: url(../../images/right-arrow.svg);
-                    background-size: 20px;
-                    width: 20px;
-                    height: 20px;
-                    display: inline-block;
-                    flex: 20px 0 0;
-                }
-            }
-
-            .card-description {
-                padding-top: 10px;
-                color: var(--theme_white);
-            }
-        }
-    }
+.image-block img {
+	pointer-events: none;
 }

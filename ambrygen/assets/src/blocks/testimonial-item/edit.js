@@ -23,7 +23,11 @@ export default function Edit( { attributes, setAttributes } ) {
 	const { logo, logoSizes, quote, author, role } = attributes;
 
 	return (
-		<div { ...useBlockProps( { className: 'ambry-testimonial' } ) }>
+		<div
+			{ ...useBlockProps( {
+				className: 'ambry-testimonials__grid__item',
+			} ) }
+		>
 			<InspectorControls>
 				<PanelBody title={ __( 'Logo Image', 'ambrygen-web' ) }>
 					<MediaUploadCheck>
@@ -82,7 +86,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					src={ logo }
 					srcSet={ buildSrcSet( logoSizes ) }
 					loading="lazy"
-					className="ambry-testimonial__logo"
+					className="ambry-testimonials__grid__logo"
 					alt=""
 				/>
 			) }
@@ -91,22 +95,24 @@ export default function Edit( { attributes, setAttributes } ) {
 				tagName="p"
 				value={ quote }
 				onChange={ ( value ) => setAttributes( { quote: value } ) }
-				className="ambry-testimonial__quote"
+				className="ambry-testimonials__grid__item__quote body2"
 			/>
 
-			<RichText
-				tagName="strong"
-				value={ author }
-				onChange={ ( value ) => setAttributes( { author: value } ) }
-				className="ambry-testimonial__author"
-			/>
+			<div className="ambry-testimonials__layout__author-details">
+				<RichText
+					tagName="strong"
+					value={ author }
+					onChange={ ( value ) => setAttributes( { author: value } ) }
+					className="ambry-testimonials__layout__author-details__author body2-medium"
+				/>
 
-			<RichText
-				tagName="span"
-				value={ role }
-				onChange={ ( value ) => setAttributes( { role: value } ) }
-				className="ambry-testimonial__role"
-			/>
+				<RichText
+					tagName="span"
+					value={ role }
+					onChange={ ( value ) => setAttributes( { role: value } ) }
+					className="ambry-testimonials__layout__author-details__role body2-medium"
+				/>
+			</div>
 		</div>
 	);
 }

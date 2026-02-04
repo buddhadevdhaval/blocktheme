@@ -108,16 +108,23 @@ function BackgroundStyleControl( { value, onChange } ) {
 					value: 'bg-secondary',
 				},
 				{
-					label: __( 'Light Background', 'ambrygen-web' ),
-					value: 'bg-light',
+					label: __( 'Primary 25 Background', 'ambrygen-web' ),
+					value: 'bg-primary_25',
 				},
 				{
-					label: __( 'Alice Blue Background', 'ambrygen-web' ),
-					value: 'bg-aliceblue',
+					label: __( 'Primary 800 Background', 'ambrygen-web' ),
+					value: 'bg-primary_800',
 				},
 				{
-					label: __( 'Dark Background', 'ambrygen-web' ),
-					value: 'bg-dark',
+					label: __(
+						'Light Blue Gradient Background',
+						'ambrygen-web'
+					),
+					value: 'bg-lightblue-gradient',
+				},
+				{
+					label: __( 'Blue Gradient Background', 'ambrygen-web' ),
+					value: 'bg-blue-gradient',
 				},
 			] }
 			onChange={ onChange }

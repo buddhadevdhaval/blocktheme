@@ -115,11 +115,12 @@ pre {
 	overflow-x: scroll;
 }
 
-hr {
+hr,
+.wp-block-separator {
 	background-color: var(--theme_hr_color);
 	border: 0;
 	height: 1px;
-	margin-bottom: 30px;
+	margin-bottom: 0;
 }
 
 audio,

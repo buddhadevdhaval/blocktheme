@@ -1,46 +1,52 @@
 {
-    "$schema": "https://schemas.wp.org/trunk/block.json",
-    "apiVersion": 3,
-    "name": "ambrygen/genetic-testing-cards",
-    "title": "Genetic Testing Cards",
-    "category": "ambrygen",
-    "icon": "grid-view",
-    "description": "A layout with two stacked cards on the left and one large featured card on the right.",
-    "supports": {
-        "html": false,
-        "align": [
-            "wide",
-            "full"
-        ],
-        "spacing": {
-            "margin": true,
-            "padding": true,
-            "blockGap": true
-        },
-        "color": {
-            "background": true,
-            "text": true
-        }
-    },
-    "keywords": [
-        "cards",
-        "genetic",
-        "layout",
-        "grid"
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/genetic-testing-cards",
+  "title": "Genetic Testing Cards",
+  "category": "ambrygen",
+  "icon": "grid-view",
+  "description": "A layout with two stacked cards on the left and one large featured card on the right.",
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
     ],
-    "attributes": {
-        "sectionTitle": {
-            "type": "string",
-            "default": "Why We’re <span>Different</span>"
-        },
-        "headingTag": {
-            "type": "string",
-            "default": "h2"
-        }
+    "spacing": {
+      "margin": true,
+      "padding": true,
+      "blockGap": true
     },
-    "editorScript": "file:./index.js",
-    "editorStyle": "file:./index.css",
-    "style": "file:./style-index.css",
-    "render": "file:./render.php",
-    "textdomain": "ambrygen-web"
+    "color": {
+      "background": true,
+      "text": true
+    }
+  },
+  "keywords": [
+    "cards",
+    "genetic",
+    "layout",
+    "grid"
+  ],
+  "attributes": {
+    "sectionTitle": {
+      "type": "string",
+      "default": "Why We’re Different"
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web",
+  "example": {
+    "attributes": {
+      "sectionTitle": "Why We’re Different",
+      "headingTag": "h2"
+    }
+  }
 }

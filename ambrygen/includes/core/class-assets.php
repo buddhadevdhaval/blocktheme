@@ -45,6 +45,7 @@ final class Assets {
 		add_action( 'wp_enqueue_scripts', [ $this, 'frontend' ] );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'register_assets' ], 5 );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'editor' ] );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin' ) , 10 );
 	}
 
 	/**
@@ -104,7 +105,6 @@ final class Assets {
 	 */
 	private function register_script( string $handle, string $file, array $deps = [], $ver = false, bool $in_footer = true ): bool {
 		$file_path = sprintf( '%s/%s', AMBRYGEN_BUILD_DIR, $file );
-
 		if ( ! file_exists( $file_path ) ) {
 			$this->log_debug( "Skip missing script {$file}" );
 			return false;
@@ -164,7 +164,10 @@ final class Assets {
 		// Editor bundles.
 		$this->register_style( 'ambrygen-editor', 'editorStyle.min.css', [ 'wp-edit-blocks' ] );
 		$this->register_script( 'ambrygen-editor', 'editor.min.js', [ 'wp-blocks', 'wp-element', 'wp-block-editor' ] );
-	}
+
+
+
+		}
 
 	/**
 	 * Frontend assets
@@ -174,12 +177,41 @@ final class Assets {
 		wp_enqueue_script( 'ambrygen-scripts' );
 	}
 
+		/**
+	 * Frontend assets
+	 */
+	public function admin(): void {
+				//admin globle 
+		$this->register_script( 'ambrygen-admin-scripts', 'admin.min.js', [ 'jquery', 'media-editor' ] );
+		wp_enqueue_script( 'ambrygen-admin-scripts' ) ;
+	}
+	
+
 	/**
 	 * Block editor assets
 	 */
 	public function editor(): void {
+
 		wp_enqueue_style( 'ambrygen-editor' );
 		wp_enqueue_script( 'ambrygen-editor' );
+
+		// Get image ID from theme options.
+		$placeholder_id  = Theme_Options::get_placeholder_image_id();
+
+		// Convert ID to URL.
+		$placeholder_url = $placeholder_id
+			? wp_get_attachment_image_url( $placeholder_id, 'full' )
+			: get_template_directory_uri() . '/assets/src/images/default-image.png';
+
+		wp_localize_script(
+			'ambrygen-editor',
+			'ambrygenAssets',
+			[
+				'themeUrl'        => get_template_directory_uri(),
+				'defaultImageUrl' => $placeholder_url,
+				'defaultImageId'  => $placeholder_id,
+			]
+		);
 	}
 }
 

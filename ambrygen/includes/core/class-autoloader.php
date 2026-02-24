@@ -15,9 +15,12 @@ defined('ABSPATH') || exit;
 require_once dirname(__DIR__) . '/traits/class-singleton.php';
 
 // Core components (order can matter if classes reference each other).
+require_once __DIR__ . '/class-theme-options.php';
 require_once __DIR__ . '/class-assets.php';
+require_once __DIR__ . '/class-helper.php';
 require_once __DIR__ . '/class-blocks.php';
 require_once __DIR__ . '/class-patterns.php';
+require_once __DIR__ . '/class-post-types.php';
 require_once __DIR__ . '/class-theme.php';
 
 Theme::instance();

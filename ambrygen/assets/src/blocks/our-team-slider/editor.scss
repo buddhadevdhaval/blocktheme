@@ -1,0 +1,28 @@
+.our-leadership-slider {
+    overflow: hidden;
+    position: relative;
+}
+
+.wp-block-ambrygen-our-team-slider-item {
+    flex-shrink: 0;
+}
+
+.custom-prev, .custom-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: rgba(0,0,0,0.5);
+    color: var(--theme_white);
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.custom-prev { left: 10px; }
+
+.custom-next { right: 10px; }
+
+.swiper-pagination {
+    bottom: 10px;
+}

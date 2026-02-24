@@ -150,10 +150,6 @@
 		}
 	}
 
-	.ai-hero__heading {
-		line-height: 1.1667;
-	}
-
 	&__counters {
 		display: flex;
 		flex-wrap: wrap;
@@ -162,8 +158,8 @@
 		text-align: center;
 
 		@include bp.max(xl) {
-			display: grid;
-			grid-template-columns: repeat(2, 1fr);
+			// display: grid;
+			// grid-template-columns: repeat(2, 1fr);
 		}
 
 		@include bp.max(lg) {

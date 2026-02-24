@@ -7,7 +7,7 @@
   "icon": "format-image",
   "description": "Banner section with text content and background image.",
   "supports": {
-    "html": false,
+    "html": true,
     "color": {
       "background": true
     }
@@ -15,15 +15,11 @@
   "attributes": {
     "heading": {
       "type": "string",
-      "default": "Contact"
+      "default": "Title"
     },
     "headingLevel": {
       "type": "string",
       "default": "h2"
-    },
-    "highlight": {
-      "type": "string",
-      "default": "Us"
     },
     "content": {
       "type": "string",
@@ -40,10 +36,40 @@
     "shapeUrl": {
       "type": "string",
       "default": "http://ambrygen-local.local/wp-content/uploads/2026/01/shape-element-three.svg"
+    },
+    "eyebrow": {
+      "type": "string",
+      "default": ""
+    },
+    "breadcrumb": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonText": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": ""
     }
   },
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
-  "render": "file:./render.php"
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "heading": "Title",
+      "headingLevel": "h2",
+      "content": "Ambry Genetics focuses on quality and accuracy within the genetic testing process by employing a multi-step verification process. Everything we do is with the patient in mind so that we can deliver the most comprehensive information available.",
+      "imageUrl": "http://ambrygen-local.local/wp-content/uploads/2026/01/contact-us.jpg",
+      "imageAlt": "Our people",
+      "shapeUrl": "http://ambrygen-local.local/wp-content/uploads/2026/01/shape-element-three.svg",
+      "eyebrow": "Ambry Genetics",
+      "breadcrumb": "Sample breadcrumb",
+      "buttonText": "Learn More",
+      "buttonUrl": "https://example.com"
+    }
+  }
 }

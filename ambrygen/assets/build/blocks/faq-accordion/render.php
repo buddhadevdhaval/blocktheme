@@ -4,7 +4,7 @@
  *
  * @package AmbryGen
  */
-
+use Ambrygen\Theme\Core\Helper;
 // Prefix all variables
 $ambrygen_attributes = $attributes ?? array();
 
@@ -12,6 +12,9 @@ $ambrygen_image_url  = $ambrygen_attributes['imageUrl'] ?? '';
 $ambrygen_image_id   = $ambrygen_attributes['imageId'] ?? 0;
 $ambrygen_image_alt  = $ambrygen_attributes['imageAlt'] ?? '';
 $ambrygen_faqs       = $ambrygen_attributes['faqs'] ?? array();
+$ambrygen_title  = $ambrygen_attributes['title'] ?? '';
+$ambrygen_heading   = $attributes['headingTag'] ?? 'h5';
+
 
 // Default alt if not provided
 if ( ! $ambrygen_image_alt ) {
@@ -30,26 +33,39 @@ if ( $ambrygen_image_id ) {
 <div class="alongside-faq">
 	<div class="alongside-faq__row">
 
-		<?php if ( $ambrygen_image_url ) : ?>
 			<div class="alongside-faq__col alongside-faq__col--left">
 				<div class="alongside-faq__media">
-					<img 
-						src="<?php echo esc_url( $ambrygen_image_url ); ?>" 
-						alt="<?php echo esc_attr( $ambrygen_image_alt ); ?>" 
-						<?php echo $ambrygen_srcset ? 'srcset="' . esc_attr( $ambrygen_srcset ) . '"' : ''; ?>
-						<?php echo $ambrygen_sizes ? 'sizes="' . esc_attr( $ambrygen_sizes ) . '"' : ''; ?>
-						loading="lazy"
-					/>
+					<?php 
+						echo Helper::image_with_placeholder (
+							$ambrygen_image_id,
+								'full',
+							array(
+								'loading' => 'lazy',
+								'alt'     => $ambrygen_title
+									? wp_strip_all_tags( $ambrygen_title )
+									: '',
+							)
+						);
+					?>
 				</div>
 			</div>
-		<?php endif; ?>
+
 
 		<div class="alongside-faq__col alongside-faq__col--right">
 			<div class="alongside-faq__content">
 
-				<div id="faq-heading" class="heading-4 alongside-faq__title mb-0">
-					<?php esc_html_e( 'Frequently Asked Questions', 'ambrygen-web' ); ?>
-				</div>
+
+				<?php if ( $ambrygen_title ) : ?>
+			<<?php echo esc_html( $ambrygen_heading ); ?> id="faq-heading"  class="heading-4 alongside-faq__title mb-0">
+				<?php 
+						echo wp_kses(
+								$ambrygen_title,
+								Helper::allowed_heading_html()
+							);
+					 ?>
+			</<?php echo esc_html( $ambrygen_heading ); ?>>
+		<?php endif; ?>
+
 
 				<div class="is-style-gl-s64"></div>
 

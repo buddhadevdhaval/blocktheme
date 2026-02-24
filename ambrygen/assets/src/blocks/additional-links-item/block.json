@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/additional-links-item",
+  "title": "Additional Links Item",
+  "category": "ambrygen",
+  "icon": "format-image",
+  "parent": [
+    "ambrygen/additional-links"
+  ],
+  "description": "Individual card for additional links block",
+  "supports": {
+    "html": false,
+    "reusable": false,
+    "color": {
+      "background": true
+    }
+  },
+  "attributes": {
+    "icon": {
+      "type": "object",
+      "default": {
+        "url": "",
+        "id": 0,
+        "alt": ""
+      }
+    },
+    "cta": {
+      "type": "object",
+      "default": {
+        "text": "Title",
+        "url": "",
+        "target": "",
+        "rel": "",
+        "variant": "dark"
+      }
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "icon": {
+        "url": "Sample url",
+        "id": 0,
+        "alt": "Preview asset"
+      },
+      "cta": {
+        "text": "Title",
+        "url": "Sample url",
+        "target": "Sample target",
+        "rel": "Sample rel",
+        "variant": "dark"
+      }
+    }
+  }
+}

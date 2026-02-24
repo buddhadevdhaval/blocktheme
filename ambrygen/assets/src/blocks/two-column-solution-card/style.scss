@@ -1,0 +1,141 @@
+/* ==========================================
+   Two Column Solution Card Section
+========================================== */
+
+.ambrygen-two-column-solution-card {
+	padding: 64px 0;
+
+	&__header {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		margin-bottom: 40px;
+		max-width: 720px;
+	}
+
+	&__title {
+		margin: 0;
+	}
+
+	&__description {
+		margin: 0;
+	}
+
+	&__grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 32px;
+	}
+
+	@media (max-width: 1024px) {
+		padding: 48px 0;
+
+		&__grid {
+			grid-template-columns: 1fr;
+		}
+	}
+}
+
+
+/* ==========================================
+   Solution Card
+========================================== */
+
+.ambrygen-solution-card {
+	display: flex;
+	flex-direction: column;
+	background: #fff;
+	border-radius: 16px;
+	overflow: hidden;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+	&:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+	}
+
+	&__image {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+		}
+	}
+
+	&__content {
+		padding: 24px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	&__title {
+		margin: 0;
+		font-weight: 600;
+	}
+
+	&__description {
+		margin: 0;
+	}
+
+	&__cta {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 12px 20px;
+		border-radius: 999px;
+		text-decoration: none;
+		font-weight: 500;
+		transition: all 0.25s ease;
+		outline: none;
+
+		/* Default (dark) */
+		background: #111;
+		color: #fff;
+
+		&:hover {
+			background: #000;
+		}
+
+		/* ADA focus */
+		&:focus-visible {
+			outline: 3px solid #005fcc;
+			outline-offset: 3px;
+		}
+	}
+}
+
+
+/* ==========================================
+   Variant Modifiers
+========================================== */
+
+/* Light Button */
+.ambrygen-solution-card__cta.is-style-site-tertiary-btn {
+	background: #f4f4f4;
+	color: #111;
+
+	&:hover {
+		background: #e5e5e5;
+	}
+}
+
+/* Large Card */
+.ambrygen-solution-card--large {
+	grid-column: span 2;
+
+	@media (max-width: 1024px) {
+		grid-column: span 1;
+	}
+}
+
+/* Small Card */
+.ambrygen-solution-card--small {
+	grid-column: span 1;
+}

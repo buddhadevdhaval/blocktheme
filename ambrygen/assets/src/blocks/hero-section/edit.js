@@ -19,11 +19,8 @@ import { useCallback, useState } from '@wordpress/element';
  */
 import {
 	RichText,
-	MediaUpload,
-	MediaUploadCheck,
 	InspectorControls,
 	useBlockProps,
-	URLInput,
 } from '@wordpress/block-editor';
 
 /**
@@ -34,138 +31,16 @@ import {
 import {
 	Button,
 	PanelBody,
-	PanelRow,
-	TextControl,
-	BaseControl,
-	ToggleControl,
 	RangeControl,
+	ToggleControl,
 } from '@wordpress/components';
 
-const ChevronRightIcon = () => (
-	<svg
-		width="20"
-		height="20"
-		viewBox="0 0 20 20"
-		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
-	>
-		<path
-			d="M7.5 15L12.5 10L7.5 5"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		/>
-	</svg>
-);
-
-/**
- * MediaUploadPanel Component
- *
- * Reusable component for handling media upload, preview, and removal.
- * Follows DRY principle and WordPress VIP best practices.
- *
- * @param {Object}   props             Component properties.
- * @param {string}   props.title       Panel title.
- * @param {string}   props.imageUrl    Current image URL.
- * @param {string}   props.imageAlt    Current image ALT text.
- * @param {number}   props.imageId     Current image ID.
- * @param {Function} props.onSelect    Callback when image is selected.
- * @param {Function} props.onRemove    Callback when image is removed.
- * @param {string}   props.selectLabel Label for the select button.
- * @param {string}   props.id          Unique ID for the control.
- * @return {JSX.Element} MediaUploadPanel component.
- */
-function MediaUploadPanel({
-	title,
-	imageUrl,
-	imageAlt,
-	imageId,
-	onSelect,
-	onRemove,
-	id,
-	selectLabel = __('Select Image', 'ambrygen-web'),
-}) {
-	return (
-		<PanelBody title={title} initialOpen={false}>
-			<PanelRow>
-				<MediaUploadCheck>
-					<MediaUpload
-						onSelect={onSelect}
-						allowedTypes={['image']}
-						value={imageId}
-						render={({ open }) => (
-							<BaseControl label={title} id={id}>
-								{imageUrl ? (
-									<>
-										<div
-											className="media-preview-wrapper"
-											style={{ marginBottom: '10px' }}
-										>
-											<img
-												src={imageUrl}
-												alt={
-													imageAlt ||
-													__(
-														'Image preview',
-														'ambrygen-web'
-													)
-												}
-												style={{
-													maxWidth: '100%',
-													height: 'auto',
-													borderRadius: '8px',
-												}}
-											/>
-										</div>
-										<div
-											style={{
-												display: 'flex',
-												gap: '8px',
-											}}
-										>
-											<Button
-												onClick={open}
-												variant="secondary"
-												isSmall
-											>
-												{__(
-													'Replace',
-													'ambrygen-web'
-												)}
-											</Button>
-											<Button
-												onClick={(e) => {
-													e.preventDefault();
-													e.stopPropagation();
-													onRemove();
-												}}
-												variant="link"
-												isDestructive
-											>
-												{__(
-													'Remove',
-													'ambrygen-web'
-												)}
-											</Button>
-										</div>
-									</>
-								) : (
-									<Button
-										onClick={open}
-										variant="secondary"
-									>
-										{selectLabel}
-									</Button>
-								)}
-							</BaseControl>
-						)}
-					/>
-				</MediaUploadCheck>
-			</PanelRow>
-		</PanelBody>
-	);
-}
+import {
+	TagSelector,
+	ImageUploader,
+	CtaButtonField,
+} from '../_shared/components';
+import { t } from '../_shared/utils';
 
 /**
  * Edit component for the Hero Section block.
@@ -183,11 +58,18 @@ function MediaUploadPanel({
  * @param {Function} props.setAttributes Function to update attributes.
  * @return {JSX.Element} Block editor interface element.
  */
-export default function Edit({ attributes, setAttributes }) {
-	const { slides, showSliderNav, showSliderDots, autoplay, autoplayDelay } =
-		attributes;
+export default function Edit( { attributes, setAttributes } ) {
+	const {
+		slides,
+		showSliderNav,
+		showSliderDots,
+		autoplay,
+		autoplayDelay,
+		primarybutton,
+		secondarybutton,
+	} = attributes;
 
-	const [currentSlide, setCurrentSlide] = useState(0);
+	const [ currentSlide, setCurrentSlide ] = useState( 0 );
 
 	/**
 	 * Updates a specific slide's property or properties.
@@ -197,28 +79,28 @@ export default function Edit({ attributes, setAttributes }) {
 	 * @param {*}             [value]      New value (if keyOrUpdates is a string).
 	 */
 	const updateSlide = useCallback(
-		(index, keyOrUpdates, value) => {
-			const newSlides = [...slides];
-			if (typeof keyOrUpdates === 'string') {
-				newSlides[index] = {
-					...newSlides[index],
-					[keyOrUpdates]: value,
+		( index, keyOrUpdates, value ) => {
+			const newSlides = [ ...slides ];
+			if ( typeof keyOrUpdates === 'string' ) {
+				newSlides[ index ] = {
+					...newSlides[ index ],
+					[ keyOrUpdates ]: value,
 				};
 			} else {
-				newSlides[index] = {
-					...newSlides[index],
+				newSlides[ index ] = {
+					...newSlides[ index ],
 					...keyOrUpdates,
 				};
 			}
-			setAttributes({ slides: newSlides });
+			setAttributes( { slides: newSlides } );
 		},
-		[slides, setAttributes]
+		[ slides, setAttributes ]
 	);
 
 	/**
 	 * Adds a new slide.
 	 */
-	const addSlide = useCallback(() => {
+	const addSlide = useCallback( () => {
 		const newSlides = [
 			...slides,
 			{
@@ -226,17 +108,21 @@ export default function Edit({ attributes, setAttributes }) {
 				backgroundImageId: 0,
 				backgroundImageAlt: '',
 				heading: '',
+				eyebrow: '',
+				headingTag: '',
 				content: '',
 				tagline: '',
 				buttonPrimaryText: 'Start Your Order',
 				buttonPrimaryUrl: '#',
+				primarybutton,
+				secondarybutton,
 				buttonSecondaryText: 'Who We Are',
 				buttonSecondaryUrl: '#',
 			},
 		];
-		setAttributes({ slides: newSlides });
-		setCurrentSlide(newSlides.length - 1);
-	}, [slides, setAttributes]);
+		setAttributes( { slides: newSlides } );
+		setCurrentSlide( newSlides.length - 1 );
+	}, [ slides, setAttributes ] );
 
 	/**
 	 * Removes a slide.
@@ -244,17 +130,37 @@ export default function Edit({ attributes, setAttributes }) {
 	 * @param {number} index Slide index to remove.
 	 */
 	const removeSlide = useCallback(
-		(index) => {
-			if (slides.length <= 1) {
+		( index ) => {
+			if ( slides.length <= 1 ) {
 				return;
 			}
-			const newSlides = slides.filter((_, i) => i !== index);
-			setAttributes({ slides: newSlides });
-			if (currentSlide >= newSlides.length) {
-				setCurrentSlide(newSlides.length - 1);
+			const newSlides = slides.filter( ( _, i ) => i !== index );
+			setAttributes( { slides: newSlides } );
+			if ( currentSlide >= newSlides.length ) {
+				setCurrentSlide( newSlides.length - 1 );
 			}
 		},
-		[slides, currentSlide, setAttributes]
+		[ slides, currentSlide, setAttributes ]
+	);
+
+	const moveSlide = useCallback(
+		( index, direction ) => {
+			const newIndex = index + direction;
+
+			if ( newIndex < 0 || newIndex >= slides.length ) {
+				return;
+			}
+
+			const newSlides = [ ...slides ];
+			const temp = newSlides[ index ];
+
+			newSlides[ index ] = newSlides[ newIndex ];
+			newSlides[ newIndex ] = temp;
+
+			setAttributes( { slides: newSlides } );
+			setCurrentSlide( newIndex );
+		},
+		[ slides, setAttributes ]
 	);
 
 	/**
@@ -264,330 +170,266 @@ export default function Edit({ attributes, setAttributes }) {
 	 * @param {Object} media Selected media object.
 	 */
 	const onSelectSlideImage = useCallback(
-		(index, media) => {
-			const newSlides = [...slides];
-			newSlides[index] = {
-				...newSlides[index],
+		( index, media ) => {
+			const newSlides = [ ...slides ];
+			newSlides[ index ] = {
+				...newSlides[ index ],
 				backgroundImage: media.url,
 				backgroundImageId: media.id,
 				backgroundImageAlt: media.alt || '',
 			};
-			setAttributes({ slides: newSlides });
+			setAttributes( { slides: newSlides } );
 		},
-		[slides, setAttributes]
+		[ slides, setAttributes ]
 	);
 
-	const blockProps = useBlockProps({
+	const blockProps = useBlockProps( {
 		className: 'hero-section',
-	});
+	} );
 
-	const slide = slides[currentSlide] || slides[0];
+	const slide = slides[ currentSlide ] || slides[ 0 ];
 
 	return (
 		<>
-			<div {...blockProps}>
+			<div { ...blockProps }>
 				<InspectorControls>
 					<PanelBody
-						title={__('Slider Settings', 'ambrygen-web')}
-						initialOpen={false}
+						title={ t( 'Slider Settings' ) }
+						initialOpen={ false }
 					>
 						<ToggleControl
-							label={__(
-								'Show Navigation Arrows',
-								'ambrygen-web'
-							)}
-							checked={showSliderNav}
-							onChange={(value) =>
-								setAttributes({ showSliderNav: value })
+							label={ t( 'Show Navigation Arrows' ) }
+							checked={ showSliderNav }
+							onChange={ ( value ) =>
+								setAttributes( { showSliderNav: value } )
 							}
 						/>
 						<ToggleControl
-							label={__(
-								'Show Pagination Dots',
-								'ambrygen-web'
-							)}
-							checked={showSliderDots}
-							onChange={(value) =>
-								setAttributes({ showSliderDots: value })
+							label={ t( 'Show Pagination Dots' ) }
+							checked={ showSliderDots }
+							onChange={ ( value ) =>
+								setAttributes( { showSliderDots: value } )
 							}
 						/>
 						<ToggleControl
-							label={__('Autoplay', 'ambrygen-web')}
-							checked={autoplay}
-							onChange={(value) =>
-								setAttributes({ autoplay: value })
+							label={ t( 'Autoplay' ) }
+							checked={ autoplay }
+							onChange={ ( value ) =>
+								setAttributes( { autoplay: value } )
 							}
 						/>
-						{autoplay && (
+
+						{ autoplay && (
 							<RangeControl
-								label={__(
-									'Autoplay Delay (ms)',
-									'ambrygen-web'
-								)}
-								value={autoplayDelay}
-								onChange={(value) =>
-									setAttributes({ autoplayDelay: value })
+								label={ t(
+									'Autoplay Delay (Milliseconds)',
+								) }
+								value={ autoplayDelay }
+								onChange={ ( value ) =>
+									setAttributes( { autoplayDelay: value } )
 								}
-								min={1000}
-								max={10000}
-								step={500}
+								min={ 1000 }
+								max={ 10000 }
+								step={ 500 }
 							/>
-						)}
+						) }
 					</PanelBody>
 
-					{slides.map((slideItem, index) => (
+					{ slides.map( ( slideItem, index ) => (
 						<PanelBody
-							key={index}
-							title={__('Slide Settings', 'ambrygen-web')}
-							initialOpen={index === currentSlide}
-							onToggle={() => setCurrentSlide(index)}
+							key={ index }
+							title={ t( `Slide ${ index + 1 }` ) }
+							initialOpen={ index === currentSlide }
+							onToggle={ () => setCurrentSlide( index ) }
 						>
-							<MediaUploadCheck>
-								<MediaUpload
-									onSelect={(media) =>
-										onSelectSlideImage(index, media)
-									}
-									allowedTypes={['image']}
-									value={slideItem.backgroundImageId}
-									render={({ open }) => (
-										<BaseControl
-											label={__(
-												'Background Image',
-												'ambrygen-web'
-											)}
-											id={`hero-bg-image-${index}`}
-										>
-											{slideItem.backgroundImage ? (
-												<>
-													<div
-														className="media-preview-wrapper"
-														style={{
-															marginBottom:
-																'10px',
-														}}
-													>
-														<img
-															src={
-																slideItem.backgroundImage
-															}
-															alt={
-																slideItem.backgroundImageAlt ||
-																__(
-																	'Slide background',
-																	'ambrygen-web'
-																)
-															}
-															style={{
-																maxWidth:
-																	'100%',
-																height: 'auto',
-																borderRadius:
-																	'8px',
-															}}
-														/>
-													</div>
-													<div
-														style={{
-															display: 'flex',
-															gap: '8px',
-														}}
-													>
-														<Button
-															onClick={open}
-															variant="secondary"
-															isSmall
-														>
-															{__(
-																'Replace',
-																'ambrygen-web'
-															)}
-														</Button>
-														<Button
-															onClick={(e) => {
-																e.preventDefault();
-																e.stopPropagation();
-																updateSlide(
-																	index,
-																	{
-																		backgroundImage:
-																			'',
-																		backgroundImageId: 0,
-																		backgroundImageAlt:
-																			'',
-																	}
-																);
-															}}
-															variant="link"
-															isDestructive
-															isSmall
-														>
-															{__(
-																'Remove',
-																'ambrygen-web'
-															)}
-														</Button>
-													</div>
-												</>
-											) : (
-												<Button
-													onClick={open}
-													variant="secondary"
-												>
-													{__(
-														'Upload Image',
-														'ambrygen-web'
-													)}
-												</Button>
-											)}
-										</BaseControl>
-									)}
-								/>
-							</MediaUploadCheck>
-							<MediaUploadPanel
-								title={__(
-									'Top Left Overlay',
-									'ambrygen-web'
-								)}
-								id={`hero-overlay-1-${index}`}
-								imageUrl={slideItem.overlayImage1}
-								onSelect={(media) =>
-									updateSlide(index, {
-										overlayImage1: media.url,
-										overlayImage1Id: media.id,
-										overlayImage1Alt: media.alt || '',
-									})
-								}
-								onRemove={() => {
-									updateSlide(index, {
-										overlayImage1: '',
-										overlayImage1Id: 0,
-										overlayImage1Alt: '',
-									});
-								}}
-							/>
-
-							<MediaUploadPanel
-								title={__(
-									'Bottom Right Overlay',
-									'ambrygen-web'
-								)}
-								id={`hero-overlay-2-${index}`}
-								imageUrl={slideItem.overlayImage2}
-								onSelect={(media) =>
-									updateSlide(index, {
-										overlayImage2: media.url,
-										overlayImage2Id: media.id,
-										overlayImage2Alt: media.alt || '',
-									})
-								}
-								onRemove={() => {
-									updateSlide(index, {
-										overlayImage2: '',
-										overlayImage2Id: 0,
-										overlayImage2Alt: '',
-									});
-								}}
-							/>
-
-							<BaseControl
-								label={__('Primary Button', 'ambrygen-web')}
-								id={`hero-primary-button-${index}`}
-							>
-								<TextControl
-									value={slideItem.buttonPrimaryText}
-									onChange={(value) =>
-										updateSlide(
-											index,
-											'buttonPrimaryText',
-											value
-										)
-									}
-									placeholder={__(
-										'Button Text',
-										'ambrygen-web'
-									)}
-								/>
-								<URLInput
-									value={slideItem.buttonPrimaryUrl}
-									onChange={(value) =>
-										updateSlide(
-											index,
-											'buttonPrimaryUrl',
-											value
-										)
-									}
-								/>
-							</BaseControl>
-
-							<BaseControl
-								label={__(
-									'Secondary Button',
-									'ambrygen-web'
-								)}
-								id={`hero-secondary-button-${index}`}
-							>
-								<TextControl
-									value={slideItem.buttonSecondaryText}
-									onChange={(value) =>
-										updateSlide(
-											index,
-											'buttonSecondaryText',
-											value
-										)
-									}
-									placeholder={__(
-										'Button Text',
-										'ambrygen-web'
-									)}
-								/>
-								<URLInput
-									value={slideItem.buttonSecondaryUrl}
-									onChange={(value) =>
-										updateSlide(
-											index,
-											'buttonSecondaryUrl',
-											value
-										)
-									}
-								/>
-							</BaseControl>
-
-							{slides.length > 1 && (
-								<Button
-									onClick={(e) => {
-										e.preventDefault();
-										e.stopPropagation();
-										removeSlide(index);
-									}}
-									variant="link"
-									isDestructive
-									style={{ marginTop: '10px' }}
+							{ slides.length > 1 && (
+								<div
+									style={ {
+										display: 'flex',
+										justifyContent: 'flex-end',
+										gap: '8px',
+										marginTop: '10px',
+									} }
 								>
-									{__('Remove Slide', 'ambrygen-web')}
-								</Button>
-							)}
+									{ /* Move Slide Up */ }
+									<Button
+										isSmall
+										disabled={ index === 0 }
+										onClick={ ( e ) => {
+											e.preventDefault();
+											e.stopPropagation();
+											moveSlide( index, -1 ); // Move up
+										} }
+									>
+										{ t( 'Move Up' ) }
+									</Button>
+
+									{ /* Move Slide Down */ }
+									<Button
+										isSmall
+										disabled={ index === slides.length - 1 }
+										onClick={ ( e ) => {
+											e.preventDefault();
+											e.stopPropagation();
+											moveSlide( index, 1 ); // Move down
+										} }
+									>
+										{ t( 'Move Down' ) }
+									</Button>
+								</div>
+							) }
+
+							<ImageUploader
+								label={ t( 'Background Image' ) }
+								url={ slideItem.backgroundImage }
+								onSelect={ ( media ) =>
+									updateSlide( index, {
+										backgroundImage: media.url,
+										backgroundImageId: media.id,
+										backgroundImageAlt: media.alt || '',
+									} )
+								}
+								onRemove={ () =>
+									updateSlide( index, {
+										backgroundImage: '',
+										backgroundImageId: 0,
+										backgroundImageAlt: '',
+									} )
+								}
+							/>
+
+							<PanelBody
+								title={ t( 'Top Left Overlay' ) }
+								initialOpen={ false }
+							>
+								<ImageUploader
+									label={ t( '' ) }
+									url={ slideItem.overlayImage1 }
+									onSelect={ ( media ) =>
+										updateSlide( index, {
+											overlayImage1: media.url,
+											overlayImage1Id: media.id,
+											overlayImage1Alt: media.alt || '',
+										} )
+									}
+									onRemove={ () =>
+										updateSlide( index, {
+											overlayImage1: '',
+											overlayImage1Id: 0,
+											overlayImage1Alt: '',
+										} )
+									}
+								/>
+							</PanelBody>
+
+							<PanelBody
+								title={ t( 'Bottom Right Overlay' ) }
+								initialOpen={ false }
+							>
+								<ImageUploader
+									label={ t( '' ) }
+									url={ slideItem.overlayImage2 }
+									onSelect={ ( media ) =>
+										updateSlide( index, {
+											overlayImage2: media.url,
+											overlayImage2Id: media.id,
+											overlayImage2Alt: media.alt || '',
+										} )
+									}
+									onRemove={ () =>
+										updateSlide( index, {
+											overlayImage2: '',
+											overlayImage2Id: 0,
+											overlayImage2Alt: '',
+										} )
+									}
+								/>
+							</PanelBody>
+
+							<PanelBody
+								label={ t( 'Primary Button' ) }
+								id={ `hero-primary-button-${ index }` }
+							>
+								<TagSelector
+									label={ t( 'Heading Tag' ) }
+									value={ slideItem.headingTag || 'h2' }
+									onChange={ ( value ) =>
+										updateSlide(
+											index,
+											'headingTag',
+											value
+										)
+									}
+								/>
+								
+								<CtaButtonField
+									label={ t( 'Primary Button' ) }
+									value={ slideItem.primarybutton || {} }
+									onChange={ ( value ) =>
+										updateSlide(
+											index,
+											'primarybutton',
+											value
+										)
+									}
+								/>
+							</PanelBody>
+
+							<PanelBody
+								label={ t( 'Secondary Button' ) }
+								id={ `hero-secondary-button-${ index }` }
+							>
+							
+								<CtaButtonField
+									label={ t( 'Secondary Button' ) }
+									value={ slideItem.secondarybutton || {} }
+									onChange={ ( value ) =>
+										updateSlide(
+											index,
+											'secondarybutton',
+											value
+										)
+									}
+								/>
+							</PanelBody>
+
+							{ slides.length > 1 && (
+								<>
+									<Button
+										onClick={ ( e ) => {
+											e.preventDefault();
+											e.stopPropagation();
+											removeSlide( index );
+										} }
+										variant="link"
+										isDestructive
+										style={ { marginTop: '10px' } }
+									>
+										{ t( 'Remove Slide' ) }
+									</Button>
+								</>
+							) }
 						</PanelBody>
-					))}
+					) ) }
 
 					<PanelBody>
 						<Button
-							onClick={addSlide}
+							onClick={ addSlide }
 							variant="secondary"
 							isLarge
 						>
-							{__('+ Add Slide', 'ambrygen-web')}
+							{ t( '+ Add Slide' ) }
 						</Button>
 					</PanelBody>
 				</InspectorControls>
 				<div className="container-1340 ">
-
 					<div className="hero-section__slider swiper">
 						<div className="swiper-wrapper">
 							<div className="hero-section__slide swiper-slide active">
-								{slides.length > 1 && showSliderNav && (
+								{ slides.length > 1 && showSliderNav && (
 									<div className="hero-section__slide-nav">
 										<Button
-											onClick={() =>
+											onClick={ () =>
 												setCurrentSlide(
 													currentSlide > 0
 														? currentSlide - 1
@@ -599,11 +441,11 @@ export default function Edit({ attributes, setAttributes }) {
 											&larr;
 										</Button>
 										<span>
-											{currentSlide + 1} /{' '}
-											{slides.length}
+											{ currentSlide + 1 } /{ ' ' }
+											{ slides.length }
 										</span>
 										<Button
-											onClick={() =>
+											onClick={ () =>
 												setCurrentSlide(
 													currentSlide <
 														slides.length - 1
@@ -616,20 +458,16 @@ export default function Edit({ attributes, setAttributes }) {
 											&rarr;
 										</Button>
 									</div>
-								)}
+								) }
 								<div className="hero-section__background">
-									{slide.backgroundImage ? (
+									{ slide.backgroundImage ? (
 										<>
 											<img
-												src={
-													slide.backgroundImage
-												}
-												alt={
-													slide.backgroundImageAlt
-												}
+												src={ slide.backgroundImage }
+												alt={ slide.backgroundImageAlt }
 												className="hero-section__image"
 											/>
-											{slide.overlayImage1 && (
+											{ slide.overlayImage1 && (
 												<div className="hero-section__overlay hero-section__overlay--1 hero-section__overlay--top">
 													<img
 														src={
@@ -641,8 +479,8 @@ export default function Edit({ attributes, setAttributes }) {
 														}
 													/>
 												</div>
-											)}
-											{slide.overlayImage2 && (
+											) }
+											{ slide.overlayImage2 && (
 												<div className="hero-section__overlay hero-section__overlay--bottom">
 													<img
 														src={
@@ -654,114 +492,165 @@ export default function Edit({ attributes, setAttributes }) {
 														}
 													/>
 												</div>
-											)}
+											) }
 										</>
 									) : (
 										<div className="hero-section__placeholder">
-											{__(
-												'Select a background image',
-												'ambrygen-web'
-											)}
+											<img
+												src={
+													window?.ambrygenAssets
+														?.defaultImageUrl
+												}
+												alt={ t(
+													'Default background image',
+												) }
+												className="hero-section__image"
+											/>
 										</div>
-									)}
+									) }
 								</div>
-								<div className='wrapper'>
+								<div className="wrapper">
 									<div className="hero-section__content">
-										<div className="hero-section__heading heading-2">
+										<div className="hero__eyebrow hero-kicker">
 											<RichText
 												tagName="div"
-												value={slide.heading}
-												onChange={(value) =>
+												value={ slide.eyebrow }
+												onChange={ ( value ) =>
 													updateSlide(
 														currentSlide,
-														'heading',
+														'eyebrow',
 														value
 													)
 												}
-												placeholder={__(
-													'Add Heading…',
-													'ambrygen-web'
-												)}
-												aria-label={__(
+												placeholder={ t(
+													'Add Eyebrow Text'
+												) }
+												aria-label={ t(
 													'Slide Heading',
-													'ambrygen-web'
-												)}
-												allowedFormats={[
+													) }
+												allowedFormats={ [
 													'core/bold',
 													'core/italic',
-												]}
+												] }
 											/>
 										</div>
+										<div
+											className="is-style-gl-s24"
+											aria-hidden="true"
+										></div>
 
+										<RichText
+											tagName={ slide.headingTag || 'h1' }
+											className="hero-section__heading heading-2 mb-0"
+											value={ slide.heading }
+											onChange={ ( value ) =>
+												updateSlide(
+													currentSlide,
+													'heading',
+													value
+												)
+											}
+											placeholder={ t(
+												'Add Heading…',
+											) }
+											allowedFormats={ [
+												'core/bold',
+												'core/italic',
+												'core/mark',
+												'core/text-color',
+											] }
+										/>
+
+										<div
+											className="is-style-gl-s24"
+											aria-hidden="true"
+										></div>
 										<div className="hero-section__description">
 											<RichText
 												tagName="p"
-												value={slide.content}
-												onChange={(value) =>
+												value={ slide.content }
+												onChange={ ( value ) =>
 													updateSlide(
 														currentSlide,
 														'content',
 														value
 													)
 												}
-												placeholder={__(
+												placeholder={ t(
 													'Add Description',
-													'ambrygen-web'
-												)}
-												aria-label={__(
+											
+												) }
+												aria-label={ t(
 													'Slide Description',
-													'ambrygen-web'
-												)}
-												allowedFormats={[
+												
+												) }
+												allowedFormats={ [
 													'core/bold',
 													'core/italic',
 													'core/link',
-												]}
+												] }
 											/>
 										</div>
 
 										<div className="hero-section__tagline">
+											<div
+												className="is-style-gl-s24"
+												aria-hidden="true"
+											></div>
 											<RichText
 												tagName="p"
-												value={slide.tagline}
-												onChange={(value) =>
+												value={ slide.tagline }
+												onChange={ ( value ) =>
 													updateSlide(
 														currentSlide,
 														'tagline',
 														value
 													)
 												}
-												placeholder={__(
+												placeholder={ t(
 													'Add Tagline…',
-													'ambrygen-web'
-												)}
-												aria-label={__(
+											
+												) }
+												aria-label={ t(
 													'Slide Tagline',
-													'ambrygen-web'
-												)}
+												
+												) }
 											/>
 										</div>
-
+										<div
+											className="is-style-gl-s24"
+											aria-hidden="true"
+										></div>
 										<div className="hero-section__actions">
-											{slide.buttonSecondaryText && (
-												<div className="hero-section__button site-btn is-style-site-tertiary-btn is-style-site-trailing-icon">
+											{ slide.primarybutton?.text && (
+												<div
+													className={ `hero-section__button site-btn ${
+														slide.primarybutton
+															.variant || ''
+													}` }
+												>
+													{ slide.primarybutton.text }
+												</div>
+											) }
+											{ slide.secondarybutton?.text && (
+												<div
+													className={ `hero-section__button site-btn ${
+														slide.secondarybutton
+															.variant || ''
+													}` }
+												>
 													{
-														slide.buttonSecondaryText
+														slide.secondarybutton
+															.text
 													}
 												</div>
-											)}
-											{slide.buttonPrimaryText && (
-												<div className="hero-section__button site-btn is-style-site-trailing-icon">
-													{slide.buttonPrimaryText}
-												</div>
-											)}
+											) }
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-
 				</div>
 			</div>
 		</>

@@ -14,15 +14,11 @@
       "type": "string",
       "default": ""
     },
-    "imageAlt": {
-      "type": "string",
+    "imageID": {
+      "type": "number",
       "default": ""
     },
-    "imageSrcSet": {
-      "type": "string",
-      "default": ""
-    },
-    "imageSizes": {
+    "eyebrow": {
       "type": "string",
       "default": ""
     },
@@ -39,11 +35,38 @@
       "default": ""
     },
     "link": {
-      "type": "string",
-      "default": ""
+      "type": "object",
+      "default": {
+        "url": "",
+        "text": "",
+        "target": "",
+        "rel": "",
+        "variant": ""
+      }
     }
   },
+  "usesContext": [
+    "ambrygen/galleryVariation"
+  ],
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
-  "style": "file:./style-index.css"
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "imageUrl": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "imageID": 1,
+      "eyebrow": "Ambry Genetics",
+      "title": "Sample Title",
+      "headingTag": "h5",
+      "description": "This is a sample preview content for this block in the inserter.",
+      "link": {
+        "url": "Sample url",
+        "text": "Sample text",
+        "target": "Sample target",
+        "rel": "Sample rel",
+        "variant": "Sample variant"
+      }
+    }
+  }
 }

@@ -3,72 +3,56 @@ import {
 	useBlockProps,
 	RichText,
 	InspectorControls,
-	MediaUpload,
-	MediaUploadCheck,
-	InnerBlocks,
+	LinkControl,
 } from '@wordpress/block-editor';
 import { Fragment } from '@wordpress/element';
 import {
 	PanelBody,
 	PanelRow,
-	Button,
 	Placeholder,
 	SelectControl,
 	ToggleControl,
 	RadioControl,
+	TextControl,
 } from '@wordpress/components';
-
-/**
- * Default InnerBlocks template
- */
-const INNER_BLOCKS_TEMPLATE = [
-	[
-		'core/paragraph',
-		{
-			content: __(
-				'Add your content here. This text can be changed.',
-				'ambrygen-web'
-			),
-		},
-	],
-];
+import { ImageUploader, TagSelector } from '../_shared/components';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const {
 		heading,
 		headingTag,
+		content,
 		imageUrl,
 		imageAlt,
 		imagePosition,
 		layoutStyle,
-		imageSize,
 		contentAlignment,
+		buttons,
 	} = attributes;
 
 	const blockProps = useBlockProps( {
-		className: `flexible-content ${ layoutStyle } ${ imagePosition } ${ imageSize }`,
+		className: `iot-block ${ layoutStyle } ${ imagePosition }`,
 		style: {
 			'--content-alignment': contentAlignment,
 		},
 	} );
 
+	const updateButton = ( index, field, value ) => {
+		const newButtons = [ ...buttons ];
+		newButtons[ index ] = {
+			...newButtons[ index ],
+			[ field ]: value,
+		};
+		setAttributes( { buttons: newButtons } );
+	};
+
 	return (
 		<Fragment>
 			<InspectorControls>
 				<PanelBody title={ __( 'Content Settings', 'ambrygen-web' ) }>
-					<SelectControl
+					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag }
-						options={ [
-							{ label: 'H1', value: 'h1' },
-							{ label: 'H2', value: 'h2' },
-							{ label: 'H3', value: 'h3' },
-							{ label: 'H4', value: 'h4' },
-							{ label: 'H5', value: 'h5' },
-							{ label: 'H6', value: 'h6' },
-							{ label: 'DIV', value: 'div' },
-							{ label: 'SPAN', value: 'span' },
-						] }
 						onChange={ ( value ) =>
 							setAttributes( { headingTag: value } )
 						}
@@ -102,26 +86,14 @@ export default function Edit( { attributes, setAttributes } ) {
 						}
 					/>
 
-					<SelectControl
-						label={ __( 'Image Size', 'ambrygen-web' ) }
-						value={ imageSize }
-						options={ [
-							{ label: 'Small', value: 'small' },
-							{ label: 'Medium', value: 'medium' },
-							{ label: 'Large', value: 'large' },
-							{ label: 'Full Width', value: 'full' },
-						] }
-						onChange={ ( value ) =>
-							setAttributes( { imageSize: value } )
-						}
-					/>
-
 					<ToggleControl
 						label={ __( 'Show Image on Right', 'ambrygen-web' ) }
-						checked={ imagePosition === 'right' }
+						checked={ imagePosition === 'iot-block__rtl' }
 						onChange={ ( value ) =>
 							setAttributes( {
-								imagePosition: value ? 'right' : 'left',
+								imagePosition: value
+									? 'iot-block__rtl'
+									: 'right',
 							} )
 						}
 					/>
@@ -131,106 +103,77 @@ export default function Edit( { attributes, setAttributes } ) {
 					title={ __( 'Image', 'ambrygen-web' ) }
 					initialOpen={ false }
 				>
-					<PanelRow>
-						{ ! imageUrl ? (
-							<MediaUploadCheck>
-								<MediaUpload
-									onSelect={ ( media ) =>
-										setAttributes( {
-											imageUrl: media.url,
-											imageId: media.id,
-											imageAlt: media.alt || '',
-										} )
+					<ImageUploader
+						url={ imageUrl }
+						onSelect={ ( media ) =>
+							setAttributes( {
+								imageUrl: media.url,
+								imageId: media.id,
+								imageAlt: media.alt || '',
+							} )
+						}
+						onRemove={ () =>
+							setAttributes( {
+								imageUrl: '',
+								imageId: 0,
+								imageAlt: '',
+							} )
+						}
+						label={ __( 'Block Image', 'ambrygen-web' ) }
+					/>
+				</PanelBody>
+				<PanelBody
+					title={ __( 'Buttons', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
+					{ buttons.map( ( button, index ) => (
+						<PanelRow key={ index }>
+							<div style={ { width: '100%' } }>
+								<strong>
+									{ __( 'Button', 'ambrygen-web' ) }{ ' ' }
+									{ index + 1 }
+								</strong>
+
+								<TextControl
+									label={ __( 'Text', 'ambrygen-web' ) }
+									value={ button.text }
+									onChange={ ( value ) =>
+										updateButton( index, 'text', value )
 									}
-									allowedTypes={ [ 'image' ] }
-									render={ ( { open } ) => (
-										<Button
-											onClick={ open }
-											variant="primary"
-										>
-											{ __(
-												'Upload Image',
-												'ambrygen-web'
-											) }
-										</Button>
-									) }
 								/>
-							</MediaUploadCheck>
-						) : (
-							<div className="image-preview">
-								<img
-									src={ imageUrl }
-									alt={ imageAlt || heading || undefined }
-									style={ {
-										maxWidth: '100px',
-										height: 'auto',
-										marginBottom: '10px',
-									} }
-								/>
-								<div className="image-info">
-									<p className="image-size">
-										{ __(
-											'Image uploaded',
-											'ambrygen-web'
-										) }
-									</p>
-									{ imageAlt && (
-										<p className="image-alt">
-											{ __(
-												'Alt text:',
-												'ambrygen-web'
-											) }{ ' ' }
-											{ imageAlt }
-										</p>
-									) }
-								</div>
-								<MediaUploadCheck>
-									<MediaUpload
-										onSelect={ ( media ) =>
-											setAttributes( {
-												imageUrl: media.url,
-												imageId: media.id,
-												imageAlt: media.alt || '',
-											} )
-										}
-										allowedTypes={ [ 'image' ] }
-										render={ ( { open } ) => (
-											<Button
-												onClick={ open }
-												variant="secondary"
-											>
-												{ __(
-													'Replace Image',
-													'ambrygen-web'
-												) }
-											</Button>
-										) }
-									/>
-								</MediaUploadCheck>
-								<Button
-									onClick={ () =>
-										setAttributes( {
-											imageUrl: '',
-											imageId: 0,
-											imageAlt: '',
-										} )
+
+								<LinkControl
+									value={ { url: button.url } }
+									onChange={ ( value ) =>
+										updateButton( index, 'url', value.url )
 									}
-									variant="link"
-									isDestructive
-								>
-									{ __( 'Remove Image', 'ambrygen-web' ) }
-								</Button>
+								/>
+
+								<SelectControl
+									label={ __( 'Variant', 'ambrygen-web' ) }
+									value={ button.variant }
+									options={ [
+										{
+											label: 'Light',
+											value: 'site-btn is-style-site-tertiary-btn',
+										},
+										{ label: 'Dark', value: 'site-btn' },
+									] }
+									onChange={ ( value ) =>
+										updateButton( index, 'variant', value )
+									}
+								/>
 							</div>
-						) }
-					</PanelRow>
+						</PanelRow>
+					) ) }
 				</PanelBody>
 			</InspectorControls>
 
 			<div { ...blockProps }>
-				<div className="content-wrapper">
+				<div className="iot-block__content">
 					{ /* Left image */ }
-					{ imagePosition === 'left' && imageUrl && (
-						<div className="image-wrapper">
+					{ imagePosition === 'iot-block__rtl' && imageUrl && (
+						<div className="iot-block__image iot-block__rtl">
 							<img
 								src={ imageUrl }
 								alt={ imageAlt || heading || undefined }
@@ -241,7 +184,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 					{ /* Text content */ }
 					<div
-						className="text-wrapper"
+						className="iot-block__text"
 						style={ { textAlign: contentAlignment } }
 					>
 						<RichText
@@ -251,43 +194,74 @@ export default function Edit( { attributes, setAttributes } ) {
 							onChange={ ( value ) =>
 								setAttributes( { heading: value } )
 							}
+							className="heading-2 block-title mb-0"
 						/>
-
-						<InnerBlocks
-							allowedBlocks={ [
-								'core/paragraph',
-								'core/heading',
-								'core/list',
-								'core/image',
-							] }
-							template={ INNER_BLOCKS_TEMPLATE }
-							templateLock={ false }
-						/>
-					</div>
-
-					{ /* Right image */ }
-					{ imagePosition === 'right' && imageUrl && (
-						<div className="image-wrapper">
-							<img
-								src={ imageUrl }
-								alt={ imageAlt || heading || undefined }
-								style={ { maxWidth: '100%', height: 'auto' } }
-							/>
-						</div>
-					) }
-
-					{ /* Image placeholder */ }
-					{ ! imageUrl && (
-						<Placeholder
-							icon="format-image"
-							label={ __( 'No image selected', 'ambrygen-web' ) }
-							instructions={ __(
-								'Upload an image from the sidebar settings.',
+						<div
+							className="is-style-gl-s20"
+							aria-hidden="true"
+						></div>
+						<RichText
+							tagName="div"
+							className="body1 iot-block__description"
+							value={ content }
+							onChange={ ( value ) =>
+								setAttributes( { content: value } )
+							}
+							placeholder={ __(
+								'Add your content here…',
 								'ambrygen-web'
 							) }
 						/>
+					</div>
+					{ buttons?.length > 0 && (
+						<>
+							<div
+								className="is-style-gl-s24"
+								aria-hidden="true"
+							></div>
+
+							<div className="iot-block__button">
+								{ buttons.map(
+									( button, index ) =>
+										button.text &&
+										button.url && (
+											<a
+												key={ index }
+												href="#"
+												className={ ` is-style-site-trailing-icon site-btn ${ button.variant }` }
+											>
+												{ button.text }
+											</a>
+										)
+								) }
+							</div>
+						</>
 					) }
 				</div>
+
+				{ /* Right image */ }
+				{ imagePosition === 'right' && imageUrl && (
+					<div className="iot-block__image">
+						<img
+							src={ imageUrl }
+							alt={ imageAlt || heading || undefined }
+							style={ { maxWidth: '100%', height: 'auto' } }
+							className="iot-block__img"
+						/>
+					</div>
+				) }
+
+				{ /* Image placeholder */ }
+				{ ! imageUrl && (
+					<Placeholder
+						icon="format-image"
+						label={ __( 'No image selected', 'ambrygen-web' ) }
+						instructions={ __(
+							'Upload an image from the sidebar settings.',
+							'ambrygen-web'
+						) }
+					/>
+				) }
 			</div>
 		</Fragment>
 	);

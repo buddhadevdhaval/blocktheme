@@ -7,30 +7,17 @@ import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
 import { useInstanceId } from '@wordpress/compose';
 import {
+	ImageUploader,
+	CtaButtonField,
+	DEFAULT_IMAGES,
+} from '../_shared/components';
+
+import {
 	RichText,
-	MediaUpload,
-	MediaUploadCheck,
 	InspectorControls,
 	useBlockProps,
-	URLInput,
 } from '@wordpress/block-editor';
-import {
-	Button,
-	PanelBody,
-	PanelRow,
-	TextControl,
-	BaseControl,
-} from '@wordpress/components';
-
-/**
- * Default images
- */
-const DEFAULT_IMAGES = {
-	small: '/wp-content/themes/ambrygen/assets/images/default-small.jpg',
-	main: '/wp-content/themes/ambrygen/assets/images/default-main.jpg',
-};
-
-const DEFAULT_IMAGE_ALT = 'Genetic testing card';
+import { PanelBody, PanelRow, BaseControl } from '@wordpress/components';
 
 /**
  * Edit component for the Genetic Testing Card block.
@@ -41,16 +28,9 @@ const DEFAULT_IMAGE_ALT = 'Genetic testing card';
  * @return {JSX.Element} Block editor interface.
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const {
-		image,
-		imageId,
-		imageAlt,
-		title,
-		description,
-		linkText,
-		linkUrl,
-		type,
-	} = attributes;
+	const defaults = DEFAULT_IMAGES();
+
+	const { image, imageAlt, title, description, link, type } = attributes;
 
 	const instanceId = useInstanceId( Edit );
 
@@ -61,8 +41,8 @@ export default function Edit( { attributes, setAttributes } ) {
 	useEffect( () => {
 		if ( ! image ) {
 			setAttributes( {
-				image: DEFAULT_IMAGES[ type ] || DEFAULT_IMAGES.small,
-				imageAlt: DEFAULT_IMAGE_ALT,
+				image: defaults?.placeholder?.url,
+				imageAlt: defaults?.placeholder?.alt || '',
 			} );
 		}
 	}, [ image, type, setAttributes ] );
@@ -92,108 +72,28 @@ export default function Edit( { attributes, setAttributes } ) {
 			<InspectorControls>
 				<PanelBody title={ __( 'Card Settings', 'ambrygen-web' ) }>
 					<PanelRow>
-						<MediaUploadCheck>
-							<MediaUpload
-								onSelect={ onSelectImage }
-								allowedTypes={ [ 'image' ] }
-								value={ imageId }
-								render={ ( { open } ) => (
-									<BaseControl
-										id={ `card-image-${ instanceId }` }
-										label={ __(
-											'Card Image',
-											'ambrygen-web'
-										) }
-									>
-										{ image ? (
-											<>
-												<img
-													src={ image }
-													alt={ imageAlt }
-													srcSet={ `${ image } 1x, ${ image } 2x` }
-													sizes="(max-width: 600px) 100vw, 300px"
-													loading="lazy"
-													style={ {
-														maxWidth: '100%',
-														height: 'auto',
-														marginBottom: '10px',
-														borderRadius: '8px',
-													} }
-												/>
-
-												<div
-													style={ {
-														display: 'flex',
-														gap: '8px',
-													} }
-												>
-													<Button
-														onClick={ open }
-														variant="secondary"
-														isSmall
-													>
-														{ __(
-															'Replace',
-															'ambrygen-web'
-														) }
-													</Button>
-
-													<Button
-														onClick={
-															onRemoveImage
-														}
-														variant="link"
-														isDestructive
-														isSmall
-													>
-														{ __(
-															'Remove',
-															'ambrygen-web'
-														) }
-													</Button>
-												</div>
-											</>
-										) : (
-											<Button
-												onClick={ open }
-												variant="secondary"
-											>
-												{ __(
-													'Upload Image',
-													'ambrygen-web'
-												) }
-											</Button>
-										) }
-									</BaseControl>
-								) }
-							/>
-						</MediaUploadCheck>
+						<ImageUploader
+							url={ image }
+							onSelect={ onSelectImage }
+							onRemove={ onRemoveImage }
+							label={ __( 'Card Image', 'ambrygen-web' ) }
+						/>
 					</PanelRow>
 
 					<PanelRow>
 						<BaseControl
 							id={ `card-link-${ instanceId }` }
-							label={ __( 'Link', 'ambrygen-web' ) }
 							className="w-full"
 						>
-							<TextControl
-								value={ linkText }
-								onChange={ ( val ) =>
-									setAttributes( { linkText: val } )
+							<CtaButtonField
+								label={ __( 'Link setting' ) }
+								textLabel={ __( 'Link Text' ) }
+								defaultVariant="primary"
+								value={ link }
+								showVariant={ false }
+								onChange={ ( value ) =>
+									setAttributes( { link: value } )
 								}
-								label={ __( 'Link Text', 'ambrygen-web' ) }
-								placeholder={ __(
-									'Learn more',
-									'ambrygen-web'
-								) }
-							/>
-
-							<URLInput
-								value={ linkUrl }
-								onChange={ ( val ) =>
-									setAttributes( { linkUrl: val } )
-								}
-								label={ __( 'Link URL', 'ambrygen-web' ) }
 							/>
 						</BaseControl>
 					</PanelRow>
@@ -202,19 +102,11 @@ export default function Edit( { attributes, setAttributes } ) {
 
 			<div { ...blockProps }>
 				<div
-					className={ `genetic-cards__image-wrapper new genetic-cards__image-wrapper--${ type }` }
+					className={ `genetic-cards__image-wrapper genetic-cards__image-wrapper--${ type }` }
 				>
 					<img
-						src={
-							image ||
-							DEFAULT_IMAGES[ type ] ||
-							DEFAULT_IMAGES.small
-						}
-						alt={ imageAlt || DEFAULT_IMAGE_ALT }
-						srcSet={ `${ image || DEFAULT_IMAGES[ type ] } 1x, ${
-							image || DEFAULT_IMAGES[ type ]
-						} 2x` }
-						sizes="(max-width: 600px) 100vw, 300px"
+						src={ image || defaults?.placeholder?.url }
+						alt={ imageAlt || defaults?.placeholder?.alt || '' }
 						loading="lazy"
 					/>
 				</div>
@@ -225,8 +117,8 @@ export default function Edit( { attributes, setAttributes } ) {
 					}` }
 				>
 					<RichText
-						tagName="h3"
-						className="genetic-cards__title heading-6 mb-0"
+						tagName="div"
+						className="genetic-cards__title heading-6 mb-0 card-title"
 						value={ title }
 						onChange={ ( val ) => setAttributes( { title: val } ) }
 						placeholder={ __( 'Heading…', 'ambrygen-web' ) }
@@ -246,11 +138,13 @@ export default function Edit( { attributes, setAttributes } ) {
 
 					<div className="is-style-gl-s20" />
 
-					{ linkText && (
+					{ link?.text && (
 						<div className="genetic-cards__link">
-							<a href={ linkUrl || '#' }>
-								{ linkText }{ ' ' }
-								<span className="icon">&rarr;</span>
+							<a
+								className="site-btn is-style-site-text-btn has-icon"
+								href={ '#' }
+							>
+								{ link?.text || 'Learn more' }{ ' ' }
 							</a>
 						</div>
 					) }

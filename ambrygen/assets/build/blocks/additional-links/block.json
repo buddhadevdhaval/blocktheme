@@ -1,0 +1,42 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/additional-links",
+  "title": "Additional Links",
+  "category": "ambrygen",
+  "icon": "grid-view",
+  "description": "Grid layout for icon cards with contact information",
+  "supports": {
+    "html": false,
+    "layout": {
+      "allowSwitching": true,
+      "allowInheriting": true
+    }
+  },
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "Additional Links"
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2"
+    },
+    "description": {
+      "type": "string",
+      "default": "A company with 25+ years of history and regular industry \"firsts,\" Ambry leads new clinical product development pipelines and research collaborations. Contributing to the scientific community to empower individuals is the way we do things, driven with a desire to promote the health of people worldwide."
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "heading": "Additional Links",
+      "headingTag": "h2",
+      "description": "A company with 25+ years of history and regular industry \"firsts,\" Ambry leads new clinical product development pipelines and research collaborations. Contributing to the scientific community to empower individuals is the way we do things, driven with a desire to promote the health of people worldwide."
+    }
+  }
+}

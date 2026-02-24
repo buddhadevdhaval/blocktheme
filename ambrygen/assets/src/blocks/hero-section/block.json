@@ -1,82 +1,164 @@
 {
-	"$schema": "https://schemas.wp.org/trunk/block.json",
-	"apiVersion": 3,
-	"name": "ambrygen/hero-section",
-	"title": "Hero Section",
-	"category": "ambrygen",
-	"icon": "cover-image",
-	"description": "Hero section with slider, logo overlay, rounded background images, and dual call-to-action buttons.",
-	"supports": {
-		"html": false,
-		"align": [
-			"wide",
-			"full"
-		],
-		"spacing": {
-			"margin": true,
-			"padding": true,
-			"blockGap": true
-		},
-		"color": {
-			"background": true,
-			"text": true
-		},
-		"typography": {
-			"fontSize": true,
-			"lineHeight": true
-		}
-	},
-	"keywords": [
-		"hero",
-		"banner",
-		"slider",
-		"carousel"
-	],
-	"attributes": {
-		"slides": {
-			"type": "array",
-			"default": [
-				{
-					"backgroundImage": "",
-					"backgroundImageId": 0,
-					"backgroundImageAlt": "",
-					"overlayImage1": "",
-					"overlayImage1Id": 0,
-					"overlayImage1Alt": "",
-					"overlayImage2": "",
-					"overlayImage2Id": 0,
-					"overlayImage2Alt": "",
-					"heading": "Industry-leading genetic testing",
-					"content": "For over 25 years our high-quality, accessible genetic testing solutions have shaped important care decisions that patients and families make with their healthcare providers.",
-					"tagline": "This brings the Ambry mindset to life: a relentless pursuit to find the answers.",
-					"buttonPrimaryText": "Start Your Order",
-					"buttonPrimaryUrl": "#",
-					"buttonSecondaryText": "Who We Are",
-					"buttonSecondaryUrl": "#"
-				}
-			]
-		},
-		"showSliderNav": {
-			"type": "boolean",
-			"default": true
-		},
-		"showSliderDots": {
-			"type": "boolean",
-			"default": true
-		},
-		"autoplay": {
-			"type": "boolean",
-			"default": false
-		},
-		"autoplayDelay": {
-			"type": "number",
-			"default": 5000
-		}
-	},
-	"editorScript": "file:./index.js",
-	"editorStyle": "file:./index.css",
-	"style": "file:./style-index.css",
-	"render": "file:./render.php",
-	"viewScript": "file:./view.js",
-	"textdomain": "ambrygen-web"
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/hero-section",
+  "title": "Hero Section",
+  "category": "ambrygen",
+  "icon": "cover-image",
+  "description": "Hero section with slider, logo overlay, rounded background images, and dual call-to-action buttons.",
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "spacing": {
+      "margin": true,
+      "padding": true,
+      "blockGap": true
+    },
+    "color": {
+      "background": true,
+      "text": true
+    },
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true
+    }
+  },
+  "keywords": [
+    "hero",
+    "banner",
+    "slider",
+    "carousel"
+  ],
+  "attributes": {
+    "slides": {
+      "type": "array",
+      "default": [
+        {
+          "backgroundImage": "",
+          "backgroundImageId": 0,
+          "backgroundImageAlt": "",
+          "overlayImage1": "",
+          "overlayImage1Id": 0,
+          "eyebrow": "",
+          "overlayImage1Alt": "",
+          "headingTag": "h2",
+          "overlayImage2": "",
+          "overlayImage2Id": 0,
+          "overlayImage2Alt": "",
+          "heading": "Industry-leading genetic testing",
+          "content": "For over 25 years our high-quality, accessible genetic testing solutions have shaped important care decisions that patients and families make with their healthcare providers.",
+          "tagline": "This brings the Ambry mindset to life: a relentless pursuit to find the answers.",
+          "buttonPrimaryText": "Start Your Order",
+          "buttonPrimaryUrl": "#",
+          "buttonSecondaryText": "Who We Are",
+          "buttonSecondaryUrl": "#",
+          "primarybutton": {
+            "type": "object",
+            "default": {
+              "url": "",
+              "text": "string",
+              "target": "",
+              "rel": "",
+              "variant": ""
+            }
+          },
+          "secondarybutton": {
+            "type": "object",
+            "default": {
+              "url": "",
+              "text": "string",
+              "target": "",
+              "rel": "",
+              "variant": ""
+            }
+          }
+        }
+      ]
+    },
+    "showSliderNav": {
+      "type": "boolean",
+      "default": true
+    },
+    "showSliderDots": {
+      "type": "boolean",
+      "default": true
+    },
+    "autoplay": {
+      "type": "boolean",
+      "default": false
+    },
+    "autoplayDelay": {
+      "type": "number",
+      "default": 5000
+    },
+    "eyebrow": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "viewScript": "file:./view.js",
+  "textdomain": "ambrygen-web",
+  "example": {
+    "attributes": {
+      "slides": [
+        {
+          "backgroundImage": "",
+          "backgroundImageId": 0,
+          "backgroundImageAlt": "",
+          "overlayImage1": "",
+          "overlayImage1Id": 0,
+          "eyebrow": "",
+          "overlayImage1Alt": "",
+          "headingTag": "h2",
+          "overlayImage2": "",
+          "overlayImage2Id": 0,
+          "overlayImage2Alt": "",
+          "heading": "Industry-leading genetic testing",
+          "content": "For over 25 years our high-quality, accessible genetic testing solutions have shaped important care decisions that patients and families make with their healthcare providers.",
+          "tagline": "This brings the Ambry mindset to life: a relentless pursuit to find the answers.",
+          "buttonPrimaryText": "Start Your Order",
+          "buttonPrimaryUrl": "#",
+          "buttonSecondaryText": "Who We Are",
+          "buttonSecondaryUrl": "#",
+          "primarybutton": {
+            "type": "object",
+            "default": {
+              "url": "",
+              "text": "string",
+              "target": "",
+              "rel": "",
+              "variant": ""
+            }
+          },
+          "secondarybutton": {
+            "type": "object",
+            "default": {
+              "url": "",
+              "text": "string",
+              "target": "",
+              "rel": "",
+              "variant": ""
+            }
+          }
+        }
+      ],
+      "showSliderNav": true,
+      "showSliderDots": true,
+      "autoplay": false,
+      "autoplayDelay": 5000,
+      "eyebrow": "Ambry Genetics",
+      "headingTag": "h2"
+    }
+  }
 }

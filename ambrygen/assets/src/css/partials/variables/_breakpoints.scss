@@ -7,10 +7,11 @@ $media: (
 	sm: 576px,
 	md: 768px,
 	lg: 992px,
-	xl-large: 1024px,
-	xl: 1199px,
-	xxl: 1280px,
-	xxxl: 1350px
+	xl-large: 1025px,
+	xl: 1201px,
+	xxxl: 1351px,
+	xxxxl: 1440px,
+	ultra: 1680px
 );
 
 @function bp($value) {

@@ -31,7 +31,7 @@
   "attributes": {
     "sectionTitle": {
       "type": "string",
-      "default": "Why We’re <span>Different</span>"
+      "default": "Why We’re Different"
     },
     "headingTag": {
       "type": "string",
@@ -42,5 +42,11 @@
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
   "render": "file:./render.php",
-  "textdomain": "ambrygen-web"
+  "textdomain": "ambrygen-web",
+  "example": {
+    "attributes": {
+      "sectionTitle": "Why We’re Different",
+      "headingTag": "h2"
+    }
+  }
 }

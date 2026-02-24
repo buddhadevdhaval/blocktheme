@@ -39,13 +39,6 @@
     "headingPrimary": {
       "type": "string"
     },
-    "headingHighlight": {
-      "type": "string"
-    },
-    "highlightColor": {
-      "type": "string",
-      "default": "#6d28d9"
-    },
     "heading": {
       "type": "string",
       "default": "Transforming Healthcare with AI Innovation"
@@ -159,8 +152,10 @@
   ],
   "example": {
     "attributes": {
+      "headingLevel": "h2",
+      "headingPrimary": "Transforming Healthcare with Genetic Insight",
       "heading": "Transforming Healthcare with AI Innovation",
-      "content": "Leveraging artificial intelligence to revolutionize patient care.",
+      "content": "Leveraging artificial intelligence to revolutionize patient care, diagnostics, and medical research.",
       "counters": [
         {
           "number": "100",
@@ -173,8 +168,35 @@
           "prefix": "",
           "suffix": "+",
           "label": "Partners"
+        },
+        {
+          "number": "50",
+          "prefix": "",
+          "suffix": "k",
+          "label": "Variants to ClinVar"
+        },
+        {
+          "number": "100",
+          "prefix": "",
+          "suffix": "k+",
+          "label": "Tests Conducted"
         }
-      ]
+      ],
+      "imageTop": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "imageTopId": 0,
+      "imageTopAlt": "Ambry default preview image",
+      "imageBottom": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "imageBottomId": 0,
+      "imageBottomAlt": "Ambry default preview image",
+      "logoImage": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "logoImageId": 0,
+      "logoImageAlt": "Ambry default preview image",
+      "imageTopSrcSet": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png 1200w",
+      "imageTopSizes": "100vw",
+      "imageBottomSrcSet": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png 1200w",
+      "imageBottomSizes": "100vw",
+      "logoImageSrcSet": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png 1200w",
+      "logoImageSizes": "100vw"
     }
   },
   "editorScript": "file:./index.js",

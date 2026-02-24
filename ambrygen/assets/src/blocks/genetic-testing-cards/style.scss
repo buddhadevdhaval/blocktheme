@@ -9,10 +9,18 @@
 		grid-template-rows: repeat(2, auto);
 		margin: 0 auto;
 
-		@include bp.max(lg) {
-			grid-template-columns: 1fr;
+		@include bp.max(xl-large) {
+			grid-template-columns: 1fr 1fr 1fr;
 			grid-template-rows: auto;
 			gap: 18px;
+		}
+
+		@include bp.max(lg) {
+			grid-template-columns: 1fr 1fr;
+		}
+
+		@include bp.max(sm) {
+			grid-template-columns: 1fr;
 		}
 
 	}
@@ -31,19 +39,19 @@
 		text-decoration: none;
 		transition: transform 0.2s ease, box-shadow 0.2s ease;
 
-		@include bp.max(sm) {
+		@include bp.max(xl-large) {
 			flex-direction: column;
 			align-items: flex-start;
 		}
 
-		@include bp.max(lg) {
-			border-radius: 10px;
+		@include bp.max(xl-large) {
+			border-radius: 16px;
 		}
 
 		&--main {
 			width: 100%;
 
-			@include bp.min(lg) {
+			@include bp.min(xl-large) {
 				gap: 32px;
 				flex-direction: column;
 				grid-column: 2;
@@ -53,18 +61,20 @@
 		}
 	}
 
-	&__image-wrapper {
+	&__image-wrapper,
+	.block-editor__container {
 		border-radius: 10px;
 		flex-shrink: 0;
 		overflow: hidden;
 		position: relative;
 
-		@include bp.max(sm) {
+		@include bp.max(xl-large) {
 			width: 100%;
 			aspect-ratio: 1 / 1;
 		}
 
-		img {
+		img,
+		.block-editor__container img {
 			display: block;
 			height: 100%;
 			object-fit: cover;
@@ -76,13 +86,13 @@
 			height: 398px;
 			width: 100%;
 
-			@include bp.max(lg) {
+			@include bp.max(xl-large) {
 				aspect-ratio: 1 / 1;
 				height: inherit;
 				width: 244px;
 			}
 
-			@include bp.max(sm) {
+			@include bp.max(xl-large) {
 				width: 100%;
 				aspect-ratio: 1 / 1;
 				height: inherit;
@@ -97,12 +107,12 @@
 				width: 200px;
 			}
 
-			@include bp.max(lg) {
+			@include bp.max(xl-large) {
 				aspect-ratio: 1 / 1;
 				height: inherit;
 			}
 
-			@include bp.max(sm) {
+			@include bp.max(xl-large) {
 				width: 100%;
 				aspect-ratio: 1 / 1;
 				height: inherit;
@@ -114,10 +124,15 @@
 		display: flex;
 		flex-direction: column;
 		flex-grow: 1;
-		justify-content: center;
+		// justify-content: center;
+
+		@include bp.max(xl-large) {
+			// justify-content: inherit;
+		}
 	}
 
-	&__title {
+	&__title,
+	.card-title {
 		color: var(--theme_gray_900);
 		max-width: 100%;
 		overflow: hidden;

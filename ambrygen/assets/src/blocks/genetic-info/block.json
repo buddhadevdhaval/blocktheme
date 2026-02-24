@@ -1,43 +1,84 @@
 {
-    "$schema": "https://schemas.wp.org/trunk/block.json",
-    "apiVersion": 3,
-    "name": "ambrygen/genetic-info",
-    "title": "Genetic Information",
-    "category": "ambrygen",
-    "icon": "video-alt3",
-    "description": "Educational section about genetic testing with video embed and content.",
-    "supports": {
-        "html": false,
-        "align": ["wide", "full"],
-        "color": {
-            "background": true,
-            "text": true
-        }
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/genetic-info",
+  "title": "Genetic Information",
+  "category": "ambrygen",
+  "icon": "video-alt3",
+  "description": "Educational section about genetic testing with video embed and content.",
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "color": {
+      "background": true,
+      "text": true
+    }
+  },
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": ""
     },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "videoUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "videoType": {
+      "type": "string",
+      "default": "embed"
+    },
+    "playIcon": {
+      "type": "object",
+      "default": null
+    },
+    "pauseIcon": {
+      "type": "object",
+      "default": null
+    },
+    "posterImage": {
+      "type": "object",
+      "default": null
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2"
+    },
+    "iframeUrl": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "viewScript": "file:./view.js",
+  "example": {
     "attributes": {
-        "heading": {
-            "type": "string",
-            "default": "What is genetic testing?",
-            "source": "html",
-            "selector": ".genetic-heading"
-        },
-        "description": {
-                "type": "string",
-                "source": "html",
-                "selector": ".genetic-description"
-            },
-        "videoUrl": {
-            "type": "string",
-            "default": ""
-        },
-        "backgroundColor": {
-            "type": "string"
-        },
-        "style": {
-            "type": "object"
-        }
-    },
-    "editorScript": "file:./index.js",
-	"editorStyle": "file:./index.css",
-	"style": "file:./style-index.css"
+      "heading": "Transforming Healthcare with Genetic Insight",
+      "description": "This is a sample preview content for this block in the inserter.",
+      "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "videoType": "embed",
+      "playIcon": {
+        "id": 1,
+        "url": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+        "alt": "Icon"
+      },
+      "pauseIcon": {
+        "id": 1,
+        "url": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+        "alt": "Icon"
+      },
+      "posterImage": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "headingTag": "h2",
+      "iframeUrl": "https://www.youtube.com/embed/ysz5S6PUM-U"
+    }
+  }
 }

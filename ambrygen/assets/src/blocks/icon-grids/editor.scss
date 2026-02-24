@@ -1,3 +1,33 @@
 /**
  * Editor styles for block
  */
+
+.wp-block {
+
+    .info-list-block {
+        display: block;
+
+        .block-editor-block-list__layout {
+            background: var(--theme_primary_25);
+            border-radius: 32px;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            width: 100%;
+            gap: clamp(18px, calc(1.125rem + ((1vw - 7.68px) * 1.0309)), 24px);
+
+            .block-editor-block-list__block {
+                margin-bottom: 0;
+                border: none;
+
+                .info-list__link {
+                    color: var(--theme_link_color);
+
+                    &:hover {
+                        color: var(--theme_link_color_hover);
+                    }
+                }
+            }
+        }
+    }
+}

@@ -236,43 +236,26 @@
 					<div class="wp-block-group site-footer__bottom-inner">
 						<!-- wp:group {"className":"site-footer__copyright text-medium"} -->
 						<div class="wp-block-group site-footer__copyright text-medium">
-							<!-- wp:paragraph -->
-							<p>© 2025 Ambry Genetics. All rights reserved.</p>
-							<!-- /wp:paragraph -->
+							<!-- wp:html -->
+							<p>&copy; <span class="current-year"></span> Ambry Genetics. All rights reserved.</p>
+							<script>
+								document.currentScript.previousElementSibling.querySelector('.current-year').textContent = new Date().getFullYear();
+							</script>
+							<!-- /wp:html -->
 						</div>
 						<!-- /wp:group -->
 
 						<!-- wp:group {"className":"social-links-wrapper"} -->
 						<div class="wp-block-group social-links-wrapper">
-							<!-- wp:html -->
-							 <ul class="social-links">
-                                <li class="social-links__item"><a href="#" class="social-links__link">
-									<figure class="logo logo--ambry-footer" >
-										<img src="/wp-content/themes/ambrygen/assets/src/images/social-icons/facebook-icon.svg" alt="Facebook" />
-									</figure>
-                                    </a></li>
-                                <li class="social-links__item"><a href="#" class="social-links__link">
-									<figure class="logo logo--ambry-footer" >
-										<img src="/wp-content/themes/ambrygen/assets/src/images/social-icons/linkedin-icon.svg" alt="Facebook" />
-									</figure>
-                                    </a></li>
-                                <li class="social-links__item"><a href="#" class="social-links__link">
-									<figure class="logo logo--ambry-footer" >
-										<img src="/wp-content/themes/ambrygen/assets/src/images/social-icons/GitHub-icon.svg" alt="Facebook" />
-									</figure>
-                                    </a></li>
-                                <li class="social-links__item"><a href="#" class="social-links__link">
-									<figure class="logo logo--ambry-footer" >
-										<img src="/wp-content/themes/ambrygen/assets/src/images/social-icons/twitter-icon.svg" alt="Facebook" />
-									</figure>
-                                    </a></li>
-                                <li class="social-links__item"><a href="#" class="social-links__link">
-									<figure class="logo logo--ambry-footer" >
-										<img src="/wp-content/themes/ambrygen/assets/src/images/social-icons/instagram-icon.svg" alt="Facebook" />
-									</figure>
-                                    </a></li>
-                            </ul>
-							<!-- /wp:html -->
+							<!-- wp:social-links {"iconColor":"base","iconColorValue":"#0079a4","openInNewTab":true,"size":"has-normal-icon-size","className":"is-style-logos-only social-links"} -->
+							<ul class="wp-block-social-links has-normal-icon-size has-icon-color is-style-logos-only social-links">
+								<!-- wp:social-link {"url":"#","service":"facebook"} /-->
+								<!-- wp:social-link {"url":"#","service":"linkedin"} /-->
+								<!-- wp:social-link {"url":"#","service":"github"} /-->
+								<!-- wp:social-link {"url":"#","service":"x"} /-->
+								<!-- wp:social-link {"url":"#","service":"instagram"} /-->
+							</ul>
+							<!-- /wp:social-links -->
 						</div>
 						<!-- /wp:group -->
 					</div>

@@ -15,8 +15,8 @@ $ambrygen_content       = $ambrygen_attributes['content'] ?? '';
 $ambrygen_heading_level = $ambrygen_attributes['headingLevel'] ?? 'h2';
 
 $ambrygen_allowed_headings = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
-$ambrygen_heading_level    = in_array( $ambrygen_heading_level, $ambrygen_allowed_headings, true ) 
-	? $ambrygen_heading_level 
+$ambrygen_heading_level    = in_array( $ambrygen_heading_level, $ambrygen_allowed_headings, true )
+	? $ambrygen_heading_level
 	: 'h2';
 ?>
 
@@ -24,8 +24,7 @@ $ambrygen_heading_level    = in_array( $ambrygen_heading_level, $ambrygen_allowe
 
 	<div class="heading-center center-align">
 		<<?php echo tag_escape( $ambrygen_heading_level ); ?> class="heading-3 block-title mb-0">
-			<?php echo esc_html( $ambrygen_title ); ?>
-			<span><?php echo esc_html( $ambrygen_highlight ); ?></span>
+			<?php echo wp_kses_post( $ambrygen_title ); ?>
 		</<?php echo tag_escape( $ambrygen_heading_level ); ?>>
 
 		<div class="is-style-gl-s24"></div>

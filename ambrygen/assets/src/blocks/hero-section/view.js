@@ -31,8 +31,8 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			autoplay: config.autoplay || false,
 			navigation: config.navigation
 				? {
-						nextEl: '.swiper-button-next',
-						prevEl: '.swiper-button-prev',
+						nextEl: '.custom-next',
+						prevEl: '.custom-prev',
 				  }
 				: false,
 			pagination: config.pagination

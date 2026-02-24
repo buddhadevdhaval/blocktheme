@@ -6,17 +6,6 @@
   "category": "ambrygen",
   "icon": "email",
   "description": "Newsletter subscription form with image and customizable styling.",
-  "supports": {
-    "html": false,
-    "align": [
-      "wide",
-      "full"
-    ],
-    "color": {
-      "background": true,
-      "text": true
-    }
-  },
   "attributes": {
     "eyebrow": {
       "type": "string",
@@ -38,17 +27,17 @@
       "type": "string",
       "default": "/wp-content/themes/ambrygen/assets/src/images/news-latter/news-latter.jpg"
     },
-    "imageSizes": {
-      "type": "object",
-      "default": {}
-    },
     "imageId": {
       "type": "number",
       "default": 0
     },
-    "imageAlt": {
-      "type": "string",
-      "default": ""
+    "overlayTopImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "overlayBottomImageId": {
+      "type": "number",
+      "default": 0
     },
     "overlayTopImage": {
       "type": "string",
@@ -58,14 +47,6 @@
       "type": "string",
       "default": "/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-bottom.svg"
     },
-    "backgroundColor": {
-      "type": "string",
-      "default": "#005E7F"
-    },
-    "textColor": {
-      "type": "string",
-      "default": "#8AD8F4"
-    },
     "style": {
       "type": "object"
     }
@@ -73,5 +54,20 @@
   "editorScript": "file:./index.js",
   "render": "file:./render.php",
   "editorStyle": "file:./index.css",
-  "style": "file:./style-index.css"
+  "style": "file:./style-index.css",
+  "example": {
+    "attributes": {
+      "eyebrow": "Newsletter",
+      "heading": "Stay Informed",
+      "headingTag": "h2",
+      "description": "Subscribe to the Ambry Newsletter and other updates.",
+      "image": "/wp-content/themes/ambrygen/assets/src/images/news-latter/news-latter.jpg",
+      "imageId": 0,
+      "overlayTopImageId": 0,
+      "overlayBottomImageId": 0,
+      "overlayTopImage": "/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-top.svg",
+      "overlayBottomImage": "/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-bottom.svg",
+      "style": {}
+    }
+  }
 }

@@ -1,38 +1,47 @@
 {
-	"$schema": "https://schemas.wp.org/trunk/block.json",
-	"apiVersion": 3,
-	"name": "ambrygen/testimonial-item",
-	"title": "Testimonial Item",
-	"parent": [
-		"ambrygen/testimonials"
-	],
-	"attributes": {
-		"logo": {
-			"type": "string"
-		},
-		"logoSizes": {
-			"type": "object"
-		},
-		"quote": {
-			"type": "string",
-			"default": "The Ambry Care Program has been a game changer for our healthcare management. Their dedicated team and innovative solutions streamlined our patient care processes, allowing us to spend more time on what truly matters—our patients' well-being."
-		},
-		"author": {
-			"type": "string",
-			"default": "Sarah Mitchell"
-		},
-		"role": {
-			"type": "string",
-			"default": "CEO of TechSpark"
-		}
-	},
-	"editorScript": "file:./index.js",
-	"render": "file:./render.php",
-	"editorStyle": "file:./index.css",
-	"style": "file:./style-index.css",
-	"textdomain": "ambrygen-web",
-	"usesContext": [
-		"ambrygen/mainImage",
-		"ambrygen/mainImageSizes"
-	]
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/testimonial-item",
+  "title": "Testimonial Item",
+  "parent": [
+    "ambrygen/testimonials"
+  ],
+  "attributes": {
+    "logo": {
+      "type": "string"
+    },
+    "logoId": {
+      "type": "number"
+    },
+    "quote": {
+      "type": "string",
+      "default": "The Ambry Care Program has been a game changer for our healthcare management. Their dedicated team and innovative solutions streamlined our patient care processes, allowing us to spend more time on what truly matters—our patients' well-being."
+    },
+    "author": {
+      "type": "string",
+      "default": "Sarah Mitchell"
+    },
+    "role": {
+      "type": "string",
+      "default": "CEO of TechSpark"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "usesContext": [
+    "ambrygen/mainImage",
+    "ambrygen/mainImageId"
+  ],
+  "example": {
+    "attributes": {
+      "logo": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "logoId": 1,
+      "quote": "The Ambry Care Program has been a game changer for our healthcare management. Their dedicated team and innovative solutions streamlined our patient care processes, allowing us to spend more time on what truly matters—our patients' well-being.",
+      "author": "Sarah Mitchell",
+      "role": "CEO of TechSpark"
+    }
+  }
 }

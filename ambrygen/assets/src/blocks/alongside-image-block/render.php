@@ -13,11 +13,17 @@ $ambrygen_iframe        = ! empty( $ambrygen_attributes['iframe'] ) ? $ambrygen_
 $ambrygen_heading_level = ! empty( $ambrygen_attributes['headingLevel'] ) ? $ambrygen_attributes['headingLevel'] : 'h2';
 $ambrygen_locations     = ! empty( $ambrygen_attributes['locations'] ) ? $ambrygen_attributes['locations'] : array();
 
+
+
 // Allowed inline formatting for RichText (text color, bold, italic)
 $ambrygen_allowed_tags = array(
 	'span' => array(
 		'style' => true,
 		'class' => true,
+	),
+	'mark' => array(
+		'class' => true,
+		'style' => true,
 	),
 	'strong' => array(),
 	'em'     => array(),
@@ -50,22 +56,33 @@ $ambrygen_allowed_tags = array(
 		<!-- Content -->
 		<div class="alongside-image-block__content">
 
-			<<?php echo tag_escape( $ambrygen_heading_level ); ?> class="alongside-image-block__title heading-2 mb-0">
-				<?php echo wp_kses( $ambrygen_title, $ambrygen_allowed_tags ); ?>
-			</<?php echo tag_escape( $ambrygen_heading_level ); ?>>
-
-			<div class="alongside-image-block__text">
+		<?php if ( ! empty( $ambrygen_title ) ) : ?>
+			<<?php echo tag_escape($ambrygen_heading_level); ?> class="alongside-image-block__title heading-2 mb-0">
+				<?php echo wp_kses($ambrygen_title, $ambrygen_allowed_tags); ?>
+			</<?php echo tag_escape($ambrygen_heading_level); ?>>
+			<div class="is-style-gl-s24"></div>
+			<?php endif; ?>
+		<div class="alongside-image-block__text">
 		<?php foreach ( $ambrygen_locations as $ambrygen_location ) : ?>
-	<div class="location-list">
-		<div class="location-title text-xl-semibold">
-			<?php echo esc_html( $ambrygen_location['name'] ?? '' ); ?>
-		</div>
-		<div class="is-style-gl-s4"></div>
-		<div class="text-medium">
-			<?php echo esc_html( $ambrygen_location['address'] ?? '' ); ?>
-		</div>
-	</div>
-<?php endforeach; ?>
+			<?php if ( ! empty( $ambrygen_location['name'] ) && ! empty( $ambrygen_location['address'] ) ) : 
+				?>
+				<div class="location-list">
+				<?php if ( ! empty( $ambrygen_location['name'] ) ) : ?>
+					<div class="location-title text-xl-semibold">
+						<?php echo wp_kses_post( $ambrygen_location['name'] ?? '' ); ?>
+					</div>
+					<?php endif; ?>
+					<?php if ( ! empty( $ambrygen_location['address'] ) ) : 
+							$address = html_entity_decode( $ambrygen_location['address'] ?? '' );
+						?>
+					<div class="is-style-gl-s4"></div>
+						<div class="location-description 12sadasd text-medium">
+							<?php echo wp_strip_all_tags( $address  ); ?>
+						</div>
+					<?php endif; ?>
+				</div>
+				<?php endif; ?>
+			<?php endforeach; ?>
 
 			</div>
 

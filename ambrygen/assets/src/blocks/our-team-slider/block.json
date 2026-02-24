@@ -1,0 +1,71 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/our-team-slider",
+  "title": "Our Team Slider",
+  "category": "ambrygen",
+  "icon": "groups",
+  "description": "Parent block for team members",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Our Leadership Team"
+    },
+    "intro": {
+      "type": "string",
+      "default": "We are proud to be leading the industry that we love and working together."
+    },
+    "headingLevel": {
+      "type": "string",
+      "default": "h2"
+    },
+    "memberTypes": {
+      "type": "array",
+      "default": []
+    },
+    "selectionMode": {
+      "type": "string",
+      "default": "manual"
+    },
+    "slidesPerView": {
+      "type": "number",
+      "default": 3
+    },
+    "showNavigation": {
+      "type": "boolean",
+      "default": true
+    },
+    "showPagination": {
+      "type": "boolean",
+      "default": true
+    },
+    "autoplay": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "title": "Our Leadership Team",
+      "intro": "We are proud to be leading the industry that we love and working together.",
+      "headingLevel": "h2",
+      "memberTypes": [
+        "leadership"
+      ],
+      "selectionMode": "manual",
+      "slidesPerView": 3,
+      "showNavigation": true,
+      "showPagination": true,
+      "autoplay": false
+    }
+  }
+}

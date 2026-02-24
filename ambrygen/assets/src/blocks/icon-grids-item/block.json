@@ -1,37 +1,101 @@
 {
-    "$schema": "https://schemas.wp.org/trunk/block.json",
-    "apiVersion": 3,
-    "name": "ambrygen/icon-grids-item",
-    "title": "Icon Grid Item",
-    "category": "ambrygen",
-    "icon": "format-image",
-    "parent": ["ambrygen/icon-grids"],
-    "description": "Individual icon card item for icon grids",
-    "supports": {
-        "html": false,
-        "reusable": false,
-        "color": {
-            "background": true,
-            "link": true
-        }
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/icon-grids-item",
+  "title": "Icon Grid Item",
+  "category": "ambrygen",
+  "icon": "format-image",
+  "parent": [
+    "ambrygen/icon-grids"
+  ],
+  "description": "Individual icon card item for icon grids",
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
+  "attributes": {
+    "icon": {
+      "type": "object",
+      "default": {
+        "url": "",
+        "id": 0,
+        "alt": ""
+      }
     },
+    "title": {
+      "type": "string",
+      "default": "Title"
+    },
+    "description": {
+      "type": "string",
+      "default": "Description"
+    },
+    "button": {
+      "type": "object",
+      "default": {}
+    },
+    "links": {
+      "type": "array",
+      "default": []
+    },
+    "selectedTerm": {
+      "type": "number",
+      "default": 0
+    },
+    "termData": {
+      "type": "object",
+      "default": {}
+    },
+    "termlinktext": {
+      "type": "string"
+    },
+    "showSelector": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "usesContext": [
+    "ambrygen/variation"
+  ],
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php",
+  "example": {
     "attributes": {
-        "icon": {
-            "type": "object",
-            "default": { "url": "", "id": 0, "alt": "" }
-        },
-        "title": {
-            "type": "string",
-            "default": "Title"
-        },
-        "links": {
-            "type": "array",
-            "default": []
+      "icon": {
+        "url": "Sample url",
+        "id": 0,
+        "alt": "Preview asset"
+      },
+      "title": "Title",
+      "description": "Description",
+      "button": {
+        "url": "https://example.com",
+        "text": "Learn More",
+        "target": "_self",
+        "rel": "Sample rel",
+        "variant": "primary"
+      },
+      "links": [
+        {
+          "text": "Read More",
+          "url": "https://example.com",
+          "target": "_self",
+          "rel": ""
         }
-    },
-    "editorScript": "file:./index.js",
-    "editorStyle": "file:./index.css",
-    "style": "file:./style-index.css",
-    "textdomain": "ambrygen-web",
-    "render": "file:./render.php"
+      ],
+      "selectedTerm": 0,
+      "termData": [
+        {
+          "id": 1,
+          "name": "All",
+          "slug": "all"
+        }
+      ],
+      "termlinktext": "Learn More",
+      "showSelector": false
+    }
+  }
 }

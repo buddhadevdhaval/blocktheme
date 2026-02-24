@@ -8,3 +8,23 @@
 ------------------------------------------------- */
 @use "theme";
 @use "blocks-background";
+@use "blocks_head";
+@use "swiper-custom";
+
+
+/* Solutions */
+@use "solutions/testing_menu";
+@use "solutions/our_approach";
+@use "solutions/gallery_variation";
+
+
+/* Patients */
+@use "patients/features_media";
+@use "patients/iot";
+
+
+/* Providers */
+@use "providers/features_horizontal_tabs";
+@use "providers/features_vertical_tabs";
+@use "providers/cta-tiles_with_content";
+@use "providers/icon_grid";

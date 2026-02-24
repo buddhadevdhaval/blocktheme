@@ -27,6 +27,7 @@ $wrapper_attributes = get_block_wrapper_attributes();
 <li <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
     <a href="<?php echo esc_url($url); ?>"
         class="nav__item--mega-menu__submenu-inner--link submenu-inner-link hover-active">
+        
         <?php if (!empty($icon_url)): ?>
             <div class="nav__item--mega-menu__submenu-inner--icon">
                 <img src="<?php echo esc_url($icon_url); ?>" alt="" />

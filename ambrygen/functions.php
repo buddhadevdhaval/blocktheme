@@ -13,6 +13,8 @@ define('AMBRYGEN_DIR', get_template_directory());
 define('AMBRYGEN_URI', get_template_directory_uri());
 define('AMBRYGEN_BUILD_DIR', AMBRYGEN_DIR . '/assets/build');
 define('AMBRYGEN_BUILD_URI', AMBRYGEN_URI . '/assets/build');
+define( 'AMBRYGEN_TEXT_DOMAIN', 'ambrygen-web' );
+define( 'AMBRYGEN_DEFAULT_IMAGE', AMBRYGEN_URI . '/assets/images/default-image.jpg' );
 
 // This line is preferably be added to your theme's functions.php file
 // with other add_theme_support() function calls.

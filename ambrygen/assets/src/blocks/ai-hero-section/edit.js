@@ -1,9 +1,12 @@
 /**
- * Retrieves the translation of text.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
+ * Shared utilities
  */
-import { __ } from '@wordpress/i18n';
+import { t } from '../_shared/utils';
+import {
+	TagSelector,
+	ImageUploader,
+	ImagePlaceholder,
+} from '../_shared/components';
 
 /**
  * React hooks for performance optimization.
@@ -18,8 +21,6 @@ import { useCallback, useState, useEffect } from '@wordpress/element';
  */
 import {
 	RichText,
-	MediaUpload,
-	MediaUploadCheck,
 	InspectorControls,
 	useBlockProps,
 } from '@wordpress/block-editor';
@@ -29,111 +30,9 @@ import {
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/components/
  */
-import {
-	Button,
-	Placeholder,
-	PanelBody,
-	PanelRow,
-	SelectControl,
-} from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
 
 import { dispatch, select } from '@wordpress/data';
-
-/**
- * Import validation utilities.
- */
-import { validateNumber } from '../../utils/validation.js';
-
-/**
- * MediaUploadPanel Component
- *
- * Reusable component for handling media upload, preview, and removal.
- * Follows DRY principle and WordPress VIP best practices.
- *
- * @param {Object}   props                Component properties.
- * @param {string}   props.title          Panel title.
- * @param {string}   props.imageUrl       Current image URL.
- * @param {string}   props.imageAlt       Current image alt text.
- * @param {Function} props.onSelect       Callback when image is selected.
- * @param {Function} props.onRemove       Callback when image is removed.
- * @param {string}   props.selectLabel    Label for select button.
- * @param {string}   props.replaceLabel   Label for replace button.
- * @param {string}   props.removeLabel    Label for remove button.
- * @param {string}   props.uploadedLabel  Label shown when image is uploaded.
- * @param {string}   props.placeholderAlt Default alt text for placeholder.
- * @return {JSX.Element} MediaUploadPanel component.
- */
-
-function MediaUploadPanel( {
-	title,
-	imageUrl,
-	imageAlt,
-	onSelect,
-	onRemove,
-	selectLabel,
-	replaceLabel,
-	removeLabel,
-	uploadedLabel,
-	placeholderAlt,
-	isOpen,
-} ) {
-	return (
-		<PanelBody title={ title } initialOpen={ isOpen } onToggle={ () => {} }>
-			<PanelRow>
-				{ ! imageUrl ? (
-					<MediaUploadCheck>
-						<MediaUpload
-							onSelect={ onSelect }
-							allowedTypes={ [ 'image' ] }
-							render={ ( { open } ) => (
-								<Button onClick={ open } variant="primary">
-									{ selectLabel }
-								</Button>
-							) }
-						/>
-					</MediaUploadCheck>
-				) : (
-					<div className="image-preview">
-						<img
-							src={ imageUrl }
-							alt={ imageAlt || placeholderAlt }
-						/>
-						<div className="image-info">
-							<p className="image-size">{ uploadedLabel }</p>
-							{ imageAlt && (
-								<p className="image-alt">
-									{ __( 'Alt text:', 'ambrygen-web' ) }{ ' ' }
-									{ imageAlt }
-								</p>
-							) }
-						</div>
-						<MediaUploadCheck>
-							<MediaUpload
-								onSelect={ onSelect }
-								allowedTypes={ [ 'image' ] }
-								render={ ( { open } ) => (
-									<Button
-										onClick={ open }
-										variant="secondary"
-									>
-										{ replaceLabel }
-									</Button>
-								) }
-							/>
-						</MediaUploadCheck>
-						<Button
-							onClick={ onRemove }
-							variant="link"
-							isDestructive
-						>
-							{ removeLabel }
-						</Button>
-					</div>
-				) }
-			</PanelRow>
-		</PanelBody>
-	);
-}
 
 /**
  * CounterItem Component
@@ -155,16 +54,12 @@ function CounterItem( { counter, index, updateCounter } ) {
 					<RichText
 						tagName="div"
 						className="ai-hero__counters--count ai-hero__counters--counter-data"
-						value={ counter.number }
-						onChange={ ( value ) =>
-							updateCounter(
-								index,
-								'number',
-								validateNumber( value )
-							)
+						value={ counter.number } // keep as string
+						onChange={
+							( value ) => updateCounter( index, 'number', value ) // remove validateNumber
 						}
 						placeholder="0"
-						aria-label={ __( 'Counter number', 'ambrygen-web' ) }
+						aria-label={ t( 'Counter number' ) }
 					/>
 					<RichText
 						tagName="div"
@@ -174,7 +69,7 @@ function CounterItem( { counter, index, updateCounter } ) {
 							updateCounter( index, 'suffix', value )
 						}
 						placeholder=""
-						aria-label={ __( 'Counter suffix', 'ambrygen-web' ) }
+						aria-label={ t( 'Counter suffix' ) }
 					/>
 				</div>
 				<RichText
@@ -184,32 +79,11 @@ function CounterItem( { counter, index, updateCounter } ) {
 					onChange={ ( value ) =>
 						updateCounter( index, 'label', value )
 					}
-					placeholder={ __( 'Label', 'ambrygen-web' ) }
-					aria-label={ __( 'Counter label', 'ambrygen-web' ) }
+					placeholder={ t( 'Label' ) }
+					aria-label={ t( 'Counter label' ) }
 				/>
 			</div>
 		</>
-	);
-}
-
-/**
- * ImagePlaceholder Component
- *
- * Displays a placeholder when no image is selected.
- * Extracted for consistency and reusability.
- *
- * @param {Object} props              Component properties.
- * @param {string} props.label        Placeholder label.
- * @param {string} props.instructions Placeholder instructions.
- * @return {JSX.Element} ImagePlaceholder component.
- */
-function ImagePlaceholder( { label, instructions } ) {
-	return (
-		<Placeholder
-			icon="format-image"
-			label={ label }
-			instructions={ instructions }
-		/>
 	);
 }
 
@@ -272,14 +146,10 @@ export default function Edit( { attributes, setAttributes } ) {
 	 */
 	const handleLogoSelect = useCallback(
 		( media ) => {
-			const sizes = media?.sizes || media?.media_details?.sizes || {};
-
 			setAttributes( {
 				logoImage: media.url,
 				logoImageId: media.id,
 				logoImageAlt: media.alt || '',
-				logoImageSrcSet: buildSrcSet( sizes ),
-				logoImageSizes: '(max-width: 768px) 50vw, 200px',
 			} );
 		},
 		[ setAttributes ]
@@ -298,20 +168,6 @@ export default function Edit( { attributes, setAttributes } ) {
 	}, [ setAttributes ] );
 
 	/**
-	 * Builds a srcset string from WordPress media sizes.
-	 *
-	 * @param {Object<string, {url: string, width: number}>} sizes
-	 *                                                             Media sizes object returned by Media Library.
-	 *
-	 * @return {string} Generated srcset string.
-	 */
-	const buildSrcSet = ( sizes = {} ) => {
-		return Object.values( sizes )
-			.filter( ( size ) => size?.url && size?.width )
-			.map( ( size ) => `${ size.url } ${ size.width }w` )
-			.join( ', ' );
-	};
-	/**
 	 * Handles top image selection.
 	 * Memoized with useCallback for performance.
 	 *
@@ -320,13 +176,10 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const handleTopImageSelect = useCallback(
 		( media ) => {
-			const sizes = media?.sizes || media?.media_details?.sizes || {};
 			setAttributes( {
 				imageTop: media.url,
 				imageTopId: media.id,
 				imageTopAlt: media.alt || '',
-				imageTopSrcSet: buildSrcSet( sizes ),
-				imageTopSizes: '(max-width: 768px) 100vw, 50vw',
 			} );
 		},
 		[ setAttributes ]
@@ -352,13 +205,10 @@ export default function Edit( { attributes, setAttributes } ) {
 	 */
 	const handleBottomImageSelect = useCallback(
 		( media ) => {
-			const sizes = media?.sizes || media?.media_details?.sizes || {};
 			setAttributes( {
 				imageBottom: media.url,
 				imageBottomId: media.id,
 				imageBottomAlt: media.alt || '',
-				imageBottomSrcSet: buildSrcSet( sizes ),
-				imageBottomSizes: '(max-width: 768px) 100vw, 50vw',
 			} );
 		},
 		[ setAttributes ]
@@ -424,73 +274,56 @@ export default function Edit( { attributes, setAttributes } ) {
 		<div { ...blockProps }>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					title={ t( 'Heading Settings' ) }
 					initialOpen={ openPanel === 'heading' }
 					onToggle={ () => {} }
 				>
-					<SelectControl
-						label={ __( 'Heading Level', 'ambrygen-web' ) }
-						value={ headingLevel }
-						options={ [
-							{ label: 'H1', value: 'h1' },
-							{ label: 'H2', value: 'h2' },
-							{ label: 'H3', value: 'h3' },
-							{ label: 'H4', value: 'h4' },
-							{ label: 'H5', value: 'h5' },
-							{ label: 'H6', value: 'h6' },
-						] }
+					<TagSelector
+						label={ t( 'Heading Tag', 'ambrygen-web' ) }
+						value={ headingLevel || 'h2' }
 						onChange={ ( value ) =>
 							setAttributes( { headingLevel: value } )
 						}
 					/>
 				</PanelBody>
-				<MediaUploadPanel
-					title={ __( 'Logo Image', 'ambrygen-web' ) }
-					imageUrl={ logoImage }
-					imageAlt={ logoImageAlt }
-					onSelect={ handleLogoSelect }
-					onRemove={ handleLogoRemove }
-					selectLabel={ __( 'Select Logo Image', 'ambrygen-web' ) }
-					replaceLabel={ __( 'Replace Logo', 'ambrygen-web' ) }
-					removeLabel={ __( 'Remove Logo', 'ambrygen-web' ) }
-					uploadedLabel={ __( 'Logo uploaded', 'ambrygen-web' ) }
-					placeholderAlt={ __( 'Company logo', 'ambrygen-web' ) }
-					isOpen={ openPanel === 'logo' }
-				/>
+				<PanelBody
+					title={ t( 'Logo Image' ) }
+					initialOpen={ openPanel === 'logo' }
+					onToggle={ () => {} }
+				>
+					<ImageUploader
+						label={ t( 'Logo Image' ) }
+						url={ logoImage }
+						onSelect={ handleLogoSelect }
+						onRemove={ handleLogoRemove }
+					/>
+				</PanelBody>
 
-				<MediaUploadPanel
-					title={ __( 'Top Image', 'ambrygen-web' ) }
-					imageUrl={ imageTop }
-					imageAlt={ imageTopAlt }
-					onSelect={ handleTopImageSelect }
-					onRemove={ handleTopImageRemove }
-					selectLabel={ __( 'Select Top Image', 'ambrygen-web' ) }
-					replaceLabel={ __( 'Replace Top Image', 'ambrygen-web' ) }
-					removeLabel={ __( 'Remove Image', 'ambrygen-web' ) }
-					uploadedLabel={ __( 'Top image uploaded', 'ambrygen-web' ) }
-					placeholderAlt={ __( 'Hero top image', 'ambrygen-web' ) }
-					isOpen={ openPanel === 'top' }
-				/>
+				<PanelBody
+					title={ t( 'Top Image' ) }
+					initialOpen={ openPanel === 'top' }
+					onToggle={ () => {} }
+				>
+					<ImageUploader
+						label={ t( 'Top Image' ) }
+						url={ imageTop }
+						onSelect={ handleTopImageSelect }
+						onRemove={ handleTopImageRemove }
+					/>
+				</PanelBody>
 
-				<MediaUploadPanel
-					title={ __( 'Bottom Image', 'ambrygen-web' ) }
-					imageUrl={ imageBottom }
-					imageAlt={ imageBottomAlt }
-					onSelect={ handleBottomImageSelect }
-					onRemove={ handleBottomImageRemove }
-					selectLabel={ __( 'Select Bottom Image', 'ambrygen-web' ) }
-					replaceLabel={ __(
-						'Replace Bottom Image',
-						'ambrygen-web'
-					) }
-					removeLabel={ __( 'Remove Image', 'ambrygen-web' ) }
-					uploadedLabel={ __(
-						'Bottom image uploaded',
-						'ambrygen-web'
-					) }
-					placeholderAlt={ __( 'Hero bottom image', 'ambrygen-web' ) }
-					isOpen={ openPanel === 'bottom' }
-				/>
+				<PanelBody
+					title={ t( 'Bottom Image' ) }
+					initialOpen={ openPanel === 'bottom' }
+					onToggle={ () => {} }
+				>
+					<ImageUploader
+						label={ t( 'Bottom Image' ) }
+						url={ imageBottom }
+						onSelect={ handleBottomImageSelect }
+						onRemove={ handleBottomImageRemove }
+					/>
+				</PanelBody>
 			</InspectorControls>
 
 			<div className="ai-hero">
@@ -521,18 +354,12 @@ export default function Edit( { attributes, setAttributes } ) {
 												src={ logoImage }
 												alt={
 													logoImageAlt ||
-													__(
-														'Company logo',
-														'ambrygen-web'
-													)
+													t( 'Company logo' )
 												}
 											/>
 										) : (
 											<ImagePlaceholder
-												label={ __(
-													'No logo selected',
-													'ambrygen-web'
-												) }
+												text={ t( 'No logo selected' ) }
 											/>
 										) }
 									</div>
@@ -558,21 +385,16 @@ export default function Edit( { attributes, setAttributes } ) {
 											src={ imageTop }
 											alt={
 												imageTopAlt ||
-												__(
-													'Hero top image',
-													'ambrygen-web'
-												)
+												t( 'Hero top image' )
 											}
 										/>
 									) : (
 										<ImagePlaceholder
-											label={ __(
-												'No top image selected',
-												'ambrygen-web'
+											text={ t(
+												'No top image selected'
 											) }
-											instructions={ __(
-												'Upload a top image from the sidebar settings.',
-												'ambrygen-web'
+											instructions={ t(
+												'Upload a top image from the sidebar settings.'
 											) }
 										/>
 									) }
@@ -595,21 +417,16 @@ export default function Edit( { attributes, setAttributes } ) {
 											src={ imageBottom }
 											alt={
 												imageBottomAlt ||
-												__(
-													'Hero bottom image',
-													'ambrygen-web'
-												)
+												t( 'Hero bottom image' )
 											}
 										/>
 									) : (
 										<ImagePlaceholder
-											label={ __(
-												'No bottom image selected',
-												'ambrygen-web'
+											text={ t(
+												'No bottom image selected'
 											) }
-											instructions={ __(
-												'Upload a bottom image from the sidebar settings.',
-												'ambrygen-web'
+											instructions={ t(
+												'Upload a bottom image from the sidebar settings.'
 											) }
 										/>
 									) }
@@ -620,7 +437,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<div className="ai-hero__col ai-hero__col--content">
 						<div className="ai-hero__content">
 							<HeadingTag
-								className="ai-hero__heading heading-2 mb-0"
+								className="ai-hero__heading heading-1 mb-0"
 								role="button"
 								tabIndex={ 0 }
 								onClick={ () => handlePanelOpen( 'heading' ) }
@@ -639,32 +456,20 @@ export default function Edit( { attributes, setAttributes } ) {
 										'core/italic',
 										'core/text-color',
 									] }
-									placeholder={ __(
-										'Hero heading…',
-										'ambrygen-web'
-									) }
+									placeholder={ t( 'Hero heading…' ) }
 									className="hero-heading"
-									aria-label={ __(
-										'Hero heading',
-										'ambrygen-web'
-									) }
+									aria-label={ t( 'Hero heading' ) }
 								/>
 							</HeadingTag>
 							<div className="is-style-gl-s24"></div>
-							<div className="ai-hero__description body1">
+							<div className="ai-hero__description-text body1 block-description">
 								<RichText
-									tagName="p"
+									tagName="div"
 									value={ content }
 									onChange={ handleContentChange }
-									placeholder={ __(
-										'Hero content…',
-										'ambrygen-web'
-									) }
+									placeholder={ t( 'Hero content…' ) }
 									className=""
-									aria-label={ __(
-										'Hero description',
-										'ambrygen-web'
-									) }
+									aria-label={ t( 'Hero description' ) }
 								/>
 							</div>
 							<div className="is-style-gl-s24"></div>

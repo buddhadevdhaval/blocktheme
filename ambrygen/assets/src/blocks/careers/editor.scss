@@ -1,0 +1,17 @@
+.careers-highlight {
+
+	&__media {
+		height: inherit;
+	}
+
+	&__job,
+	.wp-block.block-editor-block-list__block {
+		margin-bottom: 0;
+	}
+
+	&__jobs {
+		height: auto;
+		overflow-y: inherit;
+	}
+
+}

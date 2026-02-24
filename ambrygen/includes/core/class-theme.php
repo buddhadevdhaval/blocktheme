@@ -39,6 +39,7 @@ final class Theme {
 		add_action( 'after_setup_theme', array( $this, 'theme_setup' ) );
 
 		add_filter('upload_mimes', array($this, 'ambry_allow_svg_uploads'));
+add_filter( 'wp_check_filetype_and_ext', [ $this, 'ambry_fix_ico_upload' ], 10, 5 );
 
 	}
 
@@ -52,9 +53,22 @@ final class Theme {
 	public function ambry_allow_svg_uploads($mimes)
 	{
 		$mimes['svg'] = 'image/svg+xml';
+		$mimes['ico'] = 'image/x-icon';
+
 		return $mimes;
 	}
+public function ambry_fix_ico_upload( $data, $file, $filename, $mimes, $real_mime ) {
 
+	if ( 'ico' === strtolower( pathinfo( $filename, PATHINFO_EXTENSION ) ) ) {
+		return [
+			'ext'  => 'ico',
+			'type' => 'image/x-icon',
+			'proper_filename' => $filename,
+		];
+	}
+
+	return $data;
+}
 
 	/**
 	 * Load theme components.
@@ -64,9 +78,15 @@ final class Theme {
 	public function load_components(): void {
 
 		// Frontend + shared components.
+		Helper::instance();
 		Blocks::instance();
 		Assets::instance();
 		Patterns::instance();
+
+		// Custom Post Types
+		Post_Types::instance();
+		Theme_Options::instance();
+
 	}
 
 	/**
@@ -74,5 +94,15 @@ final class Theme {
 	 *
 	 * @return void
 	 */
-	public function theme_setup(): void { }
+	public function theme_setup(): void {
+
+		// Load translations.
+		load_theme_textdomain(
+			AMBRYGEN_TEXT_DOMAIN,
+			get_template_directory() . '/languages'
+		);
+
+		// Add custom image sizes.
+		add_image_size( 'hero-desktop', 1905, 0, false );
+	}
 }

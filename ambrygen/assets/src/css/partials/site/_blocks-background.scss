@@ -19,6 +19,32 @@
 
 @include bg-scope("primary_25", --theme_primary_25) {
 
+	h1,
+	.heading-1,
+	h2,
+	.heading-2,
+	h3,
+	.heading-3,
+	h4,
+	.heading-4,
+	h5,
+	.heading-5,
+	h6,
+	.heading-6,
+	.block-description {
+		color: var(--theme_primary_800);
+	}
+
+	.ai-hero {
+
+		&__counters {
+
+			.ai-hero__counters--counter-title {
+				color: var(--theme_primary_800);
+			}
+		}
+	}
+
 	/* Inside Classes SCSS will goes here */
 }
 
@@ -29,14 +55,24 @@
 
 @include bg-scope("primary_800", --theme_primary_800) {
 
+	.eyebrow {
+		color: var(--theme_primary_200);
+	}
+
+	.block-description {
+		color: var(--theme_gray_200);
+	}
+
 	p {
 		color: var(--theme_white);
 
 		a {
 			color: #b0e5f8;
+			border-color: #b0e5f8;
 
 			&:hover {
 				color: #54c6ef;
+				border-color: #54c6ef;
 			}
 		}
 	}
@@ -126,30 +162,43 @@
 	/* Inside Classes SCSS will goes here */
 }
 
+@include bg-scope("gradient1", --theme_gradient1) {
+
+	/* Inside Classes SCSS will goes here */
+}
 
 @include bg-scope("blue-gradient", --theme_blue_gradient) {
 
-    .alongside-faq {
+	.alongside-faq {
 
-        &__title {
-            color: var(--theme_primary_white);
-        }
-    }
+		&__title {
+			color: var(--theme_primary_white);
+		}
+	}
+
+	.components-button {
+
+		&.is-primary {
+			background-color: var(--theme_white);
+			color: #000;
+			font-weight: 600;
+		}
+	}
 
 
-    .faq {
+	.faq {
 
-        &__item {
-            border-top: 1px solid rgba(255, 255, 255, 0.50);
-        }
+		&__item {
+			border-color: rgba(255, 255, 255, 0.50);
+		}
 
-        &__question {
-            color: var(--theme_primary_white);
-        }
+		&__question {
+			color: var(--theme_primary_white);
+		}
 
-        &__answer {
-            color: var(--theme_primary_white);
-        }
-    }
+		&__answer {
+			color: var(--theme_primary_white);
+		}
+	}
 
 }

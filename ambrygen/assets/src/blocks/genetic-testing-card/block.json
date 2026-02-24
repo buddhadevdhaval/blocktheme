@@ -1,55 +1,76 @@
 {
-    "$schema": "https://schemas.wp.org/trunk/block.json",
-    "apiVersion": 3,
-    "name": "ambrygen/genetic-testing-card",
-    "title": "Genetic Testing Card",
-    "category": "ambrygen",
-    "parent": [
-        "ambrygen/genetic-testing-cards"
-    ],
-    "icon": "format-image",
-    "description": "An individual card for genetic testing.",
-    "attributes": {
-        "image": {
-            "type": "string",
-            "default": ""
-        },
-        "imageId": {
-            "type": "number",
-            "default": 0
-        },
-        "imageAlt": {
-            "type": "string",
-            "default": ""
-        },
-        "title": {
-            "type": "string",
-            "default": ""
-        },
-        "description": {
-            "type": "string",
-            "default": ""
-        },
-        "linkText": {
-            "type": "string",
-            "default": "Learn more"
-        },
-        "linkUrl": {
-            "type": "string",
-            "default": "#"
-        },
-        "type": {
-            "type": "string",
-            "default": "small"
-        },
-        "imageSrcSet": {
-        "type": "string"
-        },
-        "imageSizes": {
-        "type": "string"
-        }
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/genetic-testing-card",
+  "title": "Genetic Testing Card",
+  "category": "ambrygen",
+  "parent": [
+    "ambrygen/genetic-testing-cards"
+  ],
+  "icon": "format-image",
+  "description": "An individual card for genetic testing.",
+  "attributes": {
+    "image": {
+      "type": "string",
+      "default": ""
     },
-    "textdomain": "ambrygen-web",
-    "editorScript": "file:./index.js",
-    "render": "file:./render.php"
+    "imageId": {
+      "type": "number",
+      "default": 0
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "link": {
+      "type": "object",
+      "default": {
+        "url": "",
+        "text": "",
+        "target": "",
+        "rel": "",
+        "variant": ""
+      }
+    },
+    "type": {
+      "type": "string",
+      "default": "small"
+    },
+    "imageSrcSet": {
+      "type": "string"
+    },
+    "imageSizes": {
+      "type": "string"
+    }
+  },
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "image": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "imageId": 0,
+      "imageAlt": "Ambry default preview image",
+      "title": "Sample Title",
+      "description": "This is a sample preview content for this block in the inserter.",
+      "link": {
+        "url": "Sample url",
+        "text": "Sample text",
+        "target": "Sample target",
+        "rel": "Sample rel",
+        "variant": "Sample variant"
+      },
+      "type": "small",
+      "imageSrcSet": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png 1200w",
+      "imageSizes": "100vw"
+    }
+  }
 }

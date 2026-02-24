@@ -5,93 +5,118 @@
  * @package Ambrygen
  */
 
-// Exit if accessed directly.
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+use Ambrygen\Theme\Core\Helper;
+
+$ambrygen_attributes = is_array( $attributes ?? null ) ? $attributes : [];
+
+$ambrygen_image        = $ambrygen_attributes['image'] ?? '';
+$ambrygen_image_alt    = trim( $ambrygen_attributes['imageAlt'] ?? '' );
+$ambrygen_image_srcset = $ambrygen_attributes['imageSrcSet'] ?? '';
+$ambrygen_image_sizes  = $ambrygen_attributes['imageSizes'] ?? '';
+
+$ambrygen_title       = $ambrygen_attributes['title'] ?? '';
+$ambrygen_description = $ambrygen_attributes['description'] ?? '';
+
+$ambrygen_link_array   = $ambrygen_attributes['link'];
+
+$ambrygen_link_text   = $ambrygen_link_array['text'] ?? __( 'Learn more', 'ambrygen-web' );
+$ambrygen_link_url    = $ambrygen_link_array['url'] ?? '';
+$ambrygen_link_target    = $ambrygen_link_array['target'] ?? '';
+
+$ambrygen_type        = $ambrygen_attributes['type'] ?? 'small';
+$ambrygen_button_target_attr = ! empty( $ambrygen_link_target ) ? ' target="' . esc_attr( $ambrygen_link_target ) . '" rel="noopener noreferrer"': '';
 
 /**
- * Access attributes safely with default values.
- *
- * @var array $attributes Block attributes.
+ * Validate card type.
  */
-$ambrygen_attributes = isset($attributes) && is_array($attributes) ? $attributes : array();
-
-$ambrygen_image = isset($ambrygen_attributes['image']) ? $ambrygen_attributes['image'] : '';
-$ambrygen_image_alt = isset($ambrygen_attributes['imageAlt']) ? $ambrygen_attributes['imageAlt'] : '';
-$ambrygen_image_srcset = isset($ambrygen_attributes['imageSrcSet']) ? $ambrygen_attributes['imageSrcSet'] : '';
-$ambrygen_image_sizes = isset($ambrygen_attributes['imageSizes']) ? $ambrygen_attributes['imageSizes'] : '';
-
-$ambrygen_title = isset($ambrygen_attributes['title']) ? $ambrygen_attributes['title'] : '';
-$ambrygen_description = isset($ambrygen_attributes['description']) ? $ambrygen_attributes['description'] : '';
-$ambrygen_link_text = isset($ambrygen_attributes['linkText'])
-	? $ambrygen_attributes['linkText']
-	: __('Learn more', 'ambrygen-web');
-$ambrygen_link_url = isset($ambrygen_attributes['linkUrl']) ? $ambrygen_attributes['linkUrl'] : '';
-$ambrygen_type = isset($ambrygen_attributes['type']) ? $ambrygen_attributes['type'] : 'small';
-
-/**
- * Sanitize type to expected values.
- */
-$ambrygen_valid_types = array('small', 'main');
-
-if (!in_array($ambrygen_type, $ambrygen_valid_types, true)) {
-	$ambrygen_type = 'small';
-}
-
-/**
- * Build wrapper classes safely.
- */
-$ambrygen_wrapper_class = 'genetic-cards__card genetic-cards__card--' . $ambrygen_type;
+$ambrygen_type = in_array( $ambrygen_type, [ 'small', 'main' ], true )
+	? $ambrygen_type
+	: 'small';
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
-	array(
-		'class' => $ambrygen_wrapper_class,
-	)
+	[
+		'class' => 'genetic-cards__card genetic-cards__card--' . $ambrygen_type,
+	]
 );
 ?>
 
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+<?php
+$ambrygen_image_id = absint( $ambrygen_attributes['imageId'] ?? 0 );
 
-	<?php if (!empty($ambrygen_image)): ?>
-		<div class="genetic-cards__image-wrapper genetic-cards__image-wrapper--<?php echo esc_attr($ambrygen_type); ?>">
-			<img src="<?php echo esc_url($ambrygen_image); ?>" alt="<?php echo esc_attr($ambrygen_image_alt); ?>"
-				loading="lazy" <?php if (!empty($ambrygen_image_srcset)): ?>
-					srcset="<?php echo esc_attr($ambrygen_image_srcset); ?>" <?php endif; ?> 	<?php if (!empty($ambrygen_image_sizes)): ?> sizes="<?php echo esc_attr($ambrygen_image_sizes); ?>" <?php endif; ?> />
-		</div>
-	<?php endif; ?>
+// Resolve alt text properly
+$ambrygen_resolved_alt = trim( $ambrygen_image_alt );
+
+if ( ! $ambrygen_resolved_alt && $ambrygen_image_id ) {
+	$ambrygen_resolved_alt = get_post_meta(
+		$ambrygen_image_id,
+		'_wp_attachment_image_alt',
+		true
+	);
+
+	// Final fallback to attachment title
+	if ( ! $ambrygen_resolved_alt ) {
+		$ambrygen_resolved_alt = get_the_title( $ambrygen_image_id );
+	}
+}
+?>
+	<div class="genetic-cards__image-wrapper genetic-cards__image-wrapper--<?php echo esc_attr( $ambrygen_type ); ?>">
+		<?php
+				echo Helper::image_with_placeholder(
+					$ambrygen_image_id,
+					'large',
+					array(
+						'loading' => 'lazy',
+					)
+				);
+	
+		?>
+	</div>
+
 
 	<?php
 	$ambrygen_content_class = 'genetic-cards__content';
-
-	if ('main' === $ambrygen_type) {
+	if ( 'main' === $ambrygen_type ) {
 		$ambrygen_content_class .= ' genetic-cards__content--main';
 	}
 	?>
 
-	<div class="<?php echo esc_attr($ambrygen_content_class); ?>">
+	<div class="<?php echo esc_attr( $ambrygen_content_class ); ?>">
 
-		<?php if (!empty($ambrygen_title)): ?>
-			<div class="genetic-cards__title heading-6 mb-0">
-				<?php echo wp_kses_post($ambrygen_title); ?>
+		<?php if ( $ambrygen_title ) : ?>
+			<div
+				class="genetic-cards__title heading-6 mb-0 card-title"
+				role="heading"
+				aria-level="3"
+			>
+				<?php echo wp_kses_post( $ambrygen_title ); ?>
 			</div>
 		<?php endif; ?>
 
 		<div class="is-style-gl-s8"></div>
 
-		<?php if (!empty($ambrygen_description)): ?>
+		<?php if ( $ambrygen_description ) : ?>
 			<div class="genetic-cards__description body1">
-				<?php echo wp_kses_post($ambrygen_description); ?>
+				<?php echo wp_kses_post( $ambrygen_description ); ?>
 			</div>
 		<?php endif; ?>
 
 		<div class="is-style-gl-s20"></div>
 
-		<?php if (!empty($ambrygen_link_text) && !empty($ambrygen_link_url)): ?>
+		<?php if ( $ambrygen_link_text ) : ?>
 			<div class="genetic-cards__link">
-				<a href="<?php echo esc_url($ambrygen_link_url); ?>" class="site-btn is-style-site-text-btn has-icon"
-					aria-label="<?php echo esc_attr($ambrygen_link_text); ?>">
-					<?php echo esc_html($ambrygen_link_text); ?>
+				<a
+					href="<?php echo esc_url( $ambrygen_link_url ); ?>"
+					class="site-btn is-style-site-text-btn has-icon"
+					<?php if ( $ambrygen_title ) : ?>
+						aria-label="<?php echo esc_attr( $ambrygen_link_text . ' – ' . wp_strip_all_tags( $ambrygen_title ) ); ?>"
+					<?php endif; ?>
+					<?php echo $ambrygen_button_target_attr; ?>
+				>
+					<?php echo esc_html( $ambrygen_link_text ); ?>
 				</a>
 			</div>
 		<?php endif; ?>

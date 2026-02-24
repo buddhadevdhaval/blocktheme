@@ -13,10 +13,59 @@
       "allowInheriting": true
     }
   },
-  "attributes": {},
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "Title"
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2"
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "variation": {
+      "type": "string",
+      "default": "two-column"
+    },
+    "blockId": {
+      "type": "string"
+    },
+    "link": {
+      "type": "object",
+      "default": {
+        "url": "",
+        "text": "",
+        "target": "",
+        "rel": "",
+        "variant": ""
+      }
+    }
+  },
+  "providesContext": {
+    "ambrygen/variation": "variation"
+  },
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
   "textdomain": "ambrygen-web",
-  "render": "file:./render.php"
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "heading": "Title",
+      "headingTag": "h2",
+      "description": "This is a sample preview content for this block in the inserter.",
+      "variation": "two-column",
+      "blockId": 1,
+      "link": {
+        "url": "Sample url",
+        "text": "Sample text",
+        "target": "Sample target",
+        "rel": "Sample rel",
+        "variant": "Sample variant"
+      }
+    }
+  }
 }

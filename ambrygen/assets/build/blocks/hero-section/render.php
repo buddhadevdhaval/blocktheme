@@ -2,125 +2,248 @@
 /**
  * Render template for the Hero Section block.
  *
- * @package Ambrygen
+ * @package ambrygen
  */
 
-// Exit if accessed directly.
-if (!defined('ABSPATH')) {
-    exit;
+use Ambrygen\Theme\Core\Helper;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 /**
- * Access attributes safely with default values.
+ * Block attributes.
  *
- * @var array $attributes Block attributes.
+ * @var array $attributes
  */
-$attributes = isset($attributes) ? $attributes : array();
+$ambrygen_attributes = is_array( $attributes ) ? $attributes : array();
 
-$slides = isset($attributes['slides']) && is_array($attributes['slides']) ? $attributes['slides'] : array();
-$show_slider_nav = isset($attributes['showSliderNav']) ? (bool) $attributes['showSliderNav'] : true;
-$show_slider_dots = isset($attributes['showSliderDots']) ? (bool) $attributes['showSliderDots'] : true;
-$autoplay = isset($attributes['autoplay']) ? (bool) $attributes['autoplay'] : false;
-$autoplay_delay = isset($attributes['autoplayDelay']) ? absint($attributes['autoplayDelay']) : 5000;
+$ambrygen_slides           = isset( $ambrygen_attributes['slides'] ) && is_array( $ambrygen_attributes['slides'] ) ? $ambrygen_attributes['slides'] : array();
+$ambrygen_show_slider_nav  = isset( $ambrygen_attributes['showSliderNav'] ) ? (bool) $ambrygen_attributes['showSliderNav'] : true;
+$ambrygen_show_slider_dots = isset( $ambrygen_attributes['showSliderDots'] ) ? (bool) $ambrygen_attributes['showSliderDots'] : true;
+$ambrygen_autoplay         = isset( $ambrygen_attributes['autoplay'] ) ? (bool) $ambrygen_attributes['autoplay'] : false;
+$ambrygen_autoplay_delay   = isset( $ambrygen_attributes['autoplayDelay'] ) ? absint( $ambrygen_attributes['autoplayDelay'] ) : 5000;
 
-$swiper_config = array(
-    'autoplay' => $autoplay ? array('delay' => $autoplay_delay) : false,
-    'navigation' => $show_slider_nav,
-    'pagination' => $show_slider_dots,
+$ambrygen_allowed_heading_tags = array(
+	'h1',
+	'h2',
+	'h3',
+	'h4',
+	'h5',
+	'h6',
+	'p',
+	'span',
+	'div',
 );
 
-$wrapper_attributes = get_block_wrapper_attributes(array('class' => 'hero-section'));
+$ambrygen_swiper_config = array(
+	'autoplay'   => $ambrygen_autoplay ? array( 'delay' => $ambrygen_autoplay_delay ) : false,
+	'navigation' => $ambrygen_show_slider_nav,
+	'pagination' => $ambrygen_show_slider_dots,
+);
+
+$ambrygen_wrapper_attributes = get_block_wrapper_attributes(
+	array(
+		'class' => 'hero-section',
+	)
+);
+$ambrygen_index = 0;
 ?>
 
-<div <?php echo $wrapper_attributes; ?>>
-    <div class="hero-section__slider swiper container-1340"
-        data-swiper-config="<?php echo esc_attr(wp_json_encode($swiper_config)); ?>">
-        <div class="swiper-wrapper">
-            <?php
-            if (!empty($slides)):
-                foreach ($slides as $index => $slide):
-                    $background_image = isset($slide['backgroundImage']) ? $slide['backgroundImage'] : '';
-                    $background_image_alt = isset($slide['backgroundImageAlt']) ? $slide['backgroundImageAlt'] : '';
-                    $overlay_image_1 = isset($slide['overlayImage1']) ? $slide['overlayImage1'] : '';
-                    $overlay_image_1_alt = isset($slide['overlayImage1Alt']) ? $slide['overlayImage1Alt'] : '';
-                    $overlay_image_2 = isset($slide['overlayImage2']) ? $slide['overlayImage2'] : '';
-                    $overlay_image_2_alt = isset($slide['overlayImage2Alt']) ? $slide['overlayImage2Alt'] : '';
-                    $heading = isset($slide['heading']) ? $slide['heading'] : '';
-                    $content = isset($slide['content']) ? $slide['content'] : '';
-                    $tagline = isset($slide['tagline']) ? $slide['tagline'] : '';
-                    $button_primary_text = isset($slide['buttonPrimaryText']) ? $slide['buttonPrimaryText'] : '';
-                    $button_primary_url = isset($slide['buttonPrimaryUrl']) ? $slide['buttonPrimaryUrl'] : '#';
-                    $button_secondary_text = isset($slide['buttonSecondaryText']) ? $slide['buttonSecondaryText'] : '';
-                    $button_secondary_url = isset($slide['buttonSecondaryUrl']) ? $slide['buttonSecondaryUrl'] : '#';
-                    ?>
+<div <?php echo $ambrygen_wrapper_attributes; ?>>
+	<div
+		class="hero-section__slider swiper container-1340"
+		data-swiper-config="<?php echo esc_attr( wp_json_encode( $ambrygen_swiper_config ) ); ?>"
+		role="group"
+		aria-roledescription="slide"
+		aria-label="<?php echo esc_attr( sprintf( 'Slide %d of %d', $ambrygen_index + 1, count( $ambrygen_slides ) ) ); ?>"
+	>
+		<div class="swiper-wrapper">
 
-                    <div class="hero-section__slide swiper-slide">
-                        <div class="hero-section__background">
-                            <?php if (!empty($background_image)): ?>
-                                <img src="<?php echo esc_url($background_image); ?>"
-                                    alt="<?php echo esc_attr($background_image_alt); ?>" class="hero-section__image"
-                                    loading="<?php echo 0 === $index ? 'eager' : 'lazy'; ?>" />
-                                <?php if (!empty($overlay_image_1)): ?>
-                                    <div class="hero-section__overlay hero-section__overlay--1 hero-section__overlay--top">
-                                        <img src="<?php echo esc_url($overlay_image_1); ?>"
-                                            alt="<?php echo esc_attr($overlay_image_1_alt); ?>" loading="lazy" />
-                                    </div>
-                                <?php endif; ?>
-                                <?php if (!empty($overlay_image_2)): ?>
-                                    <div class="hero-section__overlay hero-section__overlay--bottom">
-                                        <img src="<?php echo esc_url($overlay_image_2); ?>"
-                                            alt="<?php echo esc_attr($overlay_image_2_alt); ?>" loading="lazy" />
-                                    </div>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                        </div>
-                        <div class="wrapper">
-                            <div class="hero-section__content">
-                                <?php if (!empty($heading)): ?>
-                                    <div class="hero-section__heading heading-2">
-                                        <?php echo wp_kses_post($heading); ?>
-                                    </div>
-                                <?php endif; ?>
+			<?php
+				// echo '<pre>';
+				// print_r($ambrygen_slides);
+				// echo '</pre>';
 
-                                <?php if (!empty($content)): ?>
-                                    <div class="hero-section__description">
-                                        <p><?php echo wp_kses_post($content); ?></p>
-                                    </div>
-                                <?php endif; ?>
 
-                                <?php if (!empty($tagline)): ?>
-                                    <div class="hero-section__tagline">
-                                        <p><?php echo wp_kses_post($tagline); ?></p>
-                                    </div>
-                                <?php endif; ?>
+			foreach ( $ambrygen_slides as $ambrygen_index => $ambrygen_slide ) : ?>
 
-                                <div class="hero-section__actions">
-                                    <?php if (!empty($button_secondary_text)): ?>
-                                        <a href="<?php echo esc_url($button_secondary_url); ?>"
-                                            class="hero-section__button site-btn is-style-site-tertiary-btn is-style-site-trailing-icon">
-                                            <?php echo esc_html($button_secondary_text); ?>
-                                        </a>
-                                    <?php endif; ?>
+				<?php
 
-                                    <?php if (!empty($button_primary_text)): ?>
-                                        <a href="<?php echo esc_url($button_primary_url); ?>"
-                                            class="hero-section__button site-btn is-style-site-trailing-icon">
-                                            <?php echo esc_html($button_primary_text); ?>
-                                        </a>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </div>
-        <?php if ($show_slider_nav): ?>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-        <?php endif; ?>
-        <?php if ($show_slider_dots): ?>
-            <div class="swiper-pagination"></div>
-        <?php endif; ?>
-    </div>
+				$ambrygen_background_image_id = isset( $ambrygen_slide['backgroundImageId'] ) ? absint( $ambrygen_slide['backgroundImageId'] ) : 0;
+				$ambrygen_overlay_image_1_id  = isset( $ambrygen_slide['overlayImage1Id'] ) ? absint( $ambrygen_slide['overlayImage1Id'] ) : 0;
+				$ambrygen_overlay_image_2_id  = isset( $ambrygen_slide['overlayImage2Id'] ) ? absint( $ambrygen_slide['overlayImage2Id'] ) : 0;
+
+				$ambrygen_heading = $ambrygen_slide['heading'] ?? '';
+				$ambrygen_content = $ambrygen_slide['content'] ?? '';
+				$ambrygen_tagline = $ambrygen_slide['tagline'] ?? '';
+				$ambrygen_eyebrow = $ambrygen_slide['eyebrow'] ?? '';
+
+			
+
+				$ambrygen_button_primary    = $ambrygen_slide['primarybutton'] ?? array();
+				$ambrygen_button_secondary   = $ambrygen_slide['secondarybutton'] ?? array();
+
+				$ambrygen_button_primary_text   = $ambrygen_button_primary['text'] ?? '';
+				$ambrygen_button_primary_url    = $ambrygen_button_primary['url'] ?? '#';
+				$ambrygen_button_primary_target    = $ambrygen_button_primary['target'] ?? '';
+				$ambrygen_button_primary_variant    = $ambrygen_button_primary['variant'] ?? '#';
+
+				$ambrygen_button_target_attr = ! empty( $ambrygen_button_primary_target )
+				? ' target="' . esc_attr( $ambrygen_button_primary_target ) . '" rel="noopener noreferrer"'
+				: '';
+
+				$ambrygen_button_secondary_text = $ambrygen_button_secondary['text'] ?? '';
+				$ambrygen_button_secondary_url  = $ambrygen_button_secondary['url'] ?? '#';
+				$ambrygen_button_secondary_target  = $ambrygen_button_secondary['target'] ?? '#';
+				$ambrygen_button_secondary_variant  = $ambrygen_button_secondary['variant'] ?? '';
+
+				$ambrygen_secondary_button_target_attr = ! empty( $ambrygen_button_secondary_target )
+				? ' target="' . esc_attr( $ambrygen_button_secondary_target ) . '" rel="noopener noreferrer"'
+				: '';
+
+				$ambrygen_heading_tag = isset( $ambrygen_slide['headingTag'] )
+					? strtolower( $ambrygen_slide['headingTag'] )
+					: 'h2';
+
+				if ( ! in_array( $ambrygen_heading_tag, $ambrygen_allowed_heading_tags, true ) ) {
+					$ambrygen_heading_tag = 'h2';
+				}
+
+				if(count( $ambrygen_slides ) == 1){
+					$ambrygen_heading_tag_escaped = tag_escape( $ambrygen_heading_tag );
+				}else{
+					$ambrygen_heading_tag_escaped = "div";
+
+				}
+
+				?>
+
+				<div class="hero-section__slide swiper-slide">
+					<div class="hero-section__background">
+
+						<?php
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped HTML returned by Helper::image().
+						echo Helper::image_with_placeholder(
+							$ambrygen_background_image_id,
+							'hero-desktop',
+							array(
+								'class'   => 'hero-section__image',
+								'loading' => 0 === $ambrygen_index ? 'eager' : 'lazy',
+							)
+						);
+						?>
+
+						<?php if ( $ambrygen_overlay_image_1_id ) : ?>
+							<div class="hero-section__overlay hero-section__overlay--1 hero-section__overlay--top">
+								<?php
+								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped HTML returned by Helper::image().
+								echo Helper::image(
+									$ambrygen_overlay_image_1_id,
+									'large',
+									array(
+										'loading' => 'lazy',
+									)
+								);
+								?>
+							</div>
+						<?php endif; ?>
+
+						<?php if ( $ambrygen_overlay_image_2_id ) : ?>
+							<div class="hero-section__overlay hero-section__overlay--bottom">
+								<?php
+								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped HTML returned by Helper::image().
+								echo Helper::image(
+									$ambrygen_overlay_image_2_id,
+									'large',
+									array(
+										'loading' => 'lazy',
+									)
+								);
+								?>
+							</div>
+						<?php endif; ?>
+
+					</div>
+
+					<div class="wrapper">
+						<div class="hero-section__content">
+
+							<?php if ( $ambrygen_eyebrow ) : ?>
+								<div class="hero__eyebrow hero-kicker">
+									<?php echo wp_kses_post( $ambrygen_eyebrow ); ?>
+								</div>
+								<div class="is-style-gl-s24" aria-hidden="true"></div>
+							<?php endif; ?>
+							<?php if ( $ambrygen_heading ) : ?>
+								<<?php echo $ambrygen_heading_tag_escaped; ?>
+									id="<?php echo esc_attr( 'hero-heading-' . $ambrygen_index ); ?>"
+									class="hero-section__heading heading-2 mb-0"
+								>
+									<?php
+									// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+									echo wp_kses(
+										$ambrygen_heading,
+										Helper::allowed_heading_html()
+									);
+									?>
+								</<?php echo $ambrygen_heading_tag_escaped; ?>>
+							<?php endif; ?>
+							<div class="is-style-gl-s24" aria-hidden="true"></div>
+							<?php if ( $ambrygen_content ) : ?>
+								<div class="hero-section__description">
+									<?php echo wp_kses_post( wpautop( $ambrygen_content ) ); ?>
+								</div>
+							<?php endif; ?>
+
+							<?php if ( $ambrygen_tagline ) : ?>
+								<div class="is-style-gl-s24" aria-hidden="true"></div>
+								<div class="hero-section__tagline">
+									<?php echo wp_kses_post( wpautop( $ambrygen_tagline ) ); ?>
+								</div>
+							<?php endif; ?>
+							<?php if ( $ambrygen_button_primary_text  && $ambrygen_button_secondary_text ) : ?>
+							<div class="is-style-gl-s24" aria-hidden="true"></div>
+							<div class="hero-section__actions">
+								<?php if ( $ambrygen_button_primary_text ) : ?>
+									<a
+										href="<?php echo esc_url( $ambrygen_button_primary_url ); ?>"
+										class="hero-section__button site-btn is-style-site-trailing-icon <?php echo $ambrygen_button_primary_variant; ?>"
+										<?php echo $ambrygen_button_target_attr; ?>
+									>
+										<?php echo esc_html( $ambrygen_button_primary_text ); ?>
+									</a>
+								<?php endif; ?>
+
+								<?php if ( $ambrygen_button_secondary_text ) : ?>
+									<a
+										href="<?php echo esc_url( $ambrygen_button_secondary_url ); ?>"
+										class="hero-section__button site-btn is-style-site-trailing-icon <?php echo $ambrygen_button_secondary_variant; ?>"
+										<?php echo $ambrygen_secondary_button_target_attr; ?>
+									>
+										<?php echo esc_html( $ambrygen_button_secondary_text ); ?>
+									</a>
+								<?php endif; ?>
+							</div>
+							<?php endif; ?>
+						</div>
+					</div>
+				</div>
+
+			<?php endforeach; ?>
+
+		</div>
+
+		<?php if ( $ambrygen_show_slider_nav ) : ?>
+			<div class="swiper-buttons">
+				<div class="custom-prev"></div>
+				<div class="custom-next"></div>
+			</div>
+		<?php endif; ?>
+
+		<?php if ( $ambrygen_show_slider_dots ) : ?>
+			<div class="swiper-pagination"></div>
+		<?php endif; ?>
+
+	</div>
 </div>

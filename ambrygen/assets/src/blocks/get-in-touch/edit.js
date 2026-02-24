@@ -14,12 +14,7 @@ const ALLOWED_BLOCKS = [ 'core/shortcode' ];
 export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps();
 
-	const {
-		title = 'Get in',
-		highlightText = 'Touch',
-		content,
-		headingLevel = 'h2',
-	} = attributes;
+	const { title = '', content, headingLevel = 'h2' } = attributes;
 
 	const HeadingTag = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ].includes(
 		headingLevel
@@ -63,36 +58,27 @@ export default function Edit( { attributes, setAttributes } ) {
 				<div className="heading-center center-align">
 					<HeadingTag className="heading-3 block-title mb-0">
 						<RichText
-							tagName="span"
+							tagName={ HeadingTag }
 							value={ title }
+							allowedFormats={ 'core/text-color' }
 							onChange={ ( value ) =>
 								setAttributes( { title: value } )
 							}
-							placeholder={ __( 'Get in', 'ambrygen-web' ) }
+							placeholder={ __( 'Add heading…', 'ambrygen-web' ) }
 						/>{ ' ' }
-						<span>
-							<RichText
-								tagName="span"
-								value={ highlightText }
-								onChange={ ( value ) =>
-									setAttributes( { highlightText: value } )
-								}
-								placeholder={ __( 'Touch', 'ambrygen-web' ) }
-							/>
-						</span>
 					</HeadingTag>
 
 					<div className="is-style-gl-s24"></div>
-
-					<RichText
-						tagName="div"
-						className="heading-content text-md-regular"
-						value={ content }
-						onChange={ ( value ) =>
-							setAttributes( { content: value } )
-						}
-						multiline="p"
-					/>
+					<div className="heading-content text-md-regular">
+						<RichText
+							tagName="p"
+							value={ content }
+							onChange={ ( value ) =>
+								setAttributes( { content: value } )
+							}
+							multiline="p"
+						/>
+					</div>
 				</div>
 
 				<div className="contact-form-block__form">

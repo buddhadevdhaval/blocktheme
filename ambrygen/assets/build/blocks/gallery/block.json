@@ -18,34 +18,48 @@
   "render": "file:./render.php",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
   "attributes": {
     "heading": {
       "type": "string",
-      "default": "Get Started with Ambry"
+      "default": "Title"
     },
     "headingTag": {
       "type": "string",
       "default": "h2"
     },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
     "variation": {
       "type": "string",
       "default": "two-column"
     },
-    "items": {
-      "type": "array",
-      "default": []
+    "topImageID": {
+      "type": "number",
+      "default": null
     },
-    "imageAlt": {
+    "topImageURL": {
       "type": "string",
       "default": ""
     },
-    "imageSrcSet": {
-      "type": "string",
-      "default": ""
-    },
-    "imageSizes": {
-      "type": "string",
-      "default": ""
+    "blockId": {
+      "type": "string"
+    }
+  },
+  "providesContext": {
+    "ambrygen/galleryVariation": "variation"
+  },
+  "example": {
+    "attributes": {
+      "heading": "Title",
+      "headingTag": "h2",
+      "description": "This is a sample preview content for this block in the inserter.",
+      "variation": "two-column",
+      "topImageID": 1,
+      "topImageURL": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "blockId": 1
     }
   }
 }

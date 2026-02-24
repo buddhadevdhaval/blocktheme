@@ -31,26 +31,26 @@
           "label": "Patients",
           "url": "#",
           "hasMegaMenu": true,
-          "megaMenuBlock": "ambrygen/mega-menu-patients"
+          "megaMenuBlock": "ambrygen/mega-menu-3-columns"
         },
         {
           "label": "Providers",
           "url": "#",
           "hasMegaMenu": true,
-          "megaMenuBlock": "ambrygen/mega-menu-providers"
+          "megaMenuBlock": "ambrygen/mega-menu-3-columns"
         },
         {
           "label": "Solutions",
           "url": "#",
           "hasMegaMenu": true,
-          "megaMenuBlock": "ambrygen/mega-menu-solutions",
+          "megaMenuBlock": "ambrygen/mega-menu-split",
           "isSecondLevel": true
         },
         {
           "label": "Company",
           "url": "#",
           "hasMegaMenu": true,
-          "megaMenuBlock": "ambrygen/mega-menu-company",
+          "megaMenuBlock": "ambrygen/mega-menu-split",
           "isSecondLevel": true
         },
         {
@@ -99,5 +99,53 @@
   "textdomain": "ambrygen-web",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
-  "render": "file:./render.php"
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "topBarText": "Find us at ACMG! We're on booth A312, Walk in to connect with us, or use this link to setup a 1:1.",
+      "topBarLinkText": "Learn More",
+      "topBarLinkUrl": "https://example.com",
+      "topBarVisible": true,
+      "navItems": [
+        {
+          "label": "Patients",
+          "url": "#",
+          "hasMegaMenu": true,
+          "megaMenuBlock": "ambrygen/mega-menu-3-columns"
+        },
+        {
+          "label": "Providers",
+          "url": "#",
+          "hasMegaMenu": true,
+          "megaMenuBlock": "ambrygen/mega-menu-3-columns"
+        },
+        {
+          "label": "Solutions",
+          "url": "#",
+          "hasMegaMenu": true,
+          "megaMenuBlock": "ambrygen/mega-menu-split",
+          "isSecondLevel": true
+        },
+        {
+          "label": "Company",
+          "url": "#",
+          "hasMegaMenu": true,
+          "megaMenuBlock": "ambrygen/mega-menu-split",
+          "isSecondLevel": true
+        },
+        {
+          "label": "Contact",
+          "url": "#",
+          "hasMegaMenu": false
+        }
+      ],
+      "loginUrl": "#",
+      "loginText": "Login",
+      "mobileCtaText": "See a Demo",
+      "mobileCtaUrl": "#",
+      "logoUrl": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "logoId": 0,
+      "logoAlt": "Ambry Genetics"
+    }
+  }
 }

@@ -1,0 +1,69 @@
+@use "../../variables/breakpoints" as bp;
+
+.icon-grid {
+	$gap-x: clamp(64px, calc(4rem + ((1vw - 7.67px) * 6.175)), 100px);
+	$gap-y: clamp(48px, calc(3rem + ((1vw - 7.67px) * 2.7444)), 64px);
+
+	&__header {
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		text-align: center;
+		max-width: 768px;
+		margin: 0 auto;
+	}
+
+	&__list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: $gap-y $gap-x;
+		justify-content: center;
+
+	}
+
+	&__item {
+		$cols: 3;
+		align-items: center;
+		display: flex;
+		flex: 0 1 calc((100% / #{$cols}) - (#{$gap-x} * (#{$cols} - 1) / #{$cols}));
+		flex-direction: column;
+		max-width: 380px;
+		text-align: center;
+
+		@include bp.max(lg) {
+			$cols-lg: 2;
+			flex: 0 1 calc((100% / #{$cols-lg}) - (#{$gap-x} * (#{$cols-lg} - 1) / #{$cols-lg}));
+		}
+
+		@include bp.max(md) {
+			flex: 0 1 100%;
+		}
+	}
+
+	&__icon {
+		align-items: center;
+		background: var(--theme_white);
+		border: 1px solid var(--theme_gray_200);
+		border-radius: 10px;
+		box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+		display: flex;
+		height: 48px;
+		justify-content: center;
+		margin-bottom: clamp(16px, calc(1rem + ((1vw - 7.67px) * 0.6861)), 20px);
+		width: 48px;
+
+		img {
+			height: 24px;
+			width: 24px;
+		}
+	}
+
+	p {
+		color: var(--theme_gray_600);
+		margin: 0;
+	}
+
+	.site-btn {
+		margin-top: auto;
+	}
+}

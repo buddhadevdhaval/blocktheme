@@ -1,0 +1,28 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/tab-menu",
+  "title": "Tab menu",
+  "category": "ambrygen",
+  "icon": "index-card",
+  "description": "Sticky horizontal tab navigation.",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "blockId": {
+      "type": "string"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "viewScript": "file:./view.js",
+  "textdomain": "ambrygen-web",
+  "example": {
+    "attributes": {
+      "blockId": 1
+    }
+  }
+}

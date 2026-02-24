@@ -1,330 +1,214 @@
-import { __ } from '@wordpress/i18n';
 import {
 	useBlockProps,
 	RichText,
-	MediaUpload,
-	MediaUploadCheck,
 	InspectorControls,
 	InnerBlocks,
 } from '@wordpress/block-editor';
+import { PanelBody } from '@wordpress/components';
 import {
-	PanelBody,
-	PanelRow,
-	Button,
-	SelectControl,
-} from '@wordpress/components';
-import { dispatch } from '@wordpress/data';
+	ImageUploader,
+	ImagePlaceholder,
+	TagSelector,
+} from '../_shared/components';
+import { t } from '../_shared/utils';
 
-const DEFAULT_IMAGE =
-	'/wp-content/themes/ambrygen/assets/src/images/news-latter.jpg';
-const DEFAULT_OVERLAY_TOP =
-	'/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-top.svg';
-const DEFAULT_OVERLAY_BOTTOM =
-	'/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-bottom.svg';
-
-function buildSrcSet(sizes) {
-	if (!sizes) {
-		return undefined;
-	}
-	return Object.values(sizes)
-		.filter((size) => size?.url && size?.width)
-		.map((size) => `${size.url} ${size.width}w`)
-		.join(', ');
-}
-
-export default function Edit({ attributes, setAttributes }) {
+export default function Edit( { attributes, setAttributes } ) {
 	const {
 		eyebrow,
 		heading,
 		headingTag = 'h2',
 		description,
 		image,
-		imageAlt = '',
-		imageSizes,
-		overlayTopImage = DEFAULT_OVERLAY_TOP,
-		overlayBottomImage = DEFAULT_OVERLAY_BOTTOM,
-		backgroundColor = '',
-		textColor = '',
+		overlayTopImage,
+		overlayBottomImage,
 		style,
 	} = attributes;
 
-	const displayImage = image || DEFAULT_IMAGE;
-	const srcSet = buildSrcSet(imageSizes);
+	const resolvedOverlayTopImage = overlayTopImage;
+	const resolvedOverlayBottomImage = overlayBottomImage;
 
-	const blockProps = useBlockProps({
+	const blockProps = useBlockProps( {
 		style: {
-			backgroundColor: backgroundColor || style?.color?.background,
-			color: textColor,
+			backgroundColor: style?.color?.background,
+			color: style?.color?.text,
 			padding: '60px 20px',
 		},
-	});
-
-	const openInspector = () => {
-		dispatch('core/edit-post').openGeneralSidebar('edit-post/block');
-	};
-
-	// Handlers for images
-	const onSelectImage = (img) => {
-		setAttributes({
-			image: img.url,
-			imageId: img.id,
-			imageAlt: img.alt || '',
-			imageSizes: img.sizes || {},
-		});
-	};
-
-	const onRemoveImage = () => {
-		setAttributes({
-			image: '',
-			imageId: 0,
-			imageAlt: '',
-			imageSizes: {},
-		});
-	};
-
-	const onSelectOverlayTop = (img) =>
-		setAttributes({ overlayTopImage: img?.url || '' });
-	const onRemoveOverlayTop = () => setAttributes({ overlayTopImage: '' });
-
-	const onSelectOverlayBottom = (img) =>
-		setAttributes({ overlayBottomImage: img?.url || '' });
-	const onRemoveOverlayBottom = () =>
-		setAttributes({ overlayBottomImage: '' });
+	} );
 
 	return (
-		<div {...blockProps}>
+		<div { ...blockProps }>
 			<InspectorControls>
-				{ /* Main Image */}
-				<PanelBody title={__('Newsletter Image', 'ambrygen-web')}>
-					<PanelRow>
-						<MediaUploadCheck>
-							<MediaUpload
-								onSelect={onSelectImage}
-								allowedTypes={['image']}
-								render={({ open }) => (
-									<Button
-										onClick={open}
-										variant={
-											image ? 'secondary' : 'primary'
-										}
-									>
-										{image
-											? __(
-												'Replace Image',
-												'ambrygen-web'
-											)
-											: __(
-												'Upload Image',
-												'ambrygen-web'
-											)}
-									</Button>
-								)}
-							/>
-						</MediaUploadCheck>
-
-						{image && (
-							<Button
-								isDestructive
-								variant="link"
-								onClick={onRemoveImage}
-							>
-								{__('Remove Image', 'ambrygen-web')}
-							</Button>
-						)}
-					</PanelRow>
+				{ /* Newsletter Image */ }
+				<PanelBody title={ t( 'Newsletter Image', 'ambrygen-web' ) }>
+					<ImageUploader
+						url={ image }
+						onSelect={ ( img ) =>
+							setAttributes( { image: img.url, imageId: img.id } )
+						}
+						onRemove={ () =>
+							setAttributes( { image: '', imageId: 0 } )
+						}
+						label={ t( 'Newsletter Image', 'ambrygen-web' ) }
+					/>
 				</PanelBody>
 
-				{ /* Heading Tag Selector */}
-				<PanelBody title={__('Heading Settings', 'ambrygen-web')}>
-					<SelectControl
-						label={__('Heading Tag', 'ambrygen-web')}
-						value={headingTag}
-						options={[
-							{ label: 'H1', value: 'h1' },
-							{ label: 'H2', value: 'h2' },
-							{ label: 'H3', value: 'h3' },
-							{ label: 'H4', value: 'h4' },
-							{ label: 'H5', value: 'h5' },
-							{ label: 'H6', value: 'h6' },
-						]}
-						onChange={(value) =>
-							setAttributes({ headingTag: value })
+				{ /* Heading Settings */ }
+				<PanelBody title={ t( 'Heading Settings', 'ambrygen-web' ) }>
+					<TagSelector
+						label={ t( 'Heading Tag', 'ambrygen-web' ) }
+						value={ headingTag || 'h2' }
+						onChange={ ( value ) =>
+							setAttributes( { headingTag: value } )
 						}
 					/>
 				</PanelBody>
 
-				{ /* Overlay Images */}
-				<PanelBody title={__('Overlay Images', 'ambrygen-web')}>
-					<PanelRow>
-						<MediaUploadCheck>
-							<MediaUpload
-								onSelect={onSelectOverlayTop}
-								allowedTypes={['image']}
-								render={({ open }) => (
-									<Button
-										onClick={open}
-										variant="secondary"
-									>
-										{overlayTopImage
-											? __(
-												'Replace Top Overlay',
-												'ambrygen-web'
-											)
-											: __(
-												'Upload Top Overlay',
-												'ambrygen-web'
-											)}
-									</Button>
-								)}
-							/>
-						</MediaUploadCheck>
+				{ /* Overlay Images */ }
+				<PanelBody title={ t( 'Overlay Images', 'ambrygen-web' ) }>
+					<ImageUploader
+						url={ overlayTopImage }
+						onSelect={ ( img ) =>
+							setAttributes( {
+								overlayTopImage: img.url,
+								overlayTopImageId: img.id,
+							} )
+						}
+						onRemove={ () =>
+							setAttributes( {
+								overlayTopImage: '',
+								overlayTopImageId: 0,
+							} )
+						}
+						label={ t( 'Top Overlay', 'ambrygen-web' ) }
+					/>
 
-						{overlayTopImage && (
-							<Button
-								isDestructive
-								variant="link"
-								onClick={onRemoveOverlayTop}
-							>
-								{__('Remove Top Overlay', 'ambrygen-web')}
-							</Button>
-						)}
-					</PanelRow>
-
-					<PanelRow>
-						<MediaUploadCheck>
-							<MediaUpload
-								onSelect={onSelectOverlayBottom}
-								allowedTypes={['image']}
-								render={({ open }) => (
-									<Button
-										onClick={open}
-										variant="secondary"
-									>
-										{overlayBottomImage
-											? __(
-												'Replace Bottom Overlay',
-												'ambrygen-web'
-											)
-											: __(
-												'Upload Bottom Overlay',
-												'ambrygen-web'
-											)}
-									</Button>
-								)}
-							/>
-						</MediaUploadCheck>
-
-						{overlayBottomImage && (
-							<Button
-								isDestructive
-								variant="link"
-								onClick={onRemoveOverlayBottom}
-							>
-								{__(
-									'Remove Bottom Overlay',
-									'ambrygen-web'
-								)}
-							</Button>
-						)}
-					</PanelRow>
+					<ImageUploader
+						url={ overlayBottomImage }
+						onSelect={ ( img ) =>
+							setAttributes( {
+								overlayBottomImage: img.url,
+								overlayBottomImageId: img.id,
+							} )
+						}
+						onRemove={ () =>
+							setAttributes( {
+								overlayBottomImage: '',
+								overlayBottomImageId: 0,
+							} )
+						}
+						label={ t( 'Bottom Overlay', 'ambrygen-web' ) }
+					/>
 				</PanelBody>
 			</InspectorControls>
 
-			{/* Frontend Preview in Editor */}
+			{ /* Editor Preview */ }
 			<div className="newsletter newsletter-signup">
 				<div className="newsletter__image-block">
-					<img
-						src={displayImage}
-						srcSet={srcSet || undefined}
-						sizes="(max-width: 768px) 100vw, 600px"
-						alt={
-							imageAlt || __('Newsletter Image', 'ambrygen-web')
-						}
-						className="newsletter__img"
-						loading="lazy"
-						decoding="async"
-					/>
+					{ image ? (
+						<img
+							src={ image }
+							alt={ t( 'Newsletter image', 'ambrygen-web' ) }
+							className="newsletter__img"
+							loading="lazy"
+							decoding="async"
+						/>
+					) : (
+						<ImagePlaceholder
+							text={ t(
+								'No newsletter image set',
+								'ambrygen-web'
+							) }
+						/>
+					) }
 
-					{ /* Overlay Top */}
-					{overlayTopImage && (
-						<div className="newsletter__image-block__overlay newsletter__image-block__overlay-top">
+					{ /* Decorative overlays */ }
+					{ resolvedOverlayTopImage && (
+						<div
+							className="newsletter__image-block__overlay newsletter__image-block__overlay-top"
+							aria-hidden="true"
+						>
 							<img
-								src={overlayTopImage}
-								alt={__('Overlay Top', 'ambrygen-web')}
+								src={ resolvedOverlayTopImage }
+								alt=""
 								className="overlay__img"
+								aria-hidden="true"
 							/>
 						</div>
-					)}
+					) }
 
-					{ /* Overlay Bottom */}
-					{overlayBottomImage && (
-						<div className="newsletter__image-block__overlay newsletter__image-block__overlay-bottom">
+					{ resolvedOverlayBottomImage && (
+						<div
+							className="newsletter__image-block__overlay newsletter__image-block__overlay-bottom"
+							aria-hidden="true"
+						>
 							<img
-								src={overlayBottomImage}
-								alt={__('Overlay Bottom', 'ambrygen-web')}
+								src={ resolvedOverlayBottomImage }
+								alt=""
 								className="overlay__img"
+								aria-hidden="true"
 							/>
 						</div>
-					)}
+					) }
 				</div>
 
 				<div className="newsletter__content-block">
-					{eyebrow && (
+					{ eyebrow && (
 						<RichText
-							tagName="span"
-							value={eyebrow}
-							onChange={(value) =>
-								setAttributes({ eyebrow: value })
+							tagName="div"
+							value={ eyebrow }
+							onChange={ ( value ) =>
+								setAttributes( { eyebrow: value } )
 							}
 							className="newsletter__content-block__eyebrow-text eyebrow"
-							placeholder={__('Newsletter', 'ambrygen-web')}
+							placeholder={ t( 'Newsletter', 'ambrygen-web' ) }
 						/>
-					)}
+					) }
 
-					<div className="is-style-gl-s12"></div>
+					<div className="is-style-gl-s12" aria-hidden="true" />
 
-					{heading && (
+					{ heading && (
 						<RichText
-							tagName={headingTag}
-							value={heading}
-							onChange={(value) =>
-								setAttributes({ heading: value })
+							tagName={ headingTag }
+							value={ heading }
+							onChange={ ( value ) =>
+								setAttributes( { heading: value } )
 							}
 							className="newsletter__content-block__heading heading-3 mb-0"
-							placeholder={__(
-								'Stay informed',
-								'ambrygen-web'
-							)}
+							placeholder={ t( 'Stay informed', 'ambrygen-web' ) }
 						/>
-					)}
+					) }
 
-					<div className="is-style-gl-s12"></div>
+					<div className="is-style-gl-s12" aria-hidden="true" />
 
-					<div className="newsletter__content-block__description text-medium">
-						{description && (
-							<RichText
-								tagName="p"
-								value={description}
-								onChange={(value) =>
-									setAttributes({ description: value })
-								}
-								className="newsletter__content-block__description-text"
-								placeholder={__(
-									'Subscribe text…',
-									'ambrygen-web'
-								)}
-							/>
-						)}
-					</div>
+					{ description && (
+						<RichText
+							tagName="div"
+							value={ description }
+							onChange={ ( value ) =>
+								setAttributes( { description: value } )
+							}
+							className="newsletter__content-block__description-text text-medium block-description"
+							placeholder={ t(
+								'Subscribe text…',
+								'ambrygen-web'
+							) }
+						/>
+					) }
 
-					<div className="newsletter-form-placeholder">
+					<div
+						className="newsletter-form-placeholder"
+						aria-label={ t(
+							'Newsletter signup form',
+							'ambrygen-web'
+						) }
+					>
 						<InnerBlocks
-							allowedBlocks={[
+							allowedBlocks={ [
 								'gravityforms/form',
 								'core/shortcode',
 								'core/html',
-							]}
-							templateLock={false}
+							] }
+							templateLock={ false }
 						/>
 					</div>
 				</div>

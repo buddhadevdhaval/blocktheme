@@ -68,13 +68,15 @@
 	--theme_cg_blue: #0079A4;
 
 
-	--theme_clear_skies: #E6F7FD;
+--theme_clear_skies: #E6F7FD;
 	--theme_smith_apple: #004761;
 	--theme_clean_pool: #54c6ef;
 	--theme_lynx_screen_blue: #33bbec;
 
 	/*linear-gradient*/
 	--theme_lightblue_gradient: linear-gradient(0deg, #B0E5F8 0%, #B0E5F8 100%), linear-gradient(0deg, #F1FAFE 0%, #F1FAFE 100%), linear-gradient(0deg, #F2F4F7 0%, #F2F4F7 100%), #FFF;
+	--theme_gradient1: linear-gradient(0deg, #F1FAFE 0%, #F1FAFE 100%), #F9FAFB;
+
 
 
 	/* Text Variations */
@@ -123,8 +125,8 @@
 	--theme_heading_color: var(--theme_color_secondary);
 
 	/* Links */
-	--theme_link_color: var(--theme_color_primary);
-	--theme_link_color_hover: var(--theme_smith_apple);
+	--theme_link_color: #009bd2;
+	--theme_link_color_hover: #004761;
 	--theme_link_border_color: var(--theme_color_primary);
 	--theme_link_border_color_hover: var(--theme_smith_apple);
 

@@ -2,17 +2,20 @@ import { __ } from '@wordpress/i18n';
 import {
 	useBlockProps,
 	InspectorControls,
-	MediaUpload,
-	MediaUploadCheck,
 	RichText,
 } from '@wordpress/block-editor';
-import { PanelBody, Button, ToggleControl } from '@wordpress/components';
-import { useState } from '@wordpress/element';
+import { PanelBody, Button } from '@wordpress/components';
+import { useState, useEffect } from '@wordpress/element';
+import {
+	TagSelector,
+	ImageUploader,
+	DEFAULT_IMAGES,
+} from '../_shared/components';
 
 const MAX_FAQS = 10;
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { imageUrl, imageAlt, faqs = [] } = attributes;
+	const { imageUrl, faqs = [], title, headingTag } = attributes;
 
 	const [ isOpen, setIsOpen ] = useState( true ); // toggle for row visibility
 
@@ -34,92 +37,49 @@ export default function Edit( { attributes, setAttributes } ) {
 	const removeFaq = ( index ) => {
 		setAttributes( { faqs: faqs.filter( ( _, i ) => i !== index ) } );
 	};
+	useEffect( () => {
+		if ( ! imageUrl ) {
+			const defaults = DEFAULT_IMAGES();
+
+			if ( defaults.placeholder.url ) {
+				setAttributes( {
+					imageUrl: defaults.placeholder.url,
+					imageId: defaults.placeholder.id,
+				} );
+			}
+		}
+	}, [] );
 
 	return (
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'FAQ Image', 'ambrygen-web' ) }
+					title={ __( 'FAQ Setting', 'ambrygen-web' ) }
 					initialOpen
 				>
-					{ ! imageUrl ? (
-						<MediaUploadCheck>
-							<MediaUpload
-								onSelect={ ( media ) =>
-									setAttributes( {
-										imageUrl: media.url,
-										imageId: media.id,
-										imageAlt: media.alt || '',
-									} )
-								}
-								allowedTypes={ [ 'image' ] }
-								render={ ( { open } ) => (
-									<Button onClick={ open } variant="primary">
-										{ __( 'Upload Image', 'ambrygen-web' ) }
-									</Button>
-								) }
-							/>
-						</MediaUploadCheck>
-					) : (
-						<div style={ { marginBottom: '10px' } }>
-							<img
-								src={ imageUrl }
-								alt={
-									imageAlt ||
-									__( 'FAQ illustration', 'ambrygen-web' )
-								}
-								style={ { maxWidth: '100%' } }
-							/>
-							<div style={ { marginTop: '5px' } }>
-								<MediaUploadCheck>
-									<MediaUpload
-										onSelect={ ( media ) =>
-											setAttributes( {
-												imageUrl: media.url,
-												imageId: media.id,
-												imageAlt: media.alt || '',
-											} )
-										}
-										allowedTypes={ [ 'image' ] }
-										render={ ( { open } ) => (
-											<Button
-												onClick={ open }
-												variant="secondary"
-											>
-												{ __(
-													'Replace Image',
-													'ambrygen-web'
-												) }
-											</Button>
-										) }
-									/>
-								</MediaUploadCheck>
-								<Button
-									onClick={ () =>
-										setAttributes( {
-											imageUrl: '',
-											imageId: 0,
-											imageAlt: '',
-										} )
-									}
-									isDestructive
-									variant="link"
-								>
-									{ __( 'Remove Image', 'ambrygen-web' ) }
-								</Button>
-							</div>
-						</div>
-					) }
-				</PanelBody>
+					<TagSelector
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
+						value={ headingTag }
+						onChange={ ( value ) =>
+							setAttributes( { headingTag: value } )
+						}
+					/>
 
-				<PanelBody
-					title={ __( 'FAQ Row Settings', 'ambrygen-web' ) }
-					initialOpen
-				>
-					<ToggleControl
-						label={ __( 'Show FAQ Row', 'ambrygen-web' ) }
-						checked={ isOpen }
-						onChange={ () => setIsOpen( ! isOpen ) }
+					<ImageUploader
+						label={ __( 'FAQ Image', 'ambrygen-web' ) }
+						url={ imageUrl }
+						onSelect={ ( media ) =>
+							setAttributes( {
+								imageUrl: media.url,
+								imageId: media.id,
+							} )
+						}
+						onRemove={ () =>
+							setAttributes( {
+								imageUrl: '',
+								imageId: 0,
+							} )
+						}
 					/>
 				</PanelBody>
 			</InspectorControls>
@@ -131,21 +91,27 @@ export default function Edit( { attributes, setAttributes } ) {
 						{ /* LEFT IMAGE */ }
 						<div className="alongside-faq__col alongside-faq__col--left">
 							<div className="alongside-faq__media">
-								{ imageUrl && (
-									<img src={ imageUrl } alt={ imageAlt } />
-								) }
+								<img
+									src={ imageUrl || defaults.placeholder.url }
+								/>
 							</div>
 						</div>
 
 						{ /* RIGHT FAQ */ }
 						<div className="alongside-faq__col alongside-faq__col--right">
 							<div className="alongside-faq__content">
-								<div className="heading-4 alongside-faq__title mb-0">
-									{ __(
+								<RichText
+									tagName={ headingTag || 'h5' }
+									className="heading-4 alongside-faq__title mb-0"
+									value={ title }
+									onChange={ ( value ) =>
+										setAttributes( { title: value } )
+									}
+									placeholder={ __(
 										'Frequently Asked Questions',
 										'ambrygen-web'
 									) }
-								</div>
+								/>
 
 								<div className="is-style-gl-s64"></div>
 

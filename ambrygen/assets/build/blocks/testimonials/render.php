@@ -9,6 +9,7 @@
 if (!defined('ABSPATH')) {
 	exit;
 }
+use Ambrygen\Theme\Core\Helper;
 
 /**
  * Access attributes safely with default values.
@@ -19,30 +20,6 @@ if (!defined('ABSPATH')) {
 $ambrygen_attributes = isset($attributes) && is_array($attributes) ? $attributes : array();
 $ambrygen_content = isset($content) ? $content : '';
 
-/**
- * Helper to build srcset string.
- *
- * @param array $sizes Image sizes.
- * @return string
- */
-if (!function_exists('ambrygen_testimonials_build_srcset')) {
-	function ambrygen_testimonials_build_srcset($sizes)
-	{
-		if (empty($sizes) || !is_array($sizes)) {
-			return '';
-		}
-
-		$srcset = array();
-
-		foreach ($sizes as $size) {
-			if (isset($size['url'], $size['width'])) {
-				$srcset[] = esc_url($size['url']) . ' ' . absint($size['width']) . 'w';
-			}
-		}
-
-		return implode(', ', $srcset);
-	}
-}
 
 /**
  * Retrieve attributes with defaults.
@@ -60,18 +37,19 @@ if (!in_array($ambrygen_heading_tag, array('h1', 'h2', 'h3', 'h4', 'h5', 'h6', '
 }
 
 $ambrygen_main_image = isset($ambrygen_attributes['mainImage']) ? $ambrygen_attributes['mainImage'] : '';
-$ambrygen_main_image_sizes = isset($ambrygen_attributes['mainImageSizes']) ? $ambrygen_attributes['mainImageSizes'] : array();
+$ambrygen_mainImageid = isset($ambrygen_attributes['mainImageid']) ? $ambrygen_attributes['mainImageid'] : array();
 $ambrygen_secondary_image = isset($ambrygen_attributes['secondaryImage']) ? $ambrygen_attributes['secondaryImage'] : '';
-$ambrygen_secondary_sizes = isset($ambrygen_attributes['secondaryImageSizes']) ? $ambrygen_attributes['secondaryImageSizes'] : array();
+$ambrygen_secondaryImageid = isset($ambrygen_attributes['secondaryImageId']) ? $ambrygen_attributes['secondaryImageId'] : null;
 $ambrygen_overlay_image = isset($ambrygen_attributes['overlayImage']) ? $ambrygen_attributes['overlayImage'] : '';
-$ambrygen_overlay_sizes = isset($ambrygen_attributes['overlayImageSizes']) ? $ambrygen_attributes['overlayImageSizes'] : array();
+$ambrygen_overlayImageid = isset($ambrygen_attributes['overlayImageId']) ? $ambrygen_attributes['overlayImageId'] : null;
+
 
 /**
  * Wrapper attributes.
  */
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class' => 'wp-block-ambrygen-testimonials ambry-testimonials',
+		'class' => 'wp-block-ambrygen-testimonials ambry-testimonials testimonials-slider',
 	)
 );
 ?>
@@ -81,19 +59,38 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	<!-- Overlay Graphics -->
 	<div class="ambry-testimonials__graphic-images">
 
-		<?php if (!empty($ambrygen_overlay_image)): ?>
+		<?php if (!empty($ambrygen_overlayImageid)): ?>
 			<div class="ambry-testimonials__graphic-images__overlay-left ambry-testimonials__graphic-images__img-block">
-				<img src="<?php echo esc_url($ambrygen_overlay_image); ?>"
-					srcset="<?php echo esc_attr(ambrygen_testimonials_build_srcset($ambrygen_overlay_sizes)); ?>"
-					class="overlay__img" alt="" loading="lazy" decoding="async" />
+					<?php
+					echo Helper::image(
+					$ambrygen_overlayImageid,
+						'large',
+						array(
+							'class'    => 'overlay__img',
+							'loading'  => 'lazy',
+							'alt='=> 'logo',
+						)
+					); 
+					
+
+					?>
 			</div>
 		<?php endif; ?>
 
-		<?php if (!empty($ambrygen_secondary_image)): ?>
+		<?php if (!empty($ambrygen_secondaryImageid)): ?>
 			<div class="ambry-testimonials__graphic-images__overlay-right ambry-testimonials__graphic-images__img-block">
-				<img src="<?php echo esc_url($ambrygen_secondary_image); ?>"
-					srcset="<?php echo esc_attr(ambrygen_testimonials_build_srcset($ambrygen_secondary_sizes)); ?>"
-					class="overlay__img" alt="" loading="lazy" decoding="async" />
+					<?php
+					echo Helper::image(
+				$ambrygen_secondaryImageid,
+						'large',
+						array(
+							'class'    => 'overlay__img',
+							'loading'  => 'lazy',
+						)
+					); 
+
+					?>
+					
 			</div>
 		<?php endif; ?>
 
@@ -101,7 +98,12 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 
 	<!-- Heading -->
 	<<?php echo tag_escape($ambrygen_heading_tag); ?> class="ambry-testimonials__heading heading-3 mb-0">
-		<?php echo wp_kses_post($ambrygen_heading); ?>
+		<?php 
+			echo wp_kses(
+				$ambrygen_heading,
+				Helper::allowed_heading_html()
+				);
+				?>
 	</<?php echo tag_escape($ambrygen_heading_tag); ?>>
 
 	<div class="is-style-gl-s32"></div>
@@ -110,18 +112,20 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	<div class="ambry-testimonials__layout">
 		<div class="ambry-testimonials__grid">
 
-			<?php if (!empty($ambrygen_main_image)): ?>
-				<div class="ambry-testimonials__top-inner__image-block">
-					<img src="<?php echo esc_url($ambrygen_main_image); ?>"
-						srcset="<?php echo esc_attr(ambrygen_testimonials_build_srcset($ambrygen_main_image_sizes)); ?>"
-						class="ambry-testimonials__main-image" alt="" loading="lazy" decoding="async" />
+			<div class="testimonial_slider swiper">
+				<div class="swiper-wrapper">
+					<?php
+					// InnerBlocks output (trusted block HTML).
+					echo $ambrygen_content;
+					?>
 				</div>
-			<?php endif; ?>
-
-			<?php
-			// InnerBlocks output (trusted block HTML).
-			echo wp_kses_post($ambrygen_content);
-			?>
+				<div class="swiper-buttons">
+					<div class="custom-prev">
+					</div>
+					<div class="custom-next">
+					</div>
+				</div>
+			</div>
 
 		</div>
 	</div>

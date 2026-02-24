@@ -37,5 +37,13 @@
   },
   "textdomain": "ambrygen-web",
   "editorScript": "file:./index.js",
-  "render": "file:./render.php"
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "label": "Sample Title",
+      "url": "#",
+      "iconId": 1,
+      "iconUrl": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png"
+    }
+  }
 }

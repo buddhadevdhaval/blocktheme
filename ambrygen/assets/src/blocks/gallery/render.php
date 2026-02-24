@@ -1,90 +1,165 @@
 <?php
 /**
- * Render template for the Gallery block.
+ * Gallery block render.
+ *
+ * WCAG 2.1 AA compliant
+ * No HTML structure changes
  *
  * @package Ambrygen
  */
 
-// Exit if accessed directly.
-if (!defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+use Ambrygen\Theme\Core\Helper;
+
+$ambrygen_heading      = $attributes['heading'] ?? '';
+$ambrygen_description  = $attributes['description'] ?? '';
+$ambrygen_heading_tag  = $attributes['headingTag'] ?? 'h2';
+$ambrygen_variation    = $attributes['variation'] ?? 'two-column';
+$ambrygen_top_image_id = isset( $attributes['topImageID'] ) ? (int) $attributes['topImageID'] : 0;
+
+/**
+ * WCAG: Prevent empty content containers
+ */
+if ( empty( trim( $content ) ) ) {
+	return;
 }
 
 /**
- * Access attributes safely with default values.
- *
- * @var array $attributes Block attributes.
- * @var string $content Block inner content.
+ * WCAG 2.1 AA: Heading tag validation (1.3.1)
  */
-$attributes = isset($attributes) ? $attributes : array();
-$content = isset($content) ? $content : '';
+$allowed_heading_tags = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
+$ambrygen_heading_tag = in_array( $ambrygen_heading_tag, $allowed_heading_tags, true )
+	? $ambrygen_heading_tag
+	: 'h2';
+$tab_block_id = $attributes['blockId'] ?? '';
+/**
+ * WCAG: Prevent empty headings being announced
+ */
+if ( empty( trim( wp_strip_all_tags( $ambrygen_heading ) ) ) ) {
+	$ambrygen_heading = '';
+}
 
-// Retrieve attributes.
-$items = isset($attributes['items']) && is_array($attributes['items']) ? $attributes['items'] : array();
-$variation = isset($attributes['variation']) ? $attributes['variation'] : 'two-column';
-$heading = isset($attributes['heading']) ? $attributes['heading'] : 'Get Started with Ambry';
+/**
+ * WCAG 2.1 AA: Accessible block labeling (2.4.6)
+ */
+$block_id = 'image-grid-' . wp_unique_id();
 
-$class_name = 'image-grid-block variation-' . $variation;
-$wrapper_attributes = get_block_wrapper_attributes(array('class' => $class_name));
+/**
+ * Block wrapper attributes (no HTML change)
+ */
+
+
+$amb_class="";
+if($ambrygen_variation === "variation-features"){
+	$amb_class="variation-style-two";
+}
+
+$ambrygen_wrapper_attributes = get_block_wrapper_attributes(
+	array(
+		'class'            => 'image-grid-block variation-features variation-' . sanitize_html_class( $ambrygen_variation ) .' '.$amb_class,
+		'aria-labelledby'  => $ambrygen_heading ? esc_attr( $block_id ) : '',
+		'id' => $tab_block_id,
+	)
+);
 ?>
 
-<section <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+<div <?php echo $ambrygen_wrapper_attributes; ?>>
 	<div class="get-started-ambry-block">
-		<h2 class="block-title heading-3 mb-0">
-			<?php echo wp_kses_post($heading); ?>
-		</h2>
 
-		<div class="card-grid-block">
-			<?php foreach ($items as $item): ?>
-				<?php
-				$link = isset($item['link']) ? $item['link'] : '';
-				$title = isset($item['title']) ? $item['title'] : '';
-				$description = isset($item['description']) ? $item['description'] : '';
-				$image_url = isset($item['imageUrl']) ? $item['imageUrl'] : '';
-				$image_srcset = isset($item['imageSrcSet']) ? $item['imageSrcSet'] : '';
-				$image_sizes = isset($item['imageSizes']) ? $item['imageSizes'] : '';
-				$image_alt = isset($item['imageAlt']) ? $item['imageAlt'] : '';
-				$heading_tag = isset($item['headingTag']) ? $item['headingTag'] : 'h5';
-
-				// Determine tag.
-				$is_link = !empty($link);
-				$tag = $is_link ? 'a' : 'div';
-				?>
-
-				<<?php echo tag_escape($tag); ?>
-					class="card-col"
-					<?php if ($is_link): ?>href="
-						<?php echo esc_url($link); ?>"
-					<?php endif; ?>
-					aria-label="
-				<?php echo esc_attr($title ? $title : 'Card item'); ?>"
-					>
-					<?php if (!empty($image_url)): ?>
-						<div class="image-block">
-							<img src="<?php echo esc_url($image_url); ?>"
-								srcset="<?php echo esc_attr($image_srcset); ?>"
-								sizes="<?php echo esc_attr($image_sizes); ?>"
-								alt="<?php echo esc_attr($image_alt ? $image_alt : ($title ? $title : 'Company logo')); ?>"
-								loading="lazy" />
-						</div>
-					<?php endif; ?>
-
-					<div class="card-info">
-						<?php if (!empty($title)): ?>
-							<<?php echo tag_escape($heading_tag); ?> class="link-btn mb-0">
-								<?php echo wp_kses_post($title); ?>
-							</<?php echo tag_escape($heading_tag); ?>>
-						<?php endif; ?>
-
-						<?php if (!empty($description)): ?>
-							<div class="card-description text-small">
-								<?php echo wp_kses_post($description); ?>
-							</div>
-						<?php endif; ?>
+		<?php if ( 'image-content-grid' === $ambrygen_variation ) : ?>
+		
+		<div class="our-approach__header logo-title-section">
+			<?php if ( $ambrygen_top_image_id ) : ?>
+				
+					<div class="logo-title-section__icon">
+					<?php
+					/**
+					 * WCAG 1.1.1: Always provide alt text
+					 */
+					echo Helper::image(
+						$ambrygen_top_image_id,
+						'large',
+						array(
+							'loading' => 'lazy',
+							'alt'     => $ambrygen_heading
+								? wp_strip_all_tags( $ambrygen_heading )
+								: '',
+						)
+					);
+					?>
 					</div>
-				</<?php echo tag_escape($tag); ?>>
+				
+			<?php endif; ?>
+			<div class="is-style-gl-s50" aria-hidden="true"></div>
+			<div class="logo-title-section__content">
+			<?php if ( $ambrygen_heading ) : ?>
+				<<?php echo esc_html( $ambrygen_heading_tag ); ?>
+					class="heading-2 block-title mb-0"
+					id="<?php echo esc_attr( $block_id ); ?>">
+					<?php
+					echo wp_kses(
+						$ambrygen_heading,
+						Helper::allowed_heading_html()
+					);
+					?>
+				</<?php echo esc_html( $ambrygen_heading_tag ); ?>>
+			<?php endif; ?>
 
-			<?php endforeach; ?>
+			<?php if ( $ambrygen_description ) : ?>
+				<div class="is-style-gl-s16" aria-hidden="true"></div>
+				<div class="body1-reg logo-title-section__description">
+					<?php echo wp_kses_post( $ambrygen_description ); ?>
+				</div>
+			<?php endif; ?>
+			</div>
+			</div>
+		
+		<?php elseif ( 'variation-features' === $ambrygen_variation ) : ?>
+			<div class="our-approach__header block__rowflex">
+			<?php if ( $ambrygen_heading ) : ?>
+				<<?php echo esc_html( $ambrygen_heading_tag ); ?>
+					class="block-title block__rowflex--heading-title heading-3 mb-0"
+					id="<?php echo esc_attr( $block_id ); ?>">
+					<?php
+					echo wp_kses(
+						$ambrygen_heading,
+						Helper::allowed_heading_html()
+					);
+					?>
+				</<?php echo esc_html( $ambrygen_heading_tag ); ?>>
+			<?php endif; ?>
+
+			<?php if ( $ambrygen_description ) : ?>
+				<div class="block__rowflex--block-content subtitle1-reg">
+					<?php echo wp_kses_post( $ambrygen_description ); ?>
+				</div>
+			<?php endif; ?>
+			
+			</div>
+
+			
+
+		<?php elseif ( $ambrygen_heading ) : ?>
+
+			<<?php echo esc_html( $ambrygen_heading_tag ); ?>
+				class="block-title heading-3 mb-0"
+				id="<?php echo esc_attr( $block_id ); ?>">
+				<?php
+				echo wp_kses(
+					$ambrygen_heading,
+					Helper::allowed_heading_html()
+				);
+				?>
+			</<?php echo esc_html( $ambrygen_heading_tag ); ?>>
+
+		<?php endif; ?>
+
+		<div class="card-grid-block" role="list">
+			<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</div>
+
 	</div>
-</section>
+</div>

@@ -7,13 +7,13 @@ import {
 	RichText,
 	InnerBlocks,
 	InspectorControls,
-	MediaUpload,
-	MediaUploadCheck,
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
-import { PanelBody, Button, SelectControl } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { useEffect } from '@wordpress/element';
+import { TagSelector, ImageUploader } from '../_shared/components';
+import { getThemeAssetUrl } from '../../utils/assets';
 
 /**
  * Default testimonial template
@@ -27,7 +27,7 @@ const TEMPLATE = [
 			quote: 'The Ambry Care Program has transformed how we manage patient care. Truly remarkable service!',
 			author: 'Sarah Mitchell',
 			role: 'CEO of TechSpark',
-			logo: '/wp-content/themes/ambrygen/assets/src/images/testimonial/logo-1.png',
+			logo: getThemeAssetUrl('/assets/src/images/testimonial/logo-1.png'),
 		},
 	],
 	[
@@ -60,23 +60,6 @@ const TEMPLATE = [
 ];
 
 /**
- * Builds responsive srcSet string from sizes object.
- *
- * @param {Object} sizes Image sizes object with url and width properties
- * @return {string|undefined} srcSet string or undefined if no sizes provided
- */
-function buildSrcSet( sizes ) {
-	if ( ! sizes ) {
-		return undefined;
-	}
-
-	return Object.values( sizes )
-		.filter( ( s ) => s?.url && s?.width )
-		.map( ( s ) => `${ s.url } ${ s.width }w` )
-		.join( ', ' );
-}
-
-/**
  * Default images used when block is first inserted
  * @type {string}
  */
@@ -99,11 +82,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		heading,
 		headingTag,
 		mainImage,
-		mainImageSizes,
 		secondaryImage,
-		secondaryImageSizes,
 		overlayImage,
-		overlayImageSizes,
+		mainImageId,
 	} = attributes;
 
 	useEffect( () => {
@@ -159,178 +140,74 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			<InspectorControls>
 				{ /* Heading settings panel */ }
 				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
-					<SelectControl
-						label={ __( 'Heading Level', 'ambrygen-web' ) }
-						value={ headingTag }
-						options={ [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ].map(
-							( tag ) => ( {
-								label: tag.toUpperCase(),
-								value: tag,
-							} )
-						) }
+					<TagSelector
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
+						value={ headingTag || 'h2' }
 						onChange={ ( value ) =>
 							setAttributes( { headingTag: value } )
 						}
 					/>
 				</PanelBody>
 				{ /* Secondary Image Panel */ }
-				<PanelBody title={ __( 'Secondary Image', 'ambrygen-web' ) }>
-					<MediaUploadCheck>
-						<MediaUpload
-							onSelect={ ( media ) =>
-								setAttributes( {
-									secondaryImage: media?.url,
-									secondaryImageSizes: media?.sizes || {},
-								} )
-							}
-							allowedTypes={ [ 'image' ] }
-							render={ ( { open } ) => (
-								<div className="image-panel-preview">
-									{ secondaryImage && (
-										<img src={ secondaryImage } alt="" />
-									) }
-
-									<Button
-										onClick={ open }
-										variant="secondary"
-									>
-										{ secondaryImage
-											? __(
-													'Replace Secondary Image',
-													'ambrygen-web'
-											  )
-											: __(
-													'Select Secondary Image',
-													'ambrygen-web'
-											  ) }
-									</Button>
-
-									{ secondaryImage && (
-										<Button
-											isDestructive
-											onClick={ () =>
-												setAttributes( {
-													secondaryImage: '',
-													secondaryImageSizes: {},
-												} )
-											}
-										>
-											{ __(
-												'Remove Image',
-												'ambrygen-web'
-											) }
-										</Button>
-									) }
-								</div>
-							) }
-						/>
-					</MediaUploadCheck>
-				</PanelBody>
 
 				{ /* Overlay Image Panel */ }
-				<PanelBody title={ __( 'Overlay Image', 'ambrygen-web' ) }>
-					<MediaUploadCheck>
-						<MediaUpload
-							onSelect={ ( media ) =>
-								setAttributes( {
-									overlayImage: media?.url,
-									overlayImageSizes: media?.sizes || {},
-								} )
-							}
-							allowedTypes={ [ 'image' ] }
-							render={ ( { open } ) => (
-								<div className="image-panel-preview">
-									{ overlayImage && (
-										<img src={ overlayImage } alt="" />
-									) }
-
-									<Button
-										onClick={ open }
-										variant="secondary"
-									>
-										{ overlayImage
-											? __(
-													'Replace Overlay Image',
-													'ambrygen-web'
-											  )
-											: __(
-													'Select Overlay Image',
-													'ambrygen-web'
-											  ) }
-									</Button>
-
-									{ overlayImage && (
-										<Button
-											isDestructive
-											onClick={ () =>
-												setAttributes( {
-													overlayImage: '',
-													overlayImageSizes: {},
-												} )
-											}
-										>
-											{ __(
-												'Remove Image',
-												'ambrygen-web'
-											) }
-										</Button>
-									) }
-								</div>
-							) }
-						/>
-					</MediaUploadCheck>
+				<PanelBody title={ __( 'Top Overlay Image', 'ambrygen-web' ) }>
+					<ImageUploader
+						url={ overlayImage }
+						label={ __( 'Top Overlay Image', 'ambrygen-web' ) }
+						onSelect={ ( media ) =>
+							setAttributes( {
+								overlayImage: media?.url,
+								overlayImageId: media?.id,
+							} )
+						}
+						onRemove={ () =>
+							setAttributes( {
+								overlayImage: '',
+								overlayImageId: null,
+							} )
+						}
+					/>
+				</PanelBody>
+				<PanelBody
+					title={ __( 'Bottom Overlay Image', 'ambrygen-web' ) }
+				>
+					<ImageUploader
+						url={ secondaryImage }
+						label={ __( 'Bottom Overlay Image', 'ambrygen-web' ) }
+						onSelect={ ( media ) =>
+							setAttributes( {
+								secondaryImage: media?.url,
+								secondaryImageId: media?.id,
+							} )
+						}
+						onRemove={ () =>
+							setAttributes( {
+								secondaryImage: '',
+								secondaryImageId: null,
+							} )
+						}
+					/>
 				</PanelBody>
 
-				{ /* Main image panel */ }
+				{ /* Main Image Panel */ }
 				<PanelBody title={ __( 'Main Image', 'ambrygen-web' ) }>
-					<MediaUploadCheck>
-						<MediaUpload
-							onSelect={ ( media ) =>
-								setAttributes( {
-									mainImage: media?.url,
-									mainImageSizes: media?.sizes || {},
-								} )
-							}
-							allowedTypes={ [ 'image' ] }
-							render={ ( { open } ) => (
-								<div className="image-panel-preview">
-									{ mainImage && (
-										<img src={ mainImage } alt="" />
-									) }
-									<Button
-										onClick={ open }
-										variant="secondary"
-									>
-										{ mainImage
-											? __(
-													'Replace Image',
-													'ambrygen-web'
-											  )
-											: __(
-													'Select Image',
-													'ambrygen-web'
-											  ) }
-									</Button>
-									{ mainImage && (
-										<Button
-											isDestructive
-											onClick={ () =>
-												setAttributes( {
-													mainImage: '',
-													mainImageSizes: {},
-												} )
-											}
-										>
-											{ __(
-												'Remove Image',
-												'ambrygen-web'
-											) }
-										</Button>
-									) }
-								</div>
-							) }
-						/>
-					</MediaUploadCheck>
+					<ImageUploader
+						url={ mainImage }
+						label={ __( 'Main Image', 'ambrygen-web' ) }
+						onSelect={ ( media ) =>
+							setAttributes( {
+								mainImage: media?.url,
+								mainImageId: media?.id,
+							} )
+						}
+						onRemove={ () =>
+							setAttributes( {
+								mainImage: null,
+								mainImageId: null,
+							} )
+						}
+					/>
 				</PanelBody>
 			</InspectorControls>
 
@@ -338,24 +215,24 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			<div className="ambry-testimonials__graphic-images">
 				{ overlayImage && (
 					<div className="ambry-testimonials__graphic-images__overlay-left ambry-testimonials__graphic-images__img-block">
-						<img
-							src={ overlayImage }
-							srcSet={ buildSrcSet( overlayImageSizes ) }
-							alt=""
-							className="overlay__img"
-						/>
+						{ overlayImage && (
+							<img
+								src={ overlayImage }
+								className="overlay__img"
+							/>
+						) }
 					</div>
 				) }
 
 				{ /* Secondary Image */ }
 				{ secondaryImage && (
 					<div className="ambry-testimonials__graphic-images__overlay-right ambry-testimonials__graphic-images__img-block">
-						<img
-							src={ secondaryImage }
-							srcSet={ buildSrcSet( secondaryImageSizes ) }
-							className="overlay__img"
-							alt=""
-						/>
+						{ secondaryImage && (
+							<img
+								src={ secondaryImage }
+								className="overlay__img"
+							/>
+						) }
 					</div>
 				) }
 			</div>
@@ -371,16 +248,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			{ /* Main layout with image and testimonial items */ }
 			<div className="ambry-testimonials__layout">
 				<div className="ambry-testimonials__grid">
-					<div className="ambry-testimonials__top-inner__image-block">
+					{ /* <div className="ambry-testimonials__top-inner__image-block">
 						{ mainImage && (
-							<img
-								src={ mainImage }
-								srcSet={ buildSrcSet( mainImageSizes ) }
-								className="ambry-testimonials__main-image"
-								alt=""
-							/>
-						) }
-					</div>
+								<img
+									src={ mainImage }
+									alt=""
+									className="ambry-testimonials__main-image"
+								/>
+							) }
+					</div> */ }
 
 					<InnerBlocks
 						template={ ! hasInnerBlocks ? TEMPLATE : undefined }

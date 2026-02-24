@@ -1,3 +1,14 @@
 /**
- * Editor styles with color preview
+ * Newsletter Signup Block Styles
+ * Editor + Frontend Compatible
  */
+
+.newsletter {
+
+	&__image-block {
+
+		img {
+			height: 100% !important;
+		}
+	}
+}

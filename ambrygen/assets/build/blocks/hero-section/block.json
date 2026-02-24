@@ -42,7 +42,9 @@
           "backgroundImageAlt": "",
           "overlayImage1": "",
           "overlayImage1Id": 0,
+          "eyebrow": "",
           "overlayImage1Alt": "",
+          "headingTag": "h2",
           "overlayImage2": "",
           "overlayImage2Id": 0,
           "overlayImage2Alt": "",
@@ -52,7 +54,27 @@
           "buttonPrimaryText": "Start Your Order",
           "buttonPrimaryUrl": "#",
           "buttonSecondaryText": "Who We Are",
-          "buttonSecondaryUrl": "#"
+          "buttonSecondaryUrl": "#",
+          "primarybutton": {
+            "type": "object",
+            "default": {
+              "url": "",
+              "text": "string",
+              "target": "",
+              "rel": "",
+              "variant": ""
+            }
+          },
+          "secondarybutton": {
+            "type": "object",
+            "default": {
+              "url": "",
+              "text": "string",
+              "target": "",
+              "rel": "",
+              "variant": ""
+            }
+          }
         }
       ]
     },
@@ -71,6 +93,14 @@
     "autoplayDelay": {
       "type": "number",
       "default": 5000
+    },
+    "eyebrow": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "default": ""
     }
   },
   "editorScript": "file:./index.js",
@@ -78,5 +108,57 @@
   "style": "file:./style-index.css",
   "render": "file:./render.php",
   "viewScript": "file:./view.js",
-  "textdomain": "ambrygen-web"
+  "textdomain": "ambrygen-web",
+  "example": {
+    "attributes": {
+      "slides": [
+        {
+          "backgroundImage": "",
+          "backgroundImageId": 0,
+          "backgroundImageAlt": "",
+          "overlayImage1": "",
+          "overlayImage1Id": 0,
+          "eyebrow": "",
+          "overlayImage1Alt": "",
+          "headingTag": "h2",
+          "overlayImage2": "",
+          "overlayImage2Id": 0,
+          "overlayImage2Alt": "",
+          "heading": "Industry-leading genetic testing",
+          "content": "For over 25 years our high-quality, accessible genetic testing solutions have shaped important care decisions that patients and families make with their healthcare providers.",
+          "tagline": "This brings the Ambry mindset to life: a relentless pursuit to find the answers.",
+          "buttonPrimaryText": "Start Your Order",
+          "buttonPrimaryUrl": "#",
+          "buttonSecondaryText": "Who We Are",
+          "buttonSecondaryUrl": "#",
+          "primarybutton": {
+            "type": "object",
+            "default": {
+              "url": "",
+              "text": "string",
+              "target": "",
+              "rel": "",
+              "variant": ""
+            }
+          },
+          "secondarybutton": {
+            "type": "object",
+            "default": {
+              "url": "",
+              "text": "string",
+              "target": "",
+              "rel": "",
+              "variant": ""
+            }
+          }
+        }
+      ],
+      "showSliderNav": true,
+      "showSliderDots": true,
+      "autoplay": false,
+      "autoplayDelay": 5000,
+      "eyebrow": "Ambry Genetics",
+      "headingTag": "h2"
+    }
+  }
 }

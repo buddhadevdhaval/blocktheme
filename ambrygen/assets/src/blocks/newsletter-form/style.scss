@@ -76,9 +76,5 @@
 		@include bp.max(md) {
 			grid-column: span 12;
 		}
-
-		&__eyebrow-text {
-			color: var(--theme_primary_200);
-		}
 	}
 }

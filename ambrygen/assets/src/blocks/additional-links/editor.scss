@@ -1,0 +1,34 @@
+@use "sass:list";
+@use "../../css/partials/variables/breakpoints" as bp;
+
+$layout-pattern: 6, 6, 4, 4, 4, 6, 6, 4, 4, 4;
+$pattern-length: list.length($layout-pattern);
+
+.wp-additional-link__cards {
+	display: block;
+
+	.block-editor-block-list__layout {
+		display: grid;
+		grid-template-columns: repeat(12, 1fr);
+		gap: var(--theme_space_8);
+		margin-top: clamp(32px, calc(2.25rem + ((1vw - 7.67px) * 2.4014)), 46px);
+
+		@for $i from 1 through $pattern-length {
+			&:nth-child(#{$pattern-length}n + #{$i}) {
+				grid-column: span list.nth($layout-pattern, $i);
+			}
+		}
+
+		@include bp.max(xl-large) {
+			grid-column: span 6 !important;
+		}
+
+		@include bp.max(sm) {
+			grid-column: span 12 !important;
+		}
+
+		.additional-link__card {
+			margin-bottom: 0;
+		}
+	}
+}

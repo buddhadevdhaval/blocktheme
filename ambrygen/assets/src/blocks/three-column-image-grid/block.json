@@ -1,0 +1,62 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/three-column-image-grid",
+  "title": "Three Column Image Grid",
+  "category": "ambrygen",
+  "icon": "screenoptions",
+  "description": "A layout with two stacked cards on the left and one large featured card on the right.",
+  "supports": {
+    "html": false,
+    "anchor": true,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "spacing": {
+      "margin": true,
+      "padding": true,
+      "blockGap": true
+    },
+    "color": {
+      "background": true,
+      "text": true
+    }
+  },
+  "keywords": [
+    "cards",
+    "genetic",
+    "layout",
+    "grid"
+  ],
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2"
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "blockId": {
+      "type": "string"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web",
+  "example": {
+    "attributes": {
+      "heading": "Transforming Healthcare with Genetic Insight",
+      "headingTag": "h2",
+      "description": "This is a sample preview content for this block in the inserter.",
+      "blockId": 1
+    }
+  }
+}

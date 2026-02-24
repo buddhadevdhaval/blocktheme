@@ -3,21 +3,70 @@
   "apiVersion": 3,
   "name": "ambrygen/gallery-item",
   "title": "Gallery Item",
-  "parent": ["ambrygen/gallery"],
-  "supports": { "html": false },
-
-  "attributes": {
-    "imageUrl": { "type": "string", "default": "" },
-    "imageAlt": { "type": "string", "default": "" },
-    "imageSrcSet": { "type": "string", "default": "" },
-    "imageSizes": { "type": "string", "default": "" },
-
-    "title": { "type": "string", "default": "" },
-    "headingTag": { "type": "string", "default": "h5" },
-    "description": { "type": "string", "default": "" },
-    "link": { "type": "string", "default": "" }
+  "parent": [
+    "ambrygen/gallery"
+  ],
+  "supports": {
+    "html": false
   },
-    "editorScript": "file:./index.js",
+  "attributes": {
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "imageID": {
+      "type": "number",
+      "default": ""
+    },
+    "eyebrow": {
+      "type": "string",
+      "default": ""
+    },
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h5"
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "link": {
+      "type": "object",
+      "default": {
+        "url": "",
+        "text": "",
+        "target": "",
+        "rel": "",
+        "variant": ""
+      }
+    }
+  },
+  "usesContext": [
+    "ambrygen/galleryVariation"
+  ],
+  "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
-  "style": "file:./style-index.css"
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "imageUrl": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "imageID": 1,
+      "eyebrow": "Ambry Genetics",
+      "title": "Sample Title",
+      "headingTag": "h5",
+      "description": "This is a sample preview content for this block in the inserter.",
+      "link": {
+        "url": "Sample url",
+        "text": "Sample text",
+        "target": "Sample target",
+        "rel": "Sample rel",
+        "variant": "Sample variant"
+      }
+    }
+  }
 }

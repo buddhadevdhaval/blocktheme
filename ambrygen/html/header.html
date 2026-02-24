@@ -38,6 +38,12 @@
         <div class="header  container-1340">
             <div class="wrapper">
                 <div class="header__inner d-flex justify-content-between">
+                    <!-- Menu Toggle -->
+                    <div class="nav__menu-btn">
+                        <span class="nav__menu-btn-line"></span>
+                        <span class="nav__menu-btn-line nav__menu-btn-line--middle"></span>
+                        <span class="nav__menu-btn-line"></span>
+                    </div>
                     <!-- Logo -->
                     <div class="header__logo logo">
                         <a href="#" class="header__logo-link">
@@ -50,7 +56,11 @@
 
                     <!-- Right Section -->
                     <div class="header__right">
-
+                        <div class="user-icon">
+                            <a href="" class="user-icon-click">
+                                <img src="../assets/src/images/icn_user_profile.svg" />
+                            </a>
+                        </div>
                         <!-- Navigation -->
                         <div class="nav">
                             <div class="nav__overlay">
@@ -69,6 +79,14 @@
 
                                                 <!-- Mega Menu -->
                                                 <div class="nav__item--mega-menu mega-menu--platform">
+                                                    <div class="menu-drawer-close-button">
+                                                        <div class="icon">
+                                                            <img src="../assets/src/images/dropdown-arrow.svg"
+                                                                alt="left arrow icon">
+                                                        </div>
+                                                        <span
+                                                            class="label-splus-bold-italic close-title">Patients</span>
+                                                    </div>
                                                     <div class="nav__item--mega-menu__wrapper">
                                                         <div class="nav__item--mega-menu__grid">
                                                             <div class="nav__item--mega-menu__item">
@@ -93,6 +111,15 @@
                                                                         decisions.</div>
                                                                 </div>
                                                                 <div class="nav__item--mega-menu__submenu-inner">
+                                                                    <div class="menu-drawer-close-button">
+                                                                        <div class="icon">
+                                                                            <img src="../assets/src/images/dropdown-arrow.svg"
+                                                                                alt="left arrow icon">
+                                                                        </div>
+                                                                        <span
+                                                                            class="label-splus-bold-italic close-title">Take
+                                                                            Action</span>
+                                                                    </div>
                                                                     <div
                                                                         class="nav__item--mega-menu__submenu-inner--col">
                                                                         <div
@@ -232,10 +259,9 @@
                                             </li>
 
                                             <!-- Normal Menu Item -->
-                                            <li class="nav__item nav__item--has-children">
+                                            <li class="nav__item">
                                                 <div class="nav__item--angle">
                                                     <a href="" class="nav__link">Providers</a>
-                                                    <span class="nav__expand"></span>
 
                                                     <!-- <ul class="nav__item--sub-menu">
                                                         <li class="nav__sub-item">
@@ -260,6 +286,14 @@
                                                 <span class="nav__expand"></span>
                                                 <!-- Mega Menu -->
                                                 <div class="nav__item--mega-menu mega-menu--platform">
+                                                    <div class="menu-drawer-close-button">
+                                                        <div class="icon">
+                                                            <img src="../assets/src/images/dropdown-arrow.svg"
+                                                                alt="left arrow icon">
+                                                        </div>
+                                                        <span
+                                                            class="label-splus-bold-italic close-title">Solutions</span>
+                                                    </div>
                                                     <div
                                                         class="nav__item--mega-menu__wrapper nav__item--mega-menu__second-level">
                                                         <div class="nav__item--mega-menu__grid">
@@ -422,6 +456,14 @@
                                                 <span class="nav__expand"></span>
                                                 <!-- Mega Menu -->
                                                 <div class="nav__item--mega-menu mega-menu--platform">
+                                                    <div class="menu-drawer-close-button">
+                                                        <div class="icon">
+                                                            <img src="../assets/src/images/dropdown-arrow.svg"
+                                                                alt="left arrow icon">
+                                                        </div>
+                                                        <span
+                                                            class="label-splus-bold-italic close-title">Company</span>
+                                                    </div>
                                                     <div
                                                         class="nav__item--mega-menu__wrapper nav__item--mega-menu__second-level">
                                                         <div class="nav__item--mega-menu__grid">
@@ -624,13 +666,6 @@
                             <a href="#" class="site-btn is-style-site-marker-btn">See a Demo</a>
                         </div>
 
-                        <!-- Menu Toggle -->
-                        <button class="menu-toggle" style="display: none;">
-                            <span class="menu-toggle__line"></span>
-                            <span class="menu-toggle__line"></span>
-                            <span class="menu-toggle__line"></span>
-                        </button>
-
                     </div>
 
                     <!-- Desktop CTA -->
@@ -661,10 +696,10 @@
 		</div>
 	</main> -->
 
-    <script type="text/javascript" src="../assets/src/js/vendors/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="../assets/build/scripts.min.js"></script>
     <script type="text/javascript" src="../assets/src/js/header/topbar.js"></script>
-    <script>       
+    <script>
         if (window.innerWidth >= 1200) {
             document.querySelectorAll('.nav__item--mega-menu').forEach(megaMenu => {
                 const catItems = megaMenu.querySelectorAll('.submenu-inner-link');

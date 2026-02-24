@@ -12,11 +12,7 @@
   "attributes": {
     "title": {
       "type": "string",
-      "default": "Get in"
-    },
-    "highlightText": {
-      "type": "string",
-      "default": "Touch"
+      "default": "Title"
     },
     "content": {
       "type": "string",
@@ -30,5 +26,12 @@
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
-  "render": "file:./render.php"
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "title": "Title",
+      "content": "<p>Please complete the form if you are a provider, pharma or business development partner, or payor.</p><p>All others, including patients who have received or are seeking genetic testing services, should reach out to the appropriate Ambry team at the email or phone number listed above.</p>",
+      "headingLevel": "h2"
+    }
+  }
 }

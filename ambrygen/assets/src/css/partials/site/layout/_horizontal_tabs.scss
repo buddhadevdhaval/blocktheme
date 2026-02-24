@@ -1,0 +1,56 @@
+@use "../../variables/breakpoints" as bp;
+
+.tabs__nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px;
+    background: var(--theme_gray_50);
+    border: 1px solid var(--theme_gray_200);
+    border-radius: 12px;
+    width: fit-content;
+    margin: 0 auto;
+
+	@include bp.max(md) {
+		width: 100%;
+		white-space: nowrap;
+		overflow-y: auto;
+	}
+}
+
+.tabs__tab {
+    border: none;
+    background: transparent;
+    padding: 8px 12px;
+    height: 44px;
+    color: var(--theme_gray_500);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    margin: 0;
+
+    &:hover {
+        background: var(--theme_cg_blue);
+        color: var(--theme_white);
+    }
+
+    &.is-active {
+        background: var(--theme_cg_blue);
+        color: var(--theme_white);
+        box-shadow: 0 1px 3px 0 rgba(16, 24, 40, 0.10), 0 1px 2px 0 rgba(16, 24, 40, 0.06);
+    }
+}
+
+.tabs__panels {
+    position: relative;
+}
+
+.tabs__panel {
+    display: none;
+
+    &.is-active {
+        display: block;
+        animation: fadeIn 0.4s ease;
+    }
+}

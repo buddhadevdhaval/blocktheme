@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/three-column-image-grid-item",
+  "title": "Image Grid Card",
+  "category": "ambrygen",
+  "parent": [
+    "ambrygen/three-column-image-grid"
+  ],
+  "icon": "format-image",
+  "description": "Single image card for three column grid.",
+  "attributes": {
+    "sectiontitle": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "imageUrl": {
+      "type": "string"
+    },
+    "imageAlt": {
+      "type": "string"
+    },
+    "imageId": {
+      "type": "number"
+    },
+    "cta": {
+      "type": "object",
+      "default": {
+        "url": "",
+        "text": "",
+        "target": "",
+        "rel": "",
+        "variant": ""
+      }
+    },
+    "type": {
+      "type": "string",
+      "default": "small"
+    }
+  },
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "sectiontitle": "Sample Title",
+      "description": "This is a sample preview content for this block in the inserter.",
+      "imageUrl": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "imageAlt": "Ambry default preview image",
+      "imageId": 1,
+      "cta": {
+        "url": "Sample url",
+        "text": "Sample text",
+        "target": "Sample target",
+        "rel": "Sample rel",
+        "variant": "Sample variant"
+      },
+      "type": "small"
+    }
+  }
+}

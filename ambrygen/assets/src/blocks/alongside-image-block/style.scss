@@ -46,11 +46,15 @@
         color: var(--theme_gray_700);
 
         .location-list {
-            margin-bottom: 25px;
+            margin-bottom: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 0.434)), 25px);
 
             &:last-child {
                 margin-bottom: 0;
             }
+
+			.location-description {
+				color: var(--theme_gray_600);
+			}
         }
     }
 }

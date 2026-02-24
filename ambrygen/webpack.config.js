@@ -10,6 +10,7 @@ module.exports = {
 		editor: path.resolve( 'assets/src/js/editor.jsx' ),
 		editorStyle: path.resolve( 'assets/src/css/editor-style.scss' ),
 		scripts: path.resolve( 'assets/src/js/bundle.jsx' ),
+		admin: path.resolve( 'assets/src/js/admin.jsx' ),
 		header: path.resolve( 'assets/src/js/header.jsx' ),
 	},
 

@@ -1,8 +1,8 @@
 @use "../../css/partials/variables/breakpoints" as bp;
 // Swiper Styles
 @use "swiper/css";
-@use "swiper/css/navigation";
-@use "swiper/css/pagination";
+// @use "swiper/css/navigation";
+// @use "swiper/css/pagination";
 @use "swiper/css/effect-fade";
 
 .hero-section {
@@ -38,12 +38,10 @@
 		z-index: 0;
 
 		@include bp.max(lg) {
-			position: relative;
-			min-height: clamp(260px, calc(16.25rem + ((1vw - 3.75px) * 22.7273)), 400px);
-			max-height: clamp(260px, calc(16.25rem + ((1vw - 3.75px) * 22.7273)), 400px);
-			min-height: clamp(260px, calc(16.25rem + ((1vw - 3.75px) * 22.7273)), 400px);
+			min-height: inherit;
 			overflow: hidden;
 			position: relative;
+			height: clamp(260px, calc(16.25rem + ((1vw - 3.75px) * 22.7273)), 400px);
 		}
 	}
 
@@ -127,6 +125,9 @@
 	&__content {
 		background: var(--theme_white_gradient);
 		border-radius: 32px 32px 0 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 		margin-left: auto;
 		max-width: clamp(500px, calc(31.25rem + ((1vw - 9.92px) * 40.5028)), 645px);
 		min-height: 618px;
@@ -139,8 +140,16 @@
 			margin: 0;
 			max-width: 100%;
 			min-height: inherit;
-			padding: 24px 0;
+			padding: 24px 0 0 0;
 		}
+	}
+
+	&__eyebrow {
+		color: var(--theme_cg_blue);
+		font-size: var(--theme_font_size_7);
+		font-weight: 600;
+		letter-spacing: 0.48px;
+		line-height: 1.12;
 	}
 
 	&__heading {
@@ -153,12 +162,11 @@
 		font-family: var(--font__main);
 		font-size: var(--theme_font_size_9);
 		font-weight: 400;
-		letter-spacing: -0.36px;
+		letter-spacing: -0.08px;
 		line-height: 1.5;
-		margin-top: 18px;
 
-		@include bp.max(lg) {
-			letter-spacing: -0.27px;
+		@include bp.max(md) {
+			font-size: 15px;
 		}
 	}
 
@@ -169,27 +177,31 @@
 		font-weight: 600;
 		letter-spacing: -0.36px;
 		line-height: 1.5;
-		margin-top: 18px;
 
 		@include bp.max(lg) {
-			letter-spacing: -0.27px;
+			// letter-spacing: -0.27px;
+		}
+
+		@include bp.max(md) {
+			font-size: 15px;
 		}
 	}
 
 	&__actions {
 		display: flex;
 		gap: 24px;
-		margin-top: 25px;
 
-		@media (max-width: 374px) {
-			flex-wrap: wrap;
+		@include bp.max(sm) {
+			flex-direction: column;
 			gap: 12px;
+			justify-content: center;
 		}
 
 		.site-btn {
-			@media (max-width: 374px) {
+
+			@include bp.max(sm) {
 				justify-content: center;
-				text-align: centere;
+				text-align: center;
 
 				width: 100%
 			}
@@ -197,12 +209,32 @@
 	}
 
 	&__slider {
+
 		.swiper-button-next {
 			right: 20px;
 		}
 
 		.swiper-button-prev {
 			left: 20px;
+		}
+
+		.swiper-buttons {
+			justify-content: space-between;
+			left: 0;
+			margin: 0;
+			padding: 0 24px;
+			position: absolute;
+			top: 50%;
+			transform: translate(0, -50%);
+			width: 100%;
+			z-index: 1;
+
+			@include bp.max(lg) {
+				justify-content: center;
+				margin: 24px 0 0 0;
+				position: relative;
+				transform: translate(0, 0);
+			}
 		}
 	}
 }

@@ -1,0 +1,1 @@
+(()=>{function e(){const e=document.querySelectorAll(".get-started-ambry-block .card-grid-block .card-col .card-info");if(!e.length)return;e.forEach(e=>{e.style.height="auto"});let t=0;e.forEach(e=>{const o=e.offsetHeight;o>t&&(t=o)}),e.forEach(e=>{e.style.height=t+"px"})}window.addEventListener("load",e),window.addEventListener("resize",()=>{setTimeout(e,200)})})();

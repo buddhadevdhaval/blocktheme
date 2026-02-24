@@ -1,18 +1,5 @@
 /* Base Styles
 >> Edit these styles as required
->> Device Ranges:
->> - Mobile:  0 - 767px
->> - iPad:    768px - 1023px (or up to 991px)
->> - Desktop: 1024px+
->>
->> Min-Width Approach (Mobile-First):
->> @include tablet-up { ... }     -> 768px and above
->> @include desktop-up { ... }    -> 1024px and above
->>
->> Max-Width Approach (Desktop-First):
->> @include mobile { ... }        -> up to 767px
->> @include between(768px, 991px) { ... }  -> 768px to 991px
->> @include desktop { ... }       -> 1024px and above
 */
 
 @use "../variables/breakpoints" as bp;
@@ -29,6 +16,7 @@
 
 html {
 	box-sizing: border-box;
+	font-optical-sizing: auto;
 }
 
 body {

@@ -1,6 +1,7 @@
 /* Desktop menu styles */
 
 .editor-styles-wrapper {
+
 	.header-block-editor {
 		padding: 50px 20px;
 		max-width: 100% !important;
@@ -9,6 +10,7 @@
 	}
 
 	.block-editor-block-list__layout {
+
 		.nav {
 			height: 100%;
 
@@ -64,24 +66,15 @@
 					margin-right: 0;
 					padding-right: 0;
 				}
-
-				/* Hover / active underline */
-				&--active,
-				&--current,
-				&:hover {
-
-					>.nav__link-wrapper::before {
-						transform: scaleX(1);
-						transform-origin: bottom left;
-					}
-				}
 			}
 		}
 	}
 }
 
 .editor-styles-wrapper {
+
 	.block-editor-block-list__layout {
+
 		.nav__item--mega-menu__submenu-inner--links {
 			margin: 20px 0 0 0;
 			padding: 0;
@@ -111,6 +104,7 @@
 		}
 
 		.nav__item--mega-menu__grid {
+
 			&.nav__item--mega-menu__second-level {
 
 				grid-template-columns: 400px 1fr;

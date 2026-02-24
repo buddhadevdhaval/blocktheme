@@ -36,6 +36,10 @@ export default function Edit( { attributes, setAttributes } ) {
 			locations: [ ...locations, { name: '', address: '' } ],
 		} );
 	};
+	const removeLocation = ( index ) => {
+		const newLocations = locations.filter( ( _, i ) => i !== index );
+		setAttributes( { locations: newLocations } );
+	};
 
 	return (
 		<div { ...blockProps }>
@@ -99,7 +103,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<div className="alongside-image-block__content">
 						<HeadingTag className="alongside-image-block__title heading-2 mb-0">
 							<RichText
-								tagName="span"
+								tagName={ HeadingTag }
 								value={ title }
 								onChange={ onChangeTitle }
 								placeholder={ __(
@@ -111,9 +115,10 @@ export default function Edit( { attributes, setAttributes } ) {
 									'core/italic',
 									'core/text-color',
 								] }
-								className="alongside-image-block__title-text"
+								className="alongside-image-block__title heading-2 mb-0"
 							/>
 						</HeadingTag>
+						<div className="is-style-gl-s24"></div>
 
 						<div className="alongside-image-block__text">
 							{ locations.map( ( loc, index ) => (
@@ -128,7 +133,7 @@ export default function Edit( { attributes, setAttributes } ) {
 												value
 											)
 										}
-										className="location-title"
+										className="location-title text-xl-semibold"
 									/>
 
 									<RichText
@@ -143,6 +148,17 @@ export default function Edit( { attributes, setAttributes } ) {
 										}
 										className="text-medium"
 									/>
+									<div className="actions-button">
+										<Button
+											variant="secondary"
+											onClick={ () =>
+												removeLocation( index )
+											}
+											className="components-button is-destructive"
+										>
+											Remove Location
+										</Button>
+									</div>
 								</div>
 							) ) }
 

@@ -1,26 +1,16 @@
-import { __ } from '@wordpress/i18n';
 import {
 	useBlockProps,
 	RichText,
 	InspectorControls,
-	MediaUpload,
-	MediaUploadCheck,
 } from '@wordpress/block-editor';
-import { PanelBody, Button } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
 
-function buildSrcSet( sizes ) {
-	if ( ! sizes ) {
-		return undefined;
-	}
+import { ImageUploader } from '../_shared/components';
+import { t } from '../_shared/utils';
 
-	return Object.values( sizes )
-		.filter( ( s ) => s?.url && s?.width )
-		.map( ( s ) => `${ s.url } ${ s.width }w` )
-		.join( ', ' );
-}
-
-export default function Edit( { attributes, setAttributes } ) {
-	const { logo, logoSizes, quote, author, role } = attributes;
+export default function Edit( { attributes, setAttributes, context } ) {
+	const { logo, quote, author, role } = attributes;
+	const mainImage = context?.[ 'ambrygen/mainImage' ];
 
 	return (
 		<div
@@ -29,89 +19,70 @@ export default function Edit( { attributes, setAttributes } ) {
 			} ) }
 		>
 			<InspectorControls>
-				<PanelBody title={ __( 'Logo Image', 'ambrygen-web' ) }>
-					<MediaUploadCheck>
-						<MediaUpload
-							onSelect={ ( media ) =>
-								setAttributes( {
-									logo: media?.url,
-									logoSizes: media?.sizes || {},
-								} )
-							}
-							allowedTypes={ [ 'image' ] }
-							render={ ( { open } ) => (
-								<div className="image-panel-preview">
-									{ logo && <img src={ logo } alt="" /> }
-
-									<Button
-										onClick={ open }
-										variant="secondary"
-									>
-										{ logo
-											? __(
-													'Replace Image',
-													'ambrygen-web'
-											  )
-											: __(
-													'Select Logo',
-													'ambrygen-web'
-											  ) }
-									</Button>
-
-									{ logo && (
-										<Button
-											isDestructive
-											onClick={ () =>
-												setAttributes( {
-													logo: '',
-													logoSizes: {},
-												} )
-											}
-										>
-											{ __(
-												'Remove Image',
-												'ambrygen-web'
-											) }
-										</Button>
-									) }
-								</div>
-							) }
-						/>
-					</MediaUploadCheck>
+				<PanelBody title={ t( 'Logo Image' ) }>
+					<ImageUploader
+						label={ t( 'Logo' ) }
+						url={ logo }
+						onSelect={ ( media ) =>
+							setAttributes( {
+								logoId: media?.id,
+								logo: media?.url,
+							} )
+						}
+						onRemove={ () =>
+							setAttributes( {
+								logoId: undefined,
+								logo: '',
+							} )
+						}
+					/>
 				</PanelBody>
 			</InspectorControls>
 
-			{ logo && (
-				<img
-					src={ logo }
-					srcSet={ buildSrcSet( logoSizes ) }
-					loading="lazy"
-					className="ambry-testimonials__grid__logo"
-					alt=""
-				/>
-			) }
+			<div className="ambry-testimonials__grid__item__thumb">
+				{ mainImage && (
+					<img src={ mainImage } alt="Main image" loading="lazy" />
+				) }
+			</div>
 
-			<RichText
-				tagName="p"
-				value={ quote }
-				onChange={ ( value ) => setAttributes( { quote: value } ) }
-				className="ambry-testimonials__grid__item__quote body2"
-			/>
+			<div className="ambry-testimonials__grid__item__content">
+				{ logo && (
+					<img
+						src={ logo }
+						loading="lazy"
+						alt="Company logo"
+						className="ambry-testimonials__grid__logo"
+					/>
+				) }
 
-			<div className="ambry-testimonials__layout__author-details">
-				<RichText
-					tagName="strong"
-					value={ author }
-					onChange={ ( value ) => setAttributes( { author: value } ) }
-					className="ambry-testimonials__layout__author-details__author body2-medium"
-				/>
+				<div className="is-style-gl-s32"></div>
 
 				<RichText
-					tagName="span"
-					value={ role }
-					onChange={ ( value ) => setAttributes( { role: value } ) }
-					className="ambry-testimonials__layout__author-details__role body2-medium"
+					tagName="div"
+					value={ quote }
+					onChange={ ( value ) => setAttributes( { quote: value } ) }
+					className="ambry-testimonials__grid__item__quote body2-reg"
 				/>
+
+				<div className="ambry-testimonials__layout__author-details">
+					<RichText
+						tagName="div"
+						value={ author }
+						onChange={ ( value ) =>
+							setAttributes( { author: value } )
+						}
+						className="ambry-testimonials__layout__author-details__author body2-medium"
+					/>
+
+					<RichText
+						tagName="div"
+						value={ role }
+						onChange={ ( value ) =>
+							setAttributes( { role: value } )
+						}
+						className="ambry-testimonials__layout__author-details__role body2-medium"
+					/>
+				</div>
 			</div>
 		</div>
 	);

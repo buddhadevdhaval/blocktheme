@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/tab-item",
+  "title": "Tab item",
+  "category": "ambrygen",
+  "parent": [
+    "ambrygen/tab-menu"
+  ],
+  "icon": "editor-kitchensink",
+  "supports": {
+    "anchor": true
+  },
+  "description": "Single image card for three column grid.",
+  "attributes": {
+    "label": {
+      "type": "string",
+      "default": "Tab Label"
+    },
+    "targetId": {
+      "type": "string",
+      "default": ""
+    },
+    "is_active_tab": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "label": "Tab Label",
+      "targetId": 1,
+      "is_active_tab": false
+    }
+  }
+}

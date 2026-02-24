@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/our-team-item",
+  "title": "Team Member",
+  "category": "ambrygen",
+  "icon": "id",
+  "parent": [
+    "ambrygen/our-team"
+  ],
+  "attributes": {
+    "postId": {
+      "type": "number"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "postId": 1
+    }
+  }
+}

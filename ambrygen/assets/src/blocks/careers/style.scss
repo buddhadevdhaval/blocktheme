@@ -1,0 +1,180 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+
+
+.careers-highlight {
+
+	&__intro {
+
+		>p {
+			margin: 0;
+		}
+
+		.block_rowflex-link {
+			margin-top: var(--theme_space_8);
+
+			@include bp.max(lg) {
+				display: none;
+			}
+		}
+	}
+
+
+	&__row {
+		display: grid;
+		grid-template-columns: clamp(386px, 24.125rem + (1vw - 9.92px) * 27.933, 486px) 1fr;
+		gap: clamp(20px, 1.25rem + (1vw - 7.68px) * 5.1546, 50px);
+
+		@include bp.max(lg) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	&__left {
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__title {
+		color: var(--theme_gray_900);
+	}
+
+	&__jobs {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		height: 493px;
+		overflow-y: auto;
+	}
+
+	&__job {
+		padding: var(--theme_space_9) 0;
+		border-top: 1px solid var(--theme_gray_201);
+
+		&:first-child {
+			border-top: none;
+			padding-top: var(--theme_space_8);
+
+			@include bp.max(lg) {
+				padding-top: 0;
+			}
+		}
+
+		&:last-child {
+			padding-bottom: 0;
+		}
+
+		&--row {
+			display: flex;
+			gap: 8px;
+			align-items: center;
+
+			@include bp.max(md) {
+				flex-wrap: wrap;
+			}
+		}
+	}
+
+	&__job-tag {
+		display: flex;
+		align-items: center;
+		border: 1px solid var(--theme_blue_200);
+		background: var(--theme_blue_50);
+		padding: 2px 10px 2px 8px;
+		border-radius: 16px;
+		color: var(--theme_blue_700);
+		gap: 6px;
+		flex: auto 0 0;
+
+		&::before {
+			content: '';
+			display: inline-block;
+			background-color: var(--theme_blue_500);
+			width: 6px;
+			height: 6px;
+			border-radius: 999px;
+		}
+	}
+
+	&__job-title {
+		color: var(--theme_gray_900);
+
+		@include bp.max(md) {
+			flex: 100% 0 0;
+		}
+
+		>a {
+			color: inherit;
+			padding: 0;
+			border: none;
+		}
+	}
+
+	&__job-meta {
+		display: flex;
+		flex-wrap: wrap;
+		column-gap: 20px;
+		row-gap: 10px;
+		font-size: 14px;
+		color: #6b7280;
+		margin-top: var(--theme_space_8);
+	}
+
+	&__job-type,
+	&__job-location {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		span {
+			color: var(--theme_gray_600);
+		}
+	}
+
+	&__icon {
+		width: 20px;
+		height: 20px;
+
+		img {
+			object-fit: contain;
+			width: 100%;
+		}
+	}
+
+	&__link {
+		margin-top: auto;
+		font-size: 14px;
+		font-weight: 600;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	&__right {
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__media {
+		position: relative;
+		border-radius: 16px;
+		overflow: hidden;
+		height: 100%;
+
+		video,
+		iframe {
+			margin: 0;
+			height: 100%;
+			object-fit: cover;
+			width: 100%;
+		}
+	}
+
+	&__image {
+		width: 100%;
+		height: auto;
+		display: block;
+
+	}
+}

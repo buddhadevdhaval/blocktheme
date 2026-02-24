@@ -53,5 +53,13 @@
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
-  "textdomain": "ambrygen-web"
+  "textdomain": "ambrygen-web",
+  "example": {
+    "attributes": {
+      "tagName": "section",
+      "containerWidth": "container-1340",
+      "backgroundStyle": "default",
+      "isFixedBackground": false
+    }
+  }
 }

@@ -1,0 +1,144 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/careers",
+  "title": "Careers Block",
+  "category": "ambrygen",
+  "icon": "groups",
+  "description": "Parent block for careers",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Our Executive Team"
+    },
+    "intro": {
+      "type": "string",
+      "default": "We are proud to be leading the industry that we love and working together."
+    },
+    "headingLevel": {
+      "type": "string",
+      "default": "h2"
+    },
+    "videoUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "videoType": {
+      "type": "string",
+      "default": "mp4"
+    },
+    "videoPoster": {
+      "type": "object",
+      "default": null
+    },
+    "careersLink": {
+      "type": "string",
+      "default": ""
+    },
+    "link": {
+      "type": "object",
+      "default": {
+        "url": "",
+        "text": "",
+        "target": "",
+        "rel": "",
+        "variant": ""
+      }
+    },
+    "careerslink": {
+      "type": "object",
+      "default": {
+        "url": "",
+        "text": "",
+        "target": "",
+        "rel": "",
+        "variant": ""
+      }
+    },
+    "viewAllText ": {
+      "type": "string",
+      "default": ""
+    },
+    "playIcon": {
+      "type": "object",
+      "default": null
+    },
+    "joblocationicon": {
+      "type": "object",
+      "default": null
+    },
+    "jobtypeicon": {
+      "type": "object",
+      "default": null
+    },
+    "pauseIcon": {
+      "type": "object",
+      "default": null
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php",
+  "providesContext": {
+    "ambrygen/joblocationicon": "joblocationicon",
+    "ambrygen/jobtypeicon": "jobtypeicon"
+  },
+  "example": {
+    "attributes": {
+      "title": "Our Executive Team",
+      "intro": "We are proud to be leading the industry that we love and working together.",
+      "headingLevel": "h2",
+      "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "videoType": "mp4",
+      "videoPoster": {},
+      "careersLink": {
+        "url": "https://example.com",
+        "text": "Learn More",
+        "target": "_self",
+        "rel": "Sample rel",
+        "variant": "primary"
+      },
+      "link": {
+        "url": "Sample url",
+        "text": "Sample text",
+        "target": "Sample target",
+        "rel": "Sample rel",
+        "variant": "Sample variant"
+      },
+      "careerslink": {
+        "url": "Sample url",
+        "text": "Sample text",
+        "target": "Sample target",
+        "rel": "Sample rel",
+        "variant": "Sample variant"
+      },
+      "viewAllText ": "Sample viewAllText ",
+      "playIcon": {
+        "id": 1,
+        "url": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+        "alt": "Icon"
+      },
+      "joblocationicon": {
+        "id": 1,
+        "url": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+        "alt": "Icon"
+      },
+      "jobtypeicon": {
+        "id": 1,
+        "url": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+        "alt": "Icon"
+      },
+      "pauseIcon": {
+        "id": 1,
+        "url": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+        "alt": "Icon"
+      }
+    }
+  }
+}

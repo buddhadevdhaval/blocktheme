@@ -1,14 +1,15 @@
 @use "../../variables/breakpoints" as bp;
 
 @mixin site-btn-style {
-	background-color: var(--theme_color_primary);
+	// background-color: var(--theme_color_primary);
+	background-color: #009bd2;
 	border: 1px solid transparent;
 	border-radius: 8px;
 	box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
 	color: var(--theme_button_color);
 	display: inline-flex;
-	font-size: var(--theme_font_size_10);
-	font-weight: 500;
+	font-size: var(--theme_font_size_7);
+	font-weight: 600;
 	letter-spacing: -0.24px;
 	line-height: 1.5;
 	outline: none;
@@ -27,7 +28,8 @@
 
 
 	&:hover {
-		background-color: var(--theme_button_bgcolor_hover);
+		// background-color: var(--theme_button_bgcolor_hover);
+		background-color: #54c6ef;
 		color: var(--theme_button_color_hover);
 	}
 
@@ -56,15 +58,38 @@
 			letter-spacing: -0.18px;
 		}
 	}
+
+	&.text-14 {
+		font-size: var(--theme_font_size_8);
+	}
 }
 
-@mixin site-secondary-btn {
-	background-color: var(--theme_secondary_button_bgcolor);
-	color: var(--theme_secondary_button_color);
+@mixin site-parimary-700 {
+	background-color: var(--theme_cg_blue);
+	color: var(--theme_white);
 
 	&:hover {
-		background-color: var(--theme_lynx_screen_blue);
-		color: var(--theme_clean_pool);
+		background-color: var(--theme_button_bgcolor_hover);
+		color: var(--theme_button_color_hover);
+	}
+}
+
+
+
+
+
+
+@mixin site-secondary-btn {
+	// background-color: var(--theme_secondary_button_bgcolor);
+	background-color: #b0e5f8;
+	color: #54c6ef;
+	// color: var(--theme_secondary_button_color);
+
+	&:hover {
+		// background-color: var(--theme_lynx_screen_blue);
+		// color: var(--theme_clean_pool);
+		background-color: #33bbec;
+		color: #54c6ef;
 	}
 
 	&:focus {
@@ -147,6 +172,15 @@
 			transition: 0.35s;
 			width: 20px;
 		}
+
+		&.icon-arrow-up {
+
+			&::after {
+				transform: rotate(-45deg);
+				bottom: -1px;
+				position: relative;
+			}
+		}
 	}
 }
 
@@ -201,6 +235,11 @@ body {
 
 			@include site-trailing-icon;
 		}
+
+		&.is-style-site-parimary-700 {
+
+			@include site-parimary-700;
+		}
 	}
 
 	// Backend Buttons - Use the Same Classname which used in Frontend
@@ -232,6 +271,14 @@ body {
 			.wp-block-button__link {
 
 				@include site-trailing-icon;
+			}
+		}
+
+		&.is-style-site-parimary-700 {
+
+			.wp-block-button__link {
+
+				@include site-parimary-700;
 			}
 		}
 	}

@@ -1,0 +1,50 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+
+// .genetic-cards__container {
+
+// 	.block-editor-inner-blocks,
+// 	.block-editor-block-list__layout {
+// 		display: contents;
+// 	}
+
+// 	.block-editor-block-list__layout>.genetic-cards__card {
+
+// 		@include bp.max(xl-large) {
+
+// 			&--small {
+// 				grid-column: 1;
+// 			}
+
+// 			&--main {
+// 				grid-column: 2;
+// 				grid-row: 1 / span 2;
+// 			}
+// 		}
+// 	}
+// }
+
+
+
+
+
+.our-approach {
+
+	&__content {
+		display: block;
+
+		.block-editor-block-list__layout {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: var(--theme_space_8);
+			justify-content: space-between;
+
+			@include bp.max(lg) {
+				grid-template-columns: repeat(2, 1fr);
+			}
+
+			@include bp.max(md) {
+				grid-template-columns: repeat(1, 1fr);
+			}
+		}
+	}
+}

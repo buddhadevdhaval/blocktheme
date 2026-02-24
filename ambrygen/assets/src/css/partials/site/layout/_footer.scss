@@ -118,7 +118,8 @@
 
 
 
-.social-links {
+.social-links,
+.wp-block-social-links {
 	display: flex;
 	gap: 20px;
 	list-style: none;
@@ -131,13 +132,33 @@
 		align-items: center;
 	}
 
-	&__link {
+	&__link,
+	.wp-social-link,
+	.wp-block-social-link.wp-social-link {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
 		width: 20px;
 		height: 20px;
 		text-decoration: none;
+
+		&:hover {
+			transform: inherit;
+		}
+
+		.screen-reader-text {
+			display: none;
+		}
+
+		svg {
+			width: 100%;
+			height: 100%;
+			transition: fill 0.3s ease;
+
+			&:hover {
+				fill: var(--theme_color_primary);
+			}
+		}
 
 		figure {
 			margin: 0;

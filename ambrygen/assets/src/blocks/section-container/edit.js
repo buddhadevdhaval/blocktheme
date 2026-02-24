@@ -65,6 +65,10 @@ function ContainerWidthControl( { value, onChange } ) {
 					value: 'container-1280',
 				},
 				{
+					label: __( 'Container 828px', 'ambrygen-web' ),
+					value: 'container-768',
+				},
+				{
 					label: __( 'Full Width', 'ambrygen-web' ),
 					value: 'container-full',
 				},
@@ -100,11 +104,11 @@ function BackgroundStyleControl( { value, onChange } ) {
 					value: '',
 				},
 				{
-					label: __( 'Primary Color', 'ambrygen-web' ),
+					label: __( 'Primary Background', 'ambrygen-web' ),
 					value: 'bg-primary',
 				},
 				{
-					label: __( 'Secondary Color', 'ambrygen-web' ),
+					label: __( 'Secondary Background', 'ambrygen-web' ),
 					value: 'bg-secondary',
 				},
 				{
@@ -125,6 +129,10 @@ function BackgroundStyleControl( { value, onChange } ) {
 				{
 					label: __( 'Blue Gradient Background', 'ambrygen-web' ),
 					value: 'bg-blue-gradient',
+				},
+				{
+					label: __( 'Gradient One Background', 'ambrygen-web' ),
+					value: 'bg-gradient1',
 				},
 			] }
 			onChange={ onChange }

@@ -1,0 +1,286 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+
+.our-team {
+
+	&__header {
+
+		@include bp.max(md) {
+			flex-direction: column;
+		}
+	}
+
+	&__intro {
+		color: var(--theme_gray_600);
+	}
+
+	&__grid {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+
+		/* dynamic layout tokens */
+		--cols: 4;
+		--gap: clamp(22px, calc(1.375rem + ((1vw - 7.68px) * 1.7182)), 32px);
+
+		gap: var(--gap);
+
+		@include bp.max(xl-large) {
+			--cols: 3;
+		}
+
+		@include bp.max(lg) {
+			--cols: 3;
+		}
+
+		@include bp.max(md) {
+			--cols: 2;
+		}
+
+		@include bp.max(sm) {
+			row-gap: 32px;
+		}
+
+
+		>a {
+
+			&:hover {
+
+				.our-team__info {
+
+					.our-team__name {
+						color: var(--theme_link_color);
+						transition: 0.3s;
+					}
+				}
+			}
+		}
+	}
+
+
+
+	&__card {
+		display: flex;
+		flex-direction: column;
+		flex: 0 0 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols));
+		text-decoration: none;
+		border-radius: 0;
+		border: none;
+		padding: 0;
+
+	}
+
+
+	&__image-wrapper {
+		border-radius: 16px;
+		overflow: hidden;
+		// width: 311px;
+		// height: 311px;
+		aspect-ratio: 1 / 1;
+
+		@include bp.max(lg) {
+			width: 100%;
+			height: 100%;
+		}
+	}
+
+	&__image {
+		width: 100%;
+		height: auto;
+		display: block;
+	}
+
+	&__info {
+		margin-top: clamp(14px, calc(0.875rem + ((1vw - 7.68px) * 1.7182)), 24px);
+	}
+
+	&__name {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		justify-content: space-between;
+		color: var(--theme_gray_900);
+		transition: 0.3s;
+	}
+
+	&__link {
+		position: relative;
+		flex: 20px 0 0;
+		width: 20px;
+		height: 20px;
+
+		&::before {
+			content: '';
+			background-image: url(../../images/link-arrow.svg);
+			background-repeat: no-repeat;
+			background-position: center center;
+			width: 20px;
+			height: 20px;
+			position: absolute;
+		}
+	}
+
+	&__role {
+		display: block;
+		color: var(--theme_cg_blue);
+	}
+
+	@media (max-width: 480px) {
+
+		&__card {
+			flex: 0 0 100%;
+			max-width: 100%;
+		}
+	}
+}
+
+.our-leadership {
+	overflow: hidden;
+
+	&__header {
+
+		@include bp.max(md) {
+			flex-direction: column;
+		}
+	}
+
+	&__intro {
+		color: var(--theme_gray_600);
+	}
+
+
+	&__card {
+		display: flex;
+		flex-direction: column;
+		text-decoration: none;
+		border-radius: 0;
+		border: none;
+		padding: 0;
+
+		/* defaults */
+		--cols: 3;
+		--gap: 24px;
+
+		flex: 0 0 calc((100% / var(--cols)) - var(--gap));
+
+		@include bp.max(xl-large) {
+			--cols: 3;
+			--gap: 20px;
+		}
+
+		@include bp.max(lg) {
+			--cols: 3;
+			--gap: 16px;
+		}
+
+		@include bp.max(md) {
+			--cols: 2;
+			--gap: 18px;
+		}
+	}
+
+
+	&__image-wrapper {
+		border-radius: 16px;
+		overflow: hidden;
+		width: 100%;
+		height: 100%;
+	}
+
+	&__image {
+		width: 100%;
+		height: auto;
+		display: block;
+	}
+
+	&__info {
+		margin-top: clamp(14px, calc(0.875rem + ((1vw - 7.68px) * 1.7182)), 24px);
+	}
+
+	&__name {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		justify-content: space-between;
+		color: var(--theme_gray_900);
+	}
+
+	&__link {
+		position: relative;
+		flex: 20px 0 0;
+		width: 20px;
+		height: 20px;
+
+		&::before {
+			content: '';
+			background-image: url(../../images/link-arrow.svg);
+			background-repeat: no-repeat;
+			background-position: center center;
+			width: 20px;
+			height: 20px;
+			position: absolute;
+		}
+	}
+
+	&__role {
+		display: block;
+		color: var(--theme_cg_blue);
+	}
+
+	@media (max-width: 480px) {
+
+		&__card {
+			flex: 0 0 100%;
+			max-width: 100%;
+		}
+	}
+
+	.swiper-inline-btn {
+		justify-content: center;
+		margin-top: var(--theme_space_9);
+	}
+}
+
+.swiper-inline-btn {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+
+	.swiper-button-next,
+	.swiper-button-prev {
+		align-items: center;
+		background-color: var(--theme_white_80);
+		border: 1px solid var(--theme_color_primary);
+		cursor: pointer;
+		display: flex;
+		border-radius: 28px;
+		height: 50px;
+		justify-content: center;
+		margin-top: 0;
+		overflow: hidden;
+		top: 0;
+		transition: all .2s ease-in-out;
+		width: 50px;
+		z-index: 10;
+		position: static;
+
+		&::after {
+			content: '';
+			background-image: url(../../images/arrow-slider.svg);
+			background-position: 50%;
+			background-repeat: no-repeat;
+			font-size: 0;
+			height: 24px;
+			-o-object-fit: contain;
+			object-fit: contain;
+			transition: all .3s ease-in-out;
+			width: 24px;
+		}
+	}
+
+	.swiper-button-prev {
+
+		&::after {
+			transform: scale(-1);
+		}
+	}
+}

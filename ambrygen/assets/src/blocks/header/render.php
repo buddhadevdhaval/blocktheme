@@ -13,7 +13,7 @@
 if (!defined('ABSPATH')) {
 	exit;
 }
-
+use Ambrygen\Theme\Core\Helper;
 /**
  * Normalize attributes.
  */
@@ -39,17 +39,18 @@ $ambrygen_mobile_cta_text = isset($ambrygen_attributes['mobileCtaText'])
 $ambrygen_mobile_cta_url = isset($ambrygen_attributes['mobileCtaUrl']) ? $ambrygen_attributes['mobileCtaUrl'] : '#';
 
 /**
- * Parse InnerBlocks by block name (for mega menus).
+ * Parse InnerBlocks by menuId.
  */
-$ambrygen_inner_blocks_by_type = array();
+$ambrygen_inner_blocks_by_id = array();
 
 if (
 	isset($block->inner_blocks)
 	&& !empty($block->inner_blocks)
 ) {
 	foreach ($block->inner_blocks as $ambrygen_inner_block) {
-		if (!empty($ambrygen_inner_block->name)) {
-			$ambrygen_inner_blocks_by_type[$ambrygen_inner_block->name] = $ambrygen_inner_block->render();
+		// Ensure attributes exist and menuId is set
+		if (isset($ambrygen_inner_block->attributes['menuId']) && !empty($ambrygen_inner_block->attributes['menuId'])) {
+			$ambrygen_inner_blocks_by_id[$ambrygen_inner_block->attributes['menuId']] = $ambrygen_inner_block->render();
 		}
 	}
 }
@@ -62,11 +63,11 @@ if (
 			<div class="top-bar__wrapper wrapper">
 				<div class="top-bar__row">
 					<div class="top-bar__text">
-						<?php echo esc_html($ambrygen_top_bar_text); ?>
+						<?php echo wp_kses_post($ambrygen_top_bar_text); ?>
 
 						<?php if (!empty($ambrygen_top_bar_link_text) && !empty($ambrygen_top_bar_link_url)): ?>
 							<a href="<?php echo esc_url($ambrygen_top_bar_link_url); ?>"
-								class="top-bar__link is-style-link-text-btn">
+								class="top-bar__link  site-btn is-style-site-text-btn has-icon">
 								<?php echo esc_html($ambrygen_top_bar_link_text); ?>
 							</a>
 						<?php endif; ?>
@@ -98,7 +99,8 @@ if (
 						? $ambrygen_attributes['logoAlt']
 						: get_bloginfo('name');
 					?>
-					<a href="<?php echo esc_url(home_url('/')); ?>" class="header__logo-link">
+					<a href="<?php echo esc_url(home_url('/')); ?>" class="header__logo-link" 	aria-label="<?php esc_attr_e( 'Ambry Genetics home', 'ambrygen' ); ?>"
+>
 						<img class="header__logo-img header__logo-img--default"
 							src="<?php echo esc_url($ambrygen_logo_url); ?>"
 							alt="<?php echo esc_attr($ambrygen_logo_alt); ?>" />
@@ -106,15 +108,16 @@ if (
 				</div>
 
 				<!-- Right Section -->
-				<div class="header__right">
+				<div class="header__navigation">
 
 					<!-- Navigation -->
 					<nav class="nav" aria-label="<?php esc_attr_e('Primary navigation', 'ambrygen-web'); ?>">
 						<div class="nav__overlay">
 							<div class="nav__container">
-								<div class="nav__menu">
+								<div class="nav__menu" aria-label="Primary navigation">
 									<ul class="nav__list">
-										<?php foreach ($ambrygen_nav_items as $ambrygen_item): ?>
+										<?php 
+										foreach ($ambrygen_nav_items as $ambrygen_item): ?>
 											<?php
 											$ambrygen_has_mega_menu = !empty($ambrygen_item['hasMegaMenu']);
 											$ambrygen_is_second_lvl = !empty($ambrygen_item['isSecondLevel']);
@@ -123,67 +126,91 @@ if (
 											if ($ambrygen_has_mega_menu) {
 												$ambrygen_item_classes .= ' nav__item--has-children nav__item--menu-has-children';
 											}
+											$ambrygen_is_active =  Helper::ambrygen_is_nav_item_active( $ambrygen_item );
+
+												if ( $ambrygen_is_active ) {
+													$ambrygen_item_classes .= ' active current-menu-item';
+												}
+
 											?>
 											<li class="<?php echo esc_attr($ambrygen_item_classes); ?>">
-												<a href="<?php echo esc_url($ambrygen_item['url']); ?>" class="nav__link">
-													<?php echo esc_html($ambrygen_item['label']); ?>
-												</a>
+
+												<div class="nav__item--angle">
+                                                    <div class="nav__item--tringle-touch">
+                                                        <a href="<?php echo esc_url($ambrygen_item['url']); ?>" class="nav__link">
+															<?php echo esc_html($ambrygen_item['label']); ?>
+														</a>
+                                                    </div>
+                                                </div>
+												<span class="nav__expand"></span>
+
 
 												<?php if ($ambrygen_has_mega_menu): ?>
-													<div class="nav__item--mega-menu mega-menu--platform">
+													<div class="nav__item--mega-menu mega-menu--platform menu-two-column ">
+															<div class="menu-drawer-close-button main-drawer-close-button">
+															<div class="icon">
+																<img
+																	src="<?php echo esc_url( get_theme_file_uri( 'assets/src/images/dropdown-arrow.svg' ) ); ?>"
+																	alt="Back"
+																>
+																<!-- <img src="../assets/src/images/dropdown-arrow.svg" alt="left arrow icon"> -->
+															</div>
+															<span class="label-splus-bold-italic close-title"><?php echo esc_html($ambrygen_item['label']); ?></span>
+														</div>
+
 														<div
 															class="nav__item--mega-menu__wrapper<?php echo $ambrygen_is_second_lvl ? ' nav__item--mega-menu__second-level' : ''; ?>">
 															<?php
-															$ambrygen_block_name = isset($ambrygen_item['megaMenuBlock'])
-																? $ambrygen_item['megaMenuBlock']
+															$ambrygen_menu_id = isset($ambrygen_item['megaMenuId'])
+																? $ambrygen_item['megaMenuId']
 																: '';
 
 															if (
-																$ambrygen_block_name
-																&& isset($ambrygen_inner_blocks_by_type[$ambrygen_block_name])
+																$ambrygen_menu_id
+																&& isset($ambrygen_inner_blocks_by_id[$ambrygen_menu_id])
 															) {
-																echo $ambrygen_inner_blocks_by_type[$ambrygen_block_name]; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-															} elseif ($ambrygen_block_name) {
-																echo wp_kses_post(
-																	do_blocks(
-																		'<!-- wp:' . esc_attr($ambrygen_block_name) . ' /-->'
-																	)
-																);
+																echo $ambrygen_inner_blocks_by_id[$ambrygen_menu_id]; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 															}
 															?>
 														</div>
+
+
+
 													</div>
 												<?php endif; ?>
 											</li>
 										<?php endforeach; ?>
 									</ul>
 								</div>
+								<div class="header__search">
+									<!-- <div class="search-toggle">
+										<img src="<?php echo esc_url(get_theme_file_uri('assets/src/images/search-icon-primary.svg')); ?>"
+										width="24" height="24" alt="<?php esc_attr_e('Search', 'ambrygen-web'); ?>" />
+									</div> -->
+									<form id="header-search-form" role="search" method="get"
+										action="<?php echo esc_url(home_url('/')); ?>">
+										<input type="text" name="s" aria-label="<?php esc_attr_e( 'Search for:', 'ambrygen-web' ); ?>"  placeholder="<?php esc_attr_e('Search', 'ambrygen-web'); ?>">
+										<button class="button" type="submit">
+											<?php esc_html_e('Search', 'ambrygen-web'); ?>
+										</button>
+									</form>
+								</div>
 							</div>
 						</div>
 					</nav>
-
-					<!-- Mobile CTA -->
-					<div class="header__btns header__btns--mobile" style="display: none;">
-						<a href="<?php echo esc_url($ambrygen_mobile_cta_url); ?>"
-							class="site-btn is-style-site-marker-btn">
-							<?php echo esc_html($ambrygen_mobile_cta_text); ?>
-						</a>
-					</div>
-
-					<!-- <button class="menu-toggle" type="button" aria-label="<?php //esc_attr_e( 'Toggle menu', 'ambrygen-web' ); ?>">
-						<span class="menu-toggle__line"></span>
-						<span class="menu-toggle__line"></span>
-						<span class="menu-toggle__line"></span>
-					</button> -->
 
 				</div>
 
 				<!-- Desktop CTA -->
 				<div class="header__right--col header__btns--desktop">
 					<div class="header__search">
+						<!-- <div class="search-toggle">
+							<img src="<?php echo esc_url(get_theme_file_uri('assets/src/images/search-icon-primary.svg')); ?>"
+							width="24" height="24" alt="<?php esc_attr_e('Search', 'ambrygen-web'); ?>" />
+						</div> -->
 						<form id="header-search-form" role="search" method="get"
 							action="<?php echo esc_url(home_url('/')); ?>">
-							<input type="text" name="s" placeholder="<?php esc_attr_e('Search', 'ambrygen-web'); ?>">
+							<input type="text" name="s" aria-label="<?php esc_attr_e( 'Search for:', 'ambrygen-web' ); ?>" placeholder="<?php esc_attr_e('Search', 'ambrygen-web'); ?>">
 							<button class="button" type="submit">
 								<?php esc_html_e('Search', 'ambrygen-web'); ?>
 							</button>
@@ -191,11 +218,24 @@ if (
 					</div>
 
 					<div class="header__login">
-						<a href="<?php echo esc_url($ambrygen_login_url); ?>" class="site-btn is-style-site-marker-btn">
-							<?php echo esc_html($ambrygen_login_text); ?>
-						</a>
+						<div class="user-icon">
+							<button class="user-icon-click">
+								<img
+									src="<?php echo esc_url( get_theme_file_uri( 'assets/src/images/icn_user_profile.svg' ) ); ?>"
+									alt="User profile"
+								>
+												</button>
+						</div>
 					</div>
+
+					<div class="nav__menu-btn">
+						<span class="nav__menu-btn-line"></span>
+						<span class="nav__menu-btn-line nav__menu-btn-line--middle"></span>
+						<span class="nav__menu-btn-line"></span>
+					</div>
+
 				</div>
+
 
 			</div>
 		</div>

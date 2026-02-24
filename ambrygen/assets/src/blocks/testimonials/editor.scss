@@ -18,9 +18,8 @@
                     padding: 50px;
 
                     &__quote {
-                        margin-bottom: 28px;
-                        font-size: clamp(19px, calc(1.1875rem + ((1vw - 7.68px) * 0.8591)), 24px);
-                        line-height: 1.33;
+                        color: var(--theme_gray_900);
+				margin-bottom: 20px;
                     }
                 }
             }

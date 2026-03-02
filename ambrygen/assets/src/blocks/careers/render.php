@@ -5,7 +5,10 @@ $ambrygen_attributes       = $attributes ?? array();
 $ambrygen_title            = $ambrygen_attributes['title'] ?? 'Title';
 $ambrygen_intro            = $ambrygen_attributes['intro'] ?? 'Add intro...';
 $ambrygen_heading_level    = $ambrygen_attributes['headingLevel'] ?? 'h2';
-$ambrygen_video_url        = $ambrygen_attributes['videoUrl'] ?? '';
+
+$ambrygen_video_array        = $ambrygen_attributes['videoObj'] ?? '';
+$ambrygen_video_url        = $ambrygen_video_array['url'] ?? '';
+
 
 
 $ambrygen_video_poster = isset( $ambrygen_attributes['videoPoster'] ) && is_array( $ambrygen_attributes['videoPoster'] )
@@ -13,6 +16,7 @@ $ambrygen_video_poster = isset( $ambrygen_attributes['videoPoster'] ) && is_arra
 	: array();
 
 $ambrygen_video_type       = $ambrygen_attributes['videoType'] ?? 'mp4'; // mp4 | embed
+
 
 $ambrygen_careers_link_top = isset( $ambrygen_attributes['link'] ) && is_array( $ambrygen_attributes['link'] )
 	? $ambrygen_attributes['link']
@@ -49,21 +53,30 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 		'class' => 'careers-highlight',
 	]
 );
-$ambrygen_careers_link_bottom_target = ! empty( $ambrygen_careers_link_bottom['target'] ) 
-    ? esc_attr( $ambrygen_careers_link_bottom['target'] ) 
+$ambrygen_careers_link_bottom_target = ! empty( $ambrygen_careers_link_bottom['target'] )
+    ? esc_attr( $ambrygen_careers_link_bottom['target'] )
     : '_self';
 
-$ambrygen_careers_link_top_target = ! empty( $ambrygen_careers_link_top['target'] ) 
-? esc_attr( $ambrygen_careers_link_top['target'] ) 
+$ambrygen_careers_link_top_target = ! empty( $ambrygen_careers_link_top['target'] )
+? esc_attr( $ambrygen_careers_link_top['target'] )
 : '_self';
 
-$ambrygen_iframe_src = Helper::get_iframe_src( $ambrygen_video_url );
+
+
+if( 'embed' === $ambrygen_video_type ) :
+	$ambrygen_iframe_src = $ambrygen_attributes['videoUrl'];
+$ambrygen_iframe_src = Helper::get_iframe_src( $ambrygen_iframe_src );
+endif;
+
 
 $ambrygen_heading_level = in_array(
 	$ambrygen_heading_level,
 	[ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ],
 	true
 ) ? $ambrygen_heading_level : 'h2';
+
+
+
 ?>
 
 <div <?php echo $ambrygen_wrapper_attributes; ?>>
@@ -76,8 +89,8 @@ $ambrygen_heading_level = in_array(
 			<p><?php echo esc_html( $ambrygen_intro ); ?></p>
 			<?php if ( ! empty( $ambrygen_careers_link_top ) && ! empty( $ambrygen_careers_link_top['text'] ) ) : ?>
 				<div class="block_rowflex-link">
-							<a 
-								href="<?php echo esc_url( $ambrygen_careers_link_top['url'] ); ?>" 
+							<a
+								href="<?php echo esc_url( $ambrygen_careers_link_top['url'] ); ?>"
 								class="site-btn is-style-site-text-btn has-icon"
 								target="<?php echo $ambrygen_careers_link_top_target; ?>"
 								<?php echo ( '_blank' === $ambrygen_careers_link_top_target ) ? 'rel="noopener noreferrer"' : ''; ?>
@@ -102,8 +115,8 @@ $ambrygen_heading_level = in_array(
 			<?php if ( ! empty( $ambrygen_careers_link_bottom['text'] ) && ! empty( $ambrygen_careers_link_bottom['url'] ) ) : ?>
 				<div class="block-btn">
 					<div class="is-style-gl-s32"></div>
-					 <a 
-						href="<?php echo esc_url( $ambrygen_careers_link_bottom['url'] ); ?>" 
+					 <a
+						href="<?php echo esc_url( $ambrygen_careers_link_bottom['url'] ); ?>"
 						class="site-btn is-style-site-text-btn has-icon"
 						target="<?php echo $ambrygen_careers_link_bottom_target; ?>"
 						<?php echo ( '_blank' === $ambrygen_careers_link_bottom_target ) ? 'rel="noopener noreferrer"' : ''; ?>
@@ -115,7 +128,7 @@ $ambrygen_heading_level = in_array(
 		</div>
 
 		<div class="careers-highlight__right">
-			<div class="careers-highlight__media">
+			<div class="careers-highlight__media   media_video">
 				<?php if ( 'mp4' === $ambrygen_video_type && $ambrygen_video_url ) : ?>
 					<video class="videos" playsinline muted preload="metadata" loop
 						<?php if ( $ambrygen_video_poster_url ) : ?>
@@ -126,7 +139,7 @@ $ambrygen_heading_level = in_array(
 					</video>
 				<?php elseif ( 'embed' === $ambrygen_video_type ) : ?>
 					<?php if ( $ambrygen_iframe_src ) : ?>
-						<div class="careers-highlight__media video-embed">
+						<div class="careers-highlight__media video-embed   media_video">
 							<iframe
 								src="<?php echo esc_url( $ambrygen_iframe_src ); ?>"
 								title="<?php esc_attr_e( 'Video', 'ambrygen' ); ?>"
@@ -140,22 +153,22 @@ $ambrygen_heading_level = in_array(
 					<?php endif; ?>
 				<?php endif; ?>
 
-				<div class="careers-highlight__play-icon-video">
-					<div class="careers-highlight__play-icon">
+				<div class="careers-highlight__play-icon-video play-icon-video">
+					<div class="careers-highlight__play-icon play-icon">
 						<img
 							src="<?php echo $ambrygen_play_icon_url; ?>"
 							width="24"
 							height="24"
 							alt="<?php esc_attr_e( 'Play', 'ambrygen' ); ?>"
 						/>
-					</div>
-					<div class="careers-highlight__pause-icon">
 						<img
 							src="<?php echo $ambrygen_pause_icon_url; ?>"
 							width="24"
 							height="24"
 							alt="<?php esc_attr_e( 'Pause', 'ambrygen' ); ?>"
+							class="pause-icon"
 						/>
+					</div>
 					</div>
 				</div>
 			</div>

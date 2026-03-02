@@ -12,7 +12,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				blockId: expectedId,
 			} );
 		}
-	}, [ clientId ] );
+	}, [ clientId, blockId, setAttributes ] );
 
 	const blockProps = useBlockProps( {
 		className: 'secondary-sticky-tabs',

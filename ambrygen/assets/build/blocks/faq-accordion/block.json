@@ -10,10 +10,6 @@
     "html": false
   },
   "attributes": {
-    "backgroundColor": {
-      "type": "string",
-      "default": "#007fa3"
-    },
     "title": {
       "type": "string",
       "default": ""
@@ -31,10 +27,24 @@
     },
     "imageAlt": {
       "type": "string",
-      "default": "FAQ illustration"
+      "default": ""
     },
     "faqs": {
       "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string"
+          }
+        }
+      },
       "default": [
         {
           "id": "1",
@@ -67,15 +77,14 @@
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
   "render": "file:./render.php",
   "example": {
     "attributes": {
-      "backgroundColor": "#007fa3",
       "title": "Sample Title",
       "headingTag": "h5",
-      "imageUrl": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "imageUrl": "Sample url",
       "imageId": 0,
-      "imageAlt": "FAQ illustration",
       "faqs": [
         {
           "id": "1",

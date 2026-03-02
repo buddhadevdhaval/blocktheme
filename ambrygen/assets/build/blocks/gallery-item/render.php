@@ -14,9 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Ambrygen\Theme\Core\Helper;
 
-if ( empty( $attributes['imageID'] ) ) {
-	return;
-}
 
 $ambrygen_image_id  = isset( $attributes['imageID'] ) ? (int) $attributes['imageID'] : 0;
 $ambrygen_title     = $attributes['title'] ?? '';
@@ -27,11 +24,15 @@ $ambrygen_link_array      = $attributes['link'] ?? '';
 $ambrygen_link      = $ambrygen_link_array['url'] ?? '';
 $ambrygen_link_text = $ambrygen_link_array['text'] ?? '';
 $ambrygen_link_target = $ambrygen_link_array['target'] ?? '';
-$ambrygen_link_target_attr = ! empty( $ambrygen_link_target )
-			? ' target="' . esc_attr( $ambrygen_link_target ) . '" rel="noopener noreferrer"'
-			: '';
+$ambrygen_link_target_attr = '';
+$ambrygen_new_tab_text = '';
 
-
+if ( ! empty( $ambrygen_link_target ) ) {
+	$ambrygen_link_target_attr = ' target="' . esc_attr( $ambrygen_link_target ) . '" rel="noopener noreferrer"';
+	if ( '_blank' === $ambrygen_link_target ) {
+		$ambrygen_new_tab_text = '<span class="screen-reader-text">' . esc_html__( '(opens in a new tab)', 'ambrygen' ) . '</span>';
+	}
+}
 
 $ambrygen_gallery_variation = $block->context['ambrygen/galleryVariation'] ?? 'two-column';
 
@@ -71,9 +72,8 @@ if ( 'a' === $ambrygen_wrapper_tag ) {
 	$ambrygen_wrapper_attrs['href'] = esc_url( $ambrygen_link );
 
 	if ( $ambrygen_link_text || $ambrygen_title ) {
-		$ambrygen_wrapper_attrs['aria-label'] = esc_attr(
-			$ambrygen_link_text ? $ambrygen_link_text : wp_strip_all_tags( $ambrygen_title )
-		);
+		$accessible_name = $ambrygen_link_text ? $ambrygen_link_text . ' ' . wp_strip_all_tags( $ambrygen_title ) : wp_strip_all_tags( $ambrygen_title );
+		$ambrygen_wrapper_attrs['aria-label'] = esc_attr( trim( $accessible_name ) );
 	}
 	$ambrygen_wrapper_attrs['target'] =  esc_attr( $ambrygen_link_target );
 
@@ -85,26 +85,21 @@ if ( 'a' === $ambrygen_wrapper_tag ) {
 	<?php endforeach; ?>
 >
 
-	<?php if ( $ambrygen_image_id ) : ?>
 		<div class="image-block">
 			<?php
 			/**
 			 * WCAG 1.1.1: Always provide alt text
 			 */
-			echo Helper::image(
+			echo Helper::image_with_placeholder(
 				$ambrygen_image_id,
-				'medium_large',
+				'full',
 				array(
 					'class'   => 'card-image',
 					'loading' => 'lazy',
-					'alt'     => $ambrygen_title
-						? wp_strip_all_tags( $ambrygen_title )
-						: '',
 				)
 			);
 			?>
 		</div>
-	<?php endif; ?>
 
 	<div class="card-info">
 		<?php if ( $ambrygen_title ) : ?>
@@ -119,25 +114,31 @@ if ( 'a' === $ambrygen_wrapper_tag ) {
 		<?php endif; ?>
 
 		<?php if ( $ambrygen_desc ) : ?>
-				<div class="card-description <?php echo ( 'variation-features' === $ambrygen_gallery_variation || 'image-content-grid' === $ambrygen_gallery_variation ) ? 'body2-reg' : 'text-small'; ?> ">
+			<p class="card-description <?php echo ( 'variation-features' === $ambrygen_gallery_variation || 'image-content-grid' === $ambrygen_gallery_variation ) ? 'body2-reg' : 'text-small'; ?> ">
 				<?php echo wp_kses_post( $ambrygen_desc ); ?>
-			</div>
+			</p>
 		<?php endif; ?>
 
 
 		
 
-		<?php if( ('variation-features' === $ambrygen_gallery_variation && $ambrygen_link) || ('image-content-grid' === $ambrygen_gallery_variation && $ambrygen_link) ) : ?>
+		<?php if( ('variation-features' === $ambrygen_gallery_variation && $ambrygen_link) || ('image-content-grid' === $ambrygen_gallery_variation && $ambrygen_link) ) : 
+			$cta_aria_label = $ambrygen_link_text ? $ambrygen_link_text . ' ' . wp_strip_all_tags( $ambrygen_title ) : wp_strip_all_tags( $ambrygen_title );
+			?>
 			<div class="card-cta-wrapper">
-				<a href="<?php echo esc_url( $ambrygen_link ); ?>" <?php echo $ambrygen_link_target_attr; ?>  class="site-btn is-style-site-text-btn has-icon">
+				<a href="<?php echo esc_url( $ambrygen_link ); ?>" <?php echo $ambrygen_link_target_attr; ?> aria-label="<?php echo esc_attr( trim( $cta_aria_label ) ); ?>" class="site-btn is-style-site-text-btn has-icon">
 					<?php echo esc_html( $ambrygen_link_text ? $ambrygen_link_text : $ambrygen_title ); ?>
+					<?php echo $ambrygen_new_tab_text; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</a>
 			</div>
 
-		<?php elseif ( 'two-column' !== $ambrygen_gallery_variation && $ambrygen_link ) : ?>
+		<?php elseif ( 'two-column' !== $ambrygen_gallery_variation && $ambrygen_link ) : 
+			$cta_aria_label = $ambrygen_link_text ? $ambrygen_link_text . ' ' . wp_strip_all_tags( $ambrygen_title ) : wp_strip_all_tags( $ambrygen_title );
+			?>
 			<div class="link_text">
-				<a href="<?php echo esc_url( $ambrygen_link ); ?>" <?php echo $ambrygen_link_target_attr; ?>  class="link-btn">
+				<a href="<?php echo esc_url( $ambrygen_link ); ?>" <?php echo $ambrygen_link_target_attr; ?> aria-label="<?php echo esc_attr( trim( $cta_aria_label ) ); ?>" class="link-btn">
 					<?php echo esc_html( $ambrygen_link_text ? $ambrygen_link_text : $ambrygen_title ); ?>
+					<?php echo $ambrygen_new_tab_text; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</a>
 			</div>
 		<?php endif; ?>

@@ -53,13 +53,17 @@ $block_id = 'image-grid-' . wp_unique_id();
 
 
 $amb_class="";
-if($ambrygen_variation === "variation-features"){
-	$amb_class="variation-style-two";
+if($ambrygen_variation === "variation-features" ||  $ambrygen_variation === "image-content-grid"){
+	$amb_class="variation-style-two variation-team";
+}else{
+	$amb_class="";
 }
+
+
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class'            => 'image-grid-block variation-features variation-' . sanitize_html_class( $ambrygen_variation ) .' '.$amb_class,
+		'class'            => 'image-grid-block  block-' . sanitize_html_class( $ambrygen_variation ) .' '.$amb_class,
 		'aria-labelledby'  => $ambrygen_heading ? esc_attr( $block_id ) : '',
 		'id' => $tab_block_id,
 	)
@@ -70,10 +74,10 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	<div class="get-started-ambry-block">
 
 		<?php if ( 'image-content-grid' === $ambrygen_variation ) : ?>
-		
+
 		<div class="our-approach__header logo-title-section">
 			<?php if ( $ambrygen_top_image_id ) : ?>
-				
+
 					<div class="logo-title-section__icon">
 					<?php
 					/**
@@ -83,6 +87,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 						$ambrygen_top_image_id,
 						'large',
 						array(
+							'class'   => 'logo-title-section__logo',
 							'loading' => 'lazy',
 							'alt'     => $ambrygen_heading
 								? wp_strip_all_tags( $ambrygen_heading )
@@ -91,9 +96,9 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 					);
 					?>
 					</div>
-				
+					<div class="is-style-gl-s50" aria-hidden="true"></div>
+
 			<?php endif; ?>
-			<div class="is-style-gl-s50" aria-hidden="true"></div>
 			<div class="logo-title-section__content">
 			<?php if ( $ambrygen_heading ) : ?>
 				<<?php echo esc_html( $ambrygen_heading_tag ); ?>
@@ -116,7 +121,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 			<?php endif; ?>
 			</div>
 			</div>
-		
+
 		<?php elseif ( 'variation-features' === $ambrygen_variation ) : ?>
 			<div class="our-approach__header block__rowflex">
 			<?php if ( $ambrygen_heading ) : ?>
@@ -137,10 +142,10 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 					<?php echo wp_kses_post( $ambrygen_description ); ?>
 				</div>
 			<?php endif; ?>
-			
+
 			</div>
 
-			
+
 
 		<?php elseif ( $ambrygen_heading ) : ?>
 

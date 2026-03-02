@@ -15,6 +15,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		( select ) =>
 			select( 'core' ).getEntityRecords( 'postType', 'our_team', {
 				per_page: -1,
+				post_status: 'publish',
 				orderby: 'title',
 				order: 'asc',
 			} ),
@@ -30,16 +31,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				return null;
 			}
 
-			const posts = select( 'core' ).getEntityRecords(
+			return select( 'core' ).getEntityRecord(
 				'postType',
 				'our_team',
+				postId,
 				{
-					per_page: -1,
 					_embed: true,
+					context: 'edit',
 				}
 			);
-
-			return posts?.find( ( post ) => post.id === postId ) || null;
 		},
 		[ postId ]
 	);
@@ -95,6 +95,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			) }
 
 			{ /* Render selected member */ }
+
 			{ postId &&
 				selectedPost &&
 				( () => {
@@ -126,6 +127,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									{ selectedPost.meta?.designation || '' }
 								</span>
 							</div>
+							<div className="is-style-gl-s24"></div>
 
 							{ /* Actions */ }
 							<div className="our-team__actions actions-button">

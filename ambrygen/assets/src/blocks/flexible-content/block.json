@@ -84,7 +84,7 @@
     "attributes": {
       "heading": "Transforming Healthcare with Genetic Insight",
       "headingTag": "h2",
-      "imageUrl": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "imageUrl": "/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
       "imageId": 0,
       "imageAlt": "Ambry default preview image",
       "imagePosition": "left",

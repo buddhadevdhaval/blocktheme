@@ -5,9 +5,9 @@ import {
 	InnerBlocks,
 } from '@wordpress/block-editor';
 
-import { PanelBody, SelectControl } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
+import { TagSelector } from '../_shared/components';
 import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
 
 const ALLOWED_BLOCKS = [ 'core/shortcode' ];
 
@@ -16,19 +16,6 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const { title = '', content, headingLevel = 'h2' } = attributes;
 
-	const HeadingTag = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ].includes(
-		headingLevel
-	)
-		? headingLevel
-		: 'h2';
-
-	// Seed content only if missing (block.json default becomes source)
-	useEffect( () => {
-		if ( ! content?.trim() ) {
-			setAttributes( { content: attributes.content } );
-		}
-	}, [ content, attributes.content, setAttributes ] );
-
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
@@ -36,17 +23,9 @@ export default function Edit( { attributes, setAttributes } ) {
 					title={ __( 'Heading Settings', 'ambrygen-web' ) }
 					initialOpen
 				>
-					<SelectControl
+					<TagSelector
 						label={ __( 'Heading Level', 'ambrygen-web' ) }
 						value={ headingLevel }
-						options={ [
-							{ label: 'H1', value: 'h1' },
-							{ label: 'H2', value: 'h2' },
-							{ label: 'H3', value: 'h3' },
-							{ label: 'H4', value: 'h4' },
-							{ label: 'H5', value: 'h5' },
-							{ label: 'H6', value: 'h6' },
-						] }
 						onChange={ ( value ) =>
 							setAttributes( { headingLevel: value } )
 						}
@@ -56,27 +35,30 @@ export default function Edit( { attributes, setAttributes } ) {
 
 			<div className="contact-form-block">
 				<div className="heading-center center-align">
-					<HeadingTag className="heading-3 block-title mb-0">
-						<RichText
-							tagName={ HeadingTag }
-							value={ title }
-							allowedFormats={ 'core/text-color' }
-							onChange={ ( value ) =>
-								setAttributes( { title: value } )
-							}
-							placeholder={ __( 'Add heading…', 'ambrygen-web' ) }
-						/>{ ' ' }
-					</HeadingTag>
+					<RichText
+						tagName={ headingLevel }
+						className={ `heading-3 block-title mb-0` }
+						value={ title }
+						allowedFormats={ [ 'core/text-color' ] }
+						onChange={ ( value ) =>
+							setAttributes( { title: value } )
+						}
+						placeholder={ __( 'Add heading…', 'ambrygen-web' ) }
+					/>
 
-					<div className="is-style-gl-s24"></div>
+					<div className="is-style-gl-s24" aria-hidden="true"></div>
 					<div className="heading-content text-md-regular">
 						<RichText
-							tagName="p"
+							tagName="div"
 							value={ content }
 							onChange={ ( value ) =>
 								setAttributes( { content: value } )
 							}
 							multiline="p"
+							placeholder={ __(
+								'Add description…',
+								'ambrygen-web'
+							) }
 						/>
 					</div>
 				</div>

@@ -1,115 +1,107 @@
 /**
  * Front-end JS for Careers Highlight Block
  * Handles play / pause for video & iframe
- */
-
-document.addEventListener( 'DOMContentLoaded', () => {
+ */ document.addEventListener( 'DOMContentLoaded', () => {
 	const blocks = document.querySelectorAll( '.careers-highlight' );
 
 	blocks.forEach( ( block ) => {
-		const playIcon = block.querySelector(
-			'.careers-highlight__play-icon-video'
+		const toggleWrap = block.querySelector(
+			'.careers-highlight__play-icon'
 		);
-		const pauseIcon = block.querySelector(
-			'.careers-highlight__pause-icon'
-		);
+		const playIcon = toggleWrap?.querySelector( 'img:not(.pause-icon)' );
+		const pauseIcon = toggleWrap?.querySelector( '.pause-icon' );
 
-		if ( ! playIcon || ! pauseIcon ) {
+		const video = block.querySelector( 'video.videos' );
+		const iframe = block.querySelector( '.video-embed iframe' );
+
+		if ( ! toggleWrap || ! playIcon || ! pauseIcon ) {
 			return;
 		}
 
-		// MP4 video
-		const video = block.querySelector( 'video.videos' );
+		// Initial state
+		pauseIcon.style.display = 'none';
 
-		// Iframe (YouTube / Vimeo)
-		const iframe = block.querySelector( '.video-embed iframe' );
-
-		const setPlaying = ( isPlaying ) => {
+		const setPlayingState = ( isPlaying ) => {
 			block.classList.toggle( 'is-playing', isPlaying );
+			playIcon.style.display = isPlaying ? 'none' : '';
+			pauseIcon.style.display = isPlaying ? '' : 'none';
 		};
 
 		/* =====================
 		 * MP4 VIDEO
 		 * ===================== */
 		if ( video ) {
-			playIcon.addEventListener( 'click', () => {
-				video.play();
-				setPlaying( true );
+			toggleWrap.addEventListener( 'click', () => {
+				if ( video.paused ) {
+					video.play();
+					setPlayingState( true );
+				} else {
+					video.pause();
+					setPlayingState( false );
+				}
 			} );
 
-			pauseIcon.addEventListener( 'click', () => {
-				video.pause();
-				setPlaying( false );
-			} );
-
-			// Sync UI if video ends
 			video.addEventListener( 'ended', () => {
-				setPlaying( false );
+				setPlayingState( false );
 			} );
 
 			return;
 		}
 
 		/* =====================
-		 * IFRAME VIDEO
+		 * IFRAME (YouTube/Vimeo basic)
 		 * ===================== */
 		if ( iframe ) {
-			playIcon.addEventListener( 'click', () => {
+			toggleWrap.addEventListener( 'click', () => {
 				const src = iframe.getAttribute( 'src' );
 
-				if ( ! src.includes( 'autoplay=1' ) ) {
+				if ( block.classList.contains( 'is-playing' ) ) {
+					// Remove autoplay (fake pause)
+					const cleanSrc = src.replace( /(\?|&)autoplay=1/, '' );
+					iframe.setAttribute( 'src', cleanSrc );
+					setPlayingState( false );
+				} else {
 					const joiner = src.includes( '?' ) ? '&' : '?';
 					iframe.setAttribute(
 						'src',
 						`${ src }${ joiner }autoplay=1`
 					);
+					setPlayingState( true );
 				}
-
-				setPlaying( true );
-			} );
-
-			pauseIcon.addEventListener( 'click', () => {
-				// Iframes can't be truly paused without API
-				// Reload iframe without autoplay
-				const cleanSrc = iframe
-					.getAttribute( 'src' )
-					.replace( /(\?|&)autoplay=1/, '' );
-
-				iframe.setAttribute( 'src', cleanSrc );
-				setPlaying( false );
 			} );
 		}
 	} );
 } );
 
-import SimpleBar from 'simplebar';
-import 'simplebar/dist/simplebar.css';
+// import SimpleBar from 'simplebar';
+// import 'simplebar/dist/simplebar.css';
 
-import ResizeObserver from 'resize-observer-polyfill';
-window.ResizeObserver = ResizeObserver;
+// import ResizeObserver from 'resize-observer-polyfill';
+// window.ResizeObserver = ResizeObserver;
 
-document.addEventListener( 'DOMContentLoaded', () => {
-	const media = document.querySelector( '.careers-highlight__media' );
-	const scroll = document.querySelector( '.custom-scroll-jobs' );
+// document.addEventListener('DOMContentLoaded', () => {
+// 	const careersRows = document.querySelectorAll('.careers-highlight__row');
 
-	if ( ! media || ! scroll ) {
-		return;
-	}
+// 	careersRows.forEach((row) => {
 
-	const resize = () => {
-		const height = `${ media.offsetHeight }px`;
-		scroll.style.maxHeight = height;
+// 		const media = row.querySelector('.careers-highlight__media');
+// 		const scroll = row.querySelector('.custom-scroll-jobs');
 
-		// Recalculate SimpleBar after height change
-		if ( window.SimpleBar && window.SimpleBar.getSimpleBarInstance ) {
-			const instance = window.SimpleBar.getSimpleBarInstance( scroll );
-			if ( instance ) {
-				instance.recalculate();
-			}
-		}
-	};
+// 		if (!media || !scroll) {
+// 			return;
+// 		}
 
-	// Initial call
-	resize();
-	window.addEventListener( 'resize', resize );
-} );
+// 		// Explicitly initialize SimpleBar
+// 		const simpleBarInstance = new SimpleBar(scroll, {
+// 			autoHide: false, // Ensure the scrollbar is always accessible / visible if needed
+// 		});
+
+// 		// Use the loaded ResizeObserver to track container changes effectively
+// 		if (window.ResizeObserver) {
+// 			const ro = new window.ResizeObserver(() => {
+// 				simpleBarInstance.recalculate();
+// 			});
+// 			ro.observe(row);
+// 		}
+// 	});
+// });

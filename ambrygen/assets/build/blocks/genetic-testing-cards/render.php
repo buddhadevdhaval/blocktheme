@@ -26,20 +26,19 @@ if ( ! in_array( $ambrygen_heading_tag, $ambrygen_valid_heading_tags, true ) ) {
 	$ambrygen_heading_tag = 'h2';
 }
 
-$ambrygen_wrapper_attributes = get_block_wrapper_attributes(
-	array(
-		'class' => 'genetic-cards',
-	)
+$ambrygen_wrapper_attributes_array = array(
+	'class' => 'genetic-cards',
+	'role'  => 'region',
 );
+
+if ( $ambrygen_section_title ) {
+	$ambrygen_wrapper_attributes_array['aria-labelledby'] = 'genetic-cards-heading';
+}
+
+$ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_attributes_array );
 ?>
 
-<div
-	<?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-	role="region"
-	<?php if ( $ambrygen_section_title ) : ?>
-		aria-labelledby="genetic-cards-heading"
-	<?php endif; ?>
->
+<div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 
 	<<?php echo tag_escape( $ambrygen_heading_tag ); ?>
 		class="heading-3 mb-0 block-title"
@@ -57,12 +56,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 
 	<div class="is-style-gl-s32" aria-hidden="true"></div>
 
-	<div
-		class="genetic-cards__container"
-		<?php if ( $ambrygen_section_title ) : ?>
-			aria-describedby="genetic-cards-heading"
-		<?php endif; ?>
-	>
+	<div class="genetic-cards__container">
 		<?php
 		// Inner blocks content is already escaped by block renderer
 		echo $ambrygen_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

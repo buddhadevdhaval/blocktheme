@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 use Ambrygen\Theme\Core\Helper;
 
-$ambrygen_heading     = isset( $attributes['heading'] ) ? $attributes['heading'] : '';
-$ambrygen_description = isset( $attributes['description'] ) ? $attributes['description'] : '';
-$ambrygen_heading_tag = isset( $attributes['headingTag'] ) ? $attributes['headingTag'] : 'h2';
+$ambrygen_heading            = isset( $attributes['heading'] ) ? $attributes['heading'] : '';
+$ambrygen_description        = isset( $attributes['description'] ) ? $attributes['description'] : '';
+$ambrygen_heading_tag        = isset( $attributes['headingTag'] ) ? $attributes['headingTag'] : 'h2';
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
 		'class' => 'vertical-tabs-block order-testing-block',

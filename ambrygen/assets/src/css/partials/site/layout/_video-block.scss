@@ -1,0 +1,50 @@
+@use "../../variables/fluid_mixins" as *;
+
+.media_video {
+	position: relative;
+	border-radius: 16px;
+	overflow: hidden;
+	height: 100%;
+
+	video,
+	iframe {
+		margin: 0;
+		height: 100%;
+		object-fit: cover;
+		width: 100%;
+		display: block;
+	}
+}
+
+.play-icon-video {
+	left: 50%;
+	margin-right: -50%;
+	object-fit: cover;
+	position: absolute;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 1;
+
+	.play-icon {
+		align-items: center;
+		background: var(--theme_white);
+		border-radius: 50%;
+		cursor: pointer;
+		display: flex;
+		height: fluid(64, 100);
+		justify-content: center;
+		outline: none;
+		transition: all .2s ease-in-out;
+		width: clamp(64px, calc(4rem + ((1vw - 7.68px) * 6.1856)), 100px);
+		backdrop-filter: drop-shadow(0 30.745px 40px rgba(0, 0, 0, 0.25));
+
+		img {
+			max-width: fluid(18, 24);
+		}
+
+		.icon-pause {
+			max-width: fluid(24, 32);
+			width: 100%;
+		}
+	}
+}

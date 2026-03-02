@@ -25,7 +25,7 @@
     },
     "image": {
       "type": "string",
-      "default": "/wp-content/themes/ambrygen/assets/src/images/news-latter/news-latter.jpg"
+      "default": ""
     },
     "imageId": {
       "type": "number",
@@ -51,6 +51,7 @@
       "type": "object"
     }
   },
+  "textdomain": "ambrygen-web",
   "editorScript": "file:./index.js",
   "render": "file:./render.php",
   "editorStyle": "file:./index.css",

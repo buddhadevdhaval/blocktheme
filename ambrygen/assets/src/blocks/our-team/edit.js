@@ -5,6 +5,7 @@ import {
 	InspectorControls,
 } from '@wordpress/block-editor';
 import { PanelBody, SelectControl } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const { title, intro, headingLevel } = attributes;
@@ -47,6 +48,10 @@ export default function Edit( { attributes, setAttributes } ) {
 									'core/italic',
 									'core/text-color',
 								] }
+								placeholder={ __(
+									'Add Title…',
+									'ambrygen-web'
+								) }
 							/>
 						</TagName>
 
@@ -57,6 +62,10 @@ export default function Edit( { attributes, setAttributes } ) {
 							onChange={ ( value ) =>
 								setAttributes( { intro: value } )
 							}
+							placeholder={ __(
+								'Add Description…',
+								'ambrygen-web'
+							) }
 						/>
 					</div>
 

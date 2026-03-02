@@ -41,11 +41,11 @@ final class Assets {
 	 * @return void
 	 */
 	private function setup_hooks(): void {
-		add_action( 'wp_enqueue_scripts', [ $this, 'register_assets' ], 5 );
-		add_action( 'wp_enqueue_scripts', [ $this, 'frontend' ] );
-		add_action( 'enqueue_block_editor_assets', [ $this, 'register_assets' ], 5 );
-		add_action( 'enqueue_block_editor_assets', [ $this, 'editor' ] );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin' ) , 10 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'register_assets' ), 5 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'frontend' ) );
+		add_action( 'enqueue_block_editor_assets', array( $this, 'register_assets' ), 5 );
+		add_action( 'enqueue_block_editor_assets', array( $this, 'editor' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin' ), 10 );
 	}
 
 	/**
@@ -57,7 +57,7 @@ final class Assets {
 	 *
 	 * @return array
 	 */
-	private function get_asset_meta( string $file, array $deps = [], $ver = false ): array {
+	private function get_asset_meta( string $file, array $deps = array(), $ver = false ): array {
 		$asset_meta_file = sprintf(
 			'%s/%s.asset.php',
 			AMBRYGEN_BUILD_DIR,
@@ -66,10 +66,10 @@ final class Assets {
 
 		$asset_meta = is_readable( $asset_meta_file )
 			? require $asset_meta_file
-			: [
-				'dependencies' => [],
+			: array(
+				'dependencies' => array(),
 				'version'      => $this->get_file_version( $file, $ver ),
-			];
+			);
 
 		$asset_meta['dependencies'] = array_merge( $deps, $asset_meta['dependencies'] );
 
@@ -103,7 +103,7 @@ final class Assets {
 	 * @param bool             $in_footer Enqueue in footer.
 	 * @return bool
 	 */
-	private function register_script( string $handle, string $file, array $deps = [], $ver = false, bool $in_footer = true ): bool {
+	private function register_script( string $handle, string $file, array $deps = array(), $ver = false, bool $in_footer = true ): bool {
 		$file_path = sprintf( '%s/%s', AMBRYGEN_BUILD_DIR, $file );
 		if ( ! file_exists( $file_path ) ) {
 			$this->log_debug( "Skip missing script {$file}" );
@@ -132,7 +132,7 @@ final class Assets {
 	 * @param string           $media  Media.
 	 * @return bool
 	 */
-	private function register_style( string $handle, string $file, array $deps = [], $ver = false, string $media = 'all' ): bool {
+	private function register_style( string $handle, string $file, array $deps = array(), $ver = false, string $media = 'all' ): bool {
 		$file_path = sprintf( '%s/%s', AMBRYGEN_BUILD_DIR, $file );
 
 		if ( ! file_exists( $file_path ) ) {
@@ -162,12 +162,9 @@ final class Assets {
 		$this->register_script( 'ambrygen-scripts', 'scripts.min.js' );
 
 		// Editor bundles.
-		$this->register_style( 'ambrygen-editor', 'editorStyle.min.css', [ 'wp-edit-blocks' ] );
-		$this->register_script( 'ambrygen-editor', 'editor.min.js', [ 'wp-blocks', 'wp-element', 'wp-block-editor' ] );
-
-
-
-		}
+		$this->register_style( 'ambrygen-editor', 'editorStyle.min.css', array( 'wp-edit-blocks' ) );
+		$this->register_script( 'ambrygen-editor', 'editor.min.js', array( 'wp-blocks', 'wp-element', 'wp-block-editor' ) );
+	}
 
 	/**
 	 * Frontend assets
@@ -182,8 +179,8 @@ final class Assets {
 	 */
 	public function admin(): void {
 				//admin globle 
-		$this->register_script( 'ambrygen-admin-scripts', 'admin.min.js', [ 'jquery', 'media-editor' ] );
-		wp_enqueue_script( 'ambrygen-admin-scripts' ) ;
+		$this->register_script( 'ambrygen-admin-scripts', 'admin.min.js', array( 'jquery', 'media-editor' ) );
+		wp_enqueue_script( 'ambrygen-admin-scripts' );
 	}
 	
 
@@ -196,7 +193,7 @@ final class Assets {
 		wp_enqueue_script( 'ambrygen-editor' );
 
 		// Get image ID from theme options.
-		$placeholder_id  = Theme_Options::get_placeholder_image_id();
+		$placeholder_id = Theme_Options::get_placeholder_image_id();
 
 		// Convert ID to URL.
 		$placeholder_url = $placeholder_id
@@ -206,12 +203,11 @@ final class Assets {
 		wp_localize_script(
 			'ambrygen-editor',
 			'ambrygenAssets',
-			[
+			array(
 				'themeUrl'        => get_template_directory_uri(),
 				'defaultImageUrl' => $placeholder_url,
 				'defaultImageId'  => $placeholder_id,
-			]
+			)
 		);
 	}
 }
-

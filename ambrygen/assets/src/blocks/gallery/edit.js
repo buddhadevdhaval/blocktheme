@@ -80,12 +80,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	];
 
 	let amb_class = '';
-	if ( variation === 'image-content-grid' ) {
-		amb_class = 'variation-style-two';
+	if (
+		variation === 'variation-features' ||
+		variation === 'image-content-grid'
+	) {
+		amb_class = 'variation-style-two variation-team';
 	}
 
 	const blockProps = useBlockProps( {
-		className: `image-grid-block variation-features variation-${ variation } ${ amb_class }`,
+		className: `image-grid-block  block-${ variation } ${ amb_class }`,
 	} );
 
 	const HeadingTag = headingTag || 'h2';
@@ -183,19 +186,23 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					{ /* New Variant */ }
 					{ variation === 'image-content-grid' && (
 						<div className="our-approach__header logo-title-section">
-							<div className="logo-title-section__icon">
-								{ topImageID && (
-									<img
-										src={ topImageURL }
-										alt=""
-										className="logo-title-section__logo"
-									/>
-								) }
-							</div>
-							<div
-								className="is-style-gl-s50"
-								aria-hidden="true"
-							></div>
+							{ topImageID && (
+								<>
+									<div className="logo-title-section__icon">
+										<img
+											src={ topImageURL }
+											alt=""
+											className="logo-title-section__logo"
+										/>
+
+										<div
+											className="is-style-gl-s50"
+											aria-hidden="true"
+										></div>
+									</div>
+								</>
+							) }
+
 							<div className="logo-title-section__content">
 								<HeadingTag className="heading-2 block-title mb-0">
 									<RichText

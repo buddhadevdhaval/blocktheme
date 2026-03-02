@@ -5,7 +5,7 @@ import {
 	RichText,
 } from '@wordpress/block-editor';
 import { PanelBody, Button } from '@wordpress/components';
-import { useState, useEffect } from '@wordpress/element';
+import { useEffect } from '@wordpress/element';
 import {
 	TagSelector,
 	ImageUploader,
@@ -15,9 +15,7 @@ import {
 const MAX_FAQS = 10;
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { imageUrl, faqs = [], title, headingTag } = attributes;
-
-	const [ isOpen, setIsOpen ] = useState( true ); // toggle for row visibility
+	const { imageUrl, imageAlt, faqs = [], title, headingTag } = attributes;
 
 	const blockProps = useBlockProps();
 
@@ -31,7 +29,12 @@ export default function Edit( { attributes, setAttributes } ) {
 		if ( faqs.length >= MAX_FAQS ) {
 			return;
 		}
-		setAttributes( { faqs: [ ...faqs, { question: '', answer: '' } ] } );
+		setAttributes( {
+			faqs: [
+				...faqs,
+				{ id: Date.now().toString(), question: '', answer: '' },
+			],
+		} );
 	};
 
 	const removeFaq = ( index ) => {
@@ -48,7 +51,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				} );
 			}
 		}
-	}, [] );
+	}, [ imageUrl, setAttributes ] );
 
 	return (
 		<>
@@ -72,122 +75,114 @@ export default function Edit( { attributes, setAttributes } ) {
 							setAttributes( {
 								imageUrl: media.url,
 								imageId: media.id,
+								imageAlt: media.alt || '',
 							} )
 						}
 						onRemove={ () =>
 							setAttributes( {
 								imageUrl: '',
 								imageId: 0,
+								imageAlt: '',
 							} )
 						}
 					/>
 				</PanelBody>
 			</InspectorControls>
 
-			{ /* FAQ Row collapsible */ }
+			{ /* FAQ Row body */ }
 			<div { ...blockProps }>
-				{ isOpen && (
-					<div className="alongside-faq__row">
-						{ /* LEFT IMAGE */ }
-						<div className="alongside-faq__col alongside-faq__col--left">
-							<div className="alongside-faq__media">
-								<img
-									src={ imageUrl || defaults.placeholder.url }
-								/>
-							</div>
+				<div className="alongside-faq__row">
+					{ /* LEFT IMAGE */ }
+					<div className="alongside-faq__col alongside-faq__col--left">
+						<div className="alongside-faq__media">
+							<img
+								src={
+									imageUrl || DEFAULT_IMAGES().placeholder.url
+								}
+								alt={ imageAlt || '' }
+							/>
 						</div>
+					</div>
 
-						{ /* RIGHT FAQ */ }
-						<div className="alongside-faq__col alongside-faq__col--right">
-							<div className="alongside-faq__content">
-								<RichText
-									tagName={ headingTag || 'h5' }
-									className="heading-4 alongside-faq__title mb-0"
-									value={ title }
-									onChange={ ( value ) =>
-										setAttributes( { title: value } )
-									}
-									placeholder={ __(
-										'Frequently Asked Questions',
-										'ambrygen-web'
-									) }
-								/>
+					{ /* RIGHT FAQ */ }
+					<div className="alongside-faq__col alongside-faq__col--right">
+						<div className="alongside-faq__content">
+							<RichText
+								tagName={ headingTag || 'h5' }
+								className="heading-4 alongside-faq__title mb-0"
+								value={ title }
+								onChange={ ( value ) =>
+									setAttributes( { title: value } )
+								}
+								placeholder={ __(
+									'Frequently Asked Questions',
+									'ambrygen-web'
+								) }
+							/>
 
-								<div className="is-style-gl-s64"></div>
+							<div
+								className="is-style-gl-s64"
+								aria-hidden="true"
+							></div>
 
-								<div className="faq">
-									{ faqs.map( ( faq, index ) => (
-										<div
-											key={ index }
-											className="faq__item editor"
-										>
-											<RichText
-												tagName="div"
-												className="faq__question"
-												value={ faq.question }
-												onChange={ ( value ) =>
-													updateFaq(
-														index,
-														'question',
-														value
-													)
-												}
-												placeholder={ __(
-													'FAQ Question',
-													'ambrygen-web'
-												) }
-											/>
-											<RichText
-												tagName="div"
-												className="faq__answer"
-												value={ faq.answer }
-												onChange={ ( value ) =>
-													updateFaq(
-														index,
-														'answer',
-														value
-													)
-												}
-												placeholder={ __(
-													'FAQ Answer',
-													'ambrygen-web'
-												) }
-											/>
-											<Button
-												isDestructive
-												onClick={ () =>
-													removeFaq( index )
-												}
-											>
-												{ __(
-													'Remove',
-													'ambrygen-web'
-												) }
-											</Button>
-										</div>
-									) ) }
-									{ faqs.length < MAX_FAQS && (
+							<div className="faq">
+								{ faqs.map( ( faq, index ) => (
+									<div
+										key={ faq.id || index }
+										className="faq__item editor"
+									>
+										<RichText
+											tagName="div"
+											className="faq__question"
+											value={ faq.question }
+											onChange={ ( value ) =>
+												updateFaq(
+													index,
+													'question',
+													value
+												)
+											}
+											placeholder={ __(
+												'FAQ Question',
+												'ambrygen-web'
+											) }
+										/>
+										<RichText
+											tagName="div"
+											className="faq__answer"
+											value={ faq.answer }
+											onChange={ ( value ) =>
+												updateFaq(
+													index,
+													'answer',
+													value
+												)
+											}
+											placeholder={ __(
+												'FAQ Answer',
+												'ambrygen-web'
+											) }
+										/>
 										<Button
-											variant="primary"
-											onClick={ addFaq }
+											isDestructive
+											onClick={ () => removeFaq( index ) }
 										>
-											{ __( 'Add FAQ', 'ambrygen-web' ) }
+											{ __( 'Remove', 'ambrygen-web' ) }
 										</Button>
-									) }
-								</div>
+									</div>
+								) ) }
+								{ faqs.length < MAX_FAQS && (
+									<Button
+										variant="primary"
+										onClick={ addFaq }
+									>
+										{ __( 'Add FAQ', 'ambrygen-web' ) }
+									</Button>
+								) }
 							</div>
 						</div>
 					</div>
-				) }
-
-				{ ! isOpen && (
-					<Button
-						variant="secondary"
-						onClick={ () => setIsOpen( true ) }
-					>
-						{ __( 'Show FAQ Row', 'ambrygen-web' ) }
-					</Button>
-				) }
+				</div>
 			</div>
 		</>
 	);

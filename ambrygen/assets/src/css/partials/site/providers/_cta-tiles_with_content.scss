@@ -1,69 +1,69 @@
-@use "../../variables/breakpoints" as bp;
+// @use "../../variables/breakpoints" as bp;
 
-.cta-tiles-with-content {
+// .cta-tiles-with-content {
 
-	&__grid {
-		display: grid;
-		gap: clamp(24px, calc(1.5rem + ((1vw - 7.67px) * 1.3722)), 32px);
-		grid-template-columns: repeat(2, 1fr);
+// 	&__grid {
+// 		display: grid;
+// 		gap: clamp(24px, calc(1.5rem + ((1vw - 7.67px) * 1.3722)), 32px);
+// 		grid-template-columns: repeat(2, 1fr);
 
-		@include bp.max(md) {
-			grid-template-columns: 1fr;
-		}
-	}
+// 		@include bp.max(md) {
+// 			grid-template-columns: 1fr;
+// 		}
+// 	}
 
-	&__item {
-		background-color: var(--theme_white);
-		border-radius: 16px;
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		overflow: hidden;
-		position: relative;
-		padding: 50px 44px 0 50px;
+// 	&__item {
+// 		background-color: var(--theme_white);
+// 		border-radius: 16px;
+// 		display: flex;
+// 		flex-direction: column;
+// 		height: 100%;
+// 		overflow: hidden;
+// 		position: relative;
+// 		padding: 50px 44px 0 50px;
 
-		@include bp.max(lg) {
-			padding: 24px 24px 0 24px;
-		}
-	}
+// 		@include bp.max(lg) {
+// 			padding: 24px 24px 0 24px;
+// 		}
+// 	}
 
-	&__image-container {
-		height: 191px;
-		position: relative;
-		width: 100%;
-		margin-top: auto;
+// 	&__image-container {
+// 		height: 191px;
+// 		position: relative;
+// 		width: 100%;
+// 		margin-top: auto;
 
-		img {
-			display: block;
-			height: 100%;
-			object-fit: cover;
-			width: 100%;
-		}
-	}
+// 		img {
+// 			display: block;
+// 			height: 100%;
+// 			object-fit: cover;
+// 			width: 100%;
+// 		}
+// 	}
 
-	&__body {
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
-		margin-bottom: clamp(20px, calc(1.25rem + ((1vw - 7.67px) * 1.3722)), 28px);
-		position: relative;
-		z-index: 1;
-	}
+// 	&__body {
+// 		display: flex;
+// 		flex-direction: column;
+// 		gap: 16px;
+// 		margin-bottom: clamp(20px, calc(1.25rem + ((1vw - 7.67px) * 1.3722)), 28px);
+// 		position: relative;
+// 		z-index: 1;
+// 	}
 
-	&__title {
-		color: var(--theme_cg_blue);
-		font-size: var(--theme_font_size_6);
-		font-weight: 600;
-		line-height: 1.33;
-		letter-spacing: -0.36px;
-		margin: 0;
+// 	&__title {
+// 		color: var(--theme_cg_blue);
+// 		font-size: var(--theme_font_size_6);
+// 		font-weight: 600;
+// 		line-height: 1.33;
+// 		letter-spacing: -0.36px;
+// 		margin: 0;
 
-		@include bp.max(lg) {
-			letter-spacing: -0.21px;
-		}
-	}
+// 		@include bp.max(lg) {
+// 			letter-spacing: -0.21px;
+// 		}
+// 	}
 
-	&__desc {
-		color: var(--theme_gray_600);
-	}
-}
+// 	&__desc {
+// 		color: var(--theme_gray_600);
+// 	}
+// }

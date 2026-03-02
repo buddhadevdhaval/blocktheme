@@ -3,7 +3,7 @@ import {
 	RichText,
 	InspectorControls,
 } from '@wordpress/block-editor';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import { PanelBody } from '@wordpress/components';
 import {
@@ -15,8 +15,7 @@ import {
 import { t } from '../_shared/utils';
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const { sectiontitle, description, imageUrl, imageAlt, imageId } =
-		attributes;
+	const { sectiontitle, description, imageUrl, imageAlt } = attributes;
 
 	// ✅ Get block index
 	const stepNumber = useSelect(
@@ -27,16 +26,24 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		[ clientId ]
 	);
 
-	const defaults = DEFAULT_IMAGES();
+	const defaultPlaceholder = useMemo(
+		() => DEFAULT_IMAGES()?.placeholder || {},
+		[]
+	);
 
 	useEffect( () => {
-		if ( ! imageUrl && defaults.placeholder.url ) {
+		if ( ! imageUrl && defaultPlaceholder.url ) {
 			setAttributes( {
-				imageUrl: defaults.placeholder.url,
-				imageId: defaults.placeholder.id,
+				imageUrl: defaultPlaceholder.url,
+				imageId: defaultPlaceholder.id,
 			} );
 		}
-	}, [] );
+	}, [
+		imageUrl,
+		defaultPlaceholder.url,
+		defaultPlaceholder.id,
+		setAttributes,
+	] );
 
 	const blockProps = useBlockProps( {
 		className: 'vertical-tabs__item',
@@ -48,7 +55,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				<PanelBody title={ t( 'Card Image' ) } initialOpen>
 					<ImageUploader
 						label={ t( 'Card Image' ) }
-						url={ imageUrl || defaults.placeholder.url }
+						url={ imageUrl || defaultPlaceholder.url }
 						onSelect={ ( media ) =>
 							setAttributes( {
 								imageUrl: media.url,

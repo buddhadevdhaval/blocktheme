@@ -12,11 +12,11 @@
   "attributes": {
     "title": {
       "type": "string",
-      "default": "Our Executive Team"
+      "default": ""
     },
     "intro": {
       "type": "string",
-      "default": "We are proud to be leading the industry that we love and working together."
+      "default": ""
     },
     "headingLevel": {
       "type": "string",
@@ -25,6 +25,10 @@
     "videoUrl": {
       "type": "string",
       "default": ""
+    },
+    "videoObj": {
+      "type": "object",
+      "default": null
     },
     "videoType": {
       "type": "string",

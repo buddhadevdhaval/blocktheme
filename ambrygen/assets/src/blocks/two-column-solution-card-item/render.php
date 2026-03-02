@@ -47,15 +47,15 @@ $ambrygen_image_html = '';
 
 
 
-/**
- * Wrapper
- */
-$ambrygen_wrapper_attributes = get_block_wrapper_attributes(
-	array(
-		'class' => 'cta-tiles-with-content__item',
-	)
-);
-?>
+	/**
+	 * Wrapper
+	 */
+	$ambrygen_wrapper_attributes = get_block_wrapper_attributes(
+		array(
+			'class' => 'cta-tiles-with-content__item',
+		)
+	);
+	?>
 
 <div <?php echo wp_kses_data( $ambrygen_wrapper_attributes ); ?>>
 

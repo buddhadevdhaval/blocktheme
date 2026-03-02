@@ -1,53 +1,65 @@
 <?php
+/**
+ * Our Team Card Template.
+ *
+ * @package ambrygen
+ */
+
+defined( 'ABSPATH' ) || exit;
 
 use Ambrygen\Theme\Core\Helper;
 
-$post_id = $attributes['postId'] ?? 0;
-if ( ! $post_id ) {
+$ambrygen_post_id = isset( $attributes['postId'] )
+	? absint( $attributes['postId'] )
+	: 0;
+
+if ( ! $ambrygen_post_id ) {
 	return;
 }
 
-$post = get_post( $post_id );
-if ( ! $post ) {
+$ambrygen_post = get_post( $ambrygen_post_id );
+
+if ( ! $ambrygen_post || 'publish' !== $ambrygen_post->post_status ) {
 	return;
 }
 
-$name = get_the_title( $post_id );
-$designation = get_post_meta( $post_id, 'designation', true );
-
-$image_id = get_post_thumbnail_id( $post_id );
-
-
+$ambrygen_name        = get_the_title( $ambrygen_post_id );
+$ambrygen_designation = get_post_meta( $ambrygen_post_id, 'designation', true );
+$ambrygen_image_id    = get_post_thumbnail_id( $ambrygen_post_id );
 ?>
 
 <div class="our-team__card">
+
 	<div class="our-team__image-wrapper">
-	
-		<?php 
-		echo Helper::image_with_placeholder (
-					$image_id,
-					'medium',
-					array(
-						'loading' => 'lazy',
-						'class'=>"our-team__image",
-						'alt'     => $name
-							? wp_strip_all_tags( $name )
-							: '',
-					)
-				);
+		<?php
+		echo Helper::image_with_placeholder(
+			$ambrygen_image_id,
+			'medium',
+			array(
+				'loading' => 'lazy',
+				'class'   => 'our-team__image',
+				'alt'     => esc_attr( $ambrygen_name ),
+			)
+		);
 		?>
 	</div>
 
 	<div class="our-team__info">
+
 		<div class="our-team__name subtitle1-sbold">
-			<?php echo esc_html( $name ); ?>
-			<div class="our-team__link" aria-label="Profile link"></div>
+			<?php echo esc_html( $ambrygen_name ); ?>
+			<span
+				class="our-team__link"
+				aria-hidden="true"
+			></span>
 		</div>
 
-		<?php if ( $designation ) : ?>
+		<?php if ( ! empty( $ambrygen_designation ) ) : ?>
 			<div class="our-team__role body1">
-				<?php echo esc_html( $designation ); ?>
+				<?php echo esc_html( $ambrygen_designation ); ?>
 			</div>
 		<?php endif; ?>
+
 	</div>
+
 </div>

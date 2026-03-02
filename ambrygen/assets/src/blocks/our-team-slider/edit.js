@@ -33,7 +33,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		showNavigation = true,
 		showPagination = true,
 		autoplay = false,
-		slidesPerView = 3,
+		slidesPerView = 4,
 	} = attributes;
 
 	const { replaceInnerBlocks } = useDispatch( 'core/block-editor' );
@@ -88,10 +88,19 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		);
 
 		replaceInnerBlocks( clientId, newBlocks, false );
-	}, [ selectionMode, memberTypes, allTeamPosts ] );
+	}, [
+		selectionMode,
+		memberTypes,
+		allTeamPosts,
+		clientId,
+		replaceInnerBlocks,
+	] );
 
 	useEffect( () => {
-		const timeout = setTimeout( () => {
+		let retryCount = 0;
+		let animationFrameId;
+
+		const initSwiper = () => {
 			if ( ! sliderRef.current ) {
 				return;
 			}
@@ -106,18 +115,34 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				'.block-editor-block-list__layout'
 			);
 
+			// If the layout container doesn't exist yet, retry a few times.
+			// Swiper also needs children to be mounted so we check for sliderDiv.children.length
+			if ( ! sliderDiv || sliderDiv.children.length === 0 ) {
+				if ( retryCount < 20 ) {
+					retryCount++;
+					animationFrameId = requestAnimationFrame( initSwiper );
+				}
+				return;
+			}
+
+			const swiperContainer = sliderDiv.parentElement;
+
+			// Manually add the wrapper classes to prevent Swiper from mutating the React DOM structure.
+			// Swiper strictly expects .swiper-wrapper to be a direct child of .swiper container.
+			swiperContainer.classList.add( 'swiper' );
+			sliderDiv.classList.add( 'swiper-wrapper' );
+
 			// Destroy existing instance if present
 			if ( swiperInstance.current ) {
 				swiperInstance.current.destroy( true, true );
 				swiperInstance.current = null;
 			}
 
-			// Initialize Swiper
-			swiperInstance.current = new Swiper( sliderDiv, {
+			// Initialize Swiper on the parent container (swiperContainer) to keep React happy
+			swiperInstance.current = new Swiper( swiperContainer, {
 				slidesPerView: slidesPerView || 3,
 				spaceBetween: 20,
 				loop: false,
-				createElements: true,
 				observer: true,
 				observeParents: true,
 				resizeObserver: true,
@@ -141,11 +166,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					  }
 					: false,
 			} );
-		}, 2000 ); // 30000ms = 30 seconds
+		};
 
-		// // Cleanup
+		initSwiper();
+
+		// Cleanup
 		return () => {
-			clearTimeout( timeout );
+			if ( animationFrameId ) {
+				cancelAnimationFrame( animationFrameId );
+			}
 			if ( swiperInstance.current ) {
 				swiperInstance.current.destroy( true, true );
 				swiperInstance.current = null;
@@ -241,22 +270,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						checked={ autoplay }
 						onChange={ ( value ) =>
 							setAttributes( { autoplay: value } )
-						}
-					/>
-					<SelectControl
-						label="Slides Per View"
-						value={ slidesPerView }
-						options={ [
-							{ label: '1', value: 1 },
-							{ label: '2', value: 2 },
-							{ label: '3', value: 3 },
-							{ label: '4', value: 4 },
-							{ label: '5', value: 5 },
-						] }
-						onChange={ ( value ) =>
-							setAttributes( {
-								slidesPerView: Number( value ),
-							} )
 						}
 					/>
 				</PanelBody>

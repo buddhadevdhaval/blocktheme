@@ -27,7 +27,9 @@ const TEMPLATE = [
 			quote: 'The Ambry Care Program has transformed how we manage patient care. Truly remarkable service!',
 			author: 'Sarah Mitchell',
 			role: 'CEO of TechSpark',
-			logo: getThemeAssetUrl('/assets/src/images/testimonial/logo-1.png'),
+			logo: getThemeAssetUrl(
+				'/assets/src/images/testimonial/logo-1.png'
+			),
 		},
 	],
 	[
@@ -78,14 +80,8 @@ const DEFAULT_MAIN =
  */
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	// Destructure attributes for easier usage
-	let {
-		heading,
-		headingTag,
-		mainImage,
-		secondaryImage,
-		overlayImage,
-		mainImageId,
-	} = attributes;
+	let { heading, headingTag, mainImage, secondaryImage, overlayImage } =
+		attributes;
 
 	useEffect( () => {
 		if ( ! secondaryImage ) {
@@ -105,7 +101,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		if ( ! mainImage ) {
 			setAttributes( { mainImage: DEFAULT_MAIN } );
 		}
-	}, [] );
+	}, [ secondaryImage, overlayImage, mainImage, setAttributes ] );
 
 	// Determine heading tag, default to H2
 	const Tag = headingTag || 'h2';
@@ -219,6 +215,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							<img
 								src={ overlayImage }
 								className="overlay__img"
+								alt=""
 							/>
 						) }
 					</div>
@@ -231,6 +228,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							<img
 								src={ secondaryImage }
 								className="overlay__img"
+								alt=""
 							/>
 						) }
 					</div>

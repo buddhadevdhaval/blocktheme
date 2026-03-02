@@ -49,7 +49,7 @@
     "attributes": {
       "sectiontitle": "Sample Title",
       "description": "This is a sample preview content for this block in the inserter.",
-      "imageUrl": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "imageUrl": "/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
       "imageAlt": "Ambry default preview image",
       "imageId": 1,
       "cta": {

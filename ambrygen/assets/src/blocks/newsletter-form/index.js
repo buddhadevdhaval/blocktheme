@@ -12,6 +12,7 @@ import { registerBlockType } from '@wordpress/blocks';
  *
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
+import { InnerBlocks } from '@wordpress/block-editor';
 import './style.scss';
 import './editor.scss';
 import Edit from './edit';
@@ -29,5 +30,5 @@ registerBlockType( metadata.name, {
 	/**
 	 * @see ./save.js
 	 */
-	save: () => null,
+	save: () => <InnerBlocks.Content />,
 } );

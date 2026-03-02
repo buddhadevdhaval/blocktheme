@@ -73,8 +73,6 @@
 	&__image-wrapper {
 		border-radius: 16px;
 		overflow: hidden;
-		// width: 311px;
-		// height: 311px;
 		aspect-ratio: 1 / 1;
 
 		@include bp.max(lg) {
@@ -85,7 +83,8 @@
 
 	&__image {
 		width: 100%;
-		height: auto;
+		height: 100%;
+		object-fit: cover;
 		display: block;
 	}
 

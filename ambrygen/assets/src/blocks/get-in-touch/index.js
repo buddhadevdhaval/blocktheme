@@ -18,7 +18,7 @@ import './style.scss';
  */
 import Edit from './edit';
 import metadata from './block.json';
-
+import { InnerBlocks } from '@wordpress/block-editor';
 /**
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
@@ -31,5 +31,5 @@ registerBlockType( metadata.name, {
 	/**
 	 * @see ./save.js
 	 */
-	save: () => null,
+	save: () => <InnerBlocks.Content />,
 } );

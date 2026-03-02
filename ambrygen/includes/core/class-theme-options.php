@@ -34,8 +34,8 @@ final class Theme_Options {
 	public function add_options_page(): void {
 
 		add_theme_page(
-			__( 'Theme Options', AMBRYGEN_TEXT_DOMAIN ),
-			__( 'Theme Options', AMBRYGEN_TEXT_DOMAIN ),
+			__( 'Theme Options', 'ambrygen-web' ),
+			__( 'Theme Options', 'ambrygen-web' ),
 			'manage_options',
 			'ambrygen-theme-options',
 			array( $this, 'render_options_page' )
@@ -61,26 +61,26 @@ final class Theme_Options {
 	/**
 	 * Sanitize options.
 	 */
-    public function sanitize_options( array $input ): array {
-        return array(
-            'placeholder_image_id' => isset( $input['placeholder_image_id'] )
-                ? absint( $input['placeholder_image_id'] )
-                : 0,
-        );
-    }
+	public function sanitize_options( array $input ): array {
+		return array(
+			'placeholder_image_id' => isset( $input['placeholder_image_id'] )
+				? absint( $input['placeholder_image_id'] )
+				: 0,
+		);
+	}
 
 	/**
 	 * Render admin page.
 	 */
 	public function render_options_page(): void {
 
-	$options  = get_option( self::OPTION_KEY );
-	$image_id = $options['placeholder_image_id'] ?? 0;
-	$image    = $image_id ? wp_get_attachment_image_url( $image_id, 'medium' ) : '';
-	?>
+		$options  = get_option( self::OPTION_KEY );
+		$image_id = $options['placeholder_image_id'] ?? 0;
+		$image    = $image_id ? wp_get_attachment_image_url( $image_id, 'medium' ) : '';
+		?>
 
 	<div class="wrap">
-		<h1><?php esc_html_e( 'Theme Options', AMBRYGEN_TEXT_DOMAIN ); ?></h1>
+		<h1><?php esc_html_e( 'Theme Options', 'ambrygen-web' ); ?></h1>
 
 		<form method="post" action="options.php">
 			<?php settings_fields( 'ambrygen_theme_options_group' ); ?>
@@ -88,7 +88,7 @@ final class Theme_Options {
 			<table class="form-table">
 				<tr>
 					<th scope="row">
-						<?php esc_html_e( 'Placeholder Image', AMBRYGEN_TEXT_DOMAIN ); ?>
+						<?php esc_html_e( 'Placeholder Image', 'ambrygen-web' ); ?>
 					</th>
 					<td>
 						<div id="ambrygen-placeholder-wrapper">
@@ -104,15 +104,15 @@ final class Theme_Options {
 						/>
 
 						<button type="button" class="button" id="ambrygen-upload-button">
-							<?php esc_html_e( 'Select Image', AMBRYGEN_TEXT_DOMAIN ); ?>
+							<?php esc_html_e( 'Select Image', 'ambrygen-web' ); ?>
 						</button>
 
 						<button type="button" class="button" id="ambrygen-remove-button">
-							<?php esc_html_e( 'Remove', AMBRYGEN_TEXT_DOMAIN ); ?>
+							<?php esc_html_e( 'Remove', 'ambrygen-web' ); ?>
 						</button>
 
 						<p class="description">
-							<?php esc_html_e( 'Set a global fallback image.', AMBRYGEN_TEXT_DOMAIN ); ?>
+							<?php esc_html_e( 'Set a global fallback image.', 'ambrygen-web' ); ?>
 						</p>
 					</td>
 				</tr>
@@ -122,8 +122,8 @@ final class Theme_Options {
 		</form>
 	</div>
 
-	<?php
-}
+		<?php
+	}
 
 	/**
 	 * Get placeholder image URL.
@@ -140,12 +140,12 @@ final class Theme_Options {
 			? AMBRYGEN_DEFAULT_IMAGE
 			: '';
 	}
-    public static function get_placeholder_image_id(): int {
+	public static function get_placeholder_image_id(): int {
 
-	$options = get_option( self::OPTION_KEY );
+		$options = get_option( self::OPTION_KEY );
 
-	return isset( $options['placeholder_image_id'] )
+		return isset( $options['placeholder_image_id'] )
 		? absint( $options['placeholder_image_id'] )
 		: 0;
-}
+	}
 }

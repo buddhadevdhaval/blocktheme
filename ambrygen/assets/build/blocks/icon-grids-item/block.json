@@ -24,11 +24,11 @@
     },
     "title": {
       "type": "string",
-      "default": "Title"
+      "default": ""
     },
     "description": {
       "type": "string",
-      "default": "Description"
+      "default": ""
     },
     "button": {
       "type": "object",
@@ -45,6 +45,10 @@
     "termData": {
       "type": "object",
       "default": {}
+    },
+    "selectedPost": {
+      "type": "number",
+      "default": 0
     },
     "termlinktext": {
       "type": "string"

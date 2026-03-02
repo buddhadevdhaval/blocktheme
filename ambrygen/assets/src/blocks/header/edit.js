@@ -67,20 +67,15 @@ const DEFAULT_LOGO =
 /**
  * Single navigation item editor in sidebar.
  *
- * @param {Object}                             props
- * @param {Object}                             props.item
- * @param {string}                             props.item.label
- * @param {string}                             props.item.url
- * @param {boolean}                            props.item.hasMegaMenu
- * @param {string}                             props.item.megaMenuId
- * @param {boolean}                            props.item.isSecondLevel
- * @param {number}                             props.index
- * @param {number}                             props.total
- * @param {Function}                           props.onUpdate
- * @param {Function}                           props.onMove
- * @param {Function}                           props.onRemove
- * @param {Array<{label:string,value:string}>} props.menuOptions
- * @return {JSX.Element}
+ * @param {Object}                             props             The component props.
+ * @param {Object}                             props.item        The navigation item.
+ * @param {number}                             props.index       Item index.
+ * @param {number}                             props.total       Total items.
+ * @param {Function}                           props.onUpdate    Update handler.
+ * @param {Function}                           props.onMove      Move handler.
+ * @param {Function}                           props.onRemove    Remove handler.
+ * @param {Array<{label:string,value:string}>} props.menuOptions Menu options.
+ * @return {JSX.Element} The rendered element.
  */
 function NavItemEditor( {
 	item,
@@ -156,11 +151,11 @@ function NavItemEditor( {
 /**
  * Top bar preview component.
  *
- * @param {Object}  props
- * @param {boolean} props.visible
- * @param {string}  props.text
- * @param {string}  props.linkText
- * @return {JSX.Element|null}
+ * @param {Object}  props          The component props.
+ * @param {boolean} props.visible  If visible.
+ * @param {string}  props.text     Text.
+ * @param {string}  props.linkText Link text.
+ * @return {JSX.Element|null} The rendered element.
  */
 function TopBar( { visible, text, linkText } ) {
 	if ( ! visible ) {
@@ -175,13 +170,19 @@ function TopBar( { visible, text, linkText } ) {
 						{ text }
 						{ linkText && (
 							<span style={ { marginLeft: '5px' } }>
-								<a
-									href="#"
+								<button
+									type="button"
 									className="top-bar__link is-style-link-text-btn"
+									style={ {
+										background: 'transparent',
+										border: 'none',
+										padding: 0,
+										cursor: 'pointer',
+									} }
 									onClick={ ( e ) => e.preventDefault() }
 								>
 									{ linkText }
-								</a>
+								</button>
 							</span>
 						) }
 					</div>
@@ -197,14 +198,11 @@ function TopBar( { visible, text, linkText } ) {
 /**
  * Navigation item in preview.
  *
- * @param {Object}   props
- * @param {Object}   props.item
- * @param {string}   props.item.label
- * @param {boolean}  props.item.hasMegaMenu
- * @param {string}   props.item.megaMenuId
- * @param {boolean}  props.isActive
- * @param {Function} props.onClick
- * @return {JSX.Element}
+ * @param {Object}   props          The component props.
+ * @param {Object}   props.item     The navigation item.
+ * @param {boolean}  props.isActive If active.
+ * @param {Function} props.onClick  Click handler.
+ * @return {JSX.Element} The rendered element.
  */
 function NavItem( { item, isActive, onClick } ) {
 	const classes = cx(
@@ -225,6 +223,7 @@ function NavItem( { item, isActive, onClick } ) {
 				{ item.hasMegaMenu ? (
 					<div className="nav__item--tringle-touch">
 						<a
+							href={ item.url || '#' }
 							className="nav__link"
 							role="menuitem"
 							onClick={ handleClick }
@@ -234,6 +233,7 @@ function NavItem( { item, isActive, onClick } ) {
 					</div>
 				) : (
 					<a
+						href={ item.url || '#' }
 						className="nav__link"
 						role="menuitem"
 						onClick={ handleClick }
@@ -260,7 +260,7 @@ function NavItem( { item, isActive, onClick } ) {
  * @param {string}      props.logoUrl
  * @param {string}      props.logoAlt
  * @param {Function}    props.onNavClick
- * @return {JSX.Element}
+ * @return {JSX.Element} The rendered element.
  */
 function HeaderPreview( {
 	topBarVisible,
@@ -285,7 +285,7 @@ function HeaderPreview( {
 					<div className="header__inner d-flex justify-content-between">
 						{ /* Logo */ }
 						<div className="header__logo logo">
-							<a href="#" className="header__logo-link">
+							<a href="/" className="header__logo-link">
 								<img
 									className="header__logo-img header__logo-img--default"
 									src={ logoUrl || DEFAULT_LOGO }
@@ -361,7 +361,7 @@ function HeaderPreview( {
  * @param {Object}   props.attributes
  * @param {Function} props.setAttributes
  * @param {string}   props.clientId
- * @return {JSX.Element}
+ * @return {JSX.Element} The rendered element.
  */
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
@@ -468,7 +468,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							}
 							allowedTypes={ [ 'image' ] }
 							value={ attributes.logoId }
-							render={ ( { open } ) => (
+							render={ () => (
 								<ImageUploader
 									url={ logoUrl }
 									onSelect={ ( media ) => {

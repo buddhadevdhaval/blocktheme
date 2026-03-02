@@ -33,7 +33,10 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const addLocation = () => {
 		setAttributes( {
-			locations: [ ...locations, { name: '', address: '' } ],
+			locations: [
+				...locations,
+				{ name: '', address: '', id: Date.now().toString() },
+			],
 		} );
 	};
 	const removeLocation = ( index ) => {
@@ -69,7 +72,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				<PanelBody title={ __( 'Map Settings', 'ambrygen-web' ) }>
 					<PanelRow>
 						<TextControl
-							label="Map Iframe URL"
+							label={ __( 'Map Iframe URL', 'ambrygen-web' ) }
 							value={ iframe || '' }
 							onChange={ onChangeIframe }
 						/>
@@ -93,7 +96,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								/>
 							) : (
 								<div className="alongside-image-block__placeholder">
-									No Map URL Set
+									{ __( 'No Map URL Set', 'ambrygen-web' ) }
 								</div>
 							) }
 						</div>
@@ -101,30 +104,34 @@ export default function Edit( { attributes, setAttributes } ) {
 
 					{ /* Content */ }
 					<div className="alongside-image-block__content">
-						<HeadingTag className="alongside-image-block__title heading-2 mb-0">
-							<RichText
-								tagName={ HeadingTag }
-								value={ title }
-								onChange={ onChangeTitle }
-								placeholder={ __(
-									'Our Locations',
-									'ambrygen-web'
-								) }
-								allowedFormats={ [
-									'core/bold',
-									'core/italic',
-									'core/text-color',
-								] }
-								className="alongside-image-block__title heading-2 mb-0"
-							/>
-						</HeadingTag>
+						<RichText
+							tagName={ HeadingTag }
+							value={ title }
+							onChange={ onChangeTitle }
+							placeholder={ __(
+								'Our Locations',
+								'ambrygen-web'
+							) }
+							allowedFormats={ [
+								'core/bold',
+								'core/italic',
+								'core/text-color',
+							] }
+							className="alongside-image-block__title heading-2 mb-0"
+						/>
 						<div className="is-style-gl-s24"></div>
 
 						<div className="alongside-image-block__text">
 							{ locations.map( ( loc, index ) => (
-								<div className="location-list" key={ index }>
+								<div
+									className="location-list"
+									key={ loc.id || index }
+								>
 									<RichText
-										placeholder="Location Name"
+										placeholder={ __(
+											'Location Name',
+											'ambrygen-web'
+										) }
 										value={ loc.name }
 										onChange={ ( value ) =>
 											updateLocation(
@@ -137,7 +144,10 @@ export default function Edit( { attributes, setAttributes } ) {
 									/>
 
 									<RichText
-										placeholder="Address"
+										placeholder={ __(
+											'Address',
+											'ambrygen-web'
+										) }
 										value={ loc.address }
 										onChange={ ( value ) =>
 											updateLocation(
@@ -148,6 +158,7 @@ export default function Edit( { attributes, setAttributes } ) {
 										}
 										className="text-medium"
 									/>
+									<div className="is-style-gl-s24"></div>
 									<div className="actions-button">
 										<Button
 											variant="secondary"
@@ -156,14 +167,17 @@ export default function Edit( { attributes, setAttributes } ) {
 											}
 											className="components-button is-destructive"
 										>
-											Remove Location
+											{ __(
+												'Remove Location',
+												'ambrygen-web'
+											) }
 										</Button>
 									</div>
 								</div>
 							) ) }
 
-							<Button isPrimary onClick={ addLocation }>
-								Add Location
+							<Button variant="primary" onClick={ addLocation }>
+								{ __( 'Add Location', 'ambrygen-web' ) }
 							</Button>
 						</div>
 					</div>

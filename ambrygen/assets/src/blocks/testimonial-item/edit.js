@@ -39,10 +39,11 @@ export default function Edit( { attributes, setAttributes, context } ) {
 				</PanelBody>
 			</InspectorControls>
 
-			<div className="ambry-testimonials__grid__item__thumb">
-				{ mainImage && (
-					<img src={ mainImage } alt="Main image" loading="lazy" />
-				) }
+			<div
+				className="ambry-testimonials__grid__item__thumb"
+				aria-hidden="true"
+			>
+				{ mainImage && <img src={ mainImage } alt="" loading="lazy" /> }
 			</div>
 
 			<div className="ambry-testimonials__grid__item__content">
@@ -58,13 +59,13 @@ export default function Edit( { attributes, setAttributes, context } ) {
 				<div className="is-style-gl-s32"></div>
 
 				<RichText
-					tagName="div"
+					tagName="blockquote"
 					value={ quote }
 					onChange={ ( value ) => setAttributes( { quote: value } ) }
 					className="ambry-testimonials__grid__item__quote body2-reg"
 				/>
 
-				<div className="ambry-testimonials__layout__author-details">
+				<cite className="ambry-testimonials__layout__author-details">
 					<RichText
 						tagName="div"
 						value={ author }
@@ -82,7 +83,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 						}
 						className="ambry-testimonials__layout__author-details__role body2-medium"
 					/>
-				</div>
+				</cite>
 			</div>
 		</div>
 	);

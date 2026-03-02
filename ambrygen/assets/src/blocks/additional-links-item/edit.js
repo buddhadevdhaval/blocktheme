@@ -39,13 +39,12 @@ export default function Edit( { attributes, setAttributes } ) {
 						label="Link"
 						value={ attributes.cta }
 						onChange={ ( newValue ) =>
-							    setAttributes( {
-        cta: {
-            ...cta,
-            ...newValue,
-        },
-    } )
-
+							setAttributes( {
+								cta: {
+									...cta,
+									...newValue,
+								},
+							} )
 						}
 						showVariant={ false } // optional if you don't need style selector
 					/>

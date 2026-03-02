@@ -34,13 +34,14 @@ $ambrygen_allowed_tags = array(
 	<div class="alongside-image-block__row">
 
 		<!-- Map -->
-		<div class="alongside-image-block__media">
+		<div class="alongside-image-block__media" role="region" aria-label="<?php esc_attr_e( 'Interactive Map', 'ambrygen-web' ); ?>">
 			<div class="alongside-image-block__image">
-				<?php if ( $ambrygen_iframe ) : ?>
+				<?php if ( $ambrygen_iframe && str_starts_with( $ambrygen_iframe, 'https://' ) ) : ?>
 					<iframe
 						src="<?php echo esc_url( $ambrygen_iframe ); ?>"
 						width="600"
 						height="450"
+						title="<?php esc_attr_e( 'Google Map Preview', 'ambrygen-web' ); ?>"
 						allowfullscreen
 						loading="lazy"
 						referrerpolicy="no-referrer-when-downgrade">
@@ -65,24 +66,20 @@ $ambrygen_allowed_tags = array(
 		<div class="alongside-image-block__text">
 		<?php foreach ( $ambrygen_locations as $ambrygen_location ) : ?>
 			<?php if ( ! empty( $ambrygen_location['name'] ) && ! empty( $ambrygen_location['address'] ) ) : 
+					$address = html_entity_decode( $ambrygen_location['address'] ?? '' );
+
 				?>
-				<div class="location-list">
-				<?php if ( ! empty( $ambrygen_location['name'] ) ) : ?>
-					<div class="location-title text-xl-semibold">
-						<?php echo wp_kses_post( $ambrygen_location['name'] ?? '' ); ?>
-					</div>
-					<?php endif; ?>
-					<?php if ( ! empty( $ambrygen_location['address'] ) ) : 
-							$address = html_entity_decode( $ambrygen_location['address'] ?? '' );
-						?>
-					<div class="is-style-gl-s4"></div>
-						<div class="location-description 12sadasd text-medium">
-							<?php echo wp_strip_all_tags( $address  ); ?>
-						</div>
-					<?php endif; ?>
-				</div>
-				<?php endif; ?>
-			<?php endforeach; ?>
+				<dl class="location-list">
+					<dt class="location-title text-xl-semibold">
+						<?php echo wp_kses_post( $ambrygen_location['name'] ); ?>
+					</dt>
+					<div class="is-style-gl-s4" aria-hidden="true"></div>
+					<dd class="location-description text-medium">
+						<?php echo wp_strip_all_tags( $address ); ?>
+					</dd>
+				</dl>
+			<?php endif; ?>
+		<?php endforeach; ?>
 
 			</div>
 

@@ -16,6 +16,7 @@
 @use "partials/site/layout/header-top-bar";
 @use "partials/site/layout/header";
 @use "partials/site/layout/footer";
+@use "partials/site/layout/video-block";
 
 * {
 	box-sizing: border-box;
@@ -37,13 +38,6 @@
 
 .center-align {
 	text-align: center;
-}
-
-button.components-button.is-destructive {
-	// background: #fff;
-	// padding: 6px 6px;
-	// height: auto;
-	// margin: 8px 0;
 }
 
 .daterangepicker {
@@ -186,6 +180,30 @@ html {
 
 	.block-editor-line-height-control {
 		margin-top: 10px;
+	}
+}
+
+
+.editor-sidebar {
+	.block-editor-link-control {
+		min-width: inherit;
+		width: 100%;
+
+		.block-editor-url-input {
+			width: 100%;
+			min-width: inherit;
+		}
+
+		.block-editor-link-control__field {
+			margin: 0;
+		}
+		.block-editor-link-control__search-item {
+			padding: 0;
+			margin-top: 15px;
+		}
+		.block-editor-link-control__search-item .block-editor-link-control__search-item-title span {
+			line-height: normal;
+		}
 	}
 }
 

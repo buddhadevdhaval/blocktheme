@@ -42,8 +42,12 @@
 		list-style: none;
 		padding: 0;
 		margin: 0;
-		height: 493px;
-		overflow-y: auto;
+		  height: 493px;
+    list-style: none;
+    margin: 0;
+    overflow-y: auto;
+    padding: 0
+
 	}
 
 	&__job {

@@ -46,19 +46,19 @@
           "name": "Secondary"
         },
         {
-          "slug": "Primary 25",
+          "slug": "Primary_25",
           "color": "var(--theme_primary_25)",
           "name": "Alice Blue"
         },
         {
-          "slug": "Primary 800",
+          "slug": "Primary_800",
           "color": "var(--theme_primary_800)",
-          "name": "Light Blue"
+          "name": "Primary 800"
         },
 				{
-          "slug": "Primary 700",
+          "slug": "Primary_700",
           "color": "var(--theme_cg_blue)",
-          "name": "Light Blue"
+          "name": "Primary 700"
         },
         {
           "slug": "gray200",

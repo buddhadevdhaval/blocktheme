@@ -51,12 +51,13 @@ const DEFAULT_LINK = { label: 'New Link', url: '#', icon: '' };
 
 /**
  * Submenu link editor with icon, label, URL, and remove button.
- * @param root0
- * @param root0.link
- * @param root0.itemIndex
- * @param root0.linkIndex
- * @param root0.onUpdate
- * @param root0.onRemove
+ *
+ * @param {Object}   props           Component properties.
+ * @param {Object}   props.link      The link object data.
+ * @param {number}   props.itemIndex Index of the parent item.
+ * @param {number}   props.linkIndex Index of the link within the submenu.
+ * @param {Function} props.onUpdate  Callback to update link values.
+ * @param {Function} props.onRemove  Callback to remove a link.
  */
 function SubmenuLink( { link, itemIndex, linkIndex, onUpdate, onRemove } ) {
 	return (
@@ -114,13 +115,14 @@ function SubmenuLink( { link, itemIndex, linkIndex, onUpdate, onRemove } ) {
 
 /**
  * Submenu section with title, links, and add button.
- * @param root0
- * @param root0.item
- * @param root0.index
- * @param root0.onUpdate
- * @param root0.onUpdateLink
- * @param root0.onAddLink
- * @param root0.onRemoveLink
+ *
+ * @param {Object}   props              Component properties.
+ * @param {Object}   props.item         The menu item object.
+ * @param {number}   props.index        Index of the menu item.
+ * @param {Function} props.onUpdate     Callback to update item fields.
+ * @param {Function} props.onUpdateLink Callback to update a nested submenu link.
+ * @param {Function} props.onAddLink    Callback to add a nested submenu link.
+ * @param {Function} props.onRemoveLink Callback to remove a nested submenu link.
  */
 function SubmenuSection( {
 	item,
@@ -197,10 +199,11 @@ function SubmenuSection( {
 
 /**
  * Single menu item column in the preview.
- * @param root0
- * @param root0.item
- * @param root0.index
- * @param root0.onUpdate
+ *
+ * @param {Object}   props          Component properties.
+ * @param {Object}   props.item     The menu item data object.
+ * @param {number}   props.index    Index of the menu item.
+ * @param {Function} props.onUpdate Callback to update item fields.
  */
 function MenuItem( { item, index, onUpdate } ) {
 	return (

@@ -69,18 +69,17 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 
 <div <?php echo wp_kses_post( $ambrygen_wrapper_attributes ); ?>>
 
-	<div class="ambry-testimonials__grid__item__thumb">
+	<div class="ambry-testimonials__grid__item__thumb" aria-hidden="true">
 		<?php
-		if ( $ambrygen_main_image_id ) {
+		
 			echo Helper::image_with_placeholder(
 				$ambrygen_main_image_id,
 				'medium_large',
 				array(
 					'loading' => 'lazy',
-					'alt'     => esc_attr( $ambrygen_main_image_alt ),
 				)
 			);
-		}
+		
 		?>
 	</div>
 
@@ -101,17 +100,16 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 		<?php endif; ?>
 
 		<?php if ( ! empty( $ambrygen_quote ) ) : ?>
-		<div class="ambry-testimonials__grid__item__quote body2-reg">
+		<blockquote class="ambry-testimonials__grid__item__quote body2-reg">
 			<p>
 				<?php echo wp_kses_post( $ambrygen_quote ); ?>
 			</p>
-		</div>
+		</blockquote>
 		<?php endif; ?>
 
 		<?php if ( ! empty( $ambrygen_author ) || ! empty( $ambrygen_role ) ) : ?>
-		<div class="ambry-testimonials__layout__author-details">
+		<cite class="ambry-testimonials__layout__author-details">
 			<?php if ( ! empty( $ambrygen_author ) ) : ?>
-
 			<div class="ambry-testimonials__layout__author-details__author body2-medium">
 				<?php echo esc_html( $ambrygen_author ); ?>
 			</div>
@@ -122,7 +120,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 					<?php echo esc_html( $ambrygen_role ); ?>
 				</div>
 			<?php endif; ?>
-		</div>
+		</cite>
 		<?php endif; ?>
 	</div>
 

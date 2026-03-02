@@ -1,1 +1,44 @@
-/* SCSS will be placed Here */
+@use "../../css/partials/variables/breakpoints" as bp;
+
+
+// Tabs Section
+.secondary-sticky-tabs {
+    display: flex;
+    justify-content: center;
+}
+
+// Horizontal Tabs Component
+.horizontal-tabs {
+    background-color: var(--theme_white);
+    border: 1px solid var(--theme_gray_200);
+    border-radius: 12px;
+    padding: 6px;
+    display: inline-flex;
+    gap: 4px;
+    overflow-y: auto;
+}
+
+.tab-button {
+    background-color: transparent;
+    border: none;
+    border-radius: 6px;
+    color: var(--theme_gray_500);
+    cursor: pointer;
+    font-family: var(--font__main);
+    font-size: var(--theme_font_size_7);
+    font-weight: 600;
+    height: 44px;
+    line-height: 1.5;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+    margin: 0;
+    white-space: nowrap;
+
+    &.active,
+    &:hover {
+        background-color: var(--theme_cg_blue);
+        box-shadow: 0 1px 3px 0 rgba(16, 24, 40, 0.1),
+            0 1px 2px 0 rgba(16, 24, 40, 0.06);
+        color: var(--theme_white);
+    }
+}

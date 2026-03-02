@@ -16,7 +16,7 @@
   "attributes": {
     "heading": {
       "type": "string",
-      "default": "Title"
+      "default": ""
     },
     "headingTag": {
       "type": "string",
@@ -42,6 +42,15 @@
         "rel": "",
         "variant": ""
       }
+    },
+    "selectedTabs": {
+      "type": "array",
+      "default": [
+        {
+          "text": "All Tests",
+          "termSlug": "all"
+        }
+      ]
     }
   },
   "providesContext": {
@@ -50,6 +59,7 @@
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
   "textdomain": "ambrygen-web",
   "render": "file:./render.php",
   "example": {
@@ -58,7 +68,7 @@
       "headingTag": "h2",
       "description": "This is a sample preview content for this block in the inserter.",
       "variation": "two-column",
-      "blockId": 1,
+      "blockId": "1",
       "link": {
         "url": "Sample url",
         "text": "Sample text",

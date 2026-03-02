@@ -3,16 +3,22 @@ import {
 	InnerBlocks,
 	RichText,
 	InspectorControls,
+	MediaUpload,
+	MediaUploadCheck,
 } from '@wordpress/block-editor';
-import { PanelBody, TextControl, SelectControl } from '@wordpress/components';
-import { useRef } from '@wordpress/element';
+import {
+	PanelBody,
+	TextControl,
+	SelectControl,
+	Button,
+} from '@wordpress/components';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import {
 	ImageUploader,
 	CtaButtonField,
 	TagSelector,
 } from '../_shared/components';
 import { t } from '../_shared/utils';
-
 import {
 	isValidUrl,
 	isValidVideoUrl,
@@ -25,6 +31,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		intro,
 		headingLevel,
 		videoUrl,
+		videoObj,
 		videoPoster,
 		careerslink,
 		playIcon,
@@ -37,13 +44,55 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const TagName = headingLevel || 'h2';
 	const videoRef = useRef( null );
+	const [ isPlaying, setIsPlaying ] = useState( false );
+	const iframeSrc = getIframeSrc( videoObj?.url );
+	const [ editorIframeSrc, setEditorIframeSrc ] = useState( iframeSrc );
 
-	const handlePlayClick = () => {
-		if ( videoRef.current ) {
+	useEffect( () => {
+		setEditorIframeSrc( iframeSrc );
+		setIsPlaying( false );
+	}, [ iframeSrc, videoType ] );
+
+	const getPlaySrc = ( src ) =>
+		src.includes( 'autoplay=1' )
+			? src
+			: `${ src }${ src.includes( '?' ) ? '&' : '?' }autoplay=1`;
+
+	const getPauseSrc = ( src ) =>
+		src
+			.replace( /([?&])autoplay=1(&?)/, '$1' )
+			.replace( /[?&]$/, '' )
+			.replace( '?&', '?' );
+
+	const handlePlayClick = ( event ) => {
+		if ( event ) {
+			event.preventDefault();
+		}
+		if ( videoType === 'mp4' && videoRef.current ) {
 			videoRef.current.play();
 		}
+		if ( videoType === 'embed' && editorIframeSrc ) {
+			setEditorIframeSrc( getPlaySrc( editorIframeSrc ) );
+		}
+		setIsPlaying( true );
 	};
+
+	const handlePauseClick = ( event ) => {
+		if ( event ) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+		if ( videoType === 'mp4' && videoRef.current ) {
+			videoRef.current.pause();
+		}
+		if ( videoType === 'embed' && editorIframeSrc ) {
+			setEditorIframeSrc( getPauseSrc( editorIframeSrc ) );
+		}
+		setIsPlaying( false );
+	};
+
 	const playIconUrl = playIcon?.url || '../assets/src/images/play-icon.svg';
+	const pauseIconUrl = pauseIcon?.url || '../assets/src/images/play-icon.svg';
 
 	return (
 		<>
@@ -59,28 +108,6 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 
-				{ /* Video settings */ }
-				{ /* <PanelBody title="Video Settings">
-					<TextControl
-						label="Video URL"
-						value={videoUrl || ''}
-						onChange={(value) => setAttributes({ videoUrl: value })}
-					/>
-
-					<MediaUploadCheck>
-						<MediaUpload
-							onSelect={(media) => setAttributes({ videoPoster: media })}
-							allowedTypes={['image']}
-							value={videoPoster?.id}
-							render={({ open }) => (
-								<Button isSecondary onClick={open}>
-									{videoPoster ? 'Change Poster Image' : 'Select Poster Image'}
-								</Button>
-							)}
-						/>
-					</MediaUploadCheck>
-				</PanelBody>
-				 */ }
 				<PanelBody title="Video Settings">
 					<SelectControl
 						label="Video Type"
@@ -96,32 +123,42 @@ export default function Edit( { attributes, setAttributes } ) {
 
 					{ videoType === 'mp4' && (
 						<>
-							<TextControl
-								label="MP4 Video URL"
-								help="Paste a direct .mp4 file URL"
-								value={ videoUrl || '' }
-								onChange={ ( value ) =>
-									isValidUrl( value ) &&
-									setAttributes( { videoUrl: value } )
-								}
-							/>
-
-							{ /* <MediaUploadCheck>
+							<MediaUploadCheck>
 								<MediaUpload
 									onSelect={ ( media ) =>
-										setAttributes( { videoPoster: media } )
+										setAttributes( {
+											videoObj: {
+												id: media.id,
+												url: media.url,
+											},
+										} )
 									}
-									allowedTypes={ [ 'image' ] }
-									value={ videoPoster?.id }
+									allowedTypes={ [ 'video' ] }
+									value={ videoObj?.id }
 									render={ ( { open } ) => (
 										<Button isSecondary onClick={ open }>
-											{ videoPoster
-												? 'Change Poster Image'
-												: 'Select Poster Image' }
+											{ videoObj?.url
+												? 'Change Video'
+												: 'Select / Upload Video' }
 										</Button>
 									) }
 								/>
-							</MediaUploadCheck> */ }
+							</MediaUploadCheck>
+
+							{ videoObj?.url && (
+								<p>Selected: { videoObj.url }</p>
+							) }
+
+							<Button
+								isLink
+								isDestructive
+								onClick={ () =>
+									setAttributes( { videoObj: null } )
+								}
+							>
+								Remove Video
+							</Button>
+
 							<ImageUploader
 								label="Video Poster Image"
 								url={ videoPoster?.url }
@@ -150,22 +187,6 @@ export default function Edit( { attributes, setAttributes } ) {
 
 				{ /* Play icon settings */ }
 				<PanelBody title="Icons Setting" initialOpen={ false }>
-					{ /* <MediaUploadCheck>
-						<MediaUpload
-							onSelect={ ( media ) =>
-								setAttributes( { playIcon: media } )
-							}
-							allowedTypes={ [ 'image' ] }
-							value={ playIcon?.id || '' }
-							render={ ( { open } ) => (
-								<Button isSecondary onClick={ open }>
-									{ playIcon
-										? 'Change Play Icon'
-										: 'Select Play Icon' }
-								</Button>
-							) }
-						/>
-					</MediaUploadCheck> */ }
 					<ImageUploader
 						label="Play Icon"
 						url={ playIcon?.url }
@@ -230,25 +251,25 @@ export default function Edit( { attributes, setAttributes } ) {
 
 			<div { ...useBlockProps( { className: 'careers-highlight' } ) }>
 				<div className="careers-highlight__header block__rowflex">
-					<TagName className="careers-highlight__title block__rowflex--heading-title heading-4 mb-0">
-						<RichText
-							tagName="div"
-							value={ title }
-							onChange={ ( value ) =>
-								setAttributes( { title: value } )
-							}
-							allowedFormats={ [
-								'core/bold',
-								'core/italic',
-								'core/text-color',
-							] }
-						/>
-					</TagName>
-
+					<RichText
+						tagName={ headingLevel || 'h2' }
+						value={ title }
+						placeholder="Add Title..."
+						className="careers-highlight__title block__rowflex--heading-title heading-4 mb-0"
+						onChange={ ( value ) =>
+							setAttributes( { title: value } )
+						}
+						allowedFormats={ [
+							'core/bold',
+							'core/italic',
+							'core/text-color',
+						] }
+					/>
 					<div className="careers-highlight__intro block__rowflex--block-content subtitle1-reg">
 						<RichText
 							tagName="div"
 							value={ intro }
+							placeholder="Add Description..."
 							onChange={ ( value ) =>
 								setAttributes( { intro: value } )
 							}
@@ -257,7 +278,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						{ link?.text && (
 							<div className="block_rowflex-link">
 								<a
-									href="#"
+									href={ link.url || '#' }
 									className="site-btn is-style-site-text-btn has-icon"
 								>
 									{ link.text }
@@ -284,7 +305,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							<div className="block-btn">
 								<div className="is-style-gl-s32"></div>
 								<a
-									href="#"
+									href={ careerslink.url || '#' }
 									className="site-btn is-style-site-text-btn has-icon"
 								>
 									{ careerslink.text }
@@ -294,8 +315,8 @@ export default function Edit( { attributes, setAttributes } ) {
 					</div>
 
 					<div className="careers-highlight__right">
-						<div className="careers-highlight__media">
-							{ videoType === 'mp4' && videoUrl && (
+						<div className="careers-highlight__media  media_video">
+							{ videoType === 'mp4' && videoObj?.url && (
 								<video
 									ref={ videoRef }
 									className="videos"
@@ -304,89 +325,74 @@ export default function Edit( { attributes, setAttributes } ) {
 									preload="metadata"
 									loop
 									poster={ videoPoster?.url || '' }
+									onPlay={ () => setIsPlaying( true ) }
+									onPause={ () => setIsPlaying( false ) }
+									onEnded={ () => setIsPlaying( false ) }
 								>
-									<source src={ videoUrl } type="video/mp4" />
+									<source
+										src={ videoObj.url }
+										type="video/mp4"
+									/>
 								</video>
 							) }
-							{ videoType === 'embed' &&
-								getIframeSrc( videoUrl ) && (
-									<div className="careers-highlight__media video-embed">
-										<iframe
-											src={ getIframeSrc( videoUrl ) }
-											title="Embedded video"
-											frameBorder="0"
-											allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-											allowFullScreen
-										/>
-									</div>
-								) }
+							{ videoType === 'embed' && editorIframeSrc && (
+								<div className="careers-highlight__media  media_video video-embed">
+									<iframe
+										src={ editorIframeSrc }
+										title="Embedded video"
+										frameBorder="0"
+										allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+										allowFullScreen
+									/>
+								</div>
+							) }
 							{ ! videoUrl && (
 								<div className="videos-placeholder">
 									Add video URL in block settings
 								</div>
 							) }
-							{ videoType === 'mp4' && (
-								<div
-									className="careers-highlight__play-icon-video"
-									onClick={ handlePlayClick }
-								>
-									<div className="careers-highlight__play-icon">
+							{ videoUrl && (
+								<div className="careers-highlight__play-icon-video play-icon-video">
+									<button
+										type="button"
+										className="careers-highlight__play-icon play-icon"
+										onClick={ handlePlayClick }
+										style={ {
+											display: isPlaying ? 'none' : '',
+											background: 'transparent',
+											border: 'none',
+											padding: 0,
+											cursor: 'pointer',
+										} }
+									>
 										<img
 											src={ playIconUrl }
 											width="24"
 											height="24"
 											alt="Play"
 										/>
-									</div>
-									<div className="careers-highlight__pause-icon">
+									</button>
+									<button
+										type="button"
+										className="careers-highlight__pause-icon pause-icon"
+										onClick={ handlePauseClick }
+										style={ {
+											display: isPlaying ? '' : 'none',
+											background: 'transparent',
+											border: 'none',
+											padding: 0,
+											cursor: 'pointer',
+										} }
+									>
 										<img
-											src={ pauseIcon }
+											src={ pauseIconUrl }
 											width="24"
 											height="24"
 											alt="Pause"
 										/>
-									</div>
-									<div className="careers-highlight__pause-icon">
-										<img
-											src={ jobtypeicon }
-											width="24"
-											height="24"
-											alt="Pause"
-										/>
-									</div>
-									<div className="careers-highlight__pause-icon">
-										<img
-											src={ joblocationicon }
-											width="24"
-											height="24"
-											alt="Pause"
-										/>
-									</div>
+									</button>
 								</div>
 							) }
-
-							<div
-								className="careers-highlight__play-icon-video"
-								onClick={ handlePlayClick }
-								style={ { cursor: 'pointer' } }
-							>
-								<div className="careers-highlight__play-icon">
-									<img
-										src={ playIconUrl }
-										width="24"
-										height="24"
-										alt="Play"
-									/>
-								</div>
-								<div className="careers-highlight__pause-icon">
-									<img
-										src={ pauseIcon }
-										width="24"
-										height="24"
-										alt="Pause"
-									/>
-								</div>
-							</div>
 						</div>
 					</div>
 				</div>

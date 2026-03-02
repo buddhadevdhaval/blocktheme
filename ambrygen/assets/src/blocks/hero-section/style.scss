@@ -152,7 +152,7 @@
 		line-height: 1.12;
 	}
 
-	&__heading {
+	.hero-section__heading {
 		color: var(--theme_color_secondary);
 		margin-bottom: 0;
 	}
@@ -202,8 +202,7 @@
 			@include bp.max(sm) {
 				justify-content: center;
 				text-align: center;
-
-				width: 100%
+				width: 100%;
 			}
 		}
 	}

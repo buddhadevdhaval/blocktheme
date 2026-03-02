@@ -1,0 +1,1 @@
+document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll(".faq__item").forEach(e=>{const t=e.querySelector("summary");t&&e.addEventListener("toggle",()=>{t.setAttribute("aria-expanded",e.open)})})});

@@ -34,8 +34,8 @@ final class Post_Types {
 		$this->register_taxonomy_meta();
 
 
-		add_action( 'add_meta_boxes', [ $this, 'register_meta_boxes' ] );
-		add_action( 'save_post', [ $this, 'save_meta_boxes' ], 10, 2 );
+		add_action( 'add_meta_boxes', array( $this, 'register_meta_boxes' ) );
+		add_action( 'save_post', array( $this, 'save_meta_boxes' ), 10, 2 );
 	}
 
 	/**
@@ -45,33 +45,39 @@ final class Post_Types {
 	 */
 	public function register_post_types(): void {
 		foreach ( $this->get_post_types() as $slug => $args ) {
-			$labels = [
+			$labels = array(
 				'name'               => $args['label'],
 				'singular_name'      => $args['singular_label'],
 				'menu_name'          => $args['label'],
 				'name_admin_bar'     => $args['singular_label'],
+				/* translators: %s: singular post type label. */
 				'add_new_item'       => sprintf( __( 'Add New %s', 'ambrygen' ), $args['singular_label'] ),
+				/* translators: %s: singular post type label. */
 				'edit_item'          => sprintf( __( 'Edit %s', 'ambrygen' ), $args['singular_label'] ),
+				/* translators: %s: singular post type label. */
 				'new_item'           => sprintf( __( 'New %s', 'ambrygen' ), $args['singular_label'] ),
+				/* translators: %s: singular post type label. */
 				'view_item'          => sprintf( __( 'View %s', 'ambrygen' ), $args['singular_label'] ),
+				/* translators: %s: plural post type label. */
 				'all_items'          => sprintf( __( 'All %s', 'ambrygen' ), $args['label'] ),
+				/* translators: %s: plural post type label. */
 				'search_items'       => sprintf( __( 'Search %s', 'ambrygen' ), $args['label'] ),
 				'not_found'          => __( 'No items found.', 'ambrygen' ),
 				'not_found_in_trash' => __( 'No items found in Trash.', 'ambrygen' ),
-			];
+			);
 
-			$defaults = [
-				'labels'             => $labels,
-				'public'             => $args['public'] ?? true,
-				'show_in_menu'       => $args['show_in_menu'] ?? true,
-				'menu_icon'          => $args['menu_icon'] ?? 'dashicons-admin-post',
-				'supports'           => $args['supports'] ?? [ 'title', 'editor', 'thumbnail' ],
-				'rewrite'            => $args['rewrite'] ?? [ 'slug' => $slug ],
-				'has_archive'        => $args['has_archive'] ?? true,
-				'show_in_rest'       => true,
-				'exclude_from_search'=> false,
-				'publicly_queryable' => true,
-			];
+			$defaults = array(
+				'labels'              => $labels,
+				'public'              => $args['public'] ?? true,
+				'show_in_menu'        => $args['show_in_menu'] ?? true,
+				'menu_icon'           => $args['menu_icon'] ?? 'dashicons-admin-post',
+				'supports'            => array( 'title', 'editor', 'thumbnail' ),
+				'rewrite'             => $args['rewrite'] ?? array( 'slug' => $slug ),
+				'has_archive'         => $args['has_archive'] ?? true,
+				'show_in_rest'        => true,
+				'exclude_from_search' => false,
+				'publicly_queryable'  => true,
+			);
 
 			register_post_type( $slug, $defaults );
 		}
@@ -89,14 +95,14 @@ final class Post_Types {
 			register_taxonomy(
 				$taxonomy,
 				$args['post_types'],
-				[
+				array(
 					'labels'            => $args['labels'],
 					'hierarchical'      => $args['hierarchical'] ?? false,
 					'show_ui'           => true,
 					'show_admin_column' => true,
 					'show_in_rest'      => true,
-					'rewrite'           => [ 'slug' => $taxonomy ],
-				]
+					'rewrite'           => array( 'slug' => $taxonomy ),
+				)
 			);
 		}
 	}
@@ -107,32 +113,32 @@ final class Post_Types {
 	 * @return array<string, array<string, mixed>>
 	 */
 	private function get_post_types(): array {
-		return [
-			'our_team' => [
+		return array(
+			'our_team'   => array(
 				'label'          => __( 'Our Team', 'ambrygen' ),
 				'singular_label' => __( 'Team Member', 'ambrygen' ),
 				'menu_icon'      => 'dashicons-groups',
-				'supports'       => [ 'title', 'thumbnail' ],
-				'meta_fields'    => [
-					'designation' => [
+				'supports'       => array( 'title', 'thumbnail', 'custom-fields' ),
+				'meta_fields'    => array(
+					'designation' => array(
 						'label' => __( 'Designation', 'ambrygen' ),
 						'type'  => 'text',
-					],
-				],
-			],
-			'jobs' => [
+					),
+				),
+			),
+			'jobs'       => array(
 				'label'          => __( 'Jobs', 'ambrygen' ),
 				'singular_label' => __( 'Job', 'ambrygen' ),
 				'menu_icon'      => 'dashicons-briefcase',
-				'supports'       => [ 'title', 'editor', 'thumbnail' ]
-			],
-			'blood-test' => [
+				'supports'       => array( 'title', 'editor', 'thumbnail' ),
+			),
+			'blood-test' => array(
 				'label'          => __( 'Blood Test', 'ambrygen' ),
 				'singular_label' => __( 'Blood Test', 'ambrygen' ),
 				'menu_icon'      => 'dashicons-briefcase',
-				'supports'       => [ 'title', 'editor', 'thumbnail' ]
-			],
-		];
+				'supports'       => array( 'title', 'editor', 'thumbnail' ),
+			),
+		);
 	}
 
 	/**
@@ -141,24 +147,24 @@ final class Post_Types {
 	 * @return array<string, array<string, mixed>>
 	 */
 	private function get_taxonomies(): array {
-		return [
-			'member_type' => [
-				'post_types' => [ 'our_team' ],
+		return array(
+			'member_type'     => array(
+				'post_types'   => array( 'our_team' ),
 				'hierarchical' => true,
-				'labels' => [
+				'labels'       => array(
 					'name'          => __( 'Member Types', 'ambrygen' ),
 					'singular_name' => __( 'Member Type', 'ambrygen' ),
 					'search_items'  => __( 'Search Member Types', 'ambrygen' ),
 					'all_items'     => __( 'All Member Types', 'ambrygen' ),
 					'edit_item'     => __( 'Edit Member Type', 'ambrygen' ),
-					'add_new_item'  => __( 'Add New Member Type', 'ambrygen' ),
+					'add_new_item'  => __( 'Add New Team', 'ambrygen' ),
 					'menu_name'     => __( 'Member Type', 'ambrygen' ),
-				],
-			],
-			'job_type' => [
-				'post_types' => [ 'jobs' ],
+				),
+			),
+			'job_type'        => array(
+				'post_types'   => array( 'jobs' ),
 				'hierarchical' => true,
-				'labels' => [
+				'labels'       => array(
 					'name'          => __( 'Job Types', 'ambrygen' ),
 					'singular_name' => __( 'Job Type', 'ambrygen' ),
 					'search_items'  => __( 'Search Job Types', 'ambrygen' ),
@@ -166,12 +172,12 @@ final class Post_Types {
 					'edit_item'     => __( 'Edit Job Type', 'ambrygen' ),
 					'add_new_item'  => __( 'Add New Job Type', 'ambrygen' ),
 					'menu_name'     => __( 'Job Type', 'ambrygen' ),
-				],
-			],
-			'job_location' => [
-				'post_types' => [ 'jobs' ],
+				),
+			),
+			'job_location'    => array(
+				'post_types'   => array( 'jobs' ),
 				'hierarchical' => true,
-				'labels' => [
+				'labels'       => array(
 					'name'          => __( 'Job Locations', 'ambrygen' ),
 					'singular_name' => __( 'Job Location', 'ambrygen' ),
 					'search_items'  => __( 'Search Job Locations', 'ambrygen' ),
@@ -179,12 +185,12 @@ final class Post_Types {
 					'edit_item'     => __( 'Edit Job Location', 'ambrygen' ),
 					'add_new_item'  => __( 'Add New Job Location', 'ambrygen' ),
 					'menu_name'     => __( 'Job Location', 'ambrygen' ),
-				],
-			],
-			'job_preferences' => [
-				'post_types' => [ 'jobs' ],
+				),
+			),
+			'job_preferences' => array(
+				'post_types'   => array( 'jobs' ),
 				'hierarchical' => true,
-				'labels' => [
+				'labels'       => array(
 					'name'          => __( 'Job Preferences', 'ambrygen' ),
 					'singular_name' => __( 'Job Preference', 'ambrygen' ),
 					'search_items'  => __( 'Search Job Preferences', 'ambrygen' ),
@@ -192,12 +198,12 @@ final class Post_Types {
 					'edit_item'     => __( 'Edit Job Preference', 'ambrygen' ),
 					'add_new_item'  => __( 'Add New Job Preference', 'ambrygen' ),
 					'menu_name'     => __( 'Job Preference', 'ambrygen' ),
-				],
-			],
-			'test_type' => [
-				'post_types' => [ 'blood-test' ],
+				),
+			),
+			'test_type'       => array(
+				'post_types'   => array( 'blood-test' ),
 				'hierarchical' => true,
-				'labels' => [
+				'labels'       => array(
 					'name'          => __( 'Test Types', 'ambrygen' ),
 					'singular_name' => __( 'Test Type', 'ambrygen' ),
 					'search_items'  => __( 'Search Test Types', 'ambrygen' ),
@@ -205,9 +211,9 @@ final class Post_Types {
 					'edit_item'     => __( 'Edit Test Type', 'ambrygen' ),
 					'add_new_item'  => __( 'Add New Test Type', 'ambrygen' ),
 					'menu_name'     => __( 'Test Type', 'ambrygen' ),
-				],
-			],
-		];
+				),
+			),
+		);
 	}
 
 	/**
@@ -225,16 +231,15 @@ final class Post_Types {
 				register_post_meta(
 					$slug,
 					$meta_key,
-					[
+					array(
 						'type'              => 'string',
 						'single'            => true,
 						'sanitize_callback' => 'sanitize_text_field',
 						'show_in_rest'      => true,
-						'auth_callback'     => static function(): bool {
-							return current_user_can( 'edit_posts' );
-						},
-					]
+	   
+					)
 				);
+
 			}
 		}
 	}
@@ -252,8 +257,9 @@ final class Post_Types {
 
 			add_meta_box(
 				$slug . '_meta_box',
+				/* translators: %s: singular post type label. */
 				sprintf( __( '%s Details', 'ambrygen' ), $args['singular_label'] ),
-				[ $this, 'render_meta_box' ],
+				array( $this, 'render_meta_box' ),
 				$slug,
 				'normal',
 				'default',
@@ -343,71 +349,93 @@ final class Post_Types {
 	 * Add image fields to job-related taxonomies.
 	 */
 	public function register_taxonomy_meta(): void {
-		$taxonomies = [ 'job_type', 'job_location', 'job_preferences','test_type' ];
+		$taxonomies = array( 'job_type', 'job_location', 'job_preferences', 'test_type' );
 
 		foreach ( $taxonomies as $taxonomy ) {
 
-		        register_term_meta(
+				register_term_meta(
 					$taxonomy,
 					'term_image',
-					[
-						'type'         => 'integer',
-						'single'       => true,
-						'show_in_rest' => true,
+					array(
+						'type'              => 'integer',
+						'single'            => true,
+						'show_in_rest'      => true,
 						'sanitize_callback' => 'absint',
-						'auth_callback' => static function() {
-							return current_user_can( 'edit_terms' );
+						'auth_callback'     => static function () {
+							return current_user_can( 'manage_categories' );
 						},
-					]
+					)
 				);
 
 
 			// Add field to add term screen
-			add_action( $taxonomy . '_add_form_fields', function() use ( $taxonomy ) {
-				?>
+			add_action(
+				$taxonomy . '_add_form_fields',
+				function () use ( $taxonomy ) {
+					?>
 				<div class="form-field term-image-wrap">
 					<label><?php esc_html_e( 'Image', 'ambrygen' ); ?></label>
-					<img src="" class="term_image_prev">
-        <img src="" class="term_image_prev" style="max-width:100px; display:block; margin-bottom:5px;" />
+					<?php wp_nonce_field( 'ambrygen_term_image_meta', 'ambrygen_term_image_nonce' ); ?>
+					<img src="" class="term_image_prev" style="max-width:100px; display:block; margin-bottom:5px;" />
+					<input type="hidden" name="term_image" id="term_image" value="" class="term-image-field" />
 					<button class="button button-secondary upload-term-image"><?php esc_html_e( 'Upload Image', 'ambrygen' ); ?></button>
 					<button class="button button-secondary remove-term-image"><?php esc_html_e( 'Remove Image', 'ambrygen' ); ?></button>
 
 				</div>
-				<?php
-			}, 10, 2 );
+					<?php
+				},
+				10,
+				2 
+			);
 
 			// Add field to edit term screen
-			add_action( $taxonomy . '_edit_form_fields', function( $term ) use ( $taxonomy ) {
-			$image_id  = get_term_meta( $term->term_id, 'term_image', true );
-			$image_url = $image_id ? wp_get_attachment_url( $image_id ) : '';
-			?>
+			add_action(
+				$taxonomy . '_edit_form_fields',
+				function ( $term ) use ( $taxonomy ) {
+					$image_id  = get_term_meta( $term->term_id, 'term_image', true );
+					$image_url = $image_id ? wp_get_attachment_url( $image_id ) : '';
+					?>
 			<tr class="form-field term-image-wrap">
 				<th scope="row">
 					<label><?php esc_html_e( 'Image', 'ambrygen' ); ?></label>
 				</th>
 				<td>
+					<?php wp_nonce_field( 'ambrygen_term_image_meta', 'ambrygen_term_image_nonce' ); ?>
 					<img src="<?php echo esc_url( $image_url ); ?>" class="term_image_prev" style="max-width:100px; display:block; margin-bottom:5px;" />
 					<input type="hidden" name="term_image" id="term_image" value="<?php echo esc_attr( $image_id ); ?>" class="term-image-field" />
 					<button class="button button-secondary upload-term-image"><?php esc_html_e( 'Upload Image', 'ambrygen' ); ?></button>
-					            <button class="button button-secondary remove-term-image"><?php esc_html_e( 'Remove Image', 'ambrygen' ); ?></button>
+								<button class="button button-secondary remove-term-image"><?php esc_html_e( 'Remove Image', 'ambrygen' ); ?></button>
 
 				</td>
 			</tr>
-			<?php
-		}, 10, 2 );
+					<?php
+				},
+				10,
+				2 
+			);
 
 
 			// Save term meta
-			add_action( 'created_' . $taxonomy, [ $this, 'save_taxonomy_image_meta' ], 10, 2 );
-			add_action( 'edited_' . $taxonomy, [ $this, 'save_taxonomy_image_meta' ], 10, 2 );
+			add_action( 'created_' . $taxonomy, array( $this, 'save_taxonomy_image_meta' ), 10, 2 );
+			add_action( 'edited_' . $taxonomy, array( $this, 'save_taxonomy_image_meta' ), 10, 2 );
 		}
 
 		// Enqueue media uploader for admin
-	// Enqueue media uploader and JS
-		add_action( 'admin_enqueue_scripts', function() {
-			wp_enqueue_media();
-			wp_add_inline_script( 'jquery-core', "
+		// Enqueue media uploader and JS
+		add_action(
+			'admin_enqueue_scripts',
+			function () {
+				wp_enqueue_media();
+				wp_add_inline_script(
+					'jquery-core',
+					"
 				jQuery(document).ready(function($){
+					var clearTermImageField = function(scope){
+						var context = scope && scope.length ? scope : $('#addtag');
+						context.find('.term-image-field').val('');
+						context.find('.term_image_prev').attr('src', '');
+					};
+
 					// Upload image
 					$('.upload-term-image').on('click', function(e){
 						e.preventDefault();
@@ -430,10 +458,28 @@ final class Post_Types {
 						input.val('').trigger('change');
 						preview.attr('src','');
 					});
-				});
-			" );
-		});
 
+					// Clear add-term image field after successful term creation
+					$(document).ajaxSuccess(function(event, xhr, settings){
+						if (!settings || typeof settings.data !== 'string') {
+							return;
+						}
+
+						if (settings.data.indexOf('action=add-tag') === -1) {
+							return;
+						}
+
+						if (xhr && xhr.responseJSON && xhr.responseJSON.success === false) {
+							return;
+						}
+
+						clearTermImageField($('#addtag'));
+					});
+				});
+			" 
+				);
+			}
+		);
 	}
 
 	/**
@@ -442,6 +488,16 @@ final class Post_Types {
 	 * @param int $term_id Term ID.
 	 */
 	public function save_taxonomy_image_meta( int $term_id ): void {
+		if (
+			empty( $_POST['ambrygen_term_image_nonce'] ) ||
+			! wp_verify_nonce(
+				sanitize_text_field( wp_unslash( $_POST['ambrygen_term_image_nonce'] ) ),
+				'ambrygen_term_image_meta'
+			)
+		) {
+			return;
+		}
+
 		if ( isset( $_POST['term_image'] ) && ! empty( $_POST['term_image'] ) ) {
 			update_term_meta( $term_id, 'term_image', intval( $_POST['term_image'] ) );
 		} else {
@@ -457,22 +513,23 @@ final class Post_Types {
  *
  * @return int[] Array of term IDs.
  */
-function get_post_term_ids( int $post_id, string $taxonomy ): array {
-    if ( ! $post_id || ! taxonomy_exists( $taxonomy ) ) {
-        return [];
-    }
+	public function get_post_term_ids( int $post_id, string $taxonomy ): array {
+		if ( ! $post_id || ! taxonomy_exists( $taxonomy ) ) {
+			return array();
+		}
 
-    $terms = wp_get_post_terms( $post_id, $taxonomy, [
-        'fields' => 'ids', // Only return term IDs
-    ] );
+		$terms = wp_get_post_terms(
+			$post_id,
+			$taxonomy,
+			array(
+				'fields' => 'ids', // Only return term IDs
+			) 
+		);
 
-    if ( is_wp_error( $terms ) ) {
-        return [];
-    }
+		if ( is_wp_error( $terms ) ) {
+			return array();
+		}
 
-    return $terms;
-}
-
-
-
+		return $terms;
+	}
 }

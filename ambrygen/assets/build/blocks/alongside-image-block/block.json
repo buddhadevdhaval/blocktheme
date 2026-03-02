@@ -14,10 +14,6 @@
       "type": "string",
       "default": "Our Locations"
     },
-    "titleColor": {
-      "type": "string",
-      "default": ""
-    },
     "iframe": {
       "type": "string",
       "default": "https://www.google.com/maps/embed?pb=..."
@@ -50,7 +46,6 @@
   "example": {
     "attributes": {
       "title": "Our Locations",
-      "titleColor": "Sample Title",
       "iframe": "https://www.google.com/maps/embed?pb=...",
       "locations": [
         {

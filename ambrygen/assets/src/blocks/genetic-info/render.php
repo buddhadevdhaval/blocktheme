@@ -78,8 +78,8 @@ $ambrygen_iframe_src  = Helper::get_iframe_src( $ambrygen_iframe_url );
 
 	<div class="is-style-gl-s50" aria-hidden="true"></div>
 
+	<div class="features-media__video media_video">
 	<?php if ( 'embed' === $ambrygen_video_type && $ambrygen_iframe_src ) : ?>
-		<div class="features-media__video media_video">
 			<div class="features-media__video-wrapper features-media__video-wrapper--iframe">
 				<iframe
 					src="<?php echo esc_url( $ambrygen_iframe_src ); ?>"
@@ -93,12 +93,14 @@ $ambrygen_iframe_src  = Helper::get_iframe_src( $ambrygen_iframe_url );
 					<div class="play-icon-video">
 						<?php if ( $ambrygen_play_icon_id ) : ?>
 							<div class="play-icon">
-							<?php 
+								<?php
 								echo Helper::image(
 									$ambrygen_play_icon_id,
-									'large',
+									'full',
 									array(
+										'class'   => 'play-icon__img',
 										'loading' => 'lazy',
+										'alt'     => 'Play Icon',
 									)
 								);
 								?>
@@ -107,12 +109,14 @@ $ambrygen_iframe_src  = Helper::get_iframe_src( $ambrygen_iframe_url );
 
 						<?php if ( $ambrygen_pause_id ) : ?>
 							<div class="pause-icon">
-								<?php 
+								<?php
 								echo Helper::image(
 									$ambrygen_pause_id,
-									'large',
+									'full',
 									array(
+										'class'   => 'pause-icon__img',
 										'loading' => 'lazy',
+										'alt'     => 'Pause Icon',
 									)
 								);
 								?>
@@ -120,7 +124,6 @@ $ambrygen_iframe_src  = Helper::get_iframe_src( $ambrygen_iframe_url );
 						<?php endif; ?>
 					</div>
 				<?php endif; ?>
-			</div>
 		</div>
 	<?php endif; ?>
 
@@ -143,28 +146,32 @@ $ambrygen_iframe_src  = Helper::get_iframe_src( $ambrygen_iframe_url );
 				<div class="play-icon-video">
 					<?php if ( $ambrygen_play_icon_id ) : ?>
 						<div class="play-icon">
-							<?php 
+							<?php
 							echo Helper::image(
-									$ambrygen_play_icon_id,
-									'full',
-									array(
-										'loading' => 'lazy',
-									)
-								);
+								$ambrygen_play_icon_id,
+								'full',
+								array(
+									'class'   => 'play-icon__img',
+									'loading' => 'lazy',
+									'alt'     => 'Play Icon',
+								)
+							);
 							?>
 						</div>
 					<?php endif; ?>
 
-					<?php if ( $ambrygen_pause_url ) : ?>
+					<?php if ( $ambrygen_pause_id ) : ?>
 						<div class="pause-icon">
-							<?php 
-								echo Helper::image(
-									$ambrygen_pause_id,
-									'full',
-									array(
-										'loading' => 'lazy',
-									)
-								);
+							<?php
+							echo Helper::image(
+								$ambrygen_pause_id,
+								'full',
+								array(
+									'class'   => 'pause-icon__img',
+									'loading' => 'lazy',
+									'alt'     => 'Pause Icon',
+								)
+							);
 							?>
 						</div>
 					<?php endif; ?>
@@ -172,4 +179,5 @@ $ambrygen_iframe_src  = Helper::get_iframe_src( $ambrygen_iframe_url );
 			<?php endif; ?>
 		</div>
 	<?php endif; ?>
+	</div>
 </div>

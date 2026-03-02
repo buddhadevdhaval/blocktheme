@@ -62,15 +62,24 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 			'iot-block ' .
 			$ambrygen_image_position
 		),
-		// 'style' => sprintf(
-		// 	'--content-alignment:%s',
-		// 	esc_attr( $ambrygen_content_alignment )
-		// ),
 	)
 );
 ?>
 
 <div <?php echo wp_kses_data( $ambrygen_wrapper_attributes ); ?>>
+			<div class="iot-block__image">
+
+			<?php
+				echo Helper::image_with_placeholder(
+					$ambrygen_image_id,
+					'full',
+					array(
+						'class' => 'iot-block__img',
+					)
+				);
+				?>
+			</div>
+
 	<div class="iot-block__content">
 		<div class="iot-block__text">
 			<?php if ( $ambrygen_heading ) : ?>
@@ -78,7 +87,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 					<?php echo wp_kses_post( $ambrygen_heading ); ?>
 				</<?php echo esc_html( $ambrygen_heading_tag ); ?>>
 			<?php endif; ?>
-
+			<div class="is-style-gl-s20" aria-hidden="true"></div>
 			<?php if ( $ambrygen_content ) : ?>
 				<div class="body1 iot-block__description">
 					<?php echo wp_kses_post( $ambrygen_content ); ?>
@@ -102,32 +111,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 			</div>
 		<?php endif; ?>
 		</div>
-	<?php if ( 'right' === $ambrygen_image_position && $ambrygen_image_id ) : ?>
-			<div class="iot-block__image">
-				
-			<?php
-				echo Helper::image(
-					$ambrygen_image_id,
-					'full',
-					array(
-						'class' => 'iot-block__img',
-					)
-				);
-				?>
-			</div>
-		<?php endif; ?>
 
-		<?php if ( 'iot-block__rtl' === $ambrygen_image_position && $ambrygen_image_id ) : ?>
-			<div class="iot-block__image">
-				<?php
-				echo Helper::image(
-					$ambrygen_image_id,
-					'full',
-					array(
-						'class' => 'iot-block__img',
-					)
-				);
-				?>
-			</div>
-		<?php endif; ?>
+
+
 </div>

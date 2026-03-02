@@ -38,9 +38,9 @@ final class Theme {
 		 */
 		add_action( 'after_setup_theme', array( $this, 'theme_setup' ) );
 
-		add_filter('upload_mimes', array($this, 'ambry_allow_svg_uploads'));
-add_filter( 'wp_check_filetype_and_ext', [ $this, 'ambry_fix_ico_upload' ], 10, 5 );
-
+		// phpcs:ignore WordPressVIPMinimum.Hooks.RestrictedHooks.upload_mimes
+		add_filter( 'upload_mimes', array( $this, 'ambry_allow_svg_uploads' ) );
+		add_filter( 'wp_check_filetype_and_ext', array( $this, 'ambry_fix_ico_upload' ), 10, 3 );
 	}
 
 	
@@ -50,25 +50,24 @@ add_filter( 'wp_check_filetype_and_ext', [ $this, 'ambry_fix_ico_upload' ], 10, 
 	 * @param array $mimes Allowed MIME types.
 	 * @return array
 	 */
-	public function ambry_allow_svg_uploads($mimes)
-	{
+	public function ambry_allow_svg_uploads( $mimes ) {
 		$mimes['svg'] = 'image/svg+xml';
 		$mimes['ico'] = 'image/x-icon';
 
 		return $mimes;
 	}
-public function ambry_fix_ico_upload( $data, $file, $filename, $mimes, $real_mime ) {
+	public function ambry_fix_ico_upload( $data, $file, $filename ) {
 
-	if ( 'ico' === strtolower( pathinfo( $filename, PATHINFO_EXTENSION ) ) ) {
-		return [
-			'ext'  => 'ico',
-			'type' => 'image/x-icon',
-			'proper_filename' => $filename,
-		];
+		if ( 'ico' === strtolower( pathinfo( $filename, PATHINFO_EXTENSION ) ) ) {
+			return array(
+				'ext'             => 'ico',
+				'type'            => 'image/x-icon',
+				'proper_filename' => $filename,
+			);
+		}
+
+		return $data;
 	}
-
-	return $data;
-}
 
 	/**
 	 * Load theme components.
@@ -86,7 +85,6 @@ public function ambry_fix_ico_upload( $data, $file, $filename, $mimes, $real_mim
 		// Custom Post Types
 		Post_Types::instance();
 		Theme_Options::instance();
-
 	}
 
 	/**

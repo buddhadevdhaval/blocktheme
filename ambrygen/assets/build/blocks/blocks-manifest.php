@@ -328,10 +328,6 @@ return array(
 				'type' => 'string',
 				'default' => 'Our Locations'
 			),
-			'titleColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
 			'iframe' => array(
 				'type' => 'string',
 				'default' => 'https://www.google.com/maps/embed?pb=...'
@@ -364,7 +360,6 @@ return array(
 		'example' => array(
 			'attributes' => array(
 				'title' => 'Our Locations',
-				'titleColor' => 'Sample Title',
 				'iframe' => 'https://www.google.com/maps/embed?pb=...',
 				'locations' => array(
 					array(
@@ -469,11 +464,11 @@ return array(
 		'attributes' => array(
 			'title' => array(
 				'type' => 'string',
-				'default' => 'Our Executive Team'
+				'default' => ''
 			),
 			'intro' => array(
 				'type' => 'string',
-				'default' => 'We are proud to be leading the industry that we love and working together.'
+				'default' => ''
 			),
 			'headingLevel' => array(
 				'type' => 'string',
@@ -482,6 +477,10 @@ return array(
 			'videoUrl' => array(
 				'type' => 'string',
 				'default' => ''
+			),
+			'videoObj' => array(
+				'type' => 'object',
+				'default' => null
 			),
 			'videoType' => array(
 				'type' => 'string',
@@ -613,10 +612,6 @@ return array(
 			'html' => false
 		),
 		'attributes' => array(
-			'backgroundColor' => array(
-				'type' => 'string',
-				'default' => '#007fa3'
-			),
 			'title' => array(
 				'type' => 'string',
 				'default' => ''
@@ -634,10 +629,24 @@ return array(
 			),
 			'imageAlt' => array(
 				'type' => 'string',
-				'default' => 'FAQ illustration'
+				'default' => ''
 			),
 			'faqs' => array(
 				'type' => 'array',
+				'items' => array(
+					'type' => 'object',
+					'properties' => array(
+						'id' => array(
+							'type' => 'string'
+						),
+						'question' => array(
+							'type' => 'string'
+						),
+						'answer' => array(
+							'type' => 'string'
+						)
+					)
+				),
 				'default' => array(
 					array(
 						'id' => '1',
@@ -670,15 +679,14 @@ return array(
 		'editorScript' => 'file:./index.js',
 		'editorStyle' => 'file:./index.css',
 		'style' => 'file:./style-index.css',
+		'viewScript' => 'file:./view.js',
 		'render' => 'file:./render.php',
 		'example' => array(
 			'attributes' => array(
-				'backgroundColor' => '#007fa3',
 				'title' => 'Sample Title',
 				'headingTag' => 'h5',
-				'imageUrl' => 'https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
+				'imageUrl' => 'Sample url',
 				'imageId' => 0,
-				'imageAlt' => 'FAQ illustration',
 				'faqs' => array(
 					array(
 						'id' => '1',
@@ -795,7 +803,7 @@ return array(
 			'attributes' => array(
 				'heading' => 'Transforming Healthcare with Genetic Insight',
 				'headingTag' => 'h2',
-				'imageUrl' => 'https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
+				'imageUrl' => '/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
 				'imageId' => 0,
 				'imageAlt' => 'Ambry default preview image',
 				'imagePosition' => 'left',
@@ -925,7 +933,7 @@ return array(
 					'text' => '',
 					'target' => '',
 					'rel' => '',
-					'variant' => ''
+					'variant' => 'dark'
 				)
 			)
 		),
@@ -1049,6 +1057,23 @@ return array(
 		),
 		'icon' => 'format-image',
 		'description' => 'An individual card for genetic testing.',
+		'supports' => array(
+			'html' => false,
+			'color' => array(
+				'background' => true,
+				'text' => true,
+				'link' => true
+			),
+			'spacing' => array(
+				'margin' => true,
+				'padding' => true,
+				'blockGap' => true
+			),
+			'typography' => array(
+				'fontSize' => true,
+				'lineHeight' => true
+			)
+		),
 		'attributes' => array(
 			'image' => array(
 				'type' => 'string',
@@ -1096,21 +1121,21 @@ return array(
 		'render' => 'file:./render.php',
 		'example' => array(
 			'attributes' => array(
-				'image' => 'https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
+				'image' => '/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
 				'imageId' => 0,
 				'imageAlt' => 'Ambry default preview image',
 				'title' => 'Sample Title',
 				'description' => 'This is a sample preview content for this block in the inserter.',
 				'link' => array(
-					'url' => 'Sample url',
+					'url' => '#',
 					'text' => 'Sample text',
-					'target' => 'Sample target',
-					'rel' => 'Sample rel',
-					'variant' => 'Sample variant'
+					'target' => '_self',
+					'rel' => '',
+					'variant' => 'primary'
 				),
 				'type' => 'small',
-				'imageSrcSet' => 'https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png 1200w',
-				'imageSizes' => '100vw'
+				'imageSrcSet' => '',
+				'imageSizes' => ''
 			)
 		)
 	),
@@ -1188,9 +1213,18 @@ return array(
 			),
 			'headingLevel' => array(
 				'type' => 'string',
+				'enum' => array(
+					'h1',
+					'h2',
+					'h3',
+					'h4',
+					'h5',
+					'h6'
+				),
 				'default' => 'h2'
 			)
 		),
+		'textdomain' => 'ambrygen-web',
 		'editorScript' => 'file:./index.js',
 		'editorStyle' => 'file:./index.css',
 		'style' => 'file:./style-index.css',
@@ -1406,7 +1440,6 @@ return array(
 						'overlayImage2Alt' => '',
 						'heading' => 'Industry-leading genetic testing',
 						'content' => 'For over 25 years our high-quality, accessible genetic testing solutions have shaped important care decisions that patients and families make with their healthcare providers.',
-						'tagline' => 'This brings the Ambry mindset to life: a relentless pursuit to find the answers.',
 						'buttonPrimaryText' => 'Start Your Order',
 						'buttonPrimaryUrl' => '#',
 						'buttonSecondaryText' => 'Who We Are',
@@ -1536,7 +1569,7 @@ return array(
 		'attributes' => array(
 			'heading' => array(
 				'type' => 'string',
-				'default' => 'Title'
+				'default' => ''
 			),
 			'headingTag' => array(
 				'type' => 'string',
@@ -1562,6 +1595,15 @@ return array(
 					'rel' => '',
 					'variant' => ''
 				)
+			),
+			'selectedTabs' => array(
+				'type' => 'array',
+				'default' => array(
+					array(
+						'text' => 'All Tests',
+						'termSlug' => 'all'
+					)
+				)
 			)
 		),
 		'providesContext' => array(
@@ -1570,6 +1612,7 @@ return array(
 		'editorScript' => 'file:./index.js',
 		'editorStyle' => 'file:./index.css',
 		'style' => 'file:./style-index.css',
+		'viewScript' => 'file:./view.js',
 		'textdomain' => 'ambrygen-web',
 		'render' => 'file:./render.php',
 		'example' => array(
@@ -1578,7 +1621,7 @@ return array(
 				'headingTag' => 'h2',
 				'description' => 'This is a sample preview content for this block in the inserter.',
 				'variation' => 'two-column',
-				'blockId' => 1,
+				'blockId' => '1',
 				'link' => array(
 					'url' => 'Sample url',
 					'text' => 'Sample text',
@@ -1615,11 +1658,11 @@ return array(
 			),
 			'title' => array(
 				'type' => 'string',
-				'default' => 'Title'
+				'default' => ''
 			),
 			'description' => array(
 				'type' => 'string',
-				'default' => 'Description'
+				'default' => ''
 			),
 			'button' => array(
 				'type' => 'object',
@@ -1642,6 +1685,10 @@ return array(
 				'default' => array(
 					
 				)
+			),
+			'selectedPost' => array(
+				'type' => 'number',
+				'default' => 0
 			),
 			'termlinktext' => array(
 				'type' => 'string'
@@ -2187,7 +2234,7 @@ return array(
 			),
 			'image' => array(
 				'type' => 'string',
-				'default' => '/wp-content/themes/ambrygen/assets/src/images/news-latter/news-latter.jpg'
+				'default' => ''
 			),
 			'imageId' => array(
 				'type' => 'number',
@@ -2213,6 +2260,7 @@ return array(
 				'type' => 'object'
 			)
 		),
+		'textdomain' => 'ambrygen-web',
 		'editorScript' => 'file:./index.js',
 		'render' => 'file:./render.php',
 		'editorStyle' => 'file:./index.css',
@@ -2684,6 +2732,14 @@ return array(
 			),
 			'headingTag' => array(
 				'type' => 'string',
+				'enum' => array(
+					'h1',
+					'h2',
+					'h3',
+					'h4',
+					'h5',
+					'h6'
+				),
 				'default' => 'h2'
 			),
 			'description' => array(
@@ -2704,7 +2760,7 @@ return array(
 				'heading' => 'Transforming Healthcare with Genetic Insight',
 				'headingTag' => 'h2',
 				'description' => 'This is a sample preview content for this block in the inserter.',
-				'blockId' => 1
+				'blockId' => 'section-example'
 			)
 		)
 	),
@@ -2759,7 +2815,7 @@ return array(
 			'attributes' => array(
 				'sectiontitle' => 'Sample Title',
 				'description' => 'This is a sample preview content for this block in the inserter.',
-				'imageUrl' => 'https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
+				'imageUrl' => '/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
 				'imageAlt' => 'Ambry default preview image',
 				'imageId' => 1,
 				'cta' => array(

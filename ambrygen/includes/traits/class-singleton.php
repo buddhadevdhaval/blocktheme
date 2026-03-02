@@ -7,13 +7,13 @@
 
 namespace Ambrygen\Theme\Core;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Simple singleton trait to be used by core classes.
  */
-trait Singleton
-{
+trait Singleton {
+
 
 	/**
 	 * Holds the single instance of the class.
@@ -27,13 +27,11 @@ trait Singleton
 	 *
 	 * @return static
 	 */
-	public static function instance()
-	{
-		if (null === static::$instance) {
+	public static function instance() {
+		if ( null === static::$instance ) {
 			static::$instance = new static();
 		}
 
 		return static::$instance;
 	}
 }
-

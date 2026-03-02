@@ -4,6 +4,7 @@ import {
 	RichText,
 	InspectorControls,
 } from '@wordpress/block-editor';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import { PanelBody, SelectControl, TextControl } from '@wordpress/components';
 import { isValidVideoUrl, getIframeSrc } from '../../utils/validation.js';
 import { ImageUploader, TagSelector } from '../_shared/components';
@@ -25,9 +26,46 @@ export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps( { className: 'features-media' } );
 
 	const iframeSrc = iframeUrl || getIframeSrc( videoUrl ) || '';
+	const [ isPlaying, setIsPlaying ] = useState( false );
+	const [ editorIframeSrc, setEditorIframeSrc ] = useState( iframeSrc );
+	const videoRef = useRef( null );
+
+	useEffect( () => {
+		setEditorIframeSrc( iframeSrc );
+		setIsPlaying( false );
+	}, [ iframeSrc, videoType ] );
 
 	// Helper to get URL from image object
 	const getImageUrl = ( imgObj ) => ( imgObj?.url ? imgObj.url : '' );
+	const getPlaySrc = ( src ) =>
+		src.includes( 'autoplay=1' )
+			? src
+			: `${ src }${ src.includes( '?' ) ? '&' : '?' }autoplay=1`;
+	const getPauseSrc = ( src ) =>
+		src
+			.replace( /([?&])autoplay=1(&?)/, '$1' )
+			.replace( /[?&]$/, '' )
+			.replace( '?&', '?' );
+
+	const onPlayClick = () => {
+		if ( videoType === 'mp4' && videoRef.current ) {
+			videoRef.current.play();
+		}
+		if ( videoType === 'embed' && editorIframeSrc ) {
+			setEditorIframeSrc( getPlaySrc( editorIframeSrc ) );
+		}
+		setIsPlaying( true );
+	};
+
+	const onPauseClick = () => {
+		if ( videoType === 'mp4' && videoRef.current ) {
+			videoRef.current.pause();
+		}
+		if ( videoType === 'embed' && editorIframeSrc ) {
+			setEditorIframeSrc( getPauseSrc( editorIframeSrc ) );
+		}
+		setIsPlaying( false );
+	};
 
 	// ------------------------------
 	// Inspector Controls
@@ -172,7 +210,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) =>
 							setAttributes( { heading: value } )
 						}
-						placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Title…', 'ambrygen-web' ) }
 						className="block-title block__rowflex--heading-title heading-2 mb-0 genetic-heading"
 					/>
 
@@ -182,10 +220,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) =>
 							setAttributes( { description: value } )
 						}
-						placeholder={ __(
-							'Genetic testing studies your genes…',
-							'ambrygen-web'
-						) }
+						placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
 						className="block__rowflex--block-content subtitle1-reg genetic-description"
 					/>
 				</div>
@@ -204,80 +239,130 @@ export default function Edit( { attributes, setAttributes } ) {
 
 				<div className="is-style-gl-s50" aria-hidden="true"></div>
 
-				{ /* Video Embed */ }
-				{ videoType === 'embed' && iframeSrc && (
-					<div className="features-media__video media_video">
-						<div className="features-media__video-wrapper features-media__video-wrapper--iframe">
-							<iframe
-								src={ iframeSrc }
-								title={ __(
-									'Genetic testing video',
-									'ambrygen-web'
+				<div className="features-media__video media_video">
+					{ /* Video Embed */ }
+					{ videoType === 'embed' && editorIframeSrc && (
+						<>
+							<div className="features-media__video-wrapper features-media__video-wrapper--iframe">
+								<iframe
+									src={ editorIframeSrc }
+									title={ __(
+										'Genetic testing video',
+										'ambrygen-web'
+									) }
+									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+									allowFullScreen
+									className="features-media__iframe"
+								/>
+							</div>
+
+							<div className="play-icon-video">
+								{ playIcon?.url && (
+									<button
+										type="button"
+										className="play-icon"
+										onClick={ onPlayClick }
+										style={ {
+											display: isPlaying ? 'none' : '',
+											background: 'transparent',
+											border: 'none',
+											padding: 0,
+											cursor: 'pointer',
+										} }
+									>
+										<img
+											src={ playIcon.url }
+											width="24"
+											height="24"
+											alt="Play"
+										/>
+									</button>
 								) }
-								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-								allowFullScreen
-								className="features-media__iframe"
+								{ pauseIcon?.url && (
+									<button
+										type="button"
+										className="pause-icon"
+										onClick={ onPauseClick }
+										style={ {
+											display: isPlaying ? '' : 'none',
+											background: 'transparent',
+											border: 'none',
+											padding: 0,
+											cursor: 'pointer',
+										} }
+									>
+										<img
+											src={ pauseIcon.url }
+											width="24"
+											height="24"
+											alt="Pause"
+										/>
+									</button>
+								) }
+							</div>
+						</>
+					) }
+
+					{ /* MP4 Video */ }
+					{ videoType === 'mp4' && videoUrl && (
+						<div className="features-media__video-wrapper">
+							<video
+								ref={ videoRef }
+								controls
+								src={ videoUrl }
+								poster={ posterImage?.url || '' }
+								className="videos"
+								onPlay={ () => setIsPlaying( true ) }
+								onPause={ () => setIsPlaying( false ) }
+								onEnded={ () => setIsPlaying( false ) }
 							/>
+							<div className="play-icon-video">
+								{ playIcon?.url && (
+									<button
+										type="button"
+										className="play-icon"
+										onClick={ onPlayClick }
+										style={ {
+											display: isPlaying ? 'none' : '',
+											background: 'transparent',
+											border: 'none',
+											padding: 0,
+											cursor: 'pointer',
+										} }
+									>
+										<img
+											src={ playIcon.url }
+											width="24"
+											height="24"
+											alt="Play"
+										/>
+									</button>
+								) }
+								{ pauseIcon?.url && (
+									<button
+										type="button"
+										className="pause-icon"
+										onClick={ onPauseClick }
+										style={ {
+											display: isPlaying ? '' : 'none',
+											background: 'transparent',
+											border: 'none',
+											padding: 0,
+											cursor: 'pointer',
+										} }
+									>
+										<img
+											src={ pauseIcon.url }
+											width="24"
+											height="24"
+											alt="Pause"
+										/>
+									</button>
+								) }
+							</div>
 						</div>
-
-						<div className="play-icon-video">
-							{ playIcon?.url && (
-								<div className="play-icon">
-									<img
-										src={ playIcon.url }
-										width="24"
-										height="24"
-										alt="Play"
-									/>
-								</div>
-							) }
-							{ pauseIcon?.url && (
-								<div className="pause-icon">
-									<img
-										src={ pauseIcon.url }
-										width="24"
-										height="24"
-										alt="Pause"
-									/>
-								</div>
-							) }
-						</div>
-					</div>
-				) }
-
-				{ /* MP4 Video */ }
-				{ videoType === 'mp4' && videoUrl && (
-					<div className="features-media__video-wrapper">
-						<video
-							controls
-							src={ videoUrl }
-							poster={ posterImage?.url || '' }
-							className="videos"
-						/>
-						<div className="play-icon-video">
-							{ playIcon?.url && (
-								<div className="play-icon">
-									<img
-										src={ playIcon.url }
-										width="24"
-										height="24"
-										alt="Play"
-									/>
-								</div>
-							) }
-							{ pauseIcon?.url && (
-								<div className="pause-icon">
-									<img
-										src={ pauseIcon.url }
-										width="24"
-										height="24"
-										alt="Pause"
-									/>
-								</div>
-							) }
-						</div>
-					</div>
-				) }
+					) }
+				</div>
 			</div>
 		</>
 	);

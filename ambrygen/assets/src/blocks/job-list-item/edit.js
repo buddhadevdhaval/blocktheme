@@ -2,6 +2,7 @@ import { useBlockProps } from '@wordpress/block-editor';
 import { SelectControl, Button } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { getThemeAssetUrl } from '../../utils/assets';
+import { useMemo } from '@wordpress/element';
 
 export default function Edit( {
 	attributes,
@@ -45,9 +46,14 @@ export default function Edit( {
 	);
 
 	// Get term IDs assigned to this post
-	const jobTypeTermIds = selectedPost?.job_type || [];
-	const jobLocationTermIds = selectedPost?.job_location || [];
-	const jobPreferencesTermIds = selectedPost?.job_preferences || [];
+	const jobTypeTermIds = useMemo(
+		() => selectedPost?.job_type || [],
+		[ selectedPost?.job_type ]
+	);
+	const jobLocationTermIds = useMemo(
+		() => selectedPost?.job_location || [],
+		[ selectedPost?.job_location ]
+	);
 
 	// Fetch full term objects for job_type
 	const jobTypeTerms = useSelect(
@@ -81,24 +87,6 @@ export default function Edit( {
 		[ jobLocationTermIds ]
 	);
 
-	// Fetch full term objects for job_type
-	const jobPreferencesTerms = useSelect(
-		( select ) => {
-			if ( ! jobPreferencesTermIds?.length ) {
-				return [];
-			}
-			return select( 'core' ).getEntityRecords(
-				'taxonomy',
-				'job_preferences',
-				{
-					include: jobPreferencesTermIds,
-					per_page: -1,
-				}
-			);
-		},
-		[ jobPreferencesTermIds ]
-	);
-
 	// Get post IDs already used in other blocks
 	const selectedIds = useSelect(
 		( select ) => {
@@ -107,7 +95,7 @@ export default function Edit( {
 				.map( ( b ) => b.attributes?.postId )
 				.filter( ( id ) => id && id !== postId );
 		},
-		[ clientId, postId ]
+		[ postId ]
 	);
 
 	// Job options for SelectControl

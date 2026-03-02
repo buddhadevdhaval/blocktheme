@@ -3,12 +3,14 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	const blocks = document.querySelectorAll( '.features-media' );
 
 	blocks.forEach( ( block ) => {
-		const playIcon = block.querySelector(
-			'.play-icon-video .play-icon img'
+		const playIconWrap = block.querySelector(
+			'.play-icon-video .play-icon'
 		);
-		const pauseIcon = block.querySelector(
-			'.play-icon-video .pause-icon img'
+		const pauseIconWrap = block.querySelector(
+			'.play-icon-video .pause-icon'
 		);
+		const playIcon = playIconWrap?.querySelector( 'img' );
+		const pauseIcon = pauseIconWrap?.querySelector( 'img' );
 
 		if ( ! playIcon || ! pauseIcon ) {
 			return;
@@ -24,7 +26,14 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 		const setPlaying = ( isPlaying ) => {
 			block.classList.toggle( 'is-playing', isPlaying );
+			if ( playIconWrap ) {
+				playIconWrap.style.display = isPlaying ? 'none' : '';
+			}
+			if ( pauseIconWrap ) {
+				pauseIconWrap.style.display = isPlaying ? '' : 'none';
+			}
 		};
+		setPlaying( false );
 
 		/* ===================== MP4 VIDEO ===================== */
 		if ( video ) {
@@ -41,6 +50,12 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			// Sync UI if video ends
 			video.addEventListener( 'ended', () => {
 				setPlaying( false );
+			} );
+			video.addEventListener( 'pause', () => {
+				setPlaying( false );
+			} );
+			video.addEventListener( 'play', () => {
+				setPlaying( true );
 			} );
 
 			return; // Skip iframe logic if MP4 exists

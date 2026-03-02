@@ -33,23 +33,17 @@ document.addEventListener( 'DOMContentLoaded', function () {
 			/* -----------------------------
 		   STICKY BEHAVIOR
 		--------------------------------*/
+			// Get real position in document
+			const wrapperTop =
+				wrapper.getBoundingClientRect().top + window.pageYOffset;
 
-			document
-				.querySelectorAll( '.secondary-sticky-tabs' )
-				.forEach( function ( wrapper ) {
-					// Get real position in document
-					const wrapperTop =
-						wrapper.getBoundingClientRect().top +
-						window.pageYOffset;
-
-					window.addEventListener( 'scroll', function () {
-						if ( window.pageYOffset >= wrapperTop ) {
-							wrapper.classList.add( 'is-sticky' );
-						} else {
-							wrapper.classList.remove( 'is-sticky' );
-						}
-					} );
-				} );
+			window.addEventListener( 'scroll', function () {
+				if ( window.pageYOffset >= wrapperTop ) {
+					wrapper.classList.add( 'is-sticky' );
+				} else {
+					wrapper.classList.remove( 'is-sticky' );
+				}
+			} );
 
 			/* -----------------------------
 		   ACTIVE TAB ON SCROLL

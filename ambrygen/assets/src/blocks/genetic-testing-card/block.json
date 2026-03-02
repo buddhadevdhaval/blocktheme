@@ -9,6 +9,23 @@
   ],
   "icon": "format-image",
   "description": "An individual card for genetic testing.",
+  "supports": {
+    "html": false,
+    "color": {
+      "background": true,
+      "text": true,
+      "link": true
+    },
+    "spacing": {
+      "margin": true,
+      "padding": true,
+      "blockGap": true
+    },
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true
+    }
+  },
   "attributes": {
     "image": {
       "type": "string",
@@ -56,21 +73,21 @@
   "render": "file:./render.php",
   "example": {
     "attributes": {
-      "image": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "image": "/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
       "imageId": 0,
       "imageAlt": "Ambry default preview image",
       "title": "Sample Title",
       "description": "This is a sample preview content for this block in the inserter.",
       "link": {
-        "url": "Sample url",
+        "url": "#",
         "text": "Sample text",
-        "target": "Sample target",
-        "rel": "Sample rel",
-        "variant": "Sample variant"
+        "target": "_self",
+        "rel": "",
+        "variant": "primary"
       },
       "type": "small",
-      "imageSrcSet": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png 1200w",
-      "imageSizes": "100vw"
+      "imageSrcSet": "",
+      "imageSizes": ""
     }
   }
 }

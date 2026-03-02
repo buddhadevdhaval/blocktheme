@@ -3,7 +3,6 @@
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
  */
-import { __ } from '@wordpress/i18n';
 
 /**
  * React hooks for performance optimization.
@@ -111,7 +110,6 @@ export default function Edit( { attributes, setAttributes } ) {
 				eyebrow: '',
 				headingTag: '',
 				content: '',
-				tagline: '',
 				buttonPrimaryText: 'Start Your Order',
 				buttonPrimaryUrl: '#',
 				primarybutton,
@@ -122,7 +120,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		];
 		setAttributes( { slides: newSlides } );
 		setCurrentSlide( newSlides.length - 1 );
-	}, [ slides, setAttributes ] );
+	}, [ slides, setAttributes, primarybutton, secondarybutton ] );
 
 	/**
 	 * Removes a slide.
@@ -159,26 +157,6 @@ export default function Edit( { attributes, setAttributes } ) {
 
 			setAttributes( { slides: newSlides } );
 			setCurrentSlide( newIndex );
-		},
-		[ slides, setAttributes ]
-	);
-
-	/**
-	 * Handles background image selection for a slide.
-	 *
-	 * @param {number} index Slide index.
-	 * @param {Object} media Selected media object.
-	 */
-	const onSelectSlideImage = useCallback(
-		( index, media ) => {
-			const newSlides = [ ...slides ];
-			newSlides[ index ] = {
-				...newSlides[ index ],
-				backgroundImage: media.url,
-				backgroundImageId: media.id,
-				backgroundImageAlt: media.alt || '',
-			};
-			setAttributes( { slides: newSlides } );
 		},
 		[ slides, setAttributes ]
 	);
@@ -221,9 +199,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 						{ autoplay && (
 							<RangeControl
-								label={ t(
-									'Autoplay Delay (Milliseconds)',
-								) }
+								label={ t( 'Autoplay Delay (Milliseconds)' ) }
 								value={ autoplayDelay }
 								onChange={ ( value ) =>
 									setAttributes( { autoplayDelay: value } )
@@ -298,53 +274,42 @@ export default function Edit( { attributes, setAttributes } ) {
 								}
 							/>
 
-							<PanelBody
-								title={ t( 'Top Left Overlay' ) }
-								initialOpen={ false }
-							>
-								<ImageUploader
-									label={ t( '' ) }
-									url={ slideItem.overlayImage1 }
-									onSelect={ ( media ) =>
-										updateSlide( index, {
-											overlayImage1: media.url,
-											overlayImage1Id: media.id,
-											overlayImage1Alt: media.alt || '',
-										} )
-									}
-									onRemove={ () =>
-										updateSlide( index, {
-											overlayImage1: '',
-											overlayImage1Id: 0,
-											overlayImage1Alt: '',
-										} )
-									}
-								/>
-							</PanelBody>
-
-							<PanelBody
-								title={ t( 'Bottom Right Overlay' ) }
-								initialOpen={ false }
-							>
-								<ImageUploader
-									label={ t( '' ) }
-									url={ slideItem.overlayImage2 }
-									onSelect={ ( media ) =>
-										updateSlide( index, {
-											overlayImage2: media.url,
-											overlayImage2Id: media.id,
-											overlayImage2Alt: media.alt || '',
-										} )
-									}
-									onRemove={ () =>
-										updateSlide( index, {
-											overlayImage2: '',
-											overlayImage2Id: 0,
-											overlayImage2Alt: '',
-										} )
-									}
-								/>
-							</PanelBody>
+							<ImageUploader
+								label={ t( 'Top Left Overlay' ) }
+								url={ slideItem.overlayImage1 }
+								onSelect={ ( media ) =>
+									updateSlide( index, {
+										overlayImage1: media.url,
+										overlayImage1Id: media.id,
+										overlayImage1Alt: media.alt || '',
+									} )
+								}
+								onRemove={ () =>
+									updateSlide( index, {
+										overlayImage1: '',
+										overlayImage1Id: 0,
+										overlayImage1Alt: '',
+									} )
+								}
+							/>
+							<ImageUploader
+								label={ t( 'Bottom Right Overlay' ) }
+								url={ slideItem.overlayImage2 }
+								onSelect={ ( media ) =>
+									updateSlide( index, {
+										overlayImage2: media.url,
+										overlayImage2Id: media.id,
+										overlayImage2Alt: media.alt || '',
+									} )
+								}
+								onRemove={ () =>
+									updateSlide( index, {
+										overlayImage2: '',
+										overlayImage2Id: 0,
+										overlayImage2Alt: '',
+									} )
+								}
+							/>
 
 							<PanelBody
 								label={ t( 'Primary Button' ) }
@@ -361,7 +326,7 @@ export default function Edit( { attributes, setAttributes } ) {
 										)
 									}
 								/>
-								
+
 								<CtaButtonField
 									label={ t( 'Primary Button' ) }
 									value={ slideItem.primarybutton || {} }
@@ -379,7 +344,6 @@ export default function Edit( { attributes, setAttributes } ) {
 								label={ t( 'Secondary Button' ) }
 								id={ `hero-secondary-button-${ index }` }
 							>
-							
 								<CtaButtonField
 									label={ t( 'Secondary Button' ) }
 									value={ slideItem.secondarybutton || {} }
@@ -502,7 +466,7 @@ export default function Edit( { attributes, setAttributes } ) {
 														?.defaultImageUrl
 												}
 												alt={ t(
-													'Default background image',
+													'Default background image'
 												) }
 												className="hero-section__image"
 											/>
@@ -526,8 +490,8 @@ export default function Edit( { attributes, setAttributes } ) {
 													'Add Eyebrow Text'
 												) }
 												aria-label={ t(
-													'Slide Heading',
-													) }
+													'Slide Heading'
+												) }
 												allowedFormats={ [
 													'core/bold',
 													'core/italic',
@@ -550,9 +514,7 @@ export default function Edit( { attributes, setAttributes } ) {
 													value
 												)
 											}
-											placeholder={ t(
-												'Add Heading…',
-											) }
+											placeholder={ t( 'Add Heading…' ) }
 											allowedFormats={ [
 												'core/bold',
 												'core/italic',
@@ -577,44 +539,16 @@ export default function Edit( { attributes, setAttributes } ) {
 													)
 												}
 												placeholder={ t(
-													'Add Description',
-											
+													'Add Description'
 												) }
 												aria-label={ t(
-													'Slide Description',
-												
+													'Slide Description'
 												) }
 												allowedFormats={ [
 													'core/bold',
 													'core/italic',
 													'core/link',
 												] }
-											/>
-										</div>
-
-										<div className="hero-section__tagline">
-											<div
-												className="is-style-gl-s24"
-												aria-hidden="true"
-											></div>
-											<RichText
-												tagName="p"
-												value={ slide.tagline }
-												onChange={ ( value ) =>
-													updateSlide(
-														currentSlide,
-														'tagline',
-														value
-													)
-												}
-												placeholder={ t(
-													'Add Tagline…',
-											
-												) }
-												aria-label={ t(
-													'Slide Tagline',
-												
-												) }
 											/>
 										</div>
 										<div

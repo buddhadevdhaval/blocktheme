@@ -46,6 +46,7 @@
     "@wordpress/compose": "^7.0.0",
     "@wordpress/create-block": "^4.80.0",
     "@wordpress/dom-ready": "^4.0.0",
+    "@wordpress/html-entities": "^4.40.0",
     "@wordpress/icons": "^11.4.0",
     "@wordpress/scripts": "^31.2.0",
     "conventional-changelog-cli": "^5.0.0",

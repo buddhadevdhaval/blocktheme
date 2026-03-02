@@ -112,6 +112,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								</div>
 							</div>
 
+							<div className="is-style-gl-s24"></div>
+
 							{ /* Actions */ }
 							<div className="our-team__actions actions-button">
 								<Button

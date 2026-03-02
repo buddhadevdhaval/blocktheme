@@ -1,11 +1,15 @@
 import { __ } from '@wordpress/i18n';
-import { RichText, InspectorControls } from '@wordpress/block-editor';
+import {
+	RichText,
+	InspectorControls,
+	useBlockProps,
+} from '@wordpress/block-editor';
 import { PanelBody, SelectControl } from '@wordpress/components';
 
 import {
-	ImagePlaceholder,
 	ImageUploader,
 	CtaButtonField,
+	DEFAULT_IMAGES,
 } from '../_shared/components';
 
 export default function Edit( { attributes, setAttributes, context } ) {
@@ -19,6 +23,11 @@ export default function Edit( { attributes, setAttributes, context } ) {
 		description,
 		link,
 	} = attributes;
+
+	const defaultImage = DEFAULT_IMAGES().placeholder.url;
+	const displayImage = imageUrl || defaultImage;
+
+	const blockProps = useBlockProps( { className: 'card-col' } );
 
 	const HeadingTag = headingTag || 'h5';
 	const galleryVariation = context?.[ 'ambrygen/galleryVariation' ];
@@ -43,7 +52,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 
 	const onRemoveImage = () => {
 		setAttributes( {
-			imageID: null,
+			imageID: 0,
 			imageUrl: '',
 			imageAlt: '',
 			imageSrcSet: '',
@@ -93,23 +102,16 @@ export default function Edit( { attributes, setAttributes, context } ) {
 				</PanelBody>
 			</InspectorControls>
 
-			<div className="card-col">
-				{ imageUrl ? (
-					<div className="image-block">
-						<img
-							src={ imageUrl }
-							srcSet={ imageSrcSet || undefined }
-							sizes={ imageSizes || undefined }
-							alt={ imageAlt || title || '' }
-							loading="lazy"
-						/>
-					</div>
-				) : (
-					<ImagePlaceholder
-						label={ __( 'No logo selected', 'ambrygen' ) }
-						minHeight="500px"
+			<div { ...blockProps }>
+				<div className="image-block">
+					<img
+						src={ displayImage }
+						srcSet={ imageSrcSet || undefined }
+						sizes={ imageSizes || undefined }
+						alt={ imageAlt || title || '' }
+						loading="lazy"
 					/>
-				) }
+				</div>
 
 				<div className="card-info">
 					{ /* { galleryVariation !== 'variation-features' && ( */ }
@@ -132,6 +134,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 						}` }
 					>
 						<RichText
+							tagName="p"
 							value={ description }
 							onChange={ ( value ) =>
 								setAttributes( { description: value } )
@@ -155,10 +158,14 @@ export default function Edit( { attributes, setAttributes, context } ) {
 										: 'card-cta-wrapper'
 								}` }
 							>
-								<span className="learn-more-btn link-btn">
+								<a
+									href={ link.url || '#' }
+									onClick={ ( e ) => e.preventDefault() }
+									className="site-btn is-style-site-text-btn has-icon"
+								>
 									{ link.text ||
 										__( 'Learn more', 'ambrygen' ) }
-								</span>
+								</a>
 							</div>
 						</>
 					) }

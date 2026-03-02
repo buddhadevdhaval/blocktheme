@@ -45,13 +45,15 @@ export default function Edit( { attributes, setAttributes } ) {
 				imageAlt: defaults?.placeholder?.alt || '',
 			} );
 		}
-	}, [ image, type, setAttributes ] );
+	}, [ image, defaults, setAttributes ] );
 
 	const onSelectImage = ( media ) => {
 		setAttributes( {
 			image: media.url,
 			imageId: media.id,
 			imageAlt: media.alt || '',
+			imageSrcSet: media.srcset || '',
+			imageSizes: media.sizes || '',
 		} );
 	};
 
@@ -86,8 +88,8 @@ export default function Edit( { attributes, setAttributes } ) {
 							className="w-full"
 						>
 							<CtaButtonField
-								label={ __( 'Link setting' ) }
-								textLabel={ __( 'Link Text' ) }
+								label={ __( 'Link setting', 'ambrygen-web' ) }
+								textLabel={ __( 'Link Text', 'ambrygen-web' ) }
 								defaultVariant="primary"
 								value={ link }
 								showVariant={ false }
@@ -144,7 +146,8 @@ export default function Edit( { attributes, setAttributes } ) {
 								className="site-btn is-style-site-text-btn has-icon"
 								href={ '#' }
 							>
-								{ link?.text || 'Learn more' }{ ' ' }
+								{ link?.text ||
+									__( 'Learn more', 'ambrygen-web' ) }
 							</a>
 						</div>
 					) }

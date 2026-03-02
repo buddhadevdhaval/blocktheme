@@ -36,6 +36,14 @@
     },
     "headingTag": {
       "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
       "default": "h2"
     },
     "description": {
@@ -56,7 +64,7 @@
       "heading": "Transforming Healthcare with Genetic Insight",
       "headingTag": "h2",
       "description": "This is a sample preview content for this block in the inserter.",
-      "blockId": 1
+      "blockId": "section-example"
     }
   }
 }

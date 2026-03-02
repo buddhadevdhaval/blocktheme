@@ -28,9 +28,6 @@ if ( ! in_array( $ambrygen_heading_tag, $ambrygen_allowed_tags, true ) ) {
 
 /* Main image handling */
 $ambrygen_image_id = absint( $ambrygen_attributes['imageId'] ?? 0 );
-if ( ! $ambrygen_image_id && ! empty( $ambrygen_attributes['image'] ) ) {
-	$ambrygen_image_id = attachment_url_to_postid( $ambrygen_attributes['image'] );
-}
 
 /* Overlay images */
 $ambrygen_overlay_top_id    = absint( $ambrygen_attributes['overlayTopImageId'] ?? 0 );
@@ -38,28 +35,25 @@ $ambrygen_overlay_bottom_id = absint( $ambrygen_attributes['overlayBottomImageId
 
 $ambrygen_overlay_top_url    = $ambrygen_attributes['overlayTopImage']    ?? get_theme_file_uri( 'assets/src/images/news-latter/overlay-top.svg' );
 $ambrygen_overlay_bottom_url = $ambrygen_attributes['overlayBottomImage'] ?? get_theme_file_uri( 'assets/src/images/news-latter/overlay-bottom.svg' );
+$ambrygen_heading_id = wp_unique_id( 'ambrygen-newsletter-heading-' );
+$ambrygen_aria_attrs = $ambrygen_heading ? 'role="region" aria-labelledby="' . esc_attr( $ambrygen_heading_id ) . '"' : '';
 ?>
 
-<div class="newsletter newsletter-signup" role="region" aria-labelledby="ambrygen-newsletter-heading">
+<div class="newsletter newsletter-signup" <?php echo $ambrygen_aria_attrs; ?>>
 
 	<!-- Image Section -->
 	<div class="newsletter__image-block">
 
 		<?php
 		// Main image or placeholder
-		if ( $ambrygen_image_id ) {
-			echo Helper::image(
-				$ambrygen_image_id,
-				'large',
-				array(
-					'class'    => 'newsletter__img',
-					'loading'  => 'lazy',
+		echo Helper::image_with_placeholder( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$ambrygen_image_id,
+			'large',
+			array(
+				'class'   => 'newsletter__img',
+				'loading' => 'lazy'			
 				)
 			);
-		} else {
-			// Placeholder image
-			echo '<div class="newsletter__img-placeholder">' . esc_html__( 'No newsletter image set', 'ambrygen-web' ) . '</div>';
-		}
 		?>
 
 		<!-- Top overlay -->
@@ -67,13 +61,12 @@ $ambrygen_overlay_bottom_url = $ambrygen_attributes['overlayBottomImage'] ?? get
 			<div class="newsletter__image-block__overlay newsletter__image-block__overlay-top" aria-hidden="true">
 				<?php
 				if ( $ambrygen_overlay_top_id ) {
-					echo Helper::image(
+					echo Helper::image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						$ambrygen_overlay_top_id,
 						'full',
 						array(
-							'class'    => 'overlay__img',
-							'loading'  => 'lazy',
-							'alt' =>  ""
+							'class'   => 'overlay__img',
+							'loading' => 'lazy',
 						)
 					);
 				} else {
@@ -82,9 +75,6 @@ $ambrygen_overlay_bottom_url = $ambrygen_attributes['overlayBottomImage'] ?? get
 						src="<?php echo esc_url( $ambrygen_overlay_top_url ); ?>"
 						class="overlay__img"
 						loading="lazy"
-						decoding="async"
-						alt=""
-
 					/>
 					<?php
 				}
@@ -97,14 +87,13 @@ $ambrygen_overlay_bottom_url = $ambrygen_attributes['overlayBottomImage'] ?? get
 			<div class="newsletter__image-block__overlay newsletter__image-block__overlay-bottom" aria-hidden="true">
 				<?php
 				if ( $ambrygen_overlay_bottom_id ) {
-					echo Helper::image(
+					echo Helper::image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						$ambrygen_overlay_bottom_id,
 						'full',
 						array(
 							'class'    => 'overlay__img',
 							'loading'  => 'lazy',
 							'decoding' => 'async',
-							'alt' => ''
 						)
 					);
 				} else {
@@ -114,7 +103,6 @@ $ambrygen_overlay_bottom_url = $ambrygen_attributes['overlayBottomImage'] ?? get
 						class="overlay__img"
 						loading="lazy"
 						decoding="async"
-						alt=""
 					/>
 					<?php
 				}
@@ -129,7 +117,7 @@ $ambrygen_overlay_bottom_url = $ambrygen_attributes['overlayBottomImage'] ?? get
 
 		<?php if ( $ambrygen_eyebrow ) : ?>
 			<div class="newsletter__content-block__eyebrow-text eyebrow">
-				<?php echo wp_kses_post( $ambrygen_eyebrow ); ?>
+				<?php echo wp_kses( $ambrygen_eyebrow, Helper::allowed_heading_html() ); ?>
 			</div>
 		<?php endif; ?>
 
@@ -137,14 +125,15 @@ $ambrygen_overlay_bottom_url = $ambrygen_attributes['overlayBottomImage'] ?? get
 
 		<?php if ( $ambrygen_heading ) : ?>
 			<<?php echo tag_escape( $ambrygen_heading_tag ); ?>
-				id="ambrygen-newsletter-heading"
+				id="<?php echo esc_attr( $ambrygen_heading_id ); ?>"
 				class="newsletter__content-block__heading heading-3 mb-0"
 			>
 				<?php
 				echo wp_kses(
-										$ambrygen_heading,
-										Helper::allowed_heading_html()
-									);?>
+					$ambrygen_heading,
+					Helper::allowed_heading_html()
+				);
+				?>
 			</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 		<?php endif; ?>
 
@@ -152,12 +141,12 @@ $ambrygen_overlay_bottom_url = $ambrygen_attributes['overlayBottomImage'] ?? get
 
 		<?php if ( $ambrygen_description ) : ?>
 			<div class="newsletter__content-block__description-text text-medium block-description">
-				<?php echo wp_kses_post( $ambrygen_description ); ?>
+				<?php echo wp_kses( $ambrygen_description, Helper::allowed_heading_html() ); ?>
 			</div>
 		<?php endif; ?>
 
 		<div class="newsletter-form-placeholder">
-			<?php echo wp_kses_post( $ambrygen_content ); ?>
+			<?php echo $ambrygen_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</div>
 
 	</div>

@@ -5,12 +5,15 @@
  * @package ambrygen
  */
 
+defined( 'ABSPATH' ) || exit;
+
+use Ambrygen\Theme\Core\Helper;
+
 // Prefix all variables with theme/plugin name
 $ambrygen_attributes    = $attributes ?? array();
 $ambrygen_block_content = $block_content ?? '';
 
 $ambrygen_title         = $ambrygen_attributes['title'] ?? 'Get in';
-$ambrygen_highlight     = $ambrygen_attributes['highlightText'] ?? 'Touch';
 $ambrygen_content       = $ambrygen_attributes['content'] ?? '';
 $ambrygen_heading_level = $ambrygen_attributes['headingLevel'] ?? 'h2';
 
@@ -18,26 +21,28 @@ $ambrygen_allowed_headings = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
 $ambrygen_heading_level    = in_array( $ambrygen_heading_level, $ambrygen_allowed_headings, true )
 	? $ambrygen_heading_level
 	: 'h2';
+
+$ambrygen_heading_id    = wp_unique_id( 'contact-heading-' );
 ?>
 
-<div class="contact-form-block">
+<div <?php echo get_block_wrapper_attributes( array( 'class' => 'contact-form-block' ) ); ?>>
 
 	<div class="heading-center center-align">
-		<<?php echo tag_escape( $ambrygen_heading_level ); ?> class="heading-3 block-title mb-0">
-			<?php echo wp_kses_post( $ambrygen_title ); ?>
-		</<?php echo tag_escape( $ambrygen_heading_level ); ?>>
+		<<?php echo esc_html( $ambrygen_heading_level ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-3 block-title mb-0">
+			<?php echo wp_kses( $ambrygen_title, Helper::allowed_heading_html() ); ?>
+		</<?php echo esc_html( $ambrygen_heading_level ); ?>>
 
-		<div class="is-style-gl-s24"></div>
+		<div class="is-style-gl-s24" aria-hidden="true"></div>
 
 		<div class="heading-content text-md-regular">
-			<?php echo wp_kses_post( wpautop( $ambrygen_content ) ); ?>
+			<?php echo wp_kses_post( $ambrygen_content ); ?>
 		</div>
 	</div>
 
 	<?php if ( ! empty( $ambrygen_block_content ) ) : ?>
-		<div class="contact-form-block__form">
+		<section class="contact-form-block__form" aria-labelledby="<?php echo esc_attr( $ambrygen_heading_id ); ?>">
 			<?php echo $ambrygen_block_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-		</div>
+		</section>
 	<?php endif; ?>
 
 </div>

@@ -31,6 +31,10 @@
       "type": "number",
       "default": 0
     },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
     "overlayTopImageId": {
       "type": "number",
       "default": 0

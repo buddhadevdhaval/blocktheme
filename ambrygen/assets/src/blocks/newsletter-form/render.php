@@ -36,10 +36,22 @@ $ambrygen_overlay_bottom_id = absint( $ambrygen_attributes['overlayBottomImageId
 $ambrygen_overlay_top_url    = $ambrygen_attributes['overlayTopImage']    ?? get_theme_file_uri( 'assets/src/images/news-latter/overlay-top.svg' );
 $ambrygen_overlay_bottom_url = $ambrygen_attributes['overlayBottomImage'] ?? get_theme_file_uri( 'assets/src/images/news-latter/overlay-bottom.svg' );
 $ambrygen_heading_id = wp_unique_id( 'ambrygen-newsletter-heading-' );
-$ambrygen_aria_attrs = $ambrygen_heading ? 'role="region" aria-labelledby="' . esc_attr( $ambrygen_heading_id ) . '"' : '';
+
+$ambrygen_wrapper_args = array(
+	'class' => 'newsletter newsletter-signup',
+	'role'  => 'region',
+);
+
+if ( $ambrygen_heading ) {
+	$ambrygen_wrapper_args['aria-labelledby'] = $ambrygen_heading_id;
+} else {
+	$ambrygen_wrapper_args['aria-label'] = __( 'Newsletter Form', 'ambrygen-web' );
+}
+
+$ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_args );
 ?>
 
-<div class="newsletter newsletter-signup" <?php echo $ambrygen_aria_attrs; ?>>
+<div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 
 	<!-- Image Section -->
 	<div class="newsletter__image-block">
@@ -51,9 +63,9 @@ $ambrygen_aria_attrs = $ambrygen_heading ? 'role="region" aria-labelledby="' . e
 			'large',
 			array(
 				'class'   => 'newsletter__img',
-				'loading' => 'lazy'			
-				)
-			);
+				'loading' => 'lazy',
+			)
+		);
 		?>
 
 		<!-- Top overlay -->
@@ -75,6 +87,7 @@ $ambrygen_aria_attrs = $ambrygen_heading ? 'role="region" aria-labelledby="' . e
 						src="<?php echo esc_url( $ambrygen_overlay_top_url ); ?>"
 						class="overlay__img"
 						loading="lazy"
+						alt="Top Image"
 					/>
 					<?php
 				}
@@ -103,6 +116,7 @@ $ambrygen_aria_attrs = $ambrygen_heading ? 'role="region" aria-labelledby="' . e
 						class="overlay__img"
 						loading="lazy"
 						decoding="async"
+						alt="Bottom Image"
 					/>
 					<?php
 				}
@@ -121,9 +135,8 @@ $ambrygen_aria_attrs = $ambrygen_heading ? 'role="region" aria-labelledby="' . e
 			</div>
 		<?php endif; ?>
 
-		<div class="is-style-gl-s12" aria-hidden="true"></div>
-
 		<?php if ( $ambrygen_heading ) : ?>
+			<div class="is-style-gl-s12" aria-hidden="true"></div>
 			<<?php echo tag_escape( $ambrygen_heading_tag ); ?>
 				id="<?php echo esc_attr( $ambrygen_heading_id ); ?>"
 				class="newsletter__content-block__heading heading-3 mb-0"
@@ -137,9 +150,8 @@ $ambrygen_aria_attrs = $ambrygen_heading ? 'role="region" aria-labelledby="' . e
 			</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 		<?php endif; ?>
 
-		<div class="is-style-gl-s12" aria-hidden="true"></div>
-
 		<?php if ( $ambrygen_description ) : ?>
+			<div class="is-style-gl-s12" aria-hidden="true"></div>
 			<div class="newsletter__content-block__description-text text-medium block-description">
 				<?php echo wp_kses( $ambrygen_description, Helper::allowed_heading_html() ); ?>
 			</div>

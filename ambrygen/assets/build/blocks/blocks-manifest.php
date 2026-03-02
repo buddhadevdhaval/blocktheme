@@ -2232,6 +2232,10 @@ return array(
 				'type' => 'number',
 				'default' => 0
 			),
+			'imageAlt' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'overlayTopImageId' => array(
 				'type' => 'number',
 				'default' => 0

@@ -13,7 +13,7 @@ use Ambrygen\Theme\Core\Helper;
 $ambrygen_attributes    = $attributes ?? array();
 $ambrygen_block_content = $block_content ?? '';
 
-$ambrygen_title         = $ambrygen_attributes['title'] ?? 'Get in';
+$ambrygen_title         = $ambrygen_attributes['title'] ?? '';
 $ambrygen_content       = $ambrygen_attributes['content'] ?? '';
 $ambrygen_heading_level = $ambrygen_attributes['headingLevel'] ?? 'h2';
 
@@ -28,15 +28,18 @@ $ambrygen_heading_id    = wp_unique_id( 'contact-heading-' );
 <div <?php echo get_block_wrapper_attributes( array( 'class' => 'contact-form-block' ) ); ?>>
 
 	<div class="heading-center center-align">
-		<<?php echo esc_html( $ambrygen_heading_level ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-3 block-title mb-0">
-			<?php echo wp_kses( $ambrygen_title, Helper::allowed_heading_html() ); ?>
-		</<?php echo esc_html( $ambrygen_heading_level ); ?>>
+		<?php if ( $ambrygen_title ) : ?>
+			<<?php echo esc_attr( $ambrygen_heading_level ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-3 block-title mb-0">
+				<?php echo wp_kses( $ambrygen_title, Helper::allowed_heading_html() ); ?>
+			</<?php echo esc_attr( $ambrygen_heading_level ); ?>>
+		<?php endif; ?>
 
-		<div class="is-style-gl-s24" aria-hidden="true"></div>
-
-		<div class="heading-content text-md-regular">
-			<?php echo wp_kses_post( $ambrygen_content ); ?>
-		</div>
+		<?php if ( $ambrygen_content ) : ?>
+			<div class="is-style-gl-s24" aria-hidden="true"></div>
+			<div class="heading-content text-md-regular">
+				<?php echo wp_kses_post( $ambrygen_content ); ?>
+			</div>
+		<?php endif; ?>
 	</div>
 
 	<?php if ( ! empty( $ambrygen_block_content ) ) : ?>

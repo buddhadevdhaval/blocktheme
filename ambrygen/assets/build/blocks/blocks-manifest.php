@@ -1205,22 +1205,14 @@ return array(
 		'attributes' => array(
 			'title' => array(
 				'type' => 'string',
-				'default' => 'Title'
+				'default' => ''
 			),
 			'content' => array(
 				'type' => 'string',
-				'default' => '<p>Please complete the form if you are a provider, pharma or business development partner, or payor.</p><p>All others, including patients who have received or are seeking genetic testing services, should reach out to the appropriate Ambry team at the email or phone number listed above.</p>'
+				'default' => ''
 			),
 			'headingLevel' => array(
 				'type' => 'string',
-				'enum' => array(
-					'h1',
-					'h2',
-					'h3',
-					'h4',
-					'h5',
-					'h6'
-				),
 				'default' => 'h2'
 			)
 		),

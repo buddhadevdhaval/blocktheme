@@ -1,10 +1,13 @@
 <?php
 /**
- * Server-side rendering for Tab Item
+ * Render: Tab Menu Item Block
+ *
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
  *
  * @package ambrygen
  */
-
 $label     = $attributes['label'] ?? '';
 $target_id = $attributes['targetId'] ?? '';
 $is_active = ! empty( $attributes['is_active_tab'] );

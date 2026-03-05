@@ -1,10 +1,13 @@
 <?php
 /**
- * Three Column Image Grid Item Block Render
+ * Render: Three Column Image Grid Item Block
+ *
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
  *
  * @package ambrygen
  */
-
 defined( 'ABSPATH' ) || exit;
 
 use Ambrygen\Theme\Core\Helper;

@@ -1,10 +1,13 @@
 <?php
 /**
- * Render: Hero Alongside Block
+ * Render: Banner Block
+ *
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
  *
  * @package ambrygen
  */
-
 // Prefix all variables with theme/plugin name
 $ambrygen_attributes = $attributes ?? array();
 

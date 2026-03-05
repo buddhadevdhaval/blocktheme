@@ -2213,23 +2213,34 @@ return array(
 		'title' => 'Newsletter Form',
 		'category' => 'ambrygen',
 		'icon' => 'email',
-		'description' => 'Newsletter subscription form with image and customizable styling.',
+		'description' => '',
+		'supports' => array(
+			'html' => false
+		),
 		'attributes' => array(
 			'eyebrow' => array(
 				'type' => 'string',
-				'default' => 'Newsletter'
+				'default' => ''
 			),
 			'heading' => array(
 				'type' => 'string',
-				'default' => 'Stay Informed'
+				'default' => ''
 			),
 			'headingTag' => array(
 				'type' => 'string',
-				'default' => 'h2'
+				'default' => 'h2',
+				'enum' => array(
+					'h1',
+					'h2',
+					'h3',
+					'h4',
+					'h5',
+					'h6'
+				)
 			),
 			'description' => array(
 				'type' => 'string',
-				'default' => 'Subscribe to the Ambry Newsletter and other updates.'
+				'default' => ''
 			),
 			'image' => array(
 				'type' => 'string',
@@ -2492,10 +2503,6 @@ return array(
 			'backgroundStyle' => array(
 				'type' => 'string',
 				'default' => ''
-			),
-			'isFixedBackground' => array(
-				'type' => 'boolean',
-				'default' => false
 			)
 		),
 		'providesContext' => array(
@@ -2509,8 +2516,7 @@ return array(
 			'attributes' => array(
 				'tagName' => 'section',
 				'containerWidth' => 'container-1340',
-				'backgroundStyle' => 'default',
-				'isFixedBackground' => false
+				'backgroundStyle' => 'default'
 			)
 		)
 	),

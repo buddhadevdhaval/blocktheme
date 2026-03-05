@@ -5,23 +5,34 @@
   "title": "Newsletter Form",
   "category": "ambrygen",
   "icon": "email",
-  "description": "Newsletter subscription form with image and customizable styling.",
+  "description": "",
+  "supports": {
+    "html": false
+  },
   "attributes": {
     "eyebrow": {
       "type": "string",
-      "default": "Newsletter"
+      "default": ""
     },
     "heading": {
       "type": "string",
-      "default": "Stay Informed"
+      "default": ""
     },
     "headingTag": {
       "type": "string",
-      "default": "h2"
+      "default": "h2",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ]
     },
     "description": {
       "type": "string",
-      "default": "Subscribe to the Ambry Newsletter and other updates."
+      "default": ""
     },
     "image": {
       "type": "string",

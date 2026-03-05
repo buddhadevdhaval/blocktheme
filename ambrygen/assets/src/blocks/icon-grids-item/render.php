@@ -1,6 +1,10 @@
 <?php
 /**
- * Server-side rendering for icon-grids-item child block
+ * Render: Icon Grids Item Block
+ *
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
  *
  * @package ambrygen
  */

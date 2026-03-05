@@ -1,10 +1,13 @@
 <?php
 /**
- * Vertical Tabs Item Template.
+ * Render: Two Column Tab With Image Item Block
+ *
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
  *
  * @package ambrygen
  */
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

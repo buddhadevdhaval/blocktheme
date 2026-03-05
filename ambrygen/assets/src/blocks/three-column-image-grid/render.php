@@ -1,10 +1,13 @@
 <?php
 /**
- * Render template for the Genetic Testing Cards block.
+ * Render: Three Column Image Grid Block
  *
- * @package Ambrygen
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
+ *
+ * @package ambrygen
  */
-
 defined( 'ABSPATH' ) || exit;
 
 use Ambrygen\Theme\Core\Helper;

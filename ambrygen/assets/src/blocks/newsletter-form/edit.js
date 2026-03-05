@@ -23,25 +23,18 @@ export default function Edit( { attributes, setAttributes } ) {
 		imageAlt,
 		overlayTopImage,
 		overlayBottomImage,
-		style,
 	} = attributes;
 
 	const defaultImage = DEFAULT_IMAGES().placeholder.url;
 	const displayImage = image || defaultImage;
 
-	const blockProps = useBlockProps( {
-		style: {
-			backgroundColor: style?.color?.background,
-			color: style?.color?.text,
-			padding: '60px 20px',
-		},
-	} );
+	const blockProps = useBlockProps();
 
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
 				{ /* Newsletter Image */ }
-				<PanelBody title={ __( 'Newsletter Image', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Newsletter Section', 'ambrygen-web' ) }>
 					<ImageUploader
 						url={ image }
 						onSelect={ ( img ) =>
@@ -60,21 +53,14 @@ export default function Edit( { attributes, setAttributes } ) {
 						}
 						label={ __( 'Newsletter Image', 'ambrygen-web' ) }
 					/>
-				</PanelBody>
-
-				{ /* Heading Settings */ }
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag || 'h2' }
+						type="heading"
 						onChange={ ( value ) =>
 							setAttributes( { headingTag: value } )
 						}
 					/>
-				</PanelBody>
-
-				{ /* Overlay Images */ }
-				<PanelBody title={ __( 'Overlay Images', 'ambrygen-web' ) }>
 					<ImageUploader
 						url={ overlayTopImage }
 						onSelect={ ( img ) =>
@@ -165,11 +151,15 @@ export default function Edit( { attributes, setAttributes } ) {
 					<RichText
 						tagName="div"
 						value={ eyebrow }
+						allowedFormats={ [ 'core/text-color' ] }
 						onChange={ ( value ) =>
 							setAttributes( { eyebrow: value } )
 						}
 						className="newsletter__content-block__eyebrow-text eyebrow"
-						placeholder={ __( 'Newsletter', 'ambrygen-web' ) }
+						placeholder={ __(
+							'Add Eyebrow Text…',
+							'ambrygen-web'
+						) }
 					/>
 
 					<div className="is-style-gl-s12" aria-hidden="true" />
@@ -177,11 +167,12 @@ export default function Edit( { attributes, setAttributes } ) {
 					<RichText
 						tagName={ headingTag }
 						value={ heading }
+						allowedFormats={ [ 'core/text-color' ] }
 						onChange={ ( value ) =>
 							setAttributes( { heading: value } )
 						}
 						className="newsletter__content-block__heading heading-3 mb-0"
-						placeholder={ __( 'Stay informed', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Title…', 'ambrygen-web' ) }
 					/>
 
 					<div className="is-style-gl-s12" aria-hidden="true" />
@@ -189,26 +180,24 @@ export default function Edit( { attributes, setAttributes } ) {
 					<RichText
 						tagName="div"
 						value={ description }
+						allowedFormats={ [ 'core/text-color' ] }
 						onChange={ ( value ) =>
 							setAttributes( { description: value } )
 						}
 						className="newsletter__content-block__description-text text-medium block-description"
-						placeholder={ __( 'Subscribe text…', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
 					/>
-
+					<div className="is-style-gl-s12" aria-hidden="true" />
 					<div
 						className="newsletter-form-placeholder"
+						role="group"
 						aria-label={ __(
 							'Newsletter signup form',
 							'ambrygen-web'
 						) }
 					>
 						<InnerBlocks
-							allowedBlocks={ [
-								'gravityforms/form',
-								'core/shortcode',
-								'core/html',
-							] }
+							allowedBlocks={ [ 'core/shortcode' ] }
 							templateLock={ false }
 						/>
 					</div>

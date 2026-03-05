@@ -1,4 +1,13 @@
 <?php
+/**
+ * Render: Additional Links Block
+ *
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
+ *
+ * @package ambrygen
+ */
 $wrapper_attributes = get_block_wrapper_attributes([]);
 $heading = $attributes['heading'] ?? '';
 $heading_tag = $attributes['headingTag'] ?? 'h2';

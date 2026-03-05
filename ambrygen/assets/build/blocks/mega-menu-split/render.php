@@ -1,10 +1,13 @@
 <?php
 /**
- * Render template for the Mega Menu Solutions block.
+ * Render: Mega Menu Split Block
  *
- * @package Ambrygen
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
+ *
+ * @package ambrygen
  */
-
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;

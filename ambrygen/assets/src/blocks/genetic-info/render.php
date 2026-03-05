@@ -1,6 +1,10 @@
 <?php
 /**
- * Server-side rendering for Genetic Information block.
+ * Render: Genetic Info Block
+ *
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
  *
  * @package ambrygen
  */

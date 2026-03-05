@@ -8,7 +8,6 @@
  *
  * @package ambrygen
  */
-
 defined( 'ABSPATH' ) || exit;
 
 use Ambrygen\Theme\Core\Helper;
@@ -26,10 +25,13 @@ $ambrygen_heading_level    = in_array( $ambrygen_heading_level, $ambrygen_allowe
 	? $ambrygen_heading_level
 	: 'h2';
 
-$ambrygen_heading_id    = wp_unique_id( 'contact-heading-' );
+$ambrygen_heading_id         = wp_unique_id( 'contact-heading-' );
+$ambrygen_wrapper_attributes = get_block_wrapper_attributes(
+	array( 'class' => 'contact-form-block' )
+);
 ?>
 
-<div <?php echo get_block_wrapper_attributes( array( 'class' => 'contact-form-block' ) ); ?>>
+<div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 
 	<div class="heading-center center-align">
 		<?php if ( $ambrygen_title ) : ?>

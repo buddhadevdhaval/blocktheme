@@ -1,4 +1,13 @@
 <?php
+/**
+ * Render: Our Team Slider Block
+ *
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
+ *
+ * @package ambrygen
+ */
 $attributes = $attributes ?? [];
 
 $title         = $attributes['title'] ?? 'Our Leadership Team';

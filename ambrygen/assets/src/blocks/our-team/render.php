@@ -1,10 +1,13 @@
 <?php
 /**
- * Our Team Block Template.
+ * Render: Our Team Block
+ *
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
  *
  * @package ambrygen
  */
-
 defined( 'ABSPATH' ) || exit;
 
 $ambrygen_attributes = isset( $attributes ) && is_array( $attributes )

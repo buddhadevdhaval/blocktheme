@@ -1,14 +1,13 @@
 <?php
 /**
- * Header Block – Server-side Rendering
+ * Render: Header Block
  *
- * @package Ambrygen
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
  *
- * @var array    $attributes Block attributes.
- * @var string   $content    Block content (InnerBlocks).
- * @var WP_Block $block      Block instance.
+ * @package ambrygen
  */
-
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
 	exit;

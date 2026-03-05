@@ -1,10 +1,13 @@
 <?php
 /**
- * Render callback for Flexible Content block.
+ * Render: Flexible Content Block
  *
- * @package Ambrygen
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
+ *
+ * @package ambrygen
  */
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

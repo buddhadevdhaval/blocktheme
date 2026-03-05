@@ -41,10 +41,6 @@
     "backgroundStyle": {
       "type": "string",
       "default": ""
-    },
-    "isFixedBackground": {
-      "type": "boolean",
-      "default": false
     }
   },
   "providesContext": {
@@ -58,8 +54,7 @@
     "attributes": {
       "tagName": "section",
       "containerWidth": "container-1340",
-      "backgroundStyle": "default",
-      "isFixedBackground": false
+      "backgroundStyle": "default"
     }
   }
 }

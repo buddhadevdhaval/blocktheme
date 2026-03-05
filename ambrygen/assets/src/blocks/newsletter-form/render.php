@@ -1,41 +1,44 @@
 <?php
 /**
- * Render template for the Newsletter Form block.
+ * Render: Newsletter Form Block
  *
- * @package Ambrygen
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
+ *
+ * @package ambrygen
  */
-
 use Ambrygen\Theme\Core\Helper;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
-$ambrygen_attributes = is_array( $attributes ?? null ) ? $attributes : [];
-$ambrygen_content    = $content ?? '';
+/** @var array<string, mixed> $ambrygen_attributes */
+$ambrygen_attributes = is_array( $attributes ?? null ) ? $attributes : array();
+/** @var string $ambrygen_content */
+$ambrygen_content = $content ?? '';
 
-/* Text content */
-$ambrygen_eyebrow     = $ambrygen_attributes['eyebrow']     ?? __( 'Newsletter', 'ambrygen-web' );
-$ambrygen_heading     = $ambrygen_attributes['heading']     ?? __( 'Stay Informed', 'ambrygen-web' );
-$ambrygen_heading_tag = $ambrygen_attributes['headingTag']  ?? 'h2';
-$ambrygen_description = $ambrygen_attributes['description'] ?? __( 'Subscribe to the Ambry Newsletter and other updates.', 'ambrygen-web' );
+// Text content.
+$ambrygen_eyebrow     = $ambrygen_attributes['eyebrow'] ?? '';
+$ambrygen_heading     = $ambrygen_attributes['heading'] ?? '';
+$ambrygen_heading_tag = $ambrygen_attributes['headingTag'] ?? 'h2';
+$ambrygen_description = $ambrygen_attributes['description'] ?? '';
 
-/* Validate heading tag */
-$ambrygen_allowed_tags = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div' );
+// Validate heading tag.
+$ambrygen_allowed_tags = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
 if ( ! in_array( $ambrygen_heading_tag, $ambrygen_allowed_tags, true ) ) {
 	$ambrygen_heading_tag = 'h2';
 }
 
-/* Main image handling */
+// Main image handling.
 $ambrygen_image_id = absint( $ambrygen_attributes['imageId'] ?? 0 );
 
-/* Overlay images */
+// Overlay images.
 $ambrygen_overlay_top_id    = absint( $ambrygen_attributes['overlayTopImageId'] ?? 0 );
 $ambrygen_overlay_bottom_id = absint( $ambrygen_attributes['overlayBottomImageId'] ?? 0 );
 
-$ambrygen_overlay_top_url    = $ambrygen_attributes['overlayTopImage']    ?? get_theme_file_uri( 'assets/src/images/news-latter/overlay-top.svg' );
-$ambrygen_overlay_bottom_url = $ambrygen_attributes['overlayBottomImage'] ?? get_theme_file_uri( 'assets/src/images/news-latter/overlay-bottom.svg' );
-$ambrygen_heading_id = wp_unique_id( 'ambrygen-newsletter-heading-' );
+$ambrygen_overlay_top_url    = $ambrygen_attributes['overlayTopImage'] ?? '';
+$ambrygen_overlay_bottom_url = $ambrygen_attributes['overlayBottomImage'] ?? '';
+$ambrygen_heading_id         = wp_unique_id( 'ambrygen-newsletter-heading-' );
 
 $ambrygen_wrapper_args = array(
 	'class' => 'newsletter newsletter-signup',
@@ -87,7 +90,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 						src="<?php echo esc_url( $ambrygen_overlay_top_url ); ?>"
 						class="overlay__img"
 						loading="lazy"
-						alt="Top Image"
+						alt="<?php esc_attr_e( 'Top image', 'ambrygen-web' ); ?>"
 					/>
 					<?php
 				}
@@ -116,7 +119,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 						class="overlay__img"
 						loading="lazy"
 						decoding="async"
-						alt="Bottom Image"
+						alt="<?php esc_attr_e( 'Bottom image', 'ambrygen-web' ); ?>"
 					/>
 					<?php
 				}
@@ -131,7 +134,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 
 		<?php if ( $ambrygen_eyebrow ) : ?>
 			<div class="newsletter__content-block__eyebrow-text eyebrow">
-				<?php echo wp_kses( $ambrygen_eyebrow, Helper::allowed_heading_html() ); ?>
+				<?php echo wp_kses_post( $ambrygen_eyebrow ); ?>
 			</div>
 		<?php endif; ?>
 
@@ -153,13 +156,14 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 		<?php if ( $ambrygen_description ) : ?>
 			<div class="is-style-gl-s12" aria-hidden="true"></div>
 			<div class="newsletter__content-block__description-text text-medium block-description">
-				<?php echo wp_kses( $ambrygen_description, Helper::allowed_heading_html() ); ?>
+				<?php echo wp_kses_post( $ambrygen_description ); ?>
 			</div>
 		<?php endif; ?>
 
+		<?php if ( $ambrygen_content ) : ?>
 		<div class="newsletter-form-placeholder">
 			<?php echo $ambrygen_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</div>
-
+		<?php endif; ?>
 	</div>
 </div>

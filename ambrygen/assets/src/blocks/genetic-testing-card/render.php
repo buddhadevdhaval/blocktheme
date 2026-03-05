@@ -1,10 +1,13 @@
 <?php
 /**
- * Render template for the Genetic Testing Card block.
+ * Render: Genetic Testing Card Block
  *
- * @package Ambrygen
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
+ *
+ * @package ambrygen
  */
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

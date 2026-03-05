@@ -1,27 +1,27 @@
 <?php
 /**
- * FAQ Accordion Render
+ * Render: FAQ Accordion Block
  *
- * @package AmbryGen
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
  *
- * @param array    $attributes Block attributes.
- * @param string   $content    Block content.
- * @param WP_Block $block      Block instance.
+ * @package ambrygen
  */
-
 defined( 'ABSPATH' ) || exit;
 
 use Ambrygen\Theme\Core\Helper;
+
 // Prefix all variables
 $ambrygen_attributes = $attributes ?? array();
 
-$ambrygen_image_id   = $ambrygen_attributes['imageId'] ?? 0;
-$ambrygen_faqs       = $ambrygen_attributes['faqs'] ?? array();
-$ambrygen_title      = $ambrygen_attributes['title'] ?? '';
+$ambrygen_image_id = $ambrygen_attributes['imageId'] ?? 0;
+$ambrygen_faqs     = $ambrygen_attributes['faqs'] ?? array();
+$ambrygen_title    = $ambrygen_attributes['title'] ?? '';
 
-$ambrygen_heading = $ambrygen_attributes['headingTag'] ?? 'h5';
+$ambrygen_heading          = $ambrygen_attributes['headingTag'] ?? 'h5';
 $ambrygen_allowed_headings = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
-$ambrygen_heading = in_array( $ambrygen_heading, $ambrygen_allowed_headings, true ) ? $ambrygen_heading : 'h5';
+$ambrygen_heading          = in_array( $ambrygen_heading, $ambrygen_allowed_headings, true ) ? $ambrygen_heading : 'h5';
 
 $ambrygen_heading_id = wp_unique_id( 'faq-heading-' );
 
@@ -39,8 +39,8 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 
 		<div class="alongside-faq__col alongside-faq__col--left">
 			<div class="alongside-faq__media">
-				<?php 
-				echo Helper::image_with_placeholder(
+				<?php
+				echo Helper::image_with_placeholder( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					$ambrygen_image_id,
 					'full',
 					array(
@@ -56,14 +56,14 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 
 
 				<?php if ( $ambrygen_title ) : ?>
-					<<?php echo esc_attr( $ambrygen_heading ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-4 alongside-faq__title mb-0">
-						<?php 
+					<<?php echo tag_escape( $ambrygen_heading ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-4 alongside-faq__title mb-0">
+						<?php
 						echo wp_kses(
 							$ambrygen_title,
 							Helper::allowed_heading_html()
 						);
 						?>
-					</<?php echo esc_attr( $ambrygen_heading ); ?>>
+					</<?php echo tag_escape( $ambrygen_heading ); ?>>
 				<?php endif; ?>
 
 
@@ -72,13 +72,17 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 				<?php
 				if ( ! empty( $ambrygen_faqs ) ) :
 					?>
-					<div class="faq" role="region" <?php 
-					if ( $ambrygen_title ) {
-						echo 'aria-labelledby="' . esc_attr( $ambrygen_heading_id ) . '"';
-					} else {
-						echo 'aria-label="' . esc_attr__( 'Frequently Asked Questions', 'ambrygen-web' ) . '"';
-					}
-					?>>
+					<div
+						class="faq"
+						role="region"
+						<?php
+						if ( $ambrygen_title ) {
+							echo 'aria-labelledby="' . esc_attr( $ambrygen_heading_id ) . '"';
+						} else {
+							echo 'aria-label="' . esc_attr__( 'Frequently Asked Questions', 'ambrygen-web' ) . '"';
+						}
+						?>
+					>
 						<?php
 						foreach ( $ambrygen_faqs as $ambrygen_faq ) :
 							$ambrygen_faq_answer_id = wp_unique_id( 'faq-answer-' );

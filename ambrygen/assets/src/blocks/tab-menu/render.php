@@ -1,10 +1,13 @@
 <?php
 /**
- * Server-side rendering for Secondary Sticky Tabs block
+ * Render: Tab Menu Block
+ *
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
  *
  * @package ambrygen
  */
-
 $block_id = $attributes['blockId'] ?? '';
 
 $wrapper_attributes = get_block_wrapper_attributes(

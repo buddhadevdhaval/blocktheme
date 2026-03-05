@@ -1,13 +1,13 @@
 <?php
 /**
- * Gallery Item Block render.
+ * Render: Gallery Item Block
  *
- * WCAG 2.1 AA compliant
- * No HTML structure changes
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
  *
- * @package Ambrygen
+ * @package ambrygen
  */
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

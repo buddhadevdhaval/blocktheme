@@ -82,6 +82,7 @@
 
 			.card-info {
 				display: flex;
+				gap: 10px;
 				flex-direction: column;
 				padding: 32px;
 				border-radius: 8px;
@@ -121,7 +122,6 @@
 			}
 
 			.card-description {
-				padding-top: 10px;
 				color: var(--theme_white);
 			}
 		}
@@ -173,7 +173,6 @@
 			}
 
 			.card-description {
-				padding-top: 0;
 				overflow: hidden;
 				text-overflow: ellipsis;
 				display: -webkit-box;

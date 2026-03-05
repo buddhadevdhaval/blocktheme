@@ -17,6 +17,10 @@
 @use "partials/site/layout/header";
 @use "partials/site/layout/footer";
 @use "partials/site/layout/video-block";
+@use "partials/site/layout/vertical_tabs";
+@use "partials/site/layout/horizontal_tabs";
+@use "partials/site/layout/badges";
+
 
 * {
 	box-sizing: border-box;
@@ -197,12 +201,47 @@ html {
 		.block-editor-link-control__field {
 			margin: 0;
 		}
+
 		.block-editor-link-control__search-item {
 			padding: 0;
 			margin-top: 15px;
 		}
+
 		.block-editor-link-control__search-item .block-editor-link-control__search-item-title span {
 			line-height: normal;
+		}
+	}
+
+	.layout-variant-selector {
+		margin: 20px 0;
+		.variant-button {
+			margin-top: 15px;
+			border-radius: 0;
+			border: 2px solid var(--theme_gray_400);
+
+			&:first-child {
+				margin-top: 0;
+			}
+
+			&.is-selected {
+				border-color: var(--theme_cg_blue);
+
+				span {
+					color: var(--theme_cg_blue);
+				}
+			}
+
+			img {
+				display: block;
+			}
+
+			span {
+				font-size: 14px;
+				font-weight: 500;
+				line-height: normal;
+				display: block;
+				padding: 5px 0;
+			}
 		}
 	}
 }

@@ -156,5 +156,7 @@
 		} );
 	}
 
-	document.querySelectorAll( '.tabs-content' ).forEach( initTabs );
+	window.addEventListener( 'load', () => {
+		document.querySelectorAll( '.tabs-content' ).forEach( initTabs );
+	} );
 } )();

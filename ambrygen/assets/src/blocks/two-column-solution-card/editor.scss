@@ -2,23 +2,35 @@
 
 .genetic-cards__container {
 
-    .block-editor-inner-blocks,
-    .block-editor-block-list__layout {
-        display: contents;
-    }
+	.block-editor-inner-blocks,
+	.block-editor-block-list__layout {
+		display: contents;
+	}
 
-    .block-editor-block-list__layout>.genetic-cards__card {
+	.block-editor-block-list__layout>.genetic-cards__card {
 
-        @include bp.max(xl-large) {
+		@include bp.max(xl-large) {
 
-            &--small {
-                grid-column: 1;
-            }
+			&--small {
+				grid-column: 1;
+			}
 
-            &--main {
-                grid-column: 2;
-                grid-row: 1 / span 2;
-            }
-        }
-    }
+			&--main {
+				grid-column: 2;
+				grid-row: 1 / span 2;
+			}
+		}
+	}
+}
+
+
+.cta-tiles-with-content {
+	.cta-tiles-with-content__grid {
+		display: block;
+		.block-editor-block-list__layout {
+			display: grid;
+			gap: clamp(24px, 1.5rem + (1vw - 7.67px) * 1.3722, 32px);
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
 }

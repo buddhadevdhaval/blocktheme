@@ -50,7 +50,6 @@
 .faq {
 
 	&__item {
-		padding: 24px 0;
 		border-top: 1px solid var(--theme_body_color);
 
 		&:first-child {
@@ -88,6 +87,7 @@
 		flex-wrap: wrap;
 		list-style: none;
 		gap: 12px;
+		padding: 24px 0;
 		cursor: pointer;
 	}
 
@@ -113,7 +113,8 @@
 	}
 
 	&__answer {
-		margin-top: 8px;
+		margin-top: -16px;
 		max-width: calc(100% - 48px);
+		padding-bottom: 24px;
 	}
 }

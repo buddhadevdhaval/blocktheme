@@ -1,1 +1,20 @@
 /* Editor styles for the Tab Menu block */
+// Horizontal Tabs Component
+
+.wp-block {
+	.horizontal-tabs {
+
+		.block-editor-block-list__layout {
+			padding: 6px;
+			display: inline-flex;
+			gap: 4px;
+			overflow-y: auto;
+		}
+
+		.tab-button,
+		.block-editor-block-list__block {
+			margin: 0;
+		}
+	}
+
+}

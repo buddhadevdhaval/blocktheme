@@ -3,6 +3,7 @@ import { SelectControl, Button } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { getThemeAssetUrl } from '../../utils/assets';
 import { useMemo } from '@wordpress/element';
+import { decodeEntities } from '@wordpress/html-entities';
 
 export default function Edit( {
 	attributes,
@@ -26,6 +27,7 @@ export default function Edit( {
 		( select ) =>
 			select( 'core' ).getEntityRecords( 'postType', 'jobs', {
 				per_page: -1,
+				post_status: 'publish',
 				order: 'asc',
 			} ),
 		[]
@@ -102,7 +104,10 @@ export default function Edit( {
 	const options = jobs
 		? jobs
 				.filter( ( j ) => ! selectedIds.includes( j.id ) )
-				.map( ( j ) => ( { label: j.title.rendered, value: j.id } ) )
+				.map( ( j ) => ( {
+					label: decodeEntities( j.title.rendered ),
+					value: j.id,
+				} ) )
 		: [];
 
 	return (
@@ -125,7 +130,7 @@ export default function Edit( {
 				<>
 					<div className="careers-highlight__job--row">
 						<div className="careers-highlight__job-title subtitle2-sbold">
-							{ selectedPost.title.rendered }
+							{ decodeEntities( selectedPost.title.rendered ) }
 						</div>
 						<div className="careers-highlight__job-tag text-small-medium">
 							{ jobTypeTerms

@@ -3,6 +3,7 @@
 .order-testing-block {
 
 	.vertical-tabs {
+		grid-template-columns: clamp(420px, calc(26.25rem + ((1vw - 9.93px) * 39.2157)), 560px) 1fr;
 
 		.vertical-tabs__item {
 

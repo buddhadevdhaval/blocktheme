@@ -16,7 +16,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			//  modules: [Navigation],
 			slidesPerView: 1.4,
 			spaceBetween: 20,
-			loop: false,
+			loop: true,
 
 			navigation:
 				config.navigation_show === false

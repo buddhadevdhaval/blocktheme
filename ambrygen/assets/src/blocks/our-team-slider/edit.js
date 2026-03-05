@@ -15,6 +15,7 @@ import {
 	CheckboxControl,
 	SelectControl,
 	Spinner,
+	Button,
 } from '@wordpress/components';
 
 import { useSelect, useDispatch } from '@wordpress/data';
@@ -36,7 +37,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		slidesPerView = 4,
 	} = attributes;
 
-	const { replaceInnerBlocks } = useDispatch( 'core/block-editor' );
+	const { replaceInnerBlocks, insertBlock } =
+		useDispatch( 'core/block-editor' );
 
 	/* ----------------------------
 	 * Data
@@ -311,7 +313,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								'ambrygen/our-team-slider-item',
 							] }
 							orientation="horizontal"
-							renderAppender={ InnerBlocks.ButtonBlockAppender }
+							renderAppender={ () => false }
 						/>
 						{ /* </div> */ }
 
@@ -328,6 +330,30 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							</>
 						) }
 					</div>
+
+					{ selectionMode !== 'taxonomy' && (
+						<div
+							className="our-team-slider__add-member"
+							style={ { marginTop: '20px', textAlign: 'center' } }
+						>
+							<Button
+								variant="primary"
+								onClick={ () => {
+									const newBlock = wp.blocks.createBlock(
+										'ambrygen/our-team-slider-item',
+										{}
+									);
+									insertBlock(
+										newBlock,
+										undefined,
+										clientId
+									);
+								} }
+							>
+								+ Add Team Member
+							</Button>
+						</div>
+					) }
 				</div>
 			</div>
 		</>

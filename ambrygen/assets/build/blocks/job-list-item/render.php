@@ -10,7 +10,7 @@ if ( ! $ambrygen_post_id ) {
 
 $ambrygen_post = get_post( $ambrygen_post_id );
 
-if ( ! $ambrygen_post ) {
+if ( ! $ambrygen_post || 'publish' !== $ambrygen_post->post_status ) {
 	return;
 }
 

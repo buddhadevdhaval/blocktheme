@@ -1,5 +1,9 @@
 .wp-block-ambrygen-testimonials {
 
+	.ambry-testimonials__graphic-images {
+		pointer-events: none;
+	}
+
     .ambry-testimonials__grid {
 
         >.block-editor-inner-blocks,

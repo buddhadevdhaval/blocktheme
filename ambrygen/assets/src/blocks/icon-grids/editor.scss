@@ -2,34 +2,45 @@
  * Editor styles for block
  */
 
- @use "../../css/partials/variables/fluid_mixins" as *;
+@use "../../css/partials/variables/fluid_mixins" as *;
 
 .wp-block {
 
-    .info-list-block {
-        display: block;
+	.info-list-block {
+		display: block;
 
-        .block-editor-block-list__layout {
-            background: var(--theme_primary_25);
-            border-radius: 32px;
-            padding: 0;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            width: 100%;
-            gap: fluid(18, 24);
+		.block-editor-block-list__layout {
+			background: var(--theme_primary_25);
+			border-radius: 32px;
+			padding: 0;
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			width: 100%;
+			gap: fluid(18, 24);
 
-            .block-editor-block-list__block {
-                margin-bottom: 0;
-                border: none;
+			.block-editor-block-list__block {
+				margin-bottom: 0;
+				border: none;
 
-                .info-list__link {
-                    color: var(--theme_link_color);
+				.info-list__link {
+					color: var(--theme_link_color);
 
-                    &:hover {
-                        color: var(--theme_link_color_hover);
-                    }
-                }
-            }
-        }
-    }
+					&:hover {
+						color: var(--theme_link_color_hover);
+					}
+				}
+			}
+		}
+	}
+
+	&.icon-grid {
+		.icon-grid__list {
+			.block-editor-block-list__layout {
+				display: flex;
+				flex-wrap: wrap;
+				gap: clamp(48px, 3rem + (1vw - 7.67px) * 2.7444, 64px) clamp(64px, 4rem + (1vw - 7.67px) * 6.175, 100px);
+				justify-content: center;
+			}
+		}
+	}
 }

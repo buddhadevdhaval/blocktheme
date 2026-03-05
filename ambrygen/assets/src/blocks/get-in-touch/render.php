@@ -2,6 +2,10 @@
 /**
  * Render: Get In Touch Block
  *
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
+ *
  * @package ambrygen
  */
 
@@ -43,7 +47,13 @@ $ambrygen_heading_id    = wp_unique_id( 'contact-heading-' );
 	</div>
 
 	<?php if ( ! empty( $ambrygen_block_content ) ) : ?>
-		<section class="contact-form-block__form" aria-labelledby="<?php echo esc_attr( $ambrygen_heading_id ); ?>">
+		<section class="contact-form-block__form"
+			<?php if ( $ambrygen_title ) : ?>
+				aria-labelledby="<?php echo esc_attr( $ambrygen_heading_id ); ?>"
+			<?php else : ?>
+				aria-label="<?php echo esc_attr__( 'Contact Form', 'ambrygen-web' ); ?>"
+			<?php endif; ?>
+		>
 			<?php echo $ambrygen_block_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</section>
 	<?php endif; ?>

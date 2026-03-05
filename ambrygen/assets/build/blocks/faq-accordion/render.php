@@ -3,6 +3,10 @@
  * FAQ Accordion Render
  *
  * @package AmbryGen
+ *
+ * @param array    $attributes Block attributes.
+ * @param string   $content    Block content.
+ * @param WP_Block $block      Block instance.
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -67,11 +71,14 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 
 				<?php
 				if ( ! empty( $ambrygen_faqs ) ) :
-					$ambrygen_region_attr = $ambrygen_title 
-						? 'aria-labelledby="' . esc_attr( $ambrygen_heading_id ) . '"'
-						: 'aria-label="' . esc_attr__( 'Frequently Asked Questions', 'ambrygen-web' ) . '"';
 					?>
-					<div class="faq" role="region" <?php echo $ambrygen_region_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+					<div class="faq" role="region" <?php 
+					if ( $ambrygen_title ) {
+						echo 'aria-labelledby="' . esc_attr( $ambrygen_heading_id ) . '"';
+					} else {
+						echo 'aria-label="' . esc_attr__( 'Frequently Asked Questions', 'ambrygen-web' ) . '"';
+					}
+					?>>
 						<?php
 						foreach ( $ambrygen_faqs as $ambrygen_faq ) :
 							$ambrygen_faq_answer_id = wp_unique_id( 'faq-answer-' );

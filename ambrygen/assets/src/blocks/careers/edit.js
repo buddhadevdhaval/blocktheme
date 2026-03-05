@@ -106,9 +106,6 @@ export default function Edit( { attributes, setAttributes } ) {
 							setAttributes( { headingLevel: value } )
 						}
 					/>
-				</PanelBody>
-
-				<PanelBody title="Video Settings">
 					<SelectControl
 						label="Video Type"
 						value={ videoType }
@@ -183,10 +180,6 @@ export default function Edit( { attributes, setAttributes } ) {
 							}
 						/>
 					) }
-				</PanelBody>
-
-				{ /* Play icon settings */ }
-				<PanelBody title="Icons Setting" initialOpen={ false }>
 					<ImageUploader
 						label="Play Icon"
 						url={ playIcon?.url }
@@ -223,9 +216,6 @@ export default function Edit( { attributes, setAttributes } ) {
 							setAttributes( { joblocationicon: null } )
 						}
 					/>
-				</PanelBody>
-				{ /* Careers link */ }
-				<PanelBody title="Careers Link">
 					<CtaButtonField
 						label={ t( 'Top Link setting' ) }
 						textLabel={ t( 'Link Text' ) }

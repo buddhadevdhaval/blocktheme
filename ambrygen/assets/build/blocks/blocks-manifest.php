@@ -685,7 +685,6 @@ return array(
 			'attributes' => array(
 				'title' => 'Sample Title',
 				'headingTag' => 'h5',
-				'imageUrl' => 'Sample url',
 				'imageId' => 0,
 				'faqs' => array(
 					array(
@@ -1213,6 +1212,14 @@ return array(
 			),
 			'headingLevel' => array(
 				'type' => 'string',
+				'enum' => array(
+					'h1',
+					'h2',
+					'h3',
+					'h4',
+					'h5',
+					'h6'
+				),
 				'default' => 'h2'
 			)
 		),
@@ -3033,6 +3040,7 @@ return array(
 		),
 		'textdomain' => 'ambrygen-web',
 		'editorScript' => 'file:./index.js',
+		'editorStyle' => 'file:./index.css',
 		'render' => 'file:./render.php',
 		'example' => array(
 			'attributes' => array(

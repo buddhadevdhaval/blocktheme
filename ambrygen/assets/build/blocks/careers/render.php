@@ -169,7 +169,6 @@ $ambrygen_heading_level = in_array(
 							class="pause-icon"
 						/>
 					</div>
-					</div>
 				</div>
 			</div>
 		</div>

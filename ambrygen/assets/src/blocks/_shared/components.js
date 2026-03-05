@@ -346,23 +346,24 @@ export function ImagePlaceholder( {
 
 	return <span style={ placeholderStyle }>{ text }</span>;
 }
-
 /**
  * HTML tag selector.
  *
- * @param {Object}   props                        - Component props.
- * @param {string}   [props.label]                - Label text.
- * @param {string}   props.value                  - Selected tag.
- * @param {Function} props.onChange               - Change handler.
- * @param {boolean}  [props.includeTextTags=true] - Include text tags.
+ * @param {Object}   props          - Component props.
+ * @param {string}   [props.label]  - Label text.
+ * @param {string}   props.value    - Selected tag.
+ * @param {Function} props.onChange - Change handler.
+ * @param {string}   [props.type]   - Tag type (heading | text | all).
  */
 export function TagSelector( {
 	label = t( 'HTML Tag' ),
 	value = 'h2',
 	onChange,
-	includeTextTags = true,
+	type = 'all',
 } ) {
-	const options = [
+	let options = [];
+
+	const headingTags = [
 		{ label: 'H1', value: 'h1' },
 		{ label: 'H2', value: 'h2' },
 		{ label: 'H3', value: 'h3' },
@@ -371,11 +372,17 @@ export function TagSelector( {
 		{ label: 'H6', value: 'h6' },
 	];
 
-	if ( includeTextTags ) {
-		options.push(
-			{ label: t( 'Paragraph' ), value: 'p' },
-			{ label: t( 'Div' ), value: 'div' }
-		);
+	const textTags = [
+		{ label: t( 'Paragraph' ), value: 'p' },
+		{ label: t( 'Div' ), value: 'div' },
+	];
+
+	if ( type === 'heading' ) {
+		options = headingTags;
+	} else if ( type === 'text' ) {
+		options = textTags;
+	} else {
+		options = [ ...headingTags, ...textTags ];
 	}
 
 	return (

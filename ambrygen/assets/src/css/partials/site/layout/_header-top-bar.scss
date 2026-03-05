@@ -15,16 +15,15 @@
 
 	&__text {
 		color: var(--theme_primary_800);
-		display: flex;
-		flex-wrap: wrap;
+		display: inline-block;
 		font-size: 16px;
 		gap: 12px;
 		justify-content: center;
 		margin-bottom: 0;
+		text-align: left;
 
 		@include bp.max(lg) {
 			font-size: 13px;
-			text-align: left;
 		}
 
 		a {
@@ -42,6 +41,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		flex: 24px 0 0;
 
 		@include bp.max(lg) {
 			flex: 22px 0 0;

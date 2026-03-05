@@ -87,7 +87,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 						src="<?php echo esc_url( $ambrygen_overlay_top_url ); ?>"
 						class="overlay__img"
 						loading="lazy"
-						alt=""
+						alt="Top Image"
 					/>
 					<?php
 				}

@@ -5,7 +5,7 @@ import {
 	RichText,
 } from '@wordpress/block-editor';
 import { PanelBody, Button } from '@wordpress/components';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useMemo } from '@wordpress/element';
 import {
 	TagSelector,
 	ImageUploader,
@@ -18,6 +18,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	const { imageUrl, imageAlt, faqs = [], title, headingTag } = attributes;
 
 	const blockProps = useBlockProps();
+	const defaultImages = useMemo( () => DEFAULT_IMAGES(), [] );
 
 	const updateFaq = ( index, field, value ) => {
 		const newFaqs = [ ...faqs ];
@@ -42,16 +43,14 @@ export default function Edit( { attributes, setAttributes } ) {
 	};
 	useEffect( () => {
 		if ( ! imageUrl ) {
-			const defaults = DEFAULT_IMAGES();
-
-			if ( defaults.placeholder.url ) {
+			if ( defaultImages.placeholder.url ) {
 				setAttributes( {
-					imageUrl: defaults.placeholder.url,
-					imageId: defaults.placeholder.id,
+					imageUrl: defaultImages.placeholder.url,
+					imageId: defaultImages.placeholder.id,
 				} );
 			}
 		}
-	}, [ imageUrl, setAttributes ] );
+	}, [ imageUrl, setAttributes, defaultImages ] );
 
 	return (
 		<>
@@ -97,7 +96,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						<div className="alongside-faq__media">
 							<img
 								src={
-									imageUrl || DEFAULT_IMAGES().placeholder.url
+									imageUrl || defaultImages.placeholder.url
 								}
 								alt={ imageAlt || '' }
 							/>
@@ -133,7 +132,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									>
 										<RichText
 											tagName="div"
-											className="faq__question"
+											className="faq__question  text-lg-medium"
 											value={ faq.question }
 											onChange={ ( value ) =>
 												updateFaq(

@@ -3,9 +3,16 @@ import {
 	useBlockProps,
 	RichText,
 	InspectorControls,
+	MediaUpload,
+	MediaUploadCheck,
 } from '@wordpress/block-editor';
 import { useEffect, useRef, useState } from '@wordpress/element';
-import { PanelBody, SelectControl, TextControl } from '@wordpress/components';
+import {
+	PanelBody,
+	SelectControl,
+	TextControl,
+	Button,
+} from '@wordpress/components';
 import { isValidVideoUrl, getIframeSrc } from '../../utils/validation.js';
 import { ImageUploader, TagSelector } from '../_shared/components';
 
@@ -127,16 +134,48 @@ export default function Edit( { attributes, setAttributes } ) {
 					{ /* MP4 Upload */ }
 					{ videoType === 'mp4' && (
 						<>
-							<ImageUploader
-								url={ videoUrl }
-								onSelect={ ( media ) =>
-									setAttributes( { videoUrl: media.url } )
-								}
-								label={ __(
-									'Upload / Replace Video',
-									'ambrygen-web'
-								) }
-							/>
+							<MediaUploadCheck>
+								<MediaUpload
+									onSelect={ ( media ) =>
+										setAttributes( { videoUrl: media.url } )
+									}
+									allowedTypes={ [ 'video' ] }
+									value={ videoUrl }
+									render={ ( { open } ) => (
+										<Button
+											isSecondary
+											onClick={ open }
+											style={ { marginBottom: '10px' } }
+										>
+											{ videoUrl
+												? __(
+														'Change Video',
+														'ambrygen-web'
+												  )
+												: __(
+														'Select / Upload Video',
+														'ambrygen-web'
+												  ) }
+										</Button>
+									) }
+								/>
+							</MediaUploadCheck>
+
+							{ videoUrl && (
+								<Button
+									isLink
+									isDestructive
+									onClick={ () =>
+										setAttributes( { videoUrl: '' } )
+									}
+									style={ {
+										marginBottom: '15px',
+										display: 'block',
+									} }
+								>
+									{ __( 'Remove Video', 'ambrygen-web' ) }
+								</Button>
+							) }
 
 							<TextControl
 								label={ __(

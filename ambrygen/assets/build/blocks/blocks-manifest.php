@@ -2213,7 +2213,7 @@ return array(
 		'title' => 'Newsletter Form',
 		'category' => 'ambrygen',
 		'icon' => 'email',
-		'description' => '',
+		'description' => 'A block for displaying a newsletter subscription form with optional heading, description, and decorative imagery.',
 		'supports' => array(
 			'html' => false
 		),
@@ -2269,9 +2269,6 @@ return array(
 			'overlayBottomImage' => array(
 				'type' => 'string',
 				'default' => '/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-bottom.svg'
-			),
-			'style' => array(
-				'type' => 'object'
 			)
 		),
 		'textdomain' => 'ambrygen-web',
@@ -2290,10 +2287,7 @@ return array(
 				'overlayTopImageId' => 0,
 				'overlayBottomImageId' => 0,
 				'overlayTopImage' => '/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-top.svg',
-				'overlayBottomImage' => '/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-bottom.svg',
-				'style' => array(
-					
-				)
+				'overlayBottomImage' => '/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-bottom.svg'
 			)
 		)
 	),

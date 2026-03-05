@@ -8,8 +8,10 @@ import {
 	TextControl,
 	PanelBody,
 	PanelRow,
-	SelectControl,
 } from '@wordpress/components';
+
+import { TagSelector } from '../_shared/components';
+import { useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 export default function Edit( { attributes, setAttributes } ) {
@@ -18,6 +20,24 @@ export default function Edit( { attributes, setAttributes } ) {
 	const { title, headingLevel = 'h2', locations = [], iframe } = attributes;
 
 	const HeadingTag = headingLevel || 'h2';
+
+	const createLocationId = () =>
+		`loc-${ Date.now() }-${ Math.random().toString( 36 ).slice( 2, 9 ) }`;
+
+	useEffect( () => {
+		const hasMissingIds = locations.some(
+			( location ) => ! location?.id
+		);
+
+		if ( hasMissingIds ) {
+			setAttributes( {
+				locations: locations.map( ( location ) => ( {
+					...location,
+					id: location?.id || createLocationId(),
+				} ) ),
+			} );
+		}
+	}, [ locations, setAttributes ] );
 
 	const onChangeTitle = ( value ) => setAttributes( { title: value } );
 	const onChangeIframe = ( value ) => setAttributes( { iframe: value } );
@@ -35,7 +55,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		setAttributes( {
 			locations: [
 				...locations,
-				{ name: '', address: '', id: Date.now().toString() },
+				{ name: '', address: '', id: createLocationId() },
 			],
 		} );
 	};
@@ -52,17 +72,10 @@ export default function Edit( { attributes, setAttributes } ) {
 					title={ __( 'Heading Settings', 'ambrygen-web' ) }
 					initialOpen
 				>
-					<SelectControl
+					<TagSelector
 						label={ __( 'Heading Level', 'ambrygen-web' ) }
+						type="heading"
 						value={ headingLevel }
-						options={ [
-							{ label: 'H1', value: 'h1' },
-							{ label: 'H2', value: 'h2' },
-							{ label: 'H3', value: 'h3' },
-							{ label: 'H4', value: 'h4' },
-							{ label: 'H5', value: 'h5' },
-							{ label: 'H6', value: 'h6' },
-						] }
 						onChange={ ( value ) =>
 							setAttributes( { headingLevel: value } )
 						}
@@ -125,7 +138,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							{ locations.map( ( loc, index ) => (
 								<div
 									className="location-list"
-									key={ loc.id || index }
+									key={ loc.id }
 								>
 									<RichText
 										placeholder={ __(

@@ -9,7 +9,6 @@ import {
 	ImageUploader,
 	ImagePlaceholder,
 	TagSelector,
-	DEFAULT_IMAGES,
 } from '../_shared/components';
 import { __ } from '@wordpress/i18n';
 
@@ -24,9 +23,6 @@ export default function Edit( { attributes, setAttributes } ) {
 		overlayTopImage,
 		overlayBottomImage,
 	} = attributes;
-
-	const defaultImage = DEFAULT_IMAGES().placeholder.url;
-	const displayImage = image || defaultImage;
 
 	const blockProps = useBlockProps();
 
@@ -100,9 +96,9 @@ export default function Edit( { attributes, setAttributes } ) {
 			{ /* Editor Preview */ }
 			<div className="newsletter newsletter-signup">
 				<div className="newsletter__image-block">
-					{ displayImage ? (
+					{ image ? (
 						<img
-							src={ displayImage }
+							src={ image }
 							alt={ imageAlt || '' }
 							className="newsletter__img"
 							loading="lazy"

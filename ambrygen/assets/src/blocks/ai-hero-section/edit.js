@@ -1,11 +1,10 @@
 /**
  * Shared utilities
  */
-import { t } from '../_shared/utils';
+import { __ } from '@wordpress/i18n';
 import {
 	TagSelector,
 	ImageUploader,
-	ImagePlaceholder,
 	DEFAULT_IMAGES,
 } from '../_shared/components';
 
@@ -54,8 +53,6 @@ function makeImageHandlers( baseKey, setAttributes ) {
 			[ baseKey ]: '',
 			[ baseKey + 'Id' ]: 0,
 			[ baseKey + 'Alt' ]: '',
-			[ baseKey + 'SrcSet' ]: '',
-			[ baseKey + 'Sizes' ]: '',
 		} );
 
 	return { onSelect, onRemove };
@@ -85,7 +82,7 @@ function CounterItem( { counter, index, updateCounter } ) {
 						updateCounter( index, 'number', value )
 					}
 					placeholder="0"
-					aria-label={ t( 'Counter number' ) }
+					aria-label={ __( 'Counter number', 'ambrygen-web' ) }
 				/>
 				<RichText
 					tagName="div"
@@ -95,7 +92,7 @@ function CounterItem( { counter, index, updateCounter } ) {
 						updateCounter( index, 'suffix', value )
 					}
 					placeholder=""
-					aria-label={ t( 'Counter suffix' ) }
+					aria-label={ __( 'Counter suffix', 'ambrygen-web' ) }
 				/>
 			</div>
 			<RichText
@@ -103,8 +100,8 @@ function CounterItem( { counter, index, updateCounter } ) {
 				className="ai-hero__counters--counter-title body1"
 				value={ counter.label }
 				onChange={ ( value ) => updateCounter( index, 'label', value ) }
-				placeholder={ t( 'Label' ) }
-				aria-label={ t( 'Counter label' ) }
+				placeholder={ __( 'Label', 'ambrygen-web' ) }
+				aria-label={ __( 'Counter label', 'ambrygen-web' ) }
 			/>
 		</div>
 	);
@@ -131,7 +128,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	const {
 		heading,
 		content,
-		counters,
+		counters = [],
 		imageTop,
 		imageTopAlt,
 		imageBottom,
@@ -187,9 +184,9 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
-				<PanelBody title={ t( 'Heading Settings' ) }>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
 					<TagSelector
-						label={ t( 'Heading Tag', 'ambrygen-web' ) }
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingLevel || 'h2' }
 						onChange={ ( value ) =>
 							setAttributes( { headingLevel: value } )
@@ -197,25 +194,25 @@ export default function Edit( { attributes, setAttributes } ) {
 						type="heading"
 					/>
 				</PanelBody>
-				<PanelBody title={ t( 'Logo Image' ) }>
+				<PanelBody title={ __( 'Logo Image', 'ambrygen-web' ) }>
 					<ImageUploader
-						label={ t( 'Logo Image' ) }
+						label={ __( 'Logo Image', 'ambrygen-web' ) }
 						url={ logoImage }
 						onSelect={ handleLogoSelect }
 						onRemove={ handleLogoRemove }
 					/>
 				</PanelBody>
-				<PanelBody title={ t( 'Top Image' ) }>
+				<PanelBody title={ __( 'Top Image', 'ambrygen-web' ) }>
 					<ImageUploader
-						label={ t( 'Top Image' ) }
+						label={ __( 'Top Image', 'ambrygen-web' ) }
 						url={ imageTop }
 						onSelect={ handleTopImageSelect }
 						onRemove={ handleTopImageRemove }
 					/>
 				</PanelBody>
-				<PanelBody title={ t( 'Bottom Image' ) }>
+				<PanelBody title={ __( 'Bottom Image', 'ambrygen-web' ) }>
 					<ImageUploader
-						label={ t( 'Bottom Image' ) }
+						label={ __( 'Bottom Image', 'ambrygen-web' ) }
 						url={ imageBottom }
 						onSelect={ handleBottomImageSelect }
 						onRemove={ handleBottomImageRemove }
@@ -231,17 +228,16 @@ export default function Edit( { attributes, setAttributes } ) {
 							<div className="ai-hero__image-wrapper">
 								<div className="ai-hero__logo">
 									<div className="ai-hero__logo-inner">
-										{ logoImage ? (
+										{ logoImage && (
 											<img
 												src={ logoImage }
 												alt={
 													logoImageAlt ||
-													t( 'Company logo' )
+													__(
+														'Company logo',
+														'ambrygen-web'
+													)
 												}
-											/>
-										) : (
-											<ImagePlaceholder
-												text={ t( 'No logo selected' ) }
 											/>
 										) }
 									</div>
@@ -249,44 +245,32 @@ export default function Edit( { attributes, setAttributes } ) {
 							</div>
 							<div className="ai-hero__image-wrapper">
 								<div className="ai-hero__image">
-									{ imageTop ? (
+									{ imageTop && (
 										<img
 											src={ imageTop }
 											alt={
 												imageTopAlt ||
-												t( 'Hero top image' )
+												__(
+													'Hero top image',
+													'ambrygen-web'
+												)
 											}
-										/>
-									) : (
-										<ImagePlaceholder
-											text={ t(
-												'No top image selected'
-											) }
-											instructions={ t(
-												'Upload a top image from the sidebar settings.'
-											) }
 										/>
 									) }
 								</div>
 							</div>
 							<div className="ai-hero__image-wrapper ai-hero__image-wrapper--full">
 								<div className="ai-hero__image">
-									{ imageBottom ? (
+									{ imageBottom && (
 										<img
 											src={ imageBottom }
 											alt={
 												imageBottomAlt ||
-												t( 'Hero bottom image' )
+												__(
+													'Hero bottom image',
+													'ambrygen-web'
+												)
 											}
-										/>
-									) : (
-										<ImagePlaceholder
-											text={ t(
-												'No bottom image selected'
-											) }
-											instructions={ t(
-												'Upload a bottom image from the sidebar settings.'
-											) }
 										/>
 									) }
 								</div>
@@ -303,8 +287,14 @@ export default function Edit( { attributes, setAttributes } ) {
 									setAttributes( { heading: value } )
 								}
 								allowedFormats={ [ 'core/text-color' ] }
-								placeholder={ t( 'Hero heading…' ) }
-								aria-label={ t( 'Hero heading' ) }
+								placeholder={ __(
+									'Hero heading…',
+									'ambrygen-web'
+								) }
+								aria-label={ __(
+									'Hero heading',
+									'ambrygen-web'
+								) }
 							/>
 							<div className="is-style-gl-s24"></div>
 							<div className="ai-hero__description-text body1 block-description">
@@ -314,8 +304,14 @@ export default function Edit( { attributes, setAttributes } ) {
 									onChange={ ( value ) =>
 										setAttributes( { content: value } )
 									}
-									placeholder={ t( 'Hero content…' ) }
-									aria-label={ t( 'Hero description' ) }
+									placeholder={ __(
+										'Hero content…',
+										'ambrygen-web'
+									) }
+									aria-label={ __(
+										'Hero description',
+										'ambrygen-web'
+									) }
 								/>
 							</div>
 							<div className="is-style-gl-s24"></div>

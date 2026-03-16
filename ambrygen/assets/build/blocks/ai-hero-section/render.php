@@ -8,10 +8,10 @@
  *
  * @package ambrygen
  */
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
 use Ambrygen\Theme\Core\Helper;
 
 /**
@@ -80,14 +80,13 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 		<div class="ai-hero__col ai-hero__col--images">
 			<div class="ai-hero__images">
 
-				<?php if ( $ambrygen_logo_image_id ) : ?>
 					<div class="ai-hero__image-wrapper">
 						<div class="ai-hero__logo">
 							<div class="ai-hero__logo-inner">
 								<?php
-								echo Helper::image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image() returns sanitized HTML.
+								echo Helper::image_with_placeholder( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image() returns sanitized HTML.
 									$ambrygen_logo_image_id,
-									'full',
+									'large',
 									array(
 										'class'       => 'ai-hero__logo-img',
 										'aria-hidden' => 'true',
@@ -97,14 +96,12 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 							</div>
 						</div>
 					</div>
-				<?php endif; ?>
 
-				<?php if ( $ambrygen_image_top_id ) : ?>
 					<div class="ai-hero__image-wrapper">
 						<div class="ai-hero__image">
 							<div class="ai-hero__image-container">
 								<?php
-								echo Helper::image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image() returns sanitized HTML.
+								echo Helper::image_with_placeholder( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image() returns sanitized HTML.
 									$ambrygen_image_top_id,
 									'large',
 									array(
@@ -115,14 +112,12 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 							</div>
 						</div>
 					</div>
-				<?php endif; ?>
 
-				<?php if ( $ambrygen_image_bottom_id ) : ?>
 					<div class="ai-hero__image-wrapper ai-hero__image-wrapper--full">
 						<div class="ai-hero__image ai-hero__image--bottom">
 							<div class="ai-hero__image-container">
 								<?php
-								echo Helper::image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image() returns sanitized HTML.
+								echo Helper::image_with_placeholder( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image() returns sanitized HTML.
 									$ambrygen_image_bottom_id,
 									'full',
 									array(
@@ -133,8 +128,6 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 							</div>
 						</div>
 					</div>
-				<?php endif; ?>
-
 			</div>
 		</div>
 
@@ -169,48 +162,38 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 					<div class="ai-hero__counters" role="list">
 						<?php foreach ( $ambrygen_counters as $ambrygen_counter ) : ?>
 							<?php
-							$number = isset( $ambrygen_counter['number'] ) ? (string) $ambrygen_counter['number'] : '';
-							$label  = isset( $ambrygen_counter['label'] ) ? (string) $ambrygen_counter['label'] : '';
-							$prefix = isset( $ambrygen_counter['prefix'] ) ? (string) $ambrygen_counter['prefix'] : '';
-							$suffix = isset( $ambrygen_counter['suffix'] ) ? (string) $ambrygen_counter['suffix'] : '';
+							$ambrygen_number = isset( $ambrygen_counter['number'] ) ? (string) $ambrygen_counter['number'] : '';
+							$ambrygen_label  = isset( $ambrygen_counter['label'] ) ? (string) $ambrygen_counter['label'] : '';
+							$ambrygen_prefix = isset( $ambrygen_counter['prefix'] ) ? (string) $ambrygen_counter['prefix'] : '';
+							$ambrygen_suffix = isset( $ambrygen_counter['suffix'] ) ? (string) $ambrygen_counter['suffix'] : '';
 
-							if ( '' === $number && '' === $label ) {
+							if ( '' === $ambrygen_number && '' === $ambrygen_label ) {
 								continue;
 							}
 
 							// Full accessible label: "100k+ Publications".
-							$aria_label = trim( $prefix . $number . $suffix . ( $label ? ' ' . $label : '' ) );
+							$ambrygen_aria_label = trim( $ambrygen_prefix . $ambrygen_number . $ambrygen_suffix . ( $ambrygen_label ? ' ' . $ambrygen_label : '' ) );
 							?>
 							<div class="ai-hero__counters--counter-item" role="listitem">
 
-								<?php if ( '' !== $number ) : ?>
+								<?php if ( '' !== $ambrygen_number ) : ?>
 									<div
 										class="ai-hero__counters--counter-number heading-3 mb-0"
-										aria-label="<?php echo esc_attr( $aria_label ); ?>"
+										aria-label="<?php echo esc_attr( $ambrygen_aria_label ); ?>"
 									>
 										<div class="ai-hero__counters--count">
-											<?php echo esc_html( $number ); ?>
-											<?php if ( $suffix ) : ?>
-												<?php echo esc_html( $suffix ); ?>
+											<?php echo esc_html( $ambrygen_number ); ?>
+											<?php if ( $ambrygen_suffix ) : ?>
+												<?php echo esc_html( $ambrygen_suffix ); ?>
 											<?php endif; ?>
 										</div>
 									</div>
 								<?php endif; ?>
 
-								<?php if ( $label ) : ?>
+								<?php if ( $ambrygen_label ) : ?>
 									<div class="ai-hero__counters--counter-title body1">
 										<?php
-										echo wp_kses(
-											$label,
-											array(
-												'strong' => array(),
-												'em'     => array(),
-												'b'      => array(),
-												'i'      => array(),
-												'span'   => array( 'class' => array() ),
-												'br'     => array(),
-											)
-										);
+										echo wp_kses_post( $ambrygen_label );
 										?>
 									</div>
 								<?php endif; ?>

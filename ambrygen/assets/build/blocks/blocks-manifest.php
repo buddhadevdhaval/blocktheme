@@ -206,30 +206,6 @@ return array(
 			'logoImageAlt' => array(
 				'type' => 'string',
 				'default' => ''
-			),
-			'imageTopSrcSet' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'imageTopSizes' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'imageBottomSrcSet' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'imageBottomSizes' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'logoImageSrcSet' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'logoImageSizes' => array(
-				'type' => 'string',
-				'default' => ''
 			)
 		),
 		'variations' => array(
@@ -286,13 +262,7 @@ return array(
 				'imageBottomAlt' => 'Ambry default preview image',
 				'logoImage' => 'https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
 				'logoImageId' => 0,
-				'logoImageAlt' => 'Ambry default preview image',
-				'imageTopSrcSet' => 'https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png 1200w',
-				'imageTopSizes' => '100vw',
-				'imageBottomSrcSet' => 'https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png 1200w',
-				'imageBottomSizes' => '100vw',
-				'logoImageSrcSet' => 'https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png 1200w',
-				'logoImageSizes' => '100vw'
+				'logoImageAlt' => 'Ambry default preview image'
 			)
 		),
 		'editorScript' => 'file:./index.js',

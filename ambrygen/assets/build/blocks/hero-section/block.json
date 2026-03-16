@@ -7,24 +7,7 @@
   "icon": "cover-image",
   "description": "Hero section with slider, logo overlay, rounded background images, and dual call-to-action buttons.",
   "supports": {
-    "html": false,
-    "align": [
-      "wide",
-      "full"
-    ],
-    "spacing": {
-      "margin": true,
-      "padding": true,
-      "blockGap": true
-    },
-    "color": {
-      "background": true,
-      "text": true
-    },
-    "typography": {
-      "fontSize": true,
-      "lineHeight": true
-    }
+    "html": false
   },
   "keywords": [
     "hero",
@@ -35,6 +18,125 @@
   "attributes": {
     "slides": {
       "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "backgroundImage": {
+            "type": "string",
+            "default": ""
+          },
+          "backgroundImageId": {
+            "type": "integer",
+            "default": 0
+          },
+          "backgroundImageAlt": {
+            "type": "string",
+            "default": ""
+          },
+          "overlayImage1": {
+            "type": "string",
+            "default": ""
+          },
+          "overlayImage1Id": {
+            "type": "integer",
+            "default": 0
+          },
+          "overlayImage1Alt": {
+            "type": "string",
+            "default": ""
+          },
+          "overlayImage2": {
+            "type": "string",
+            "default": ""
+          },
+          "overlayImage2Id": {
+            "type": "integer",
+            "default": 0
+          },
+          "overlayImage2Alt": {
+            "type": "string",
+            "default": ""
+          },
+          "eyebrow": {
+            "type": "string",
+            "default": ""
+          },
+          "headingTag": {
+            "type": "string",
+            "enum": [
+              "h1",
+              "h2",
+              "h3",
+              "h4",
+              "h5",
+              "h6"
+            ],
+            "default": "h2"
+          },
+          "heading": {
+            "type": "string",
+            "default": ""
+          },
+          "content": {
+            "type": "string",
+            "default": ""
+          },
+          "tagline": {
+            "type": "string",
+            "default": ""
+          },
+          "primarybutton": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "default": ""
+              },
+              "text": {
+                "type": "string",
+                "default": ""
+              },
+              "target": {
+                "type": "string",
+                "default": ""
+              },
+              "rel": {
+                "type": "string",
+                "default": ""
+              },
+              "variant": {
+                "type": "string",
+                "default": ""
+              }
+            }
+          },
+          "secondarybutton": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "default": ""
+              },
+              "text": {
+                "type": "string",
+                "default": ""
+              },
+              "target": {
+                "type": "string",
+                "default": ""
+              },
+              "rel": {
+                "type": "string",
+                "default": ""
+              },
+              "variant": {
+                "type": "string",
+                "default": ""
+              }
+            }
+          }
+        }
+      },
       "default": [
         {
           "backgroundImage": "",
@@ -55,24 +157,18 @@
           "buttonSecondaryText": "Who We Are",
           "buttonSecondaryUrl": "#",
           "primarybutton": {
-            "type": "object",
-            "default": {
-              "url": "",
-              "text": "string",
-              "target": "",
-              "rel": "",
-              "variant": ""
-            }
+            "url": "",
+            "text": "",
+            "target": "",
+            "rel": "",
+            "variant": ""
           },
           "secondarybutton": {
-            "type": "object",
-            "default": {
-              "url": "",
-              "text": "string",
-              "target": "",
-              "rel": "",
-              "variant": ""
-            }
+            "url": "",
+            "text": "",
+            "target": "",
+            "rel": "",
+            "variant": ""
           }
         }
       ]
@@ -87,19 +183,11 @@
     },
     "autoplay": {
       "type": "boolean",
-      "default": false
+      "default": true
     },
     "autoplayDelay": {
       "type": "number",
       "default": 5000
-    },
-    "eyebrow": {
-      "type": "string",
-      "default": ""
-    },
-    "headingTag": {
-      "type": "string",
-      "default": ""
     }
   },
   "editorScript": "file:./index.js",
@@ -131,33 +219,25 @@
           "buttonSecondaryText": "Who We Are",
           "buttonSecondaryUrl": "#",
           "primarybutton": {
-            "type": "object",
-            "default": {
-              "url": "",
-              "text": "string",
-              "target": "",
-              "rel": "",
-              "variant": ""
-            }
+            "url": "",
+            "text": "",
+            "target": "",
+            "rel": "",
+            "variant": ""
           },
           "secondarybutton": {
-            "type": "object",
-            "default": {
-              "url": "",
-              "text": "string",
-              "target": "",
-              "rel": "",
-              "variant": ""
-            }
+            "url": "",
+            "text": "",
+            "target": "",
+            "rel": "",
+            "variant": ""
           }
         }
       ],
       "showSliderNav": true,
       "showSliderDots": true,
-      "autoplay": false,
-      "autoplayDelay": 5000,
-      "eyebrow": "Ambry Genetics",
-      "headingTag": "h2"
+      "autoplay": true,
+      "autoplayDelay": 5000
     }
   }
 }

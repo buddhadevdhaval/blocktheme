@@ -9,6 +9,7 @@ section:has(.ambry-testimonials) {
 }
 
 .ambry-testimonials {
+
 	&__graphic-images {
 		opacity: 0.6;
 
@@ -84,6 +85,7 @@ section:has(.ambry-testimonials) {
 	}
 
 	&__layout {
+
 		&__author-details {
 			display: flex;
 			flex-wrap: wrap;
@@ -120,6 +122,7 @@ section:has(.ambry-testimonials) {
 	}
 
 	&__grid {
+
 		@include bp.min(md) {
 			display: grid;
 			gap: 24px;
@@ -132,6 +135,7 @@ section:has(.ambry-testimonials) {
 		}
 
 		&__item {
+
 			@include bp.max(md) {
 				background: var(--theme_white);
 				border-radius: 24px;
@@ -140,6 +144,7 @@ section:has(.ambry-testimonials) {
 			}
 
 			&:nth-child(1) {
+
 				@include bp.min(md) {
 					display: grid;
 					gap: 24px;
@@ -167,6 +172,7 @@ section:has(.ambry-testimonials) {
 				}
 
 				.ambry-testimonials__grid__item__content {
+
 					@include bp.min(md) {
 						padding: 30px;
 					}
@@ -185,6 +191,7 @@ section:has(.ambry-testimonials) {
 				}
 
 				.ambry-testimonials__grid__item__quote {
+
 					@include bp.min(md) {
 						font-size: clamp(19px, calc(1.1875rem + ((1vw - 7.68px) * 0.8591)), 24px);
 						letter-spacing: 0.55px;
@@ -232,6 +239,7 @@ section:has(.ambry-testimonials) {
 		}
 
 		.testimonial_slider {
+
 			@include bp.min(md) {
 				padding: 50px;
 			}

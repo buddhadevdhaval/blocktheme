@@ -26,6 +26,13 @@
 			flex: clamp(386px, calc(24.125rem + ((1vw - 9.92px) * 27.933)), 486px) 0 0;
 			margin: 0;
 
+			&:only-child {
+				flex: 1 0 0;
+				text-align: center;
+				max-width: 1180px;
+				margin: 0 auto;
+			}
+
 			@include bp.max(lg) {
 				flex: 100% 0 0;
 			}

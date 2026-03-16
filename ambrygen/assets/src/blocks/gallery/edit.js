@@ -6,13 +6,15 @@ import {
 	InnerBlocks,
 	MediaUpload,
 	MediaUploadCheck,
+	BlockContextProvider,
 } from '@wordpress/block-editor';
-import { PanelBody, Button } from '@wordpress/components';
-import { useEffect } from '@wordpress/element';
+import { PanelBody, Button, SelectControl } from '@wordpress/components';
+import { useEffect, useMemo } from '@wordpress/element';
+import { useSelect } from '@wordpress/data';
 import { getThemeAssetUrl } from '../../utils/assets';
 import { TagSelector } from '../_shared/components';
 
-const ALLOWED_BLOCKS = [ 'ambrygen/gallery-item' ];
+const ALLOWED_BLOCKS = ['ambrygen/gallery-item'];
 
 const DEFAULT_TEMPLATE = [
 	[
@@ -33,32 +35,40 @@ const DEFAULT_TEMPLATE = [
 	],
 ];
 
-export default function Edit( { attributes, setAttributes, clientId } ) {
+export default function Edit({ attributes, setAttributes, clientId }) {
 	const { blockId } = attributes;
 
-	useEffect( () => {
-		const expectedId = `sticky-tabs-${ clientId.slice( 0, 8 ) }`;
+	useEffect(() => {
+		const expectedId = `sticky-tabs-${clientId.slice(0, 8)}`;
 
-		if ( blockId !== expectedId ) {
-			setAttributes( {
+		if (blockId !== expectedId) {
+			setAttributes({
 				blockId: expectedId,
-			} );
+			});
 		}
-	}, [ clientId ] );
+	}, [clientId]);
 
 	const {
-		variation = 'two-column',
+		variation = 'default',
 		heading,
 		description,
 		headingTag = 'h2',
 		topImageID = 0,
 		topImageURL,
+		gridColumns = '2',
 	} = attributes;
+
+	const innerBlocks = useSelect(
+		( select ) => select( 'core/block-editor' ).getBlocks( clientId ),
+		[ clientId ]
+	);
+
+	const effectiveGridColumns = variation === 'default' && innerBlocks.length === 3 ? '3' : gridColumns;
 
 	const VARIANTS = [
 		{
 			label: 'Default',
-			value: 'two-column',
+			value: 'default',
 			image: getThemeAssetUrl(
 				'/assets/src/images/image-gallery/default.png'
 			),
@@ -84,113 +94,112 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		variation === 'variation-features' ||
 		variation === 'image-content-grid'
 	) {
-		amb_class = 'variation-style-two variation-team';
+		amb_class = 'variation-team';
 	}
 
-	const blockProps = useBlockProps( {
-		className: `image-grid-block  block-${ variation } ${ amb_class }`,
-	} );
+	const blockProps = useBlockProps({
+		className: `image-grid-block  block-${variation} ${amb_class} ${`grid-column${effectiveGridColumns}`}`,
+	});
 
 	const HeadingTag = headingTag || 'h2';
-	useEffect( () => {
-		if ( ! attributes.variation ) {
-			setAttributes( { variation: 'two-column' } );
+	useEffect(() => {
+		if (!attributes.variation) {
+			setAttributes({ variation: 'default' });
 		}
-	}, [] );
+	}, []);
 
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Gallery Settings', 'ambrygen-web' ) }>
+				<PanelBody title={__('Gallery Settings', 'ambrygen-web')}>
 					<div className="layout-variant-selector">
-						{ VARIANTS.map( ( variant ) => (
+						{VARIANTS.map((variant) => (
 							<button
-								key={ variant.value }
+								key={variant.value}
 								type="button"
-								className={ `variant-button ${
-									variation === variant.value
+								className={`variant-button ${variation === variant.value
 										? 'is-selected'
 										: ''
-								}` }
-								onClick={ () =>
-									setAttributes( {
+									}`}
+								onClick={() =>
+									setAttributes({
 										variation: variant.value,
-									} )
+									})
 								}
 							>
 								<img
-									src={ variant.image }
-									alt={ variant.label }
+									src={variant.image}
+									alt={variant.label}
 								/>
-								<span>{ variant.label }</span>
+								<span>{variant.label}</span>
 							</button>
-						) ) }
+						))}
 					</div>
 
 					<TagSelector
-						label={ __( 'Heading Tag', 'ambrygen-web' ) }
-						value={ headingTag || 'h2' }
-						onChange={ ( value ) =>
-							setAttributes( { headingTag: value } )
+						label={__('Heading Tag', 'ambrygen-web')}
+						value={headingTag || 'h2'}
+						onChange={(value) =>
+							setAttributes({ headingTag: value })
 						}
 					/>
 				</PanelBody>
 
-				{ variation === 'image-content-grid' && (
-					<PanelBody title={ __( 'Top Image', 'ambrygen-web' ) }>
+				{variation === 'image-content-grid' && (
+					<PanelBody title={__('Top Image', 'ambrygen-web')}>
 						<MediaUploadCheck>
-							{ topImageID && (
+							{topImageID && (
 								<div className="gallery-intro__image">
-									<img src={ topImageURL } alt="" />
+									<img src={topImageURL} alt="" />
 								</div>
-							) }
+							)}
 							<MediaUpload
-								onSelect={ ( media ) =>
-									setAttributes( {
+								onSelect={(media) =>
+									setAttributes({
 										topImageID: media.id,
 										topImageURL: media.url,
-									} )
+									})
 								}
-								allowedTypes={ [ 'image' ] }
-								value={ topImageID }
-								render={ ( { open } ) => (
-									<Button onClick={ open } variant="primary">
-										{ topImageID
+								allowedTypes={['image']}
+								value={topImageID}
+								render={({ open }) => (
+									<Button onClick={open} variant="primary">
+										{topImageID
 											? 'Replace Image'
-											: 'Select Image' }
+											: 'Select Image'}
 									</Button>
-								) }
+								)}
 							/>
 						</MediaUploadCheck>
 
-						{ topImageURL && (
+						{topImageURL && (
 							<Button
 								variant="link"
 								isDestructive
-								onClick={ () =>
-									setAttributes( {
+								onClick={() =>
+									setAttributes({
 										topImageID: null,
 										topImageURL: '',
-									} )
+									})
 								}
 							>
 								Remove Image
 							</Button>
-						) }
+						)}
 					</PanelBody>
-				) }
+				)}
 			</InspectorControls>
 
-			<div { ...blockProps }>
-				<div className="get-started-ambry-block">
-					{ /* New Variant */ }
-					{ variation === 'image-content-grid' && (
+			<div {...blockProps}>
+				<div className="get-started-block">
+					{ /* New Variant */}
+					{variation === 'image-content-grid' && (
 						<div className="our-approach__header logo-title-section">
-							{ topImageID && (
+							{topImageID && (
 								<>
 									<div className="logo-title-section__icon">
 										<img
-											src={ topImageURL }
+											src={topImageURL}
 											alt=""
 											className="logo-title-section__logo"
 										/>
@@ -200,15 +209,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 											aria-hidden="true"
 										></div>
 									</div>
+									<div className="is-style-gl-s50" aria-hidden="true"></div>
 								</>
-							) }
+							)}
 
 							<div className="logo-title-section__content">
 								<HeadingTag className="heading-2 block-title mb-0">
 									<RichText
-										value={ heading }
-										onChange={ ( value ) =>
-											setAttributes( { heading: value } )
+										value={heading}
+										onChange={(value) =>
+											setAttributes({ heading: value })
 										}
 										placeholder="Add title…"
 									/>
@@ -219,65 +229,66 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								></div>
 								<div className="body1-reg logo-title-section__description">
 									<RichText
-										value={ description }
-										onChange={ ( value ) =>
-											setAttributes( {
+										value={description}
+										onChange={(value) =>
+											setAttributes({
 												description: value,
-											} )
+											})
 										}
 										placeholder="Add description…"
 									/>
 								</div>
 							</div>
 						</div>
-					) }
+					)}
 
-					{ /* Old Variant */ }
-					{ variation === 'two-column' && (
+					{ /* Old Variant */}
+					{variation === 'default' && (
 						<HeadingTag className="block-title heading-3 mb-0">
 							<RichText
-								value={ heading }
-								onChange={ ( value ) =>
-									setAttributes( { heading: value } )
+								value={heading}
+								onChange={(value) =>
+									setAttributes({ heading: value })
 								}
 								placeholder="Add title…"
 							/>
 						</HeadingTag>
-					) }
+					)}
 
-					{ variation === 'variation-features' && (
+					{variation === 'variation-features' && (
 						<>
 							<div className="our-approach__header block__rowflex">
 								<HeadingTag className="block-title heading-3 mb-0 block__rowflex--heading-title">
 									<RichText
-										value={ heading }
-										onChange={ ( value ) =>
-											setAttributes( { heading: value } )
+										value={heading}
+										onChange={(value) =>
+											setAttributes({ heading: value })
 										}
 										placeholder="Add title…"
 									/>
 								</HeadingTag>
 								<div className="block__rowflex--block-content subtitle1-reg">
 									<RichText
-										value={ description }
-										onChange={ ( value ) =>
-											setAttributes( {
+										value={description}
+										onChange={(value) =>
+											setAttributes({
 												description: value,
-											} )
+											})
 										}
 										placeholder="Add description…"
 									/>
 								</div>
 							</div>
 						</>
-					) }
+					)}
 
 					<div className="card-grid-block">
-						<InnerBlocks
-							allowedBlocks={ ALLOWED_BLOCKS }
-							template={ DEFAULT_TEMPLATE }
-							templateLock={ false }
-						/>
+						<BlockContextProvider value={{ 'ambrygen/galleryGridColumns': effectiveGridColumns }}>
+							<InnerBlocks
+								allowedBlocks={ALLOWED_BLOCKS}
+								template={DEFAULT_TEMPLATE}
+								templateLock={false}							maxBlocks={3}							/>
+						</BlockContextProvider>
 					</div>
 				</div>
 			</div>

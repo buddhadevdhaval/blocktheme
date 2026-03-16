@@ -38,6 +38,10 @@
     "type": {
       "type": "string",
       "default": "small"
+    },
+    "files": {
+      "type": "array",
+      "default": []
     }
   },
   "textdomain": "ambrygen-web",
@@ -59,7 +63,15 @@
         "rel": "Sample rel",
         "variant": "Sample variant"
       },
-      "type": "small"
+      "type": "small",
+      "files": [
+        {
+          "fileId": 1,
+          "fileUrl": "/wp-content/uploads/2026/03/sample.pdf",
+          "fileName": "Sample PDF",
+          "sizeType": "small"
+        }
+      ]
     }
   }
 }

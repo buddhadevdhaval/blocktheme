@@ -49,6 +49,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { headingTag: value } )
 						}
+						type='heading'
 					/>
 				</PanelBody>
 			</InspectorControls>
@@ -91,7 +92,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							[ 'ambrygen/three-column-image-grid-item' ],
 							[ 'ambrygen/three-column-image-grid-item' ],
 						] }
-						templateLock={ false }
+						templateLock="all"
 					/>
 				</div>
 			</div>

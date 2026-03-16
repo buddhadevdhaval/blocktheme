@@ -16,7 +16,7 @@
 	&__text {
 		color: var(--theme_primary_800);
 		display: inline-block;
-		font-size: 16px;
+		font-size: var(--theme_font_size_7);
 		gap: 12px;
 		justify-content: center;
 		margin-bottom: 0;
@@ -43,6 +43,10 @@
 		justify-content: center;
 		flex: 24px 0 0;
 
+		@include bp.min(ultra-large) {
+			flex: 36px 0 0;
+		}
+
 		@include bp.max(lg) {
 			flex: 22px 0 0;
 		}
@@ -51,12 +55,20 @@
 	&__close-icon {
 		display: inline-flex;
 
+		@include bp.min(ultra-large) {
+			width: 100%;
+		}
+
 		figure {
 			margin: 0;
 		}
 
 		img {
 			display: block;
+
+			@include bp.min(ultra-large) {
+				width: 100%;
+			}
 		}
 	}
 }

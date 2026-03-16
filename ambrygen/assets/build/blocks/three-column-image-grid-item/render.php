@@ -18,12 +18,26 @@ $ambrygen_description = $ambrygen_attributes['description'] ?? '';
 $ambrygen_image_id    = absint( $ambrygen_attributes['imageId'] ?? 0 );
 $ambrygen_image_alt   = $ambrygen_attributes['imageAlt'] ?? '';
 $ambrygen_cta         = $ambrygen_attributes['cta'] ?? array();
+$ambrygen_files       = $ambrygen_attributes['files'] ?? array();
 
 $ambrygen_cta_text    = $ambrygen_cta['text'] ?? '';
 $ambrygen_cta_url     = $ambrygen_cta['url'] ?? '';
 $ambrygen_cta_target  = $ambrygen_cta['target'] ?? '';
 $ambrygen_cta_rel     = $ambrygen_cta['rel'] ?? '';
 $ambrygen_cta_variant = $ambrygen_cta['variant'] ?? 'dark';
+
+if ( ! is_array( $ambrygen_files ) ) {
+	$ambrygen_files = array();
+}
+
+$ambrygen_files = array_values(
+	array_filter(
+		$ambrygen_files,
+		static function ( $file ) {
+			return ! empty( $file['fileUrl'] );
+		}
+	)
+);
 /*
 |--------------------------------------------------------------------------
 | Ensure rel attribute is secure if target=_blank
@@ -71,6 +85,34 @@ $ambrygen_wrapper_attrs = get_block_wrapper_attributes( array( 'class' => 'appro
 					<?php if ( ! empty( $ambrygen_description ) ) : ?>
 						<div class="approach-card__description body2-reg">
 							<?php echo wp_kses_post( $ambrygen_description ); ?>
+						</div>
+					<?php endif; ?>
+
+					<?php if ( ! empty( $ambrygen_files ) ) : ?>
+						<div class="approach-card__files has-downloads">
+							<div class="approach-card__files-list">
+								<?php foreach ( $ambrygen_files as $file ) : ?>
+									<?php
+									$file_url       = $file['fileUrl'] ?? '';
+									$file_name      = $file['fileName'] ?? '';
+									$file_size_type = $file['sizeType'] ?? '';
+									$file_label     = $file_name ? $file_name : wp_basename( $file_url );
+									?>
+									<?php if ( $file_url ) : ?>
+										<div class="approach-card__files-item">
+											<a
+												class="approach-card__files-link"
+												href="<?php echo esc_url( $file_url ); ?>"
+												download
+											>
+												<?php if ( $file_size_type ) : ?>
+														<?php echo esc_html( $file_size_type ); ?>
+												<?php endif; ?>
+											</a>
+										</div>
+									<?php endif; ?>
+								<?php endforeach; ?>
+							</div>
 						</div>
 					<?php endif; ?>
 			</div>

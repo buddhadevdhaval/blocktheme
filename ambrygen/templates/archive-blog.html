@@ -1,0 +1,272 @@
+<!-- wp:template-part {"slug":"header"} /-->
+
+<!-- wp:group {"tagName":"main","className":"wp-block-group","htmlId":"main-content"} -->
+<main id="main-content" class="wp-block-group">
+
+    <!-- Hero / Featured Section -->
+    <!-- wp:group {"tagName":"section","className":"container-1136"} -->
+    <section class="wp-block-group container-1136">
+        <!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
+        <div style="height:50px" aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
+        <!-- /wp:spacer -->
+        <!-- wp:group {"className":"wrapper"} -->
+        <div class="wp-block-group wrapper">
+
+            <!-- Header Text -->
+            <!-- wp:group {"className":"blog-header"} -->
+            <div class="wp-block-group blog-header">
+                <!-- wp:paragraph {"className":"blog-header__eyebrow text-md-Semibold"} -->
+                <p class="blog-header__eyebrow text-md-Semibold">blog</p>
+                <!-- /wp:paragraph -->
+
+                <!-- wp:spacer {"height":"12px","className":"is-style-gl-s12"} -->
+                <div style="height:12px" aria-hidden="true" class="wp-block-spacer is-style-gl-s12"></div>
+                <!-- /wp:spacer -->
+
+                <!-- wp:heading {"level":1,"className":"blog-header__title heading-3 mb-0"} -->
+                <h1 class="wp-block-heading blog-header__title heading-3 mb-0">Company Blog</h1>
+                <!-- /wp:heading -->
+
+                <!-- wp:spacer {"height":"24px","className":"is-style-gl-s24"} -->
+                <div style="height:24px" aria-hidden="true" class="wp-block-spacer is-style-gl-s24"></div>
+                <!-- /wp:spacer -->
+
+                <!-- wp:paragraph {"className":"blog-header__description subtitle1-reg"} -->
+                <p class="blog-header__description subtitle1-reg">The latest industry news, interviews, technologies,
+                    and resources.</p>
+                <!-- /wp:paragraph -->
+            </div>
+            <!-- /wp:group -->
+
+            <!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
+            <div style="height:64px" aria-hidden="true" class="wp-block-spacer is-style-gl-s64"></div>
+            <!-- /wp:spacer -->
+
+            <!-- Featured Post (Latest 1) -->
+            <!-- wp:query {"queryId":11,"query":{"perPage":1,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false}} -->
+            <div class="wp-block-query">
+                <!-- wp:post-template -->
+                <!-- wp:group {"tagName":"article","className":"blog-card"} -->
+                <article class="wp-block-group blog-card">
+                    <!-- wp:post-featured-image {"isLink":true,"className":"blog-card__image"} /-->
+
+                    <!-- wp:group {"className":"blog-card__overlay"} -->
+                    <div class="wp-block-group blog-card__overlay" aria-hidden="true"></div>
+                    <!-- /wp:group -->
+
+                    <!-- wp:group {"className":"blog-card__content"} -->
+                    <div class="wp-block-group blog-card__content">
+                        <!-- wp:group {"className":"blog-card__text"} -->
+                        <div class="wp-block-group blog-card__text">
+                            <!-- wp:post-title {"isLink":true,"className":"display-xs-semibold blog-card__title mb-0"} /-->
+                            <!-- wp:spacer {"height":"8px","className":"is-style-gl-s8"} -->
+                            <div style="height:8px" aria-hidden="true" class="wp-block-spacer is-style-gl-s8"></div>
+                            <!-- /wp:spacer -->
+                            <!-- wp:post-excerpt {"moreText":"","className":"blog-card__description text-md-regular"} /-->
+                        </div>
+                        <!-- /wp:group -->
+
+                        <!-- wp:spacer {"height":"24px","className":"is-style-gl-s24"} -->
+                        <div style="height:24px" aria-hidden="true" class="wp-block-spacer is-style-gl-s24"></div>
+                        <!-- /wp:spacer -->
+
+                        <!-- wp:group {"className":"blog-card__meta"} -->
+                        <div class="wp-block-group blog-card__meta">
+                            <!-- wp:group {"className":"blog-card__meta-left"} -->
+                            <div class="wp-block-group blog-card__meta-left">
+                                <!-- wp:group {"className":"blog-card__author"} -->
+                                <div class="wp-block-group blog-card__author">
+                                    <!-- wp:html -->
+                                    <div class="blog-card__meta-label text-small-semibold">Written by</div>
+                                    <!-- /wp:html -->
+                                    <!-- wp:group {"className":"blog-card__author-row"} -->
+                                    <div class="wp-block-group blog-card__author-row">
+                                        <!-- wp:post-author {"showAvatar":true,"avatarSize":32,"showBio":false} /-->
+                                    </div>
+                                    <!-- /wp:group -->
+                                </div>
+                                <!-- /wp:group -->
+
+                                <!-- wp:group {"className":"blog-card__published"} -->
+                                <div class="wp-block-group blog-card__published">
+                                    <!-- wp:html -->
+                                    <div class="blog-card__meta-label text-small-semibold">Published on</div>
+                                    <!-- /wp:html -->
+                                    <!-- wp:post-date {"className":"blog-card__date text-md-Semibold"} /-->
+                                </div>
+                                <!-- /wp:group -->
+                            </div>
+                            <!-- /wp:group -->
+
+                            <!-- wp:group {"className":"blog-card__meta-right"} -->
+                            <div class="wp-block-group blog-card__meta-right">
+                                <!-- wp:html -->
+                                <div class="blog-card__meta-label text-small-semibold">File under</div>
+                                <!-- /wp:html -->
+                                <!-- wp:post-terms {"term":"category","className":"blog-card__tags blog-card__tag"} /-->
+                            </div>
+                            <!-- /wp:group -->
+                        </div>
+                        <!-- /wp:group -->
+                    </div>
+                    <!-- /wp:group -->
+                </article>
+                <!-- /wp:group -->
+                <!-- /wp:post-template -->
+            </div>
+            <!-- /wp:query -->
+        </div>
+        <!-- /wp:group -->
+    </section>
+    <!-- /wp:group -->
+
+    <!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
+    <div style="height:64px" aria-hidden="true" class="wp-block-spacer is-style-gl-s64"></div>
+    <!-- /wp:spacer -->
+
+    <!-- Blog Posts Grid with Filters -->
+    <!-- wp:group {"tagName":"section","className":"container-1136"} -->
+    <section class="wp-block-group container-1136">
+        <!-- wp:group {"className":"wrapper"} -->
+        <div class="wp-block-group wrapper">
+            <!-- wp:group {"className":"company-tabs-block"} -->
+            <div class="wp-block-group company-tabs-block">
+
+                <!-- wp:html -->
+                <div class="tabs-row">
+                    <div class="tabs-row__col-left">
+                        <ul class="tabs blog-category-filter">
+                            <li><button class="tab active label" data-term="0">All categories</button></li>
+                            <li><button class="tab label" data-term="1">Category 1</button></li>
+                            <li><button class="tab label" data-term="2">Category 2</button></li>
+                            <li><button class="tab label" data-term="3">Category 3</button></li>
+                        </ul>
+                    </div>
+                    <div class="tabs-row__col-right">
+                        <div class="tab-dropdown-post">
+                            <select class="category-select text-md-medium" aria-label="Select Category">
+                                <option value="all-resources">most recenet</option>
+                                <option value="diagnosis">DIAGNOSIS</option>
+                                <option value="persona">PERSONA</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- /wp:html -->
+
+                <!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
+                <div style="height:64px" aria-hidden="true" class="wp-block-spacer is-style-gl-s64"></div>
+                <!-- /wp:spacer -->
+
+                <!-- wp:group {"className":"tab-content"} -->
+                <div class="wp-block-group tab-content">
+
+                    <!-- wp:query {"queryId":12,"query":{"perPage":9,"pages":0,"offset":1,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true}} -->
+                    <div class="wp-block-query">
+                        <!-- wp:group {"className":"conferences__grid"} -->
+                        <div class="wp-block-group conferences__grid">
+                            <!-- wp:post-template -->
+                            <!-- wp:group {"className":"conferences__card"} -->
+                            <div class="wp-block-group conferences__card">
+                                <!-- wp:group {"className":"conferences__image-wrap"} -->
+                                <div class="wp-block-group conferences__image-wrap">
+                                    <!-- wp:post-featured-image {"isLink":true,"className":"conferences__image"} /-->
+                                </div>
+                                <!-- /wp:group -->
+                                <!-- wp:group {"className":"conferences__content"} -->
+                                <div class="wp-block-group conferences__content">
+                                    <!-- wp:spacer {"height":"16px","className":"is-style-gl-s16"} -->
+                                    <div style="height:16px" aria-hidden="true" class="wp-block-spacer is-style-gl-s16">
+                                    </div>
+                                    <!-- /wp:spacer -->
+
+                                    <!-- wp:group {"className":"conferences__meta"} -->
+                                    <div class="wp-block-group conferences__meta">
+                                        <!-- wp:post-terms {"term":"category","className":"conferences__location text-small-semibold"} /-->
+                                        <!-- wp:post-date {"className":"conferences__date text-small-semibold"} /-->
+                                    </div>
+                                    <!-- /wp:group -->
+
+                                    <!-- wp:spacer {"height":"8px","className":"is-style-gl-s8"} -->
+                                    <div style="height:8px" aria-hidden="true" class="wp-block-spacer is-style-gl-s8">
+                                    </div>
+                                    <!-- /wp:spacer -->
+
+                                    <!-- wp:group {"className":"conferences__title-row"} -->
+                                    <div class="wp-block-group conferences__title-row">
+                                        <!-- wp:post-title {"isLink":true,"className":"text-lg-semibold conferences__card-title mb-0"} /-->
+                                        <!-- wp:html -->
+                                        <div class="conferences__link" aria-hidden="true"></div>
+                                        <!-- /wp:html -->
+                                    </div>
+                                    <!-- /wp:group -->
+
+                                    <!-- wp:spacer {"height":"4px","className":"is-style-gl-s4"} -->
+                                    <div style="height:4px" aria-hidden="true" class="wp-block-spacer is-style-gl-s4">
+                                    </div>
+                                    <!-- /wp:spacer -->
+
+                                    <!-- wp:post-excerpt {"moreText":"","className":"body-s conferences__description"} /-->
+
+                                    <!-- wp:spacer {"height":"16px","className":"is-style-gl-s16"} -->
+                                    <div style="height:16px" aria-hidden="true" class="wp-block-spacer is-style-gl-s16">
+                                    </div>
+                                    <!-- /wp:spacer -->
+
+                                    <!-- wp:group {"className":"conferences__author-block"} -->
+                                    <div class="wp-block-group conferences__author-block">
+                                        <!-- wp:group {"className":"conferences__author-block--author-details"} -->
+                                        <div class="wp-block-group conferences__author-block--author-details">
+                                            <!-- wp:group {"className":"conferences__author-block__author-avatar"} -->
+                                            <div class="wp-block-group conferences__author-block__author-avatar">
+                                                <!-- wp:post-author-name {"isLink":false} /-->
+                                            </div>
+                                            <!-- /wp:group -->
+                                        </div>
+                                        <!-- /wp:group -->
+                                    </div>
+                                    <!-- /wp:group -->
+                                </div>
+                                <!-- /wp:group -->
+                            </div>
+                            <!-- /wp:group -->
+                            <!-- /wp:post-template -->
+
+                            <!-- wp:query-no-results -->
+                            <!-- wp:paragraph {"placeholder":"Add text or blocks that will display when a query returns no results."} -->
+                            <p>No posts found.</p>
+                            <!-- /wp:paragraph -->
+                            <!-- /wp:query-no-results -->
+                        </div>
+                        <!-- /wp:group -->
+
+                        <!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
+                        <div style="height:64px" aria-hidden="true" class="wp-block-spacer is-style-gl-s64"></div>
+                        <!-- /wp:spacer -->
+
+                        <!-- wp:query-pagination {"paginationArrow":"arrow","layout":{"type":"flex","justifyContent":"space-between"},"className":"pagination"} -->
+                        <!-- wp:query-pagination-previous {"label":"Previous","className":"pagination__nav pagination__nav--prev"} /-->
+                        <!-- wp:query-pagination-numbers {"className":"pagination__list"} /-->
+                        <!-- wp:query-pagination-next {"label":"Next","className":"pagination__nav pagination__nav--next"} /-->
+                        <!-- /wp:query-pagination -->
+
+                    </div>
+                    <!-- /wp:query -->
+                </div>
+                <!-- /wp:group -->
+
+            </div>
+            <!-- /wp:group -->
+        </div>
+        <!-- /wp:group -->
+    </section>
+    <!-- /wp:group -->
+
+    <!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
+    <div style="height:64px" aria-hidden="true" class="wp-block-spacer is-style-gl-s64"></div>
+    <!-- /wp:spacer -->
+
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer"} /-->

@@ -1,0 +1,69 @@
+<!-- wp:group {"tagName":"section","className":"container-1136"} -->
+<section class="wp-block-group container-1136">
+	<!-- wp:group {"className":"wrapper"} -->
+	<div class="wp-block-group wrapper">
+		<!-- wp:group {"className":"conference-section"} -->
+		<div class="wp-block-group conference-section">
+			<!-- wp:group {"className":"conference-section__header"} -->
+			<div class="wp-block-group conference-section__header">
+				<!-- wp:heading {"level":2,"className":"heading-4"} -->
+				<h2 class="wp-block-heading heading-4">Upcoming Conferences</h2>
+				<!-- /wp:heading -->
+
+				<!-- wp:html -->
+				<div class="conference-section__filters">
+					<div class="conference-section__tabs">
+						<button type="button" class="conference-tab is-active">All Events</button>
+						<button type="button" class="conference-tab">Upcoming</button>
+						<button type="button" class="conference-tab">Past</button>
+					</div>
+					<div class="conference-section__search">
+						<label class="sr-only" for="conference-search">Search</label>
+						<input id="conference-search" class="conference-search__input" type="search" placeholder="Search" />
+					</div>
+				</div>
+				<!-- /wp:html -->
+			</div>
+			<!-- /wp:group -->
+
+			<div class="ambrygen-ajax-pagination" data-ambrygen-scope="upcoming" data-ambrygen-per-page="8" data-ambrygen-order="ASC">
+				<div class="ambrygen-ajax-pagination__content">
+					<!-- wp:query {"queryId":2,"query":{"perPage":8,"postType":"conferences","order":"asc","orderBy":"date","inherit":false}} -->
+					<div class="wp-block-query">
+						<!-- wp:group {"className":"conference-grid"} -->
+						<div class="wp-block-group conference-grid" role="list">
+							<!-- wp:post-template -->
+							<!-- wp:group {"className":"conference-card"} -->
+							<div class="wp-block-group conference-card" role="listitem">
+								<!-- wp:ambrygen/featured-image-fallback {"isLink":true,"className":"conference-card__image"} /-->
+								<!-- wp:post-title {"isLink":true,"className":"conference-card__title text-md-semibold"} /-->
+								<!-- wp:ambrygen/event-post-meta-list /-->
+							</div>
+							<!-- /wp:group -->
+							<!-- /wp:post-template -->
+						</div>
+						<!-- /wp:group -->
+
+						<!-- wp:spacer {"height":"32px","className":"is-style-gl-s32"} -->
+						<div style="height:32px" aria-hidden="true" class="wp-block-spacer is-style-gl-s32"></div>
+						<!-- /wp:spacer -->
+
+						<!-- wp:query-pagination {"paginationArrow":"arrow","layout":{"type":"flex","justifyContent":"space-between"},"className":"pagination"} -->
+						<!-- wp:query-pagination-previous {"label":"Previous","className":"pagination__nav pagination__nav--prev"} /-->
+						<!-- wp:query-pagination-numbers {"className":"pagination__list"} /-->
+						<!-- wp:query-pagination-next {"label":"Next","className":"pagination__nav pagination__nav--next"} /-->
+						<!-- /wp:query-pagination -->
+					</div>
+					<!-- /wp:query -->
+				</div>
+			</div>
+		</div>
+		<!-- /wp:group -->
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
+	<div style="height:64px" aria-hidden="true" class="wp-block-spacer is-style-gl-s64"></div>
+	<!-- /wp:spacer -->
+</section>
+<!-- /wp:group -->

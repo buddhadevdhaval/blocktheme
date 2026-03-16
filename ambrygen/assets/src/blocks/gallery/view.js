@@ -1,6 +1,6 @@
 function equalizeCardInfoHeight() {
 	const cards = document.querySelectorAll(
-		'.get-started-ambry-block .card-grid-block .card-col .card-info'
+		'.get-started-block .card-grid-block .card-col .card-info'
 	);
 
 	if ( ! cards.length ) {

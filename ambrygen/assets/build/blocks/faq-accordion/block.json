@@ -14,9 +14,21 @@
       "type": "string",
       "default": ""
     },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
     "headingTag": {
       "type": "string",
       "default": "h5"
+    },
+    "variant": {
+      "type": "string",
+      "default": "default",
+      "enum": [
+        "default",
+        "without-image"
+      ]
     },
     "imageUrl": {
       "type": "string"
@@ -82,7 +94,9 @@
   "example": {
     "attributes": {
       "title": "Sample Title",
+      "description": "Sample description below the title.",
       "headingTag": "h5",
+      "variant": "default",
       "imageId": 0,
       "faqs": [
         {

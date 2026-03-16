@@ -66,19 +66,11 @@
       "type": "string",
       "default": ""
     },
-    "playIcon": {
-      "type": "object",
-      "default": null
-    },
     "joblocationicon": {
       "type": "object",
       "default": null
     },
     "jobtypeicon": {
-      "type": "object",
-      "default": null
-    },
-    "pauseIcon": {
       "type": "object",
       "default": null
     }
@@ -123,22 +115,12 @@
         "variant": "Sample variant"
       },
       "viewAllText ": "Sample viewAllText ",
-      "playIcon": {
-        "id": 1,
-        "url": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
-        "alt": "Icon"
-      },
       "joblocationicon": {
         "id": 1,
         "url": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
         "alt": "Icon"
       },
       "jobtypeicon": {
-        "id": 1,
-        "url": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
-        "alt": "Icon"
-      },
-      "pauseIcon": {
         "id": 1,
         "url": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
         "alt": "Icon"

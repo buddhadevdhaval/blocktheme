@@ -27,6 +27,13 @@
 
 		&__overlay {
 
+			&.open {
+
+				.nav__container {
+					display: flex;
+				}
+			}
+
 			.nav__menu {
 
 				.nav__list {
@@ -393,7 +400,7 @@
 		&__container {
 			position: relative;
 			z-index: 2;
-			display: flex;
+			display: none;
 			flex-direction: column;
 			height: 100%;
 			overflow-x: hidden;
@@ -402,6 +409,10 @@
 				overflow: hidden;
 			}
 		}
+
+
+
+
 
 		/* ===============================
            Row inside overlay

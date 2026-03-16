@@ -62,3 +62,17 @@ p {
 		}
 	}
 }
+
+
+
+.media-frame-tab-panel {
+	.attachments-wrapper {
+		ul.attachments{
+			li.attachment {
+				&::before {
+					display: none;
+				}
+			}
+		}
+	}
+}

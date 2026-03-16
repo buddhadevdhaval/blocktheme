@@ -199,6 +199,10 @@
 		&__answer {
 			color: var(--theme_primary_white);
 		}
+
+		&__icon::after {
+			filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(145deg) brightness(103%) contrast(102%);
+		}
 	}
 
 }

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/image-gallery-slider-item",
+  "title": "Image Gallery Slider Item",
+  "category": "ambrygen",
+  "icon": "format-image",
+  "parent": [
+    "ambrygen/image-gallery-slider"
+  ],
+  "usesContext": [
+    "ambrygen/imageGalleryNav",
+    "ambrygen/imageGalleryPagination",
+    "ambrygen/imageGalleryAutoplay"
+  ],
+  "attributes": {
+    "postId": {
+      "type": "number"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "postId": 1
+    }
+  }
+}

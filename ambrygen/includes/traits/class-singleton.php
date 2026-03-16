@@ -1,6 +1,6 @@
 <?php
 /**
- * Re‑usable singleton helper.
+ * Reusable singleton helper.
  *
  * @package Ambrygen
  */
@@ -13,7 +13,6 @@ defined( 'ABSPATH' ) || exit;
  * Simple singleton trait to be used by core classes.
  */
 trait Singleton {
-
 
 	/**
 	 * Holds the single instance of the class.

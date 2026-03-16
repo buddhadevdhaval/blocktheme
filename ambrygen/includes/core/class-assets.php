@@ -172,6 +172,17 @@ final class Assets {
 	public function frontend(): void {
 		wp_enqueue_style( 'ambrygen-theme-styles' );
 		wp_enqueue_script( 'ambrygen-scripts' );
+
+		
+			wp_localize_script(
+				'ambrygen-scripts',
+				'ambrygenAjax',
+				array(
+					'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+					'nonce'   => wp_create_nonce( 'ambrygen-ajax' ),
+				)
+			);
+	
 	}
 
 		/**

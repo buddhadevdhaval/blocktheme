@@ -47,6 +47,18 @@ final class Helper {
 		return apply_filters( 'ambrygen_allowed_heading_html', $allowed );
 	}
 
+	/**
+	 * Returns a sanitized <img> element for a given attachment.
+	 *
+	 * Output is safe to echo without additional escaping:
+	 * - SVG path: attributes escaped with esc_url() / esc_attr(), URL via wp_get_attachment_url().
+	 * - Raster path: delegates to wp_get_attachment_image(), which is escaped by WordPress core.
+	 *
+	 * @param int    $image_id Attachment post ID.
+	 * @param string $size     Image size slug (default 'large').
+	 * @param array  $attrs    Additional HTML attributes merged over defaults.
+	 * @return string Safe, pre-escaped <img> HTML, or empty string when $image_id is falsy.
+	 */
 	public static function image(
 		int $image_id,
 		string $size = 'large',

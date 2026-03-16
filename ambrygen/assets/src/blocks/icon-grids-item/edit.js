@@ -206,10 +206,10 @@ export default function Edit( {
 	};
 
 	const VARIANT_CLASS_MAP = {
-		'icon-grid': 'info-list__row info-list-block',
+		'icon-grids': 'info-list__row info-list-block',
 		'our-testing-menu': 'item-card',
 		'variation-3': 'info-list__col',
-		'variation-4': 'info-list__col wp-block-ambrygen-icon-grids-item',
+		'variation-4': 'icon-grid__item',
 	};
 
 	const blockProps = useBlockProps( {
@@ -333,7 +333,7 @@ export default function Edit( {
 
 			<div { ...blockProps }>
 				{ variation === 'variation-4' && (
-					<div className="icon-grid__item">
+					<>
 						{ icon?.url && (
 							<div className="icon-grid__icon">
 								<img src={ icon.url } alt={ icon.alt || '' } />
@@ -381,7 +381,7 @@ export default function Edit( {
 								{ links[ 0 ].label }
 							</a>
 						) }
-					</div>
+					</>
 				) }
 
 				{ /* OUR TESTING MENU MODE */ }

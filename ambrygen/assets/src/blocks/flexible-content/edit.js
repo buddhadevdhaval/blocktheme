@@ -20,151 +20,196 @@ import {
 	DEFAULT_IMAGES,
 } from '../_shared/components';
 
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit({ attributes, setAttributes }) {
 	const {
 		heading,
 		headingTag,
 		content,
 		imageUrl,
+		topIconUrl,
 		imagePosition,
 		layoutStyle,
 		contentAlignment,
 		buttons,
+		borderRequired,
 	} = attributes;
+	const currentImagePosition = imagePosition || 'right';
+
+	const isImageRight =
+		currentImagePosition === 'right' ||
+		currentImagePosition === 'iot-block__rtl';
+	const imagePositionClass = isImageRight ? 'iot-block__rtl' : '';
+
 	const defaultPlaceholder = DEFAULT_IMAGES().placeholder;
 	const resolvedImageUrl = imageUrl || defaultPlaceholder?.url || '';
 
-	const blockProps = useBlockProps( {
-		className: `iot-block  ${ layoutStyle } ${ imagePosition }`,
+	const borderClass = borderRequired ? 'iot-block--border' : '';
+
+	const blockProps = useBlockProps({
+		className: `iot-block ${layoutStyle} ${imagePositionClass} ${borderClass}`,
 		style: {
 			'--content-alignment': contentAlignment,
 		},
-	} );
+	});
 
-	const updateButton = ( index, field, value ) => {
-		const newButtons = Array.isArray( buttons ) ? [ ...buttons ] : [];
-		newButtons[ index ] = {
-			...newButtons[ index ],
-			[ field ]: value,
+	const updateButton = (index, field, value) => {
+		const newButtons = Array.isArray(buttons) ? [...buttons] : [];
+		newButtons[index] = {
+			...newButtons[index],
+			[field]: value,
 		};
-		setAttributes( { buttons: newButtons } );
+		setAttributes({ buttons: newButtons });
 	};
-	const primaryButton = buttons?.[ 0 ] || {};
-	const secondaryButton = buttons?.[ 1 ] || {};
+	const primaryButton = buttons?.[0] || {};
+	const secondaryButton = buttons?.[1] || {};
 
 	return (
 		<Fragment>
 			<InspectorControls>
-				<PanelBody title={ __( 'Content Settings', 'ambrygen-web' ) }>
+				<PanelBody title={__('Content Settings', 'ambrygen-web')}>
 					<TagSelector
-						label={ __( 'Heading Tag', 'ambrygen-web' ) }
-						value={ headingTag }
-						onChange={ ( value ) =>
-							setAttributes( { headingTag: value } )
+						label={__('Heading Tag', 'ambrygen-web')}
+						value={headingTag}
+						onChange={(value) =>
+							setAttributes({ headingTag: value })
 						}
 					/>
 					<ToggleControl
-						label={ __( 'Show Image on Right', 'ambrygen-web' ) }
-						checked={ imagePosition === 'left' }
-						onChange={ ( value ) =>
-							setAttributes( {
-								imagePosition: value
-									? 'left'
-									: 'iot-block__rtl',
-							} )
+						label={__('Show Image on right', 'ambrygen-web')}
+						checked={isImageRight}
+						onChange={(value) =>
+							setAttributes({
+								imagePosition: value ? 'right' : 'left',
+							})
+						}
+					/>
+
+					<ToggleControl
+						label={__('Image on Border', 'ambrygen-web')}
+						checked={borderRequired || false}
+						onChange={(value) =>
+							setAttributes({ borderRequired: value })
 						}
 					/>
 
 					<ImageUploader
-						url={ imageUrl }
-						onSelect={ ( media ) =>
-							setAttributes( {
+						url={imageUrl}
+						onSelect={(media) =>
+							setAttributes({
 								imageUrl: media.url,
 								imageId: media.id,
-							} )
+							})
 						}
-						onRemove={ () =>
-							setAttributes( {
+						onRemove={() =>
+							setAttributes({
 								imageUrl: '',
 								imageId: 0,
-							} )
+							})
 						}
-						label={ __( 'Block Image', 'ambrygen-web' ) }
+						label={__('Block Image', 'ambrygen-web')}
 					/>
+					<ImageUploader
+						url={topIconUrl}
+						onSelect={(media) =>
+							setAttributes({
+								topIconUrl: media.url,
+								topIconId: media.id,
+								topIconAlt: media.alt || '',
+							})
+						}
+						onRemove={() =>
+							setAttributes({
+								topIconUrl: '',
+								topIconId: 0,
+								topIconAlt: '',
+							})
+						}
+						label={__('Content top icon', 'ambrygen-web')}
+					/>
+					<div className="is-style-gl-s16" aria-hidden="true"></div>
 					<PanelRow>
-						<div style={ { width: '100%' } }>
+						<div style={{ width: '100%' }}>
 							<strong>
-								{ __( 'Primary Button', 'ambrygen-web' ) }
+								{__('Primary Button', 'ambrygen-web')}
 							</strong>
 
 							<TextControl
-								label={ __( 'Text', 'ambrygen-web' ) }
-								value={ primaryButton.text || '' }
-								onChange={ ( value ) =>
-									updateButton( 0, 'text', value )
+								label={__('Text', 'ambrygen-web')}
+								value={primaryButton.text || ''}
+								onChange={(value) =>
+									updateButton(0, 'text', value)
 								}
 							/>
 
 							<LinkControl
-								value={ { url: primaryButton.url || '' } }
-								onChange={ ( value ) =>
-									updateButton( 0, 'url', value.url )
+								value={{ url: primaryButton.url || '' }}
+								onChange={(value) =>
+									updateButton(0, 'url', value.url)
 								}
 							/>
 
 							<SelectControl
-								label={ __( 'Button Style', 'ambrygen-web' ) }
-								value={ primaryButton.variant || 'site-btn' }
-								options={ [
+								label={__('Button Style', 'ambrygen-web')}
+								value={primaryButton.variant || 'site-btn'}
+								options={[
 									{
 										label: 'Light',
 										value: 'site-btn is-style-site-tertiary-btn',
 									},
+									{
+										label: 'Text Button',
+										value: 'site-btn is-style-site-text-btn has-icon',
+									},
 									{ label: 'Dark', value: 'site-btn' },
-								] }
-								onChange={ ( value ) =>
-									updateButton( 0, 'variant', value )
+								]}
+								onChange={(value) =>
+									updateButton(0, 'variant', value)
 								}
 							/>
 						</div>
 					</PanelRow>
 
+					<div className="is-style-gl-s16" aria-hidden="true"></div>
 					<PanelRow>
-						<div style={ { width: '100%' } }>
+						<div style={{ width: '100%' }}>
 							<strong>
-								{ __( 'Secondary Button', 'ambrygen-web' ) }
+								{__('Secondary Button', 'ambrygen-web')}
 							</strong>
 
 							<TextControl
-								label={ __( 'Text', 'ambrygen-web' ) }
-								value={ secondaryButton.text || '' }
-								onChange={ ( value ) =>
-									updateButton( 1, 'text', value )
+								label={__('Text', 'ambrygen-web')}
+								value={secondaryButton.text || ''}
+								onChange={(value) =>
+									updateButton(1, 'text', value)
 								}
 							/>
 
 							<LinkControl
-								value={ { url: secondaryButton.url || '' } }
-								onChange={ ( value ) =>
-									updateButton( 1, 'url', value.url )
+								value={{ url: secondaryButton.url || '' }}
+								onChange={(value) =>
+									updateButton(1, 'url', value.url)
 								}
 							/>
 
 							<SelectControl
-								label={ __( 'Variant', 'ambrygen-web' ) }
+								label={__('Variant', 'ambrygen-web')}
 								value={
 									secondaryButton.variant ||
 									'site-btn is-style-site-tertiary-btn'
 								}
-								options={ [
+								options={[
 									{
 										label: 'Light',
 										value: 'site-btn is-style-site-tertiary-btn',
 									},
+									{
+										label: 'Text Button',
+										value: 'site-btn is-style-site-text-btn has-icon',
+									},
 									{ label: 'Dark', value: 'site-btn' },
-								] }
-								onChange={ ( value ) =>
-									updateButton( 1, 'variant', value )
+								]}
+								onChange={(value) =>
+									updateButton(1, 'variant', value)
 								}
 							/>
 						</div>
@@ -172,37 +217,48 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 			</InspectorControls>
 
-			<div { ...blockProps }>
-				{ resolvedImageUrl && (
+			<div {...blockProps}>
+				{resolvedImageUrl && (
 					<div className="iot-block__image">
-						<img src={ resolvedImageUrl } />
+						<img src={resolvedImageUrl} />
 					</div>
-				) }
+				)}
 
-				{ /* Fallback only if no uploaded image and no global default image */ }
-				{ ! imageUrl && ! defaultPlaceholder?.url && (
+				{ /* Fallback only if no uploaded image and no global default image */}
+				{!imageUrl && !defaultPlaceholder?.url && (
 					<Placeholder
 						icon="format-image"
-						label={ __( 'No image selected', 'ambrygen-web' ) }
-						instructions={ __(
+						label={__('No image selected', 'ambrygen-web')}
+						instructions={__(
 							'Upload an image from the sidebar settings.',
 							'ambrygen-web'
-						) }
+						)}
 					/>
-				) }
+				)}
 
 				<div className="iot-block__content">
-					{ /* Text content */ }
+					{ /* Text content */}
 					<div
 						className="iot-block__text"
-						style={ { textAlign: contentAlignment } }
+						style={{ textAlign: contentAlignment }}
 					>
+						{topIconUrl && (
+							<>
+								<div className="iot-block__top-icon">
+									<img src={topIconUrl} alt="" />
+								</div>
+								<div
+									className="is-style-gl-s16"
+									aria-hidden="true"
+								></div>
+							</>
+						)}
 						<RichText
-							tagName={ headingTag || 'h2' }
-							value={ heading }
-							placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
-							onChange={ ( value ) =>
-								setAttributes( { heading: value } )
+							tagName={headingTag || 'h2'}
+							value={heading}
+							placeholder={__('Add Heading…', 'ambrygen-web')}
+							onChange={(value) =>
+								setAttributes({ heading: value })
 							}
 							className="heading-2 block-title mb-0"
 						/>
@@ -213,40 +269,40 @@ export default function Edit( { attributes, setAttributes } ) {
 						<RichText
 							tagName="div"
 							className="body1 iot-block__description"
-							value={ content }
-							onChange={ ( value ) =>
-								setAttributes( { content: value } )
+							value={content}
+							onChange={(value) =>
+								setAttributes({ content: value })
 							}
-							placeholder={ __(
+							placeholder={__(
 								'Add Description…',
 								'ambrygen-web'
-							) }
+							)}
 						/>
 					</div>
-					{ buttons?.length > 0 && (
+					{buttons?.length > 0 && (
 						<>
 							<div
 								className="is-style-gl-s24"
 								aria-hidden="true"
 							></div>
 
-							<div className="iot-block__button">
-								{ buttons.map(
-									( button, index ) =>
+							<div className="iot-block__button  two-btn-row">
+								{buttons.map(
+									(button, index) =>
 										button.text &&
 										button.url && (
 											<a
-												key={ index }
+												key={index}
 												href="#"
-												className={ ` is-style-site-trailing-icon site-btn ${ button.variant }` }
+												className={` is-style-site-trailing-icon site-btn ${button.variant}`}
 											>
-												{ button.text }
+												{button.text}
 											</a>
 										)
-								) }
+								)}
 							</div>
 						</>
-					) }
+					)}
 				</div>
 			</div>
 		</Fragment>

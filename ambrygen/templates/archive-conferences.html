@@ -1,0 +1,64 @@
+<!-- wp:template-part {"slug":"header"} /-->
+
+<!-- wp:group {"tagName":"main","className":"wp-block-group","htmlId":"main-content"} -->
+<main id="main-content" class="wp-block-group">
+
+	<!-- In-Progress Conference -->
+	<!-- wp:group {"tagName":"section","className":"container-1136"} -->
+	<section class="wp-block-group container-1136">
+		<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
+		<div style="height:50px" aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
+		<!-- /wp:spacer -->
+
+		<!-- wp:group {"className":"wrapper"} -->
+		<div class="wp-block-group wrapper">
+			<!-- wp:group {"className":"conference-section"} -->
+			<div class="wp-block-group conference-section">
+				<!-- wp:heading {"level":2,"className":"heading-4"} -->
+				<h2 class="wp-block-heading heading-4">Conferences In-Progress</h2>
+				<!-- /wp:heading -->
+
+				<!-- wp:query {"queryId":1,"query":{"perPage":1,"postType":"conferences","order":"desc","orderBy":"date","inherit":false}} -->
+				<div class="wp-block-query">
+					<!-- wp:post-template -->
+					<!-- wp:group {"className":"conference-feature"} -->
+					<div class="wp-block-group conference-feature">
+						<!-- wp:group {"className":"conference-feature__media"} -->
+						<div class="wp-block-group conference-feature__media">
+							<!-- wp:ambrygen/featured-image-fallback {"isLink":true,"className":"conference-feature__image"} /-->
+						</div>
+						<!-- /wp:group -->
+
+						<!-- wp:group {"className":"conference-feature__content"} -->
+						<div class="wp-block-group conference-feature__content">
+							<!-- wp:post-title {"isLink":true,"className":"conference-feature__title text-lg-semibold"} /-->
+							<!-- wp:ambrygen/event-post-meta-list /-->
+							<!-- wp:post-excerpt {"moreText":"","className":"conference-feature__excerpt text-md-regular"} /-->
+							<!-- wp:html -->
+							<a class="site-btn is-style-site-text-btn has-icon icon-arrow-up" aria-hidden="true">Learn More</a>
+							<!-- /wp:html -->
+						</div>
+						<!-- /wp:group -->
+					</div>
+					<!-- /wp:group -->
+					<!-- /wp:post-template -->
+				</div>
+				<!-- /wp:query -->
+			</div>
+			<!-- /wp:group -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
+		<div style="height:64px" aria-hidden="true" class="wp-block-spacer is-style-gl-s64"></div>
+		<!-- /wp:spacer -->
+	</section>
+	<!-- /wp:group -->
+
+	<!-- wp:template-part {"slug":"upcoming-conferences"} /-->
+	<!-- wp:template-part {"slug":"past-conferences"} /-->
+
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer"} /-->

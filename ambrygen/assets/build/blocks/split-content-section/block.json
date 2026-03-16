@@ -1,0 +1,57 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/split-content-section",
+  "title": "Split Content Section",
+  "category": "ambrygen",
+  "icon": "align-pull-left",
+  "description": "Mission statement banner with title, description, and background image.",
+  "supports": {
+    "html": false,
+    "color": {
+      "background": true,
+      "text": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Section Title"
+    },
+    "titleTag": {
+      "type": "string",
+      "default": "h2"
+    },
+    "description": {
+      "type": "string",
+      "default": "Ambry Genetics' mission is to empower individuals with advanced genetic testing solutions that transform healthcare and promote the health of people worldwide."
+    },
+    "backgroundImage": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "backgroundImageAlt": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web",
+  "example": {
+    "attributes": {
+      "title": "Section Title",
+      "titleTag": "h2",
+      "description": "Ambry Genetics' mission is to empower individuals with advanced genetic testing solutions that transform healthcare and promote the health of people worldwide.",
+      "backgroundImage": "/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "backgroundImageId": 0,
+      "backgroundImageAlt": "Mission statement background"
+    }
+  }
+}

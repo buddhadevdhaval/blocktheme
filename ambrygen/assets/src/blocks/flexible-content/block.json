@@ -43,9 +43,21 @@
       "type": "string",
       "default": ""
     },
+    "topIconUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "topIconId": {
+      "type": "number",
+      "default": 0
+    },
+    "topIconAlt": {
+      "type": "string",
+      "default": ""
+    },
     "imagePosition": {
       "type": "string",
-      "default": "left"
+      "default": "right"
     },
     "layoutStyle": {
       "type": "string",
@@ -62,7 +74,7 @@
     },
     "content": {
       "type": "string",
-      "default": "left"
+      "default": ""
     },
     "buttons": {
       "type": "array",
@@ -78,6 +90,10 @@
           "variant": "site-btn is-style-site-tertiary-btn"
         }
       ]
+    },
+    "borderRequired": {
+      "type": "boolean",
+      "default": false
     }
   },
   "example": {
@@ -87,10 +103,13 @@
       "imageUrl": "/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
       "imageId": 0,
       "imageAlt": "Ambry default preview image",
+      "topIconUrl": "",
+      "topIconId": 0,
+      "topIconAlt": "",
       "imagePosition": "left",
       "layoutStyle": "standard",
       "contentAlignment": "left",
-      "content": "left",
+      "content": "",
       "buttons": [
         {
           "text": "",

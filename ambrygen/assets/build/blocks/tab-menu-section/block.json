@@ -1,0 +1,67 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/tab-menu-section",
+  "title": "Tab Menu Section",
+  "category": "ambrygen",
+  "icon": "index-card",
+  "description": "Independent tab menu with scroll targets.",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "blockId": {
+      "type": "string"
+    },
+    "scrollOffset": {
+      "type": "number",
+      "default": 250
+    },
+    "enableSticky": {
+      "type": "boolean",
+      "default": false
+    },
+    "tabs": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web",
+  "example": {
+    "attributes": {
+      "scrollOffset": 250,
+      "enableSticky": false,
+      "tabs": [
+        {
+          "label": "About Ambry",
+          "targetId": "section-about",
+          "isActive": true
+        },
+        {
+          "label": "Multimedia Assets",
+          "targetId": "section-assets",
+          "isActive": false
+        }
+      ]
+    }
+  }
+}

@@ -128,7 +128,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 
 					<div
 						className={ `card-description  ${
-							galleryVariation !== 'two-column'
+							galleryVariation !== 'default'
 								? 'body2-reg'
 								: 'text-small'
 						}` }
@@ -145,7 +145,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 
 					{ showLearnMore && link?.text && (
 						<>
-							{ galleryVariation !== 'two-column' && (
+							{ galleryVariation !== 'default' && (
 								<div
 									className="is-style-gl-s12"
 									aria-hidden="true"
@@ -153,7 +153,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 							) }
 							<div
 								className={ `${
-									galleryVariation === 'two-column'
+									galleryVariation === 'default'
 										? 'card-cta'
 										: 'card-cta-wrapper'
 								}` }

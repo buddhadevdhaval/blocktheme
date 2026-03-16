@@ -1,0 +1,172 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/logo-section",
+  "title": "Logo Section",
+  "category": "ambrygen",
+  "icon": "format-image",
+  "description": "Logo usage section with downloads and guidelines.",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "sectionTitle": {
+      "type": "string",
+      "default": "Logo"
+    },
+    "sectionTitleTag": {
+      "type": "string",
+      "default": "h2"
+    },
+    "logoImageUrl": {
+      "type": "string"
+    },
+    "logoImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "logoImageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "downloads": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "properties": {
+          "group": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "fileUrl": {
+            "type": "string"
+          },
+          "fileId": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "leftItems": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "imageId": {
+            "type": "number"
+          },
+          "imageAlt": {
+            "type": "string"
+          },
+          "secondaryImageUrl": {
+            "type": "string"
+          },
+          "secondaryImageId": {
+            "type": "number"
+          },
+          "secondaryImageAlt": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "rightTitle": {
+      "type": "string",
+      "default": "Using the Logo"
+    },
+    "rightContent": {
+      "type": "string",
+      "default": ""
+    },
+    "rightSections": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "listItems": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "sectionTitle": "Logo",
+      "sectionTitleTag": "h2",
+      "logoImageId": 0,
+      "downloads": [
+        {
+          "group": "web",
+          "label": "JPG",
+          "fileUrl": "#",
+          "fileId": 0
+        },
+        {
+          "group": "web",
+          "label": "PNG",
+          "fileUrl": "#",
+          "fileId": 0
+        },
+        {
+          "group": "print",
+          "label": "PDF",
+          "fileUrl": "#",
+          "fileId": 0
+        }
+      ],
+      "leftItems": [
+        {
+          "title": "Clear Space",
+          "description": "Maintain clear space around the logo.",
+          "imageId": 0
+        },
+        {
+          "title": "Minimum Size",
+          "description": "Do not print smaller than the minimum width.",
+          "imageId": 0
+        }
+      ],
+      "rightTitle": "Using the Logo",
+      "rightContent": "It is important to pay attention to clear space and size standards.",
+      "rightSections": [
+        {
+          "title": "Using the Logo",
+          "content": "It is important to pay attention to the clear space and minimum and maximum size standards."
+        },
+        {
+          "title": "Clear Space",
+          "content": "The logo should have a minimum amount of clear space around it (see example). No content, art or other imagery should impinge on this clear space."
+        }
+      ]
+    }
+  }
+}

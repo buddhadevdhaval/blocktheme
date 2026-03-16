@@ -26,6 +26,10 @@
       "type": "string",
       "default": ""
     },
+    "showDescription": {
+      "type": "boolean",
+      "default": true
+    },
     "videoUrl": {
       "type": "string",
       "default": ""
@@ -33,14 +37,6 @@
     "videoType": {
       "type": "string",
       "default": "embed"
-    },
-    "playIcon": {
-      "type": "object",
-      "default": null
-    },
-    "pauseIcon": {
-      "type": "object",
-      "default": null
     },
     "posterImage": {
       "type": "object",
@@ -53,6 +49,18 @@
     "iframeUrl": {
       "type": "string",
       "default": ""
+    },
+    "showImage": {
+      "type": "boolean",
+      "default": false
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "imageId": {
+      "type": "number",
+      "default": 0
     }
   },
   "editorScript": "file:./index.js",
@@ -64,21 +72,15 @@
     "attributes": {
       "heading": "Transforming Healthcare with Genetic Insight",
       "description": "This is a sample preview content for this block in the inserter.",
+      "showDescription": true,
       "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
       "videoType": "embed",
-      "playIcon": {
-        "id": 1,
-        "url": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
-        "alt": "Icon"
-      },
-      "pauseIcon": {
-        "id": 1,
-        "url": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
-        "alt": "Icon"
-      },
-      "posterImage": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "posterImage": "/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
       "headingTag": "h2",
-      "iframeUrl": "https://www.youtube.com/embed/ysz5S6PUM-U"
+      "iframeUrl": "https://www.youtube.com/embed/ysz5S6PUM-U",
+      "showImage": false,
+      "imageUrl": "",
+      "imageId": 0
     }
   }
 }

@@ -112,22 +112,7 @@ return array(
 		'icon' => 'networking',
 		'description' => 'Advanced hero section with AI healthcare visuals, animated counters, and multi-media layout system.',
 		'supports' => array(
-			'html' => false,
-			'align' => true,
-			'spacing' => array(
-				'margin' => true,
-				'padding' => true,
-				'blockGap' => true
-			),
-			'color' => array(
-				'background' => true,
-				'text' => true,
-				'link' => false
-			),
-			'typography' => array(
-				'fontSize' => false,
-				'lineHeight' => false
-			)
+			'html' => false
 		),
 		'keywords' => array(
 			'hero',
@@ -139,10 +124,15 @@ return array(
 		'attributes' => array(
 			'headingLevel' => array(
 				'type' => 'string',
+				'enum' => array(
+					'h1',
+					'h2',
+					'h3',
+					'h4',
+					'h5',
+					'h6'
+				),
 				'default' => 'h2'
-			),
-			'headingPrimary' => array(
-				'type' => 'string'
 			),
 			'heading' => array(
 				'type' => 'string',
@@ -260,7 +250,6 @@ return array(
 		'example' => array(
 			'attributes' => array(
 				'headingLevel' => 'h2',
-				'headingPrimary' => 'Transforming Healthcare with Genetic Insight',
 				'heading' => 'Transforming Healthcare with AI Innovation',
 				'content' => 'Leveraging artificial intelligence to revolutionize patient care, diagnostics, and medical research.',
 				'counters' => array(
@@ -326,7 +315,7 @@ return array(
 		'attributes' => array(
 			'title' => array(
 				'type' => 'string',
-				'default' => 'Our Locations'
+				'default' => ''
 			),
 			'iframe' => array(
 				'type' => 'string',
@@ -350,6 +339,14 @@ return array(
 			),
 			'headingLevel' => array(
 				'type' => 'string',
+				'enum' => array(
+					'h1',
+					'h2',
+					'h3',
+					'h4',
+					'h5',
+					'h6'
+				),
 				'default' => 'h2'
 			)
 		),
@@ -518,19 +515,11 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
-			'playIcon' => array(
-				'type' => 'object',
-				'default' => null
-			),
 			'joblocationicon' => array(
 				'type' => 'object',
 				'default' => null
 			),
 			'jobtypeicon' => array(
-				'type' => 'object',
-				'default' => null
-			),
-			'pauseIcon' => array(
 				'type' => 'object',
 				'default' => null
 			)
@@ -577,22 +566,12 @@ return array(
 					'variant' => 'Sample variant'
 				),
 				'viewAllText ' => 'Sample viewAllText ',
-				'playIcon' => array(
-					'id' => 1,
-					'url' => 'https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
-					'alt' => 'Icon'
-				),
 				'joblocationicon' => array(
 					'id' => 1,
 					'url' => 'https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
 					'alt' => 'Icon'
 				),
 				'jobtypeicon' => array(
-					'id' => 1,
-					'url' => 'https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
-					'alt' => 'Icon'
-				),
-				'pauseIcon' => array(
 					'id' => 1,
 					'url' => 'https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
 					'alt' => 'Icon'
@@ -616,9 +595,21 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'description' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'headingTag' => array(
 				'type' => 'string',
 				'default' => 'h5'
+			),
+			'variant' => array(
+				'type' => 'string',
+				'default' => 'default',
+				'enum' => array(
+					'default',
+					'without-image'
+				)
 			),
 			'imageUrl' => array(
 				'type' => 'string'
@@ -684,7 +675,9 @@ return array(
 		'example' => array(
 			'attributes' => array(
 				'title' => 'Sample Title',
+				'description' => 'Sample description below the title.',
 				'headingTag' => 'h5',
+				'variant' => 'default',
 				'imageId' => 0,
 				'faqs' => array(
 					array(
@@ -761,9 +754,21 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'topIconUrl' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'topIconId' => array(
+				'type' => 'number',
+				'default' => 0
+			),
+			'topIconAlt' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'imagePosition' => array(
 				'type' => 'string',
-				'default' => 'left'
+				'default' => 'right'
 			),
 			'layoutStyle' => array(
 				'type' => 'string',
@@ -780,7 +785,7 @@ return array(
 			),
 			'content' => array(
 				'type' => 'string',
-				'default' => 'left'
+				'default' => ''
 			),
 			'buttons' => array(
 				'type' => 'array',
@@ -796,6 +801,10 @@ return array(
 						'variant' => 'site-btn is-style-site-tertiary-btn'
 					)
 				)
+			),
+			'borderRequired' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		),
 		'example' => array(
@@ -805,10 +814,13 @@ return array(
 				'imageUrl' => '/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
 				'imageId' => 0,
 				'imageAlt' => 'Ambry default preview image',
+				'topIconUrl' => '',
+				'topIconId' => 0,
+				'topIconAlt' => '',
 				'imagePosition' => 'left',
 				'layoutStyle' => 'standard',
 				'contentAlignment' => 'left',
-				'content' => 'left',
+				'content' => '',
 				'buttons' => array(
 					array(
 						'text' => '',
@@ -860,7 +872,15 @@ return array(
 			),
 			'variation' => array(
 				'type' => 'string',
-				'default' => 'two-column'
+				'default' => 'default'
+			),
+			'gridColumns' => array(
+				'type' => 'string',
+				'default' => '2',
+				'enum' => array(
+					'2',
+					'3'
+				)
 			),
 			'topImageID' => array(
 				'type' => 'number',
@@ -875,14 +895,15 @@ return array(
 			)
 		),
 		'providesContext' => array(
-			'ambrygen/galleryVariation' => 'variation'
+			'ambrygen/galleryVariation' => 'variation',
+			'ambrygen/galleryGridColumns' => 'gridColumns'
 		),
 		'example' => array(
 			'attributes' => array(
 				'heading' => 'Title',
 				'headingTag' => 'h2',
 				'description' => 'This is a sample preview content for this block in the inserter.',
-				'variation' => 'two-column',
+				'variation' => 'default',
 				'topImageID' => 1,
 				'topImageURL' => 'https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
 				'blockId' => 1
@@ -989,6 +1010,10 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'showDescription' => array(
+				'type' => 'boolean',
+				'default' => true
+			),
 			'videoUrl' => array(
 				'type' => 'string',
 				'default' => ''
@@ -996,14 +1021,6 @@ return array(
 			'videoType' => array(
 				'type' => 'string',
 				'default' => 'embed'
-			),
-			'playIcon' => array(
-				'type' => 'object',
-				'default' => null
-			),
-			'pauseIcon' => array(
-				'type' => 'object',
-				'default' => null
 			),
 			'posterImage' => array(
 				'type' => 'object',
@@ -1016,6 +1033,18 @@ return array(
 			'iframeUrl' => array(
 				'type' => 'string',
 				'default' => ''
+			),
+			'showImage' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'imageUrl' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'imageId' => array(
+				'type' => 'number',
+				'default' => 0
 			)
 		),
 		'editorScript' => 'file:./index.js',
@@ -1027,21 +1056,15 @@ return array(
 			'attributes' => array(
 				'heading' => 'Transforming Healthcare with Genetic Insight',
 				'description' => 'This is a sample preview content for this block in the inserter.',
+				'showDescription' => true,
 				'videoUrl' => 'https://www.w3schools.com/html/mov_bbb.mp4',
 				'videoType' => 'embed',
-				'playIcon' => array(
-					'id' => 1,
-					'url' => 'https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
-					'alt' => 'Icon'
-				),
-				'pauseIcon' => array(
-					'id' => 1,
-					'url' => 'https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
-					'alt' => 'Icon'
-				),
-				'posterImage' => 'https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
+				'posterImage' => '/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
 				'headingTag' => 'h2',
-				'iframeUrl' => 'https://www.youtube.com/embed/ysz5S6PUM-U'
+				'iframeUrl' => 'https://www.youtube.com/embed/ysz5S6PUM-U',
+				'showImage' => false,
+				'imageUrl' => '',
+				'imageId' => 0
 			)
 		)
 	),
@@ -1057,21 +1080,7 @@ return array(
 		'icon' => 'format-image',
 		'description' => 'An individual card for genetic testing.',
 		'supports' => array(
-			'html' => false,
-			'color' => array(
-				'background' => true,
-				'text' => true,
-				'link' => true
-			),
-			'spacing' => array(
-				'margin' => true,
-				'padding' => true,
-				'blockGap' => true
-			),
-			'typography' => array(
-				'fontSize' => true,
-				'lineHeight' => true
-			)
+			'html' => false
 		),
 		'attributes' => array(
 			'image' => array(
@@ -1107,12 +1116,6 @@ return array(
 			'type' => array(
 				'type' => 'string',
 				'default' => 'small'
-			),
-			'imageSrcSet' => array(
-				'type' => 'string'
-			),
-			'imageSizes' => array(
-				'type' => 'string'
 			)
 		),
 		'textdomain' => 'ambrygen-web',
@@ -1132,9 +1135,7 @@ return array(
 					'rel' => '',
 					'variant' => 'primary'
 				),
-				'type' => 'small',
-				'imageSrcSet' => '',
-				'imageSizes' => ''
+				'type' => 'small'
 			)
 		)
 	),
@@ -1147,20 +1148,7 @@ return array(
 		'icon' => 'grid-view',
 		'description' => 'A layout with two stacked cards on the left and one large featured card on the right.',
 		'supports' => array(
-			'html' => false,
-			'align' => array(
-				'wide',
-				'full'
-			),
-			'spacing' => array(
-				'margin' => true,
-				'padding' => true,
-				'blockGap' => true
-			),
-			'color' => array(
-				'background' => true,
-				'text' => true
-			)
+			'html' => false
 		),
 		'keywords' => array(
 			'cards',
@@ -1169,6 +1157,18 @@ return array(
 			'grid'
 		),
 		'attributes' => array(
+			'headingLevel' => array(
+				'type' => 'string',
+				'enum' => array(
+					'h1',
+					'h2',
+					'h3',
+					'h4',
+					'h5',
+					'h6'
+				),
+				'default' => 'h2'
+			),
 			'sectionTitle' => array(
 				'type' => 'string',
 				'default' => 'Why We’re Different'
@@ -1396,24 +1396,7 @@ return array(
 		'icon' => 'cover-image',
 		'description' => 'Hero section with slider, logo overlay, rounded background images, and dual call-to-action buttons.',
 		'supports' => array(
-			'html' => false,
-			'align' => array(
-				'wide',
-				'full'
-			),
-			'spacing' => array(
-				'margin' => true,
-				'padding' => true,
-				'blockGap' => true
-			),
-			'color' => array(
-				'background' => true,
-				'text' => true
-			),
-			'typography' => array(
-				'fontSize' => true,
-				'lineHeight' => true
-			)
+			'html' => false
 		),
 		'keywords' => array(
 			'hero',
@@ -1424,6 +1407,125 @@ return array(
 		'attributes' => array(
 			'slides' => array(
 				'type' => 'array',
+				'items' => array(
+					'type' => 'object',
+					'properties' => array(
+						'backgroundImage' => array(
+							'type' => 'string',
+							'default' => ''
+						),
+						'backgroundImageId' => array(
+							'type' => 'integer',
+							'default' => 0
+						),
+						'backgroundImageAlt' => array(
+							'type' => 'string',
+							'default' => ''
+						),
+						'overlayImage1' => array(
+							'type' => 'string',
+							'default' => ''
+						),
+						'overlayImage1Id' => array(
+							'type' => 'integer',
+							'default' => 0
+						),
+						'overlayImage1Alt' => array(
+							'type' => 'string',
+							'default' => ''
+						),
+						'overlayImage2' => array(
+							'type' => 'string',
+							'default' => ''
+						),
+						'overlayImage2Id' => array(
+							'type' => 'integer',
+							'default' => 0
+						),
+						'overlayImage2Alt' => array(
+							'type' => 'string',
+							'default' => ''
+						),
+						'eyebrow' => array(
+							'type' => 'string',
+							'default' => ''
+						),
+						'headingTag' => array(
+							'type' => 'string',
+							'enum' => array(
+								'h1',
+								'h2',
+								'h3',
+								'h4',
+								'h5',
+								'h6'
+							),
+							'default' => 'h2'
+						),
+						'heading' => array(
+							'type' => 'string',
+							'default' => ''
+						),
+						'content' => array(
+							'type' => 'string',
+							'default' => ''
+						),
+						'tagline' => array(
+							'type' => 'string',
+							'default' => ''
+						),
+						'primarybutton' => array(
+							'type' => 'object',
+							'properties' => array(
+								'url' => array(
+									'type' => 'string',
+									'default' => ''
+								),
+								'text' => array(
+									'type' => 'string',
+									'default' => ''
+								),
+								'target' => array(
+									'type' => 'string',
+									'default' => ''
+								),
+								'rel' => array(
+									'type' => 'string',
+									'default' => ''
+								),
+								'variant' => array(
+									'type' => 'string',
+									'default' => ''
+								)
+							)
+						),
+						'secondarybutton' => array(
+							'type' => 'object',
+							'properties' => array(
+								'url' => array(
+									'type' => 'string',
+									'default' => ''
+								),
+								'text' => array(
+									'type' => 'string',
+									'default' => ''
+								),
+								'target' => array(
+									'type' => 'string',
+									'default' => ''
+								),
+								'rel' => array(
+									'type' => 'string',
+									'default' => ''
+								),
+								'variant' => array(
+									'type' => 'string',
+									'default' => ''
+								)
+							)
+						)
+					)
+				),
 				'default' => array(
 					array(
 						'backgroundImage' => '',
@@ -1444,24 +1546,18 @@ return array(
 						'buttonSecondaryText' => 'Who We Are',
 						'buttonSecondaryUrl' => '#',
 						'primarybutton' => array(
-							'type' => 'object',
-							'default' => array(
-								'url' => '',
-								'text' => 'string',
-								'target' => '',
-								'rel' => '',
-								'variant' => ''
-							)
+							'url' => '',
+							'text' => '',
+							'target' => '',
+							'rel' => '',
+							'variant' => ''
 						),
 						'secondarybutton' => array(
-							'type' => 'object',
-							'default' => array(
-								'url' => '',
-								'text' => 'string',
-								'target' => '',
-								'rel' => '',
-								'variant' => ''
-							)
+							'url' => '',
+							'text' => '',
+							'target' => '',
+							'rel' => '',
+							'variant' => ''
 						)
 					)
 				)
@@ -1476,19 +1572,11 @@ return array(
 			),
 			'autoplay' => array(
 				'type' => 'boolean',
-				'default' => false
+				'default' => true
 			),
 			'autoplayDelay' => array(
 				'type' => 'number',
 				'default' => 5000
-			),
-			'eyebrow' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'headingTag' => array(
-				'type' => 'string',
-				'default' => ''
 			)
 		),
 		'editorScript' => 'file:./index.js',
@@ -1520,33 +1608,25 @@ return array(
 						'buttonSecondaryText' => 'Who We Are',
 						'buttonSecondaryUrl' => '#',
 						'primarybutton' => array(
-							'type' => 'object',
-							'default' => array(
-								'url' => '',
-								'text' => 'string',
-								'target' => '',
-								'rel' => '',
-								'variant' => ''
-							)
+							'url' => '',
+							'text' => '',
+							'target' => '',
+							'rel' => '',
+							'variant' => ''
 						),
 						'secondarybutton' => array(
-							'type' => 'object',
-							'default' => array(
-								'url' => '',
-								'text' => 'string',
-								'target' => '',
-								'rel' => '',
-								'variant' => ''
-							)
+							'url' => '',
+							'text' => '',
+							'target' => '',
+							'rel' => '',
+							'variant' => ''
 						)
 					)
 				),
 				'showSliderNav' => true,
 				'showSliderDots' => true,
-				'autoplay' => false,
-				'autoplayDelay' => 5000,
-				'eyebrow' => 'Ambry Genetics',
-				'headingTag' => 'h2'
+				'autoplay' => true,
+				'autoplayDelay' => 5000
 			)
 		)
 	),
@@ -1742,6 +1822,122 @@ return array(
 			)
 		)
 	),
+	'image-gallery-slider' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'ambrygen/image-gallery-slider',
+		'title' => 'Image Gallery Slider',
+		'category' => 'ambrygen',
+		'icon' => 'images-alt2',
+		'description' => 'Slider of team gallery images pulled from our_team posts.',
+		'supports' => array(
+			'html' => false
+		),
+		'attributes' => array(
+			'title' => array(
+				'type' => 'string',
+				'default' => 'Executive Leadership'
+			),
+			'intro' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'headingLevel' => array(
+				'type' => 'string',
+				'default' => 'h2',
+				'enum' => array(
+					'h1',
+					'h2',
+					'h3',
+					'h4',
+					'h5',
+					'h6'
+				)
+			),
+			'memberTypes' => array(
+				'type' => 'array',
+				'default' => array(
+					
+				)
+			),
+			'selectionMode' => array(
+				'type' => 'string',
+				'default' => 'manual',
+				'enum' => array(
+					'manual',
+					'taxonomy'
+				)
+			),
+			'showNavigation' => array(
+				'type' => 'boolean',
+				'default' => true
+			),
+			'showPagination' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'autoplay' => array(
+				'type' => 'boolean',
+				'default' => false
+			)
+		),
+		'editorScript' => 'file:./index.js',
+		'editorStyle' => 'file:./index.css',
+		'style' => 'file:./style-index.css',
+		'textdomain' => 'ambrygen-web',
+		'render' => 'file:./render.php',
+		'providesContext' => array(
+			'ambrygen/imageGalleryNav' => 'showNavigation',
+			'ambrygen/imageGalleryPagination' => 'showPagination',
+			'ambrygen/imageGalleryAutoplay' => 'autoplay'
+		),
+		'example' => array(
+			'attributes' => array(
+				'title' => 'Executive Leadership',
+				'intro' => '',
+				'headingLevel' => 'h2',
+				'memberTypes' => array(
+					
+				),
+				'selectionMode' => 'manual',
+				'showNavigation' => true,
+				'showPagination' => false,
+				'autoplay' => false
+			)
+		)
+	),
+	'image-gallery-slider-item' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'ambrygen/image-gallery-slider-item',
+		'title' => 'Image Gallery Slider Item',
+		'category' => 'ambrygen',
+		'icon' => 'format-image',
+		'parent' => array(
+			'ambrygen/image-gallery-slider'
+		),
+		'usesContext' => array(
+			'ambrygen/imageGalleryNav',
+			'ambrygen/imageGalleryPagination',
+			'ambrygen/imageGalleryAutoplay'
+		),
+		'attributes' => array(
+			'postId' => array(
+				'type' => 'number'
+			)
+		),
+		'editorScript' => 'file:./index.js',
+		'editorStyle' => 'file:./index.css',
+		'style' => 'file:./style-index.css',
+		'textdomain' => 'ambrygen-web',
+		'viewScript' => 'file:./view.js',
+		'render' => 'file:./render.php',
+		'example' => array(
+			'attributes' => array(
+				'postId' => 1
+			)
+		)
+	),
 	'job-list-item' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
@@ -1769,6 +1965,184 @@ return array(
 		'example' => array(
 			'attributes' => array(
 				'postId' => 1
+			)
+		)
+	),
+	'logo-section' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'ambrygen/logo-section',
+		'title' => 'Logo Section',
+		'category' => 'ambrygen',
+		'icon' => 'format-image',
+		'description' => 'Logo usage section with downloads and guidelines.',
+		'supports' => array(
+			'html' => false
+		),
+		'attributes' => array(
+			'sectionTitle' => array(
+				'type' => 'string',
+				'default' => 'Logo'
+			),
+			'sectionTitleTag' => array(
+				'type' => 'string',
+				'default' => 'h2'
+			),
+			'logoImageUrl' => array(
+				'type' => 'string'
+			),
+			'logoImageId' => array(
+				'type' => 'number',
+				'default' => 0
+			),
+			'logoImageAlt' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'downloads' => array(
+				'type' => 'array',
+				'default' => array(
+					
+				),
+				'items' => array(
+					'type' => 'object',
+					'properties' => array(
+						'group' => array(
+							'type' => 'string'
+						),
+						'label' => array(
+							'type' => 'string'
+						),
+						'fileUrl' => array(
+							'type' => 'string'
+						),
+						'fileId' => array(
+							'type' => 'number'
+						)
+					)
+				)
+			),
+			'leftItems' => array(
+				'type' => 'array',
+				'default' => array(
+					
+				),
+				'items' => array(
+					'type' => 'object',
+					'properties' => array(
+						'title' => array(
+							'type' => 'string'
+						),
+						'description' => array(
+							'type' => 'string'
+						),
+						'imageUrl' => array(
+							'type' => 'string'
+						),
+						'imageId' => array(
+							'type' => 'number'
+						),
+						'imageAlt' => array(
+							'type' => 'string'
+						),
+						'secondaryImageUrl' => array(
+							'type' => 'string'
+						),
+						'secondaryImageId' => array(
+							'type' => 'number'
+						),
+						'secondaryImageAlt' => array(
+							'type' => 'string'
+						)
+					)
+				)
+			),
+			'rightTitle' => array(
+				'type' => 'string',
+				'default' => 'Using the Logo'
+			),
+			'rightContent' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'rightSections' => array(
+				'type' => 'array',
+				'default' => array(
+					
+				),
+				'items' => array(
+					'type' => 'object',
+					'properties' => array(
+						'title' => array(
+							'type' => 'string'
+						),
+						'content' => array(
+							'type' => 'string'
+						),
+						'listItems' => array(
+							'type' => 'array',
+							'items' => array(
+								'type' => 'string'
+							)
+						)
+					)
+				)
+			)
+		),
+		'textdomain' => 'ambrygen-web',
+		'editorScript' => 'file:./index.js',
+		'editorStyle' => 'file:./index.css',
+		'style' => 'file:./style-index.css',
+		'render' => 'file:./render.php',
+		'example' => array(
+			'attributes' => array(
+				'sectionTitle' => 'Logo',
+				'sectionTitleTag' => 'h2',
+				'logoImageId' => 0,
+				'downloads' => array(
+					array(
+						'group' => 'web',
+						'label' => 'JPG',
+						'fileUrl' => '#',
+						'fileId' => 0
+					),
+					array(
+						'group' => 'web',
+						'label' => 'PNG',
+						'fileUrl' => '#',
+						'fileId' => 0
+					),
+					array(
+						'group' => 'print',
+						'label' => 'PDF',
+						'fileUrl' => '#',
+						'fileId' => 0
+					)
+				),
+				'leftItems' => array(
+					array(
+						'title' => 'Clear Space',
+						'description' => 'Maintain clear space around the logo.',
+						'imageId' => 0
+					),
+					array(
+						'title' => 'Minimum Size',
+						'description' => 'Do not print smaller than the minimum width.',
+						'imageId' => 0
+					)
+				),
+				'rightTitle' => 'Using the Logo',
+				'rightContent' => 'It is important to pay attention to clear space and size standards.',
+				'rightSections' => array(
+					array(
+						'title' => 'Using the Logo',
+						'content' => 'It is important to pay attention to the clear space and minimum and maximum size standards.'
+					),
+					array(
+						'title' => 'Clear Space',
+						'content' => 'The logo should have a minimum amount of clear space around it (see example). No content, art or other imagery should impinge on this clear space.'
+					)
+				)
 			)
 		)
 	),
@@ -2514,6 +2888,63 @@ return array(
 			)
 		)
 	),
+	'split-content-section' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'ambrygen/split-content-section',
+		'title' => 'Split Content Section',
+		'category' => 'ambrygen',
+		'icon' => 'align-pull-left',
+		'description' => 'Mission statement banner with title, description, and background image.',
+		'supports' => array(
+			'html' => false,
+			'color' => array(
+				'background' => true,
+				'text' => true
+			)
+		),
+		'attributes' => array(
+			'title' => array(
+				'type' => 'string',
+				'default' => 'Section Title'
+			),
+			'titleTag' => array(
+				'type' => 'string',
+				'default' => 'h2'
+			),
+			'description' => array(
+				'type' => 'string',
+				'default' => 'Ambry Genetics\' mission is to empower individuals with advanced genetic testing solutions that transform healthcare and promote the health of people worldwide.'
+			),
+			'backgroundImage' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'backgroundImageId' => array(
+				'type' => 'number',
+				'default' => 0
+			),
+			'backgroundImageAlt' => array(
+				'type' => 'string',
+				'default' => ''
+			)
+		),
+		'editorScript' => 'file:./index.js',
+		'editorStyle' => 'file:./index.css',
+		'style' => 'file:./style-index.css',
+		'render' => 'file:./render.php',
+		'textdomain' => 'ambrygen-web',
+		'example' => array(
+			'attributes' => array(
+				'title' => 'Section Title',
+				'titleTag' => 'h2',
+				'description' => 'Ambry Genetics\' mission is to empower individuals with advanced genetic testing solutions that transform healthcare and promote the health of people worldwide.',
+				'backgroundImage' => '/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png',
+				'backgroundImageId' => 0,
+				'backgroundImageAlt' => 'Mission statement background'
+			)
+		)
+	),
 	'tab-menu' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
@@ -2578,6 +3009,75 @@ return array(
 				'label' => 'Tab Label',
 				'targetId' => 1,
 				'is_active_tab' => false
+			)
+		)
+	),
+	'tab-menu-section' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'ambrygen/tab-menu-section',
+		'title' => 'Tab Menu Section',
+		'category' => 'ambrygen',
+		'icon' => 'index-card',
+		'description' => 'Independent tab menu with scroll targets.',
+		'supports' => array(
+			'html' => false
+		),
+		'attributes' => array(
+			'blockId' => array(
+				'type' => 'string'
+			),
+			'scrollOffset' => array(
+				'type' => 'number',
+				'default' => 250
+			),
+			'enableSticky' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'tabs' => array(
+				'type' => 'array',
+				'default' => array(
+					
+				),
+				'items' => array(
+					'type' => 'object',
+					'properties' => array(
+						'label' => array(
+							'type' => 'string'
+						),
+						'targetId' => array(
+							'type' => 'string'
+						),
+						'isActive' => array(
+							'type' => 'boolean'
+						)
+					)
+				)
+			)
+		),
+		'editorScript' => 'file:./index.js',
+		'editorStyle' => 'file:./index.css',
+		'style' => 'file:./style-index.css',
+		'viewScript' => 'file:./view.js',
+		'render' => 'file:./render.php',
+		'textdomain' => 'ambrygen-web',
+		'example' => array(
+			'attributes' => array(
+				'scrollOffset' => 250,
+				'enableSticky' => false,
+				'tabs' => array(
+					array(
+						'label' => 'About Ambry',
+						'targetId' => 'section-about',
+						'isActive' => true
+					),
+					array(
+						'label' => 'Multimedia Assets',
+						'targetId' => 'section-assets',
+						'isActive' => false
+					)
+				)
 			)
 		)
 	),
@@ -2807,6 +3307,12 @@ return array(
 			'type' => array(
 				'type' => 'string',
 				'default' => 'small'
+			),
+			'files' => array(
+				'type' => 'array',
+				'default' => array(
+					
+				)
 			)
 		),
 		'textdomain' => 'ambrygen-web',
@@ -2828,7 +3334,15 @@ return array(
 					'rel' => 'Sample rel',
 					'variant' => 'Sample variant'
 				),
-				'type' => 'small'
+				'type' => 'small',
+				'files' => array(
+					array(
+						'fileId' => 1,
+						'fileUrl' => '/wp-content/uploads/2026/03/sample.pdf',
+						'fileName' => 'Sample PDF',
+						'sizeType' => 'small'
+					)
+				)
 			)
 		)
 	),

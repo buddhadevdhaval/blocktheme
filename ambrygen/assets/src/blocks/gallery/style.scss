@@ -1,6 +1,37 @@
 @use "../../css/partials/variables/breakpoints" as bp;
+@use "../../css/partials/variables/fluid_mixins" as *;
 
-.get-started-ambry-block {
+.image-grid-block {
+
+	&.grid-column3 {
+
+		.get-started-block {
+
+			.card-grid-block {
+
+				.card-col {
+					grid-column: span 4;
+
+					@include bp.max(xl-large) {
+						grid-column: span 6;
+					}
+
+					@include bp.max(md) {
+						grid-column: span 12;
+					}
+
+					.card-info {
+						bottom: fluid(16, 30);
+						left: fluid(16, 30);
+						right: fluid(16, 30);
+					}
+				}
+			}
+		}
+	}
+}
+
+.get-started-block {
 
 	.card-grid-block {
 
@@ -105,7 +136,7 @@
 				position: relative;
 				display: flex;
 				gap: 8px;
-				align-items: center;
+				// align-items: center;
 				margin: 0;
 				transition: 0.3s;
 
@@ -118,6 +149,8 @@
 					display: inline-block;
 					flex: 20px 0 0;
 					transition: 0.3s;
+					position: relative;
+					top: 10px;
 				}
 			}
 
@@ -127,12 +160,12 @@
 		}
 	}
 
-
-
 }
 
 
-.variation-style-two {
+.variation-style-two,
+.block-image-content-grid,
+.block-variation-features {
 
 	.card-grid-block {
 
@@ -203,6 +236,8 @@
 			}
 		}
 	}
+
+
 }
 
 

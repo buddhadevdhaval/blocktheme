@@ -10,21 +10,7 @@
   "icon": "format-image",
   "description": "An individual card for genetic testing.",
   "supports": {
-    "html": false,
-    "color": {
-      "background": true,
-      "text": true,
-      "link": true
-    },
-    "spacing": {
-      "margin": true,
-      "padding": true,
-      "blockGap": true
-    },
-    "typography": {
-      "fontSize": true,
-      "lineHeight": true
-    }
+    "html": false
   },
   "attributes": {
     "image": {
@@ -60,12 +46,6 @@
     "type": {
       "type": "string",
       "default": "small"
-    },
-    "imageSrcSet": {
-      "type": "string"
-    },
-    "imageSizes": {
-      "type": "string"
     }
   },
   "textdomain": "ambrygen-web",
@@ -85,9 +65,7 @@
         "rel": "",
         "variant": "primary"
       },
-      "type": "small",
-      "imageSrcSet": "",
-      "imageSizes": ""
+      "type": "small"
     }
   }
 }

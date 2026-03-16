@@ -46,7 +46,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) =>
 							setAttributes( { heading: value } )
 						}
-						placeholder={ t( 'Section Title' ) }
+						placeholder={ t( 'Add Title' ) }
 					/>
 
 					<div className="block__rowflex--block-content subtitle-1-regular">
@@ -56,7 +56,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							onChange={ ( value ) =>
 								setAttributes( { description: value } )
 							}
-							placeholder={ t( 'Section Description' ) }
+							placeholder={ t( 'Add Description' ) }
 						/>
 					</div>
 				</div>

@@ -8,11 +8,12 @@
  *
  * @package ambrygen
  */
-use Ambrygen\Theme\Core\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+use Ambrygen\Theme\Core\Helper;
 
 /**
  * Block attributes.
@@ -34,9 +35,6 @@ $ambrygen_allowed_heading_tags = array(
 	'h4',
 	'h5',
 	'h6',
-	'p',
-	'span',
-	'div',
 );
 
 $ambrygen_swiper_config = array(
@@ -50,26 +48,22 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 		'class' => 'hero-section',
 	)
 );
-$ambrygen_index = 0;
+$ambrygen_index              = 0;
 ?>
 
-<div <?php echo $ambrygen_wrapper_attributes; ?>>
+<div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() returns pre-sanitized attributes. ?>>
 	<div
 		class="hero-section__slider swiper container-1340"
 		data-swiper-config="<?php echo esc_attr( wp_json_encode( $ambrygen_swiper_config ) ); ?>"
-		role="group"
-		aria-roledescription="slide"
-		aria-label="<?php echo esc_attr( sprintf( 'Slide %d of %d', $ambrygen_index + 1, count( $ambrygen_slides ) ) ); ?>"
+		role="region"
+		aria-roledescription="carousel"
+		aria-label="<?php esc_attr_e( 'Hero', 'ambrygen-web' ); ?>"
 	>
 		<div class="swiper-wrapper">
 
 			<?php
-				// echo '<pre>';
-				// print_r($ambrygen_slides);
-				// echo '</pre>';
-
-
-			foreach ( $ambrygen_slides as $ambrygen_index => $ambrygen_slide ) : ?>
+			foreach ( $ambrygen_slides as $ambrygen_index => $ambrygen_slide ) :
+				?>
 
 				<?php
 
@@ -82,24 +76,24 @@ $ambrygen_index = 0;
 				$ambrygen_tagline = $ambrygen_slide['tagline'] ?? '';
 				$ambrygen_eyebrow = $ambrygen_slide['eyebrow'] ?? '';
 
-			
 
-				$ambrygen_button_primary    = $ambrygen_slide['primarybutton'] ?? array();
-				$ambrygen_button_secondary   = $ambrygen_slide['secondarybutton'] ?? array();
 
-				$ambrygen_button_primary_text   = $ambrygen_button_primary['text'] ?? '';
-				$ambrygen_button_primary_url    = $ambrygen_button_primary['url'] ?? '#';
-				$ambrygen_button_primary_target    = $ambrygen_button_primary['target'] ?? '';
-				$ambrygen_button_primary_variant    = $ambrygen_button_primary['variant'] ?? '#';
+				$ambrygen_button_primary   = $ambrygen_slide['primarybutton'] ?? array();
+				$ambrygen_button_secondary = $ambrygen_slide['secondarybutton'] ?? array();
+
+				$ambrygen_button_primary_text    = $ambrygen_button_primary['text'] ?? '';
+				$ambrygen_button_primary_url     = $ambrygen_button_primary['url'] ?? '#';
+				$ambrygen_button_primary_target  = $ambrygen_button_primary['target'] ?? '';
+				$ambrygen_button_primary_variant = $ambrygen_button_primary['variant'] ?? '';
 
 				$ambrygen_button_target_attr = ! empty( $ambrygen_button_primary_target )
 				? ' target="' . esc_attr( $ambrygen_button_primary_target ) . '" rel="noopener noreferrer"'
 				: '';
 
-				$ambrygen_button_secondary_text = $ambrygen_button_secondary['text'] ?? '';
-				$ambrygen_button_secondary_url  = $ambrygen_button_secondary['url'] ?? '#';
-				$ambrygen_button_secondary_target  = $ambrygen_button_secondary['target'] ?? '#';
-				$ambrygen_button_secondary_variant  = $ambrygen_button_secondary['variant'] ?? '';
+				$ambrygen_button_secondary_text    = $ambrygen_button_secondary['text'] ?? '';
+				$ambrygen_button_secondary_url     = $ambrygen_button_secondary['url'] ?? '#';
+				$ambrygen_button_secondary_target  = $ambrygen_button_secondary['target'] ?? '';
+				$ambrygen_button_secondary_variant = $ambrygen_button_secondary['variant'] ?? '';
 
 				$ambrygen_secondary_button_target_attr = ! empty( $ambrygen_button_secondary_target )
 				? ' target="' . esc_attr( $ambrygen_button_secondary_target ) . '" rel="noopener noreferrer"'
@@ -113,16 +107,14 @@ $ambrygen_index = 0;
 					$ambrygen_heading_tag = 'h2';
 				}
 
-				if(count( $ambrygen_slides ) == 1){
-					$ambrygen_heading_tag_escaped = tag_escape( $ambrygen_heading_tag );
-				}else{
-					$ambrygen_heading_tag_escaped = "div";
-
-				}
+				$ambrygen_heading_tag_escaped = tag_escape( $ambrygen_heading_tag );
 
 				?>
 
-				<div class="hero-section__slide swiper-slide">
+				<div class="hero-section__slide swiper-slide"
+				role="group"
+				aria-roledescription="slide"
+				aria-label="<?php echo esc_attr( sprintf( '%1$d of %2$d', $ambrygen_index + 1, count( $ambrygen_slides ) ) ); ?>">
 					<div class="hero-section__background">
 
 						<?php
@@ -179,7 +171,7 @@ $ambrygen_index = 0;
 								<div class="is-style-gl-s24" aria-hidden="true"></div>
 							<?php endif; ?>
 							<?php if ( $ambrygen_heading ) : ?>
-								<<?php echo $ambrygen_heading_tag_escaped; ?>
+								<<?php echo $ambrygen_heading_tag_escaped; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Sanitized with tag_escape(). ?>
 									id="<?php echo esc_attr( 'hero-heading-' . $ambrygen_index ); ?>"
 									class="hero-section__heading heading-2 mb-0"
 								>
@@ -190,7 +182,7 @@ $ambrygen_index = 0;
 										Helper::allowed_heading_html()
 									);
 									?>
-								</<?php echo $ambrygen_heading_tag_escaped; ?>>
+								</<?php echo $ambrygen_heading_tag_escaped; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Sanitized with tag_escape(). ?>>
 							<?php endif; ?>
 							<div class="is-style-gl-s24" aria-hidden="true"></div>
 							<?php if ( $ambrygen_content ) : ?>
@@ -205,14 +197,14 @@ $ambrygen_index = 0;
 									<?php echo wp_kses_post( wpautop( $ambrygen_tagline ) ); ?>
 								</div>
 							<?php endif; ?>
-							<?php if ( $ambrygen_button_primary_text  && $ambrygen_button_secondary_text ) : ?>
+							<?php if ( $ambrygen_button_primary_text || $ambrygen_button_secondary_text ) : ?>
 							<div class="is-style-gl-s24" aria-hidden="true"></div>
 							<div class="hero-section__actions">
 								<?php if ( $ambrygen_button_primary_text ) : ?>
 									<a
 										href="<?php echo esc_url( $ambrygen_button_primary_url ); ?>"
-										class="hero-section__button site-btn is-style-site-trailing-icon <?php echo $ambrygen_button_primary_variant; ?>"
-										<?php echo $ambrygen_button_target_attr; ?>
+										class="hero-section__button site-btn <?php echo esc_attr( $ambrygen_button_primary_variant ); ?>"
+										<?php echo $ambrygen_button_target_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute string built with esc_attr() internally. ?>
 									>
 										<?php echo esc_html( $ambrygen_button_primary_text ); ?>
 									</a>
@@ -221,8 +213,8 @@ $ambrygen_index = 0;
 								<?php if ( $ambrygen_button_secondary_text ) : ?>
 									<a
 										href="<?php echo esc_url( $ambrygen_button_secondary_url ); ?>"
-										class="hero-section__button site-btn is-style-site-trailing-icon <?php echo $ambrygen_button_secondary_variant; ?>"
-										<?php echo $ambrygen_secondary_button_target_attr; ?>
+										class="hero-section__button site-btn <?php echo esc_attr( $ambrygen_button_secondary_variant ); ?>"
+										<?php echo $ambrygen_secondary_button_target_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute string built with esc_attr() internally. ?>
 									>
 										<?php echo esc_html( $ambrygen_button_secondary_text ); ?>
 									</a>
@@ -239,8 +231,8 @@ $ambrygen_index = 0;
 
 		<?php if ( $ambrygen_show_slider_nav ) : ?>
 			<div class="swiper-buttons">
-				<div class="custom-prev"></div>
-				<div class="custom-next"></div>
+				<button class="custom-prev" aria-label="<?php esc_attr_e( 'Previous slide', 'ambrygen-web' ); ?>"></button>
+				<button class="custom-next" aria-label="<?php esc_attr_e( 'Next slide', 'ambrygen-web' ); ?>"></button>
 			</div>
 		<?php endif; ?>
 

@@ -30,7 +30,7 @@
 					<div class="features-tabs__category body2-semibold">${ escapeHtml(
 						category
 					) }</div>
-					<div class="heading-5 features-tabs__card-title">
+					<div class="features-tabs__card-title">
 						${ escapeHtml(
 							title
 						) } <div class="badge badge--blue"><i class="badge__dot"></i>Test</div>
@@ -91,7 +91,7 @@
 
 			if ( ! Array.isArray( posts ) || posts.length === 0 ) {
 				panel.innerHTML =
-					'<div class="features-tabs__grid"><p>No posts found for this tab.</p></div>';
+					'<div class="features-tabs__grid--no-post"><p>No posts found for this tab.</p></div>';
 				panel.dataset.loaded = '1';
 				return;
 			}

@@ -1,5 +1,5 @@
 <?php
-/**
+    /**
  * Render: Genetic Info Block
  *
  * @param array    $attributes The block attributes.
@@ -8,180 +8,125 @@
  *
  * @package ambrygen
  */
-use Ambrygen\Theme\Core\Helper;
- 
-// Block attributes
-$ambrygen_attributes    = $attributes ?? array();
-$ambrygen_heading       = $ambrygen_attributes['heading'] ?? '';
-$ambrygen_heading_tag   = $ambrygen_attributes['headingTag'] ?? 'h2';
-$ambrygen_description   = $ambrygen_attributes['description'] ?? '';
-$ambrygen_video_url     = $ambrygen_attributes['videoUrl'] ?? '';
-$ambrygen_video_type    = $ambrygen_attributes['videoType'] ?? 'embed';
-$ambrygen_iframe_url    = $ambrygen_attributes['iframeUrl'] ?? '';
-$ambrygen_image_url     = $ambrygen_attributes['imageUrl'] ?? '';
+    use Ambrygen\Theme\Core\Helper;
 
-$ambrygen_poster_image = isset( $ambrygen_attributes['posterImage'] ) && is_array( $ambrygen_attributes['posterImage'] )
-	? $ambrygen_attributes['posterImage']
-	: array();
+    // Block attributes
+    $ambrygen_attributes  = $attributes ?? [];
+    $ambrygen_heading     = $ambrygen_attributes['heading'] ?? '';
+    $ambrygen_heading_tag = $ambrygen_attributes['headingTag'] ?? 'h2';
+    $ambrygen_description = $ambrygen_attributes['description'] ?? '';
+    $ambrygen_show_description = isset($ambrygen_attributes['showDescription']) ? (bool) $ambrygen_attributes['showDescription'] : true;
+    $ambrygen_video_url   = $ambrygen_attributes['videoUrl'] ?? '';
+    $ambrygen_video_type  = $ambrygen_attributes['videoType'] ?? 'embed';
+    $ambrygen_iframe_url  = $ambrygen_attributes['iframeUrl'] ?? '';
+    $ambrygen_image_url   = $ambrygen_attributes['imageUrl'] ?? '';
+    $ambrygen_image_id    = absint($ambrygen_attributes['imageId'] ?? 0);
+    $ambrygen_show_image  = ! empty($ambrygen_attributes['showImage']);
 
-$ambrygen_play_icon  = isset( $ambrygen_attributes['playIcon'] ) && is_array( $ambrygen_attributes['playIcon'] )
-	? $ambrygen_attributes['playIcon']
-	: array();
+    $ambrygen_poster_image = isset($ambrygen_attributes['posterImage']) && is_array($ambrygen_attributes['posterImage'])
+    ? $ambrygen_attributes['posterImage']
+    : [];
 
-$ambrygen_play_icon_id = isset( $ambrygen_play_icon['id'] )
-	? (int) $ambrygen_play_icon['id']
-	: 0;
+    $ambrygen_poster_image_id = isset($ambrygen_poster_image['id'])
+    ? (int) $ambrygen_poster_image['id']
+    : 0;
 
-$ambrygen_poster_image_id = isset( $ambrygen_poster_image['id'] )
-	? (int) $ambrygen_poster_image['id']
-	: 0;
+    $ambrygen_poster_url = isset($ambrygen_poster_image['url'])
+    ? esc_url($ambrygen_poster_image['url'])
+    : '';
 
-$ambrygen_pause_icon = isset( $ambrygen_attributes['pauseIcon'] ) && is_array( $ambrygen_attributes['pauseIcon'] )
-	? $ambrygen_attributes['pauseIcon']
-	: array();
+    $ambrygen_iframe_src = Helper::get_iframe_src($ambrygen_iframe_url);
 
-$ambrygen_poster_url = isset( $ambrygen_poster_image['url'] )
-	? esc_url( $ambrygen_poster_image['url'] )
-	: '';
+    // Determine iframe source
 
-$ambrygen_play_url = isset( $ambrygen_play_icon['url'] )
-	? esc_url( $ambrygen_play_icon['url'] )
-	: '';
-
-$ambrygen_pause_url = isset( $ambrygen_pause_icon['url'] )
-	? esc_url( $ambrygen_pause_icon['url'] )
-	: '';
-
-$ambrygen_pause_id = isset( $ambrygen_pause_icon['id'] )
-	? (int) $ambrygen_pause_icon['id']
-	: 0;
-$ambrygen_iframe_src  = Helper::get_iframe_src( $ambrygen_iframe_url );
-
-	
-
-// Determine iframe source
-
-// Extract URLs from image objects
-
+    // Extract URLs from image objects
 
 ?>
 
 <div class="features-media">
 	<div class="features-media__header block__rowflex">
-		<<?php echo esc_html( $ambrygen_heading_tag ); ?> class="block-title block__rowflex--heading-title heading-2 mb-0">
-				<?php echo wp_kses(
-										$ambrygen_heading,
-										Helper::allowed_heading_html()
-									);?>
-		</<?php echo esc_html( $ambrygen_heading_tag ); ?>>
-
+		<<?php echo esc_html($ambrygen_heading_tag); ?> class="block-title block__rowflex--heading-title heading-2 mb-0">
+				<?php
+                    echo wp_kses(
+                        $ambrygen_heading,
+                        Helper::allowed_heading_html()
+                    );
+                ?>
+		</<?php echo esc_html($ambrygen_heading_tag); ?>>
+		<?php if($ambrygen_show_description && $ambrygen_description) : ?>
 		<div class="block__rowflex--block-content subtitle1-reg">
-			<p><?php echo wp_kses_post( $ambrygen_description ); ?></p>
+			<p><?php echo wp_kses_post($ambrygen_description); ?></p>
 		</div>
+		<?php endif; ?>
 	</div>
 
 	<div class="is-style-gl-s50" aria-hidden="true"></div>
 
+	<!-- <div class="features-media__video media_video"> -->
+	<?php if ($ambrygen_show_image): ?>
+		<div class="features-media has-image">
+			<?php
+                echo Helper::image_with_placeholder( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    $ambrygen_image_id,
+                    'full',
+                    [
+                        'class'   => 'features-media__image',
+                        'loading' => 'lazy',
+                    ]
+                );
+
+            ?>
+		</div>
+	<?php endif; ?>
+	<?php if (! $ambrygen_show_image && ('embed' === $ambrygen_video_type && $ambrygen_iframe_src) or ('mp4' === $ambrygen_video_type && $ambrygen_video_url)): ?>
+
 	<div class="features-media__video media_video">
-	<?php if ( 'embed' === $ambrygen_video_type && $ambrygen_iframe_src ) : ?>
+		<?php if (! $ambrygen_show_image && 'embed' === $ambrygen_video_type && $ambrygen_iframe_src): ?>
 			<div class="features-media__video-wrapper features-media__video-wrapper--iframe">
-				<iframe
-					src="<?php echo esc_url( $ambrygen_iframe_src ); ?>"
-					title="<?php esc_attr_e( 'Genetic testing video', 'ambrygen' ); ?>"
-					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-					allowfullscreen
-					class="features-media__iframe"
-				></iframe>
+					<iframe
+						src="<?php echo esc_url($ambrygen_iframe_src); ?>"
+						title="<?php esc_attr_e('Genetic testing video', 'ambrygen'); ?>"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+						allowfullscreen
+						class="features-media__iframe"
+					></iframe>
 
-				<?php if ( $ambrygen_play_url || $ambrygen_pause_url ) : ?>
 					<div class="play-icon-video">
-						<?php if ( $ambrygen_play_icon_id ) : ?>
-							<div class="play-icon">
-								<?php
-								echo Helper::image(
-									$ambrygen_play_icon_id,
-									'full',
-									array(
-										'class'   => 'play-icon__img',
-										'loading' => 'lazy',
-										'alt'     => 'Play Icon',
-									)
-								);
-								?>
+							<div class="play-icon circle-icon">
+								<img src="/wp-content/uploads/2026/02/play-icon1.svg" class="play-icon__img" alt="Play Icon">
 							</div>
-						<?php endif; ?>
-
-						<?php if ( $ambrygen_pause_id ) : ?>
-							<div class="pause-icon">
-								<?php
-								echo Helper::image(
-									$ambrygen_pause_id,
-									'full',
-									array(
-										'class'   => 'pause-icon__img',
-										'loading' => 'lazy',
-										'alt'     => 'Pause Icon',
-									)
-								);
-								?>
+							<div class="pause-icon circle-icon">
+								<img src="/wp-content/uploads/2026/02/pause-icon.svg" class="pause-icon__img" alt="Pause Icon">
 							</div>
-						<?php endif; ?>
 					</div>
-				<?php endif; ?>
-		</div>
-	<?php endif; ?>
+			</div>
+		<?php endif; ?>
 
-	<?php if ( 'mp4' === $ambrygen_video_type && $ambrygen_video_url ) : ?>
-		<div class="features-media__video-wrapper">
-			<video
-				class="videos"
-				playsinline
-				muted
-				preload="metadata"
-				loop
-				poster="<?php echo esc_url( $ambrygen_poster_url ); ?>"
-				controls
-			>
-				<source src="<?php echo esc_url( $ambrygen_video_url ); ?>" type="video/mp4">
-				<?php esc_html_e( 'Your browser does not support the video tag.', 'ambrygen' ); ?>
-			</video>
+		<?php if (! $ambrygen_show_image && 'mp4' === $ambrygen_video_type && $ambrygen_video_url): ?>
+			<div class="features-media__video-wrapper">
+				<video
+					class="videos"
+					playsinline
+					muted
+					preload="metadata"
+					loop
+					poster="<?php echo esc_url($ambrygen_poster_url); ?>"
+					controls
+				>
+					<source src="<?php echo esc_url($ambrygen_video_url); ?>" type="video/mp4">
+					<?php esc_html_e('Your browser does not support the video tag.', 'ambrygen'); ?>
+				</video>
 
-			<?php if ( $ambrygen_play_url || $ambrygen_pause_url ) : ?>
-				<div class="play-icon-video">
-					<?php if ( $ambrygen_play_icon_id ) : ?>
-						<div class="play-icon">
-							<?php
-							echo Helper::image(
-								$ambrygen_play_icon_id,
-								'full',
-								array(
-									'class'   => 'play-icon__img',
-									'loading' => 'lazy',
-									'alt'     => 'Play Icon',
-								)
-							);
-							?>
-						</div>
-					<?php endif; ?>
-
-					<?php if ( $ambrygen_pause_id ) : ?>
-						<div class="pause-icon">
-							<?php
-							echo Helper::image(
-								$ambrygen_pause_id,
-								'full',
-								array(
-									'class'   => 'pause-icon__img',
-									'loading' => 'lazy',
-									'alt'     => 'Pause Icon',
-								)
-							);
-							?>
-						</div>
-					<?php endif; ?>
-				</div>
-			<?php endif; ?>
-		</div>
-	<?php endif; ?>
+					<div class="play-icon-video">
+							<div class="play-icon circle-icon">
+								<img src="/wp-content/uploads/2026/02/play-icon1.svg" class="play-icon__img" alt="Play Icon">
+							</div>
+							<div class="pause-icon circle-icon">
+								<img src="/wp-content/uploads/2026/02/pause-icon.svg" class="pause-icon__img" alt="Pause Icon">
+							</div>
+					</div>
+			</div>
+		<?php endif; ?>
 	</div>
+	<?php endif; ?>
 </div>

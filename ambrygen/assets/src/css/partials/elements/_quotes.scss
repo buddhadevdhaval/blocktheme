@@ -19,7 +19,13 @@ blockquote {
 	margin-bottom: 20px;
 	padding: 0;
 
+	&.wp-block-quote {
+		border-left: 4px solid var(--theme_color_primary);
+		padding-left: 20px;
+	}
+
 	p {
+
 		&:last-child {
 			margin-bottom: 0;
 		}
@@ -35,3 +41,7 @@ cite {
 	line-height: 1.42;
 	color: var(--theme_gray_700);
 }
+
+
+
+

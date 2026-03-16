@@ -2,6 +2,14 @@
 
 .alongside-faq {
 
+	&.variation-without-image {
+
+		.alongside-faq__title,
+		.alongside-faq__description {
+			text-align: center;
+		}
+	}
+
 	&__row {
 		display: flex;
 		flex-wrap: wrap;
@@ -53,8 +61,12 @@
 		border-top: 1px solid var(--theme_body_color);
 
 		&:first-child {
-			padding-top: 0;
 			border-top: 0;
+			padding-top: 0;
+
+			.faq__header {
+				padding-top: 0;
+			}
 		}
 
 		&:last-child {
@@ -68,18 +80,14 @@
 			}
 		}
 
-		.components-button {
+		&.editor {
+			padding: 16px 0;
 
-			&.is-destructive {
-				margin-top: 5px;
-				color: #721c24;
-				background-color: #f8d7da;
-				border-color: #f5c6cb;
-				line-height: normal;
-				padding: 6px 12px;
-				height: inherit;
+			.faq__answer {
+				margin-top: 0;
 			}
 		}
+
 	}
 
 	&__header {

@@ -7,7 +7,7 @@
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
-	margin: 0 0 30px;
+	margin: 0;
 	width: 100%;
 	table-layout: fixed;
 	text-align: left;
@@ -50,34 +50,56 @@ thead {
 	}
 
 	tr:last-child {
-		border-bottom: 3px solid var(--theme_table_head_border_color);
+		border-bottom: 1px solid var(--theme_table_head_border_color);
 	}
 
 	th {
-		font-weight: 700;
+		font-weight: 600;
 	}
 }
 
 tfoot {
+	border-top: 1px solid var(--theme_table_foot_border_color);
 
 	tr {
 		border: none;
 	}
 
 	tr:first-child {
-		border-top: 3px solid var(--theme_table_foot_border_color);
+		border-top: 1px solid var(--theme_table_foot_border_color);
 	}
 
 	td {
-		font-weight: 700;
+		font-weight: 600;
 	}
 }
 
 
 .wp-block-table {
+	box-shadow: 0 4px 8px -2px rgba(16, 24, 40, 0.10), 0 2px 4px -2px rgba(16, 24, 40, 0.06);
 
-	tbody td {
-		border: 2px solid var(--theme_table_border_color);
+	thead {
+		background-color: var(--theme_gray_50);
+		border-bottom: 1px solid var(--theme_gray_200);
+	}
+
+	th,
+	td {
+		border: 1px solid var(--theme_gray_200);
+		padding: 12px 16px;
+	}
+
+	tfoot {
+		background-color: var(--theme_gray_50);
+		border-top: 1px solid var(--theme_table_foot_border_color);
+
+		tr {
+			border: none;
+		}
+
+		td {
+			font-weight: 600;
+		}
 	}
 
 	&.is-style-stripes {
@@ -97,7 +119,7 @@ tfoot {
 		tfoot {
 
 			tr {
-				border-top: 3px solid var(--theme_table_head_border_color);
+				border-top: 1px solid var(--theme_table_head_border_color);
 			}
 		}
 
@@ -114,7 +136,7 @@ tfoot {
 		}
 
 		tfoot tr {
-			border-top: 3px solid var(--theme_table_head_border_color);
+			border-top: 1px solid var(--theme_table_head_border_color);
 		}
 	}
 }

@@ -1,3 +1,6 @@
+
+@use "../variables/breakpoints" as bp;
+
 :root {
 
 	/* Font Sizes */
@@ -40,4 +43,48 @@
 
 	/* ------- Heading 7 [ D-13 to M-13 ] - [ Text-13 ] ------- */
 	--theme_font_size_13: 13px;
+}
+
+/* 4K Screen Sizes (1921px - 2799px) */
+@include bp.min(ultra-large) {
+
+	:root {
+
+		/* Scale up font sizes for 4K */
+		--theme_font_size_1: clamp(60px, calc(3.75rem + ((1vw - 7.68px) * 3.0928)), 75px);
+		--theme_font_size_2: clamp(54px, calc(3.375rem + ((1vw - 7.68px) * 3.0928)), 66px);
+		--theme_font_size_3: clamp(48px, calc(3rem + ((1vw - 7.68px) * 3.4364)), 60px);
+		--theme_font_size_4: clamp(36px, calc(2.25rem + ((1vw - 7.68px) * 1.7182)), 48px);
+		--theme_font_size_5: clamp(30px, calc(1.875rem + ((1vw - 7.68px) * 1.0309)), 38px);
+		--theme_font_size_6: clamp(24px, calc(1.5rem + ((1vw - 7.68px) * 0.8591)), 30px);
+		--theme_font_size_7: clamp(18px, calc(1.125rem + ((1vw - 7.68px) * 0.1718)), 20px);
+		--theme_font_size_8: 18px;
+		--theme_font_size_9: clamp(22px, calc(1.375rem + ((1vw - 7.67px) * 0.3431)), 24px);
+		--theme_font_size_10: clamp(20px, calc(1.25rem + ((1vw - 7.67px) * 0.3431)), 22px);
+		--theme_font_size_11: 16px;
+		--theme_font_size_12: 19px;
+		--theme_font_size_13: 17px;
+	}
+}
+
+/* Ultra 4K Screen Sizes (2800px+) */
+@include bp.min(ultra-wide) {
+
+	:root {
+
+		/* Scale up font sizes even more for ultra 4K */
+		--theme_font_size_1: clamp(75px, calc(4.6875rem + ((1vw - 7.68px) * 3.0928)), 90px);
+		--theme_font_size_2: clamp(66px, calc(4.125rem + ((1vw - 7.68px) * 3.0928)), 78px);
+		--theme_font_size_3: clamp(60px, calc(3.75rem + ((1vw - 7.68px) * 3.4364)), 72px);
+		--theme_font_size_4: clamp(48px, calc(3rem + ((1vw - 7.68px) * 1.7182)), 60px);
+		--theme_font_size_5: clamp(38px, calc(2.375rem + ((1vw - 7.68px) * 1.0309)), 46px);
+		--theme_font_size_6: clamp(30px, calc(1.875rem + ((1vw - 7.68px) * 0.8591)), 36px);
+		--theme_font_size_7: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 0.1718)), 22px);
+		--theme_font_size_8: 20px;
+		--theme_font_size_9: clamp(24px, calc(1.5rem + ((1vw - 7.67px) * 0.3431)), 26px);
+		--theme_font_size_10: clamp(22px, calc(1.375rem + ((1vw - 7.67px) * 0.3431)), 24px);
+		--theme_font_size_11: 18px;
+		--theme_font_size_12: 20px;
+		--theme_font_size_13: 18px;
+	}
 }

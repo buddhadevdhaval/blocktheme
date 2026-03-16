@@ -1,1 +1,14 @@
 /* SCSS will be placed Here */
+@use "../../css/partials/variables/breakpoints" as bp;
+
+.features-media {
+
+	&.has-image {
+
+		img {
+			max-width: 100%;
+			height: auto;
+		}
+	}
+
+}

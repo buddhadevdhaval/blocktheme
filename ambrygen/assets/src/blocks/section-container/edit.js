@@ -46,34 +46,34 @@ import {
  * @param {Function} props.onChange Callback when width changes.
  * @return {JSX.Element} ContainerWidthControl component.
  */
-function ContainerWidthControl( { value, onChange } ) {
+function ContainerWidthControl({ value, onChange }) {
 	return (
 		<RadioControl
-			label={ __( 'Container Width', 'ambrygen-web' ) }
-			help={ __(
+			label={__('Container Width', 'ambrygen-web')}
+			help={__(
 				'Choose the maximum width for this section container.',
 				'ambrygen-web'
-			) }
-			selected={ value }
-			options={ [
+			)}
+			selected={value}
+			options={[
 				{
-					label: __( 'Container 1340px (Default)', 'ambrygen-web' ),
+					label: __('Container 1340px (Default)', 'ambrygen-web'),
 					value: 'container-1340',
 				},
 				{
-					label: __( 'Container 1280px', 'ambrygen-web' ),
+					label: __('Container 1280px', 'ambrygen-web'),
 					value: 'container-1280',
 				},
 				{
-					label: __( 'Container 828px', 'ambrygen-web' ),
+					label: __('Container 828px', 'ambrygen-web'),
 					value: 'container-768',
 				},
 				{
-					label: __( 'Full Width', 'ambrygen-web' ),
+					label: __('Full Width', 'ambrygen-web'),
 					value: 'container-full',
 				},
-			] }
-			onChange={ onChange }
+			]}
+			onChange={onChange}
 		/>
 	);
 }
@@ -89,35 +89,39 @@ function ContainerWidthControl( { value, onChange } ) {
  * @param {Function} props.onChange Callback when style changes.
  * @return {JSX.Element} BackgroundStyleControl component.
  */
-function BackgroundStyleControl( { value, onChange } ) {
+function BackgroundStyleControl({ value, onChange }) {
 	return (
 		<SelectControl
-			label={ __( 'Background Style', 'ambrygen-web' ) }
-			help={ __(
+			label={__('Background Style', 'ambrygen-web')}
+			help={__(
 				'Select a background style for this section.',
 				'ambrygen-web'
-			) }
-			value={ value }
-			options={ [
+			)}
+			value={value}
+			options={[
 				{
-					label: __( 'None (Transparent)', 'ambrygen-web' ),
+					label: __('None (Transparent)', 'ambrygen-web'),
 					value: '',
 				},
 				{
-					label: __( 'Primary Background', 'ambrygen-web' ),
+					label: __('Primary Background', 'ambrygen-web'),
 					value: 'bg-primary',
 				},
 				{
-					label: __( 'Secondary Background', 'ambrygen-web' ),
+					label: __('Secondary Background', 'ambrygen-web'),
 					value: 'bg-secondary',
 				},
 				{
-					label: __( 'Primary 25 Background', 'ambrygen-web' ),
+					label: __('Primary 25 Background', 'ambrygen-web'),
 					value: 'bg-primary_25',
 				},
 				{
-					label: __( 'Primary 800 Background', 'ambrygen-web' ),
+					label: __('Primary 800 Background', 'ambrygen-web'),
 					value: 'bg-primary_800',
+				},
+				{
+					label: __('Gray 50 Background', 'ambrygen-web'),
+					value: 'bg-gray-50',
 				},
 				{
 					label: __(
@@ -127,15 +131,15 @@ function BackgroundStyleControl( { value, onChange } ) {
 					value: 'bg-lightblue-gradient',
 				},
 				{
-					label: __( 'Blue Gradient Background', 'ambrygen-web' ),
+					label: __('Blue Gradient Background', 'ambrygen-web'),
 					value: 'bg-blue-gradient',
 				},
 				{
-					label: __( 'Gradient One Background', 'ambrygen-web' ),
+					label: __('Gradient One Background', 'ambrygen-web'),
 					value: 'bg-gradient1',
 				},
-			] }
-			onChange={ onChange }
+			]}
+			onChange={onChange}
 		/>
 	);
 }
@@ -151,38 +155,38 @@ function BackgroundStyleControl( { value, onChange } ) {
  * @param {Function} props.onChange Callback when tag changes.
  * @return {JSX.Element} TagNameControl component.
  */
-function TagNameControl( { value, onChange } ) {
+function TagNameControl({ value, onChange }) {
 	return (
 		<SelectControl
-			label={ __( 'HTML Tag', 'ambrygen-web' ) }
-			help={ __(
+			label={__('HTML Tag', 'ambrygen-web')}
+			help={__(
 				'Choose the semantic HTML tag for this section.',
 				'ambrygen-web'
-			) }
-			value={ value }
-			options={ [
+			)}
+			value={value}
+			options={[
 				{
-					label: __( '<section> (Default)', 'ambrygen-web' ),
+					label: __('<section> (Default)', 'ambrygen-web'),
 					value: 'section',
 				},
 				{
-					label: __( '<div> (Generic)', 'ambrygen-web' ),
+					label: __('<div> (Generic)', 'ambrygen-web'),
 					value: 'div',
 				},
 				{
-					label: __( '<article> (Article Content)', 'ambrygen-web' ),
+					label: __('<article> (Article Content)', 'ambrygen-web'),
 					value: 'article',
 				},
 				{
-					label: __( '<aside> (Sidebar Content)', 'ambrygen-web' ),
+					label: __('<aside> (Sidebar Content)', 'ambrygen-web'),
 					value: 'aside',
 				},
 				{
-					label: __( '<main> (Main Content)', 'ambrygen-web' ),
+					label: __('<main> (Main Content)', 'ambrygen-web'),
 					value: 'main',
 				},
-			] }
-			onChange={ onChange }
+			]}
+			onChange={onChange}
 		/>
 	);
 }
@@ -203,7 +207,7 @@ function TagNameControl( { value, onChange } ) {
  * @param {Function} props.setAttributes Function to update attributes.
  * @return {JSX.Element} Block editor interface element.
  */
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit({ attributes, setAttributes }) {
 	const { tagName, containerWidth, backgroundStyle, isFixedBackground } =
 		attributes;
 
@@ -214,10 +218,10 @@ export default function Edit( { attributes, setAttributes } ) {
 	 * @param {string} value New container width value.
 	 */
 	const handleWidthChange = useCallback(
-		( value ) => {
-			setAttributes( { containerWidth: value } );
+		(value) => {
+			setAttributes({ containerWidth: value });
 		},
-		[ setAttributes ]
+		[setAttributes]
 	);
 
 	/**
@@ -227,10 +231,10 @@ export default function Edit( { attributes, setAttributes } ) {
 	 * @param {string} value New background style value.
 	 */
 	const handleBackgroundChange = useCallback(
-		( value ) => {
-			setAttributes( { backgroundStyle: value } );
+		(value) => {
+			setAttributes({ backgroundStyle: value });
 		},
-		[ setAttributes ]
+		[setAttributes]
 	);
 
 	/**
@@ -240,10 +244,10 @@ export default function Edit( { attributes, setAttributes } ) {
 	 * @param {boolean} value New checked state.
 	 */
 	const handleFixedBackgroundChange = useCallback(
-		( value ) => {
-			setAttributes( { isFixedBackground: value } );
+		(value) => {
+			setAttributes({ isFixedBackground: value });
 		},
-		[ setAttributes ]
+		[setAttributes]
 	);
 
 	/**
@@ -253,68 +257,67 @@ export default function Edit( { attributes, setAttributes } ) {
 	 * @param {string} value New tag name value.
 	 */
 	const handleTagChange = useCallback(
-		( value ) => {
-			setAttributes( { tagName: value } );
+		(value) => {
+			setAttributes({ tagName: value });
 		},
-		[ setAttributes ]
+		[setAttributes]
 	);
 
-	const blockProps = useBlockProps( {
-		className: `${ containerWidth } ${ backgroundStyle } ${
-			isFixedBackground ? 'bg-fixed' : ''
-		}`,
-	} );
+	const blockProps = useBlockProps({
+		className: `${containerWidth} ${backgroundStyle} ${isFixedBackground ? 'bg-fixed' : ''
+			}`,
+	});
 
 	return (
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Container Settings', 'ambrygen-web' ) }
-					initialOpen={ true }
+					title={__('Container Settings', 'ambrygen-web')}
+					initialOpen={true}
 				>
 					<ContainerWidthControl
-						value={ containerWidth }
-						onChange={ handleWidthChange }
+						value={containerWidth}
+						onChange={handleWidthChange}
 					/>
 				</PanelBody>
 
 				<PanelBody
-					title={ __( 'Background Settings', 'ambrygen-web' ) }
-					initialOpen={ false }
+					title={__('Background Settings', 'ambrygen-web')}
+					initialOpen={false}
 				>
 					<BackgroundStyleControl
-						value={ backgroundStyle }
-						onChange={ handleBackgroundChange }
+						value={backgroundStyle}
+						onChange={handleBackgroundChange}
 					/>
 					<ToggleControl
-						label={ __( 'Fixed Background', 'ambrygen-web' ) }
-						help={ __(
+						label={__('Fixed Background', 'ambrygen-web')}
+						help={__(
 							'Fixes the background image/color during scroll.',
 							'ambrygen-web'
-						) }
-						checked={ isFixedBackground }
-						onChange={ handleFixedBackgroundChange }
+						)}
+						checked={isFixedBackground}
+						onChange={handleFixedBackgroundChange}
 					/>
 				</PanelBody>
 
 				<PanelBody
-					title={ __( 'Advanced Settings', 'ambrygen-web' ) }
-					initialOpen={ false }
+					title={__('Advanced Settings', 'ambrygen-web')}
+					initialOpen={false}
 				>
 					<TagNameControl
-						value={ tagName }
-						onChange={ handleTagChange }
+						value={tagName}
+						onChange={handleTagChange}
 					/>
 				</PanelBody>
 			</InspectorControls>
 
-			{ createElement(
+			{createElement(
 				tagName,
 				blockProps,
 				<div className="wrapper">
 					<InnerBlocks />
 				</div>
-			) }
+			)}
 		</>
 	);
 }

@@ -17,8 +17,27 @@ use Ambrygen\Theme\Core\Helper;
 $ambrygen_heading      = $attributes['heading'] ?? '';
 $ambrygen_description  = $attributes['description'] ?? '';
 $ambrygen_heading_tag  = $attributes['headingTag'] ?? 'h2';
-$ambrygen_variation    = $attributes['variation'] ?? 'two-column';
+$ambrygen_variation    = $attributes['variation'] ?? '';
 $ambrygen_top_image_id = isset( $attributes['topImageID'] ) ? (int) $attributes['topImageID'] : 0;
+$ambrygen_grid_columns = $attributes['gridColumns'] ?? '2';
+
+/**
+ * Auto-adjust grid columns based on number of items
+ */
+$inner_blocks = $block->inner_blocks ?? array();
+$item_count = count( $inner_blocks );
+$grid_map = array(
+	1 => '1',
+	2 => '2',
+	3 => '3',
+	4 => '4',
+);
+$ambrygen_grid_columns = $grid_map[ $item_count ] ?? '3';
+
+/**
+ * Set context for inner blocks
+ */
+$block->context['ambrygen/galleryGridColumns'] = $ambrygen_grid_columns;
 
 /**
  * WCAG: Prevent empty content containers
@@ -54,7 +73,7 @@ $block_id = 'image-grid-' . wp_unique_id();
 
 $amb_class="";
 if($ambrygen_variation === "variation-features" ||  $ambrygen_variation === "image-content-grid"){
-	$amb_class="variation-style-two variation-team";
+	$amb_class="variation-team";
 }else{
 	$amb_class="";
 }
@@ -63,7 +82,7 @@ if($ambrygen_variation === "variation-features" ||  $ambrygen_variation === "ima
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class'            => 'image-grid-block  block-' . sanitize_html_class( $ambrygen_variation ) .' '.$amb_class,
+		'class'            => 'image-grid-block  block-' . sanitize_html_class( $ambrygen_variation ) .' '.$amb_class .' grid-column'.$ambrygen_grid_columns,
 		'aria-labelledby'  => $ambrygen_heading ? esc_attr( $block_id ) : '',
 		'id' => $tab_block_id,
 	)
@@ -71,7 +90,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 ?>
 
 <div <?php echo $ambrygen_wrapper_attributes; ?>>
-	<div class="get-started-ambry-block">
+	<div class="get-started-block">
 
 		<?php if ( 'image-content-grid' === $ambrygen_variation ) : ?>
 

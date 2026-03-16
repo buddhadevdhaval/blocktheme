@@ -258,6 +258,13 @@ h6,
 	letter-spacing: normal;
 }
 
+.text-small-semibold {
+	font-size: var(--theme_font_size_12);
+	font-weight: 600;
+	line-height: 1.42857;
+	letter-spacing: normal;
+}
+
 .eyebrow {
 	font-size: var(--theme_font_size_7);
 	font-weight: 700;
@@ -314,6 +321,15 @@ h6,
 	letter-spacing: normal;
 }
 
+.text-lg-semibold {
+	font-family: var(--font__main);
+	font-size: var(--theme_font_size_10);
+	font-style: normal;
+	font-weight: 600;
+	line-height: 1.55;
+	letter-spacing: normal;
+}
+
 .text-xl-reg {
 	color: var(--theme_gray_900);
 	font-family: var(--font__main);
@@ -331,5 +347,19 @@ h6,
 	font-style: normal;
 	font-weight: 600;
 	line-height: 1.5;
+	letter-spacing: normal;
+}
+
+.display-xs-semibold {
+	font-size: var(--theme_font_size_6);
+	font-weight: 600;
+	line-height: 1.33;
+	letter-spacing: normal;
+}
+
+.display-sm-semibold {
+	font-size: var(--theme_font_size_5);
+	font-weight: 600;
+	line-height: 1.26;
 	letter-spacing: normal;
 }

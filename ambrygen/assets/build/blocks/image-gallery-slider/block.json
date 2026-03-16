@@ -1,0 +1,80 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/image-gallery-slider",
+  "title": "Image Gallery Slider",
+  "category": "ambrygen",
+  "icon": "images-alt2",
+  "description": "Slider of team gallery images pulled from our_team posts.",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Executive Leadership"
+    },
+    "intro": {
+      "type": "string",
+      "default": ""
+    },
+    "headingLevel": {
+      "type": "string",
+      "default": "h2",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ]
+    },
+    "memberTypes": {
+      "type": "array",
+      "default": []
+    },
+    "selectionMode": {
+      "type": "string",
+      "default": "manual",
+      "enum": [
+        "manual",
+        "taxonomy"
+      ]
+    },
+    "showNavigation": {
+      "type": "boolean",
+      "default": true
+    },
+    "showPagination": {
+      "type": "boolean",
+      "default": false
+    },
+    "autoplay": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php",
+  "providesContext": {
+    "ambrygen/imageGalleryNav": "showNavigation",
+    "ambrygen/imageGalleryPagination": "showPagination",
+    "ambrygen/imageGalleryAutoplay": "autoplay"
+  },
+  "example": {
+    "attributes": {
+      "title": "Executive Leadership",
+      "intro": "",
+      "headingLevel": "h2",
+      "memberTypes": [],
+      "selectionMode": "manual",
+      "showNavigation": true,
+      "showPagination": false,
+      "autoplay": false
+    }
+  }
+}

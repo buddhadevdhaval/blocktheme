@@ -4,7 +4,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
  */
 import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useMemo } from '@wordpress/element';
 import { useInstanceId } from '@wordpress/compose';
 import {
 	ImageUploader,
@@ -28,7 +28,7 @@ import { PanelBody, PanelRow, BaseControl } from '@wordpress/components';
  * @return {JSX.Element} Block editor interface.
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const defaults = DEFAULT_IMAGES();
+	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
 
 	const { image, imageAlt, title, description, link, type } = attributes;
 
@@ -52,8 +52,6 @@ export default function Edit( { attributes, setAttributes } ) {
 			image: media.url,
 			imageId: media.id,
 			imageAlt: media.alt || '',
-			imageSrcSet: media.srcset || '',
-			imageSizes: media.sizes || '',
 		} );
 	};
 
@@ -106,11 +104,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				<div
 					className={ `genetic-cards__image-wrapper genetic-cards__image-wrapper--${ type }` }
 				>
-					<img
-						src={ image || defaults?.placeholder?.url }
-						alt={ imageAlt || defaults?.placeholder?.alt || '' }
-						loading="lazy"
-					/>
+					<img src={ image } alt={ imageAlt } loading="lazy" />
 				</div>
 
 				<div
@@ -140,15 +134,12 @@ export default function Edit( { attributes, setAttributes } ) {
 
 					<div className="is-style-gl-s20" />
 
-					{ link?.text && (
+					{ link?.url && (
 						<div className="genetic-cards__link">
-							<a
-								className="site-btn is-style-site-text-btn has-icon"
-								href={ '#' }
-							>
+							<span className="site-btn is-style-site-text-btn has-icon">
 								{ link?.text ||
 									__( 'Learn more', 'ambrygen-web' ) }
-							</a>
+							</span>
 						</div>
 					) }
 				</div>

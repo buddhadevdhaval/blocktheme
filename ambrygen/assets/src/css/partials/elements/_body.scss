@@ -27,6 +27,14 @@ body {
 	color: var(--theme_body_color);
 	background-color: var(--theme_body_bg);
 	line-height: 1.5;
+
+	@include bp.min(ultra-large) {
+		font-size: 1.25rem;
+	}
+
+	@include bp.min(ultra-wide) {
+		font-size: 1.625rem;
+	}
 }
 
 body,

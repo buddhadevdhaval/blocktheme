@@ -122,7 +122,7 @@ if ( 'variation-3' === $ambrygen_variation ) :
 				</<?php echo esc_html( $attributes['headingTag'] ?? 'h2' ); ?>>
 			<?php endif; ?>
 
-		
+
 
 			<?php if ( ! empty( $attributes['description'] ) ) : ?>
 				<div class="block__rowflex--block-content subtitle-1-regular">
@@ -185,13 +185,16 @@ if ( 'variation-3' === $ambrygen_variation ) :
 							$ambrygen_post_terms = get_the_terms( get_the_ID(), 'test_type' );
 							$ambrygen_category   = ( is_array( $ambrygen_post_terms ) && ! empty( $ambrygen_post_terms ) && ! is_wp_error( $ambrygen_post_terms[0] ) )
 								? $ambrygen_post_terms[0]->name
-								: 'Category';
+								: '';
 							?>
 							<div class="features-tabs__card">
 								<div class="features-tabs__content-head">
-									<div class="features-tabs__category body2-semibold">
-										<?php echo esc_html( $ambrygen_category ); ?>
-									</div>
+									<?php 
+									if ( $ambrygen_category ) : ?>
+										<div class="features-tabs__category body2-semibold">
+											<?php echo esc_html( $ambrygen_category ); ?>
+										</div>
+									<?php endif; ?>
 									<div class="heading-5 features-tabs__card-title">
 										<?php echo esc_html( $ambrygen_post_title ); ?> <div class="badge badge--blue"><i class="badge__dot"></i>Test</div>
 									</div>
@@ -201,16 +204,13 @@ if ( 'variation-3' === $ambrygen_variation ) :
 								</a>
 							</div>
 						<?php endwhile; ?>
-					
 						<?php wp_reset_postdata(); ?>
 					<?php endif; ?>
 				</div>
-					
-				
 			</div>
 		<?php endforeach; ?>
 	</div>
-					
+
 
 		</div>
 </div>

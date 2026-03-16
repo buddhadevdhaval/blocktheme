@@ -2,20 +2,33 @@ import {
 	useBlockProps,
 	RichText,
 	InspectorControls,
+	MediaUpload,
+	MediaUploadCheck,
 } from '@wordpress/block-editor';
 
-import { PanelBody } from '@wordpress/components';
+import { PanelBody, Button, SelectControl } from '@wordpress/components';
 
 import {
 	ImageUploader,
 	ImagePlaceholder,
 	CtaButtonField,
 	DEFAULT_IMAGES,
+	ItemHeader,
+	PanelItem,
+	Field,
 } from '../_shared/components';
+import { useArrayHandlers } from '../_shared/utils';
 import { __ } from '@wordpress/i18n';
 
+const DEFAULT_FILE = {
+	fileId: 0,
+	fileUrl: '',
+	fileName: '',
+	sizeType: 'small',
+};
+
 export default function Edit( { attributes, setAttributes } ) {
-	const { sectiontitle, description, imageUrl, cta } = attributes;
+	const { sectiontitle, description, imageUrl, cta, files } = attributes;
 
 	const defaultImage = DEFAULT_IMAGES().placeholder.url;
 	const displayImage = imageUrl || defaultImage;
@@ -23,6 +36,40 @@ export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps( {
 		className: 'approach-card',
 	} );
+
+	const { update, add, remove, move } = useArrayHandlers(
+		setAttributes,
+		'files'
+	);
+
+	const updateFileMedia = ( index, media ) => {
+		setAttributes( ( prev ) => {
+			const nextFiles = [ ...( prev.files || [] ) ];
+			nextFiles[ index ] = {
+				...nextFiles[ index ],
+				fileUrl: media?.url || '',
+				fileId: media?.id || 0,
+				fileName:
+					media?.title ||
+					media?.filename ||
+					nextFiles[ index ]?.fileName ||
+					'',
+			};
+			return { files: nextFiles };
+		} );
+	};
+
+	const clearFileMedia = ( index ) => {
+		setAttributes( ( prev ) => {
+			const nextFiles = [ ...( prev.files || [] ) ];
+			nextFiles[ index ] = {
+				...nextFiles[ index ],
+				fileUrl: '',
+				fileId: 0,
+			};
+			return { files: nextFiles };
+		} );
+	};
 
 	return (
 		<>
@@ -57,6 +104,140 @@ export default function Edit( { attributes, setAttributes } ) {
 							setAttributes( { cta: value } )
 						}
 					/>
+				</PanelBody>
+
+				<PanelBody
+					title={ __( 'File Downloads', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
+					<p className="components-base-control__help">
+						{ __(
+							'Add files to show a download link with size type.',
+							'ambrygen-web'
+						) }
+					</p>
+
+					{ ( files || [] ).length === 0 && (
+						<p className="components-base-control__help">
+							{ __(
+								'No files added yet.',
+								'ambrygen-web'
+							) }
+						</p>
+					) }
+
+					{ ( files || [] ).map( ( fileItem, index ) => (
+						<PanelItem key={ index }>
+							<ItemHeader
+								index={ index }
+								label={
+									fileItem.fileName || fileItem.fileUrl
+								}
+								total={ ( files || [] ).length }
+								onMove={ ( i, dir ) => move( i, dir ) }
+								onRemove={ ( i ) => remove( i, 0 ) }
+								minCount={ 0 }
+							/>
+
+							<div style={ { marginBottom: '8px' } }>
+								<MediaUploadCheck>
+									<MediaUpload
+										allowedTypes={ [
+											'application',
+											'text',
+											'audio',
+											'video',
+										] }
+										onSelect={ ( media ) =>
+											updateFileMedia( index, media )
+										}
+										render={ ( { open } ) => (
+											<Button
+												variant="secondary"
+												onClick={ ( e ) => {
+													e.stopPropagation();
+													open();
+												} }
+											>
+												{ fileItem.fileUrl
+													? __(
+															'Replace File',
+															'ambrygen-web'
+													  )
+													: __(
+															'Select File',
+															'ambrygen-web'
+													  ) }
+											</Button>
+										) }
+									/>
+								</MediaUploadCheck>
+								{ fileItem.fileUrl && (
+									<Button
+										variant="secondary"
+										isDestructive
+										onClick={ ( e ) => {
+											e.stopPropagation();
+											clearFileMedia( index );
+										} }
+										style={ { marginLeft: '8px' } }
+									>
+										{ __(
+											'Remove File',
+											'ambrygen-web'
+										) }
+									</Button>
+								) }
+							</div>
+
+							<Field
+								label={ __(
+									'File Name (optional)',
+									'ambrygen-web'
+								) }
+								value={ fileItem.fileName || '' }
+								onChange={ ( value ) =>
+									update( index, 'fileName', value )
+								}
+								onClick={ ( e ) => e.stopPropagation() }
+							/>
+
+							<SelectControl
+								label={ __(
+									'File Size Type',
+									'ambrygen-web'
+								) }
+								value={ fileItem.sizeType || 'small' }
+								options={ [
+									{
+										label: __(
+											'Small',
+											'ambrygen-web'
+										),
+										value: 'small',
+									},
+									{
+										label: __(
+											'Large',
+											'ambrygen-web'
+										),
+										value: 'large',
+									},
+								] }
+								onChange={ ( value ) =>
+									update( index, 'sizeType', value )
+								}
+							/>
+						</PanelItem>
+					) ) }
+
+					<Button
+						variant="primary"
+						onClick={ () => add( DEFAULT_FILE ) }
+						style={ { width: '100%', justifyContent: 'center' } }
+					>
+						{ __( 'Add File', 'ambrygen-web' ) }
+					</Button>
 				</PanelBody>
 			</InspectorControls>
 
@@ -108,6 +289,31 @@ export default function Edit( { attributes, setAttributes } ) {
 									'ambrygen-web'
 								) }
 							/>
+							{/* Show files if available */}
+						{ files?.length > 0 && (
+							<div className="approach-card__files">
+								{ files.map( ( file, index ) => {
+									const extension = file?.fileUrl
+										?.split('.')
+										.pop()
+										?.toUpperCase();
+
+									return (
+										<div
+											key={ index }
+											className="approach-card__file"
+										>
+											{ extension && (
+												<span className="file-type">
+													({ extension })
+												</span>
+											)}
+										</div>
+									);
+								} ) }
+							</div>
+						) }
+
 						</div>
 					</div>
 

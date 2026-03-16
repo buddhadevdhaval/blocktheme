@@ -13,7 +13,6 @@ $attributes = $attributes ?? [];
 $title         = $attributes['title'] ?? 'Our Leadership Team';
 $intro         = $attributes['intro'] ?? 'We are proud to be leading the industry that we love and working together.';
 $heading_level = $attributes['headingLevel'] ?? 'h2';
-$slides_per_view = $attributes['slidesPerView'] ?? 3;
 $show_navigation = $attributes['showNavigation'] ?? true;
 
 $wrapper_attributes = get_block_wrapper_attributes([
@@ -37,9 +36,8 @@ $heading_level = in_array($heading_level, ['h1','h2','h3','h4','h5','h6'], true)
   <div class="our-leadership__grid our-leadership-slider swiper"
      data-swiper-config='<?php echo wp_json_encode([
          'autoplay' => $attributes['autoplay'] ?? false,
-         'navigation_show' => $attributes['showNavigation'] ?? true,
-         'slidesPerView' => $attributes['slidesPerView'] ?? 3,
-     ]); ?>'>
+         'navigation_show' => $attributes['showNavigation'] ?? true
+            ]); ?>'>
     <div class="swiper-wrapper">
         <?php
         echo $content;

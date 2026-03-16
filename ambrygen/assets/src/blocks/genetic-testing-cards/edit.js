@@ -79,6 +79,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) =>
 							setAttributes( { headingTag: value } )
 						}
+						type="heading"
 					/>
 				</PanelBody>
 			</InspectorControls>
@@ -88,7 +89,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					tagName={ headingTag }
 					className="heading-3 mb-0 block-title"
 					value={ sectionTitle }
-					allowedFormats={ [ 'core/bold', 'core/text-color' ] } // highlight only
+					allowedFormats={ [ 'core/text-color' ] } // highlight only
 					onChange={ ( value ) =>
 						setAttributes( { sectionTitle: value } )
 					}

@@ -26,7 +26,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			fadeEffect: {
 				crossFade: true,
 			},
-			loop: true,
+			loop: sliderElement.querySelectorAll( '.swiper-slide' ).length > 1,
 			speed: 800,
 			autoplay: config.autoplay || false,
 			navigation: config.navigation

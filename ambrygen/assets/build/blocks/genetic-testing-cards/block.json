@@ -7,20 +7,7 @@
   "icon": "grid-view",
   "description": "A layout with two stacked cards on the left and one large featured card on the right.",
   "supports": {
-    "html": false,
-    "align": [
-      "wide",
-      "full"
-    ],
-    "spacing": {
-      "margin": true,
-      "padding": true,
-      "blockGap": true
-    },
-    "color": {
-      "background": true,
-      "text": true
-    }
+    "html": false
   },
   "keywords": [
     "cards",
@@ -29,6 +16,18 @@
     "grid"
   ],
   "attributes": {
+    "headingLevel": {
+      "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
+      "default": "h2"
+    },
     "sectionTitle": {
       "type": "string",
       "default": "Why We’re Different"

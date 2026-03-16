@@ -1,10 +1,4 @@
 /**
- * Retrieves the translation of text.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
- */
-
-/**
  * React hooks for performance optimization.
  *
  * @see https://react.dev/reference/react
@@ -17,6 +11,8 @@ import { useCallback, useState } from '@wordpress/element';
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/
  */
 import {
+	BlockControls,
+	MediaPlaceholder,
 	RichText,
 	InspectorControls,
 	useBlockProps,
@@ -32,14 +28,16 @@ import {
 	PanelBody,
 	RangeControl,
 	ToggleControl,
+	ToolbarButton,
+	ToolbarGroup,
 } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 
 import {
 	TagSelector,
 	ImageUploader,
 	CtaButtonField,
 } from '../_shared/components';
-import { t } from '../_shared/utils';
 
 /**
  * Edit component for the Hero Section block.
@@ -58,15 +56,8 @@ import { t } from '../_shared/utils';
  * @return {JSX.Element} Block editor interface element.
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const {
-		slides,
-		showSliderNav,
-		showSliderDots,
-		autoplay,
-		autoplayDelay,
-		primarybutton,
-		secondarybutton,
-	} = attributes;
+	const { slides, showSliderNav, showSliderDots, autoplay, autoplayDelay } =
+		attributes;
 
 	const [ currentSlide, setCurrentSlide ] = useState( 0 );
 
@@ -103,24 +94,43 @@ export default function Edit( { attributes, setAttributes } ) {
 		const newSlides = [
 			...slides,
 			{
+				id:
+					typeof crypto?.randomUUID === 'function'
+						? crypto.randomUUID()
+						: `${ Date.now() }-${ Math.random()
+								.toString( 36 )
+								.slice( 2 ) }`,
 				backgroundImage: '',
 				backgroundImageId: 0,
 				backgroundImageAlt: '',
 				heading: '',
 				eyebrow: '',
-				headingTag: '',
+				headingTag: 'h2',
 				content: '',
+				tagline: '',
 				buttonPrimaryText: 'Start Your Order',
 				buttonPrimaryUrl: '#',
-				primarybutton,
-				secondarybutton,
+				primarybutton: {
+					url: '',
+					text: '',
+					target: '',
+					rel: '',
+					variant: '',
+				},
+				secondarybutton: {
+					url: '',
+					text: '',
+					target: '',
+					rel: '',
+					variant: '',
+				},
 				buttonSecondaryText: 'Who We Are',
 				buttonSecondaryUrl: '#',
 			},
 		];
 		setAttributes( { slides: newSlides } );
 		setCurrentSlide( newSlides.length - 1 );
-	}, [ slides, setAttributes, primarybutton, secondarybutton ] );
+	}, [ slides, setAttributes ] );
 
 	/**
 	 * Removes a slide.
@@ -169,28 +179,43 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	return (
 		<>
+			<BlockControls>
+				<ToolbarGroup>
+					<ToolbarButton
+						icon="plus-alt2"
+						label={ __( 'Add Slide', 'ambrygen-web' ) }
+						onClick={ addSlide }
+					/>
+				</ToolbarGroup>
+			</BlockControls>
 			<div { ...blockProps }>
 				<InspectorControls>
 					<PanelBody
-						title={ t( 'Slider Settings' ) }
+						title={ __( 'Slider Settings', 'ambrygen-web' ) }
 						initialOpen={ false }
 					>
 						<ToggleControl
-							label={ t( 'Show Navigation Arrows' ) }
+							label={ __(
+								'Show Navigation Arrows',
+								'ambrygen-web'
+							) }
 							checked={ showSliderNav }
 							onChange={ ( value ) =>
 								setAttributes( { showSliderNav: value } )
 							}
 						/>
 						<ToggleControl
-							label={ t( 'Show Pagination Dots' ) }
+							label={ __(
+								'Show Pagination Dots',
+								'ambrygen-web'
+							) }
 							checked={ showSliderDots }
 							onChange={ ( value ) =>
 								setAttributes( { showSliderDots: value } )
 							}
 						/>
 						<ToggleControl
-							label={ t( 'Autoplay' ) }
+							label={ __( 'Autoplay', 'ambrygen-web' ) }
 							checked={ autoplay }
 							onChange={ ( value ) =>
 								setAttributes( { autoplay: value } )
@@ -199,7 +224,10 @@ export default function Edit( { attributes, setAttributes } ) {
 
 						{ autoplay && (
 							<RangeControl
-								label={ t( 'Autoplay Delay (Milliseconds)' ) }
+								label={ __(
+									'Autoplay Delay (Milliseconds)',
+									'ambrygen-web'
+								) }
 								value={ autoplayDelay }
 								onChange={ ( value ) =>
 									setAttributes( { autoplayDelay: value } )
@@ -213,23 +241,18 @@ export default function Edit( { attributes, setAttributes } ) {
 
 					{ slides.map( ( slideItem, index ) => (
 						<PanelBody
-							key={ index }
-							title={ t( `Slide ${ index + 1 }` ) }
+							key={ slideItem.id ?? index }
+							title={ `${ __( 'Slide', 'ambrygen-web' ) } ${
+								index + 1
+							}` }
 							initialOpen={ index === currentSlide }
 							onToggle={ () => setCurrentSlide( index ) }
 						>
 							{ slides.length > 1 && (
-								<div
-									style={ {
-										display: 'flex',
-										justifyContent: 'flex-end',
-										gap: '8px',
-										marginTop: '10px',
-									} }
-								>
+								<div className="hero-section__slide-controls">
 									{ /* Move Slide Up */ }
 									<Button
-										isSmall
+										size="small"
 										disabled={ index === 0 }
 										onClick={ ( e ) => {
 											e.preventDefault();
@@ -237,12 +260,12 @@ export default function Edit( { attributes, setAttributes } ) {
 											moveSlide( index, -1 ); // Move up
 										} }
 									>
-										{ t( 'Move Up' ) }
+										{ __( 'Move Up', 'ambrygen-web' ) }
 									</Button>
 
 									{ /* Move Slide Down */ }
 									<Button
-										isSmall
+										size="small"
 										disabled={ index === slides.length - 1 }
 										onClick={ ( e ) => {
 											e.preventDefault();
@@ -250,13 +273,16 @@ export default function Edit( { attributes, setAttributes } ) {
 											moveSlide( index, 1 ); // Move down
 										} }
 									>
-										{ t( 'Move Down' ) }
+										{ __( 'Move Down', 'ambrygen-web' ) }
 									</Button>
 								</div>
 							) }
 
 							<ImageUploader
-								label={ t( 'Background Image' ) }
+								label={ __(
+									'Background Image',
+									'ambrygen-web'
+								) }
 								url={ slideItem.backgroundImage }
 								onSelect={ ( media ) =>
 									updateSlide( index, {
@@ -275,7 +301,10 @@ export default function Edit( { attributes, setAttributes } ) {
 							/>
 
 							<ImageUploader
-								label={ t( 'Top Left Overlay' ) }
+								label={ __(
+									'Top Left Overlay',
+									'ambrygen-web'
+								) }
 								url={ slideItem.overlayImage1 }
 								onSelect={ ( media ) =>
 									updateSlide( index, {
@@ -293,7 +322,10 @@ export default function Edit( { attributes, setAttributes } ) {
 								}
 							/>
 							<ImageUploader
-								label={ t( 'Bottom Right Overlay' ) }
+								label={ __(
+									'Bottom Right Overlay',
+									'ambrygen-web'
+								) }
 								url={ slideItem.overlayImage2 }
 								onSelect={ ( media ) =>
 									updateSlide( index, {
@@ -311,51 +343,49 @@ export default function Edit( { attributes, setAttributes } ) {
 								}
 							/>
 
-							<PanelBody
-								label={ t( 'Primary Button' ) }
+							{ /* <PanelBody
+								title={ __( 'Heading Settings', 'ambrygen-web' ) }
+								id={ `hero-heading-settings-${ index }` }
+							></PanelBody> */ }
+							<TagSelector
+								label={ __( 'Heading Tag', 'ambrygen-web' ) }
+								value={ slideItem.headingTag || 'h2' }
+								onChange={ ( value ) =>
+									updateSlide( index, 'headingTag', value )
+								}
+								type="heading"
+							/>
+
+							{ /* <PanelBody
+								title={ __( 'Primary Button', 'ambrygen-web' ) }
 								id={ `hero-primary-button-${ index }` }
-							>
-								<TagSelector
-									label={ t( 'Heading Tag' ) }
-									value={ slideItem.headingTag || 'h2' }
-									onChange={ ( value ) =>
-										updateSlide(
-											index,
-											'headingTag',
-											value
-										)
-									}
-								/>
+							></PanelBody> */ }
+							<CtaButtonField
+								label={ __( 'Primary Button', 'ambrygen-web' ) }
+								value={ slideItem.primarybutton || {} }
+								onChange={ ( value ) =>
+									updateSlide( index, 'primarybutton', value )
+								}
+							/>
 
-								<CtaButtonField
-									label={ t( 'Primary Button' ) }
-									value={ slideItem.primarybutton || {} }
-									onChange={ ( value ) =>
-										updateSlide(
-											index,
-											'primarybutton',
-											value
-										)
-									}
-								/>
-							</PanelBody>
-
-							<PanelBody
-								label={ t( 'Secondary Button' ) }
+							{ /* <PanelBody
+								title={ __( 'Secondary Button', 'ambrygen-web' ) }
 								id={ `hero-secondary-button-${ index }` }
-							>
-								<CtaButtonField
-									label={ t( 'Secondary Button' ) }
-									value={ slideItem.secondarybutton || {} }
-									onChange={ ( value ) =>
-										updateSlide(
-											index,
-											'secondarybutton',
-											value
-										)
-									}
-								/>
-							</PanelBody>
+							></PanelBody> */ }
+							<CtaButtonField
+								label={ __(
+									'Secondary Button',
+									'ambrygen-web'
+								) }
+								value={ slideItem.secondarybutton || {} }
+								onChange={ ( value ) =>
+									updateSlide(
+										index,
+										'secondarybutton',
+										value
+									)
+								}
+							/>
 
 							{ slides.length > 1 && (
 								<>
@@ -367,24 +397,14 @@ export default function Edit( { attributes, setAttributes } ) {
 										} }
 										variant="link"
 										isDestructive
-										style={ { marginTop: '10px' } }
+										className="hero-section__remove-slide"
 									>
-										{ t( 'Remove Slide' ) }
+										{ __( 'Remove Slide', 'ambrygen-web' ) }
 									</Button>
 								</>
 							) }
 						</PanelBody>
 					) ) }
-
-					<PanelBody>
-						<Button
-							onClick={ addSlide }
-							variant="secondary"
-							isLarge
-						>
-							{ t( '+ Add Slide' ) }
-						</Button>
-					</PanelBody>
 				</InspectorControls>
 				<div className="container-1340 ">
 					<div className="hero-section__slider swiper">
@@ -401,6 +421,10 @@ export default function Edit( { attributes, setAttributes } ) {
 												)
 											}
 											variant="secondary"
+											aria-label={ __(
+												'Previous slide',
+												'ambrygen-web'
+											) }
 										>
 											&larr;
 										</Button>
@@ -418,6 +442,10 @@ export default function Edit( { attributes, setAttributes } ) {
 												)
 											}
 											variant="secondary"
+											aria-label={ __(
+												'Next slide',
+												'ambrygen-web'
+											) }
 										>
 											&rarr;
 										</Button>
@@ -460,15 +488,30 @@ export default function Edit( { attributes, setAttributes } ) {
 										</>
 									) : (
 										<div className="hero-section__placeholder">
-											<img
-												src={
-													window?.ambrygenAssets
-														?.defaultImageUrl
+											<MediaPlaceholder
+												icon="format-image"
+												labels={ {
+													title: __(
+														'Background Image',
+														'ambrygen-web'
+													),
+													instructions: __(
+														'Upload or select a background image for this slide.',
+														'ambrygen-web'
+													),
+												} }
+												onSelect={ ( media ) =>
+													updateSlide( currentSlide, {
+														backgroundImage:
+															media.url,
+														backgroundImageId:
+															media.id,
+														backgroundImageAlt:
+															media.alt || '',
+													} )
 												}
-												alt={ t(
-													'Default background image'
-												) }
-												className="hero-section__image"
+												accept="image/*"
+												allowedTypes={ [ 'image' ] }
 											/>
 										</div>
 									) }
@@ -486,11 +529,13 @@ export default function Edit( { attributes, setAttributes } ) {
 														value
 													)
 												}
-												placeholder={ t(
-													'Add Eyebrow Text'
+												placeholder={ __(
+													'Add Eyebrow Text',
+													'ambrygen-web'
 												) }
-												aria-label={ t(
-													'Slide Heading'
+												aria-label={ __(
+													'Slide Heading',
+													'ambrygen-web'
 												) }
 												allowedFormats={ [
 													'core/bold',
@@ -514,7 +559,10 @@ export default function Edit( { attributes, setAttributes } ) {
 													value
 												)
 											}
-											placeholder={ t( 'Add Heading…' ) }
+											placeholder={ __(
+												'Add Heading…',
+												'ambrygen-web'
+											) }
 											allowedFormats={ [
 												'core/bold',
 												'core/italic',
@@ -538,11 +586,39 @@ export default function Edit( { attributes, setAttributes } ) {
 														value
 													)
 												}
-												placeholder={ t(
-													'Add Description'
+												placeholder={ __(
+													'Add Description',
+													'ambrygen-web'
 												) }
-												aria-label={ t(
-													'Slide Description'
+												aria-label={ __(
+													'Slide Description',
+													'ambrygen-web'
+												) }
+												allowedFormats={ [
+													'core/bold',
+													'core/italic',
+													'core/link',
+												] }
+											/>
+										</div>
+										<div
+											className="is-style-gl-s24"
+											aria-hidden="true"
+										></div>
+										<div className="hero-section__tagline">
+											<RichText
+												tagName="p"
+												value={ slide.tagline }
+												onChange={ ( value ) =>
+													updateSlide(
+														currentSlide,
+														'tagline',
+														value
+													)
+												}
+												placeholder={ __(
+													'Add Tagline',
+													'ambrygen-web'
 												) }
 												allowedFormats={ [
 													'core/bold',

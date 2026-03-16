@@ -1,0 +1,214 @@
+// @use "../../variables/breakpoints" as bp;
+
+// // ──────────────────────────────────────────────
+// // WCAG 2.1 AA – Skip Navigation (2.4.1)
+// // ──────────────────────────────────────────────
+// .skip-link {
+//     position: absolute;
+//     top: -100%;
+//     left: 0;
+//     z-index: 9999;
+//     padding: 12px 20px;
+//     background-color: var(--theme_primary_700, #0079a4);
+//     color: var(--theme_white, #fff);
+//     font-weight: 600;
+//     text-decoration: none;
+//     border-radius: 0 0 4px 4px;
+//     transition: top 0.2s ease;
+
+//     &:focus {
+//         top: 0;
+//         outline: 3px solid var(--theme_primary_500, #00aae7);
+//         outline-offset: 2px;
+//     }
+// }
+
+// .two-content-block {
+//     display: flex;
+//     align-items: flex-start;
+//     gap: 96px;
+
+//     @include bp.max(xl) {
+//         gap: 60px;
+//     }
+
+//     @include bp.max(lg) {
+//         gap: 40px;
+//     }
+
+//     @include bp.max(md) {
+//         flex-direction: column;
+//         gap: 32px;
+//     }
+
+//     &__left {
+//         flex: 1;
+//         display: flex;
+//         flex-direction: column;
+//     }
+
+//     &__heading-wrap {
+//         display: flex;
+//         flex-direction: column;
+//     }
+
+//     &__text-group {
+//         display: flex;
+//         flex-direction: column;
+//     }
+
+//     &__subheading {
+//         color: var(--theme_gray_900);
+//         margin: 0;
+//     }
+
+//     &__body {
+//         color: var(--theme_gray_600);
+//         margin: 0;
+//     }
+
+//     &__right {
+//         flex: 1;
+//         display: flex;
+//         flex-direction: column;
+//     }
+
+//     &__partner {
+//         display: flex;
+//         flex-direction: column;
+//     }
+
+//     &__partner-text {
+//         color: var(--theme_gray_900);
+//         margin: 0;
+//     }
+
+//     &__logo {
+//         display: flex;
+//         align-items: center;
+//     }
+
+//     &__logo-img {
+//         display: block;
+//         max-width: 176px;
+//         height: auto;
+//         width: 100%;
+//     }
+
+//     &__link {
+//         display: inline-flex;
+//         align-items: center;
+
+//         // WCAG 2.1 AA – 2.4.7 Focus Visible / 2.4.11 Focus Appearance
+//         &:focus-visible {
+//             outline: 3px solid var(--theme_primary_500, #00aae7);
+//             outline-offset: 3px;
+//             border-radius: 2px;
+//         }
+//     }
+
+//     // ──────────────────────────────────────────────
+//     // Video Section
+//     // ──────────────────────────────────────────────
+
+//     &__video-section {
+//         display: flex;
+//         flex-direction: column;
+//         align-items: center;
+//         width: 100%;
+//     }
+
+//     &__video-heading {
+//         text-align: center;
+//         width: 100%;
+//     }
+
+//     &__video-wrap {
+//         width: 100%;
+//         max-width: 960px;
+//         margin-left: auto;
+//         margin-right: auto;
+
+//         .features-media__video-wrapper {
+//             position: relative;
+//             width: 100%;
+//             aspect-ratio: 16 / 9;
+//             border-radius: 12px;
+//             overflow: hidden;
+//             box-shadow:
+//                 0 32px 64px -12px rgba(10, 13, 18, 0.14),
+//                 0 5px 5px -2.5px rgba(10, 13, 18, 0.04);
+
+//             video {
+//                 display: block;
+//                 width: 100%;
+//                 height: 100%;
+//                 object-fit: cover;
+//                 border-radius: 12px;
+//             }
+
+//             .play-icon-video {
+//                 position: absolute;
+//                 inset: 0;
+//                 display: flex;
+//                 align-items: center;
+//                 justify-content: center;
+//                 background-color: rgba(0, 0, 0, 0.1);
+//                 cursor: pointer;
+
+//                 // WCAG 2.4.7 – remove default button border/bg
+//                 background: rgba(0, 0, 0, 0.1);
+//                 border: none;
+//                 padding: 0;
+//                 width: 100%;
+
+//                 // WCAG 2.4.7 / 2.4.11 – Focus Visible
+//                 &:focus-visible {
+//                     outline: 3px solid var(--theme_primary_500, #00aae7);
+//                     outline-offset: 4px;
+//                     border-radius: 12px;
+//                 }
+
+//                 .play-icon,
+//                 .pause-icon {
+//                     display: flex;
+//                     align-items: center;
+//                     justify-content: center;
+//                     width: 64px;
+//                     height: 64px;
+//                     border-radius: 50%;
+//                     background-color: rgba(255, 255, 255, 0.3);
+//                     backdrop-filter: blur(8px);
+//                     -webkit-backdrop-filter: blur(8px);
+//                     pointer-events: none;
+
+//                     img {
+//                         display: block;
+//                         width: 20px;
+//                         height: 20px;
+//                     }
+//                 }
+
+//                 .pause-icon {
+//                     display: none;
+//                 }
+
+//                 // When video is playing – toggle icons via JS setting aria-pressed
+//                 &[aria-pressed="true"] {
+
+//                     .play-icon {
+//                         display: none;
+//                     }
+
+//                     .pause-icon {
+//                         display: flex;
+//                     }
+//                 }
+//             }
+
+//             @include bp.max(md) {
+//                 border-radius: 8px;
+//             }
+//         }
+//     }
+// }

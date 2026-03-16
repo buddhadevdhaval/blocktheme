@@ -34,7 +34,7 @@ if ( ! empty( $ambrygen_link_target ) ) {
 	}
 }
 
-$ambrygen_gallery_variation = $block->context['ambrygen/galleryVariation'] ?? 'two-column';
+$ambrygen_gallery_variation = $block->context['ambrygen/galleryVariation'] ?? 'default';
 
 /**
  * WCAG 1.3.1: Validate heading tag
@@ -54,7 +54,7 @@ if ( empty( trim( wp_strip_all_tags( $ambrygen_title ) ) ) ) {
 /**
  * Wrapper tag logic (unchanged)
  */
-$ambrygen_wrapper_tag = ( 'two-column' === $ambrygen_gallery_variation && ! empty( $ambrygen_link ) )
+$ambrygen_wrapper_tag = ( 'default' === $ambrygen_gallery_variation && ! empty( $ambrygen_link ) )
 	? 'a'
 	: 'div';
 
@@ -132,7 +132,7 @@ if ( 'a' === $ambrygen_wrapper_tag ) {
 				</a>
 			</div>
 
-		<?php elseif ( 'two-column' !== $ambrygen_gallery_variation && $ambrygen_link ) :
+		<?php elseif ( 'default' !== $ambrygen_gallery_variation && $ambrygen_link ) :
 			$cta_aria_label = $ambrygen_link_text ? $ambrygen_link_text . ' ' . wp_strip_all_tags( $ambrygen_title ) : wp_strip_all_tags( $ambrygen_title );
 			?>
 			<div class="link_text">

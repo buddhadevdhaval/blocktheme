@@ -5,10 +5,8 @@
 	const blocks = document.querySelectorAll( '.careers-highlight' );
 
 	blocks.forEach( ( block ) => {
-		const toggleWrap = block.querySelector(
-			'.careers-highlight__play-icon'
-		);
-		const playIcon = toggleWrap?.querySelector( 'img:not(.pause-icon)' );
+		const toggleWrap = block.querySelector( '.play-icon-video' );
+		const playIcon = toggleWrap?.querySelector( '.play-icon' );
 		const pauseIcon = toggleWrap?.querySelector( '.pause-icon' );
 
 		const video = block.querySelector( 'video.videos' );
@@ -31,7 +29,8 @@
 		 * MP4 VIDEO
 		 * ===================== */
 		if ( video ) {
-			toggleWrap.addEventListener( 'click', () => {
+			toggleWrap.addEventListener( 'click', ( event ) => {
+				event.preventDefault();
 				if ( video.paused ) {
 					video.play();
 					setPlayingState( true );
@@ -52,7 +51,8 @@
 		 * IFRAME (YouTube/Vimeo basic)
 		 * ===================== */
 		if ( iframe ) {
-			toggleWrap.addEventListener( 'click', () => {
+			toggleWrap.addEventListener( 'click', ( event ) => {
+				event.preventDefault();
 				const src = iframe.getAttribute( 'src' );
 
 				if ( block.classList.contains( 'is-playing' ) ) {

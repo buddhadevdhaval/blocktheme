@@ -12,7 +12,7 @@
   "attributes": {
     "title": {
       "type": "string",
-      "default": "Our Locations"
+      "default": ""
     },
     "iframe": {
       "type": "string",
@@ -36,6 +36,14 @@
     },
     "headingLevel": {
       "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
       "default": "h2"
     }
   },

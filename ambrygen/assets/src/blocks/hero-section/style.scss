@@ -45,7 +45,8 @@
 		}
 	}
 
-	&__image {
+	&__image,
+	.block-editor__container img {
 		border-bottom-left-radius: clamp(120px, calc(7.5rem + ((1vw - 7.68px) * 18.0412)), 225px);
 		height: 100%;
 		object-fit: cover;
@@ -152,7 +153,7 @@
 		line-height: 1.12;
 	}
 
-	.hero-section__heading {
+	&__heading {
 		color: var(--theme_color_secondary);
 		margin-bottom: 0;
 	}
@@ -198,17 +199,16 @@
 		}
 
 		.site-btn {
-
 			@include bp.max(sm) {
 				justify-content: center;
 				text-align: center;
-				width: 100%;
+
+				width: 100%
 			}
 		}
 	}
 
 	&__slider {
-
 		.swiper-button-next {
 			right: 20px;
 		}

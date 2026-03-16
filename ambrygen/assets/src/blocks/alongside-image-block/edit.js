@@ -25,9 +25,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		`loc-${ Date.now() }-${ Math.random().toString( 36 ).slice( 2, 9 ) }`;
 
 	useEffect( () => {
-		const hasMissingIds = locations.some(
-			( location ) => ! location?.id
-		);
+		const hasMissingIds = locations.some( ( location ) => ! location?.id );
 
 		if ( hasMissingIds ) {
 			setAttributes( {
@@ -136,10 +134,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 						<div className="alongside-image-block__text">
 							{ locations.map( ( loc, index ) => (
-								<div
-									className="location-list"
-									key={ loc.id }
-								>
+								<div className="location-list" key={ loc.id }>
 									<RichText
 										placeholder={ __(
 											'Location Name',

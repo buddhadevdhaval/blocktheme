@@ -18,6 +18,8 @@ $ambrygen_attributes = $attributes ?? array();
 $ambrygen_image_id = $ambrygen_attributes['imageId'] ?? 0;
 $ambrygen_faqs     = $ambrygen_attributes['faqs'] ?? array();
 $ambrygen_title    = $ambrygen_attributes['title'] ?? '';
+$ambrygen_description = $ambrygen_attributes['description'] ?? '';
+$ambrygen_variant  = $ambrygen_attributes['variant'] ?? 'default';
 
 $ambrygen_heading          = $ambrygen_attributes['headingTag'] ?? 'h5';
 $ambrygen_allowed_headings = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
@@ -29,7 +31,7 @@ $ambrygen_heading_id = wp_unique_id( 'faq-heading-' );
 // Generate wrapper attributes.
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class' => 'alongside-faq',
+		'class' => 'alongside-faq variation-' . $ambrygen_variant,
 	)
 );
 ?>
@@ -37,6 +39,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="alongside-faq__row">
 
+		<?php if ( $ambrygen_variant === 'default' ) : ?>
 		<div class="alongside-faq__col alongside-faq__col--left">
 			<div class="alongside-faq__media">
 				<?php
@@ -50,11 +53,10 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 				?>
 			</div>
 		</div>
+		<?php endif; ?>
 
 		<div class="alongside-faq__col alongside-faq__col--right">
 			<div class="alongside-faq__content">
-
-
 				<?php if ( $ambrygen_title ) : ?>
 					<<?php echo tag_escape( $ambrygen_heading ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-4 alongside-faq__title mb-0">
 						<?php
@@ -66,6 +68,12 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 					</<?php echo tag_escape( $ambrygen_heading ); ?>>
 				<?php endif; ?>
 
+				<?php if ( $ambrygen_description ) : ?>
+					<div class="is-style-gl-s24" aria-hidden="true"></div>
+					<div class="alongside-faq__description">
+						<?php echo wp_kses_post( wpautop( $ambrygen_description ) ); ?>
+					</div>
+				<?php endif; ?>
 
 				<div class="is-style-gl-s64" aria-hidden="true"></div>
 

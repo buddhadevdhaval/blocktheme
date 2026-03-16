@@ -88,5 +88,92 @@ final class Blocks {
 				);
 			}
 		}
+
+		register_block_type(
+			'ambrygen/post-meta-list',
+			array(
+				'render_callback' => static function (): string {
+					if ( ! class_exists( '\\Ambrygen\\Theme\\Core\\PostTypes' ) ) {
+						return '';
+					}
+
+					$post_id = get_the_ID();
+					if ( ! $post_id ) {
+						return '';
+					}
+
+					return PostTypes::instance()->render_post_meta_fields( $post_id );
+				},
+			)
+		);
+
+		register_block_type(
+			'ambrygen/event-post-meta-list',
+			array(
+				'render_callback' => static function (): string {
+					if ( ! class_exists( '\\Ambrygen\\Theme\\Core\\PostTypes' ) ) {
+						return '';
+					}
+
+					$post_id = get_the_ID();
+					if ( ! $post_id ) {
+						return '';
+					}
+
+					return PostTypes::instance()->render_event_meta_summary( $post_id );
+				},
+			)
+		);
+
+
+
+		register_block_type(
+			'ambrygen/featured-image-fallback',
+			array(
+				'attributes'      => array(
+					'className' => array(
+						'type'    => 'string',
+						'default' => '',
+					),
+					'sizeSlug'  => array(
+						'type'    => 'string',
+						'default' => 'full',
+					),
+					'isLink'    => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
+				),
+				'render_callback' => static function ( array $attributes ): string {
+					$post_id = get_the_ID();
+					if ( ! $post_id ) {
+						return '';
+					}
+
+					$size = isset( $attributes['sizeSlug'] ) ? (string) $attributes['sizeSlug'] : 'full';
+					$class = isset( $attributes['className'] ) ? (string) $attributes['className'] : '';
+					$is_link = ! empty( $attributes['isLink'] );
+
+					$image_html = Helper::image_with_placeholder(
+						get_post_thumbnail_id( $post_id ),
+						$size,
+						array(
+							'class' => $class,
+						)
+					);
+
+					if ( ! $is_link ) {
+						return $image_html;
+					}
+
+					$permalink = get_permalink( $post_id );
+					if ( ! $permalink ) {
+						return $image_html;
+					}
+
+					return '<a href="' . esc_url( $permalink ) . '">' . $image_html . '</a>';
+				},
+			)
+		);
 	}
 }

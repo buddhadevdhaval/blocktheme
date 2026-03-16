@@ -11,7 +11,9 @@ $media: (
 	xl: 1201px,
 	xxxl: 1351px,
 	xxxxl: 1440px,
-	ultra: 1680px
+	ultra: 1680px,
+	ultra-large: 1921px,
+	ultra-wide: 2800px
 );
 
 @function bp($value) {

@@ -43,7 +43,6 @@ final class Theme {
 		add_filter( 'wp_check_filetype_and_ext', array( $this, 'ambry_fix_ico_upload' ), 10, 3 );
 	}
 
-	
 	/**
 	 * Allow SVG uploads.
 	 *
@@ -56,8 +55,16 @@ final class Theme {
 
 		return $mimes;
 	}
-	public function ambry_fix_ico_upload( $data, $file, $filename ) {
 
+	/**
+	 * Fix ICO uploads.
+	 *
+	 * @param array  $data     File data.
+	 * @param string $file     File path.
+	 * @param string $filename File name.
+	 * @return array
+	 */
+	public function ambry_fix_ico_upload( $data, $file, $filename ) {
 		if ( 'ico' === strtolower( pathinfo( $filename, PATHINFO_EXTENSION ) ) ) {
 			return array(
 				'ext'             => 'ico',
@@ -75,7 +82,6 @@ final class Theme {
 	 * @return void
 	 */
 	public function load_components(): void {
-
 		// Frontend + shared components.
 		Helper::instance();
 		Blocks::instance();
@@ -83,7 +89,7 @@ final class Theme {
 		Patterns::instance();
 
 		// Custom Post Types
-		Post_Types::instance();
+		//Post_Types::instance();
 		Theme_Options::instance();
 	}
 
@@ -93,7 +99,6 @@ final class Theme {
 	 * @return void
 	 */
 	public function theme_setup(): void {
-
 		// Load translations.
 		load_theme_textdomain(
 			AMBRYGEN_TEXT_DOMAIN,

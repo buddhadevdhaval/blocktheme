@@ -4,7 +4,7 @@ import {
 	InspectorControls,
 	RichText,
 } from '@wordpress/block-editor';
-import { PanelBody, Button } from '@wordpress/components';
+import { PanelBody, Button, ToggleControl } from '@wordpress/components';
 import { useEffect, useMemo } from '@wordpress/element';
 import {
 	TagSelector,
@@ -14,109 +14,139 @@ import {
 
 const MAX_FAQS = 10;
 
-export default function Edit( { attributes, setAttributes } ) {
-	const { imageUrl, imageAlt, faqs = [], title, headingTag } = attributes;
+export default function Edit({ attributes, setAttributes }) {
+	const { imageUrl, imageAlt, faqs = [], title, headingTag, variant, description } = attributes;
+	const showImage = variant !== 'without-image';
 
-	const blockProps = useBlockProps();
-	const defaultImages = useMemo( () => DEFAULT_IMAGES(), [] );
+	const blockProps = useBlockProps({
+		className: `alongside-faq variation-${variant}`,
+	});
+	const defaultImages = useMemo(() => DEFAULT_IMAGES(), []);
 
-	const updateFaq = ( index, field, value ) => {
-		const newFaqs = [ ...faqs ];
-		newFaqs[ index ] = { ...newFaqs[ index ], [ field ]: value };
-		setAttributes( { faqs: newFaqs } );
+	const updateFaq = (index, field, value) => {
+		const newFaqs = [...faqs];
+		newFaqs[index] = { ...newFaqs[index], [field]: value };
+		setAttributes({ faqs: newFaqs });
 	};
 
 	const addFaq = () => {
-		if ( faqs.length >= MAX_FAQS ) {
+		if (faqs.length >= MAX_FAQS) {
 			return;
 		}
-		setAttributes( {
+		setAttributes({
 			faqs: [
 				...faqs,
 				{ id: Date.now().toString(), question: '', answer: '' },
 			],
-		} );
+		});
 	};
 
-	const removeFaq = ( index ) => {
-		setAttributes( { faqs: faqs.filter( ( _, i ) => i !== index ) } );
+	const removeFaq = (index) => {
+		setAttributes({ faqs: faqs.filter((_, i) => i !== index) });
 	};
-	useEffect( () => {
-		if ( ! imageUrl ) {
-			if ( defaultImages.placeholder.url ) {
-				setAttributes( {
+	useEffect(() => {
+		if (!imageUrl) {
+			if (defaultImages.placeholder.url) {
+				setAttributes({
 					imageUrl: defaultImages.placeholder.url,
 					imageId: defaultImages.placeholder.id,
-				} );
+				});
 			}
 		}
-	}, [ imageUrl, setAttributes, defaultImages ] );
+	}, [imageUrl, setAttributes, defaultImages]);
 
 	return (
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'FAQ Setting', 'ambrygen-web' ) }
+					title={__('FAQ Setting', 'ambrygen-web')}
 					initialOpen
 				>
 					<TagSelector
-						label={ __( 'Heading Tag', 'ambrygen-web' ) }
-						value={ headingTag }
-						onChange={ ( value ) =>
-							setAttributes( { headingTag: value } )
+						label={__('Heading Tag', 'ambrygen-web')}
+						value={headingTag}
+						onChange={(value) =>
+							setAttributes({ headingTag: value })
 						}
 					/>
 
-					<ImageUploader
-						label={ __( 'FAQ Image', 'ambrygen-web' ) }
-						url={ imageUrl }
-						onSelect={ ( media ) =>
-							setAttributes( {
-								imageUrl: media.url,
-								imageId: media.id,
-								imageAlt: media.alt || '',
-							} )
-						}
-						onRemove={ () =>
-							setAttributes( {
-								imageUrl: '',
-								imageId: 0,
-								imageAlt: '',
-							} )
+					<ToggleControl
+						label={__('Show Image', 'ambrygen-web')}
+						checked={showImage}
+						onChange={(value) =>
+							setAttributes({
+								variant: value ? 'default' : 'without-image',
+							})
 						}
 					/>
+
+					{showImage && (
+						<ImageUploader
+							label={__('FAQ Image', 'ambrygen-web')}
+							url={imageUrl}
+							onSelect={(media) =>
+								setAttributes({
+									imageUrl: media.url,
+									imageId: media.id,
+									imageAlt: media.alt || '',
+								})
+							}
+							onRemove={() =>
+								setAttributes({
+									imageUrl: '',
+									imageId: 0,
+									imageAlt: '',
+								})
+							}
+						/>
+					)}
 				</PanelBody>
 			</InspectorControls>
 
-			{ /* FAQ Row body */ }
-			<div { ...blockProps }>
+			{ /* FAQ Row body */}
+			<div {...blockProps}>
 				<div className="alongside-faq__row">
-					{ /* LEFT IMAGE */ }
-					<div className="alongside-faq__col alongside-faq__col--left">
-						<div className="alongside-faq__media">
-							<img
-								src={
-									imageUrl || defaultImages.placeholder.url
-								}
-								alt={ imageAlt || '' }
-							/>
+					{ /* LEFT IMAGE */}
+					{showImage && (
+						<div className="alongside-faq__col alongside-faq__col--left">
+							<div className="alongside-faq__media">
+								<img
+									src={
+										imageUrl || defaultImages.placeholder.url
+									}
+									alt={imageAlt || ''}
+								/>
+							</div>
 						</div>
-					</div>
+					)}
 
-					{ /* RIGHT FAQ */ }
-					<div className="alongside-faq__col alongside-faq__col--right">
+					{ /* RIGHT FAQ */}
+					<div className={`alongside-faq__col alongside-faq__col--right ${showImage ? '' : 'full-width'}`}>
 						<div className="alongside-faq__content">
 							<RichText
-								tagName={ headingTag || 'h5' }
+								tagName={headingTag || 'h5'}
 								className="heading-4 alongside-faq__title mb-0"
-								value={ title }
-								onChange={ ( value ) =>
-									setAttributes( { title: value } )
+								value={title}
+								onChange={(value) =>
+									setAttributes({ title: value })
 								}
-								placeholder={ __(
+								placeholder={__(
 									'Frequently Asked Questions',
 									'ambrygen-web'
-								) }
+								)}
+							/>
+							<div className="is-style-gl-s24" aria-hidden="true"></div>
+							<RichText
+								tagName="div"
+								className="alongside-faq__description"
+								value={description}
+								onChange={(value) =>
+									setAttributes({ description: value })
+								}
+								placeholder={__(
+									'Description',
+									'ambrygen-web'
+								)}
 							/>
 
 							<div
@@ -125,59 +155,64 @@ export default function Edit( { attributes, setAttributes } ) {
 							></div>
 
 							<div className="faq">
-								{ faqs.map( ( faq, index ) => (
+								{faqs.map((faq, index) => (
 									<div
-										key={ faq.id || index }
+										key={faq.id || index}
 										className="faq__item editor"
 									>
 										<RichText
 											tagName="div"
 											className="faq__question  text-lg-medium"
-											value={ faq.question }
-											onChange={ ( value ) =>
+											value={faq.question}
+											onChange={(value) =>
 												updateFaq(
 													index,
 													'question',
 													value
 												)
 											}
-											placeholder={ __(
+											placeholder={__(
 												'FAQ Question',
 												'ambrygen-web'
-											) }
+											)}
 										/>
 										<RichText
 											tagName="div"
 											className="faq__answer"
-											value={ faq.answer }
-											onChange={ ( value ) =>
+											value={faq.answer}
+											onChange={(value) =>
 												updateFaq(
 													index,
 													'answer',
 													value
 												)
 											}
-											placeholder={ __(
+											placeholder={__(
 												'FAQ Answer',
 												'ambrygen-web'
-											) }
+											)}
 										/>
-										<Button
-											isDestructive
-											onClick={ () => removeFaq( index ) }
-										>
-											{ __( 'Remove', 'ambrygen-web' ) }
-										</Button>
+										<div className='actions-button'>
+											<Button
+												isDestructive
+												onClick={() => removeFaq(index)}
+											>
+												{__('Remove', 'ambrygen-web')}
+											</Button>
+										</div>
 									</div>
-								) ) }
-								{ faqs.length < MAX_FAQS && (
-									<Button
-										variant="primary"
-										onClick={ addFaq }
-									>
-										{ __( 'Add FAQ', 'ambrygen-web' ) }
-									</Button>
-								) }
+								))}
+								{faqs.length < MAX_FAQS && (
+									<>
+										<div className="is-style-gl-s24" aria-hidden="true"></div>
+										<Button
+											variant="primary"
+											onClick={addFaq}
+										>
+											{__('Add FAQ', 'ambrygen-web')}
+										</Button>
+									</>
+								)}
 							</div>
 						</div>
 					</div>

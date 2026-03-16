@@ -34,7 +34,15 @@
     },
     "variation": {
       "type": "string",
-      "default": "two-column"
+      "default": "default"
+    },
+    "gridColumns": {
+      "type": "string",
+      "default": "2",
+      "enum": [
+        "2",
+        "3"
+      ]
     },
     "topImageID": {
       "type": "number",
@@ -49,14 +57,15 @@
     }
   },
   "providesContext": {
-    "ambrygen/galleryVariation": "variation"
+    "ambrygen/galleryVariation": "variation",
+    "ambrygen/galleryGridColumns": "gridColumns"
   },
   "example": {
     "attributes": {
       "heading": "Title",
       "headingTag": "h2",
       "description": "This is a sample preview content for this block in the inserter.",
-      "variation": "two-column",
+      "variation": "default",
       "topImageID": 1,
       "topImageURL": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
       "blockId": 1

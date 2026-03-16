@@ -17,6 +17,11 @@ $ambrygen_description       = isset( $attributes['description'] ) ? $attributes[
 $ambrygen_image_url         = isset( $attributes['imageUrl'] ) ? $attributes['imageUrl'] : '';
 $ambrygen_image_alt         = isset( $attributes['imageAlt'] ) ? $attributes['imageAlt'] : '';
 $ambrygen_custom_step_label = isset( $attributes['customStepLabel'] ) ? $attributes['customStepLabel'] : '';
+$ambrygen_cta               = isset( $attributes['cta'] ) && is_array( $attributes['cta'] ) ? $attributes['cta'] : array();
+$ambrygen_cta_text          = isset( $ambrygen_cta['text'] ) ? $ambrygen_cta['text'] : '';
+$ambrygen_cta_url           = isset( $ambrygen_cta['url'] ) ? $ambrygen_cta['url'] : '';
+$ambrygen_cta_target        = isset( $ambrygen_cta['target'] ) ? $ambrygen_cta['target'] : '';
+$ambrygen_cta_rel           = isset( $ambrygen_cta['rel'] ) ? $ambrygen_cta['rel'] : '';
 
 ?>
 
@@ -32,14 +37,26 @@ $ambrygen_custom_step_label = isset( $attributes['customStepLabel'] ) ? $attribu
 
 		<?php if ( ! empty( $ambrygen_section_title ) ) : ?>
 			<div class="subtitle1-sbold vertical-tabs__title">
-				<?php echo esc_html( $ambrygen_section_title ); ?>
+				<?php echo wp_kses_post( html_entity_decode( $ambrygen_section_title ) ); ?>
 			</div>
 		<?php endif; ?>
 
 		<?php if ( ! empty( $ambrygen_description ) ) : ?>
 			<div class="body1-regular vertical-tabs__desc">
-				<?php echo wp_kses_post( $ambrygen_description ); ?>
+				<?php echo wp_kses_post( html_entity_decode($ambrygen_description )); ?>
 			</div>
+		<?php endif; ?>
+
+		<?php if ( ! empty( $ambrygen_cta_url ) ) : ?>
+			<div class='is-style-gl-s20'></div>
+			<a
+				class="features-tabs__view-link site-btn is-style-site-text-btn has-icon icon-arrow-up"
+				href="<?php echo esc_url( $ambrygen_cta_url ); ?>"
+				<?php echo ! empty( $ambrygen_cta_target ) ? 'target="' . esc_attr( $ambrygen_cta_target ) . '"' : ''; ?>
+				<?php echo ! empty( $ambrygen_cta_rel ) ? 'rel="' . esc_attr( $ambrygen_cta_rel ) . '"' : ''; ?>
+			>
+				<?php echo esc_html( ! empty( $ambrygen_cta_text ) ? $ambrygen_cta_text : $ambrygen_cta_url ); ?>
+			</a>
 		<?php endif; ?>
 
 	</div>

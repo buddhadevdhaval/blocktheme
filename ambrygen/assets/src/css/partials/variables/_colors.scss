@@ -63,12 +63,37 @@
 	--theme_gray_700: #344054;
 	--theme_gray_800: #1D2939;
 	--theme_gray_900: #101828;
+	// --gray_900: #181d27;
+	// --gray_200: #E9EAEB;
+	// --gray_500: #717680;
+	// --gray_600: #535862;
+	// --gray_700: #414651;
+	// --gray_50: #FAFAFA;
 
 	--theme_primary_200: #8AD8F4;
 	--theme_cg_blue: #0079A4;
 
+	// new color
+	--gray-blue-50: #F8F9FC;
+	--gray-blue-200: #D5D9EB;
+	--gray-blue-700: #363F72;
+	--indigo-50: #EEF4FF;
+	--indigo-200: #C7D4FF;
+	--indigo-700: #3538CD;
+	--orange-50: #FEF6EE;
+	--orange-200: #F9DBAF;
+	--orange-700: #B93815;
+	--pink-50: #FDF2FA;
+	--pink-200: #FCCEEE;
+	--pink-700: #C11574;
+	--success-50: #ECFDF3;
+	--success-200: #ABEFC6;
+	--success-700: #067647;
 
---theme_clear_skies: #E6F7FD;
+	--theme-brand-200: #E9D7FE;
+
+
+	--theme_clear_skies: #E6F7FD;
 	--theme_smith_apple: #004761;
 	--theme_clean_pool: #54c6ef;
 	--theme_lynx_screen_blue: #33bbec;
@@ -142,11 +167,11 @@
 	--theme_blockqoute_cite_color: var(--theme_regular_text);
 
 	/* Tables */
-	--theme_table_border_color: var(--theme_border);
+	--theme_table_border_color: var(--theme_gray_200);
 	--theme_caption_color: var(--theme_color_primary);
-	--theme_table_foot_border_color: var(--theme_border);
+	--theme_table_foot_border_color: var(--theme_gray_200);
 	--theme_wp_table_block_stripe_bg_color: var(--theme_white_1);
-	--theme_table_head_border_color: var(--theme_border);
+	--theme_table_head_border_color: var(--theme_gray_200);
 
 	/* Table */
 

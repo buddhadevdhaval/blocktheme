@@ -38,7 +38,7 @@ if ( 'our-testing-menu' === $ambrygen_icon_variation ) {
 	$ambrygen_termlinktext = ! empty( $ambrygen_attributes['termlinktext'] )
 	? $ambrygen_attributes['termlinktext']
 	: 'View Test';
-	
+
 	$ambrygen_selected_term_id = isset( $ambrygen_attributes['selectedTerm'] )
 		? absint( $ambrygen_attributes['selectedTerm'] )
 		: 0;
@@ -71,16 +71,20 @@ if ( 'our-testing-menu' === $ambrygen_icon_variation ) {
  * Informative images must have meaningful alt.
  */
 
+
+$ambrygen_card_class = '';
+
 $ambrygen_wrapper_class      = 'our-testing-menu' === $ambrygen_icon_variation ? 'item-card' : 'info-list__col';
+if ( 'variation-4' === $ambrygen_icon_variation ) {
+	$ambrygen_wrapper_class = 'icon-grid__item';
+}
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
 		'class' => $ambrygen_wrapper_class,
 	)
 );
-
-$ambrygen_card_class = '';
 if ( 'variation-4' === $ambrygen_icon_variation ) {
-	$ambrygen_card_class = 'icon-grid__item';
+	$ambrygen_card_class = '';
 } elseif ( 'our-testing-menu' !== $ambrygen_icon_variation && 'variation-3' !== $ambrygen_icon_variation ) {
 	$ambrygen_card_class = 'info-list__card';
 }

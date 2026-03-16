@@ -12,18 +12,20 @@
 @use "swiper-custom";
 
 
-/* Solutions */
-@use "solutions/testing_menu";
-@use "solutions/gallery_variation";
+/* Patients Take Action */
+@use "patients-take-action/two-content-block";
+@use "patients-take-action/midpage-cta-block";
+
+/* Patients Billing & Insurance */
+@use "patients-billing-insurance/patients-image-block";
+@use "patients-billing-insurance/faq-block";
 
 
-/* Patients */
-@use "patients/features_media";
-@use "patients/iot";
+/* Company Events */
+@use "company-events/blog-post";
 
+/* Company Blog */
+@use "company-blog/blog-details";
 
-/* Providers */
-@use "providers/features_horizontal_tabs";
-@use "providers/features_vertical_tabs";
-@use "providers/cta-tiles_with_content";
-@use "providers/icon_grid";
+// events
+@use "events/event";

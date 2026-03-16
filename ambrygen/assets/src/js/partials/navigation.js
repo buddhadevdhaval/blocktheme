@@ -21,6 +21,55 @@
 // 		});
 // 	});
 // });
+function setPowerActiveNav() {
+	const currentPath = window.location.pathname.replace( /\/$/, '' ) || '/';
+	const navItems = document.querySelectorAll( '.nav__list > li' );
+
+	navItems.forEach( ( item ) => {
+		const links = item.querySelectorAll( 'a' );
+		let isMatch = false;
+
+		// FIX: You must loop through the links to remove a class from each one
+		links.forEach( ( link ) => {
+			link.classList.remove( 'active-item' );
+
+			const hrefAttr = link.getAttribute( 'href' );
+
+			// Skip hashes, empty, or javascript links
+			if (
+				! hrefAttr ||
+				hrefAttr === '#' ||
+				hrefAttr.startsWith( 'javascript:' )
+			) {
+				return;
+			}
+
+			// Use link.pathname for reliable comparison
+			const linkPath = link.pathname.replace( /\/$/, '' ) || '/';
+
+			if ( linkPath.toLowerCase() === currentPath.toLowerCase() ) {
+				isMatch = true;
+				link.classList.add( 'active-item' );
+			}
+		} );
+
+		// 'item' is the <li> from the outer loop
+		if ( item ) {
+			if ( isMatch ) {
+				item.classList.add( 'current-menu-item' );
+			} else {
+				item.classList.remove( 'current-menu-item' );
+			}
+		}
+	} );
+}
+
+if ( document.readyState === 'loading' ) {
+	document.addEventListener( 'DOMContentLoaded', setPowerActiveNav );
+} else {
+	setPowerActiveNav();
+}
+
 document.addEventListener( 'DOMContentLoaded', () => {
 	/* =====================================================
 	 * MODULE 0: Desktop guard

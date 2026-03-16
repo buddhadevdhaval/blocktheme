@@ -1,129 +1,151 @@
-
+@use "../../variables/breakpoints" as bp;
 
 $containers: (
-    1340: 1400px,
+	1340: 1400px,
 	1280: 1340px,
-    768: 828px,
-    full: 100%
+	1136: 1196px,
+	768: 828px,
+	full: 100%
 );
 
 
 @mixin container($max-width) {
 
-    .wrapper {
-        margin: 0 auto;
-        width: 100%;
-        position: relative;
+	.wrapper {
+		margin: 0 auto;
+		width: 100%;
+		position: relative;
 
-        @if $max-width == 100% {
-            max-width: 100%;
-            padding-left: 0;
-            padding-right: 0;
-        } @else {
-            max-width: $max-width;
-            padding-left: 30px;
-            padding-right: 30px;
+		@if $max-width == 100% {
+			max-width: 100%;
+			padding-left: 0;
+			padding-right: 0;
+		} @else {
+			max-width: $max-width;
+			padding-left: 30px;
+			padding-right: 30px;
 
-            @media (width <= 1220px) {
-                padding-left: 24px;
-                padding-right: 24px;
-            }
-        }
-    }
+			@media (width <=1220px) {
+				padding-left: 24px;
+				padding-right: 24px;
+			}
+		}
+	}
 }
 
 @mixin editor-container($max-width) {
 
-    .block-editor-inner-blocks {
+	.block-editor-inner-blocks {
 
-        .wp-block {
-            margin: 0 auto;
-            max-width: $max-width !important;
-        }
-    }
+		.wp-block {
+			margin: 0 auto;
+			max-width: $max-width !important;
+		}
+	}
 }
 
 @mixin wp-block-post-content {
-    padding: 50px 20px;
-    max-width: 100% !important;
-    border: 3px dashed #7b7b7b;
+	padding: 50px 20px;
+	max-width: 100% !important;
+	border: 3px dashed #7b7b7b;
 }
 
 @each $name,
 $width in $containers {
-    .container-#{$name} {
+	.container-#{$name} {
 
-        @include container($width);
-    }
+		@include container($width);
+	}
 
-    .editor-container-#{$name} {
-        .container-#{$name} {
+	.editor-container-#{$name} {
+		.container-#{$name} {
 
-            @include editor-container($width);
-        }
-    }
+			@include editor-container($width);
+		}
+	}
 }
 
 .editor-styles-wrapper {
 
-    // .wp-block-group {
+	// .wp-block-group {
 
-        .block-editor-block-list__block {
+	.block-editor-block-list__block {
 
-            @each $name,
-            $width in $containers {
-                &.container-#{$name} {
+		@each $name,
+		$width in $containers {
+			&.container-#{$name} {
 
-                    @include wp-block-post-content;
+				@include wp-block-post-content;
 
-                    width: 100% !important;
-                }
-            }
-        }
-    // }
+				width: 100% !important;
+			}
+		}
+	}
 
-    .wp-block-post-contentt {
+	// }
 
-        >.block-editor-block-list__block {
+	.wp-block-post-contentt {
 
-            @each $name,
-            $width in $containers {
-                &.editor-container-#{$name} {
+		>.block-editor-block-list__block {
 
-                    @include wp-block-post-content;
+			@each $name,
+			$width in $containers {
+				&.editor-container-#{$name} {
 
-                    width: auto !important;
-                }
-            }
-        }
-    }
+					@include wp-block-post-content;
+
+					width: auto !important;
+				}
+			}
+		}
+	}
 }
 
 @each $name,
 $width in $containers {
-    .editor-container-#{$name} {
-        max-width: 100% !important;
-        width: 100% !important;
-    }
+	.editor-container-#{$name} {
+		max-width: 100% !important;
+		width: 100% !important;
+	}
+}
+
+@include bp.min(ultra-large) {
+
+	.container-1340 {
+
+		.wrapper {
+			max-width: 1800px;
+		}
+	}
+}
+
+@include bp.min(ultra-wide) {
+
+	.container-1340 {
+
+		.wrapper {
+			max-width: 2400px;
+		}
+	}
 }
 
 .editor-container-full {
-    max-width: 100% !important;
-    width: 100% !important;
+	max-width: 100% !important;
+	width: 100% !important;
 
-    .block-editor-inner-blocks {
-        max-width: 100% !important;
+	.block-editor-inner-blocks {
+		max-width: 100% !important;
 
-        .wp-block {
-            max-width: 100% !important;
-            width: 100% !important;
-        }
-    }
+		.wp-block {
+			max-width: 100% !important;
+			width: 100% !important;
+		}
+	}
 }
 
 .editor-full-width-container,
 .wp-block-acf-spacer,
 .wp-block-acf-spacer .acf-input select {
-    max-width: 100% !important;
-    width: 100% !important;
+	max-width: 100% !important;
+	width: 100% !important;
 }

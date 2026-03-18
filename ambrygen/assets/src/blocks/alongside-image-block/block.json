@@ -10,6 +10,10 @@
     "html": false
   },
   "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
     "title": {
       "type": "string",
       "default": ""
@@ -31,7 +35,12 @@
         }
       ],
       "items": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "id":      { "type": "string" },
+          "name":    { "type": "string" },
+          "address": { "type": "string" }
+        }
       }
     },
     "headingLevel": {

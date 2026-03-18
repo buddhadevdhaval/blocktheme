@@ -14,15 +14,21 @@ import { TagSelector } from '../_shared/components';
 import { useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
-export default function Edit( { attributes, setAttributes } ) {
+const createLocationId = () =>
+	`loc-${ Date.now() }-${ Math.random().toString( 36 ).slice( 2, 9 ) }`;
+
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	const blockProps = useBlockProps();
 
-	const { title, headingLevel = 'h2', locations = [], iframe } = attributes;
+	const {
+		blockId,
+		title,
+		headingLevel = 'h2',
+		locations = [],
+		iframe,
+	} = attributes;
 
 	const HeadingTag = headingLevel || 'h2';
-
-	const createLocationId = () =>
-		`loc-${ Date.now() }-${ Math.random().toString( 36 ).slice( 2, 9 ) }`;
 
 	useEffect( () => {
 		const hasMissingIds = locations.some( ( location ) => ! location?.id );
@@ -37,16 +43,25 @@ export default function Edit( { attributes, setAttributes } ) {
 		}
 	}, [ locations, setAttributes ] );
 
+	useEffect( () => {
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+
+		if ( ! blockId ) {
+			setAttributes( {
+				blockId: expectedId,
+			} );
+		}
+	}, [ clientId, blockId, setAttributes ] );
+
 	const onChangeTitle = ( value ) => setAttributes( { title: value } );
 	const onChangeIframe = ( value ) => setAttributes( { iframe: value } );
 
-	const updateLocation = ( index, key, value ) => {
-		const newLocations = [ ...locations ];
-		newLocations[ index ] = {
-			...newLocations[ index ],
-			[ key ]: value,
-		};
-		setAttributes( { locations: newLocations } );
+	const updateLocation = ( id, key, value ) => {
+		setAttributes( {
+			locations: locations.map( ( loc ) =>
+				loc.id === id ? { ...loc, [ key ]: value } : loc
+			),
+		} );
 	};
 
 	const addLocation = () => {
@@ -143,7 +158,7 @@ export default function Edit( { attributes, setAttributes } ) {
 										value={ loc.name }
 										onChange={ ( value ) =>
 											updateLocation(
-												index,
+												loc.id,
 												'name',
 												value
 											)
@@ -159,7 +174,7 @@ export default function Edit( { attributes, setAttributes } ) {
 										value={ loc.address }
 										onChange={ ( value ) =>
 											updateLocation(
-												index,
+												loc.id,
 												'address',
 												value
 											)

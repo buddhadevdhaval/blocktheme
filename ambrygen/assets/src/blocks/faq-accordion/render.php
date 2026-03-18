@@ -8,18 +8,20 @@
  *
  * @package ambrygen
  */
+
 defined( 'ABSPATH' ) || exit;
 
 use Ambrygen\Theme\Core\Helper;
 
-// Prefix all variables
+// Prefix all variables.
 $ambrygen_attributes = $attributes ?? array();
 
-$ambrygen_image_id = $ambrygen_attributes['imageId'] ?? 0;
-$ambrygen_faqs     = $ambrygen_attributes['faqs'] ?? array();
-$ambrygen_title    = $ambrygen_attributes['title'] ?? '';
+$ambrygen_block_id    = $ambrygen_attributes['blockId'] ?? '';
+$ambrygen_image_id    = $ambrygen_attributes['imageId'] ?? 0;
+$ambrygen_faqs        = $ambrygen_attributes['faqs'] ?? array();
+$ambrygen_title       = $ambrygen_attributes['title'] ?? '';
 $ambrygen_description = $ambrygen_attributes['description'] ?? '';
-$ambrygen_variant  = $ambrygen_attributes['variant'] ?? 'default';
+$ambrygen_variant     = $ambrygen_attributes['variant'] ?? 'default';
 
 $ambrygen_heading          = $ambrygen_attributes['headingTag'] ?? 'h5';
 $ambrygen_allowed_headings = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
@@ -30,16 +32,21 @@ $ambrygen_heading_id = wp_unique_id( 'faq-heading-' );
 
 // Generate wrapper attributes.
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
-	array(
-		'class' => 'alongside-faq variation-' . $ambrygen_variant,
-	)
+	$ambrygen_block_id
+		? array(
+			'class' => 'alongside-faq variation-' . $ambrygen_variant,
+			'id'    => $ambrygen_block_id,
+		)
+		: array(
+			'class' => 'alongside-faq variation-' . $ambrygen_variant,
+		)
 );
 ?>
 
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="alongside-faq__row">
 
-		<?php if ( $ambrygen_variant === 'default' ) : ?>
+		<?php if ( 'default' === $ambrygen_variant ) : ?>
 		<div class="alongside-faq__col alongside-faq__col--left">
 			<div class="alongside-faq__media">
 				<?php

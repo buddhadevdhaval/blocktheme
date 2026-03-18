@@ -283,6 +283,10 @@ return array(
 			'html' => false
 		),
 		'attributes' => array(
+			'blockId' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'title' => array(
 				'type' => 'string',
 				'default' => ''
@@ -304,7 +308,18 @@ return array(
 					)
 				),
 				'items' => array(
-					'type' => 'object'
+					'type' => 'object',
+					'properties' => array(
+						'id' => array(
+							'type' => 'string'
+						),
+						'name' => array(
+							'type' => 'string'
+						),
+						'address' => array(
+							'type' => 'string'
+						)
+					)
 				)
 			),
 			'headingLevel' => array(

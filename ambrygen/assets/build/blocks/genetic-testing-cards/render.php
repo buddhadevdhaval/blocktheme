@@ -60,7 +60,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 
 	<div class="is-style-gl-s32" aria-hidden="true"></div>
 
-	<div class="genetic-cards__container">
+	<div class="genetic-cards__container" role="list">
 		<?php
 		// Inner blocks content is already escaped by block renderer.
 		echo $ambrygen_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

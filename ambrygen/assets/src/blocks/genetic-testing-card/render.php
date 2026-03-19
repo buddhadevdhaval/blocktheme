@@ -27,14 +27,27 @@ $ambrygen_link_target = $ambrygen_link_array['target'] ?? '';
 
 $ambrygen_type = $ambrygen_attributes['type'] ?? 'small';
 
-$ambrygen_button_target_attr = '';
-$ambrygen_new_tab_text       = '';
+$ambrygen_link_rel     = $ambrygen_link_array['rel'] ?? '';
+$ambrygen_new_tab_text = '';
 
+$ambrygen_rel_parts = array_filter(
+	array_unique(
+		array_merge(
+			array( 'noopener' ),
+			$ambrygen_link_rel ? explode( ' ', $ambrygen_link_rel ) : array()
+		)
+	)
+);
+
+if ( '_blank' === $ambrygen_link_target ) {
+	$ambrygen_rel_parts[]  = 'noreferrer';
+	$ambrygen_new_tab_text = '<span class="screen-reader-text">' . esc_html__( '(opens in a new tab)', 'ambrygen-web' ) . '</span>';
+}
+
+$ambrygen_button_target_attr = '';
 if ( ! empty( $ambrygen_link_target ) ) {
-	$ambrygen_button_target_attr = ' target="' . esc_attr( $ambrygen_link_target ) . '" rel="noopener noreferrer"';
-	if ( '_blank' === $ambrygen_link_target ) {
-		$ambrygen_new_tab_text = '<span class="screen-reader-text">' . esc_html__( '(opens in a new tab)', 'ambrygen-web' ) . '</span>';
-	}
+	$ambrygen_button_target_attr  = ' target="' . esc_attr( $ambrygen_link_target ) . '"';
+	$ambrygen_button_target_attr .= ' rel="' . esc_attr( implode( ' ', $ambrygen_rel_parts ) ) . '"';
 }
 
 /**

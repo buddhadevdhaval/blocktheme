@@ -1,14 +1,26 @@
 import { useBlockProps } from '@wordpress/block-editor';
 import { SelectControl, Spinner, Button } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
+import { __ } from '@wordpress/i18n';
+import { useMemo } from '@wordpress/element';
 import { DEFAULT_IMAGES } from '../_shared/components';
+
+const getMemberPreviewData = ( post, defaults ) => {
+	const featuredMedia = post?._embedded?.[ 'wp:featuredmedia' ]?.[ 0 ];
+
+	return {
+		imageUrl: featuredMedia?.source_url || defaults?.placeholder?.url,
+		imageAlt: featuredMedia?.alt_text || post?.title?.rendered || '',
+	};
+};
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { postId } = attributes;
 	const { removeBlock } = useDispatch( 'core/block-editor' );
-	const defaults = DEFAULT_IMAGES();
+	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
 
 	// Get all team members
+	// Query args are static, so no dependencies are required.
 	const teamMembers = useSelect( ( select ) => {
 		return select( 'core' ).getEntityRecords( 'postType', 'our_team', {
 			per_page: -1,
@@ -50,14 +62,18 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	);
 
 	// Dropdown options excluding selected
-	const options = teamMembers
-		? teamMembers
-				.filter( ( post ) => ! selectedIds.includes( post.id ) )
-				.map( ( post ) => ( {
-					label: post.title.rendered,
-					value: post.id,
-				} ) )
-		: [];
+	const options = useMemo(
+		() =>
+			teamMembers
+				? teamMembers
+						.filter( ( post ) => ! selectedIds.includes( post.id ) )
+						.map( ( post ) => ( {
+							label: post.title.rendered,
+							value: post.id,
+						} ) )
+				: [],
+		[ teamMembers, selectedIds ]
+	);
 
 	return (
 		<div { ...useBlockProps( { className: 'our-team__card' } ) }>
@@ -67,10 +83,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			{ /* If no selection yet */ }
 			{ ! postId && (
 				<SelectControl
-					label="Select Team Member"
+					label={ __( 'Select Team Member', 'ambrygen-web' ) }
 					value=""
 					options={ [
-						{ label: 'Select a team member', value: '' },
+						{
+							label: __( 'Select a team member', 'ambrygen-web' ),
+							value: '',
+						},
 						...options,
 					] }
 					onChange={ ( value ) =>
@@ -85,18 +104,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			{ postId &&
 				selectedPost &&
 				( () => {
-					// const imageUrl =
-					// 	selectedPost?._embedded?.[ 'wp:featuredmedia' ]?.[ 0 ]
-					// 		?.source_url || fallbackImage;
-					const imageUrl =
-						selectedPost?._embedded?.[ 'wp:featuredmedia' ]?.[ 0 ]
-							?.source_url || defaults?.placeholder?.url;
+					const { imageUrl, imageAlt } = getMemberPreviewData(
+						selectedPost,
+						defaults
+					);
 					return (
 						<>
 							<div className="our-team__image-wrapper">
 								<img
 									src={ imageUrl }
-									alt={ selectedPost.title.rendered }
+									alt={ imageAlt }
 									className="our-team__image"
 								/>
 							</div>
@@ -104,7 +121,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							<div className="our-team__info">
 								<div className="our-team__name subtitle1-sbold">
 									{ selectedPost.title.rendered }
-									<div className="our-team__link"></div>
+									<div
+										className="our-team__link"
+										aria-hidden="true"
+									></div>
 								</div>
 
 								<div className="our-team__role body1">
@@ -117,19 +137,19 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							{ /* Actions */ }
 							<div className="our-team__actions actions-button">
 								<Button
-									isSecondary
+									variant="secondary"
 									onClick={ () =>
 										setAttributes( { postId: null } )
 									}
 								>
-									Change Member
+									{ __( 'Change Member', 'ambrygen-web' ) }
 								</Button>
 
 								<Button
 									isDestructive
 									onClick={ () => removeBlock( clientId ) }
 								>
-									Remove Member
+									{ __( 'Remove Member', 'ambrygen-web' ) }
 								</Button>
 							</div>
 						</>

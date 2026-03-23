@@ -2674,6 +2674,10 @@ return array(
 			'html' => false
 		),
 		'attributes' => array(
+			'blockId' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'title' => array(
 				'type' => 'string',
 				'default' => 'Title'
@@ -2684,13 +2688,22 @@ return array(
 			),
 			'headingLevel' => array(
 				'type' => 'string',
-				'default' => 'h2'
+				'default' => 'h2',
+				'enum' => array(
+					'h1',
+					'h2',
+					'h3',
+					'h4',
+					'h5',
+					'h6'
+				)
 			)
 		),
 		'editorScript' => 'file:./index.js',
 		'editorStyle' => 'file:./index.css',
 		'style' => 'file:./style-index.css',
 		'textdomain' => 'ambrygen-web',
+		'viewScript' => 'file:./view.js',
 		'render' => 'file:./render.php',
 		'example' => array(
 			'attributes' => array(

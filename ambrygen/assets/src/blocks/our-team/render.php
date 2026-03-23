@@ -8,17 +8,18 @@
  *
  * @package ambrygen
  */
+
 defined( 'ABSPATH' ) || exit;
 
 $ambrygen_attributes = isset( $attributes ) && is_array( $attributes )
 	? $attributes
 	: array();
 
-$ambrygen_title         = isset( $ambrygen_attributes['title'] )
+$ambrygen_title = isset( $ambrygen_attributes['title'] )
 	? $ambrygen_attributes['title']
 	: '';
 
-$ambrygen_intro         = isset( $ambrygen_attributes['intro'] )
+$ambrygen_intro = isset( $ambrygen_attributes['intro'] )
 	? $ambrygen_attributes['intro']
 	: '';
 
@@ -45,13 +46,13 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 
 		<div class="our-team__header block__rowflex">
 
-			<<?php echo esc_html( $ambrygen_heading_level ); ?> class="our-team__title block__rowflex--heading-title heading-3 mb-0">
+			<<?php echo esc_attr( $ambrygen_heading_level ); ?> class="our-team__title block__rowflex--heading-title heading-3 mb-0">
 				<?php echo wp_kses_post( $ambrygen_title ); ?>
-			</<?php echo esc_html( $ambrygen_heading_level ); ?>>
+			</<?php echo esc_attr( $ambrygen_heading_level ); ?>>
 
 			<?php if ( ! empty( $ambrygen_intro ) ) : ?>
 				<div class="our-team__intro block__rowflex--block-content subtitle1">
-					<?php echo esc_html( $ambrygen_intro ); ?>
+					<?php echo wp_kses_post( $ambrygen_intro ); ?>
 				</div>
 			<?php endif; ?>
 
@@ -63,9 +64,41 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 
 	<div class="our-team__grid">
 		<?php
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $content is block-rendered content.
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is pre-escaped by WordPress core.
 		echo $content;
 		?>
+	</div>
+
+	<!-- Offcanvas Panel -->
+	<div class="offcanvas-sidebar our-team-offcanvas" aria-hidden="true">
+		<div class="offcanvas-sidebar__overlay"></div>
+		<div
+			class="offcanvas-sidebar__panel"
+			role="dialog"
+			aria-modal="true"
+			aria-label="<?php esc_attr_e( 'Team Member Details', 'ambrygen-web' ); ?>"
+		>
+			<button
+				type="button"
+				class="offcanvas-sidebar__close"
+				aria-label="<?php esc_attr_e( 'Close', 'ambrygen-web' ); ?>"
+			>
+				<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/src/images/close-icon.svg' ); ?>" alt="Close" />
+			</button>
+
+			<div class="our-team-offcanvas__header">
+				<div class="our-team-offcanvas__image-wrapper">
+					<img class="our-team-offcanvas__image" src="" alt="" />
+				</div>
+				<div class="our-team-offcanvas__meta">
+					<div class="our-team-offcanvas__name heading-4 mb-0"></div>
+					<div class="our-team-offcanvas__role body1"></div>
+					
+				</div>
+			</div>
+
+			<div class="our-team-offcanvas__bio"></div>
+		</div>
 	</div>
 
 </div>

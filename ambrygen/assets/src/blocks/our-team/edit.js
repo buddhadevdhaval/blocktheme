@@ -4,28 +4,36 @@ import {
 	RichText,
 	InspectorControls,
 } from '@wordpress/block-editor';
-import { PanelBody, SelectControl } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
+import { TagSelector } from '../_shared/components';
 import { __ } from '@wordpress/i18n';
+import { useEffect } from '@wordpress/element';
 
-export default function Edit( { attributes, setAttributes } ) {
-	const { title, intro, headingLevel } = attributes;
+export default function Edit( { attributes, setAttributes, clientId } ) {
+	const { blockId, title, intro, headingLevel } = attributes;
 	const TagName = headingLevel || 'h2';
+
+	useEffect( () => {
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+
+		if ( ! blockId ) {
+			setAttributes( {
+				blockId: expectedId,
+			} );
+		}
+	}, [ clientId, blockId, setAttributes ] );
 
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title="Heading Settings">
-					<SelectControl
-						label="Heading Level"
+				<PanelBody
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen
+				>
+					<TagSelector
+						label={ __( 'Heading Level', 'ambrygen-web' ) }
+						type="heading"
 						value={ headingLevel }
-						options={ [
-							{ label: 'H1', value: 'h1' },
-							{ label: 'H2', value: 'h2' },
-							{ label: 'H3', value: 'h3' },
-							{ label: 'H4', value: 'h4' },
-							{ label: 'H5', value: 'h5' },
-							{ label: 'H6', value: 'h6' },
-						] }
 						onChange={ ( value ) =>
 							setAttributes( { headingLevel: value } )
 						}
@@ -36,24 +44,20 @@ export default function Edit( { attributes, setAttributes } ) {
 			<div { ...useBlockProps( { className: 'wrapper' } ) }>
 				<div className="our-team">
 					<div className="our-team__header block__rowflex">
-						<TagName className="our-team__title block__rowflex--heading-title heading-3 mb-0">
-							<RichText
-								tagName="span"
-								value={ title }
-								onChange={ ( value ) =>
-									setAttributes( { title: value } )
-								}
-								allowedFormats={ [
-									'core/bold',
-									'core/italic',
-									'core/text-color',
-								] }
-								placeholder={ __(
-									'Add Title…',
-									'ambrygen-web'
-								) }
-							/>
-						</TagName>
+						<RichText
+							tagName={ TagName }
+							className="our-team__title block__rowflex--heading-title heading-3 mb-0"
+							value={ title }
+							onChange={ ( value ) =>
+								setAttributes( { title: value } )
+							}
+							allowedFormats={ [
+								'core/bold',
+								'core/italic',
+								'core/text-color',
+							] }
+							placeholder={ __( 'Add Title…', 'ambrygen-web' ) }
+						/>
 
 						<RichText
 							tagName="div"

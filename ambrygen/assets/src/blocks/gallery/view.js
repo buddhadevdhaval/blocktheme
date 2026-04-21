@@ -1,6 +1,6 @@
-function equalizeCardInfoHeight() {
-	const cards = document.querySelectorAll(
-		'.get-started-block .card-grid-block .card-col .card-info'
+function equalizeCardInfoHeight( gallery ) {
+	const cards = gallery.querySelectorAll(
+		'.card-grid-block .card-col .card-info'
 	);
 
 	if ( ! cards.length ) {
@@ -23,14 +23,24 @@ function equalizeCardInfoHeight() {
 
 	// Apply tallest height
 	cards.forEach( ( card ) => {
-		card.style.height = maxHeight + 'px';
+		card.style.height = `${ maxHeight }px`;
 	} );
 }
 
-// Run on load
-window.addEventListener( 'load', equalizeCardInfoHeight );
+function equalizeGalleries() {
+	document
+		.querySelectorAll( '.image-grid-block' )
+		.forEach( equalizeCardInfoHeight );
+}
 
-// Run on resize
-window.addEventListener( 'resize', () => {
-	setTimeout( equalizeCardInfoHeight, 200 );
-} );
+function debounce( callback, delay = 200 ) {
+	let timeoutId;
+
+	return () => {
+		window.clearTimeout( timeoutId );
+		timeoutId = window.setTimeout( callback, delay );
+	};
+}
+
+window.addEventListener( 'load', equalizeGalleries );
+window.addEventListener( 'resize', debounce( equalizeGalleries ) );

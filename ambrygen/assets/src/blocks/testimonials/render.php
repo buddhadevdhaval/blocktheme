@@ -8,6 +8,7 @@
  *
  * @package ambrygen
  */
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,6 +23,7 @@ use Ambrygen\Theme\Core\Helper;
  */
 $ambrygen_attributes = isset( $attributes ) && is_array( $attributes ) ? $attributes : array();
 $ambrygen_content    = isset( $content ) ? $content : '';
+$ambrygen_block_id   = isset( $ambrygen_attributes['blockId'] ) ? $ambrygen_attributes['blockId'] : '';
 
 
 /**
@@ -29,7 +31,7 @@ $ambrygen_content    = isset( $content ) ? $content : '';
  */
 $ambrygen_heading = isset( $ambrygen_attributes['heading'] )
 	? $ambrygen_attributes['heading']
-	: __( 'Read About Ambry’s Impact on Patient Lives', 'ambrygen-web' );
+	: '';
 
 $ambrygen_heading_tag = isset( $ambrygen_attributes['headingTag'] )
 	? $ambrygen_attributes['headingTag']
@@ -51,12 +53,19 @@ $ambrygen_heading_id = 'testimonials-heading-' . $ambrygen_id;
 /**
  * Wrapper attributes.
  */
-$ambrygen_wrapper_attributes = get_block_wrapper_attributes(
-	array(
-		'class'           => 'wp-block-ambrygen-testimonials ambry-testimonials testimonials-slider',
-		'aria-labelledby' => $ambrygen_heading_id,
-	)
+$ambrygen_wrapper_attributes_array = array(
+	'class' => 'wp-block-ambrygen-testimonials ambry-testimonials testimonials-slider',
 );
+
+if ( $ambrygen_block_id ) {
+	$ambrygen_wrapper_attributes_array['id'] = $ambrygen_block_id;
+}
+
+if ( ! empty( $ambrygen_heading ) ) {
+	$ambrygen_wrapper_attributes_array['aria-labelledby'] = $ambrygen_heading_id;
+}
+
+$ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_attributes_array );
 ?>
 
 <section <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
@@ -78,7 +87,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 							)
 						)
 					);
-					
+
 
 					?>
 			</div>
@@ -106,17 +115,19 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 
 	</div>
 
-	<!-- Heading -->
-	<<?php echo tag_escape( $ambrygen_heading_tag ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="ambry-testimonials__heading heading-3 mb-0">
-		<?php
-			echo wp_kses(
-				$ambrygen_heading,
-				Helper::allowed_heading_html()
-			);
+	<?php if ( ! empty( $ambrygen_heading ) ) : ?>
+		<!-- Heading -->
+		<<?php echo tag_escape( $ambrygen_heading_tag ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="js-gsap-fade ambry-testimonials__heading heading-3 mb-0">
+			<?php
+				echo wp_kses(
+					$ambrygen_heading,
+					Helper::allowed_heading_html()
+				);
 			?>
-	</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
+		</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 
-	<div class="is-style-gl-s32"></div>
+		<div class="is-style-gl-s32"></div>
+	<?php endif; ?>
 
 	<!-- Layout -->
 	<div class="ambry-testimonials__layout">

@@ -10,13 +10,21 @@ import {
 	useBlockProps,
 	RichText,
 	InspectorControls,
+	URLInput,
 } from '@wordpress/block-editor';
-import { Button, Tooltip, PanelBody, CardDivider } from '@wordpress/components';
-import { plus, trash } from '@wordpress/icons';
-import { useEffect } from '@wordpress/element';
+import {
+	Button,
+	Tooltip,
+	PanelBody,
+	CardDivider,
+	ToggleControl,
+} from '@wordpress/components';
+import { plus, trash, chevronUp, chevronDown } from '@wordpress/icons';
+import { useEffect, useState } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 
 // Shared imports
-import { useArrayHandlers, generateMenuId, t } from '../_shared/utils';
+import { useArrayHandlers, generateMenuId } from '../_shared/utils';
 import {
 	ItemHeader,
 	ImageUploader,
@@ -43,33 +51,52 @@ const DEFAULT_ITEM = {
 	submenuLinks: [],
 };
 
-const DEFAULT_LINK = { label: 'New Link', url: '#', icon: '' };
+const DEFAULT_LINK = {
+	label: 'New Link',
+	url: '#',
+	icon: '',
+	opensInNewTab: false,
+	target: '',
+	rel: '',
+};
 
 /* ─────────────────────────────────────────────────────────────
    Sub-Components
 ───────────────────────────────────────────────────────────── */
 
-/**
- * Submenu link editor with icon, label, URL, and remove button.
- *
- * @param {Object}   props           Component properties.
- * @param {Object}   props.link      The link object data.
- * @param {number}   props.itemIndex Index of the parent item.
- * @param {number}   props.linkIndex Index of the link within the submenu.
- * @param {Function} props.onUpdate  Callback to update link values.
- * @param {Function} props.onRemove  Callback to remove a link.
- */
-function SubmenuLink( { link, itemIndex, linkIndex, onUpdate, onRemove } ) {
+function SubmenuLink( {
+	link,
+	itemIndex,
+	linkIndex,
+	totalLinks,
+	onUpdate,
+	onRemove,
+	onMove,
+	onSelectLink,
+	isSelected,
+} ) {
 	return (
 		<li
 			className="nav__item--mega-menu__submenu-inner--link-wrapper"
 			style={ { position: 'relative' } }
 		>
-			<a
-				href={ link.url }
-				className="nav__item--mega-menu__submenu-inner--link"
-				onClick={ ( e ) => e.preventDefault() }
-			>
+			<div style={ { marginBottom: '4px' } }>
+				<Button
+					icon={ chevronUp }
+					size="small"
+					disabled={ linkIndex === 0 }
+					onClick={ () => onMove( itemIndex, linkIndex, -1 ) }
+					label={ __( 'Move Up', 'ambrygen-web' ) }
+				/>
+				<Button
+					icon={ chevronDown }
+					size="small"
+					disabled={ linkIndex >= totalLinks - 1 }
+					onClick={ () => onMove( itemIndex, linkIndex, 1 ) }
+					label={ __( 'Move Down', 'ambrygen-web' ) }
+				/>
+			</div>
+			<div className="nav__item--mega-menu__submenu-inner--link">
 				<div className="nav__item--mega-menu__submenu-inner--icon">
 					<IconPicker
 						url={ link.icon }
@@ -86,17 +113,66 @@ function SubmenuLink( { link, itemIndex, linkIndex, onUpdate, onRemove } ) {
 						onUpdate( itemIndex, linkIndex, 'label', v )
 					}
 				/>
-			</a>
-			<div style={ { marginTop: '5px' } }>
-				<Field
-					value={ link.url }
-					onChange={ ( v ) =>
-						onUpdate( itemIndex, linkIndex, 'url', v )
-					}
-					placeholder={ t( 'Paste Link URL' ) }
-				/>
 			</div>
-			<Tooltip text="Remove Link">
+			<div style={ { marginTop: '5px', marginBottom: '8px' } }>
+				<Field
+					value={ link.url || '' }
+					onChange={ ( value ) =>
+						onUpdate( itemIndex, linkIndex, 'url', value )
+					}
+					placeholder={ __( 'Paste Link URL', 'ambrygen-web' ) }
+				/>
+				<Button
+					variant="secondary"
+					size="small"
+					onClick={ () => onSelectLink( itemIndex, linkIndex ) }
+					style={ { marginTop: '8px' } }
+				>
+					{ isSelected
+						? __( 'Close Link Picker', 'ambrygen-web' )
+						: __( 'Open Link Picker', 'ambrygen-web' ) }
+				</Button>
+				{ isSelected && (
+					<div style={ { marginTop: '8px' } }>
+						<URLInput
+							value={ link.url || '' }
+							onChange={ ( url ) => {
+								onUpdate(
+									itemIndex,
+									linkIndex,
+									'url',
+									url || ''
+								);
+							} }
+						/>
+						<ToggleControl
+							label={ __( 'Open in new tab', 'ambrygen-web' ) }
+							checked={ !! link.opensInNewTab }
+							onChange={ ( checked ) => {
+								onUpdate(
+									itemIndex,
+									linkIndex,
+									'opensInNewTab',
+									checked
+								);
+								onUpdate(
+									itemIndex,
+									linkIndex,
+									'target',
+									checked ? '_blank' : ''
+								);
+								onUpdate(
+									itemIndex,
+									linkIndex,
+									'rel',
+									checked ? 'noopener noreferrer' : ''
+								);
+							} }
+						/>
+					</div>
+				) }
+			</div>
+			<Tooltip text={ __( 'Remove Link', 'ambrygen-web' ) }>
 				<Button
 					icon={ trash }
 					onClick={ () => onRemove( itemIndex, linkIndex ) }
@@ -113,17 +189,6 @@ function SubmenuLink( { link, itemIndex, linkIndex, onUpdate, onRemove } ) {
 	);
 }
 
-/**
- * Submenu section with title, links, and add button.
- *
- * @param {Object}   props              Component properties.
- * @param {Object}   props.item         The menu item object.
- * @param {number}   props.index        Index of the menu item.
- * @param {Function} props.onUpdate     Callback to update item fields.
- * @param {Function} props.onUpdateLink Callback to update a nested submenu link.
- * @param {Function} props.onAddLink    Callback to add a nested submenu link.
- * @param {Function} props.onRemoveLink Callback to remove a nested submenu link.
- */
 function SubmenuSection( {
 	item,
 	index,
@@ -131,6 +196,9 @@ function SubmenuSection( {
 	onUpdateLink,
 	onAddLink,
 	onRemoveLink,
+	onMoveLink,
+	onSelectLink,
+	selectedSubmenuLink,
 } ) {
 	if ( ! item.hasSubmenu ) {
 		return (
@@ -140,7 +208,7 @@ function SubmenuSection( {
 					onClick={ () => onUpdate( index, 'hasSubmenu', true ) }
 					style={ { width: '100%', justifyContent: 'center' } }
 				>
-					{ t( 'Add Submenu (Links)' ) }
+					{ __( 'Add Submenu (Links)', 'ambrygen-web' ) }
 				</Button>
 			</div>
 		);
@@ -163,14 +231,14 @@ function SubmenuSection( {
 						onChange={ ( v ) =>
 							onUpdate( index, 'submenuTitle', v )
 						}
-						placeholder={ t( 'Submenu Title' ) }
+						placeholder={ __( 'Submenu Title', 'ambrygen-web' ) }
 					/>
 					<Button
 						icon={ trash }
 						isSmall
 						isDestructive
 						onClick={ () => onUpdate( index, 'hasSubmenu', false ) }
-						label={ t( 'Remove Section' ) }
+						label={ __( 'Remove Section', 'ambrygen-web' ) }
 					/>
 				</div>
 				<ul className="nav__item--mega-menu__submenu-inner--links">
@@ -180,8 +248,15 @@ function SubmenuSection( {
 							link={ link }
 							itemIndex={ index }
 							linkIndex={ linkIndex }
+							totalLinks={ item?.submenuLinks?.length || 0 }
 							onUpdate={ onUpdateLink }
 							onRemove={ onRemoveLink }
+							onMove={ onMoveLink }
+							onSelectLink={ onSelectLink }
+							isSelected={
+								selectedSubmenuLink?.itemIndex === index &&
+								selectedSubmenuLink?.linkIndex === linkIndex
+							}
 						/>
 					) ) }
 				</ul>
@@ -190,7 +265,7 @@ function SubmenuSection( {
 					icon={ plus }
 					onClick={ () => onAddLink( index ) }
 				>
-					{ t( 'Add Link' ) }
+					{ __( 'Add Link', 'ambrygen-web' ) }
 				</Button>
 			</div>
 		</div>
@@ -222,7 +297,7 @@ function MenuItem( { item, index, onUpdate } ) {
 						className="body2-medium mb-0 nav__item--mega-menu__link-title"
 						value={ item.title }
 						onChange={ ( v ) => onUpdate( index, 'title', v ) }
-						placeholder={ t( 'Title' ) }
+						placeholder={ __( 'Title', 'ambrygen-web' ) }
 					/>
 				</div>
 				<RichText
@@ -230,7 +305,7 @@ function MenuItem( { item, index, onUpdate } ) {
 					className="nav__item--mega-menu__info caption-regular"
 					value={ item.text }
 					onChange={ ( v ) => onUpdate( index, 'text', v ) }
-					placeholder={ t( 'Description' ) }
+					placeholder={ __( 'Description', 'ambrygen-web' ) }
 				/>
 			</div>
 		</div>
@@ -243,6 +318,7 @@ function MenuItem( { item, index, onUpdate } ) {
 
 export default function Edit( { attributes, setAttributes } ) {
 	const { items, menuId, menuLabel } = attributes;
+	const [ selectedSubmenuLink, setSelectedSubmenuLink ] = useState( null );
 
 	// Auto-generate menu ID
 	useEffect( () => {
@@ -306,6 +382,28 @@ export default function Edit( { attributes, setAttributes } ) {
 			};
 			return { items: newItems };
 		} );
+		setSelectedSubmenuLink( null );
+	};
+
+	const moveSubmenuLink = ( itemIndex, fromIndex, direction ) => {
+		const toIndex = fromIndex + direction;
+		if ( fromIndex === toIndex ) {
+			return;
+		}
+		setAttributes( ( prev ) => {
+			const newItems = [ ...prev.items ];
+			const links = [ ...newItems[ itemIndex ].submenuLinks ];
+			if ( toIndex < 0 || toIndex >= links.length ) {
+				return prev;
+			}
+			const [ movedLink ] = links.splice( fromIndex, 1 );
+			links.splice( toIndex, 0, movedLink );
+			newItems[ itemIndex ] = {
+				...newItems[ itemIndex ],
+				submenuLinks: links,
+			};
+			return { items: newItems };
+		} );
 	};
 
 	// Image update helper
@@ -325,33 +423,36 @@ export default function Edit( { attributes, setAttributes } ) {
 		<>
 			<InspectorControls>
 				{ /* Menu Settings */ }
-				<PanelBody title={ t( 'Menu Settings' ) } initialOpen>
+				<PanelBody title={ __( 'Menu Settings', 'ambrygen-web' ) } initialOpen>
 					<Field
-						label={ t( 'Menu Name' ) }
+						label={ __( 'Menu Name', 'ambrygen-web' ) }
 						value={ menuLabel }
 						onChange={ ( v ) => setAttributes( { menuLabel: v } ) }
-						help={ t(
-							'Name this menu to easily find it in the Header settings.'
+						help={ __(
+							'Name this menu to easily find it in the Header settings.',
+							'ambrygen-web'
 						) }
 					/>
 					<Field
-						label={ t( 'Menu ID (System)' ) }
+						label={ __( 'Menu ID (System)', 'ambrygen-web' ) }
 						value={ menuId }
 						readOnly
-						help={ t(
-							'Unique ID used for linking (do not change).'
+						help={ __(
+							'Unique ID used for linking (do not change).',
+							'ambrygen-web'
 						) }
 					/>
 				</PanelBody>
 
 				{ /* Menu Items */ }
-				<PanelBody title={ t( 'Menu Items' ) } initialOpen>
+				<PanelBody title={ __( 'Menu Items', 'ambrygen-web' ) } initialOpen>
 					<p
 						className="components-base-control__help"
 						style={ { marginBottom: '12px' } }
 					>
-						{ t(
-							`Manage up to ${ MAX_ITEMS } menu items. Current: ${ items.length }/${ MAX_ITEMS }`
+						{ __(
+							`Manage up to ${ MAX_ITEMS } menu items. Current: ${ items.length }/${ MAX_ITEMS }`,
+							'ambrygen-web'
 						) }
 					</p>
 
@@ -366,26 +467,26 @@ export default function Edit( { attributes, setAttributes } ) {
 							/>
 							<ImageUploader
 								url={ item.image }
-								label={ t( 'Image' ) }
+								label={ __( 'Image', 'ambrygen-web' ) }
 								onSelect={ ( media ) =>
 									updateImage( index, media )
 								}
 								onRemove={ () => updateImage( index, null ) }
 							/>
 							<Field
-								label={ t( 'Title' ) }
+								label={ __( 'Title', 'ambrygen-web' ) }
 								value={ item.title }
 								onChange={ ( v ) =>
 									update( index, 'title', v )
 								}
 							/>
 							<Field
-								label={ t( 'URL' ) }
+								label={ __( 'URL', 'ambrygen-web' ) }
 								value={ item.url }
 								onChange={ ( v ) => update( index, 'url', v ) }
 							/>
 							<Field
-								label={ t( 'Description' ) }
+								label={ __( 'Description', 'ambrygen-web' ) }
 								value={ item.text }
 								onChange={ ( v ) => update( index, 'text', v ) }
 							/>
@@ -403,7 +504,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								justifyContent: 'center',
 							} }
 						>
-							{ t( 'Add Item' ) }
+							{ __( 'Add Item', 'ambrygen-web' ) }
 						</Button>
 					) }
 				</PanelBody>
@@ -424,6 +525,22 @@ export default function Edit( { attributes, setAttributes } ) {
 							onUpdateLink={ updateSubmenuLink }
 							onAddLink={ addSubmenuLink }
 							onRemoveLink={ removeSubmenuLink }
+							onMoveLink={ moveSubmenuLink }
+							onSelectLink={ ( itemIndex, linkIndex ) =>
+								setSelectedSubmenuLink( ( prev ) => {
+									if (
+										prev?.itemIndex === itemIndex &&
+										prev?.linkIndex === linkIndex
+									) {
+										return null;
+									}
+									return {
+										itemIndex,
+										linkIndex,
+									};
+								} )
+							}
+							selectedSubmenuLink={ selectedSubmenuLink }
 						/>
 					</div>
 				) ) }

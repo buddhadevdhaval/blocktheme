@@ -25,9 +25,10 @@ import {
 } from '@wordpress/components';
 import { plus } from '@wordpress/icons';
 import { useState, useCallback, useMemo } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 
 // Shared imports
-import { useArrayHandlers, cx, t } from '../_shared/utils';
+import { useArrayHandlers, cx } from '../_shared/utils';
 import {
 	ItemHeader,
 	ImageUploader,
@@ -96,32 +97,33 @@ function NavItemEditor( {
 				onRemove={ onRemove }
 			/>
 			<Field
-				label={ t( 'Label' ) }
+				label={ __( 'Label', 'ambrygen-web' ) }
 				value={ item.label }
 				onChange={ ( v ) => onUpdate( index, 'label', v ) }
 			/>
 			<Field
-				label={ t( 'URL' ) }
+				label={ __( 'URL', 'ambrygen-web' ) }
 				value={ item.url }
 				onChange={ ( v ) => onUpdate( index, 'url', v ) }
 			/>
 			<Toggle
-				label={ t( 'Has Mega Menu' ) }
+				label={ __( 'Has Mega Menu', 'ambrygen-web' ) }
 				checked={ item.hasMegaMenu }
 				onChange={ ( v ) => onUpdate( index, 'hasMegaMenu', v ) }
 			/>
 			{ item.hasMegaMenu && (
 				<>
 					<SelectControl
-						label={ t( 'Select Mega Menu Instance' ) }
+						label={ __( 'Select Mega Menu Instance', 'ambrygen-web' ) }
 						value={ item.megaMenuId }
 						options={ [
-							{ label: t( '— Select a Menu —' ), value: '' },
+							{ label: __( '— Select a Menu —', 'ambrygen-web' ), value: '' },
 							...menuOptions,
 						] }
 						onChange={ ( v ) => onUpdate( index, 'megaMenuId', v ) }
-						help={ t(
-							'Select the specific mega menu to display.'
+						help={ __(
+							'Select the specific mega menu to display.',
+							'ambrygen-web'
 						) }
 					/>
 					{ item.megaMenuId && (
@@ -132,11 +134,11 @@ function NavItemEditor( {
 								onUpdate( index, 'megaMenuId', '' )
 							}
 						>
-							{ t( 'Unlink Menu' ) }
+							{ __( 'Unlink Menu', 'ambrygen-web' ) }
 						</Button>
 					) }
 					<Toggle
-						label={ t( 'Second Level Style' ) }
+						label={ __( 'Second Level Style', 'ambrygen-web' ) }
 						checked={ item.isSecondLevel }
 						onChange={ ( v ) =>
 							onUpdate( index, 'isSecondLevel', v )
@@ -289,7 +291,7 @@ function HeaderPreview( {
 								<img
 									className="header__logo-img header__logo-img--default"
 									src={ logoUrl || DEFAULT_LOGO }
-									alt={ logoAlt || t( 'Site Logo' ) }
+									alt={ logoAlt || __( 'Site Logo', 'ambrygen-web' ) }
 								/>
 							</a>
 						</div>
@@ -326,7 +328,7 @@ function HeaderPreview( {
 									<input
 										type="text"
 										name="s"
-										placeholder={ t( 'Search' ) }
+										placeholder={ __( 'Search', 'ambrygen-web' ) }
 										disabled
 									/>
 									<button
@@ -334,7 +336,7 @@ function HeaderPreview( {
 										type="button"
 										disabled
 									>
-										{ t( 'Search' ) }
+										{ __( 'Search', 'ambrygen-web' ) }
 									</button>
 								</form>
 							</div>
@@ -409,7 +411,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		() =>
 			innerBlocks
 				.map( ( b ) => ( {
-					label: b.attributes.menuLabel || t( 'Untitled Menu' ),
+					label:
+						b.attributes.menuLabel ||
+						__( 'Untitled Menu', 'ambrygen-web' ),
 					value: b.attributes.menuId || '',
 				} ) )
 				.filter( ( o ) => o.value ),
@@ -455,7 +459,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		<>
 			<InspectorControls>
 				{ /* Logo Settings */ }
-				<PanelBody title={ t( 'Logo Settings' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Logo Settings', 'ambrygen-web' ) } initialOpen={ false }>
 					<MediaUploadCheck>
 						<MediaUpload
 							onSelect={ ( media ) =>
@@ -463,7 +467,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									logoUrl: media.url,
 									logoId: media.id,
 									logoAlt:
-										media.alt || media.title || 'Site Logo',
+										media.alt ||
+										media.title ||
+										__( 'Site Logo', 'ambrygen-web' ),
 								} )
 							}
 							allowedTypes={ [ 'image' ] }
@@ -478,7 +484,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 											logoAlt:
 												media.alt ||
 												media.title ||
-												'Site Logo',
+												__( 'Site Logo', 'ambrygen-web' ),
 										} );
 									} }
 									onRemove={ () =>
@@ -488,7 +494,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 											logoAlt: '',
 										} )
 									}
-									label={ t( 'Logo' ) }
+									label={ __( 'Logo', 'ambrygen-web' ) }
 								/>
 							) }
 						/>
@@ -496,9 +502,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 
 				{ /* Top Bar Settings */ }
-				<PanelBody title={ t( 'Top Bar' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Top Bar', 'ambrygen-web' ) } initialOpen={ false }>
 					<Toggle
-						label={ t( 'Show Top Bar' ) }
+						label={ __( 'Show Top Bar', 'ambrygen-web' ) }
 						checked={ topBarVisible }
 						onChange={ ( v ) =>
 							setAttributes( { topBarVisible: v } )
@@ -507,7 +513,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					{ topBarVisible && (
 						<>
 							<Field
-								label={ t( 'Message' ) }
+								label={ __( 'Message', 'ambrygen-web' ) }
 								value={ topBarText }
 								onChange={ ( v ) =>
 									setAttributes( { topBarText: v } )
@@ -515,14 +521,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							/>
 							<CardDivider />
 							<Field
-								label={ t( 'Link Label' ) }
+								label={ __( 'Link Label', 'ambrygen-web' ) }
 								value={ topBarLinkText }
 								onChange={ ( v ) =>
 									setAttributes( { topBarLinkText: v } )
 								}
 							/>
 							<Field
-								label={ t( 'Link URL' ) }
+								label={ __( 'Link URL', 'ambrygen-web' ) }
 								value={ topBarLinkUrl }
 								onChange={ ( v ) =>
 									setAttributes( { topBarLinkUrl: v } )
@@ -533,10 +539,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 
 				{ /* Navigation Items */ }
-				<PanelBody title={ t( 'Navigation Items' ) } initialOpen>
+				<PanelBody title={ __( 'Navigation Items', 'ambrygen-web' ) } initialOpen>
 					<p className="components-base-control__help">
-						{ t(
-							`Manage navigation items. Current: ${ navItems.length }`
+						{ __(
+							`Manage navigation items. Current: ${ navItems.length }`,
+							'ambrygen-web'
 						) }
 					</p>
 					{ navItems.map( ( item, i ) => (
@@ -557,14 +564,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onClick={ handleAddNav }
 						className="header-editor__add-nav-btn"
 					>
-						{ t( 'Add Nav Item' ) }
+						{ __( 'Add Nav Item', 'ambrygen-web' ) }
 					</Button>
 				</PanelBody>
 
 				{ /* Mega Menu Management */ }
-				<PanelBody title={ t( 'Manage Mega Menus' ) } initialOpen>
+				<PanelBody title={ __( 'Manage Mega Menus', 'ambrygen-web' ) } initialOpen>
 					<p className="description">
-						{ t( 'Add new mega menu instances to link to.' ) }
+						{ __( 'Add new mega menu instances to link to.', 'ambrygen-web' ) }
 					</p>
 					<div
 						className="header-editor__add-menu-buttons"
@@ -581,7 +588,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								addMegaMenu( 'ambrygen/mega-menu-3-columns' )
 							}
 						>
-							{ t( '+ Add 3-Column Menu' ) }
+							{ __( '+ Add 3-Column Menu', 'ambrygen-web' ) }
 						</Button>
 						<Button
 							variant="secondary"
@@ -589,33 +596,33 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								addMegaMenu( 'ambrygen/mega-menu-split' )
 							}
 						>
-							{ t( '+ Add Split View Menu' ) }
+							{ __( '+ Add Split View Menu', 'ambrygen-web' ) }
 						</Button>
 					</div>
 				</PanelBody>
 
 				{ /* CTA Buttons */ }
-				<PanelBody title={ t( 'CTA Buttons' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'CTA Buttons', 'ambrygen-web' ) } initialOpen={ false }>
 					<Field
-						label={ t( 'Login Text' ) }
+						label={ __( 'Login Text', 'ambrygen-web' ) }
 						value={ loginText }
 						onChange={ ( v ) => setAttributes( { loginText: v } ) }
 					/>
 					<Field
-						label={ t( 'Login URL' ) }
+						label={ __( 'Login URL', 'ambrygen-web' ) }
 						value={ loginUrl }
 						onChange={ ( v ) => setAttributes( { loginUrl: v } ) }
 					/>
 					<CardDivider />
 					<Field
-						label={ t( 'Mobile CTA Text' ) }
+						label={ __( 'Mobile CTA Text', 'ambrygen-web' ) }
 						value={ mobileCtaText }
 						onChange={ ( v ) =>
 							setAttributes( { mobileCtaText: v } )
 						}
 					/>
 					<Field
-						label={ t( 'Mobile CTA URL' ) }
+						label={ __( 'Mobile CTA URL', 'ambrygen-web' ) }
 						value={ mobileCtaUrl }
 						onChange={ ( v ) =>
 							setAttributes( { mobileCtaUrl: v } )
@@ -641,17 +648,17 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					{ activeMenuId && (
 						<div className="header-editor__active-header">
 							<span className="header-editor__active-header-title">
-								{ t( 'Editing Menu:' ) }{ ' ' }
+								{ __( 'Editing Menu:', 'ambrygen-web' ) }{ ' ' }
 								{ megaMenuOptions.find(
 									( o ) => o.value === activeMenuId
-								)?.label || 'Unknown Menu' }
+								)?.label || __( 'Unknown Menu', 'ambrygen-web' ) }
 							</span>
 							<button
 								type="button"
 								className="header-editor__active-header-close"
 								onClick={ () => setActiveMenuId( null ) }
 							>
-								✕ { t( 'Close' ) }
+								✕ { __( 'Close', 'ambrygen-web' ) }
 							</button>
 						</div>
 					) }
@@ -668,10 +675,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						{ ! activeMenuId && (
 							<p className="header-editor__management-info">
 								<strong>
-									{ t( 'Manage Mega Menu Blocks:' ) }
+									{ __( 'Manage Mega Menu Blocks:', 'ambrygen-web' ) }
 								</strong>{ ' ' }
-								{ t(
-									'Use the "Manage Mega Menus" panel in the sidebar to add new menus. Click a menu item above to edit its linked menu.'
+								{ __(
+									'Use the "Manage Mega Menus" panel in the sidebar to add new menus. Click a menu item above to edit its linked menu.',
+									'ambrygen-web'
 								) }
 							</p>
 						) }
@@ -687,3 +695,4 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
+

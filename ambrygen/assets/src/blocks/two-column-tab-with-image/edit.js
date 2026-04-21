@@ -5,10 +5,10 @@ import {
 	InspectorControls,
 } from '@wordpress/block-editor';
 import { useEffect, useRef } from '@wordpress/element';
-import { PanelBody } from '@wordpress/components';
+import { PanelBody, ToggleControl } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 
 import { TagSelector } from '../_shared/components';
-import { t } from '../_shared/utils';
 const TEMPLATE = [
 	[ 'ambrygen/two-column-tab-with-image-item' ],
 	[ 'ambrygen/two-column-tab-with-image-item' ],
@@ -17,10 +17,12 @@ const TEMPLATE = [
 ];
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { heading, headingTag, description } = attributes;
+	const { heading, headingTag, description, showFullImage } = attributes;
 
 	const blockProps = useBlockProps( {
-		className: 'vertical-tabs-block order-testing-block',
+		className: `vertical-tabs-block order-testing-block${
+			showFullImage ? ' show-full-image' : ''
+		}`,
 	} );
 
 	const containerRef = useRef( null );
@@ -82,14 +84,25 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ t( 'Heading Settings' ) } initialOpen>
+				<PanelBody
+					title={ __( 'Block Settings', 'ambrygen-web' ) }
+					initialOpen
+				>
+					<ToggleControl
+						label={ __( 'Show full image', 'ambrygen-web' ) }
+						checked={ !! showFullImage }
+						onChange={ ( value ) =>
+							setAttributes( { showFullImage: value } )
+						}
+					/>
 					<TagSelector
-						label={ t( 'Heading Tag' ) }
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag }
 						onChange={ ( value ) =>
 							setAttributes( { headingTag: value } )
 						}
 						includeTextTags={ false }
+						type="heading"
 					/>
 				</PanelBody>
 			</InspectorControls>
@@ -103,7 +116,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) =>
 							setAttributes( { heading: value } )
 						}
-						placeholder={ t( 'Section Title' ) }
+						placeholder={ __( 'Section Title', 'ambrygen-web' ) }
 					/>
 
 					<div className="block__rowflex--block-content subtitle-1-regular">
@@ -113,7 +126,10 @@ export default function Edit( { attributes, setAttributes } ) {
 							onChange={ ( value ) =>
 								setAttributes( { description: value } )
 							}
-							placeholder={ t( 'Section Description' ) }
+							placeholder={ __(
+								'Section Description',
+								'ambrygen-web'
+							) }
 						/>
 					</div>
 				</div>

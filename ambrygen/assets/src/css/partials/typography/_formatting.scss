@@ -38,7 +38,8 @@ address {
 
 mark {
 	color: var(--theme_mark_color);
-	padding: 3px 7px;
+	background-color: transparent;
+	// padding: 3px 7px;
 }
 
 small {

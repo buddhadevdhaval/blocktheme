@@ -45,7 +45,7 @@ import {
  * Renders the block interface in the editor with:
  * - Logo overlay configuration
  * - Slider with repeater fields for multiple slides
- * - Per-slide: background image, heading, content, tagline, buttons
+ * - Per-slide: background image, heading, content, buttons
  * - Slider settings (navigation, dots, autoplay)
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
@@ -56,8 +56,14 @@ import {
  * @return {JSX.Element} Block editor interface element.
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const { slides, showSliderNav, showSliderDots, autoplay, autoplayDelay } =
-		attributes;
+	const {
+		slides,
+		showSliderNav,
+		showSliderDots,
+		autoplay,
+		autoplayDelay,
+		showSmallImage,
+	} = attributes;
 
 	const [ currentSlide, setCurrentSlide ] = useState( 0 );
 
@@ -107,9 +113,6 @@ export default function Edit( { attributes, setAttributes } ) {
 				eyebrow: '',
 				headingTag: 'h2',
 				content: '',
-				tagline: '',
-				buttonPrimaryText: 'Start Your Order',
-				buttonPrimaryUrl: '#',
 				primarybutton: {
 					url: '',
 					text: '',
@@ -124,8 +127,6 @@ export default function Edit( { attributes, setAttributes } ) {
 					rel: '',
 					variant: '',
 				},
-				buttonSecondaryText: 'Who We Are',
-				buttonSecondaryUrl: '#',
 			},
 		];
 		setAttributes( { slides: newSlides } );
@@ -172,7 +173,9 @@ export default function Edit( { attributes, setAttributes } ) {
 	);
 
 	const blockProps = useBlockProps( {
-		className: 'hero-section',
+		className: `hero-section${
+			showSmallImage ? ' inner-hero-banner' : ''
+		}`,
 	} );
 
 	const slide = slides[ currentSlide ] || slides[ 0 ];
@@ -212,6 +215,13 @@ export default function Edit( { attributes, setAttributes } ) {
 							checked={ showSliderDots }
 							onChange={ ( value ) =>
 								setAttributes( { showSliderDots: value } )
+							}
+						/>
+						<ToggleControl
+							label={ __( 'Small Image', 'ambrygen-web' ) }
+							checked={ showSmallImage }
+							onChange={ ( value ) =>
+								setAttributes( { showSmallImage: value } )
 							}
 						/>
 						<ToggleControl
@@ -530,7 +540,7 @@ export default function Edit( { attributes, setAttributes } ) {
 													)
 												}
 												placeholder={ __(
-													'Add Eyebrow Text',
+													'Add Eyebrow…',
 													'ambrygen-web'
 												) }
 												aria-label={ __(
@@ -598,32 +608,7 @@ export default function Edit( { attributes, setAttributes } ) {
 													'core/bold',
 													'core/italic',
 													'core/link',
-												] }
-											/>
-										</div>
-										<div
-											className="is-style-gl-s24"
-											aria-hidden="true"
-										></div>
-										<div className="hero-section__tagline">
-											<RichText
-												tagName="p"
-												value={ slide.tagline }
-												onChange={ ( value ) =>
-													updateSlide(
-														currentSlide,
-														'tagline',
-														value
-													)
-												}
-												placeholder={ __(
-													'Add Tagline',
-													'ambrygen-web'
-												) }
-												allowedFormats={ [
-													'core/bold',
-													'core/italic',
-													'core/link',
+													'core/text-color',
 												] }
 											/>
 										</div>

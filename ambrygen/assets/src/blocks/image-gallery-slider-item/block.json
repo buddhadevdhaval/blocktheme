@@ -8,11 +8,6 @@
   "parent": [
     "ambrygen/image-gallery-slider"
   ],
-  "usesContext": [
-    "ambrygen/imageGalleryNav",
-    "ambrygen/imageGalleryPagination",
-    "ambrygen/imageGalleryAutoplay"
-  ],
   "attributes": {
     "postId": {
       "type": "number"

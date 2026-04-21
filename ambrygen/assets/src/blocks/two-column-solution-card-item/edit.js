@@ -5,13 +5,12 @@ import {
 } from '@wordpress/block-editor';
 import { useEffect, useMemo } from '@wordpress/element';
 import { PanelBody } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 import {
 	ImageUploader,
 	ImagePlaceholder,
 	DEFAULT_IMAGES,
 } from '../_shared/components';
-
-import { t } from '../_shared/utils';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const { sectiontitle, description, imageUrl, imageAlt } = attributes;
@@ -44,9 +43,9 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ t( 'Card Image' ) } initialOpen>
+				<PanelBody title={ __( 'Card Image', 'ambrygen-web' ) } initialOpen>
 					<ImageUploader
-						label={ t( 'Card Image' ) }
+						label={ __( 'Card Image', 'ambrygen-web' ) }
 						url={ imageUrl || defaultPlaceholder.url }
 						onSelect={ ( media ) =>
 							setAttributes( {
@@ -75,7 +74,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) =>
 							setAttributes( { sectiontitle: value } )
 						}
-						placeholder={ t( 'Card Title' ) }
+						placeholder={ __( 'Card Title', 'ambrygen-web' ) }
 						allowedFormats={ [] }
 					/>
 
@@ -86,7 +85,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) =>
 							setAttributes( { description: value } )
 						}
-						placeholder={ t( 'Card description...' ) }
+						placeholder={ __( 'Card description...', 'ambrygen-web' ) }
 					/>
 				</div>
 

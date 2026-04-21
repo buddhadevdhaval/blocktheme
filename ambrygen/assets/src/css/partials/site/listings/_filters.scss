@@ -1,0 +1,238 @@
+@use "../../variables/breakpoints" as bp;
+@use "../../variables/fluid_mixins" as *;
+
+
+.cs-wp-filters {
+    background: var(--theme_primary_25);
+    border-radius: fluid(12, 16);
+    padding: 16px 24px;
+    overflow: hidden;
+
+    @include bp.max(md) {
+        padding: 12px 20px;
+    }
+
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__heading {
+        color: var(--theme_gray_900);
+    }
+
+    &__toggle {
+        background: none;
+        border: none;
+        padding: 4px;
+        color: var(--theme_gray_900);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease;
+        margin: 0;
+        height: auto;
+        display: none;
+
+        @include bp.max(md) {
+            display: block;
+        }
+
+        &:hover {
+            background-color: transparent;
+            color: inherit;
+        }
+
+        svg {
+            transition: transform 0.3s ease;
+        }
+
+        &[aria-expanded="true"] svg {
+            transform: rotate(180deg);
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    &__form {
+        margin-top: 16px;
+
+        @include bp.max(md) {
+            display: none;
+        }
+
+        .cs-wp-filters.is-open & {
+            @include bp.max(md) {
+                display: block;
+                animation: fadeIn 0.3s ease-in-out;
+            }
+        }
+
+        // The actual form element
+        .cs-wp-filters-form {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            gap: 24px;
+
+            @include bp.max(md) {
+                gap: 16px;
+            }
+
+            &__field {
+                flex: 1 1 180px;
+                min-width: 0;
+            }
+
+            &__actions {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex: 0 0 auto;
+                margin: 0; // Remove default p margins if any
+
+                button {
+                    margin: 0;
+                }
+            }
+        }
+
+        // FacetWP label above each filter group
+        .facetwp-label {
+            display: block;
+            font-size: var(--theme_font_size_13);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--theme_gray_500);
+            margin-bottom: 12px;
+
+            @include bp.max(md) {
+                margin-bottom: 6px;
+            }
+        }
+
+        .facetwp-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+            cursor: pointer;
+            color: var(--theme_gray_700);
+            font-size: var(--theme_font_size_7);
+            transition: color 0.2s ease;
+
+            &:hover {
+                color: var(--theme_color_primary);
+            }
+
+            &.checked {
+                color: var(--theme_color_primary);
+                font-weight: 600;
+
+                &::before {
+                    background-color: var(--theme_color_primary);
+                    border-color: var(--theme_color_primary);
+                }
+            }
+
+            // Custom checkbox box
+            &::before {
+                content: '';
+                flex-shrink: 0;
+                width: 16px;
+                height: 16px;
+                border: 1.5px solid var(--theme_gray_300);
+                border-radius: 4px;
+                background-color: var(--theme_white);
+                transition: background-color 0.2s ease, border-color 0.2s ease;
+            }
+        }
+
+        select {
+            width: 100%;
+            max-width: 100%;
+            height: 48px;
+            padding: 0 40px 0 16px;
+            background-color: var(--theme_white);
+            border: 1px solid var(--theme_gray_300);
+            border-radius: 8px;
+            color: var(--theme_gray_700);
+            font-size: var(--theme_font_size_7);
+            cursor: pointer;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+
+            &:focus {
+                outline: none;
+                border-color: var(--theme_color_primary);
+                box-shadow: 0 0 0 3px rgba(0, 155, 210, 0.15);
+            }
+
+            option {
+                max-width: 100%;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+        }
+
+        input[type="text"],
+        input[type="search"] {
+            width: 100%;
+            height: 48px;
+            padding: 0 16px;
+            background-color: var(--theme_white);
+            border: 1px solid var(--theme_gray_300);
+            border-radius: 8px;
+            color: var(--theme_gray_700);
+            font-size: var(--theme_font_size_7);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            box-sizing: border-box;
+
+            &::placeholder {
+                color: var(--theme_gray_400);
+            }
+
+            &:focus {
+                outline: none;
+                border-color: var(--theme_color_primary);
+                box-shadow: 0 0 0 3px rgba(0, 155, 210, 0.15);
+            }
+        }
+
+        .facetwp-type-radio,
+        .facetwp-type-checkboxes {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .facetwp-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+            color: var(--theme_cg_blue);
+            font-size: var(--theme_font_size_8);
+            font-weight: 600;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            transition: color 0.2s ease;
+
+            &:hover {
+                color: var(--theme_primary_800);
+            }
+        }
+    }
+}

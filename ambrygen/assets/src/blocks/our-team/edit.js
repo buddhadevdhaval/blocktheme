@@ -5,9 +5,9 @@ import {
 	InspectorControls,
 } from '@wordpress/block-editor';
 import { PanelBody } from '@wordpress/components';
-import { TagSelector } from '../_shared/components';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
+import { TagSelector } from '../_shared/components';
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { blockId, title, intro, headingLevel } = attributes;
@@ -26,14 +26,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody
-					title={ __( 'Heading Settings', 'ambrygen-web' ) }
-					initialOpen
-				>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
 					<TagSelector
 						label={ __( 'Heading Level', 'ambrygen-web' ) }
-						type="heading"
 						value={ headingLevel }
+						type="heading"
 						onChange={ ( value ) =>
 							setAttributes( { headingLevel: value } )
 						}
@@ -44,20 +41,24 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			<div { ...useBlockProps( { className: 'wrapper' } ) }>
 				<div className="our-team">
 					<div className="our-team__header block__rowflex">
-						<RichText
-							tagName={ TagName }
-							className="our-team__title block__rowflex--heading-title heading-3 mb-0"
-							value={ title }
-							onChange={ ( value ) =>
-								setAttributes( { title: value } )
-							}
-							allowedFormats={ [
-								'core/bold',
-								'core/italic',
-								'core/text-color',
-							] }
-							placeholder={ __( 'Add Title…', 'ambrygen-web' ) }
-						/>
+						<TagName className="our-team__title block__rowflex--heading-title heading-3 mb-0">
+							<RichText
+								tagName="span"
+								value={ title }
+								onChange={ ( value ) =>
+									setAttributes( { title: value } )
+								}
+								allowedFormats={ [
+									'core/bold',
+									'core/italic',
+									'core/text-color',
+								] }
+								placeholder={ __(
+									'Add Heading…',
+									'ambrygen-web'
+								) }
+							/>
+						</TagName>
 
 						<RichText
 							tagName="div"

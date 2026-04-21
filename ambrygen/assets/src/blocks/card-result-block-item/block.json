@@ -1,0 +1,54 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/card-result-block-item",
+  "title": "Card Result Block Item",
+  "category": "ambrygen",
+  "parent": [
+    "ambrygen/card-result-block"
+  ],
+  "icon": "index-card",
+  "description": "Single result card item.",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Negative"
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h3"
+    },
+    "summary": {
+      "type": "string",
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "imageId": {
+      "type": "number",
+      "default": 0
+    },
+    "cardVariant": {
+      "type": "string",
+      "default": "negative"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web"
+}

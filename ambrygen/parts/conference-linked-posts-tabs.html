@@ -1,0 +1,267 @@
+<!-- 
+	Conference Linked Posts - Tabbed View
+	Displays presentations and posters in a tabbed interface.
+	Include in single-conferences.html template.
+-->
+
+<!-- wp:group {"className":"conference-linked-posts-tabs-wrapper"} -->
+<div class="wp-block-group conference-linked-posts-tabs-wrapper">
+	<!-- Tab Navigation -->
+	<!-- wp:html -->
+	<div class="conference-tabs-nav">
+		<?php
+			$conference_id = get_the_ID();
+			$post_types = \Ambrygen\Theme\Core\PostTypes::instance();
+			$presentations = $post_types->get_linked_posts_by_type( $conference_id, 'presentation' );
+			$posters = $post_types->get_linked_posts_by_type( $conference_id, 'poster' );
+			
+			$has_presentations = ! empty( $presentations );
+			$has_posters = ! empty( $posters );
+		?>
+		<ul class="conference-tabs-nav__list" role="tablist">
+			<?php if ( $has_presentations ) : ?>
+			<li class="conference-tabs-nav__item">
+				<button 
+					class="conference-tabs-nav__button conference-tabs-nav__button--active" 
+					role="tab" 
+					aria-selected="true" 
+					aria-controls="conference-presentations-panel"
+					data-tab="presentations">
+					Oral Presentation
+				</button>
+			</li>
+			<?php endif; ?>
+			
+			<?php if ( $has_posters ) : ?>
+			<li class="conference-tabs-nav__item">
+				<button 
+					class="conference-tabs-nav__button <?php echo ! $has_presentations ? 'conference-tabs-nav__button--active' : ''; ?>" 
+					role="tab" 
+					aria-selected="<?php echo ! $has_presentations ? 'true' : 'false'; ?>" 
+					aria-controls="conference-posters-panel"
+					data-tab="posters">
+					Scientific Posters
+				</button>
+			</li>
+			<?php endif; ?>
+		</ul>
+	</div>
+	<!-- /wp:html -->
+	
+	<!-- Tab Content -->
+	<!-- wp:html -->
+	<div class="conference-tabs-content">
+		<?php if ( $has_presentations ) : ?>
+		<div 
+			id="conference-presentations-panel" 
+			class="conference-tabs-content__panel conference-tabs-content__panel--active" 
+			role="tabpanel" 
+			aria-labelledby="conference-presentations-tab">
+			<?php 
+				// Include the presentations template part
+				if ( locate_template( 'parts/conference-presentations.html' ) ) {
+					echo file_get_contents( locate_template( 'parts/conference-presentations.html' ) );
+				}
+			?>
+		</div>
+		<?php endif; ?>
+		
+		<?php if ( $has_posters ) : ?>
+		<div 
+			id="conference-posters-panel" 
+			class="conference-tabs-content__panel <?php echo ! $has_presentations ? 'conference-tabs-content__panel--active' : ''; ?>" 
+			role="tabpanel" 
+			aria-labelledby="conference-posters-tab">
+			<?php 
+				// Include the posters template part
+				if ( locate_template( 'parts/conference-posters.html' ) ) {
+					echo file_get_contents( locate_template( 'parts/conference-posters.html' ) );
+				}
+			?>
+		</div>
+		<?php endif; ?>
+	</div>
+	<!-- /wp:html -->
+</div>
+<!-- /wp:group -->
+
+<!-- Tab Switching Script -->
+<script>
+(function() {
+	'use strict';
+	
+	const tabButtons = document.querySelectorAll('.conference-tabs-nav__button');
+	const tabPanels = document.querySelectorAll('.conference-tabs-content__panel');
+
+	tabButtons.forEach(button => {
+		button.addEventListener('click', function(e) {
+			e.preventDefault();
+			
+			const tabName = this.getAttribute('data-tab');
+			
+			// Deactivate all buttons and panels
+			tabButtons.forEach(btn => {
+				btn.classList.remove('conference-tabs-nav__button--active');
+				btn.setAttribute('aria-selected', 'false');
+			});
+			
+			tabPanels.forEach(panel => {
+				panel.classList.remove('conference-tabs-content__panel--active');
+			});
+			
+			// Activate clicked button and corresponding panel
+			this.classList.add('conference-tabs-nav__button--active');
+			this.setAttribute('aria-selected', 'true');
+			
+			const activePanel = document.getElementById('conference-' + tabName + '-panel');
+			if (activePanel) {
+				activePanel.classList.add('conference-tabs-content__panel--active');
+			}
+		});
+	});
+})();
+</script>
+
+<style>
+.conference-linked-posts-tabs-wrapper {
+	margin: 0;
+}
+
+.conference-tabs-nav {
+	border-bottom: 2px solid #e0e0e0;
+	margin-bottom: 2rem;
+}
+
+.conference-tabs-nav__list {
+	display: flex;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	gap: 0.5rem;
+}
+
+.conference-tabs-nav__item {
+	margin: 0;
+	padding: 0;
+}
+
+.conference-tabs-nav__button {
+	background: none;
+	border: none;
+	border-bottom: 3px solid transparent;
+	cursor: pointer;
+	font-size: 1rem;
+	font-weight: 500;
+	padding: 1rem 1.5rem;
+	color: #666;
+	transition: all 0.3s ease;
+	position: relative;
+	bottom: -2px;
+}
+
+.conference-tabs-nav__button:hover {
+	color: #333;
+}
+
+.conference-tabs-nav__button--active {
+	color: #006494;
+	border-bottom-color: #006494;
+}
+
+.conference-tabs-content__panel {
+	display: none;
+}
+
+.conference-tabs-content__panel--active {
+	display: block;
+}
+
+.conference-linked-posts__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	gap: 2rem;
+	margin-bottom: 2rem;
+}
+
+.conference-linked-post-item {
+	background: #f9f9f9;
+	border: 1px solid #e0e0e0;
+	border-radius: 8px;
+	overflow: hidden;
+	padding: 1.5rem;
+	transition: box-shadow 0.3s ease;
+}
+
+.conference-linked-post-item:hover {
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.conference-linked-post-item__image {
+	display: block;
+	margin: -1.5rem -1.5rem 1rem -1.5rem;
+	width: calc(100% + 3rem);
+	height: 180px;
+	overflow: hidden;
+	border-radius: 8px 8px 0 0;
+}
+
+.conference-linked-post-item__image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.conference-linked-post-item__title {
+	margin: 0 0 0.5rem 0;
+}
+
+.conference-linked-post-item__title a {
+	color: #006494;
+	text-decoration: none;
+}
+
+.conference-linked-post-item__title a:hover {
+	text-decoration: underline;
+}
+
+.conference-linked-post-item__speakers,
+.conference-linked-post-item__authors {
+	color: #666;
+	margin-bottom: 0.75rem;
+	font-style: italic;
+}
+
+.conference-linked-post-item__description {
+	color: #666;
+	margin: 0.75rem 0;
+	line-height: 1.5;
+}
+
+.conference-linked-post-item__details {
+	margin-top: 1rem;
+	padding-top: 1rem;
+	border-top: 1px solid #e0e0e0;
+}
+
+.conference-linked-post-item__meta {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 0.5rem;
+	color: #999;
+}
+
+.conference-linked-post-item__meta .label {
+	font-weight: 600;
+	color: #666;
+}
+
+.conference-linked-post-item__link {
+	margin-top: 1rem;
+}
+
+.conference-no-items {
+	text-align: center;
+	padding: 2rem;
+	color: #999;
+}
+</style>

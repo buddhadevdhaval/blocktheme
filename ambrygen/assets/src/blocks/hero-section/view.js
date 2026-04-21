@@ -31,13 +31,13 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			autoplay: config.autoplay || false,
 			navigation: config.navigation
 				? {
-						nextEl: '.custom-next',
-						prevEl: '.custom-prev',
+						nextEl: sliderElement.querySelector( '.custom-next' ),
+						prevEl: sliderElement.querySelector( '.custom-prev' ),
 				  }
 				: false,
 			pagination: config.pagination
 				? {
-						el: '.swiper-pagination',
+						el: sliderElement.querySelector( '.swiper-pagination' ),
 						clickable: true,
 						bulletClass: 'hero-section__dot',
 						bulletActiveClass: 'active',

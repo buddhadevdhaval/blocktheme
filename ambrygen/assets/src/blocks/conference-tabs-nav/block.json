@@ -1,0 +1,16 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/conference-tabs-nav",
+  "version": "1.0.0",
+  "title": "Conference Tabs Nav",
+  "category": "ambrygen",
+  "description": "Renders tabs navigation for conference pages.",
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web"
+}

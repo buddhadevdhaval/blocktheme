@@ -1,0 +1,102 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/two-column-icon-grid",
+  "title": "Two Column Icon Grid",
+  "category": "ambrygen",
+  "icon": "grid-view",
+  "description": "A two-column block with an icon grid on the left and content on the right.",
+  "textdomain": "ambrygen-web",
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "heading": {
+      "type": "string",
+      "default": "Recognize the Symptoms"
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2"
+    },
+    "description": {
+      "type": "string",
+      "default": "<p>Inherited cardiovascular conditions can show up across multiple generations and often appear in an autosomal dominant pattern. Symptoms vary - and some people have none at all.</p><p>Because these conditions are often asymptomatic, knowing your family history and getting tested is the most reliable way to understand your risk - don't wait for symptoms to appear.</p>"
+    },
+    "items": {
+      "type": "array",
+      "default": [
+        {
+          "iconId": 0,
+          "iconUrl": "",
+          "iconAlt": "",
+          "text": "Shortness of<br>Breath"
+        },
+        {
+          "iconId": 0,
+          "iconUrl": "",
+          "iconAlt": "",
+          "text": "Unusual<br>Fatigue"
+        },
+        {
+          "iconId": 0,
+          "iconUrl": "",
+          "iconAlt": "",
+          "text": "Chest Pain or<br>Pressure"
+        },
+        {
+          "iconId": 0,
+          "iconUrl": "",
+          "iconAlt": "",
+          "text": "Irregular<br>Heartbeat"
+        },
+        {
+          "iconId": 0,
+          "iconUrl": "",
+          "iconAlt": "",
+          "text": "Fainting or<br>Near-Fainting"
+        },
+        {
+          "iconId": 0,
+          "iconUrl": "",
+          "iconAlt": "",
+          "text": "Unexplained<br>Nausea"
+        },
+        {
+          "iconId": 0,
+          "iconUrl": "",
+          "iconAlt": "",
+          "text": "Persistent<br>Coughing"
+        },
+        {
+          "iconId": 0,
+          "iconUrl": "",
+          "iconAlt": "",
+          "text": "Sudden<br>Cardiac Arrest"
+        }
+      ]
+    }
+  },
+  "example": {
+    "attributes": {
+      "heading": "Recognize the Symptoms",
+      "headingTag": "h2"
+    }
+  }
+}

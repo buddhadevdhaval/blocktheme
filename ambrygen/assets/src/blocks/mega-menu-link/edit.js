@@ -6,13 +6,53 @@ import {
 	MediaUpload,
 	MediaUploadCheck,
 } from '@wordpress/block-editor';
+import { useSelect, useDispatch } from '@wordpress/data';
+import { chevronUp, chevronDown } from '@wordpress/icons';
 import { PanelBody, TextControl, Button } from '@wordpress/components';
 
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { label, url, iconId, iconUrl } = attributes;
 	const blockProps = useBlockProps( {
 		className: 'nav__item--mega-menu__submenu-inner--links-item',
 	} ); // Add a wrapper class if needed
+
+	const { index, rootClientId, total } = useSelect(
+		( select ) => {
+			const { getBlockIndex, getBlockRootClientId, getBlocks } =
+				select( 'core/block-editor' );
+			const rootId = getBlockRootClientId( clientId );
+			return {
+				index: getBlockIndex( clientId, rootId ),
+				rootClientId: rootId,
+				total: getBlocks( rootId ).length,
+			};
+		},
+		[ clientId ]
+	);
+
+	const { moveBlockToPosition } = useDispatch( 'core/block-editor' );
+
+	const onMoveUp = () => {
+		if ( index > 0 ) {
+			moveBlockToPosition(
+				clientId,
+				rootClientId,
+				rootClientId,
+				index - 1
+			);
+		}
+	};
+
+	const onMoveDown = () => {
+		if ( index < total - 1 ) {
+			moveBlockToPosition(
+				clientId,
+				rootClientId,
+				rootClientId,
+				index + 1
+			);
+		}
+	};
 
 	const onSelectMedia = ( media ) => {
 		setAttributes( {
@@ -93,6 +133,22 @@ export default function Edit( { attributes, setAttributes } ) {
 			</InspectorControls>
 
 			<li { ...blockProps }>
+				<div style={ { marginBottom: '4px', display: 'flex' } }>
+					<Button
+						icon={ chevronUp }
+						size="small"
+						disabled={ index === 0 }
+						onClick={ onMoveUp }
+						label={ __( 'Move Up', 'ambrygen-web' ) }
+					/>
+					<Button
+						icon={ chevronDown }
+						size="small"
+						disabled={ index >= total - 1 }
+						onClick={ onMoveDown }
+						label={ __( 'Move Down', 'ambrygen-web' ) }
+					/>
+				</div>
 				<a
 					href={ url }
 					className="nav__item--mega-menu__submenu-inner--link submenu-inner-link"

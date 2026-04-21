@@ -1,0 +1,90 @@
+<!--
+	Conference Posters Template Part
+	Displays posters linked to the current conference post.
+	Use with: do_blocks() or via PHP in single-conferences.html
+-->
+
+<!-- wp:group {"tagName":"section","className":"container-1136 conference-posters"} -->
+<section class="wp-block-group container-1280 conference-posters">
+	<!-- wp:group {"className":"wrapper"} -->
+	<div class="wp-block-group wrapper">
+		<!-- wp:group {"className":"conference-section"} -->
+		<div class="wp-block-group conference-section">
+			<!-- wp:heading {"level":2,"className":"heading-4"} -->
+			<h2 class="wp-block-heading heading-4">Scientific Posters</h2>
+			<!-- /wp:heading -->
+
+			<!-- wp:html -->
+			<div class="conference-linked-posts" data-conference-id="<?php echo esc_attr( get_the_ID() ); ?>" data-post-type="poster">
+				<?php
+					$conference_id = get_the_ID();
+					$post_types = \Ambrygen\Theme\Core\PostTypes::instance();
+					$posters = $post_types->get_linked_posts_by_type( $conference_id, 'poster' );
+
+					if ( ! empty( $posters ) ) {
+						echo '<div class="conference-linked-posts__grid">';
+						foreach ( $posters as $poster ) {
+							$post_id = $poster->ID;
+							$title = $poster->post_title;
+							$permalink = get_permalink( $post_id );
+							$authors = get_post_meta( $post_id, 'authors', true );
+							$session_id = get_post_meta( $post_id, 'session_id', true );
+							$description = get_post_meta( $post_id, 'description', true );
+							$featured_image = get_the_post_thumbnail_url( $post_id, 'thumbnail' );
+
+							echo '<div class="conference-linked-post-item">';
+
+							if ( ! empty( $featured_image ) ) {
+								echo '<div class="conference-linked-post-item__image">';
+								echo '<img src="' . esc_url( $featured_image ) . '" alt="' . esc_attr( $title ) . '" />';
+								echo '</div>';
+							}
+
+							echo '<div class="conference-linked-post-item__header">';
+							echo '<h3 class="conference-linked-post-item__title text-md-semibold"><a href="' . esc_url( $permalink ) . '">' . esc_html( $title ) . '</a></h3>';
+
+							if ( ! empty( $authors ) ) {
+								echo '<div class="conference-linked-post-item__authors body2">';
+								echo esc_html( $authors );
+								echo '</div>';
+							}
+							echo '</div>';
+
+							if ( ! empty( $description ) ) {
+								echo '<div class="conference-linked-post-item__description body-excerpt">';
+								echo wp_kses_post( wp_trim_words( $description, 20 ) );
+								echo '</div>';
+							}
+
+							echo '<div class="conference-linked-post-item__details">';
+							if ( ! empty( $session_id ) ) {
+								echo '<div class="conference-linked-post-item__meta text-small">';
+								echo '<span class="label">Session ID:</span> ';
+								echo '<span class="value">' . esc_html( $session_id ) . '</span>';
+								echo '</div>';
+							}
+							echo '<div class="conference-linked-post-item__link">';
+							echo '<a href="' . esc_url( $permalink ) . '" class="button button-secondary">View Poster</a>';
+							echo '</div>';
+							echo '</div>';
+							echo '</div>';
+						}
+						echo '</div>';
+					} else {
+						echo '<div class="conference-no-items">';
+						echo '<p class="body2">No posters linked to this conference.</p>';
+						echo '</div>';
+					}
+				?>
+			</div>
+			<!-- /wp:html -->
+		</div>
+		<!-- /wp:group -->
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
+	<div class="is-style-gl-s50" aria-hidden="true"></div>
+	<!-- /wp:spacer -->
+</section>
+<!-- /wp:group -->

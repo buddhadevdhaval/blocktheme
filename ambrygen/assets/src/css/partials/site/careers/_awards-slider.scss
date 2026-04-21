@@ -1,0 +1,53 @@
+// @use "../../variables/breakpoints" as bp;
+// @use "../../variables/fluid_mixins" as *;
+
+// .awards-slider {
+//     &__header {
+//         max-width: 960px;
+//         text-align: center;
+//         margin: 0 auto;
+//     }
+// }
+
+// .marquee-slide {
+//     &__slider {
+//         overflow: hidden;
+//         width: 100%;
+//         position: relative;
+//         z-index: 1;
+//         height: 191px;
+//     }
+
+//     &__wrapper {
+//         counter-reset: ms-count;
+//         display: flex;
+//         z-index: 1;
+//         height: 100%;
+//         width: 100%;
+//         position: absolute;
+//         top: 0;
+//         left: 0;
+//     }
+
+//     &__item {
+//         counter-increment: ms-count;
+//         position: absolute;
+//         z-index: 1;
+//         top: 0;
+//         left: 0;
+//         width: 253px;
+//         height: 100%;
+//         overflow: hidden;
+
+//         img {
+//             max-width: 229px;
+//         }
+
+//         &.is-visible {
+//             .marquee-slide__card {
+//                 transform: translateY(0);
+//                 opacity: 1;
+//             }
+//         }
+//     }
+// }

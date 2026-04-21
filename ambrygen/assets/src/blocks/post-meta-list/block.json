@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/post-meta-list",
+  "version": "1.0.0",
+  "title": "Post Meta List",
+  "category": "ambrygen",
+  "description": "Renders a list of post meta fields.",
+  "attributes": {
+    "previewPostId": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "usesContext": [
+    "postId",
+    "postType"
+  ],
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web"
+}
+

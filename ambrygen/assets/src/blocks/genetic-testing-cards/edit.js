@@ -11,71 +11,54 @@ import {
 } from '@wordpress/block-editor';
 
 import { PanelBody } from '@wordpress/components';
-import { TagSelector, DEFAULT_IMAGES } from '../_shared/components';
-import { useMemo } from '@wordpress/element';
+import { TagSelector } from '../_shared/components';
+import { useEffect } from '@wordpress/element';
 
-export default function Edit( { attributes, setAttributes } ) {
-	const { sectionTitle, headingTag } = attributes;
-	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
+const TEMPLATE = [
+	[
+		'ambrygen/genetic-testing-card',
+		{
+			type: 'small',
+		},
+	],
+	[
+		'ambrygen/genetic-testing-card',
+		{
+			type: 'small',
+		},
+	],
+	[
+		'ambrygen/genetic-testing-card',
+		{
+			type: 'main',
+		},
+	],
+];
+
+export default function Edit( { attributes, setAttributes, clientId } ) {
+	const { blockId, sectionTitle, headingTag } = attributes;
+
+	useEffect( () => {
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+
+		if ( ! blockId ) {
+			setAttributes( {
+				blockId: expectedId,
+			} );
+		}
+	}, [ clientId, blockId, setAttributes ] );
 
 	const blockProps = useBlockProps( {
 		className: 'genetic-cards',
 	} );
-
-	const TEMPLATE = useMemo(
-		() => [
-			[
-				'ambrygen/genetic-testing-card',
-				{
-					type: 'small',
-					image: defaults?.placeholder?.url,
-					title: __(
-						'Considering genetic testing for yourself or a family member?',
-						'ambrygen-web'
-					),
-					description: __(
-						'At Ambry Genetics, we want to empower you to navigate your healthcare with confidence.',
-						'ambrygen-web'
-					),
-				},
-			],
-			[
-				'ambrygen/genetic-testing-card',
-				{
-					type: 'small',
-					image: defaults?.placeholder?.url,
-					title: __( 'Classifi', 'ambrygen-web' ),
-					description: __(
-						'How Ambry transforms raw genetic data into actionable clinical insights.',
-						'ambrygen-web'
-					),
-					link: { text: __( 'Discover Classifi', 'ambrygen-web' ) },
-				},
-			],
-			[
-				'ambrygen/genetic-testing-card',
-				{
-					type: 'main',
-					image: defaults?.placeholder?.url,
-					title: __( 'Patient for Life ss', 'ambrygen-web' ),
-					description: __(
-						'Our promise to patients living with rare and undiagnosed conditions, today and in the future.',
-						'ambrygen-web'
-					),
-					link: { text: __( 'Explore the Program', 'ambrygen-web' ) },
-				},
-			],
-		],
-		[ defaults ]
-	);
 
 	return (
 		<>
 			<InspectorControls>
 				<PanelBody title={ __( 'Section Settings', 'ambrygen-web' ) }>
 					<TagSelector
-						label={ __( 'Heading Tag', 'ambrygen-web' ) }
-						value={ headingTag || 'h2' }
+						label={ __( 'Heading Level', 'ambrygen-web' ) }
+						value={ headingTag }
 						onChange={ ( value ) =>
 							setAttributes( { headingTag: value } )
 						}
@@ -93,7 +76,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					onChange={ ( value ) =>
 						setAttributes( { sectionTitle: value } )
 					}
-					placeholder={ __( 'Section title…', 'ambrygen-web' ) }
+					placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 				/>
 
 				<div className="is-style-gl-s32"></div>

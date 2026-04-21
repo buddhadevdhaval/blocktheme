@@ -1,0 +1,16 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/poster-result-count",
+  "version": "1.0.0",
+  "title": "Poster Result Count",
+  "category": "ambrygen",
+  "description": "Renders poster result count.",
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web"
+}

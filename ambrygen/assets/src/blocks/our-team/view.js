@@ -9,9 +9,6 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			return;
 		}
 
-		const overlay = offcanvas.querySelector(
-			'.offcanvas-sidebar__overlay'
-		);
 		const panel = offcanvas.querySelector( '.offcanvas-sidebar__panel' );
 		const closeBtn = offcanvas.querySelector( '.offcanvas-sidebar__close' );
 		const nameEl = offcanvas.querySelector( '.our-team-offcanvas__name' );
@@ -19,6 +16,20 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		const imageEl = offcanvas.querySelector( '.our-team-offcanvas__image' );
 		const bioEl = offcanvas.querySelector( '.our-team-offcanvas__bio' );
 
+		if (
+			! panel ||
+			! closeBtn ||
+			! nameEl ||
+			! roleEl ||
+			! imageEl ||
+			! bioEl
+		) {
+			return;
+		}
+
+		const overlay = offcanvas.querySelector(
+			'.offcanvas-sidebar__overlay'
+		);
 		let lastFocusedElement = null;
 
 		function openOffcanvas( card ) {
@@ -29,13 +40,18 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			const designation =
 				card.getAttribute( 'data-team-designation' ) || '';
 			const imageSrc = card.getAttribute( 'data-team-image' ) || '';
-			const bio = card.getAttribute( 'data-team-bio' ) || '';
+			const bioTemplate = card.querySelector( '.our-team__bio-template' );
 
 			nameEl.textContent = name;
 			roleEl.textContent = designation;
 			imageEl.src = imageSrc;
 			imageEl.alt = name;
-			bioEl.innerHTML = bio;
+
+			if ( bioTemplate ) {
+				bioEl.replaceChildren( bioTemplate.content.cloneNode( true ) );
+			} else {
+				bioEl.textContent = '';
+			}
 
 			// Show offcanvas.
 			offcanvas.classList.add( 'is-active' );
@@ -62,17 +78,13 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 		// Open on card click.
 		cards.forEach( ( card ) => {
-			if ( ! card.hasAttribute( 'tabindex' ) ) {
-				card.setAttribute( 'tabindex', '0' );
-			}
-
 			card.addEventListener( 'click', () => {
 				openOffcanvas( card );
 			} );
 
-			card.addEventListener( 'keydown', ( e ) => {
-				if ( e.key === 'Enter' || e.key === ' ' ) {
-					e.preventDefault();
+			card.addEventListener( 'keydown', ( event ) => {
+				if ( event.key === 'Enter' || event.key === ' ' ) {
+					event.preventDefault();
 					openOffcanvas( card );
 				}
 			} );

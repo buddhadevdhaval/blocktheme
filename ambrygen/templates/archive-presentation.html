@@ -1,0 +1,120 @@
+<!-- wp:template-part {"slug":"header"} /-->
+
+<!-- wp:ambrygen/hero-section /-->
+
+<!-- wp:group {"tagName":"main","className":"wp-block-group","htmlId":"main-content"} -->
+<main id="main-content" class="wp-block-group">
+
+	<!-- wp:group {"tagName":"section","className":"container-1280 poster-archive-section listing-archive-section"} -->
+	<section class="wp-block-group container-1280 poster-archive-section listing-archive-section">
+
+		<!-- wp:group {"className":"wrapper"} -->
+		<div class="wp-block-group wrapper">
+
+			<!-- wp:html -->
+			<div class="is-style-gl-s50" aria-hidden="true"></div>
+			<!-- /wp:html -->
+
+
+
+			<!-- wp:group {"className":"poster-archive__layout"} -->
+			<div class="wp-block-group poster-archive__layout cs-wp-archive_layout listing-archive-layout">
+
+				<!-- wp:group {"className":"poster-archive__filters"} -->
+				<div class="wp-block-group poster-archive__filters cs-wp-archive__filter listing-archive-filter">
+					<!-- wp:template-part {"slug":"presentation-filters","theme":"ambrygen","area":"uncategorized"} /-->
+				</div>
+				<!-- /wp:group -->
+
+				<!-- wp:html -->
+				<div class="is-style-gl-s32" aria-hidden="true"></div>
+				<!-- /wp:html -->
+
+				<!-- wp:group {"className":"poster-archive__content"} -->
+				<div class="wp-block-group poster-archive__content cs-wp-archive_content listing-archive-content">
+
+					<!-- wp:ambrygen/presentation-result-count {"className":"poster-archive__result-count"} /-->
+
+					<!-- wp:html -->
+					<div class="is-style-gl-s20" aria-hidden="true"></div>
+					<!-- /wp:html -->
+
+					<!-- wp:query {"queryId":21,"query":{"perPage":10,"pages":0,"offset":0,"postType":"presentation","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true}} -->
+					<div class="wp-block-query poster-archive__query cs-wp-archive__query listing-archive__query">
+
+						<!-- wp:post-template -->
+						<!-- wp:group {"className":"poster-archive__item"} -->
+						<div class="wp-block-group poster-archive__item cs-wp-archive__item listing-archive__item">
+
+							<!-- wp:post-title {"isLink":true,"level":3,"className":"heading-5 mb-0 poster-archive__item-title listing-archive__item-title"} /-->
+
+							<!-- wp:post-terms {"term":"poster_category","separator":" ","className":"lists-item-category poster-archive__item-category listing-archive__item-category"} /-->
+
+							<!-- wp:html -->
+							<div class="is-style-gl-s12" aria-hidden="true"></div>
+							<!-- /wp:html -->
+
+							<!-- wp:post-terms {"term":"collaborator","prefix":"Collaborators: ","separator":", ","className":"text-md-regular mb-0 poster-archive__item-collaborators listing-archive__item-collaborators"} /-->
+
+							<!-- wp:ambrygen/presentation-meta {"className":"poster-archive__item-meta listing-archive__item-meta"} /-->
+
+						</div>
+						<!-- /wp:group -->
+						<!-- /wp:post-template -->
+
+						<!-- wp:query-no-results -->
+						<!-- wp:group {"className":"poster-archive__empty"} -->
+						<div class="wp-block-group poster-archive__empty listing-archive__empty">
+							<!-- wp:paragraph {"className":"text-md-regular mb-0"} -->
+							<div class="block-content mb-0">No presentations found matching your filters. Try
+								adjusting or clearing your search criteria.</div>
+							<!-- /wp:paragraph -->
+						</div>
+						<!-- /wp:group -->
+						<!-- /wp:query-no-results -->
+
+						<!-- wp:html -->
+						<div class="is-style-gl-s32" aria-hidden="true"></div>
+						<!-- /wp:html -->
+
+						<!-- wp:group {"className":"pagination-buttons-row","layout":{"type":"default"}} -->
+						<div class="wp-block-group pagination-buttons-row">
+							<!-- wp:group {"className":"pagination-container","layout":{"type":"default"}} -->
+							<div class="wp-block-group pagination-container">
+								<!-- wp:group {"className":"desktop-pages","layout":{"type":"flex","flexWrap":"nowrap"}} -->
+								<div class="wp-block-group desktop-pages">
+									<!-- wp:query-pagination-previous {"label":"","className":"arrow-btn pagination__nav pagination__nav--prev"} /-->
+									<!-- wp:query-pagination-numbers {"className":"pagination-list"} /-->
+									<!-- wp:query-pagination-next {"label":"","className":"arrow-btn pagination__nav pagination__nav--next"} /-->
+								</div>
+								<!-- /wp:group -->
+							</div>
+							<!-- /wp:group -->
+						</div>
+						<!-- /wp:group -->
+
+					</div>
+					<!-- /wp:query -->
+
+				</div>
+				<!-- /wp:group -->
+
+			</div>
+			<!-- /wp:group -->
+
+			<!-- wp:html -->
+			<div class="is-style-gl-s50" aria-hidden="true"></div>
+			<!-- /wp:html -->
+
+		</div>
+		<!-- /wp:group -->
+
+	</section>
+	<!-- /wp:group -->
+
+</main>
+<!-- /wp:group -->
+
+<!-- wp:ambrygen/newsletter-form /-->
+
+<!-- wp:template-part {"slug":"footer"} /-->

@@ -9,9 +9,9 @@ section:has(.block-bg-image) {
 
 	.block-bg-image {
 		position: absolute;
-		left: 0;
 		top: 0;
-		inset: 0;
+		right: 0;
+		bottom: 0;
 		z-index: 0;
 		pointer-events: none;
 		width: 100vw;
@@ -32,6 +32,7 @@ section:has(.block-bg-image) {
 
 
 	.heading-content-section__title {
+		/* Style will be placed here */
 	}
 
 	.heading-content-section__description {
@@ -41,8 +42,28 @@ section:has(.block-bg-image) {
 		letter-spacing: 0.45px;
 		font-weight: 400;
 
-		@include bp.max(md) {
+		@include bp.max(lg) {
+			max-width: 730px;
 			letter-spacing: 0.36px;
 		}
+	}
+
+	&__content {
+		max-width: 730px;
+	}
+
+	&__tooltip {
+		max-width: 730px;
+		margin-top: 12px;
+		font-size: var(--theme_font_size_7);
+		line-height: 1.35;
+		opacity: 0.8;
+	}
+
+	&__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		margin-top: 28px;
 	}
 }

@@ -2,7 +2,8 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "ambrygen/genetic-info",
-  "title": "Genetic Information",
+  "title": "Theme Video",
+  "textdomain": "ambrygen-web",
   "category": "ambrygen",
   "icon": "video-alt3",
   "description": "Educational section about genetic testing with video embed and content.",
@@ -18,6 +19,20 @@
     }
   },
   "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "link": {
+      "type": "object",
+      "default": {
+        "url": "",
+        "text": "",
+        "target": "",
+        "rel": "",
+        "variant": ""
+      }
+    },
     "heading": {
       "type": "string",
       "default": ""
@@ -44,6 +59,14 @@
     },
     "headingTag": {
       "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
       "default": "h2"
     },
     "iframeUrl": {
@@ -61,6 +84,10 @@
     "imageId": {
       "type": "number",
       "default": 0
+    },
+    "isHeaderVertical": {
+      "type": "boolean",
+      "default": false
     }
   },
   "editorScript": "file:./index.js",
@@ -73,6 +100,13 @@
       "heading": "Transforming Healthcare with Genetic Insight",
       "description": "This is a sample preview content for this block in the inserter.",
       "showDescription": true,
+      "link": {
+        "url": "https://example.com",
+        "text": "Learn More",
+        "target": "_self",
+        "rel": "",
+        "variant": "primary"
+      },
       "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
       "videoType": "embed",
       "posterImage": "/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",

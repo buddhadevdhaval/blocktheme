@@ -8,7 +8,7 @@ import {
 	PlainText,
 } from '@wordpress/block-editor';
 import { PanelBody, Button, SelectControl } from '@wordpress/components';
-import { useMemo } from '@wordpress/element';
+import { useMemo, useEffect } from '@wordpress/element';
 import {
 	ImageUploader,
 	ImagePlaceholder,
@@ -16,7 +16,7 @@ import {
 	ItemHeader,
 	PanelItem,
 	Field,
-	TagSelector
+	TagSelector,
 } from '../_shared/components';
 import { useArrayHandlers } from '../_shared/utils';
 
@@ -44,8 +44,9 @@ const DEFAULT_RIGHT_SECTION = {
 	listItems: [],
 };
 
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
+		blockId,
 		sectionTitle,
 		sectionTitleTag,
 		logoImageUrl,
@@ -56,6 +57,16 @@ export default function Edit( { attributes, setAttributes } ) {
 		rightContent,
 		rightSections = [],
 	} = attributes;
+
+	useEffect( () => {
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+
+		if ( ! blockId ) {
+			setAttributes( {
+				blockId: expectedId,
+			} );
+		}
+	}, [ clientId, blockId, setAttributes ] );
 
 	const blockProps = useBlockProps( {
 		className: 'logo-section',
@@ -194,9 +205,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		} );
 	};
 
-	const webDownloads = downloads.filter(
-		( item ) => item.group === 'web'
-	);
+	const webDownloads = downloads.filter( ( item ) => item.group === 'web' );
 	const printDownloads = downloads.filter(
 		( item ) => item.group === 'print'
 	);
@@ -249,10 +258,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				>
 					{ downloads.length === 0 && (
 						<p className="components-base-control__help">
-							{ __(
-								'No downloads added yet.',
-								'ambrygen-web'
-							) }
+							{ __( 'No downloads added yet.', 'ambrygen-web' ) }
 						</p>
 					) }
 
@@ -262,12 +268,8 @@ export default function Edit( { attributes, setAttributes } ) {
 								index={ index }
 								label={ item.label || item.fileUrl }
 								total={ downloads.length }
-								onMove={ ( i, dir ) =>
-									moveDownload( i, dir )
-								}
-								onRemove={ ( i ) =>
-									removeDownload( i, 0 )
-								}
+								onMove={ ( i, dir ) => moveDownload( i, dir ) }
+								onRemove={ ( i ) => removeDownload( i, 0 ) }
 								minCount={ 0 }
 							/>
 
@@ -276,10 +278,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								value={ item.group || 'web' }
 								options={ [
 									{
-										label: __(
-											'For Web',
-											'ambrygen-web'
-										),
+										label: __( 'For Web', 'ambrygen-web' ),
 										value: 'web',
 									},
 									{
@@ -318,10 +317,7 @@ export default function Edit( { attributes, setAttributes } ) {
 											'image',
 										] }
 										onSelect={ ( media ) =>
-											updateDownloadMedia(
-												index,
-												media
-											)
+											updateDownloadMedia( index, media )
 										}
 										render={ ( { open } ) => (
 											<Button
@@ -354,10 +350,7 @@ export default function Edit( { attributes, setAttributes } ) {
 										} }
 										style={ { marginLeft: '8px' } }
 									>
-										{ __(
-											'Remove File',
-											'ambrygen-web'
-										) }
+										{ __( 'Remove File', 'ambrygen-web' ) }
 									</Button>
 								) }
 							</div>
@@ -392,9 +385,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								index={ index }
 								label={ item.title }
 								total={ leftItems.length }
-								onMove={ ( i, dir ) =>
-									moveLeftItem( i, dir )
-								}
+								onMove={ ( i, dir ) => moveLeftItem( i, dir ) }
 								onRemove={ ( i ) => removeLeftItem( i, 0 ) }
 								minCount={ 0 }
 							/>
@@ -409,10 +400,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							/>
 
 							<Field
-								label={ __(
-									'Description',
-									'ambrygen-web'
-								) }
+								label={ __( 'Description', 'ambrygen-web' ) }
 								value={ item.description || '' }
 								onChange={ ( value ) =>
 									updateLeftItem(
@@ -459,7 +447,6 @@ export default function Edit( { attributes, setAttributes } ) {
 						{ __( 'Add Guideline', 'ambrygen-web' ) }
 					</Button>
 				</PanelBody>
-
 			</InspectorControls>
 
 			<div { ...blockProps }>
@@ -474,7 +461,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						placeholder={ __( 'Logo', 'ambrygen-web' ) }
 					/>
 				</div>
-				<div class="is-style-gl-s50" aria-hidden="true"></div>
+				<div className="is-style-gl-s50" aria-hidden="true"></div>
 
 				<div className="logo-section__top">
 					<div className="logo-section__logo">
@@ -482,65 +469,56 @@ export default function Edit( { attributes, setAttributes } ) {
 							<img src={ displayLogo } alt={ logoImageAlt } />
 						) : (
 							<ImagePlaceholder
-								text={ __(
-									'No logo set',
-									'ambrygen-web'
-								) }
+								text={ __( 'No logo set', 'ambrygen-web' ) }
 							/>
 						) }
 					</div>
 
 					<div className="logo-section__downloads">
 						<div className="logo-section__downloads-group">
-							<div className="logo-section__downloads-title">
+							<div className="logo-section__downloads-title subtitle2-sbold">
 								{ __( 'For Web', 'ambrygen-web' ) }
 							</div>
-							<ul className="logo-section__downloads-list">
+							<div className="logo-section__downloads-list">
 								{ webDownloads.length === 0 && (
-									<li className="logo-section__downloads-empty">
-										{ __(
-											'No files',
-											'ambrygen-web'
-										) }
-									</li>
+									<div className="logo-section__downloads-item with-icon">
+										{ __( 'No files', 'ambrygen-web' ) }
+									</div>
 								) }
 								{ webDownloads.map( ( item, index ) => (
-									<li
+									<div
 										key={ `${ index }-web` }
 										className="logo-section__downloads-item"
 									>
 										<span className="logo-section__downloads-link">
 											{ item.label || 'JPG' }
 										</span>
-									</li>
+									</div>
 								) ) }
-							</ul>
+							</div>
 						</div>
 
 						<div className="logo-section__downloads-group">
-							<div className="logo-section__downloads-title">
+							<div className="logo-section__downloads-title subtitle2-sbold">
 								{ __( 'For Print', 'ambrygen-web' ) }
 							</div>
-							<ul className="logo-section__downloads-list">
+							<div className="logo-section__downloads-list">
 								{ printDownloads.length === 0 && (
-									<li className="logo-section__downloads-empty">
-										{ __(
-											'No files',
-											'ambrygen-web'
-										) }
-									</li>
+									<div className="logo-section__downloads-item with-icon">
+										{ __( 'No files', 'ambrygen-web' ) }
+									</div>
 								) }
 								{ printDownloads.map( ( item, index ) => (
-									<li
+									<div
 										key={ `${ index }-print` }
 										className="logo-section__downloads-item"
 									>
 										<span className="logo-section__downloads-link">
 											{ item.label || 'PDF' }
 										</span>
-									</li>
+									</div>
 								) ) }
-							</ul>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -567,11 +545,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									className="logo-section__guideline-title heading-6 mb-0"
 									value={ item.title }
 									onChange={ ( value ) =>
-										updateLeftItem(
-											index,
-											'title',
-											value
-										)
+										updateLeftItem( index, 'title', value )
 									}
 									placeholder={ __(
 										'Guideline Title',
@@ -590,9 +564,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									{ item.secondaryImageUrl && (
 										<img
 											src={ item.secondaryImageUrl }
-											alt={
-												item.secondaryImageAlt || ''
-											}
+											alt={ item.secondaryImageAlt || '' }
 										/>
 									) }
 								</div>
@@ -669,11 +641,11 @@ export default function Edit( { attributes, setAttributes } ) {
 										{ ( section.listItems || [] ).length >
 											0 && (
 											<ul className="logo-section__right-content__section-list">
-												{ ( section.listItems || [] ).map(
+												{ (
+													section.listItems || []
+												).map(
 													( listItem, itemIndex ) => (
-														<li
-															key={ itemIndex }
-														>
+														<li key={ itemIndex }>
 															<Field
 																label={ __(
 																	'List item',

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/genes-table",
+  "title": "Genes Table",
+  "category": "ambrygen",
+  "icon": "editor-table",
+  "description": "Search the gene taxonomy and render results in a table layout.",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "cardTitle": {
+      "type": "string",
+      "default": "Exome & Microarray"
+    },
+    "placeholder": {
+      "type": "string",
+      "default": "Search genes…"
+    },
+    "defaultSymbols": {
+      "type": "string",
+      "default": ""
+    },
+    "instructionText": {
+      "type": "string",
+      "default": "Please enter a comma-separated the list of genes to search for."
+    },
+    "noResultsText": {
+      "type": "string",
+      "default": "No genes found"
+    },
+    "footnoteText": {
+      "type": "string",
+      "default": "1 Total number of CDS with > 90% covered with at least 10x"
+    },
+    "taxonomy": {
+      "type": "string",
+      "default": "gene"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web",
+  "example": {
+    "attributes": {
+      "cardTitle": "Exome & Microarray"
+    }
+  }
+}

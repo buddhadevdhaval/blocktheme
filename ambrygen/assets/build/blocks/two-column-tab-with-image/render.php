@@ -8,17 +8,28 @@
  *
  * @package ambrygen
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
 use Ambrygen\Theme\Core\Helper;
 
-$ambrygen_heading            = isset( $attributes['heading'] ) ? $attributes['heading'] : '';
-$ambrygen_description        = isset( $attributes['description'] ) ? $attributes['description'] : '';
-$ambrygen_heading_tag        = isset( $attributes['headingTag'] ) ? $attributes['headingTag'] : 'h2';
+$ambrygen_heading              = isset( $attributes['heading'] ) ? $attributes['heading'] : '';
+$ambrygen_description          = isset( $attributes['description'] ) ? $attributes['description'] : '';
+$ambrygen_heading_tag          = isset( $attributes['headingTag'] ) ? $attributes['headingTag'] : 'h2';
+$ambrygen_show_full_image       = isset( $attributes['showFullImage'] ) ? (bool) $attributes['showFullImage'] : false;
+$ambrygen_allowed_heading_tags = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
+$ambrygen_heading_tag          = in_array( $ambrygen_heading_tag, $ambrygen_allowed_heading_tags, true ) ? $ambrygen_heading_tag : 'h2';
+
+$ambrygen_wrapper_classes = array( 'vertical-tabs-block', 'order-testing-block' );
+if ( $ambrygen_show_full_image ) {
+	$ambrygen_wrapper_classes[] = 'show-full-image';
+}
+
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class' => 'vertical-tabs-block order-testing-block',
+		'class' => implode( ' ', $ambrygen_wrapper_classes ),
 	)
 );
 ?>
@@ -28,14 +39,14 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	<div class="vertical-tabs-block__header block__rowflex">
 
 		<?php if ( ! empty( $ambrygen_heading ) ) : ?>
-			<<?php echo esc_html( $ambrygen_heading_tag ); ?>
-				class="heading-3 block-title mb-0 block__rowflex--heading-title">
+			<<?php echo tag_escape( $ambrygen_heading_tag ); ?>
+				class="heading-3 block-title mb-0 block__rowflex--heading-title js-gsap-fade">
 				<?php echo wp_kses( $ambrygen_heading, Helper::allowed_heading_html() ); ?>
-			</<?php echo esc_html( $ambrygen_heading_tag ); ?>>
+			</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 		<?php endif; ?>
 
 		<?php if ( ! empty( $ambrygen_description ) ) : ?>
-			<div class="block__rowflex--block-content subtitle-1-regular">
+			<div class="block__rowflex--block-content subtitle-1-regular js-gsap-fade">
 				<?php echo wp_kses_post( $ambrygen_description ); ?>
 			</div>
 		<?php endif; ?>
@@ -44,7 +55,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 
 	<div class="is-style-gl-s50" aria-hidden="true"></div>
 
-	<div class="vertical-tabs">
+	<div class="vertical-tabs js-gsap-fade">
 		<?php echo wp_kses_post( $content ); ?>
 	</div>
 

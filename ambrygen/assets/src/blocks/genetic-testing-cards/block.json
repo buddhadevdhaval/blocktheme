@@ -2,10 +2,10 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "ambrygen/genetic-testing-cards",
-  "title": "Genetic Testing Cards",
+  "title": "CTA Tiles with 3 Card",
   "category": "ambrygen",
   "icon": "grid-view",
-  "description": "A layout with two stacked cards on the left and one large featured card on the right.",
+  "description": "",
   "supports": {
     "html": false
   },
@@ -16,7 +16,15 @@
     "grid"
   ],
   "attributes": {
-    "headingLevel": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "sectionTitle": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
       "type": "string",
       "enum": [
         "h1",
@@ -27,14 +35,6 @@
         "h6"
       ],
       "default": "h2"
-    },
-    "sectionTitle": {
-      "type": "string",
-      "default": "Why We’re Different"
-    },
-    "headingTag": {
-      "type": "string",
-      "default": "h2"
     }
   },
   "editorScript": "file:./index.js",
@@ -44,7 +44,7 @@
   "textdomain": "ambrygen-web",
   "example": {
     "attributes": {
-      "sectionTitle": "Why We’re Different",
+      "sectionTitle": "",
       "headingTag": "h2"
     }
   }

@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "ambrygen/icon-grids-item",
-  "title": "Icon Grid Item",
+  "title": "Grid Item",
   "category": "ambrygen",
   "icon": "format-image",
   "parent": [
@@ -56,6 +56,10 @@
     "showSelector": {
       "type": "boolean",
       "default": false
+    },
+    "count": {
+      "type": "string",
+      "default": ""
     }
   },
   "usesContext": [

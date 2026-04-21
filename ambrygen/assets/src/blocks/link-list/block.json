@@ -1,0 +1,38 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ambrygen/link-list",
+	"version": "0.1.0",
+	"title": "Link List",
+	"category": "ambrygen",
+	"description": "A list of resource downloads with a side heading.",
+	"attributes": {
+		"kicker": {
+			"type": "string",
+			"default": "Resources & Downloads"
+		},
+		"title": {
+			"type": "string",
+			"default": "Resources & Downloads"
+		},
+		"headingTag": {
+			"type": "string",
+			"default": "h2"
+		},
+		"content": {
+			"type": "string",
+			"default": ""
+		},
+		"blockId": {
+			"type": "string"
+		}
+	},
+	"supports": {
+		"html": false,
+		"anchor": true
+	},
+	"textdomain": "ambrygen-web",
+	"editorScript": "file:./index.js",
+	"style": "file:./style.scss",
+	"render": "file:./render.php"
+}

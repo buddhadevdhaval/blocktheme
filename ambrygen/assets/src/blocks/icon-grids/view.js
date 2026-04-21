@@ -33,14 +33,15 @@
 					<div class="features-tabs__card-title">
 						${ escapeHtml(
 							title
-						) } <div class="badge badge--blue"><i class="badge__dot"></i>Test</div>
+						) } 
+						<div class="badge badge--blue"><i class="badge__dot"></i>Tests</div>
 					</div>
 				</div>
 				<a class="features-tabs__view-link site-btn is-style-site-text-btn has-icon icon-arrow-up" href="${ escapeHtml(
 					url
-				) }" aria-label="View test for ${ escapeHtml(
+				) }" aria-label="View product for ${ escapeHtml(
 					title
-				) }">View Test</a>
+				) }">View Product</a>
 			</div>
 		`;
 	}
@@ -67,7 +68,7 @@
 
 			if ( termSlug && termSlug !== 'all' ) {
 				const termRes = await fetch(
-					`${ apiBase }/wp/v2/test_type?slug=${ encodeURIComponent(
+					`${ apiBase }/wp/v2/poster_category?slug=${ encodeURIComponent(
 						termSlug
 					) }`
 				);
@@ -78,12 +79,12 @@
 						: null;
 			}
 
-			let postsUrl = `${ apiBase }/wp/v2/blood-test?per_page=100&_embed=wp:term`;
+			let postsUrl = `${ apiBase }/wp/v2/genetic-testing?per_page=12&_embed=wp:term`;
 			if ( termId ) {
-				postsUrl += `&test_type=${ termId }`;
+				postsUrl += `&poster_category=${ termId }`;
 			}
 			if ( termSlug && termSlug !== 'all' && ! termId ) {
-				postsUrl = `${ apiBase }/wp/v2/blood-test?per_page=1&include=0`;
+				postsUrl = `${ apiBase }/wp/v2/genetic-testing?per_page=1&include=0`;
 			}
 
 			const postsRes = await fetch( postsUrl );
@@ -91,7 +92,7 @@
 
 			if ( ! Array.isArray( posts ) || posts.length === 0 ) {
 				panel.innerHTML =
-					'<div class="features-tabs__grid--no-post"><p>No posts found for this tab.</p></div>';
+					'<div class="features-tabs__grid--no-post"><p>No Tests found for this tab.</p></div>';
 				panel.dataset.loaded = '1';
 				return;
 			}
@@ -102,7 +103,7 @@
 			panel.dataset.loaded = '1';
 		} catch ( error ) {
 			panel.innerHTML =
-				'<div class="features-tabs__grid"><p>Unable to load posts.</p></div>';
+				'<div class="features-tabs__grid"><p>Unable to load Tests.</p></div>';
 			panel.dataset.loaded = '0';
 		}
 	}
@@ -112,7 +113,7 @@
 			return;
 		}
 		const tabs = Array.from(
-			container.querySelectorAll( '.tabs__tab[data-tab-target]' )
+			container.querySelectorAll( '.icon_ajax_tab[data-tab-target]' )
 		);
 		const panels = Array.from(
 			container.querySelectorAll( '.tabs__panel' )

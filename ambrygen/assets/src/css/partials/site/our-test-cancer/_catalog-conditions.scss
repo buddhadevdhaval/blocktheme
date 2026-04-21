@@ -1,0 +1,23 @@
+@use "../../variables/breakpoints" as bp;
+@use "../../variables/fluid_mixins" as *;
+
+.catalog-conditions {
+
+    &__header {
+        max-width: 960px;
+        margin: 0 auto;
+    }
+
+    &__intro {
+        max-width: 960px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .tabs {
+        .tabs__nav {
+            max-width: 1120px;
+            margin: 0 auto;
+        }
+    }
+}

@@ -1,0 +1,126 @@
+@use "../../css/partials/variables/fluid_mixins" as *;
+@use "../../css/partials/variables/breakpoints" as bp;
+
+.ordering-options {
+	// background: var(--theme_primary_25);
+	// border-radius: fluid(16, 32);
+	// padding: fluid(24, 50);
+
+	&__header {
+		text-align: center;
+		max-width: 960px;
+		margin: 0 auto;
+	}
+
+
+	&__subtitle {
+		color: #101828;
+		text-align: center;
+	}
+
+	&__cards {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: fluid(16, 24);
+		width: 100%;
+		// display: flex;
+		// align-items: stretch;
+		// justify-content: space-between;
+
+
+		@include bp.max(md) {
+			// flex-direction: column;
+			grid-template-columns: 1fr;
+		}
+
+	}
+
+	&__card {
+		display: flex;
+		flex-direction: column;
+		gap: 18px;
+		background-color: #fff;
+		border: 1px solid #e4e7ec;
+		border-radius: 16px;
+		padding: fluid(20, 48);
+		flex: 1;
+	}
+
+	&__card-image {
+		width: 100%;
+		height: 250px;
+		border-radius: 12px;
+		overflow: hidden;
+		flex-shrink: 0;
+
+		@include bp.max(sm) {
+			height: 200px;
+		}
+
+		img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			border-radius: 16px;
+		}
+	}
+
+	&__card-body {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		flex: 1;
+	}
+
+	&__card-content {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+	}
+
+	&__card-title {
+
+		// Specificity: 0,3,0 - Overrides .bg-{name} .heading-5 (0,2,0) from _blocks-background.scss
+		.ordering-options .ordering-options__card & {
+			color: #101828;
+		}
+	}
+
+	&__card-subtitle {
+		.ordering-options .ordering-options__card & {
+			color: var(--theme_cg_blue);
+		}
+
+		margin-top: 4px;
+	}
+
+	&__card-list {
+		margin: 0;
+		padding-left: 10px;
+
+		li {
+			padding-left: 20px;
+			margin-bottom: 10px;
+
+			&::before {
+				background-color: var(--theme_gray_600);
+				width: 8px;
+				height: 8px;
+			}
+		}
+	}
+
+	&__card-link {
+		color: var(--theme_cg_blue);
+		text-decoration: none;
+		padding: 0;
+
+
+
+	}
+
+	&__card-footnote {
+		color: var(--theme_gray_600);
+	}
+}

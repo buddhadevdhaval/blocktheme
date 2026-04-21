@@ -3,11 +3,13 @@
   "apiVersion": 3,
   "name": "ambrygen/faq-accordion",
   "title": "FAQ Accordion",
+  "textdomain": "ambrygen-web",
   "category": "ambrygen",
   "icon": "editor-help",
   "description": "Interactive FAQ accordion with image and expandable questions.",
   "supports": {
-    "html": false
+    "html": false,
+    "anchor": true
   },
   "attributes": {
     "blockId": {
@@ -64,8 +66,25 @@
           "question": {
             "type": "string"
           },
+          "subHeading": {
+            "type": "string"
+          },
           "answer": {
             "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       },
@@ -73,27 +92,14 @@
         {
           "id": "1",
           "question": "WHAT IS GENETIC TESTING?",
-          "answer": "Genetic testing involves examining your DNA, the chemical data base that carries instructions for your body’s functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
+          "subHeading": "",
+          "answer": "Genetic testing involves examining your DNA, the chemical database that carries instructions for your body's functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
         },
         {
           "id": "2",
           "question": "IS GENETIC TESTING FOR EVERYONE?",
-          "answer": "Genetic testing involves examining your DNA, the chemical data base that carries instructions for your body’s functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
-        },
-        {
-          "id": "3",
-          "question": "WHY SHOULD SOMEONE BE TESTED?",
-          "answer": "Genetic testing involves examining your DNA, the chemical data base that carries instructions for your body’s functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
-        },
-        {
-          "id": "4",
-          "question": "WHAT IS A GENETIC COUNSELOR?",
-          "answer": "Genetic testing involves examining your DNA, the chemical data base that carries instructions for your body’s functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
-        },
-        {
-          "id": "5",
-          "question": "WHAT MAKES AMBRY DIFFERENT FROM ITS COMPETITORS?",
-          "answer": "Genetic testing involves examining your DNA, the chemical data base that carries instructions for your body’s functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
+          "subHeading": "",
+          "answer": "Genetic testing involves examining your DNA, the chemical database that carries instructions for your body's functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
         }
       ]
     }
@@ -114,27 +120,14 @@
         {
           "id": "1",
           "question": "WHAT IS GENETIC TESTING?",
-          "answer": "Genetic testing involves examining your DNA, the chemical data base that carries instructions for your body’s functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
+          "subHeading": "",
+          "answer": "Genetic testing involves examining your DNA, the chemical database that carries instructions for your body's functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
         },
         {
           "id": "2",
           "question": "IS GENETIC TESTING FOR EVERYONE?",
-          "answer": "Genetic testing involves examining your DNA, the chemical data base that carries instructions for your body’s functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
-        },
-        {
-          "id": "3",
-          "question": "WHY SHOULD SOMEONE BE TESTED?",
-          "answer": "Genetic testing involves examining your DNA, the chemical data base that carries instructions for your body’s functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
-        },
-        {
-          "id": "4",
-          "question": "WHAT IS A GENETIC COUNSELOR?",
-          "answer": "Genetic testing involves examining your DNA, the chemical data base that carries instructions for your body’s functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
-        },
-        {
-          "id": "5",
-          "question": "WHAT MAKES AMBRY DIFFERENT FROM ITS COMPETITORS?",
-          "answer": "Genetic testing involves examining your DNA, the chemical data base that carries instructions for your body’s functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
+          "subHeading": "",
+          "answer": "Genetic testing involves examining your DNA, the chemical database that carries instructions for your body's functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
         }
       ]
     }

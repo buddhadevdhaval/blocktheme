@@ -21,55 +21,6 @@
 // 		});
 // 	});
 // });
-function setPowerActiveNav() {
-	const currentPath = window.location.pathname.replace( /\/$/, '' ) || '/';
-	const navItems = document.querySelectorAll( '.nav__list > li' );
-
-	navItems.forEach( ( item ) => {
-		const links = item.querySelectorAll( 'a' );
-		let isMatch = false;
-
-		// FIX: You must loop through the links to remove a class from each one
-		links.forEach( ( link ) => {
-			link.classList.remove( 'active-item' );
-
-			const hrefAttr = link.getAttribute( 'href' );
-
-			// Skip hashes, empty, or javascript links
-			if (
-				! hrefAttr ||
-				hrefAttr === '#' ||
-				hrefAttr.startsWith( 'javascript:' )
-			) {
-				return;
-			}
-
-			// Use link.pathname for reliable comparison
-			const linkPath = link.pathname.replace( /\/$/, '' ) || '/';
-
-			if ( linkPath.toLowerCase() === currentPath.toLowerCase() ) {
-				isMatch = true;
-				link.classList.add( 'active-item' );
-			}
-		} );
-
-		// 'item' is the <li> from the outer loop
-		if ( item ) {
-			if ( isMatch ) {
-				item.classList.add( 'current-menu-item' );
-			} else {
-				item.classList.remove( 'current-menu-item' );
-			}
-		}
-	} );
-}
-
-if ( document.readyState === 'loading' ) {
-	document.addEventListener( 'DOMContentLoaded', setPowerActiveNav );
-} else {
-	setPowerActiveNav();
-}
-
 document.addEventListener( 'DOMContentLoaded', () => {
 	/* =====================================================
 	 * MODULE 0: Desktop guard
@@ -152,6 +103,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		return;
 	}
 
+	// EXISTING CODE (UNCHANGED)
 	menuBtn.addEventListener( 'click', () => {
 		const isOpen = navOverlay.classList.contains( 'open' );
 
@@ -159,10 +111,29 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			// Close menu
 			navOverlay.classList.remove( 'open' );
 			body.classList.remove( 'no-overflow' );
+			document
+				.querySelectorAll( '.nav__list .active' )
+				.forEach( ( el ) => {
+					el.classList.remove( 'active' );
+				} );
 		} else {
 			// Open menu
 			navOverlay.classList.add( 'open' );
 			body.classList.add( 'no-overflow' );
+		}
+	} );
+
+	// ✅ NEW: Close button (event delegation - SAFE)
+	navOverlay.addEventListener( 'click', ( e ) => {
+		if ( e.target.closest( '.nav__menu-btn-close' ) ) {
+			navOverlay.classList.remove( 'open' );
+			body.classList.remove( 'no-overflow' );
+
+			document
+				.querySelectorAll( '.nav__list .active' )
+				.forEach( ( el ) => {
+					el.classList.remove( 'active' );
+				} );
 		}
 	} );
 
@@ -238,10 +209,12 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 		const headerHeight = header ? header.offsetHeight : 0;
 		const totalHeight = topBarHeight + headerHeight;
+		const totalHeightM = topBarHeight;
 
 		// Mobile only
 		if ( window.innerWidth < 1023 ) {
-			navOverlay.style.height = `calc(100vh - ${ totalHeight }px)`;
+			// navOverlay.style.height = `calc(100vh - ${ totalHeightM }px)`;
+			navOverlay.style.top = `-${ totalHeightM }px`;
 			body.style.paddingTop = `${ totalHeight }px`;
 		} else {
 			// Reset on desktop
@@ -277,7 +250,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		 * MODULE 7: Mega Menu Item Click – Add Active Class
 		 * ===================================================== */
 		document
-			.querySelectorAll( '.nav__item--mega-menu__links' )
+			.querySelectorAll( '.nav__item--mega-menu__col' )
 			.forEach( ( link ) => {
 				link.addEventListener( 'click', ( e ) => {
 					e.preventDefault(); // Optional, if you don't want the link to navigate
@@ -323,6 +296,97 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					parentItem.classList.remove( 'active' );
 				} );
 			} );
+	}
+
+	/* =====================================================
+	 * MODULE 8.5: User Icon Modal Toggle
+	 * ===================================================== */
+	const userIconBtn = document.querySelector( '.user-icon-click' );
+	const userModal = document.getElementById( 'modal-popup' );
+
+	if ( userIconBtn && userModal ) {
+		const modalOverlay = userModal.querySelector( '.modal-popup__overlay' );
+		const modalCloseBtn = userModal.querySelector( '.modal-popup__close' );
+
+		const openModal = () => {
+			userModal.classList.add( 'is-active' );
+			userModal.setAttribute( 'aria-hidden', 'false' );
+			userIconBtn.setAttribute( 'aria-expanded', 'true' );
+			body.classList.add( 'no-overflow' );
+
+			setTimeout( () => {
+				modalCloseBtn?.focus();
+			}, 100 );
+		};
+
+		const closeModal = () => {
+			userModal.classList.remove( 'is-active' );
+			userModal.setAttribute( 'aria-hidden', 'true' );
+			userIconBtn.setAttribute( 'aria-expanded', 'false' );
+			body.classList.remove( 'no-overflow' );
+		};
+
+		userIconBtn.addEventListener( 'click', ( e ) => {
+			e.preventDefault();
+			e.stopPropagation();
+
+			const isOpen = userModal.classList.contains( 'is-active' );
+			if ( isOpen ) {
+				closeModal();
+			} else {
+				openModal();
+			}
+		} );
+
+		// Close on backdrop click.
+		modalOverlay?.addEventListener( 'click', closeModal );
+
+		// Close on close button click.
+		modalCloseBtn?.addEventListener( 'click', closeModal );
+
+		// Close on Escape key.
+		document.addEventListener( 'keydown', ( e ) => {
+			if (
+				e.key === 'Escape' &&
+				userModal.classList.contains( 'is-active' )
+			) {
+				closeModal();
+				userIconBtn.focus();
+			}
+		} );
+
+		// Focus trapping
+		userModal.addEventListener( 'keydown', ( e ) => {
+			if ( e.key !== 'Tab' ) {
+				return;
+			}
+
+			const focusableElements = userModal.querySelectorAll(
+				'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+			);
+
+			if ( ! focusableElements.length ) {
+				return;
+			}
+
+			const firstFocusable = focusableElements[ 0 ];
+			const lastFocusable =
+				focusableElements[ focusableElements.length - 1 ];
+
+			const activeElement = userModal.ownerDocument.activeElement;
+
+			if ( e.shiftKey ) {
+				// Shift + Tab
+				if ( activeElement === firstFocusable ) {
+					e.preventDefault();
+					lastFocusable.focus();
+				}
+			} else if ( activeElement === lastFocusable ) {
+				// Tab
+				e.preventDefault();
+				firstFocusable.focus();
+			}
+		} );
 	}
 
 	/* =====================================================

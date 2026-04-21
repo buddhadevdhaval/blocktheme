@@ -1,69 +1,188 @@
-<!-- wp:group {"tagName":"section","className":"container-1136"} -->
-<section class="wp-block-group container-1136">
-	<!-- wp:group {"className":"wrapper"} -->
-	<div class="wp-block-group wrapper">
-		<!-- wp:group {"className":"conference-section"} -->
-		<div class="wp-block-group conference-section">
-			<!-- wp:group {"className":"conference-section__header"} -->
-			<div class="wp-block-group conference-section__header">
-				<!-- wp:heading {"level":2,"className":"heading-4"} -->
-				<h2 class="wp-block-heading heading-4">Upcoming Conferences</h2>
-				<!-- /wp:heading -->
+<!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
+<div class="is-style-gl-s50" aria-hidden="true"></div>
+<!-- /wp:spacer -->
 
-				<!-- wp:html -->
-				<div class="conference-section__filters">
-					<div class="conference-section__tabs">
-						<button type="button" class="conference-tab is-active">All Events</button>
-						<button type="button" class="conference-tab">Upcoming</button>
-						<button type="button" class="conference-tab">Past</button>
+<!-- wp:group {"tagName":"section","className":"container-1280","layout":{"type":"default"}} -->
+<section class="wp-block-group container-1280">
+	<!-- wp:group {"className":"wrapper","layout":{"type":"default"}} -->
+	<div class="wp-block-group wrapper">
+		<!-- wp:group {"className":"event-carousel","layout":{"type":"default"}} -->
+		<div class="wp-block-group event-carousel">
+			<!-- wp:heading {"level":2,"className":"heading-3 block-title mb-0"} -->
+			<h2 class="wp-block-heading heading-3 block-title mb-0"><span>Upcoming</span> Conferences</h2>
+			<!-- /wp:heading -->
+
+			<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
+			<div class="is-style-gl-s50" aria-hidden="true"></div>
+			<!-- /wp:spacer -->
+
+			<!-- wp:group {"className":"category-filter-search","layout":{"type":"default"}} -->
+			<div class="wp-block-group category-filter-search">
+				<!-- wp:group {"className":"category-filter-search__dropdown","layout":{"type":"default"}} -->
+				<div class="wp-block-group category-filter-search__dropdown"></div>
+				<!-- /wp:group -->
+
+				<!-- wp:group {"className":"category-filter-search__tabs","layout":{"type":"default"}} -->
+				<div class="wp-block-group category-filter-search__tabs">
+					<!-- wp:html -->
+					<div class="horizontal-tabs tabs__nav" role="tablist" id="conference-tabs-upcoming">
+						<button type="button" class="tab-button active is-active tabs__tab text-md-Semibold" data-tag-id="0" role="tab" aria-selected="true">All</button>
 					</div>
-					<div class="conference-section__search">
-						<label class="sr-only" for="conference-search">Search</label>
-						<input id="conference-search" class="conference-search__input" type="search" placeholder="Search" />
-					</div>
+					<!-- /wp:html -->
 				</div>
-				<!-- /wp:html -->
+				<!-- /wp:group -->
+
+				<!-- wp:group {"className":"category-filter-search__search","layout":{"type":"default"}} -->
+				<div class="wp-block-group category-filter-search__search">
+					<!-- wp:html -->
+					<form id="category-search-form" role="search" method="get" action="/">
+						<input type="text" name="s" aria-label="Search for:" placeholder="Search">
+						<button class="button" type="submit">Search</button>
+					</form>
+					<!-- /wp:html -->
+				</div>
+				<!-- /wp:group -->
 			</div>
 			<!-- /wp:group -->
 
-			<div class="ambrygen-ajax-pagination" data-ambrygen-scope="upcoming" data-ambrygen-per-page="8" data-ambrygen-order="ASC">
+			<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
+			<div class="is-style-gl-s50" aria-hidden="true"></div>
+			<!-- /wp:spacer -->
+
+			<!-- wp:html -->
+			<div class="ambrygen-ajax-pagination" data-ambrygen-scope="upcoming" data-ambrygen-per-page="8"
+				data-ambrygen-order="ASC">
 				<div class="ambrygen-ajax-pagination__content">
+					<!-- /wp:html -->
+
 					<!-- wp:query {"queryId":2,"query":{"perPage":8,"postType":"conferences","order":"asc","orderBy":"date","inherit":false}} -->
 					<div class="wp-block-query">
-						<!-- wp:group {"className":"conference-grid"} -->
-						<div class="wp-block-group conference-grid" role="list">
-							<!-- wp:post-template -->
-							<!-- wp:group {"className":"conference-card"} -->
-							<div class="wp-block-group conference-card" role="listitem">
-								<!-- wp:ambrygen/featured-image-fallback {"isLink":true,"className":"conference-card__image"} /-->
-								<!-- wp:post-title {"isLink":true,"className":"conference-card__title text-md-semibold"} /-->
-								<!-- wp:ambrygen/event-post-meta-list /-->
-							</div>
-							<!-- /wp:group -->
-							<!-- /wp:post-template -->
-						</div>
-						<!-- /wp:group -->
+						<!-- wp:post-template {"className":"event-carousel__grid"} -->
+						<!-- wp:ambrygen/event-grid-card /-->
+						<!-- /wp:post-template -->
 
-						<!-- wp:spacer {"height":"32px","className":"is-style-gl-s32"} -->
-						<div style="height:32px" aria-hidden="true" class="wp-block-spacer is-style-gl-s32"></div>
+						<!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
+						<div class="is-style-gl-s50" aria-hidden="true"></div>
 						<!-- /wp:spacer -->
 
-						<!-- wp:query-pagination {"paginationArrow":"arrow","layout":{"type":"flex","justifyContent":"space-between"},"className":"pagination"} -->
-						<!-- wp:query-pagination-previous {"label":"Previous","className":"pagination__nav pagination__nav--prev"} /-->
-						<!-- wp:query-pagination-numbers {"className":"pagination__list"} /-->
-						<!-- wp:query-pagination-next {"label":"Next","className":"pagination__nav pagination__nav--next"} /-->
-						<!-- /wp:query-pagination -->
+						<!-- wp:html -->
+						<div class="pagination-buttons-row">
+							<div class="pagination-container">
+								<div class="desktop-pages">
+									<button id="desktopprev" class="arrow-btn"></button>
+									<div id="paginationList-upcoming" class="pagination-list">
+										<button class="page-btn active">1</button>
+									</div>
+									<button id="desktopnext" class="arrow-btn"></button>
+								</div>
+
+								<div class="mobile-pagination">
+									<button id="prevbtn" class="arrow-btn"></button>
+									<button id="pagetrigger-upcoming" class="page-trigger">1/1</button>
+									<button id="nextbtn" class="arrow-btn"></button>
+								</div>
+
+								<div id="paginationPopup-upcoming" class="pagination-popup">
+									<div class="popup-body">
+										<div id="popupGrid-upcoming" class="popup-grid">
+											<button class="page-btn active">1</button>
+										</div>
+										<button id="popupPrev" class="arrow-btn"></button>
+										<button id="popupNext" class="arrow-btn"></button>
+									</div>
+								</div>
+							</div>
+							<div class="tab-dropdown">
+								<button class="dropdown-toggle" id="category-dropdown-btn-upcoming-perpage"
+									type="button" aria-expanded="false"
+									aria-controls="category-dropdown-menu-upcoming-perpage">8 / page</button>
+								<ul id="category-dropdown-menu-upcoming-perpage" class="dropdown-menu">
+									<li style="animation-delay: 0s;"><a href="#" aria-current="page">8 / page</a></li>
+									<li style="animation-delay: 0.1s;"><a href="#">16 / page</a></li>
+									<li style="animation-delay: 0.2s;"><a href="#">24 / page</a></li>
+								</ul>
+							</div>
+						</div>
+						<script>
+							document.addEventListener('DOMContentLoaded', function () {
+								document.querySelectorAll('.ambrygen-ajax-pagination').forEach(function (container) {
+									var totalPages = parseInt(container.getAttribute('data-ambrygen-total-pages'), 10);
+									if (isNaN(totalPages)) {
+										return;
+									}
+
+									var currentPage = parseInt(container.getAttribute('data-ambrygen-current') || '1', 10) || 1;
+									var paginationRow = container.querySelector('.pagination-buttons-row');
+									var desktopList = container.querySelector('.desktop-pages .pagination-list');
+									var mobileTrigger = container.querySelector('.mobile-pagination .page-trigger');
+									var popupGrid = container.querySelector('.pagination-popup .popup-grid');
+
+									function renderDesktopPages() {
+										if (totalPages <= 1) {
+											return '<button class="page-btn active">1</button>';
+										}
+
+										var html = '';
+										var showDots = false;
+										var range = 1;
+
+										for (var i = 1; i <= totalPages; i += 1) {
+											if (i === 1 || i === totalPages || (i >= currentPage - range && i <= currentPage + range)) {
+												html += '<button class="page-btn' + (i === currentPage ? ' active' : '') + '">' + i + '</button>';
+												showDots = true;
+											} else if (showDots) {
+												html += '<span class="dots">...</span>';
+												showDots = false;
+											}
+										}
+
+										return html;
+									}
+
+									function renderPopupPages() {
+										var html = '';
+										for (var j = 1; j <= Math.max(1, totalPages); j += 1) {
+											html += '<button class="page-btn' + (j === currentPage ? ' active' : '') + '">' + j + '</button>';
+										}
+
+										return html;
+									}
+
+									if (paginationRow) {
+										paginationRow.style.display = totalPages <= 1 ? 'none' : '';
+									}
+
+									if (desktopList) {
+										desktopList.innerHTML = renderDesktopPages();
+									}
+
+									if (mobileTrigger) {
+										mobileTrigger.textContent = currentPage + '/' + Math.max(1, totalPages);
+									}
+
+									if (popupGrid) {
+										popupGrid.innerHTML = renderPopupPages();
+									}
+								});
+							});
+						</script>
+						<!-- /wp:html -->
 					</div>
 					<!-- /wp:query -->
+
+					<!-- wp:html -->
 				</div>
 			</div>
+			<!-- /wp:html -->
 		</div>
 		<!-- /wp:group -->
 	</div>
 	<!-- /wp:group -->
 
-	<!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
-	<div style="height:64px" aria-hidden="true" class="wp-block-spacer is-style-gl-s64"></div>
+	<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
+	<div class="is-style-gl-s50" aria-hidden="true"></div>
 	<!-- /wp:spacer -->
 </section>
+<!-- /wp:group -->
+
 <!-- /wp:group -->

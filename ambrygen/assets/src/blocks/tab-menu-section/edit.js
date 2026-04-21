@@ -1,32 +1,25 @@
 import { useEffect, useMemo } from '@wordpress/element';
-import {
-	useBlockProps,
-	InspectorControls,
-} from '@wordpress/block-editor';
+import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import {
 	PanelBody,
 	Button,
 	SelectControl,
 	ToggleControl,
-	RangeControl,
 } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import {
-	ItemHeader,
-	PanelItem,
-	Field,
-} from '../_shared/components';
+import { ItemHeader, PanelItem, Field } from '../_shared/components';
 import { useArrayHandlers } from '../_shared/utils';
 
 const DEFAULT_TAB = {
 	label: '',
 	targetId: '',
+	targetClientId: '',
 	isActive: false,
 };
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const { blockId, tabs = [], scrollOffset, enableSticky } = attributes;
+	const { blockId, tabs = [], tabBehavior = 'tab-mode' } = attributes;
 
 	useEffect( () => {
 		const expectedId = `tab-menu-${ clientId.slice( 0, 8 ) }`;
@@ -57,7 +50,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		return [
 			{ label: __( 'Select Section', 'ambrygen-web' ), value: '' },
 			...allBlocks
-				.filter( ( block ) => block.attributes?.blockId )
+				.map( ( block ) => ( {
+					...block,
+					targetId:
+						block.attributes?.blockId ||
+						block.attributes?.anchor ||
+						'',
+				} ) )
+				.filter( ( block ) => block.targetId )
 				.map( ( block ) => {
 					const blockType = wp.blocks.getBlockType( block.name );
 					const blockTitle = blockType?.title || block.name;
@@ -66,17 +66,84 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					const heading =
 						stripHTML( block.attributes?.heading ) ||
 						stripHTML( block.attributes?.title ) ||
+						stripHTML( block.attributes?.sectionTitle ) ||
+						stripHTML( block.attributes?.sectiontitle ) ||
 						null;
 
 					return {
 						label: heading
 							? `${ blockTitle } - ${ heading }`
-							: `${ blockTitle } - ${ block.attributes.blockId }`,
-						value: block.attributes.blockId,
+							: `${ blockTitle } - ${ block.targetId }`,
+						value: block.targetId,
+						clientId: block.clientId,
 					};
 				} ),
 		];
 	} );
+
+	useEffect( () => {
+		if ( ! tabs.length || ! sectionOptions.length ) {
+			return;
+		}
+
+		const sectionByClientId = new Map(
+			sectionOptions
+				.filter(
+					( option ) =>
+						option.clientId && option.value && option.value !== ''
+				)
+				.map( ( option ) => [ option.clientId, option.value ] )
+		);
+
+		const optionsByValue = new Map();
+		sectionOptions.forEach( ( option ) => {
+			if ( ! option.value ) {
+				return;
+			}
+
+			if ( ! optionsByValue.has( option.value ) ) {
+				optionsByValue.set( option.value, [] );
+			}
+
+			optionsByValue.get( option.value ).push( option );
+		} );
+
+		let hasChanges = false;
+		const nextTabs = tabs.map( ( tab ) => {
+			let nextTab = tab;
+
+			if ( tab.targetClientId ) {
+				const resolvedTargetId = sectionByClientId.get(
+					tab.targetClientId
+				);
+
+				if ( resolvedTargetId && resolvedTargetId !== tab.targetId ) {
+					nextTab = {
+						...nextTab,
+						targetId: resolvedTargetId,
+					};
+					hasChanges = true;
+				}
+			} else if ( tab.targetId ) {
+				const matchingOptions =
+					optionsByValue.get( tab.targetId ) || [];
+
+				if ( matchingOptions.length === 1 ) {
+					nextTab = {
+						...nextTab,
+						targetClientId: matchingOptions[ 0 ].clientId || '',
+					};
+					hasChanges = true;
+				}
+			}
+
+			return nextTab;
+		} );
+
+		if ( hasChanges ) {
+			setAttributes( { tabs: nextTabs } );
+		}
+	}, [ tabs, sectionOptions, setAttributes ] );
 
 	const {
 		update: updateTab,
@@ -99,7 +166,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	};
 
 	const blockProps = useBlockProps( {
-		className: 'tab-menu-section',
+		className: 'secondary-sticky-tabs',
 	} );
 
 	const activeIndex = useMemo(
@@ -111,24 +178,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Scroll Settings', 'ambrygen-web' ) }
+					title={ __( 'Tab Settings', 'ambrygen-web' ) }
 					initialOpen
 				>
-					<RangeControl
-						label={ __( 'Scroll Offset (px)', 'ambrygen-web' ) }
-						value={ scrollOffset || 0 }
-						onChange={ ( value ) =>
-							setAttributes( { scrollOffset: value } )
-						}
-						min={ 0 }
-						max={ 600 }
-						step={ 10 }
-					/>
 					<ToggleControl
-						label={ __( 'Enable Sticky', 'ambrygen-web' ) }
-						checked={ !! enableSticky }
+						label={ __( 'Tab Mode', 'ambrygen-web' ) }
+						checked={ tabBehavior === 'tab-mode' }
 						onChange={ ( value ) =>
-							setAttributes( { enableSticky: value } )
+							setAttributes( {
+								tabBehavior: value ? 'tab-mode' : 'scroll',
+							} )
 						}
 					/>
 				</PanelBody>
@@ -139,10 +198,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				>
 					{ tabs.length === 0 && (
 						<p className="components-base-control__help">
-							{ __(
-								'No tabs added yet.',
-								'ambrygen-web'
-							) }
+							{ __( 'No tabs added yet.', 'ambrygen-web' ) }
 						</p>
 					) }
 
@@ -166,32 +222,51 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							/>
 
 							<SelectControl
-								label={ __( 'Scroll To Section', 'ambrygen-web' ) }
-								value={ tab.targetId || '' }
-								options={ sectionOptions }
-								onChange={ ( value ) =>
-									updateTab( index, 'targetId', value )
-								}
-							/>
-
-							<ToggleControl
 								label={ __(
-									'Set as Default Active Tab',
+									'Link to Section',
 									'ambrygen-web'
 								) }
-								checked={ !! tab.isActive }
+								value={ tab.targetId || '' }
+								options={ sectionOptions }
 								onChange={ ( value ) => {
-									if ( value ) {
-										setActiveTab( index );
-									} else {
-										updateTab(
-											index,
-											'isActive',
-											false
-										);
-									}
+									const selectedOption = sectionOptions.find(
+										( option ) => option.value === value
+									);
+
+									setAttributes( {
+										tabs: tabs.map(
+											( currentTab, currentIndex ) =>
+												currentIndex === index
+													? {
+															...currentTab,
+															targetId: value,
+															targetClientId:
+																selectedOption?.clientId ||
+																'',
+													  }
+													: currentTab
+										),
+									} );
 								} }
 							/>
+
+							{ tabBehavior !== 'scroll' && (
+								<ToggleControl
+									label={ __( 'Active Tab', 'ambrygen-web' ) }
+									checked={ !! tab.isActive }
+									onChange={ ( value ) => {
+										if ( value ) {
+											setActiveTab( index );
+										} else {
+											updateTab(
+												index,
+												'isActive',
+												false
+											);
+										}
+									} }
+								/>
+							) }
 						</PanelItem>
 					) ) }
 
@@ -206,32 +281,30 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			</InspectorControls>
 
 			<div { ...blockProps } id={ blockId }>
-				<div className="tab-menu-section__inner">
-					<div className="tab-menu-section__tabs" role="tablist">
-						{ tabs.length === 0 && (
-							<span className="tab-menu-section__empty">
-								{ __(
-									'Add tabs from the sidebar.',
-									'ambrygen-web'
-								) }
-							</span>
-						) }
-						{ tabs.map( ( tab, index ) => (
-							<button
-								key={ index }
-								type="button"
-								className={ `tab-menu-section__tab ${
-									tab.isActive ||
-									( activeIndex < 0 && index === 0 )
-										? 'active'
-										: ''
-								}` }
-								data-scroll-target={ tab.targetId || '' }
-							>
-								{ tab.label || __( 'Tab', 'ambrygen-web' ) }
-							</button>
-						) ) }
-					</div>
+				<div className="horizontal-tabs" role="tablist">
+					{ tabs.length === 0 && (
+						<span className=" tab-button tab-menu-section__empty">
+							{ __(
+								'Add tabs from the sidebar.',
+								'ambrygen-web'
+							) }
+						</span>
+					) }
+					{ tabs.map( ( tab, index ) => (
+						<button
+							key={ index }
+							type="button"
+							className={ ` tab-button tab-menu-section__tab ${
+								tab.isActive ||
+								( activeIndex < 0 && index === 0 )
+									? 'active'
+									: ''
+							}` }
+							data-scroll-target={ tab.targetId || '' }
+						>
+							{ tab.label || __( 'Tab', 'ambrygen-web' ) }
+						</button>
+					) ) }
 				</div>
 			</div>
 		</>

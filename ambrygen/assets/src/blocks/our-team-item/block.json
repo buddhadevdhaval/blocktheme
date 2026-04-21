@@ -10,8 +10,12 @@
   ],
   "attributes": {
     "postId": {
-      "type": "number"
+      "type": "number",
+      "default": 0
     }
+  },
+  "supports": {
+    "html": false
   },
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",

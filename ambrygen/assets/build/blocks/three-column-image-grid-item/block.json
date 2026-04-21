@@ -9,6 +9,9 @@
   ],
   "icon": "format-image",
   "description": "Single image card for three column grid.",
+  "usesContext": [
+    "ambrygen/threeColumnVariation"
+  ],
   "attributes": {
     "sectiontitle": {
       "type": "string"
@@ -25,6 +28,22 @@
     "imageId": {
       "type": "number"
     },
+    "videoTitle": {
+      "type": "string",
+      "default": ""
+    },
+    "videoContent": {
+      "type": "string",
+      "default": ""
+    },
+    "formTitle": {
+      "type": "string",
+      "default": ""
+    },
+    "formContent": {
+      "type": "string",
+      "default": ""
+    },
     "cta": {
       "type": "object",
       "default": {
@@ -32,7 +51,12 @@
         "text": "",
         "target": "",
         "rel": "",
-        "variant": ""
+        "variant": "dark",
+        "isPopup": false,
+        "popupType": "video",
+        "videoType": "embed",
+        "iframeUrl": "",
+        "videoUrl": ""
       }
     },
     "type": {
@@ -48,6 +72,7 @@
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
   "render": "file:./render.php",
   "example": {
     "attributes": {
@@ -61,13 +86,14 @@
         "text": "Sample text",
         "target": "Sample target",
         "rel": "Sample rel",
-        "variant": "Sample variant"
+        "variant": "dark",
+        "isVideo": false
       },
       "type": "small",
       "files": [
         {
-          "fileId": 1,
-          "fileUrl": "/wp-content/uploads/2026/03/sample.pdf",
+          "fileId": 0,
+          "fileUrl": "",
           "fileName": "Sample PDF",
           "sizeType": "small"
         }

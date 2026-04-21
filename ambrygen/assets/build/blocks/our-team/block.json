@@ -16,11 +16,11 @@
     },
     "title": {
       "type": "string",
-      "default": "Title"
+      "default": ""
     },
     "intro": {
       "type": "string",
-      "default": "We are proud to be leading the industry that we love and working together."
+      "default": ""
     },
     "headingLevel": {
       "type": "string",

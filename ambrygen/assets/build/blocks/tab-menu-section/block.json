@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "ambrygen/tab-menu-section",
-  "title": "Tab Menu Section",
+  "title": "Tab Menu",
   "category": "ambrygen",
   "icon": "index-card",
   "description": "Independent tab menu with scroll targets.",
@@ -13,13 +13,9 @@
     "blockId": {
       "type": "string"
     },
-    "scrollOffset": {
-      "type": "number",
-      "default": 250
-    },
-    "enableSticky": {
-      "type": "boolean",
-      "default": false
+    "tabBehavior": {
+      "type": "string",
+      "default": "tab-mode"
     },
     "tabs": {
       "type": "array",
@@ -31,6 +27,9 @@
             "type": "string"
           },
           "targetId": {
+            "type": "string"
+          },
+          "targetClientId": {
             "type": "string"
           },
           "isActive": {
@@ -48,8 +47,7 @@
   "textdomain": "ambrygen-web",
   "example": {
     "attributes": {
-      "scrollOffset": 250,
-      "enableSticky": false,
+      "tabBehavior": "tab-mode",
       "tabs": [
         {
           "label": "About Ambry",

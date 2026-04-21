@@ -1,0 +1,16 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/event-post-meta-list",
+  "version": "1.0.0",
+  "title": "Event Post Meta List",
+  "category": "ambrygen",
+  "description": "Renders a summary of event post meta.",
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web"
+}

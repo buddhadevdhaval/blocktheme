@@ -27,15 +27,7 @@ $ambrygen_show_slider_nav  = isset( $ambrygen_attributes['showSliderNav'] ) ? (b
 $ambrygen_show_slider_dots = isset( $ambrygen_attributes['showSliderDots'] ) ? (bool) $ambrygen_attributes['showSliderDots'] : true;
 $ambrygen_autoplay         = isset( $ambrygen_attributes['autoplay'] ) ? (bool) $ambrygen_attributes['autoplay'] : false;
 $ambrygen_autoplay_delay   = isset( $ambrygen_attributes['autoplayDelay'] ) ? absint( $ambrygen_attributes['autoplayDelay'] ) : 5000;
-
-$ambrygen_allowed_heading_tags = array(
-	'h1',
-	'h2',
-	'h3',
-	'h4',
-	'h5',
-	'h6',
-);
+$ambrygen_show_small_image = isset( $ambrygen_attributes['showSmallImage'] ) ? (bool) $ambrygen_attributes['showSmallImage'] : false;
 
 $ambrygen_swiper_config = array(
 	'autoplay'   => $ambrygen_autoplay ? array( 'delay' => $ambrygen_autoplay_delay ) : false,
@@ -45,7 +37,7 @@ $ambrygen_swiper_config = array(
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class' => 'hero-section',
+		'class' => $ambrygen_show_small_image ? 'hero-section inner-hero-banner' : 'hero-section',
 	)
 );
 $ambrygen_index              = 0;
@@ -68,12 +60,17 @@ $ambrygen_index              = 0;
 				<?php
 
 				$ambrygen_background_image_id = isset( $ambrygen_slide['backgroundImageId'] ) ? absint( $ambrygen_slide['backgroundImageId'] ) : 0;
+				$ambrygen_background_image    = $ambrygen_slide['backgroundImage'] ?? '';
+				$ambrygen_background_alt      = $ambrygen_slide['backgroundImageAlt'] ?? '';
 				$ambrygen_overlay_image_1_id  = isset( $ambrygen_slide['overlayImage1Id'] ) ? absint( $ambrygen_slide['overlayImage1Id'] ) : 0;
+				$ambrygen_overlay_image_1     = $ambrygen_slide['overlayImage1'] ?? '';
+				$ambrygen_overlay_image_1_alt = $ambrygen_slide['overlayImage1Alt'] ?? '';
 				$ambrygen_overlay_image_2_id  = isset( $ambrygen_slide['overlayImage2Id'] ) ? absint( $ambrygen_slide['overlayImage2Id'] ) : 0;
+				$ambrygen_overlay_image_2     = $ambrygen_slide['overlayImage2'] ?? '';
+				$ambrygen_overlay_image_2_alt = $ambrygen_slide['overlayImage2Alt'] ?? '';
 
 				$ambrygen_heading = $ambrygen_slide['heading'] ?? '';
 				$ambrygen_content = $ambrygen_slide['content'] ?? '';
-				$ambrygen_tagline = $ambrygen_slide['tagline'] ?? '';
 				$ambrygen_eyebrow = $ambrygen_slide['eyebrow'] ?? '';
 
 
@@ -102,10 +99,7 @@ $ambrygen_index              = 0;
 				$ambrygen_heading_tag = isset( $ambrygen_slide['headingTag'] )
 					? strtolower( $ambrygen_slide['headingTag'] )
 					: 'h2';
-
-				if ( ! in_array( $ambrygen_heading_tag, $ambrygen_allowed_heading_tags, true ) ) {
-					$ambrygen_heading_tag = 'h2';
-				}
+				$ambrygen_heading_tag = Helper::get_heading_tag( $ambrygen_heading_tag, 'h2' );
 
 				$ambrygen_heading_tag_escaped = tag_escape( $ambrygen_heading_tag );
 
@@ -118,43 +112,53 @@ $ambrygen_index              = 0;
 					<div class="hero-section__background">
 
 						<?php
-						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped HTML returned by Helper::image().
-						echo Helper::image_with_placeholder(
+						// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() escapes attributes and returns wp_kses_post()-sanitized image markup.
+						echo Helper::image_from_source(
 							$ambrygen_background_image_id,
+							$ambrygen_background_image,
 							'hero-desktop',
 							array(
 								'class'   => 'hero-section__image',
+								'alt'     => $ambrygen_background_alt,
 								'loading' => 0 === $ambrygen_index ? 'eager' : 'lazy',
-							)
+							),
+							true
 						);
+						// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 						?>
 
-						<?php if ( $ambrygen_overlay_image_1_id ) : ?>
+						<?php if ( $ambrygen_overlay_image_1_id || $ambrygen_overlay_image_1 ) : ?>
 							<div class="hero-section__overlay hero-section__overlay--1 hero-section__overlay--top">
 								<?php
-								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped HTML returned by Helper::image().
-								echo Helper::image(
+								// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() escapes attributes and returns wp_kses_post()-sanitized image markup.
+								echo Helper::image_from_source(
 									$ambrygen_overlay_image_1_id,
+									$ambrygen_overlay_image_1,
 									'large',
 									array(
+										'alt'     => $ambrygen_overlay_image_1_alt,
 										'loading' => 'lazy',
 									)
 								);
+								// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 								?>
 							</div>
 						<?php endif; ?>
 
-						<?php if ( $ambrygen_overlay_image_2_id ) : ?>
+						<?php if ( $ambrygen_overlay_image_2_id || $ambrygen_overlay_image_2 ) : ?>
 							<div class="hero-section__overlay hero-section__overlay--bottom">
 								<?php
-								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped HTML returned by Helper::image().
-								echo Helper::image(
+								// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() escapes attributes and returns wp_kses_post()-sanitized image markup.
+								echo Helper::image_from_source(
 									$ambrygen_overlay_image_2_id,
+									$ambrygen_overlay_image_2,
 									'large',
 									array(
+										'alt'     => $ambrygen_overlay_image_2_alt,
 										'loading' => 'lazy',
 									)
 								);
+								// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 								?>
 							</div>
 						<?php endif; ?>
@@ -165,7 +169,7 @@ $ambrygen_index              = 0;
 						<div class="hero-section__content">
 
 							<?php if ( $ambrygen_eyebrow ) : ?>
-								<div class="hero__eyebrow hero-kicker">
+								<div class="hero__eyebrow hero-kicker js-gsap-fade">
 									<?php echo wp_kses_post( $ambrygen_eyebrow ); ?>
 								</div>
 								<div class="is-style-gl-s24" aria-hidden="true"></div>
@@ -173,7 +177,7 @@ $ambrygen_index              = 0;
 							<?php if ( $ambrygen_heading ) : ?>
 								<<?php echo $ambrygen_heading_tag_escaped; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Sanitized with tag_escape(). ?>
 									id="<?php echo esc_attr( 'hero-heading-' . $ambrygen_index ); ?>"
-									class="hero-section__heading heading-2 mb-0"
+									class="hero-section__heading heading-2 mb-0 js-gsap-fade"
 								>
 									<?php
 									// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -186,24 +190,18 @@ $ambrygen_index              = 0;
 							<?php endif; ?>
 							<div class="is-style-gl-s24" aria-hidden="true"></div>
 							<?php if ( $ambrygen_content ) : ?>
-								<div class="hero-section__description">
+								<div class="hero-section__description js-gsap-fade">
 									<?php echo wp_kses_post( wpautop( $ambrygen_content ) ); ?>
 								</div>
 							<?php endif; ?>
 
-							<?php if ( $ambrygen_tagline ) : ?>
-								<div class="is-style-gl-s24" aria-hidden="true"></div>
-								<div class="hero-section__tagline">
-									<?php echo wp_kses_post( wpautop( $ambrygen_tagline ) ); ?>
-								</div>
-							<?php endif; ?>
 							<?php if ( $ambrygen_button_primary_text || $ambrygen_button_secondary_text ) : ?>
 							<div class="is-style-gl-s24" aria-hidden="true"></div>
-							<div class="hero-section__actions">
+							<div class="hero-section__actions js-gsap-fade">
 								<?php if ( $ambrygen_button_primary_text ) : ?>
 									<a
 										href="<?php echo esc_url( $ambrygen_button_primary_url ); ?>"
-										class="hero-section__button site-btn <?php echo esc_attr( $ambrygen_button_primary_variant ); ?>"
+										class="hero-section__button site-btn is-style-site-trailing-icon <?php echo esc_attr( $ambrygen_button_primary_variant ); ?>"
 										<?php echo $ambrygen_button_target_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute string built with esc_attr() internally. ?>
 									>
 										<?php echo esc_html( $ambrygen_button_primary_text ); ?>
@@ -213,7 +211,7 @@ $ambrygen_index              = 0;
 								<?php if ( $ambrygen_button_secondary_text ) : ?>
 									<a
 										href="<?php echo esc_url( $ambrygen_button_secondary_url ); ?>"
-										class="hero-section__button site-btn <?php echo esc_attr( $ambrygen_button_secondary_variant ); ?>"
+										class="hero-section__button site-btn is-style-site-trailing-icon <?php echo esc_attr( $ambrygen_button_secondary_variant ); ?>"
 										<?php echo $ambrygen_secondary_button_target_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute string built with esc_attr() internally. ?>
 									>
 										<?php echo esc_html( $ambrygen_button_secondary_text ); ?>

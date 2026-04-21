@@ -1,0 +1,136 @@
+<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
+<div class="is-style-gl-s50" aria-hidden="true"></div>
+<!-- /wp:spacer -->
+
+<!-- wp:group {"className":"event-carousel","layout":{"type":"default"}} -->
+<div class="wp-block-group event-carousel">
+	<!-- wp:group {"className":"category-filter-search category-filter-search--blog","layout":{"type":"default"}} -->
+	<div class="wp-block-group category-filter-search category-filter-search--blog">
+		<!-- wp:group {"className":"category-filter-search__dropdown","layout":{"type":"default"}} -->
+		<div class="wp-block-group category-filter-search__dropdown"></div>
+		<!-- /wp:group -->
+
+		<!-- wp:group {"className":"category-filter-search__tabs","layout":{"type":"default"}} -->
+		<div class="wp-block-group category-filter-search__tabs"></div>
+		<!-- /wp:group -->
+
+		<!-- wp:group {"className":"category-filter-search__search","layout":{"type":"default"}} -->
+		<div class="wp-block-group category-filter-search__search">
+			<!-- wp:html -->
+			<form id="blog-search-form" role="search" method="get" action="/">
+				<input type="text" name="s" aria-label="Search blog posts" placeholder="Search">
+				<button class="button" type="submit">Search</button>
+			</form>
+			<!-- /wp:html -->
+		</div>
+		<!-- /wp:group -->
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
+	<div class="is-style-gl-s50" aria-hidden="true"></div>
+	<!-- /wp:spacer -->
+
+	<!-- wp:html -->
+	<div class="ambrygen-ajax-pagination" data-ambrygen-scope="blog" data-ambrygen-per-page="8" data-ambrygen-current="1"
+		data-ambrygen-post-type="post" data-ambrygen-order="DESC">
+		<div class="ambrygen-ajax-pagination__content">
+			<!-- /wp:html -->
+
+			<!-- wp:query {"queryId":13,"query":{"perPage":8,"postType":"post","order":"desc","orderBy":"date","inherit":false}} -->
+			<div class="wp-block-query">
+				<!-- wp:post-template {"className":"event-carousel__grid"} -->
+				<!-- wp:group {"className":"conferences__card"} -->
+				<div class="wp-block-group conferences__card">
+					<!-- wp:group {"className":"conferences__image-wrap"} -->
+					<div class="wp-block-group conferences__image-wrap">
+						<!-- wp:ambrygen/featured-image-fallback {"className":"conferences__image","isLink":true} /-->
+					</div>
+					<!-- /wp:group -->
+
+					<!-- wp:group {"className":"conferences__content"} -->
+					<div class="wp-block-group conferences__content">
+						<!-- wp:spacer {"height":"16px","className":"is-style-gl-s16"} -->
+						<div class="is-style-gl-s16" aria-hidden="true"></div>
+						<!-- /wp:spacer -->
+
+						<!-- wp:group {"className":"conferences__title-row"} -->
+						<div class="wp-block-group conferences__title-row">
+							<!-- wp:post-title {"isLink":true,"className":"text-lg-semibold conferences__card-title mb-0"} /-->
+							<!-- wp:html -->
+							<div class="conferences__link" aria-hidden="true"></div>
+							<!-- /wp:html -->
+						</div>
+						<!-- /wp:group -->
+
+						<!-- wp:spacer {"height":"16px","className":"is-style-gl-s16"} -->
+						<div class="is-style-gl-s16" aria-hidden="true"></div>
+						<!-- /wp:spacer -->
+					</div>
+					<!-- /wp:group -->
+				</div>
+				<!-- /wp:group -->
+				<!-- /wp:post-template -->
+
+				<!-- wp:query-no-results -->
+				<!-- wp:paragraph {"className":"no-results-message text-center text-lg-reg"} -->
+				<p class="no-results-message text-center text-lg-reg">No blog posts found.</p>
+				<!-- /wp:paragraph -->
+				<!-- /wp:query-no-results -->
+
+				<!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
+				<div class="is-style-gl-s50" aria-hidden="true"></div>
+				<!-- /wp:spacer -->
+
+				<!-- wp:html -->
+				<div class="pagination-buttons-row">
+					<div class="pagination-container">
+						<div class="desktop-pages">
+							<button id="desktopprev" class="arrow-btn"></button>
+							<div id="paginationList-blog" class="pagination-list">
+								<button class="page-btn active">1</button>
+							</div>
+							<button id="desktopnext" class="arrow-btn"></button>
+						</div>
+
+						<div class="mobile-pagination">
+							<button id="prevbtn" class="arrow-btn"></button>
+							<button id="pagetrigger-blog" class="page-trigger">1/1</button>
+							<button id="nextbtn" class="arrow-btn"></button>
+						</div>
+
+						<div id="paginationPopup-blog" class="pagination-popup">
+							<div class="popup-body">
+								<div id="popupGrid-blog" class="popup-grid">
+									<button class="page-btn active">1</button>
+								</div>
+								<button id="popupPrev" class="arrow-btn"></button>
+								<button id="popupNext" class="arrow-btn"></button>
+							</div>
+						</div>
+					</div>
+
+					<div class="tab-dropdown">
+						<button class="dropdown-toggle" id="category-dropdown-btn-blog-perpage" type="button"
+							aria-expanded="false" aria-controls="category-dropdown-menu-blog-perpage">8 / page</button>
+						<ul id="category-dropdown-menu-blog-perpage" class="dropdown-menu">
+							<li><a href="#" aria-current="page">8 / page</a></li>
+							<li><a href="#">16 / page</a></li>
+							<li><a href="#">24 / page</a></li>
+						</ul>
+					</div>
+				</div>
+				<!-- /wp:html -->
+			</div>
+			<!-- /wp:query -->
+
+			<!-- wp:html -->
+		</div>
+	</div>
+	<!-- /wp:html -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
+<div class="is-style-gl-s50" aria-hidden="true"></div>
+<!-- /wp:spacer -->

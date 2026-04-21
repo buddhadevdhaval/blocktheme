@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/marketing-files",
+  "title": "Marketing Files",
+  "category": "ambrygen",
+  "icon": "media-document",
+  "description": "Lists marketing material titles for a selected category and links each title to the latest uploaded file.",
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "title": {
+      "type": "string",
+      "default": "Marketing Files"
+    },
+    "headingLevel": {
+      "type": "string",
+      "default": "h2"
+    },
+    "selectedCategory": {
+      "type": "object",
+      "default": {
+        "id": 0,
+        "name": "",
+        "slug": ""
+      }
+    },
+    "selectedMaterialType": {
+      "type": "object",
+      "default": {
+        "id": 0,
+        "name": "",
+        "slug": ""
+      }
+    },
+    "sections": {
+      "type": "array",
+      "default": []
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web",
+  "example": {
+    "attributes": {
+      "title": "Marketing Files"
+    }
+  }
+}

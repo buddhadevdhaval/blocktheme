@@ -1,0 +1,70 @@
+@use "../../variables/breakpoints" as bp;
+@use "../../variables/fluid_mixins" as *;
+
+.card-meta {
+	align-items: center;
+	display: flex;
+	gap: fluid(12, 24);
+	margin: 0;
+	padding: 0;
+	flex-wrap: wrap;
+
+	@include bp.max(sm) {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+
+	.assessment-icon {
+		.card-meta-icon {
+			background-image: url(../images/assessment-icon.svg);
+		}
+	}
+
+	.calendar-check-icon {
+
+		.card-meta-icon {
+			background-image: url(../images/calendar-check-icon.svg);
+		}
+	}
+
+	.clock-icon {
+		.card-meta-icon {
+			background-image: url(../images/clock-icon.svg);
+		}
+	}
+
+	.marker-pin {
+
+		.card-meta-icon {
+			background-image: url(../images/marker-pin-variation-icon.svg);
+		}
+	}
+
+	.flag-icon {
+
+		.card-meta-icon {
+			background-image: url(../images/flag-variation-icon.svg);
+		}
+	}
+
+	.card-meta-item {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		color: var(--theme_gray_600);
+
+		.card-meta-icon {
+			background-position: 50%;
+			background-repeat: no-repeat;
+			background-size: 20px 20px;
+			display: block;
+			flex-shrink: 0;
+			height: 20px;
+			width: 20px;
+		}
+
+		.card-meta-text {
+			margin: 0;
+		}
+	}
+}

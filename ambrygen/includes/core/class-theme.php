@@ -7,6 +7,9 @@
 
 namespace Ambrygen\Theme\Core;
 
+use Ambrygen\Theme\Core\Blocks\BlockVisibilityService;
+use Ambrygen\Theme\Core\Blog\BlogAjaxController;
+
 defined( 'ABSPATH' ) || exit;
 
 final class Theme {
@@ -85,11 +88,17 @@ final class Theme {
 		// Frontend + shared components.
 		Helper::instance();
 		Blocks::instance();
+		BlockVisibilityService::instance();
 		Assets::instance();
 		Patterns::instance();
+		// AJAX Controllers
+		\Ambrygen\Theme\Core\Conferences\ConferenceAjaxController::instance();
+		\Ambrygen\Theme\Core\Webinars\WebinarAjaxController::instance();
+		\Ambrygen\Theme\Core\Blog\BlogAjaxController::instance();
+		\Ambrygen\Theme\Core\Admin\PostSearchAjaxController::instance();
 
 		// Custom Post Types
-		//Post_Types::instance();
+		PostTypes::instance();
 		Theme_Options::instance();
 	}
 
@@ -107,5 +116,8 @@ final class Theme {
 
 		// Add custom image sizes.
 		add_image_size( 'hero-desktop', 1905, 0, false );
+		add_image_size( 'event-carousel-thumb', 571, 340, true );
+		add_image_size( 'cip-card-thumb', 644, 387, true );
+
 	}
 }

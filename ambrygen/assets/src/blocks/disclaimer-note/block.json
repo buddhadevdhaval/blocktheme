@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/disclaimer-note",
+  "title": "Disclaimer Note",
+  "category": "ambrygen",
+  "icon": "info",
+  "description": "Display a medical disclaimer for blog posts.",
+  "textdomain": "ambrygen-web",
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"],
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "DISCLAIMER: THIS BLOG DOES NOT PROVIDE MEDICAL ADVICE"
+    },
+    "content": {
+      "type": "string",
+      "default": "The information contained in this article is intended for informational and educational purposes only and does not constitute medical advice, diagnosis, or treatment. Always consult with a qualified healthcare professional or genetic counselor before making any decisions related to genetic testing or your personal health. Individual results may vary. Ambry Genetics does not provide direct-to-consumer genetic testing services."
+    }
+  },
+  "example": {
+    "attributes": {
+      "heading": "DISCLAIMER: THIS BLOG DOES NOT PROVIDE MEDICAL ADVICE",
+      "content": "The information contained in this article is intended for informational and educational purposes only and does not constitute medical advice, diagnosis, or treatment."
+    }
+  }
+}

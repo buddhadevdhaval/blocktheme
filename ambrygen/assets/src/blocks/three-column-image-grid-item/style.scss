@@ -2,8 +2,9 @@
 
 // Approach Card Component
 .approach-card {
-	background: linear-gradient(90deg, #fff 0%, #fff 100%),
-		linear-gradient(90deg, var(--theme_primary_25) 0%, var(--theme_primary_25) 100%);
+	background: linear-gradient(0deg, #FFF 0%, #FFF 100%), var(--theme_primary_25);
+	// background: linear-gradient(90deg, #fff 0%, #fff 100%),
+	// 	linear-gradient(90deg, var(--theme_primary_25) 0%, var(--theme_primary_25) 100%);
 	border-radius: 16px;
 	overflow: hidden;
 
@@ -33,12 +34,20 @@
 
 		a {
 			color: var(--theme_gray_900);
-			outline: none;
 			padding: 0;
 			border: none;
+			text-decoration: none;
 
 			&:hover {
 				color: var(--theme_cg_blue);
+				text-decoration: underline;
+			}
+
+			&:focus-visible {
+				outline: 2px solid var(--theme_cg_blue);
+				outline-offset: 2px;
+				color: var(--theme_cg_blue);
+				text-decoration: underline;
 			}
 		}
 	}
@@ -52,55 +61,6 @@
 			&:last-child {
 				margin-bottom: 0;
 			}
-		}
-	}
-
-	&__files {
-		&.has-downloads {
-			.approach-card__files-link {
-				position: relative;
-				&:after {
-					content: "";
-					display: block;
-					background-image: url(../../images/download-icon.svg);
-					background-repeat: no-repeat;
-					background-position: right center;
-					background-size: 11px 14px;
-					width: 11px;
-					height: 14px;
-					transition: 0.35s;
-				}
-			}
-		}
-	}
-
-	&__files-list {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--theme_space_8);
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-
-	&__files-item {
-		margin: 0;
-		padding: 0;
-	}
-
-	&__files-link {
-		display: inline-flex;
-		align-items: center;
-		gap: var(--theme_space_4);
-		color: var(--theme_gray_700);
-		text-decoration: none;
-		padding: 0;
-		border: none;
-
-		&:hover,
-		&:focus-visible {
-			color: var(--theme_cg_blue);
-			outline: none;
 		}
 	}
 
@@ -130,7 +90,6 @@
 		width: 100%;
 		display: block;
 		gap: 10px;
-		outline: none;
 		border: none;
 		padding: 16px;
 		border-radius: 8px;
@@ -147,6 +106,13 @@
 		}
 
 		&:hover {
+			background-color: var(--theme_button_bgcolor_hover);
+			color: var(--theme_button_color_hover);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--theme_white);
+			outline-offset: 2px;
 			background-color: var(--theme_button_bgcolor_hover);
 			color: var(--theme_button_color_hover);
 		}

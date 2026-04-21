@@ -1,0 +1,16 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "ambrygen/webinar-meta-summary",
+  "version": "0.1.0",
+  "title": "Webinar Meta Summary",
+  "category": "theme-blocks",
+  "icon": "calendar-alt",
+  "description": "Displays the webinar date, time, duration, and credits dynamically.",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

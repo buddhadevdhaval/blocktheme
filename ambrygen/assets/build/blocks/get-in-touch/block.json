@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "ambrygen/get-in-touch",
-  "title": "Get In Touch",
+  "title": "Theme Form",
   "category": "ambrygen",
   "icon": "email",
   "description": "Contact block with Gravity Form",
@@ -10,6 +10,10 @@
     "html": false
   },
   "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
     "title": {
       "type": "string",
       "default": ""

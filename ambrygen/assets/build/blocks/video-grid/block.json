@@ -1,0 +1,93 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/video-grid",
+  "title": "Video Grid",
+  "category": "ambrygen",
+  "icon": "video-alt3",
+  "description": "Video grid section with layout variations and multiple videos.",
+  "textdomain": "ambrygen-web",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "heading": {
+      "type": "string",
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "subheading": {
+      "type": "string",
+      "default": ""
+    },
+    "subDescription": {
+      "type": "string",
+      "default": ""
+    },
+    "quoteAttribution": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ]
+    },
+    "variation": {
+      "type": "string",
+      "default": "variation-features",
+      "enum": [
+        "variation-features",
+        "variation-3"
+      ]
+    },
+    "topImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "topImageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "topImageAlt": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "providesContext": {
+    "ambrygen/videoGridVariation": "variation"
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "heading": "Transforming Healthcare with Genetic Insight",
+      "description": "This is a sample preview content for this block in the inserter.",
+      "subheading": "How to Videos",
+      "subDescription": "Optional supporting text beneath the subheading.",
+      "quoteAttribution": "- Example Name, Title",
+      "headingTag": "h2",
+      "variation": "variation-3",
+      "topImageId": 0,
+      "topImageUrl": "",
+      "topImageAlt": ""
+    }
+  }
+}

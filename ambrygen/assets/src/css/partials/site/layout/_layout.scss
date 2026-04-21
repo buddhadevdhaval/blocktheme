@@ -1,5 +1,6 @@
 @use "header-top-bar";
 @use "header";
+@use "search-bar";
 @use "menu-desktop";
 @use "menu-mobile";
 @use "footer";
@@ -11,3 +12,14 @@
 @use "vertical_tabs";
 @use "badges";
 @use "video-block";
+@use "offcanvas";
+@use "popup";
+@use "detail_hero_banner";
+@use "card-meta";
+@use "flag-info";
+@use "design-blocks";
+@use "downloads-links";
+@use "mid-page-cta";
+@use "tooltip";
+@use "video";
+@use "tabs-table-content";

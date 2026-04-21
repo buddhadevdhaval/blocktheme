@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "ambrygen/flexible-content",
-  "title": "Flexible Content Layout",
+  "title": "Image Alongside Text",
   "category": "ambrygen",
   "icon": "align-wide",
   "description": "A flexible block with heading, content, image, and multiple layout options (standard, overlap, stacked).",
@@ -23,12 +23,32 @@
   "style": "file:./style-index.css",
   "render": "file:./render.php",
   "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
     "heading": {
+      "type": "string",
+      "default": ""
+    },
+    "subheading": {
+      "type": "string",
+      "default": ""
+    },
+    "eyebrowText": {
       "type": "string",
       "default": ""
     },
     "headingTag": {
       "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
       "default": "h2"
     },
     "imageUrl": {
@@ -40,6 +60,18 @@
       "default": 0
     },
     "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundImageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "backgroundImageAlt": {
       "type": "string",
       "default": ""
     },
@@ -72,26 +104,72 @@
       "type": "string",
       "default": "left"
     },
+    "contentTopAlign": {
+      "type": "boolean",
+      "default": false
+    },
+    "variation": {
+      "type": "string",
+      "default": "default",
+      "enum": [
+        "default",
+        "variation-process",
+        "variation-iot-author"
+      ]
+    },
     "content": {
       "type": "string",
       "default": ""
     },
     "buttons": {
       "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "default": ""
+          },
+          "url": {
+            "type": "string",
+            "default": ""
+          },
+          "variant": {
+            "type": "string",
+            "default": ""
+          },
+          "target": {
+            "type": "string",
+            "default": ""
+          },
+          "rel": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      },
       "default": [
         {
           "text": "",
           "url": "",
-          "variant": "site-btn"
+          "variant": "site-btn",
+          "target": "",
+          "rel": ""
         },
         {
           "text": "",
           "url": "",
-          "variant": "site-btn is-style-site-tertiary-btn"
+          "variant": "site-btn is-style-site-tertiary-btn",
+          "target": "",
+          "rel": ""
         }
       ]
     },
     "borderRequired": {
+      "type": "boolean",
+      "default": false
+    },
+    "isOriginalImage": {
       "type": "boolean",
       "default": false
     }
@@ -99,27 +177,37 @@
   "example": {
     "attributes": {
       "heading": "Transforming Healthcare with Genetic Insight",
+      "subheading": "",
       "headingTag": "h2",
       "imageUrl": "/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
       "imageId": 0,
       "imageAlt": "Ambry default preview image",
+      "backgroundImageUrl": "",
+      "backgroundImageId": 0,
+      "backgroundImageAlt": "",
       "topIconUrl": "",
       "topIconId": 0,
       "topIconAlt": "",
       "imagePosition": "left",
       "layoutStyle": "standard",
       "contentAlignment": "left",
+      "contentTopAlign": false,
+      "variation": "default",
       "content": "",
       "buttons": [
         {
           "text": "",
           "url": "",
-          "variant": "site-btn"
+          "variant": "site-btn",
+          "target": "",
+          "rel": ""
         },
         {
           "text": "",
           "url": "",
-          "variant": "site-btn is-style-site-tertiary-btn"
+          "variant": "site-btn is-style-site-tertiary-btn",
+          "target": "",
+          "rel": ""
         }
       ]
     }

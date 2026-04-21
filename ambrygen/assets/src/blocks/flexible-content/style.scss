@@ -1,6 +1,11 @@
 @use "../../css/partials/variables/breakpoints" as bp;
 @use "../../css/partials/variables/fluid_mixins" as *;
 
+section:has(.iot-block__bg-image) {
+	position: relative;
+	overflow: hidden;
+}
+
 .iot-block {
 	display: flex;
 	align-items: center;
@@ -11,11 +16,71 @@
 		align-items: inherit;
 	}
 
+	&__bg-image {
+		position: absolute;
+		top: 0;
+		height: 100%;
+		overflow: hidden;
+		mix-blend-mode: multiply;
+		opacity: 0.2;
+		pointer-events: none;
+		width: 100vw;
+		right: calc(-50vw + 50%);
+
+		&.has-right-align {
+			left: auto;
+			right: calc(-50vw + 50%);
+		}
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+		}
+	}
+
 	&__rtl {
 
 		.iot-block__image {
 			order: 2;
 		}
+	}
+
+	&.has-top-align {
+		align-items: flex-start;
+	}
+
+	&.variation-iot-author {
+		.iot-block__image {
+			width: fluid(311, 311);
+			height: fluid(311, 311);
+			border-radius: 16px;
+		}
+	}
+
+	&.variation-process {
+		// padding: fluid(32, 50);
+		// border-radius: fluid(24, 32);
+
+		.iot-block__image {
+			height: fluid(205, 396);
+
+			@include bp.max(lg) {
+				height: auto;
+				max-height: 396px;
+				width: 100%;
+			}
+		}
+	}
+
+	&__tagline {
+		color: var(--theme_cg_blue);
+		font-feature-settings: 'liga' off, 'clig' off;
+		font-weight: 600;
+		line-height: 18px;
+		letter-spacing: 1px;
+		text-transform: uppercase;
 	}
 
 	&__content {
@@ -27,6 +92,10 @@
 	&__text {
 		display: flex;
 		flex-direction: column;
+	}
+
+	&__sub-heading {
+		color: var(--theme_cg_blue);
 	}
 
 	&__icon--wrapper {
@@ -49,12 +118,16 @@
 	&.iot-block--border {
 
 		.iot-block__image {
+			// background-color: var(--theme_gray_900);
 			border: 6px solid var(--theme_gray_900);
-			border-radius: 24px;
+			border-radius: fluid(16, 24);
 
 			@include bp.max(lg) {
 				border-width: 4px;
-				border-radius: 16px;
+			}
+
+			img {
+				border-radius: 4px;
 			}
 		}
 	}
@@ -63,7 +136,7 @@
 		flex-shrink: 0;
 		width: fluid(300, 578);
 		height: fluid(292, 564);
-		border-radius: 24px;
+		border-radius: fluid(16, 24);
 		overflow: hidden;
 		position: relative;
 
@@ -73,12 +146,19 @@
 			order: 2;
 		}
 
+		.orignal-image & {
+			height: auto;
+			max-width: 100%;
+			max-height: 100%;
+		}
+
 
 		img {
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
-			border-radius: 24px;
+			border-radius: fluid(16, 24);
+			display: block;
 		}
 	}
 

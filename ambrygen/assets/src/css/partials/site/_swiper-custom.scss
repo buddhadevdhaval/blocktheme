@@ -56,3 +56,31 @@
 		}
 	}
 }
+
+
+
+.swiper-pagination {
+	&.swiper-pagination-bullets {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 18px;
+		bottom: 0 !important;
+		top: auto !important;
+	}
+
+	>.swiper-pagination-bullet {
+		width: 14px;
+		height: 14px;
+		background: var(--theme_clear_skies);
+		opacity: 1;
+		border-radius: 50%;
+		transition: all 0.35s ease;
+		position: relative;
+
+		&-active {
+			background: var(--theme_cg_blue);
+		}
+	}
+}

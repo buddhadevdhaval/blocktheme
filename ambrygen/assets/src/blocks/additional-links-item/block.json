@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "ambrygen/additional-links-item",
-  "title": "Additional Links Item",
+  "title": "Item",
   "category": "ambrygen",
   "icon": "format-image",
   "parent": [
@@ -28,7 +28,7 @@
     "cta": {
       "type": "object",
       "default": {
-        "text": "Title",
+        "text": "",
         "url": "",
         "target": "",
         "rel": "",
@@ -49,7 +49,7 @@
         "alt": "Preview asset"
       },
       "cta": {
-        "text": "Title",
+        "text": "Link",
         "url": "Sample url",
         "target": "Sample target",
         "rel": "Sample rel",

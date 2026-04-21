@@ -14,6 +14,10 @@
     }
   },
   "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
     "title": {
       "type": "string",
       "default": "Section Title"
@@ -37,6 +41,60 @@
     "backgroundImageAlt": {
       "type": "string",
       "default": ""
+    },
+    "primarybutton": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "default": ""
+        },
+        "text": {
+          "type": "string",
+          "default": ""
+        },
+        "target": {
+          "type": "string",
+          "default": ""
+        },
+        "rel": {
+          "type": "string",
+          "default": ""
+        },
+        "variant": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "secondarybutton": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "default": ""
+        },
+        "text": {
+          "type": "string",
+          "default": ""
+        },
+        "target": {
+          "type": "string",
+          "default": ""
+        },
+        "rel": {
+          "type": "string",
+          "default": ""
+        },
+        "variant": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "isMediumText": {
+      "type": "boolean",
+      "default": false
     }
   },
   "editorScript": "file:./index.js",
@@ -51,7 +109,21 @@
       "description": "Ambry Genetics' mission is to empower individuals with advanced genetic testing solutions that transform healthcare and promote the health of people worldwide.",
       "backgroundImage": "/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
       "backgroundImageId": 0,
-      "backgroundImageAlt": "Mission statement background"
+      "backgroundImageAlt": "Mission statement background",
+      "primarybutton": {
+        "url": "",
+        "text": "",
+        "target": "",
+        "rel": "",
+        "variant": ""
+      },
+      "secondarybutton": {
+        "url": "",
+        "text": "",
+        "target": "",
+        "rel": "",
+        "variant": ""
+      }
     }
   }
 }

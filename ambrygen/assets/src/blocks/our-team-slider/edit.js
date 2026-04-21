@@ -4,6 +4,7 @@ import {
 	InspectorControls,
 	InnerBlocks,
 } from '@wordpress/block-editor';
+import { createBlock } from '@wordpress/blocks';
 import Swiper from 'swiper/bundle';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -13,19 +14,21 @@ import {
 	PanelBody,
 	ToggleControl,
 	CheckboxControl,
-	SelectControl,
 	Spinner,
 	Button,
 } from '@wordpress/components';
 
 import { useSelect, useDispatch } from '@wordpress/data';
 import { useEffect, useRef } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+import { TagSelector } from '../_shared/components';
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const sliderRef = useRef( null );
 	const swiperInstance = useRef( null );
 
 	const {
+		blockId,
 		title,
 		intro,
 		headingLevel = 'h2',
@@ -34,11 +37,21 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		showNavigation = true,
 		showPagination = true,
 		autoplay = false,
-		slidesPerView = 4,
+		slidesPerView = 3,
 	} = attributes;
 
 	const { replaceInnerBlocks, insertBlock } =
 		useDispatch( 'core/block-editor' );
+
+	useEffect( () => {
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+
+		if ( ! blockId ) {
+			setAttributes( {
+				blockId: expectedId,
+			} );
+		}
+	}, [ clientId, blockId, setAttributes ] );
 
 	/* ----------------------------
 	 * Data
@@ -80,11 +93,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 
 		const filteredPosts = allTeamPosts.filter( ( post ) =>
-			post.member_type?.some( ( id ) => memberTypes.includes( id ) )
+			post.member_type?.some( ( id ) =>
+				memberTypes.includes( Number( id ) )
+			)
 		);
 
 		const newBlocks = filteredPosts.map( ( post ) =>
-			wp.blocks.createBlock( 'ambrygen/our-team-slider-item', {
+			createBlock( 'ambrygen/our-team-slider-item', {
 				postId: post.id,
 			} )
 		);
@@ -199,27 +214,23 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title="Heading Settings">
-					<SelectControl
-						label="Heading Level"
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
+					<TagSelector
+						label={ __( 'Heading Level', 'ambrygen-web' ) }
+						type="heading"
 						value={ headingLevel }
-						options={ [
-							{ label: 'H1', value: 'h1' },
-							{ label: 'H2', value: 'h2' },
-							{ label: 'H3', value: 'h3' },
-							{ label: 'H4', value: 'h4' },
-							{ label: 'H5', value: 'h5' },
-							{ label: 'H6', value: 'h6' },
-						] }
 						onChange={ ( value ) =>
 							setAttributes( { headingLevel: value } )
 						}
 					/>
 				</PanelBody>
 
-				<PanelBody title="Team Selection Mode" initialOpen>
+				<PanelBody
+					title={ __( 'Team Selection Mode', 'ambrygen-web' ) }
+					initialOpen
+				>
 					<ToggleControl
-						label="Select by Member Type"
+						label={ __( 'Select by Member Type', 'ambrygen-web' ) }
 						checked={ selectionMode === 'taxonomy' }
 						onChange={ ( enabled ) =>
 							setAttributes( {
@@ -252,23 +263,26 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						) ) }
 				</PanelBody>
 
-				<PanelBody title="Slider Settings" initialOpen>
+				<PanelBody
+					title={ __( 'Slider Settings', 'ambrygen-web' ) }
+					initialOpen
+				>
 					<ToggleControl
-						label="Show Navigation"
+						label={ __( 'Show Navigation', 'ambrygen-web' ) }
 						checked={ showNavigation }
 						onChange={ ( value ) =>
 							setAttributes( { showNavigation: value } )
 						}
 					/>
 					<ToggleControl
-						label="Show Pagination"
+						label={ __( 'Show Pagination', 'ambrygen-web' ) }
 						checked={ showPagination }
 						onChange={ ( value ) =>
 							setAttributes( { showPagination: value } )
 						}
 					/>
 					<ToggleControl
-						label="Autoplay"
+						label={ __( 'Autoplay', 'ambrygen-web' ) }
 						checked={ autoplay }
 						onChange={ ( value ) =>
 							setAttributes( { autoplay: value } )
@@ -339,7 +353,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							<Button
 								variant="primary"
 								onClick={ () => {
-									const newBlock = wp.blocks.createBlock(
+									const newBlock = createBlock(
 										'ambrygen/our-team-slider-item',
 										{}
 									);
@@ -350,7 +364,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									);
 								} }
 							>
-								+ Add Team Member
+								{ __( '+ Add Team Member', 'ambrygen-web' ) }
 							</Button>
 						</div>
 					) }

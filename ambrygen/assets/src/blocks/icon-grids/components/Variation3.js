@@ -16,12 +16,18 @@ export default function Variation3( { attributes, setAttributes } ) {
 
 	const { terms, hasResolvedTerms } = useSelect( ( select ) => {
 		const { getEntityRecords, hasFinishedResolution } = select( 'core' );
-		const query = { per_page: -1 };
+		const query = {
+			per_page: 100,
+			hide_empty: false,
+			orderby: 'name',
+			order: 'asc',
+		};
+
 		return {
-			terms: getEntityRecords( 'taxonomy', 'test_type', query ),
+			terms: getEntityRecords( 'taxonomy', 'poster_category', query ),
 			hasResolvedTerms: hasFinishedResolution( 'getEntityRecords', [
 				'taxonomy',
-				'test_type',
+				'poster_category',
 				query,
 			] ),
 		};
@@ -35,24 +41,28 @@ export default function Variation3( { attributes, setAttributes } ) {
 		( select ) => {
 			const { getEntityRecords, hasFinishedResolution } =
 				select( 'core' );
-			const query = { per_page: -1 };
+			const query = {
+				per_page: 100,
+				orderby: 'title',
+				order: 'asc',
+			};
 
 			if ( activeTab !== 'all' && terms ) {
 				const activeTerm = terms.find( ( t ) => t.slug === activeTab );
 				if ( activeTerm ) {
-					query.test_type = activeTerm.id;
+					query.poster_category = activeTerm.id;
 				}
 			}
 
 			return {
 				activePosts: getEntityRecords(
 					'postType',
-					'blood-test',
+					'genetic-testing',
 					query
 				),
 				hasResolvedPosts: hasFinishedResolution( 'getEntityRecords', [
 					'postType',
-					'blood-test',
+					'genetic-testing',
 					query,
 				] ),
 			};
@@ -61,12 +71,14 @@ export default function Variation3( { attributes, setAttributes } ) {
 	);
 
 	const getPostCategory = ( post ) => {
-		if ( ! post?.test_type?.length || ! terms?.length ) {
+		if ( ! post?.poster_category?.length || ! terms?.length ) {
 			return 'Category';
 		}
+
 		const term = terms.find(
-			( item ) => item.id === Number( post.test_type[ 0 ] )
+			( item ) => item.id === Number( post.poster_category[ 0 ] )
 		);
+
 		return term ? decodeEntities( term.name ) : 'Category';
 	};
 
@@ -82,7 +94,7 @@ export default function Variation3( { attributes, setAttributes } ) {
 
 		if ( key === 'termSlug' ) {
 			if ( value === 'all' ) {
-				newTabs[ index ].text = 'All Tests';
+				newTabs[ index ].text = 'All Test';
 			} else {
 				const term = terms?.find( ( t ) => t.slug === value );
 				if ( term ) {
@@ -120,11 +132,11 @@ export default function Variation3( { attributes, setAttributes } ) {
 								}
 							/>
 							<SelectControl
-								label={ __( 'Target Term', 'ambrygen-web' ) }
+								label={ __( 'Target Category', 'ambrygen-web' ) }
 								value={ tab.termSlug }
 								options={ [
 									{
-										label: 'All Tests (all)',
+										label: 'All Test (all)',
 										value: 'all',
 									},
 									...( hasResolvedTerms && terms
@@ -140,7 +152,10 @@ export default function Variation3( { attributes, setAttributes } ) {
 								disabled={ ! hasResolvedTerms }
 								help={
 									! hasResolvedTerms
-										? __( 'Loading terms…', 'ambrygen-web' )
+										? __(
+												'Loading categories...',
+												'ambrygen-web'
+										  )
 										: ''
 								}
 							/>
@@ -211,7 +226,7 @@ export default function Variation3( { attributes, setAttributes } ) {
 								className="tabs__tab text-md-Semibold is-active"
 								onClick={ () => setActiveTab( 'all' ) }
 							>
-								All Tests
+								All Test
 							</button>
 						) }
 					</div>
@@ -240,7 +255,7 @@ export default function Variation3( { attributes, setAttributes } ) {
 													) }
 													<div className="badge badge--blue">
 														<i className="badge__dot"></i>
-														Test
+														Product
 													</div>
 												</div>
 											</div>
@@ -249,7 +264,7 @@ export default function Variation3( { attributes, setAttributes } ) {
 												className="features-tabs__view-link site-btn is-style-site-text-btn has-icon icon-arrow-up"
 												href={ post.link || '#' }
 											>
-												View Test
+												View Product
 											</a>
 										</div>
 									) ) }
@@ -259,7 +274,7 @@ export default function Variation3( { attributes, setAttributes } ) {
 									activePosts.length === 0 && (
 										<p>
 											{ __(
-												'No posts found for this tab.',
+												'No Test found for this tab.',
 												'ambrygen-web'
 											) }
 										</p>

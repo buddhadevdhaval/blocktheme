@@ -1,0 +1,62 @@
+<!-- wp:template-part {"slug":"header"} /-->
+
+<!-- wp:group {"tagName":"main","className":"wp-block-group","htmlId":"main-content"} -->
+<main id="main-content" class="wp-block-group">
+
+	<!-- Webinar In-Progress Section -->
+	<!-- wp:group {"tagName":"section","className":"container-1340 webinar-in-progress-wrapper","layout":{"type":"default"},"htmlId":"cip-heading-container"} -->
+	<section class="wp-block-group container-1340 webinar-in-progress-wrapper" aria-labelledby="cip-heading" id="cip-heading-container">
+		<!-- wp:group {"className":"wrapper","layout":{"type":"default"}} -->
+		<div class="wp-block-group wrapper">
+			<!-- wp:group {"className":"conferences-in-progress","layout":{"type":"default"}} -->
+			<div class="wp-block-group conferences-in-progress">
+				<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
+				<div aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
+				<!-- /wp:spacer -->
+
+				<!-- wp:heading {"level":2,"className":"conferences-in-progress__heading heading-3 mb-0","htmlId":"cip-heading"} -->
+				<h2 id="cip-heading" class="wp-block-heading conferences-in-progress__heading heading-3 mb-0">
+					Webinar <span>In-Progress</span></h2>
+				<!-- /wp:heading -->
+
+				<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
+				<div aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
+				<!-- /wp:spacer -->
+
+				<!-- wp:group {"className":"conferences-in-progress__slider-wrap","layout":{"type":"default"}} -->
+				<div class="wp-block-group event-carousel">
+					<!-- wp:query {"queryId":10,"className":"","query":{"perPage":3,"postType":"webinar","order":"desc","orderBy":"date","inherit":false}} -->
+					<div class="wp-block-query">
+						<!-- wp:post-template {"className":"event-carousel__grid webinar__grid"} -->
+
+						<div class="wp-block-group">
+							<!-- wp:ambrygen/webinar-grid-card /-->
+						</div>
+
+						<!-- /wp:post-template -->
+						<!-- wp:query-no-results -->
+						<!-- wp:paragraph -->
+						<div>No webinars found.</div>
+						<!-- /wp:paragraph -->
+						<!-- /wp:query-no-results -->
+					</div>
+					<!-- /wp:query -->
+				</div>
+				<!-- /wp:group -->
+			</div>
+			<!-- /wp:group -->
+			<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
+			<div aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
+			<!-- /wp:spacer -->
+		</div>
+		<!-- /wp:group -->
+	</section>
+	<!-- /wp:group -->
+
+	<!-- wp:template-part {"slug":"upcoming-webinars"} /-->
+	<!-- wp:template-part {"slug":"past-webinars"} /-->
+
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer"} /-->

@@ -17,8 +17,9 @@ import {
 	MediaUploadCheck,
 	LinkControl,
 } from '@wordpress/block-editor';
+import { __ } from '@wordpress/i18n';
+import { useMemo } from '@wordpress/element';
 import { trash, chevronUp, chevronDown, upload } from '@wordpress/icons';
-import { t } from './utils';
 
 /**
  * Shared global configuration
@@ -64,14 +65,14 @@ export function ItemControls( {
 				size="small"
 				disabled={ index === 0 }
 				onClick={ () => onMove( index, -1 ) }
-				label={ t( 'Move Up' ) }
+				label={ __( 'Move Up', 'ambrygen-web' ) }
 			/>
 			<Button
 				icon={ chevronDown }
 				size="small"
 				disabled={ index >= total - 1 }
 				onClick={ () => onMove( index, 1 ) }
-				label={ t( 'Move Down' ) }
+				label={ __( 'Move Down', 'ambrygen-web' ) }
 			/>
 			<Button
 				icon={ trash }
@@ -79,7 +80,7 @@ export function ItemControls( {
 				isDestructive
 				disabled={ total <= minCount }
 				onClick={ () => onRemove( index ) }
-				label={ t( 'Remove' ) }
+				label={ __( 'Remove', 'ambrygen-web' ) }
 			/>
 		</div>
 	);
@@ -106,15 +107,15 @@ export function ItemHeader( {
 } ) {
 	return (
 		<div
+			className="reorder-controls"
 			style={ {
-				display: 'flex',
 				justifyContent: 'space-between',
-				alignItems: 'center',
 				marginBottom: '8px',
 			} }
 		>
 			<strong>
-				{ t( 'Item' ) } { index + 1 }: { label || t( 'Untitled' ) }
+				{ __( 'Item', 'ambrygen-web' ) } { index + 1 }:{ ' ' }
+				{ label || __( 'Untitled', 'ambrygen-web' ) }
 			</strong>
 			<ItemControls
 				index={ index }
@@ -169,7 +170,7 @@ export function ImageUploader( { url, onSelect, onRemove, label } ) {
 										size="small"
 										onClick={ open }
 									>
-										{ t( 'Replace' ) }
+										{ __( 'Replace', 'ambrygen-web' ) }
 									</Button>
 								) }
 							/>
@@ -180,7 +181,7 @@ export function ImageUploader( { url, onSelect, onRemove, label } ) {
 							isDestructive
 							onClick={ onRemove }
 						>
-							{ t( 'Remove' ) }
+							{ __( 'Remove', 'ambrygen-web' ) }
 						</Button>
 					</div>
 				</>
@@ -195,7 +196,7 @@ export function ImageUploader( { url, onSelect, onRemove, label } ) {
 								icon={ upload }
 								onClick={ open }
 							>
-								{ t( 'Upload Image' ) }
+								{ __( 'Upload Image', 'ambrygen-web' ) }
 							</Button>
 						) }
 					/>
@@ -219,13 +220,19 @@ export function IconPicker( { url, onSelect } ) {
 				onSelect={ ( media ) => onSelect( media.url ) }
 				allowedTypes={ [ 'image' ] }
 				render={ ( { open } ) => (
-					<div
+					<button
+						type="button"
 						onClick={ open }
 						style={ {
+							display: 'inline-flex',
+							alignItems: 'center',
+							justifyContent: 'center',
 							cursor: 'pointer',
 							width: '24px',
 							height: '24px',
 							background: url ? 'transparent' : '#eee',
+							border: 'none',
+							padding: 0,
 						} }
 					>
 						{ url && (
@@ -235,7 +242,7 @@ export function IconPicker( { url, onSelect } ) {
 								style={ { width: '100%', height: '100%' } }
 							/>
 						) }
-					</div>
+					</button>
 				) }
 			/>
 		</MediaUploadCheck>
@@ -255,22 +262,27 @@ const panelItemStyle = {
 
 /**
  * Styled panel item container.
- * @param root0
- * @param root0.active
- * @param root0.onClick
- * @param root0.children
+ *
+ * @param {Object}   props          - Component props.
+ * @param {boolean}  props.active   - Active state.
+ * @param {Function} props.onClick  - Click handler.
+ * @param {Object}   props.children - Child content.
  */
 export function PanelItem( { active, onClick, children } ) {
 	return (
-		<div
+		<button
+			type="button"
 			style={ {
 				...panelItemStyle,
 				background: active ? '#e0e7ff' : '#f0f0f0',
+				border: 'none',
+				width: '100%',
+				textAlign: 'left',
 			} }
 			onClick={ onClick }
 		>
 			{ children }
-		</div>
+		</button>
 	);
 }
 
@@ -331,7 +343,7 @@ export function Toggle( { label, checked, onChange } ) {
    Placeholder States
 ───────────────────────────────────────────────────────────── */
 export function ImagePlaceholder( {
-	text = t( 'No image set', 'ambrygen' ),
+	text = __( 'No image set', 'ambrygen-web' ),
 	minHeight = '100px',
 } ) {
 	const placeholderStyle = {
@@ -356,7 +368,7 @@ export function ImagePlaceholder( {
  * @param {string}   [props.type]   - Tag type (heading | text | all).
  */
 export function TagSelector( {
-	label = t( 'HTML Tag' ),
+	label = __( 'HTML Tag', 'ambrygen-web' ),
 	value = 'h2',
 	onChange,
 	type = 'all',
@@ -373,8 +385,8 @@ export function TagSelector( {
 	];
 
 	const textTags = [
-		{ label: t( 'Paragraph' ), value: 'p' },
-		{ label: t( 'Div' ), value: 'div' },
+		{ label: __( 'Paragraph', 'ambrygen-web' ), value: 'p' },
+		{ label: __( 'Div', 'ambrygen-web' ), value: 'div' },
 	];
 
 	if ( type === 'heading' ) {
@@ -405,76 +417,107 @@ export function TagSelector( {
  * @param {string}   [props.help]             - Help text.
  * @param {boolean}  [props.showText=true]    - Show text field.
  * @param {string}   [props.textLabel]        - Text label.
+ * @param {string}   [props.textPlaceholder]  - Text field placeholder.
  * @param {boolean}  [props.showVariant=true] - Show variant selector.
  * @param {string}   [props.variantLabel]     - Variant label.
  */
+
 export function CtaButtonField( {
-	label = t( 'Link' ),
-	value = {},
-	onChange,
-	help,
-	showText = true,
-	textLabel = t( 'Link Text' ),
-	showVariant = true,
-	variantLabel = t( 'Button Style' ),
+    label = __( 'Link', 'ambrygen-web' ),
+    value = {},
+    onChange,
+    help,
+    showText = true,
+    textLabel = __( 'Link Text', 'ambrygen-web' ),
+    textPlaceholder = '',
+    showVariant = true,
+    variantLabel = __( 'Button Style', 'ambrygen-web' ),
 } ) {
-	const linkValue = {
-		url: value?.url || '',
-		opensInNewTab: value?.target === '_blank',
-	};
-
-	const updateValue = ( updates ) => {
-		onChange( {
-			...value,
-			...updates,
-		} );
-	};
-
-	return (
-		<div style={ { marginBottom: '16px' } }>
-			{ label && (
-				<p style={ { marginBottom: '6px', fontWeight: '500' } }>
-					{ label }
-				</p>
-			) }
-
-			{ showText && (
-				<TextControl
-					label={ textLabel }
-					value={ value?.text || '' }
-					onChange={ ( text ) => updateValue( { text } ) }
-				/>
-			) }
-
-			{ showVariant && (
-				<SelectControl
-					label={ variantLabel }
-					value={ value?.variant || 'dark' }
-					options={ [
-						{
-							label: t( 'Light' ),
-							value: 'is-style-site-tertiary-btn',
-						},
-						{ label: t( 'Dark' ), value: 'dark' },
-					] }
-					onChange={ ( variant ) => updateValue( { variant } ) }
-				/>
-			) }
-
-			<LinkControl
-				value={ linkValue }
-				onChange={ ( newLink ) => {
-					updateValue( {
-						url: newLink.url,
-						target: newLink.opensInNewTab ? '_blank' : '',
-						rel: newLink.opensInNewTab ? 'noopener noreferrer' : '',
-					} );
-				} }
-			/>
-
-			{ help && (
-				<p style={ { fontSize: '12px', color: '#666' } }>{ help }</p>
-			) }
-		</div>
-	);
+ 
+    const updateValue = ( updates ) => {
+        onChange( {
+            ...value,
+            ...updates,
+        } );
+    };
+ 
+    const clearLink = () => {
+        updateValue( {
+            url: '',
+            target: '',
+            rel: '',
+        } );
+    };
+ 
+    const linkValue = useMemo(
+        () => ( {
+            url: value?.url || '',
+            title: value?.text || '',
+            opensInNewTab: value?.target === '_blank',
+        } ),
+        [ value?.url, value?.text, value?.target ]
+    );
+ 
+    return (
+        <div style={ { marginBottom: '16px' } }>
+            { label && (
+                <p style={ { marginBottom: '6px', fontWeight: '500' } }>
+                    { label }
+                </p>
+            ) }
+ 
+            { showText && (
+                <TextControl
+                    label={ textLabel }
+                    value={ value?.text || '' }
+                    placeholder={ textPlaceholder }
+                    onChange={ ( text ) => updateValue( { text } ) }
+                />
+            ) }
+ 
+            { showVariant && (
+                <SelectControl
+                    label={ variantLabel }
+                    value={ value?.variant || 'dark' }
+                    options={ [
+                        {
+                            label: __( 'Light', 'ambrygen-web' ),
+                            value: 'is-style-site-tertiary-btn',
+                        },
+                        { label: __( 'Dark', 'ambrygen-web' ), value: 'dark' },
+                    ] }
+                    onChange={ ( variant ) => updateValue( { variant } ) }
+                />
+            ) }
+ 
+            <LinkControl
+                key={ `${ label }-${ value?.url || 'empty' }-${ value?.target || 'same-tab' }` }
+                value={ linkValue }
+                settings={ [] }
+                onRemove={ value?.url ? clearLink : undefined }
+                onChange={ ( newLink ) => {
+                    updateValue( {
+                        url: newLink?.url || '',
+                        target: newLink.opensInNewTab ? '_blank' : '',
+                        rel: newLink.opensInNewTab ? 'noopener noreferrer' : '',
+                    } );
+                } }
+            />
+ 
+            <ToggleControl
+                label={ __( 'Open in new tab', 'ambrygen-web' ) }
+                checked={ value?.target === '_blank' }
+                onChange={ ( opensInNewTab ) =>
+                    updateValue( {
+                        target: opensInNewTab ? '_blank' : '',
+                        rel: opensInNewTab ? 'noopener noreferrer' : '',
+                    } )
+                }
+            />
+ 
+            { help && (
+                <p style={ { fontSize: '12px', color: '#666' } }>{ help }</p>
+            ) }
+        </div>
+    );
 }

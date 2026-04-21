@@ -9,9 +9,8 @@ import {
 	InspectorControls,
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
-import { PanelBody } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useMemo } from '@wordpress/element';
 import { TagSelector, ImageUploader } from '../_shared/components';
 import { getThemeAssetUrl } from '../../utils/assets';
 
@@ -20,46 +19,6 @@ import { getThemeAssetUrl } from '../../utils/assets';
  * This template is used when the block is first inserted and no inner blocks exist.
  * @type {Array<Array>}
  */
-const TEMPLATE = [
-	[
-		'ambrygen/testimonial-item',
-		{
-			quote: 'The Ambry Care Program has transformed how we manage patient care. Truly remarkable service!',
-			author: 'Sarah Mitchell',
-			role: 'CEO of TechSpark',
-			logo: getThemeAssetUrl(
-				'/assets/src/images/testimonial/logo-1.png'
-			),
-		},
-	],
-	[
-		'ambrygen/testimonial-item',
-		{
-			quote: "Ambrygen's team made it so easy for our staff to streamline operations. Highly recommended!",
-			author: 'James Parker',
-			role: 'Operations Manager',
-			logo: '/wp-content/themes/ambrygen/assets/src/images/testimonial/logo-2.png',
-		},
-	],
-	[
-		'ambrygen/testimonial-item',
-		{
-			quote: 'We saw immediate improvements in workflow and patient satisfaction thanks to Ambrygen.',
-			author: 'Emily Chen',
-			role: 'Head of Nursing',
-			logo: '/wp-content/themes/ambrygen/assets/src/images/testimonial/logo-3.png',
-		},
-	],
-	[
-		'ambrygen/testimonial-item',
-		{
-			quote: 'The support and innovative solutions provided by Ambrygen have been invaluable.',
-			author: 'Michael Lee',
-			role: 'CTO of HealthBridge',
-			logo: '/wp-content/themes/ambrygen/assets/src/images/testimonial/logo-4.png',
-		},
-	],
-];
 
 /**
  * Default images used when block is first inserted
@@ -80,10 +39,67 @@ const DEFAULT_MAIN =
  */
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	// Destructure attributes for easier usage
-	let { heading, headingTag, mainImage, secondaryImage, overlayImage } =
-		attributes;
+	let {
+		blockId,
+		heading,
+		headingTag,
+		mainImage,
+		secondaryImage,
+		overlayImage,
+	} = attributes;
+
+	const TEMPLATE = useMemo(
+	() => [
+		[
+			'ambrygen/testimonial-item',
+			{
+				quote: 'The Ambry Care Program has transformed how we manage patient care. Truly remarkable service!',
+				author: 'Sarah Mitchell',
+				role: 'CEO of TechSpark',
+				logo: getThemeAssetUrl(
+					'/assets/src/images/testimonial/logo-1.png'
+				),
+			},
+		],
+		[
+			'ambrygen/testimonial-item',
+			{
+				quote: "Ambrygen's team made it so easy for our staff to streamline operations. Highly recommended!",
+				author: 'James Parker',
+				role: 'Operations Manager',
+				logo: '/wp-content/themes/ambrygen/assets/src/images/testimonial/logo-2.png',
+			},
+		],
+		[
+			'ambrygen/testimonial-item',
+			{
+				quote: 'We saw immediate improvements in workflow and patient satisfaction thanks to Ambrygen.',
+				author: 'Emily Chen',
+				role: 'Head of Nursing',
+				logo: '/wp-content/themes/ambrygen/assets/src/images/testimonial/logo-3.png',
+			},
+		],
+		[
+			'ambrygen/testimonial-item',
+			{
+				quote: 'The support and innovative solutions provided by Ambrygen have been invaluable.',
+				author: 'Michael Lee',
+				role: 'CTO of HealthBridge',
+				logo: '/wp-content/themes/ambrygen/assets/src/images/testimonial/logo-4.png',
+			},
+		],
+	]);
+
 
 	useEffect( () => {
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+
+		if ( ! blockId ) {
+			setAttributes( {
+				blockId: expectedId,
+			} );
+		}
+
 		if ( ! secondaryImage ) {
 			setAttributes( {
 				secondaryImage:
@@ -101,7 +117,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		if ( ! mainImage ) {
 			setAttributes( { mainImage: DEFAULT_MAIN } );
 		}
-	}, [ secondaryImage, overlayImage, mainImage, setAttributes ] );
+	}, [
+		clientId,
+		blockId,
+		secondaryImage,
+		overlayImage,
+		mainImage,
+		setAttributes,
+	] );
 
 	// Determine heading tag, default to H2
 	const Tag = headingTag || 'h2';
@@ -135,76 +158,66 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			{ /* Inspector Controls for sidebar settings */ }
 			<InspectorControls>
 				{ /* Heading settings panel */ }
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
-					<TagSelector
-						label={ __( 'Heading Tag', 'ambrygen-web' ) }
-						value={ headingTag || 'h2' }
-						onChange={ ( value ) =>
-							setAttributes( { headingTag: value } )
-						}
-					/>
-				</PanelBody>
+				<TagSelector
+					label={ __( 'Heading Tag', 'ambrygen-web' ) }
+					value={ headingTag || 'h2' }
+					onChange={ ( value ) =>
+						setAttributes( { headingTag: value } )
+					}
+				/>
 				{ /* Secondary Image Panel */ }
 
 				{ /* Overlay Image Panel */ }
-				<PanelBody title={ __( 'Top Overlay Image', 'ambrygen-web' ) }>
-					<ImageUploader
-						url={ overlayImage }
-						label={ __( 'Top Overlay Image', 'ambrygen-web' ) }
-						onSelect={ ( media ) =>
-							setAttributes( {
-								overlayImage: media?.url,
-								overlayImageId: media?.id,
-							} )
-						}
-						onRemove={ () =>
-							setAttributes( {
-								overlayImage: '',
-								overlayImageId: null,
-							} )
-						}
-					/>
-				</PanelBody>
-				<PanelBody
-					title={ __( 'Bottom Overlay Image', 'ambrygen-web' ) }
-				>
-					<ImageUploader
-						url={ secondaryImage }
-						label={ __( 'Bottom Overlay Image', 'ambrygen-web' ) }
-						onSelect={ ( media ) =>
-							setAttributes( {
-								secondaryImage: media?.url,
-								secondaryImageId: media?.id,
-							} )
-						}
-						onRemove={ () =>
-							setAttributes( {
-								secondaryImage: '',
-								secondaryImageId: null,
-							} )
-						}
-					/>
-				</PanelBody>
+				<ImageUploader
+					url={ overlayImage }
+					label={ __( 'Top Overlay Image', 'ambrygen-web' ) }
+					onSelect={ ( media ) =>
+						setAttributes( {
+							overlayImage: media?.url,
+							overlayImageId: media?.id,
+						} )
+					}
+					onRemove={ () =>
+						setAttributes( {
+							overlayImage: '',
+							overlayImageId: null,
+						} )
+					}
+				/>
+				<ImageUploader
+					url={ secondaryImage }
+					label={ __( 'Bottom Overlay Image', 'ambrygen-web' ) }
+					onSelect={ ( media ) =>
+						setAttributes( {
+							secondaryImage: media?.url,
+							secondaryImageId: media?.id,
+						} )
+					}
+					onRemove={ () =>
+						setAttributes( {
+							secondaryImage: '',
+							secondaryImageId: null,
+						} )
+					}
+				/>
 
-				{ /* Main Image Panel */ }
-				<PanelBody title={ __( 'Main Image', 'ambrygen-web' ) }>
-					<ImageUploader
-						url={ mainImage }
-						label={ __( 'Main Image', 'ambrygen-web' ) }
-						onSelect={ ( media ) =>
-							setAttributes( {
-								mainImage: media?.url,
-								mainImageId: media?.id,
-							} )
-						}
-						onRemove={ () =>
-							setAttributes( {
-								mainImage: null,
-								mainImageId: null,
-							} )
-						}
-					/>
-				</PanelBody>
+				{ /* Image control */ }
+				<ImageUploader
+					url={ mainImage }
+					label={ __( 'Image', 'ambrygen-web' ) }
+					onSelect={ ( media ) =>
+						setAttributes( {
+							mainImage: media?.url,
+							mainImageId: media?.id,
+						} )
+					}
+					onRemove={ () =>
+						setAttributes( {
+							mainImage: null,
+							mainImageId: null,
+						} )
+					}
+				/>
 			</InspectorControls>
 
 			{ /* Overlay Graphics - matching save.js */ }
@@ -240,6 +253,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				tagName={ Tag }
 				value={ heading }
 				onChange={ ( value ) => setAttributes( { heading: value } ) }
+				placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 				className="ambry-testimonials__heading"
 			/>
 

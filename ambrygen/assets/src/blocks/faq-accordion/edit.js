@@ -1,18 +1,65 @@
-import { __ } from '@wordpress/i18n';
+import { createBlock } from '@wordpress/blocks';
 import {
-	useBlockProps,
+	InnerBlocks,
 	InspectorControls,
 	RichText,
+	useBlockProps,
 } from '@wordpress/block-editor';
-import { PanelBody, Button, ToggleControl } from '@wordpress/components';
+import { PanelBody, ToggleControl } from '@wordpress/components';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { useEffect, useMemo } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+
 import {
-	TagSelector,
-	ImageUploader,
 	DEFAULT_IMAGES,
+	ImageUploader,
+	TagSelector,
 } from '../_shared/components';
 
-const MAX_FAQS = 10;
+const createParagraphBlock = ( content = '' ) =>
+	createBlock( 'core/paragraph', {
+		content,
+	} );
+
+const createListMarkup = ( items = [] ) => {
+	if ( ! Array.isArray( items ) || ! items.length ) {
+		return '<li></li>';
+	}
+
+	return items.map( ( item ) => `<li>${ item?.text || '' }</li>` ).join( '' );
+};
+
+const createFaqItemBlock = ( faq = {} ) => {
+	const innerBlocks = [];
+
+	if ( faq?.answer ) {
+		innerBlocks.push( createParagraphBlock( faq.answer ) );
+	}
+
+	if ( Array.isArray( faq?.items ) && faq.items.length ) {
+		innerBlocks.push(
+			createBlock( 'core/list', {
+				values: createListMarkup( faq.items ),
+				ordered: false,
+			} )
+		);
+	}
+
+	if ( ! innerBlocks.length ) {
+		innerBlocks.push( createParagraphBlock() );
+	}
+
+	return createBlock(
+		'ambrygen/faq-accordion-item',
+		{
+			question: faq?.question || '',
+			subHeading: faq?.subHeading || '',
+		},
+		innerBlocks
+	);
+};
+
+const TEMPLATE = [ [ 'ambrygen/faq-accordion-item' ] ];
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
@@ -22,15 +69,25 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		faqs = [],
 		title,
 		headingTag,
-		variant,
+		variant = 'default',
 		description,
 	} = attributes;
 	const showImage = variant !== 'without-image';
-
+	const variantClassName =
+		variant === 'without-image'
+			? `variation-${ variant } variation-boxed`
+			: `variation-${ variant }`;
+	const { replaceInnerBlocks } = useDispatch( 'core/block-editor' );
+	const innerBlocks = useSelect(
+		( select ) => select( 'core/block-editor' ).getBlocks( clientId ),
+		[ clientId ]
+	);
+	const hasInnerBlocks = innerBlocks.length > 0;
 	const blockProps = useBlockProps( {
-		className: `alongside-faq variation-${ variant }`,
+		className: `block-layout alongside-faq ${ variantClassName }`,
 	} );
 	const defaultImages = useMemo( () => DEFAULT_IMAGES(), [] );
+	const displayImageUrl = imageUrl || defaultImages?.placeholder?.url || '';
 
 	useEffect( () => {
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
@@ -42,38 +99,23 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 	}, [ clientId, blockId, setAttributes ] );
 
-	const updateFaq = ( index, field, value ) => {
-		const newFaqs = [ ...faqs ];
-		newFaqs[ index ] = { ...newFaqs[ index ], [ field ]: value };
-		setAttributes( { faqs: newFaqs } );
-	};
-
-	const addFaq = () => {
-		if ( faqs.length >= MAX_FAQS ) {
+	useEffect( () => {
+		if ( hasInnerBlocks || ! faqs.length ) {
 			return;
 		}
-		setAttributes( {
-			faqs: [
-				...faqs,
-				{ id: Date.now().toString(), question: '', answer: '' },
-			],
-		} );
-	};
 
-	const removeFaq = ( index ) => {
-		setAttributes( { faqs: faqs.filter( ( _, i ) => i !== index ) } );
-	};
+		replaceInnerBlocks( clientId, faqs.map( createFaqItemBlock ), false );
+	}, [ clientId, faqs, hasInnerBlocks, replaceInnerBlocks ] );
+
 	useEffect( () => {
-		if ( ! imageUrl ) {
-			if ( defaultImages.placeholder.url ) {
-				setAttributes( {
-					imageUrl: defaultImages.placeholder.url,
-					imageId: defaultImages.placeholder.id,
-					imageAlt: defaultImages.placeholder.alt || '',
-				} );
-			}
+		if ( showImage && ! imageUrl && defaultImages.placeholder.url ) {
+			setAttributes( {
+				imageUrl: defaultImages.placeholder.url,
+				imageId: defaultImages.placeholder.id,
+				imageAlt: defaultImages.placeholder.alt || '',
+			} );
 		}
-	}, [ imageUrl, setAttributes, defaultImages ] );
+	}, [ showImage, imageUrl, setAttributes, defaultImages ] );
 
 	return (
 		<>
@@ -91,13 +133,19 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 
 					<ToggleControl
-						label={ __( 'Show Image', 'ambrygen-web' ) }
-						checked={ showImage }
-						onChange={ ( value ) =>
+						label={ __( 'Keep FAQ without image', 'ambrygen-web' ) }
+						checked={ variant === 'without-image' }
+						onChange={ ( isChecked ) =>
 							setAttributes( {
-								variant: value ? 'default' : 'without-image',
+								variant: isChecked
+									? 'without-image'
+									: 'default',
 							} )
 						}
+						help={ __(
+							'Enable this to hide the FAQ image.',
+							'ambrygen-web'
+						) }
 					/>
 
 					{ showImage && (
@@ -123,25 +171,21 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 			</InspectorControls>
 
-			{ /* FAQ Row body */ }
 			<div { ...blockProps }>
 				<div className="alongside-faq__row">
-					{ /* LEFT IMAGE */ }
 					{ showImage && (
 						<div className="alongside-faq__col alongside-faq__col--left">
 							<div className="alongside-faq__media">
-								<img
-									src={
-										imageUrl ||
-										defaultImages.placeholder.url
-									}
-									alt={ imageAlt || '' }
-								/>
+								{ displayImageUrl && (
+									<img
+										src={ displayImageUrl }
+										alt={ imageAlt || '' }
+									/>
+								) }
 							</div>
 						</div>
 					) }
 
-					{ /* RIGHT FAQ */ }
 					<div
 						className={ `alongside-faq__col alongside-faq__col--right ${
 							showImage ? '' : 'full-width'
@@ -166,7 +210,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							></div>
 							<RichText
 								tagName="div"
-								className="alongside-faq__description"
+								className="block-description alongside-faq__description"
 								value={ description }
 								onChange={ ( value ) =>
 									setAttributes( { description: value } )
@@ -183,72 +227,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							></div>
 
 							<div className="faq">
-								{ faqs.map( ( faq, index ) => (
-									<div
-										key={ faq.id || index }
-										className="faq__item editor"
-									>
-										<RichText
-											tagName="div"
-											className="faq__question  text-lg-medium"
-											value={ faq.question }
-											onChange={ ( value ) =>
-												updateFaq(
-													index,
-													'question',
-													value
-												)
-											}
-											placeholder={ __(
-												'FAQ Question',
-												'ambrygen-web'
-											) }
-										/>
-										<RichText
-											tagName="div"
-											className="faq__answer"
-											value={ faq.answer }
-											onChange={ ( value ) =>
-												updateFaq(
-													index,
-													'answer',
-													value
-												)
-											}
-											placeholder={ __(
-												'FAQ Answer',
-												'ambrygen-web'
-											) }
-										/>
-										<div className="actions-button">
-											<Button
-												isDestructive
-												onClick={ () =>
-													removeFaq( index )
-												}
-											>
-												{ __(
-													'Remove',
-													'ambrygen-web'
-												) }
-											</Button>
-										</div>
-									</div>
-								) ) }
-								{ faqs.length < MAX_FAQS && (
-									<>
-										<div
-											className="is-style-gl-s24"
-											aria-hidden="true"
-										></div>
-										<Button
-											variant="primary"
-											onClick={ addFaq }
-										>
-											{ __( 'Add FAQ', 'ambrygen-web' ) }
-										</Button>
-									</>
-								) }
+								<InnerBlocks
+									allowedBlocks={ [
+										'ambrygen/faq-accordion-item',
+									] }
+									template={ TEMPLATE }
+									templateLock={ false }
+									renderAppender={
+										InnerBlocks.ButtonBlockAppender
+									}
+								/>
 							</div>
 						</div>
 					</div>

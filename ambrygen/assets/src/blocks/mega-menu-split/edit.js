@@ -12,11 +12,12 @@ import {
 	InspectorControls,
 } from '@wordpress/block-editor';
 import { Button, Tooltip, PanelBody, CardDivider } from '@wordpress/components';
-import { plus, trash } from '@wordpress/icons';
+import { plus, trash, chevronUp, chevronDown } from '@wordpress/icons';
 import { useState, useEffect, useCallback } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 
 // Shared imports
-import { useArrayHandlers, generateMenuId, t } from '../_shared/utils';
+import { useArrayHandlers, generateMenuId } from '../_shared/utils';
 import {
 	ItemHeader,
 	ImageUploader,
@@ -54,6 +55,7 @@ const DEFAULT_ITEM = {
  * @param {Function} props.onSelect Callback fired when item is selected.
  * @param {Function} props.onUpdate Callback fired when item field updates.
  * @param {Function} props.onRemove Callback fired when item is removed.
+ * @param {Function} props.onMove   Callback fired when item is moved up or down.
  * @param {number}   props.total    Total number of items.
  * @return {JSX.Element}                       Rendered list item element.
  */
@@ -64,6 +66,7 @@ function LeftListItem( {
 	onSelect,
 	onUpdate,
 	onRemove,
+	onMove,
 	total,
 } ) {
 	const handleClick = () => onSelect( index );
@@ -77,6 +80,28 @@ function LeftListItem( {
 			} }
 			onClick={ handleClick }
 		>
+			<div style={ { marginBottom: '4px', display: 'flex' } }>
+				<Button
+					icon={ chevronUp }
+					size="small"
+					disabled={ index === 0 }
+					onClick={ ( e ) => {
+						e.stopPropagation();
+						onMove( index, -1 );
+					} }
+					label={ __( 'Move Up', 'ambrygen-web' ) }
+				/>
+				<Button
+					icon={ chevronDown }
+					size="small"
+					disabled={ index >= total - 1 }
+					onClick={ ( e ) => {
+						e.stopPropagation();
+						onMove( index, 1 );
+					} }
+					label={ __( 'Move Down', 'ambrygen-web' ) }
+				/>
+			</div>
 			<a
 				href={ item.url }
 				className="nav__item--mega-menu__submenu-inner--link submenu-inner-link"
@@ -99,11 +124,11 @@ function LeftListItem( {
 				<Field
 					value={ item.url }
 					onChange={ ( v ) => onUpdate( index, 'url', v ) }
-					placeholder={ t( 'URL' ) }
+					placeholder={ __( 'URL', 'ambrygen-web' ) }
 					onClick={ ( e ) => e.stopPropagation() }
 				/>
 			</div>
-			<Tooltip text="Remove Item">
+			<Tooltip text={ __( 'Remove Item', 'ambrygen-web' ) }>
 				<Button
 					icon={ trash }
 					onClick={ ( e ) => {
@@ -137,8 +162,9 @@ function RightPanel( { item, index, onUpdate } ) {
 	if ( ! item ) {
 		return (
 			<p>
-				{ t(
-					'Add an item on the left to configure right-side content.'
+				{ __(
+					'Add an item on the left to configure right-side content.',
+					'ambrygen-web'
 				) }
 			</p>
 		);
@@ -161,7 +187,7 @@ function RightPanel( { item, index, onUpdate } ) {
 						<img src={ item.image } alt="" />
 					) : (
 						<span style={ { color: '#999', fontSize: '12px' } }>
-							{ t( 'No image set - use sidebar to upload' ) }
+							{ __( 'No image set - use sidebar to upload', 'ambrygen-web' ) }
 						</span>
 					) }
 				</figure>
@@ -174,7 +200,7 @@ function RightPanel( { item, index, onUpdate } ) {
 					className="body2-medium mb-0 nav__item--mega-menu__link-title"
 					value={ item.rightTitle }
 					onChange={ ( v ) => onUpdate( index, 'rightTitle', v ) }
-					placeholder={ t( 'Right Side Title' ) }
+					placeholder={ __( 'Right Side Title', 'ambrygen-web' ) }
 				/>
 				<div className="nav__item--mega-menu__links--icon" />
 			</div>
@@ -182,7 +208,7 @@ function RightPanel( { item, index, onUpdate } ) {
 			{ /* URL */ }
 			<div style={ { margin: '10px 0' } }>
 				<Field
-					label={ t( 'Right Side URL' ) }
+					label={ __( 'Right Side URL', 'ambrygen-web' ) }
 					value={ item.rightUrl || '' }
 					onChange={ ( v ) => onUpdate( index, 'rightUrl', v ) }
 					placeholder="https://..."
@@ -195,7 +221,7 @@ function RightPanel( { item, index, onUpdate } ) {
 				className="nav__item--mega-menu__info caption-regular"
 				value={ item.rightText }
 				onChange={ ( v ) => onUpdate( index, 'rightText', v ) }
-				placeholder={ t( 'Right Side Description' ) }
+				placeholder={ __( 'Right Side Description', 'ambrygen-web' ) }
 			/>
 		</div>
 	);
@@ -273,33 +299,36 @@ export default function Edit( { attributes, setAttributes } ) {
 		<>
 			<InspectorControls>
 				{ /* Menu Settings */ }
-				<PanelBody title={ t( 'Menu Settings' ) } initialOpen>
+				<PanelBody title={ __( 'Menu Settings', 'ambrygen-web' ) } initialOpen>
 					<Field
-						label={ t( 'Menu Name' ) }
+						label={ __( 'Menu Name', 'ambrygen-web' ) }
 						value={ menuLabel }
 						onChange={ ( v ) => setAttributes( { menuLabel: v } ) }
-						help={ t(
-							'Name this menu to easily find it in the Header settings.'
+						help={ __(
+							'Name this menu to easily find it in the Header settings.',
+							'ambrygen-web'
 						) }
 					/>
 					<Field
-						label={ t( 'Menu ID (System)' ) }
+						label={ __( 'Menu ID (System)', 'ambrygen-web' ) }
 						value={ menuId }
 						readOnly
-						help={ t(
-							'Unique ID used for linking (do not change).'
+						help={ __(
+							'Unique ID used for linking (do not change).',
+							'ambrygen-web'
 						) }
 					/>
 				</PanelBody>
 
 				{ /* Solution Items */ }
-				<PanelBody title={ t( 'Solution Items' ) } initialOpen>
+				<PanelBody title={ __( 'Solution Items', 'ambrygen-web' ) } initialOpen>
 					<p
 						className="components-base-control__help"
 						style={ { marginBottom: '12px' } }
 					>
-						{ t(
-							`Manage solution items. Current: ${ items.length } items`
+						{ __(
+							`Manage solution items. Current: ${ items.length } items`,
+							'ambrygen-web'
 						) }
 					</p>
 
@@ -321,7 +350,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								/>
 								<ImageUploader
 									url={ item.image }
-									label={ t( 'Right Side Image' ) }
+									label={ __( 'Right Side Image', 'ambrygen-web' ) }
 									onSelect={ ( media ) =>
 										updateImage( index, media )
 									}
@@ -330,7 +359,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									}
 								/>
 								<Field
-									label={ t( 'Label' ) }
+									label={ __( 'Label', 'ambrygen-web' ) }
 									value={ item.label }
 									onChange={ ( v ) =>
 										update( index, 'label', v )
@@ -338,7 +367,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									onClick={ ( e ) => e.stopPropagation() }
 								/>
 								<Field
-									label={ t( 'URL' ) }
+									label={ __( 'URL', 'ambrygen-web' ) }
 									value={ item.url }
 									onChange={ ( v ) =>
 										update( index, 'url', v )
@@ -346,7 +375,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									onClick={ ( e ) => e.stopPropagation() }
 								/>
 								<Field
-									label={ t( 'Right Title' ) }
+									label={ __( 'Right Title', 'ambrygen-web' ) }
 									value={ item.rightTitle }
 									onChange={ ( v ) =>
 										update( index, 'rightTitle', v )
@@ -354,7 +383,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									onClick={ ( e ) => e.stopPropagation() }
 								/>
 								<Field
-									label={ t( 'Right URL' ) }
+									label={ __( 'Right URL', 'ambrygen-web' ) }
 									value={ item.rightUrl || '' }
 									onChange={ ( v ) =>
 										update( index, 'rightUrl', v )
@@ -372,7 +401,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onClick={ handleAdd }
 						style={ { width: '100%', justifyContent: 'center' } }
 					>
-						{ t( 'Add Item' ) }
+						{ __( 'Add Item', 'ambrygen-web' ) }
 					</Button>
 				</PanelBody>
 			</InspectorControls>
@@ -389,7 +418,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								onChange={ ( v ) =>
 									setAttributes( { leftTitle: v } )
 								}
-								placeholder={ t( 'Title' ) }
+								placeholder={ __( 'Title', 'ambrygen-web' ) }
 							/>
 							<ul className="nav__item--mega-menu__submenu-inner--links">
 								{ items.map( ( item, index ) => (
@@ -401,6 +430,7 @@ export default function Edit( { attributes, setAttributes } ) {
 										onSelect={ handleSelect }
 										onUpdate={ update }
 										onRemove={ handleRemove }
+										onMove={ ( i, dir ) => move( i, dir ) }
 										total={ items.length }
 									/>
 								) ) }
@@ -410,7 +440,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								icon={ plus }
 								onClick={ handleAdd }
 							>
-								{ t( 'Add Item' ) }
+								{ __( 'Add Item', 'ambrygen-web' ) }
 							</Button>
 						</div>
 					</div>
@@ -427,8 +457,9 @@ export default function Edit( { attributes, setAttributes } ) {
 							/>
 						) : (
 							<p>
-								{ t(
-									'Add an item on the left to configure right-side content.'
+								{ __(
+									'Add an item on the left to configure right-side content.',
+									'ambrygen-web'
 								) }
 							</p>
 						) }

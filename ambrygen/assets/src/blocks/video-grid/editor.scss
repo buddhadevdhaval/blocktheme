@@ -1,0 +1,27 @@
+.video-grid {
+
+	.card-grid-block {
+
+		> .block-editor-inner-blocks,
+		> .block-editor-inner-blocks > .block-editor-block-list__layout {
+			display: contents;
+		}
+	}
+
+	.video-grid-item .features-media__video-wrapper {
+
+		iframe,
+		video {
+			pointer-events: none;
+		}
+	}
+
+	.videos__cards-item-thumbnail,
+	.play-icon-video {
+		pointer-events: none;
+	}
+
+	.video-grid-item__description {
+		margin-top: 12px;
+	}
+}

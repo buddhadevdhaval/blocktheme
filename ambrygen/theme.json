@@ -50,6 +50,11 @@
           "color": "var(--theme_primary_25)",
           "name": "Alice Blue"
         },
+				{
+          "slug": "Primary_200",
+          "color": "var(--theme_primary_200)",
+          "name": "Primary 200"
+        },
         {
           "slug": "Primary_800",
           "color": "var(--theme_primary_800)",
@@ -69,6 +74,11 @@
           "slug": "gray300",
           "color": "var(--theme_gray_300)",
           "name": "Gray 300"
+        },
+        {
+          "slug": "gray400",
+          "color": "var(--theme_gray_400)",
+          "name": "Gray 400"
         },
         {
           "slug": "gray500",

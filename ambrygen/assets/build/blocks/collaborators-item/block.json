@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/collaborators-item",
+  "title": "Collaborator Link Item",
+  "category": "ambrygen",
+  "icon": "admin-links",
+  "parent": [
+    "ambrygen/collaborators-list"
+  ],
+  "description": "An individual collaborator link item.",
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
+  "attributes": {
+    "text": {
+      "type": "string",
+      "default": "Collaborator Name"
+    },
+    "url": {
+      "type": "string",
+      "default": ""
+    },
+    "linkTarget": {
+      "type": "string",
+      "default": "_blank"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php"
+}

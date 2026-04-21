@@ -10,22 +10,37 @@
 @use "blocks-background";
 @use "blocks_head";
 @use "swiper-custom";
-
-
-/* Patients Take Action */
-@use "patients-take-action/two-content-block";
-@use "patients-take-action/midpage-cta-block";
-
-/* Patients Billing & Insurance */
-@use "patients-billing-insurance/patients-image-block";
-@use "patients-billing-insurance/faq-block";
-
-
-/* Company Events */
-@use "company-events/blog-post";
-
-/* Company Blog */
-@use "company-blog/blog-details";
+@use "download-links-lists";
 
 // events
 @use "events/event";
+@use "event-details/event-details";
+
+
+/* Our Tests */
+// @use "our-test-cancer/step1";
+// @use "our-test-cancer/supporting_graphs";
+// @use "our-test-cancer/principles_steps";
+// @use "our-test-cancer/test-catlouge";
+// @use "our-test-cancer/resource";
+@use "our-test-cancer/intro";
+// @use "our-test-cancer/symptoms";
+
+/* Listings */
+@use "listings/listings";
+@use "listings/filters";
+
+/* Blog */
+@use "blog/blog-listing";
+@use "blog/blog-detail";
+
+/* Detail Pages */
+@use "detail-pages/archive-single";
+
+/* Hereditary Neurology */
+@use "our-test-cancer/icon-card-grid";
+@use "our-test-cancer/catalog-conditions";
+
+/* Careers */
+// @use "careers/testimonial-slider";
+// @use "careers/awards-slider";

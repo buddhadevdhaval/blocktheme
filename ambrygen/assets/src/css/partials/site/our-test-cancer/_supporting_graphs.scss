@@ -1,0 +1,210 @@
+// @use "../../variables/breakpoints" as bp;
+// @use "../../variables/fluid_mixins" as *;
+
+// .supporting-graphs {
+//     display: grid;
+//     align-items: center;
+//     justify-content: space-between;
+//     grid-template-columns: 1fr 1fr;
+//     gap: fluid(32, 50);
+
+//     @include bp.max(md) {
+//         grid-template-columns: 1fr;
+//     }
+
+//     &__chart-card {
+//         background-color: var(--theme_white);
+//         border-radius: 16px;
+//         padding: 16px;
+
+//         @include bp.max(md) {
+//             order: 2;
+//         }
+//     }
+
+//     &__chart-image {
+//         width: 100%;
+//         aspect-ratio: 1340 / 590;
+//         overflow: hidden;
+//         border-radius: 8px;
+
+//         img {
+//             width: 100%;
+//             height: 100%;
+//             object-fit: cover;
+//             display: block;
+//         }
+//     }
+
+//     &__content {
+//         color: var(--theme_white);
+
+//         &:has(.social-cards) {
+//             text-align: center;
+//         }
+//     }
+
+//     // ── variation: steps layout ────────────────────────────────────
+//     &.variation-style-steps {
+
+//         @include bp.max(xxxl) {
+//             grid-template-columns: 1fr 440px;
+//         }
+
+//         @include bp.max(xl) {
+//             grid-template-columns: 1fr 380px;
+//         }
+
+//         @include bp.max(lg) {
+//             grid-template-columns: 1fr;
+//         }
+
+//         .supporting-graphs__steps {
+//             display: flex;
+//             flex-direction: row;
+//             // align-items: center;
+//             gap: 52px;
+
+//             @include bp.max(md) {
+//                 flex-wrap: wrap;
+//                 justify-content: center;
+//                 gap: 24px;
+//             }
+//         }
+
+//         .supporting-graphs__step-card {
+//             position: relative;
+//             display: flex;
+//             flex-direction: column;
+//             align-items: center;
+//             gap: 12px;
+//             background-color: var(--theme_white);
+//             border-radius: 16px;
+//             padding: 12px;
+//             flex: 1;
+//             min-width: 0;
+//             text-align: center;
+
+//             @include bp.max(md) {
+//                 flex: 100% 0 0;
+//             }
+
+//             // Arrow drawn as ::before on every card except the first
+//             &:not(:first-child) {
+//                 &::before {
+//                     content: '';
+//                     position: absolute;
+//                     left: -40px;
+//                     top: 50%;
+//                     transform: translateY(-50%);
+//                     width: 24px;
+//                     height: 24px;
+//                     background-color: var(--theme_white);
+//                     mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 12H19M19 12L13 6M19 12L13 18' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+//                     mask-repeat: no-repeat;
+//                     mask-size: contain;
+//                     mask-position: center;
+//                     flex-shrink: 0;
+
+//                     @include bp.max(md) {
+//                         display: none;
+//                     }
+//                 }
+//             }
+//         }
+
+//         .supporting-graphs__step-icon {
+//             width: 100px;
+//             height: 100px;
+//             border-radius: 16px;
+//             overflow: hidden;
+//             flex-shrink: 0;
+
+//             img {
+//                 width: 100%;
+//                 height: 100%;
+//                 object-fit: contain;
+//                 display: block;
+//             }
+//         }
+
+//         .supporting-graphs__step-label {
+//             color: var(--theme_gray_900);
+//             text-align: center;
+//         }
+
+//         .supporting-graphs__content {
+//             display: flex;
+//             flex-direction: column;
+//             gap: 25px;
+//             color: var(--theme_white);
+//         }
+
+//         .supporting-graphs__turnaround-label {
+//             font-size: fluid(28, 36);
+//             font-weight: 500;
+//             line-height: 1.22;
+//             letter-spacing: -0.02em;
+//             color: var(--theme_white);
+//         }
+
+//         .supporting-graphs__turnaround-value {
+//             font-size: fluid(36, 48);
+//             font-weight: 500;
+//             line-height: 1.25;
+//             letter-spacing: -0.02em;
+//             color: var(--theme_white);
+//             margin-top: -15px;
+//         }
+
+//         .supporting-graphs__description {
+//             color: var(--theme_white);
+//         }
+//     }
+// }
+
+// .social-cards {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     gap: 40px;
+
+//     @include bp.max(md) {
+//         flex-direction: column;
+//         align-items: flex-start;
+//         gap: 20px;
+//     }
+
+//     &__item {
+//         display: flex;
+//         flex-direction: column;
+//         gap: 6px;
+//         min-width: 200px;
+//         text-align: center;
+
+//         @include bp.max(md) {
+//             min-width: unset;
+//             width: 100%;
+//         }
+//     }
+
+//     &__title {
+//         color: var(--theme_primary_200);
+//         margin: 0;
+//     }
+
+//     &__value {
+//         font-size: fluid(36, 48);
+//         font-weight: 500;
+//         line-height: 1.25;
+//         color: var(--theme_white);
+//         margin: 0;
+//         letter-spacing: -0.02em;
+//     }
+
+//     &__unit {
+//         font-size: 24px;
+//         font-weight: 400;
+//         line-height: 32px;
+//     }
+// }

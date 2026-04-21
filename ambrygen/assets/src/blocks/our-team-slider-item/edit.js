@@ -1,12 +1,15 @@
 import { useBlockProps } from '@wordpress/block-editor';
 import { SelectControl, Spinner, Button } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
+import { useMemo } from '@wordpress/element';
+import { decodeEntities } from '@wordpress/html-entities';
+import { __ } from '@wordpress/i18n';
 import { DEFAULT_IMAGES } from '../_shared/components';
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { postId } = attributes;
 	const { removeBlock } = useDispatch( 'core/block-editor' );
-	const defaults = DEFAULT_IMAGES();
+	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
 
 	/* ------------------------------------------------------------------
 	 * Get all team members
@@ -67,8 +70,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		? teamMembers
 				.filter( ( post ) => ! selectedIds.includes( post.id ) )
 				.map( ( post ) => ( {
-					label: post.title.rendered,
-					value: post.id,
+					label: decodeEntities( post.title.rendered ),
+					value: String( post.id ),
 				} ) )
 		: [];
 
@@ -80,15 +83,18 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			{ /* Dropdown for selecting member */ }
 			{ ! postId && teamMembers && (
 				<SelectControl
-					label="Select Team Member"
+					label={ __( 'Select Team Member', 'ambrygen-web' ) }
 					value=""
 					options={ [
-						{ label: 'Select a team member', value: '' },
+						{
+							label: __( 'Select a team member', 'ambrygen-web' ),
+							value: '',
+						},
 						...options,
 					] }
 					onChange={ ( value ) =>
 						setAttributes( {
-							postId: parseInt( value, 10 ) || null,
+							postId: parseInt( value, 10 ) || 0,
 						} )
 					}
 				/>
@@ -108,7 +114,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							<div className="our-leadership__image-wrapper">
 								<img
 									src={ imageUrl }
-									alt={ selectedPost.title.rendered }
+									alt={ decodeEntities(
+										selectedPost.title.rendered
+									) }
 									className="our-leadership__image"
 									loading="lazy"
 								/>
@@ -116,10 +124,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 							<div className="our-leadership__info">
 								<div className="our-leadership__name subtitle1-sbold">
-									{ selectedPost.title.rendered }
+									{ decodeEntities(
+										selectedPost.title.rendered
+									) }
 									<div
 										className="our-leadership__link"
-										aria-label="Profile link"
+										aria-label={ __(
+											'Profile link',
+											'ambrygen-web'
+										) }
 									/>
 								</div>
 
@@ -132,18 +145,18 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							{ /* Actions */ }
 							<div className="our-team__actions actions-button">
 								<Button
-									isSecondary
+									variant="secondary"
 									onClick={ () =>
-										setAttributes( { postId: null } )
+										setAttributes( { postId: 0 } )
 									}
 								>
-									Change Member
+									{ __( 'Change Member', 'ambrygen-web' ) }
 								</Button>
 								<Button
 									isDestructive
 									onClick={ () => removeBlock( clientId ) }
 								>
-									Remove Member
+									{ __( 'Remove Member', 'ambrygen-web' ) }
 								</Button>
 							</div>
 						</div>

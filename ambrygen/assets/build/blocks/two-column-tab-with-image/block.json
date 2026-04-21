@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "ambrygen/two-column-tab-with-image",
-  "title": "Two Column Tab Content with Image",
+  "title": "Steps Image Alongside Text",
   "category": "ambrygen",
   "icon": "columns",
   "description": "A layout with two stacked cards on the left and one large featured card on the right.",
@@ -22,6 +22,14 @@
     },
     "headingTag": {
       "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
       "default": "h2"
     },
     "description": {
@@ -30,8 +38,21 @@
     },
     "blockId": {
       "type": "string"
+    },
+    "showFullImage": {
+      "type": "boolean",
+      "default": false
     }
   },
+  "variations": [
+    {
+      "name": "show-full-image",
+      "title": "Show full image",
+      "attributes": {
+        "showFullImage": true
+      }
+    }
+  ],
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",

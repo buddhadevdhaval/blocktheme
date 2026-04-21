@@ -1,0 +1,16 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/conference-hero-content",
+  "version": "1.0.0",
+  "title": "Conference Hero Content",
+  "category": "ambrygen",
+  "description": "Renders hero content for conference post.",
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web"
+}

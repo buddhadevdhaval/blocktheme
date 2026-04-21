@@ -20,34 +20,27 @@ $ambrygen_title       = $ambrygen_attributes['title'] ?? '';
 $ambrygen_description = $ambrygen_attributes['description'] ?? '';
 
 $ambrygen_link_array = $ambrygen_attributes['link'] ?? array();
+$ambrygen_link_array = is_array( $ambrygen_link_array ) ? $ambrygen_link_array : array();
 
-$ambrygen_link_text   = $ambrygen_link_array['text'] ?? __( 'Learn more', 'ambrygen-web' );
+$ambrygen_link_text   = ! empty( $ambrygen_link_array['text'] ) ? $ambrygen_link_array['text'] : __( 'Learn more', 'ambrygen-web' );
 $ambrygen_link_url    = $ambrygen_link_array['url'] ?? '';
 $ambrygen_link_target = $ambrygen_link_array['target'] ?? '';
 
 $ambrygen_type = $ambrygen_attributes['type'] ?? 'small';
 
-$ambrygen_link_rel     = $ambrygen_link_array['rel'] ?? '';
+$ambrygen_link_rel = $ambrygen_link_array['rel'] ?? '';
+
+// Build rel: start from editor-saved value, then layer in security tokens.
+$ambrygen_rel_parts = $ambrygen_link_rel
+	? array_filter( array_unique( explode( ' ', $ambrygen_link_rel ) ) )
+	: array();
+
 $ambrygen_new_tab_text = '';
 
-$ambrygen_rel_parts = array_filter(
-	array_unique(
-		array_merge(
-			array( 'noopener' ),
-			$ambrygen_link_rel ? explode( ' ', $ambrygen_link_rel ) : array()
-		)
-	)
-);
-
 if ( '_blank' === $ambrygen_link_target ) {
-	$ambrygen_rel_parts[]  = 'noreferrer';
+	// noopener + noreferrer are only meaningful for new-tab links.
+	$ambrygen_rel_parts    = array_unique( array_merge( $ambrygen_rel_parts, array( 'noopener', 'noreferrer' ) ) );
 	$ambrygen_new_tab_text = '<span class="screen-reader-text">' . esc_html__( '(opens in a new tab)', 'ambrygen-web' ) . '</span>';
-}
-
-$ambrygen_button_target_attr = '';
-if ( ! empty( $ambrygen_link_target ) ) {
-	$ambrygen_button_target_attr  = ' target="' . esc_attr( $ambrygen_link_target ) . '"';
-	$ambrygen_button_target_attr .= ' rel="' . esc_attr( implode( ' ', $ambrygen_rel_parts ) ) . '"';
 }
 
 /**
@@ -59,10 +52,18 @@ $ambrygen_type = in_array( $ambrygen_type, array( 'small', 'main' ), true )
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class' => 'genetic-cards__card genetic-cards__card--' . $ambrygen_type,
+		'class' => 'js-gsap-fade genetic-cards__card genetic-cards__card--' . $ambrygen_type,
+		'role'  => 'listitem',
 	)
 );
 $ambrygen_image_id           = absint( $ambrygen_attributes['imageId'] ?? 0 );
+$ambrygen_image_url          = $ambrygen_attributes['image'] ?? '';
+$ambrygen_image_alt          = $ambrygen_attributes['imageAlt'] ?? '';
+$ambrygen_image_attrs        = array(
+	'alt'      => $ambrygen_image_alt,
+	'loading'  => 'lazy',
+	'decoding' => 'async',
+);
 
 ?>
 
@@ -70,11 +71,16 @@ $ambrygen_image_id           = absint( $ambrygen_attributes['imageId'] ?? 0 );
 
 	<div class="genetic-cards__image-wrapper genetic-cards__image-wrapper--<?php echo esc_attr( $ambrygen_type ); ?>">
 		<?php
-				echo Helper::image_with_placeholder( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_with_placeholder() returns sanitized HTML.
-					$ambrygen_image_id,
-					'large'
-				);
-				?>
+		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() escapes attributes and returns wp_kses_post()-sanitized image markup.
+		echo Helper::image_from_source(
+			$ambrygen_image_id,
+			$ambrygen_image_url,
+			'large',
+			$ambrygen_image_attrs,
+			true
+		);
+		// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
+		?>
 	</div>
 
 
@@ -107,9 +113,14 @@ $ambrygen_image_id           = absint( $ambrygen_attributes['imageId'] ?? 0 );
 					href="<?php echo esc_url( $ambrygen_link_url ); ?>"
 					class="site-btn is-style-site-text-btn has-icon"
 					<?php if ( $ambrygen_title ) : ?>
-						aria-label="<?php echo esc_attr( $ambrygen_link_text . ' – ' . wp_strip_all_tags( html_entity_decode( $ambrygen_title, ENT_QUOTES, 'UTF-8' ) ) ); ?>"
+						aria-label="<?php echo esc_attr( $ambrygen_link_text . ' - ' . wp_strip_all_tags( html_entity_decode( $ambrygen_title, ENT_QUOTES, 'UTF-8' ) ) ); ?>"
 					<?php endif; ?>
-					<?php echo $ambrygen_button_target_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php if ( $ambrygen_link_target ) : ?>
+						target="<?php echo esc_attr( $ambrygen_link_target ); ?>"
+					<?php endif; ?>
+					<?php if ( $ambrygen_rel_parts ) : ?>
+						rel="<?php echo esc_attr( implode( ' ', $ambrygen_rel_parts ) ); ?>"
+					<?php endif; ?>
 				>
 					<?php echo esc_html( $ambrygen_link_text ); ?>
 					<?php echo $ambrygen_new_tab_text; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>

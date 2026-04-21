@@ -1,0 +1,87 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/awards-block",
+  "title": "Awards Block",
+  "category": "ambrygen",
+  "icon": "awards",
+  "description": "Awards content block with description, CTAs, and award logo listing.",
+  "textdomain": "ambrygen-web",
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php",
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "title": {
+      "type": "string",
+      "default": "Awards"
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "awards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "imageId": {
+            "type": "number"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "imageAlt": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "autoplay": {
+      "type": "boolean",
+      "default": false
+    },
+    "showNavigation": {
+      "type": "boolean",
+      "default": true
+    },
+    "showPagination": {
+      "type": "boolean",
+      "default": true
+    },
+    "slidesPerView": {
+      "type": "number",
+      "default": 4
+    },
+    "isHeaderVertical": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "example": {
+    "attributes": {
+      "title": "Awards",
+      "description": "<p>Recognition and awards from our team and community.</p>"
+    }
+  }
+}

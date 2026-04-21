@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/latest-blogs",
+  "title": "Latest Blogs",
+  "category": "ambrygen",
+  "icon": "welcome-widgets-menus",
+  "description": "Displays latest blogs with tag and category filters.",
+  "supports": {
+    "html": false,
+    "anchor": true,
+    "align": ["wide", "full"]
+  },
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "title": {
+      "type": "string",
+      "default": "Latest Articles"
+    },
+    "headingLevel": {
+      "type": "string",
+      "enum": ["h1", "h2", "h3", "h4", "h5", "h6"],
+      "default": "h2"
+    },
+    "postsPerPage": {
+      "type": "number",
+      "default": 9
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./editor.scss",
+  "style": "file:./style.scss",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web"
+}

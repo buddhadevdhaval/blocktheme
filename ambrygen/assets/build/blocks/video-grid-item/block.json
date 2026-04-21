@@ -1,0 +1,71 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/video-grid-item",
+  "title": "Video Grid Item",
+  "category": "ambrygen",
+  "parent": [
+    "ambrygen/video-grid"
+  ],
+  "icon": "format-video",
+  "description": "Single video item for Video Grid block.",
+  "textdomain": "ambrygen-web",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "videoType": {
+      "type": "string",
+      "default": "embed",
+      "enum": [
+        "embed",
+        "mp4"
+      ]
+    },
+    "iframeUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "videoUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "posterImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "posterImageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "posterImageAlt": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "usesContext": [
+    "ambrygen/videoGridVariation"
+  ],
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "title": "Understanding Genetic Testing",
+      "description": "Learn how testing moves from sample collection through analysis and reporting.",
+      "videoType": "embed",
+      "iframeUrl": "https://www.youtube.com/watch?v=ysz5S6PUM-U",
+      "videoUrl": "",
+      "posterImageId": 0,
+      "posterImageUrl": "",
+      "posterImageAlt": ""
+    }
+  }
+}

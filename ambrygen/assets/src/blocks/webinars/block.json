@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/webinars",
+  "title": "Webinar grid",
+  "category": "ambrygen",
+  "icon": "video-alt",
+  "description": "A container for selected webinars",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "title": {
+      "type": "string",
+      "default": "Webinars"
+    },
+    "scope": {
+      "type": "string",
+      "default": "upcoming"
+    },
+    "perPage": {
+      "type": "number",
+      "default": 8
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php"
+}

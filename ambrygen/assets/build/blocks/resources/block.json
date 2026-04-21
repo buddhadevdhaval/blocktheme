@@ -1,0 +1,179 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/resources",
+  "title": "Resources",
+  "category": "ambrygen",
+  "icon": "index-card",
+  "description": "A block to display resource cards and organization logos.",
+  "textdomain": "ambrygen-web",
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Resources"
+    },
+    "subtitle": {
+      "type": "string",
+      "default": "Everything you need to understand your results and take next steps."
+    },
+    "resourceCards": {
+      "type": "array",
+      "default": [
+        {
+          "title": "Exome Patient Brochure",
+          "pdfLinks": [
+            {
+              "label": "EN",
+              "url": "#"
+            },
+            {
+              "label": "ES",
+              "url": "#"
+            }
+          ]
+        },
+        {
+          "title": "Positive Epilepsy Result Guide",
+          "pdfLinks": [
+            {
+              "label": "EN",
+              "url": "#"
+            },
+            {
+              "label": "ES",
+              "url": "#"
+            }
+          ]
+        },
+        {
+          "title": "Positive AutismNext Result Guide",
+          "pdfLinks": [
+            {
+              "label": "EN",
+              "url": "#"
+            },
+            {
+              "label": "ES",
+              "url": "#"
+            }
+          ]
+        },
+        {
+          "title": "Carrier Result Guide — Epilepsy & Autism",
+          "pdfLinks": [
+            {
+              "label": "EN",
+              "url": "#"
+            },
+            {
+              "label": "ES",
+              "url": "#"
+            }
+          ]
+        }
+      ]
+    },
+    "orgTitle": {
+      "type": "string",
+      "default": "Helpful Organizations"
+    },
+    "collaboratorIds": {
+      "type": "array",
+      "default": []
+    },
+    "resourcesCardTitle": {
+      "type": "string",
+      "default": "Test Lists & Downloads"
+    },
+    "headingLevel": {
+      "type": "string",
+      "default": "h2",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ]
+    }
+  },
+  "example": {
+    "attributes": {
+      "title": "Resources",
+      "subtitle": "Everything you need to understand your results and take next steps.",
+      "resourceCards": [
+        {
+          "title": "Exome Patient Brochure",
+          "pdfLinks": [
+            {
+              "label": "EN",
+              "url": "#"
+            },
+            {
+              "label": "ES",
+              "url": "#"
+            }
+          ]
+        },
+        {
+          "title": "Positive Epilepsy Result Guide",
+          "pdfLinks": [
+            {
+              "label": "EN",
+              "url": "#"
+            },
+            {
+              "label": "ES",
+              "url": "#"
+            }
+          ]
+        },
+        {
+          "title": "Positive AutismNext Result Guide",
+          "pdfLinks": [
+            {
+              "label": "EN",
+              "url": "#"
+            },
+            {
+              "label": "ES",
+              "url": "#"
+            }
+          ]
+        },
+        {
+          "title": "Carrier Result Guide — Epilepsy & Autism",
+          "pdfLinks": [
+            {
+              "label": "EN",
+              "url": "#"
+            },
+            {
+              "label": "ES",
+              "url": "#"
+            }
+          ]
+        }
+      ],
+      "orgTitle": "Helpful Organizations",
+      "resourcesCardTitle": "Test Lists & Downloads",
+      "collaboratorIds": []
+    }
+  }
+}

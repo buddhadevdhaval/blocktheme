@@ -10,6 +10,10 @@
     "html": false
   },
   "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
     "sectionTitle": {
       "type": "string",
       "default": "Logo"

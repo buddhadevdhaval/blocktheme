@@ -2,7 +2,8 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "ambrygen/gallery-item",
-  "title": "Gallery Item",
+  "title": "Tiles Item",
+  "textdomain": "ambrygen-web",
   "parent": [
     "ambrygen/gallery"
   ],
@@ -16,9 +17,17 @@
     },
     "imageID": {
       "type": "number",
+      "default": 0
+    },
+    "imageAlt": {
+      "type": "string",
       "default": ""
     },
-    "eyebrow": {
+    "imageSrcSet": {
+      "type": "string",
+      "default": ""
+    },
+    "imageSizes": {
       "type": "string",
       "default": ""
     },
@@ -28,6 +37,14 @@
     },
     "headingTag": {
       "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
       "default": "h5"
     },
     "description": {
@@ -36,6 +53,23 @@
     },
     "link": {
       "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "rel": {
+          "type": "string"
+        },
+        "variant": {
+          "type": "string"
+        }
+      },
       "default": {
         "url": "",
         "text": "",
@@ -54,18 +88,20 @@
   "render": "file:./render.php",
   "example": {
     "attributes": {
-      "imageUrl": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
-      "imageID": 1,
-      "eyebrow": "Ambry Genetics",
+      "imageUrl": "",
+      "imageID": 0,
+      "imageAlt": "",
+      "imageSrcSet": "",
+      "imageSizes": "",
       "title": "Sample Title",
       "headingTag": "h5",
       "description": "This is a sample preview content for this block in the inserter.",
       "link": {
-        "url": "Sample url",
+        "url": "https://example.com/",
         "text": "Sample text",
-        "target": "Sample target",
-        "rel": "Sample rel",
-        "variant": "Sample variant"
+        "target": "",
+        "rel": "",
+        "variant": "dark"
       }
     }
   }

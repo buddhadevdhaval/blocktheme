@@ -4,12 +4,13 @@ import {
 	InspectorControls,
 	useBlockProps,
 } from '@wordpress/block-editor';
-import { PanelBody, SelectControl } from '@wordpress/components';
+import { useMemo } from '@wordpress/element';
 
 import {
 	ImageUploader,
 	CtaButtonField,
 	DEFAULT_IMAGES,
+	TagSelector,
 } from '../_shared/components';
 
 export default function Edit( { attributes, setAttributes, context } ) {
@@ -24,17 +25,28 @@ export default function Edit( { attributes, setAttributes, context } ) {
 		link,
 	} = attributes;
 
-	const defaultImage = DEFAULT_IMAGES().placeholder.url;
+	const defaultImages = useMemo( () => DEFAULT_IMAGES(), [] );
+	const defaultImage = defaultImages.placeholder.url;
 	const displayImage = imageUrl || defaultImage;
 
 	const blockProps = useBlockProps( { className: 'card-col' } );
 
 	const HeadingTag = headingTag || 'h5';
 	const galleryVariation = context?.[ 'ambrygen/galleryVariation' ];
-	//const showLearnMore = galleryVariation === 'image-content-grid';
+	const hasLink = Boolean( link?.url );
 	const showLearnMore =
-		galleryVariation === 'image-content-grid' ||
-		galleryVariation === 'variation-features'; // new variation
+		hasLink &&
+		( galleryVariation === 'image-content-grid' ||
+			galleryVariation === 'variation-features' );
+	const isDefaultLinkedCard = galleryVariation === 'default' && hasLink;
+	const WrapperTag = isDefaultLinkedCard ? 'a' : 'div';
+	const wrapperProps = isDefaultLinkedCard
+		? {
+				...blockProps,
+				href: link.url,
+				onClick: ( event ) => event.preventDefault(),
+		  }
+		: blockProps;
 
 	const onSelectImage = ( media ) => {
 		if ( ! media ) {
@@ -63,46 +75,32 @@ export default function Edit( { attributes, setAttributes, context } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody
-					title={ __( 'Image Settings', 'ambrygen' ) }
-					initialOpen
-				>
-					<ImageUploader
-						label={ __( 'Card Image', 'ambrygen' ) }
-						url={ imageUrl }
-						onSelect={ onSelectImage }
-						onRemove={ onRemoveImage }
-					/>
-				</PanelBody>
+				<ImageUploader
+					label={ __( 'Card Image', 'ambrygen-web' ) }
+					url={ imageUrl }
+					onSelect={ onSelectImage }
+					onRemove={ onRemoveImage }
+				/>
 
-				<PanelBody title={ __( 'Text & Link Settings', 'ambrygen' ) }>
-					<SelectControl
-						label={ __( 'Heading Tag', 'ambrygen' ) }
-						value={ headingTag }
-						options={ [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ].map(
-							( tag ) => ( {
-								label: tag.toUpperCase(),
-								value: tag,
-							} )
-						) }
-						onChange={ ( value ) =>
-							setAttributes( { headingTag: value } )
-						}
-					/>
-					<CtaButtonField
-						label={ __( 'Link setting' ) }
-						textLabel={ __( 'Link Text' ) }
-						defaultVariant="primary"
-						value={ link }
-						showVariant={ false }
-						onChange={ ( value ) =>
-							setAttributes( { link: value } )
-						}
-					/>
-				</PanelBody>
+				<TagSelector
+					label={ __( 'Heading Tag', 'ambrygen-web' ) }
+					value={ headingTag || 'h5' }
+					onChange={ ( value ) =>
+						setAttributes( { headingTag: value } )
+					}
+					type="heading"
+				/>
+				<CtaButtonField
+					label={ __( 'Link setting', 'ambrygen-web' ) }
+					textLabel={ __( 'Link Text', 'ambrygen-web' ) }
+					defaultVariant="primary"
+					value={ link }
+					showVariant={ false }
+					onChange={ ( value ) => setAttributes( { link: value } ) }
+				/>
 			</InspectorControls>
 
-			<div { ...blockProps }>
+			<WrapperTag { ...wrapperProps }>
 				<div className="image-block">
 					<img
 						src={ displayImage }
@@ -114,17 +112,18 @@ export default function Edit( { attributes, setAttributes, context } ) {
 				</div>
 
 				<div className="card-info">
-					{ /* { galleryVariation !== 'variation-features' && ( */ }
 					<HeadingTag className="link-btn mb-0 heading-5">
 						<RichText
 							value={ title }
 							onChange={ ( value ) =>
 								setAttributes( { title: value } )
 							}
-							placeholder={ __( 'Add title…', 'ambrygen' ) }
+							placeholder={ __(
+								'Add subtitle…',
+								'ambrygen-web'
+							) }
 						/>
 					</HeadingTag>
-					{ /* ) } */ }
 
 					<div
 						className={ `card-description  ${
@@ -139,7 +138,10 @@ export default function Edit( { attributes, setAttributes, context } ) {
 							onChange={ ( value ) =>
 								setAttributes( { description: value } )
 							}
-							placeholder={ __( 'Add description…', 'ambrygen' ) }
+							placeholder={ __(
+								'Add short description…',
+								'ambrygen-web'
+							) }
 						/>
 					</div>
 
@@ -164,13 +166,13 @@ export default function Edit( { attributes, setAttributes, context } ) {
 									className="site-btn is-style-site-text-btn has-icon"
 								>
 									{ link.text ||
-										__( 'Learn more', 'ambrygen' ) }
+										__( 'Learn more', 'ambrygen-web' ) }
 								</a>
 							</div>
 						</>
 					) }
 				</div>
-			</div>
+			</WrapperTag>
 		</>
 	);
 }

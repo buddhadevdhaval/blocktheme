@@ -31,6 +31,7 @@ h6,
 		color: var(--theme_cg_blue);
 		margin: 0;
 		padding: 0;
+		background-color: transparent;
 	}
 }
 
@@ -124,6 +125,17 @@ h6,
 	}
 }
 
+.body1-sbold {
+	font-size: var(--theme_font_size_7);
+	font-weight: 600;
+	letter-spacing: -0.08px;
+	line-height: 1.50;
+
+	@include bp.max(md) {
+		// letter-spacing: -0.22px;
+	}
+}
+
 .body2-reg {
 	font-size: var(--theme_font_size_8);
 	font-weight: 400;
@@ -192,6 +204,17 @@ h6,
 .subtitle2 {
 	font-size: var(--theme_font_size_10);
 	font-weight: 400;
+	letter-spacing: -0.27px;
+	line-height: 1.55;
+
+	@include bp.max(md) {
+		letter-spacing: -0.22px;
+	}
+}
+
+.subtitle2-medium {
+	font-size: var(--theme_font_size_10);
+	font-weight: 500;
 	letter-spacing: -0.27px;
 	line-height: 1.55;
 
@@ -330,6 +353,24 @@ h6,
 	letter-spacing: normal;
 }
 
+.text-lg-bold {
+	font-family: var(--font__main);
+	font-size: var(--theme_font_size_9);
+	font-style: normal;
+	font-weight: 700;
+	line-height: 1.5;
+	letter-spacing: normal;
+}
+
+.text-lg-reg {
+	font-family: var(--font__main);
+	font-size: var(--theme_font_size_9);
+	font-style: normal;
+	font-weight: 400;
+	line-height: 1.5;
+	letter-spacing: normal;
+}
+
 .text-xl-reg {
 	color: var(--theme_gray_900);
 	font-family: var(--font__main);
@@ -362,4 +403,47 @@ h6,
 	font-weight: 600;
 	line-height: 1.26;
 	letter-spacing: normal;
+}
+
+.button2-sbold {
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 142.857;
+	letter-spacing: -0.21px;
+	text-transform: capitalize;
+}
+
+
+
+
+.legal-content-page {
+
+	/* Use of H4 */
+	h2.wp-block-heading {
+		font-size: var(--theme_font_size_4);
+		letter-spacing: 0.72px;
+		line-height: 1.22;
+	}
+
+	/* Use of H5 */
+	h3.wp-block-heading {
+		font-size: var(--theme_font_size_5);
+		line-height: 1.26;
+		letter-spacing: 0.45px;
+
+		@include bp.max(md) {
+			letter-spacing: 0.36px;
+		}
+	}
+
+	/* Use of H6 */
+	h4.wp-block-heading {
+		font-size: var(--theme_font_size_6);
+		line-height: 1.33;
+		letter-spacing: 0.45px;
+
+		@include bp.max(md) {
+			letter-spacing: 0.36px;
+		}
+	}
 }

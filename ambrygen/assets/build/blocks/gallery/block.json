@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "ambrygen/gallery",
-  "title": "Image Gallery",
+  "title": "CTA Tiles",
   "category": "ambrygen",
   "icon": "grid-view",
   "description": "Responsive image gallery with design variants.",
@@ -22,10 +22,18 @@
   "attributes": {
     "heading": {
       "type": "string",
-      "default": "Title"
+      "default": ""
     },
     "headingTag": {
       "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
       "default": "h2"
     },
     "description": {
@@ -34,7 +42,12 @@
     },
     "variation": {
       "type": "string",
-      "default": "default"
+      "default": "default",
+      "enum": [
+        "default",
+        "image-content-grid",
+        "variation-features"
+      ]
     },
     "gridColumns": {
       "type": "string",
@@ -52,6 +65,10 @@
       "type": "string",
       "default": ""
     },
+    "topImageAlt": {
+      "type": "string",
+      "default": ""
+    },
     "blockId": {
       "type": "string"
     }
@@ -66,9 +83,10 @@
       "headingTag": "h2",
       "description": "This is a sample preview content for this block in the inserter.",
       "variation": "default",
-      "topImageID": 1,
-      "topImageURL": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
-      "blockId": 1
+      "topImageID": 0,
+      "topImageURL": "",
+      "topImageAlt": "",
+      "blockId": "cta-tiles-example"
     }
   }
 }

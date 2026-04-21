@@ -1,3 +1,5 @@
+@use "../../variables/fluid_mixins" as *;
+
 .badge {
     display: inline-flex;
     align-items: center;
@@ -17,22 +19,72 @@
     }
 
     &--blue {
-        background: var(--Blue-50, #E7F0FF);
-        border-color: var(--Blue-200, #8FBAFF);
-        color: var(--Blue-700, #084BB5);
+        background: var(--theme_badge_primary_bg);
+        border-color: var(--theme_badge_primary_border);
+        color: var(--theme_badge_primary_color);
 
         .badge__dot {
-            background: #2E90FA; // Standard blue dot
+            background: var(--theme_badge_primary_dot_color);
         }
     }
 
     &--purple {
-        background: var(--Purple-50, #F3EDF7);
-        border-color: var(--Purple-200, #C6ACDB);
-        color: var(--Purple-700, #5C357D);
+        background: var(--theme_badge_secondary_bg);
+        border-color: var(--theme_badge_secondary_border);
+        color: var(--theme_badge_secondary_color);
 
         .badge__dot {
-            background: #7F56D9; // Standard purple dot
+            background: var(--theme_badge_secondary_dot_color);
+        }
+    }
+}
+
+
+
+
+
+
+
+.risk-checklist__result {
+    border-radius: 16px;
+    padding: fluid(18, 25);
+    border-width: 1px;
+    border-style: solid;
+
+    // Default: no risk — green
+    &--no-risk {
+        background-color: var(--theme_green_50);
+        border-color: var(--theme_green_500);
+
+        .risk-checklist__result-title {
+            color: var(--theme_green_700);
+        }
+
+        .risk-checklist__result-text {
+            color: var(--theme_gray_600);
+        }
+    }
+
+    // At risk — pink/red
+    &--at-risk {
+        background-color: #fff5f5;
+        border-color: #f97066;
+
+        .risk-checklist__result-title {
+            color: #c0281a;
+        }
+
+        .risk-checklist__result-text {
+            color: var(--theme_gray_600);
+
+            &--bold {
+                color: var(--theme_gray_900);
+                font-weight: 600;
+            }
+        }
+
+        .risk-checklist__result-footnote {
+            color: var(--theme_gray_500);
         }
     }
 }

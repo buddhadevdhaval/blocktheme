@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Blocks class for registering and managing theme blocks.
  *
@@ -7,16 +8,15 @@
 
 namespace Ambrygen\Theme\Core;
 
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 /**
  * Blocks class.
  *
  * @since 1.0.0
  */
-final class Blocks {
-
-
+final class Blocks
+{
 	use Singleton;
 
 	/**
@@ -24,7 +24,8 @@ final class Blocks {
 	 *
 	 * @since 1.0.0
 	 */
-	protected function __construct() {
+	protected function __construct()
+	{
 		$this->setup_hooks();
 	}
 
@@ -34,7 +35,8 @@ final class Blocks {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	private function setup_hooks(): void {
+	private function setup_hooks(): void
+	{
 		$this->register_block_category();
 		$this->register_blocks();
 	}
@@ -45,17 +47,18 @@ final class Blocks {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function register_block_category(): void {
+	public function register_block_category(): void
+	{
 		add_filter(
 			'block_categories_all',
 			// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- Required by filter callback signature.
-			function ( $categories, $post ) {
+			function ($categories, $post) {
 
 				return array_merge(
 					array(
 						array(
-							'slug'  => 'ambrygen',
-							'title' => __( 'Ambrygen Blocks', 'ambrygen-web' ),
+							'slug' => 'ambrygen',
+							'title' => __('Ambrygen Blocks', 'ambrygen-web'),
 						),
 					),
 					$categories
@@ -72,15 +75,16 @@ final class Blocks {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function register_blocks(): void {
+	public function register_blocks(): void
+	{
 
 		$blocks_dir = get_template_directory() . '/assets/build/blocks';
 
 		$manifest_file = $blocks_dir . '/blocks-manifest.php';
 
-		if ( file_exists( $manifest_file ) ) {
+		if (file_exists($manifest_file)) {
 
-			if ( function_exists( 'wp_register_block_types_from_metadata_collection' ) ) {
+			if (function_exists('wp_register_block_types_from_metadata_collection')) {
 
 				wp_register_block_types_from_metadata_collection(
 					$blocks_dir,
@@ -88,92 +92,5 @@ final class Blocks {
 				);
 			}
 		}
-
-		register_block_type(
-			'ambrygen/post-meta-list',
-			array(
-				'render_callback' => static function (): string {
-					if ( ! class_exists( '\\Ambrygen\\Theme\\Core\\PostTypes' ) ) {
-						return '';
-					}
-
-					$post_id = get_the_ID();
-					if ( ! $post_id ) {
-						return '';
-					}
-
-					return PostTypes::instance()->render_post_meta_fields( $post_id );
-				},
-			)
-		);
-
-		register_block_type(
-			'ambrygen/event-post-meta-list',
-			array(
-				'render_callback' => static function (): string {
-					if ( ! class_exists( '\\Ambrygen\\Theme\\Core\\PostTypes' ) ) {
-						return '';
-					}
-
-					$post_id = get_the_ID();
-					if ( ! $post_id ) {
-						return '';
-					}
-
-					return PostTypes::instance()->render_event_meta_summary( $post_id );
-				},
-			)
-		);
-
-
-
-		register_block_type(
-			'ambrygen/featured-image-fallback',
-			array(
-				'attributes'      => array(
-					'className' => array(
-						'type'    => 'string',
-						'default' => '',
-					),
-					'sizeSlug'  => array(
-						'type'    => 'string',
-						'default' => 'full',
-					),
-					'isLink'    => array(
-						'type'    => 'boolean',
-						'default' => false,
-					),
-				),
-				'render_callback' => static function ( array $attributes ): string {
-					$post_id = get_the_ID();
-					if ( ! $post_id ) {
-						return '';
-					}
-
-					$size = isset( $attributes['sizeSlug'] ) ? (string) $attributes['sizeSlug'] : 'full';
-					$class = isset( $attributes['className'] ) ? (string) $attributes['className'] : '';
-					$is_link = ! empty( $attributes['isLink'] );
-
-					$image_html = Helper::image_with_placeholder(
-						get_post_thumbnail_id( $post_id ),
-						$size,
-						array(
-							'class' => $class,
-						)
-					);
-
-					if ( ! $is_link ) {
-						return $image_html;
-					}
-
-					$permalink = get_permalink( $post_id );
-					if ( ! $permalink ) {
-						return $image_html;
-					}
-
-					return '<a href="' . esc_url( $permalink ) . '">' . $image_html . '</a>';
-				},
-			)
-		);
 	}
 }

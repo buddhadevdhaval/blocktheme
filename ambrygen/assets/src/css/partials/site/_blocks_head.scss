@@ -1,6 +1,21 @@
 @use "../variables/breakpoints" as bp;
 
 
+.block__rowflex.is-vertical {
+	display: block;
+	text-align: center;
+	margin: 0 auto;
+	max-width: 960px;
+
+	&.awards-slider__header {
+		max-width: 960px;
+	}
+
+	.block__rowflex--block-content {
+		margin-top: 20px;
+	}
+}
+
 .block {
 
 	&__text-center {
@@ -36,6 +51,10 @@
 			@include bp.max(lg) {
 				flex: 100% 0 0;
 			}
+		}
+
+		.heading-content-wrapper {
+			flex: 1 0 0;
 		}
 
 		&--block-content {

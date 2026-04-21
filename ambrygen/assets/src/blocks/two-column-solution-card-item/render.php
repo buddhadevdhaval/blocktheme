@@ -55,7 +55,7 @@ $ambrygen_image_html = '';
 	 */
 	$ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 		array(
-			'class' => 'cta-tiles-with-content__item',
+			'class' => 'cta-tiles-with-content__item js-gsap-fade',
 		)
 	);
 	?>

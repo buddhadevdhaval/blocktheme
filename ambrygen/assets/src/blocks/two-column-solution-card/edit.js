@@ -5,9 +5,9 @@ import {
 	InspectorControls,
 } from '@wordpress/block-editor';
 import { PanelBody } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 
 import { TagSelector } from '../_shared/components';
-import { t } from '../_shared/utils';
 
 const TEMPLATE = [
 	[ 'ambrygen/two-column-solution-card-item' ],
@@ -24,9 +24,9 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ t( 'Heading Settings' ) } initialOpen>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) } initialOpen>
 					<TagSelector
-						label={ t( 'Heading Tag' ) }
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag }
 						onChange={ ( value ) =>
 							setAttributes( { headingTag: value } )
@@ -46,7 +46,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) =>
 							setAttributes( { heading: value } )
 						}
-						placeholder={ t( 'Add Title' ) }
+						placeholder={ __( 'Add Title', 'ambrygen-web' ) }
 					/>
 
 					<div className="block__rowflex--block-content subtitle-1-regular">
@@ -56,7 +56,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							onChange={ ( value ) =>
 								setAttributes( { description: value } )
 							}
-							placeholder={ t( 'Add Description' ) }
+							placeholder={ __( 'Add Description', 'ambrygen-web' ) }
 						/>
 					</div>
 				</div>

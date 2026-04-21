@@ -2,7 +2,43 @@
 
 
 .our-approach {
-	margin: 0;
+    margin: 0;
+
+    &.variation-three {
+        .approach-card {
+            background: var(--theme_gray_100);
+
+            .bg-primary_25 & {
+                background-color: var(--theme_white);
+            }
+
+            .approach-card__image {
+                height: 183px;
+            }
+        }
+    }
+
+    &.variation-two {
+
+        .approach-card {
+
+            &__title {
+                color: var(--theme_gray_900);
+
+                a {
+                    color: var(--theme_gray_900);
+
+                    &:hover {
+                        color: var(--theme_cg_blue);
+                    }
+                }
+            }
+
+            &__inner {
+                padding: var(--theme_space_8);
+            }
+        }
+    }
 
     &__content {
         display: grid;
@@ -35,7 +71,5 @@
                 }
             }
         }
-
-
     }
 }

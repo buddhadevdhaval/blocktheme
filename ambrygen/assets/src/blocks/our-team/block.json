@@ -16,16 +16,16 @@
     },
     "title": {
       "type": "string",
-      "default": "Title"
+      "default": ""
     },
     "intro": {
       "type": "string",
-      "default": "We are proud to be leading the industry that we love and working together."
+      "default": ""
     },
     "headingLevel": {
       "type": "string",
       "default": "h2",
-      "enum": [ "h1", "h2", "h3", "h4", "h5", "h6" ]
+      "enum": ["h1", "h2", "h3", "h4", "h5", "h6"]
     }
   },
   "editorScript": "file:./index.js",

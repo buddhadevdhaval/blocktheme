@@ -10,6 +10,10 @@
     "html": false
   },
   "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
     "title": {
       "type": "string",
       "default": "Executive Leadership"
@@ -32,6 +36,9 @@
     },
     "memberTypes": {
       "type": "array",
+      "items": {
+        "type": "number"
+      },
       "default": []
     },
     "selectionMode": {
@@ -41,18 +48,6 @@
         "manual",
         "taxonomy"
       ]
-    },
-    "showNavigation": {
-      "type": "boolean",
-      "default": true
-    },
-    "showPagination": {
-      "type": "boolean",
-      "default": false
-    },
-    "autoplay": {
-      "type": "boolean",
-      "default": false
     }
   },
   "editorScript": "file:./index.js",
@@ -60,21 +55,13 @@
   "style": "file:./style-index.css",
   "textdomain": "ambrygen-web",
   "render": "file:./render.php",
-  "providesContext": {
-    "ambrygen/imageGalleryNav": "showNavigation",
-    "ambrygen/imageGalleryPagination": "showPagination",
-    "ambrygen/imageGalleryAutoplay": "autoplay"
-  },
   "example": {
     "attributes": {
       "title": "Executive Leadership",
       "intro": "",
       "headingLevel": "h2",
       "memberTypes": [],
-      "selectionMode": "manual",
-      "showNavigation": true,
-      "showPagination": false,
-      "autoplay": false
+      "selectionMode": "manual"
     }
   }
 }

@@ -1,0 +1,30 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+
+.webinars {
+	// Root container styling
+	padding: 20px 0;
+
+	// Targeting the InnerBlocks layout container inside the grid
+	.event-carousel__grid {
+		.block-editor-block-list__layout {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 32px;
+
+			@include bp.max(lg) {
+				grid-template-columns: repeat(2, 1fr);
+			}
+
+			@include bp.max(md) {
+				grid-template-columns: 1fr;
+			}
+		}
+	}
+
+	// Ensure the appender (plus icon) matches the grid
+	.block-editor-button-block-appender {
+		grid-column: 1 / -1;
+		justify-self: center;
+		margin-top: 20px;
+	}
+}

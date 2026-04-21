@@ -8,11 +8,13 @@
  *
  * @package ambrygen
  */
+
 defined( 'ABSPATH' ) || exit;
 
 use Ambrygen\Theme\Core\Helper;
 
 $ambrygen_attributes     = $attributes ?? array();
+$ambrygen_block_id       = $ambrygen_attributes['blockId'] ?? '';
 $ambrygen_section        = $ambrygen_attributes['sectionTitle'] ?? '';
 $ambrygen_section_tag    = $ambrygen_attributes['sectionTitleTag'] ?? 'h2';
 $ambrygen_logo_id        = absint( $ambrygen_attributes['logoImageId'] ?? 0 );
@@ -62,11 +64,15 @@ $ambrygen_downloads_print = array_values(
 	)
 );
 
-$ambrygen_wrapper_attributes = get_block_wrapper_attributes(
-	array(
-		'class' => 'logo-section',
-	)
+$ambrygen_wrapper_attributes_array = array(
+	'class' => 'logo-section',
 );
+
+if ( $ambrygen_block_id ) {
+	$ambrygen_wrapper_attributes_array['id'] = $ambrygen_block_id;
+}
+
+$ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_attributes_array );
 
 $ambrygen_allowed_tags = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
 $ambrygen_section_tag  = in_array( $ambrygen_section_tag, $ambrygen_allowed_tags, true )
@@ -74,17 +80,17 @@ $ambrygen_section_tag  = in_array( $ambrygen_section_tag, $ambrygen_allowed_tags
 	: 'h2';
 ?>
 
-<div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+<div <?php echo wp_kses_post( $ambrygen_wrapper_attributes ); ?>>
 	<?php if ( $ambrygen_section ) : ?>
 		<div class="logo-section__header">
-			<<?php echo esc_attr( $ambrygen_section_tag ); ?> class="logo-section__title heading-3 mb-0">
+			<<?php echo esc_attr( $ambrygen_section_tag ); ?> class="logo-section__title heading-3 mb-0 js-gsap-fade">
 				<?php echo esc_html( $ambrygen_section ); ?>
 			</<?php echo esc_attr( $ambrygen_section_tag ); ?>>
 		</div>
 	<?php endif; ?>
 	<div class="is-style-gl-s50" aria-hidden="true"></div>
 	<div class="logo-section__top">
-		<div class="logo-section__logo">
+		<div class="logo-section__logo js-gsap-fade">
 			<?php
 			echo wp_kses_post(
 				Helper::image_with_placeholder(
@@ -100,7 +106,7 @@ $ambrygen_section_tag  = in_array( $ambrygen_section_tag, $ambrygen_allowed_tags
 		</div>
 
 		<div class="logo-section__downloads">
-			<div class="logo-section__downloads-group">
+			<div class="logo-section__downloads-group js-gsap-fade">
 				<div class="logo-section__downloads-title subtitle2-sbold">
 					<?php esc_html_e( 'For Web', 'ambrygen-web' ); ?>
 				</div>
@@ -125,7 +131,7 @@ $ambrygen_section_tag  = in_array( $ambrygen_section_tag, $ambrygen_allowed_tags
 				</div>
 			</div>
 
-			<div class="logo-section__downloads-group">
+			<div class="logo-section__downloads-group js-gsap-fade">
 				<div class="logo-section__downloads-title subtitle2-sbold">
 					<?php esc_html_e( 'For Print', 'ambrygen-web' ); ?>
 				</div>
@@ -168,11 +174,11 @@ $ambrygen_section_tag  = in_array( $ambrygen_section_tag, $ambrygen_allowed_tags
 				?>
 				<div class="logo-section__guideline-item">
 					<?php if ( $item_title ) : ?>
-						<h4 class="logo-section__guideline-title heading-6 mb-0">
+						<h4 class="logo-section__guideline-title heading-6 mb-0 js-gsap-fade">
 							<?php echo esc_html( $item_title ); ?>
 						</h4>
 					<?php endif; ?>
-					<div class="logo-section__guideline-images">
+					<div class="logo-section__guideline-images js-gsap-fade">
 						<?php
 						echo wp_kses_post(
 							Helper::image_with_placeholder(
@@ -211,7 +217,7 @@ $ambrygen_section_tag  = in_array( $ambrygen_section_tag, $ambrygen_allowed_tags
 					</div>
 
 					<?php if ( $item_description ) : ?>
-						<p class="logo-section__guideline-description">
+						<p class="logo-section__guideline-description js-gsap-fade">
 							<?php echo wp_kses_post( $item_description ); ?>
 						</p>
 					<?php endif; ?>
@@ -228,7 +234,7 @@ $ambrygen_section_tag  = in_array( $ambrygen_section_tag, $ambrygen_allowed_tags
 						$section_content = $section['content'] ?? '';
 						$section_list    = $section['listItems'] ?? array();
 						?>
-						<div class="logo-section__right-content__section subtitle2">
+						<div class="logo-section__right-content__section subtitle2 js-gsap-fade">
 							<?php if ( $section_title ) : ?>
 								<div class="logo-section__right-content__section-title subtitle2-sbold">
 									<?php echo wp_kses_post( $section_title ); ?>
@@ -249,7 +255,7 @@ $ambrygen_section_tag  = in_array( $ambrygen_section_tag, $ambrygen_allowed_tags
 						</div>
 					<?php endforeach; ?>
 				<?php elseif ( $ambrygen_right_title || $ambrygen_right_text ) : ?>
-					<div class="logo-section__right-content__section subtitle2">
+					<div class="logo-section__right-content__section subtitle2 js-gsap-fade">
 						<?php if ( $ambrygen_right_title ) : ?>
 							<div class="logo-section__right-content__section-title subtitle2-sbold">
 								<?php echo wp_kses_post( $ambrygen_right_title ); ?>

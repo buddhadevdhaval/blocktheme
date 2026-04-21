@@ -17,7 +17,7 @@ fieldset {
 	display: block;
 	margin: 0 0 24px;
 
-	@media (width <= 767px) {
+	@media (width <=767px) {
 		margin-bottom: 24px;
 	}
 }
@@ -65,11 +65,11 @@ textarea {
 
 	&:focus {
 		background-color: var(--theme_white);
-		border-color: var(--theme_body_color);
-		box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+		border-color: var(--theme_cg_blue);
+		// box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
 	}
 
-	@media (width <= 640px) {
+	@media (width <=640px) {
 		font-size: 16px;
 		height: 44px;
 		padding: 12px 12px 13px;
@@ -168,10 +168,26 @@ select {
 	cursor: pointer;
 	padding-bottom: 5px;
 	padding-top: 5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
-	@media (width <= 640px) {
+	&:focus {
+		outline: none;
+		border-color: var(--theme_color_primary);
+		box-shadow: 0 0 0 3px rgba(0, 155, 210, 0.15);
+	}
+
+	@media (width <=640px) {
 		background-position: center right 12px;
 		background-size: 14px;
+	}
+
+	option {
+		max-width: 100%;
+		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 }
 
@@ -181,7 +197,7 @@ textarea {
 	padding: 14px 16px;
 	resize: none;
 
-	@media (width <= 640px) {
+	@media (width <=640px) {
 		padding: 8px 14px 12px;
 	}
 }

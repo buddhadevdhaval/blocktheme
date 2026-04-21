@@ -1,26 +1,18 @@
 import { useBlockProps } from '@wordpress/block-editor';
 import { SelectControl, Spinner, Button } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { __ } from '@wordpress/i18n';
 import { useMemo } from '@wordpress/element';
+import { decodeEntities } from '@wordpress/html-entities';
+import { __ } from '@wordpress/i18n';
 import { DEFAULT_IMAGES } from '../_shared/components';
 
-const getMemberPreviewData = ( post, defaults ) => {
-	const featuredMedia = post?._embedded?.[ 'wp:featuredmedia' ]?.[ 0 ];
-
-	return {
-		imageUrl: featuredMedia?.source_url || defaults?.placeholder?.url,
-		imageAlt: featuredMedia?.alt_text || post?.title?.rendered || '',
-	};
-};
-
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const { postId } = attributes;
+	const { postId = 0 } = attributes;
 	const { removeBlock } = useDispatch( 'core/block-editor' );
 	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
+	const hasSelectedPost = Boolean( postId );
 
 	// Get all team members
-	// Query args are static, so no dependencies are required.
 	const teamMembers = useSelect( ( select ) => {
 		return select( 'core' ).getEntityRecords( 'postType', 'our_team', {
 			per_page: -1,
@@ -62,18 +54,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	);
 
 	// Dropdown options excluding selected
-	const options = useMemo(
-		() =>
-			teamMembers
-				? teamMembers
-						.filter( ( post ) => ! selectedIds.includes( post.id ) )
-						.map( ( post ) => ( {
-							label: post.title.rendered,
-							value: post.id,
-						} ) )
-				: [],
-		[ teamMembers, selectedIds ]
-	);
+	const options = teamMembers
+		? teamMembers
+				.filter( ( post ) => ! selectedIds.includes( post.id ) )
+				.map( ( post ) => ( {
+					label: decodeEntities( post.title.rendered ),
+					value: String( post.id ),
+				} ) )
+		: [];
 
 	return (
 		<div { ...useBlockProps( { className: 'our-team__card' } ) }>
@@ -81,7 +69,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			{ ! teamMembers && <Spinner /> }
 
 			{ /* If no selection yet */ }
-			{ ! postId && (
+			{ ! hasSelectedPost && (
 				<SelectControl
 					label={ __( 'Select Team Member', 'ambrygen-web' ) }
 					value=""
@@ -94,37 +82,37 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					] }
 					onChange={ ( value ) =>
 						setAttributes( {
-							postId: parseInt( value, 10 ) || null,
+							postId: parseInt( value, 10 ) || 0,
 						} )
 					}
 				/>
 			) }
 
 			{ /* Selected Member Preview */ }
-			{ postId &&
+			{ hasSelectedPost &&
 				selectedPost &&
 				( () => {
-					const { imageUrl, imageAlt } = getMemberPreviewData(
-						selectedPost,
-						defaults
-					);
+					const imageUrl =
+						selectedPost?._embedded?.[ 'wp:featuredmedia' ]?.[ 0 ]
+							?.source_url || defaults?.placeholder?.url;
 					return (
 						<>
 							<div className="our-team__image-wrapper">
 								<img
 									src={ imageUrl }
-									alt={ imageAlt }
+									alt={ decodeEntities(
+										selectedPost.title.rendered
+									) }
 									className="our-team__image"
 								/>
 							</div>
 
 							<div className="our-team__info">
 								<div className="our-team__name subtitle1-sbold">
-									{ selectedPost.title.rendered }
-									<div
-										className="our-team__link"
-										aria-hidden="true"
-									></div>
+									{ decodeEntities(
+										selectedPost.title.rendered
+									) }
+									<div className="our-team__link"></div>
 								</div>
 
 								<div className="our-team__role body1">
@@ -139,7 +127,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								<Button
 									variant="secondary"
 									onClick={ () =>
-										setAttributes( { postId: null } )
+										setAttributes( { postId: 0 } )
 									}
 								>
 									{ __( 'Change Member', 'ambrygen-web' ) }

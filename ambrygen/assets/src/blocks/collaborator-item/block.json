@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/collaborator-item",
+  "title": "Collaborator Item",
+  "category": "ambrygen",
+  "icon": "networking",
+  "parent": [
+    "ambrygen/collaborators"
+  ],
+  "attributes": {
+    "termId": {
+      "type": "number"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "termId": 1
+    }
+  }
+}

@@ -30,6 +30,10 @@
     "grid"
   ],
   "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": ""
+    },
     "heading": {
       "type": "string",
       "default": ""
@@ -50,9 +54,24 @@
       "type": "string",
       "default": ""
     },
+    "variation": {
+      "type": "string",
+      "enum": [
+        "default",
+        "variation-three"
+      ],
+      "default": "default"
+    },
     "blockId": {
       "type": "string"
+    },
+    "isHeaderVertical": {
+      "type": "boolean",
+      "default": false
     }
+  },
+  "providesContext": {
+    "ambrygen/threeColumnVariation": "variation"
   },
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
@@ -64,6 +83,7 @@
       "heading": "Transforming Healthcare with Genetic Insight",
       "headingTag": "h2",
       "description": "This is a sample preview content for this block in the inserter.",
+      "variation": "default",
       "blockId": "section-example"
     }
   }

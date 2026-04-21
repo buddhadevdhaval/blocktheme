@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/webinars-item",
+  "title": "Webinar Item",
+  "category": "ambrygen",
+  "icon": "video-alt",
+  "parent": [
+    "ambrygen/webinars"
+  ],
+  "attributes": {
+    "postId": {
+      "type": "number"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php"
+}

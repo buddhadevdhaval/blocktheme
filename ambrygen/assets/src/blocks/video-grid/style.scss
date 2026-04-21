@@ -1,0 +1,204 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+@use "../../css/partials/variables/fluid_mixins" as *;
+
+.two-column-videos {
+
+	&__quote-attribution {
+		color: var(--theme_cg_blue);
+	}
+
+	&__subheading {
+		text-align: center;
+		width: 100%;
+	}
+
+	&__subheading-highlight {
+		color: var(--theme_cg_blue);
+	}
+
+}
+
+
+
+.videos__cards {
+	display: grid;
+	gap: fluid(32, 50);
+	grid-template-columns: repeat(2, 1fr);
+
+	@include bp.max(md) {
+		grid-template-columns: repeat(1, 1fr);
+	}
+
+	&.variation-three-column {
+		grid-template-columns: repeat(3, 1fr);
+
+		@include bp.max(xl-large) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		@include bp.max(md) {
+			grid-template-columns: repeat(1, 1fr);
+		}
+	}
+}
+
+
+// .videos__cards {
+// 	display: grid;
+// 	gap: fluid(32, 50);
+// 	grid-template-columns: repeat(2, 1fr);
+
+// 	@include bp.max(md) {
+// 		grid-template-columns: repeat(1, 1fr);
+// 	}
+
+// 	&.variation-three-column {
+// 		grid-template-columns: repeat(3, 1fr);
+
+// 		@include bp.max(xl-large) {
+// 			grid-template-columns: repeat(2, 1fr);
+// 		}
+
+// 		@include bp.max(md) {
+// 			grid-template-columns: repeat(1, 1fr);
+// 		}
+// 	}
+
+// 	&-item {
+// 		display: flex;
+// 		flex-direction: column;
+// 		align-items: center;
+
+// 		&:only-child {
+// 			grid-column: 1 / -1;
+// 			justify-self: center;
+// 			width: 100%;
+// 			max-width: 645px;
+// 		}
+// 	}
+
+// 	&-item-thumbnail {
+// 		position: absolute;
+// 		width: 100%;
+// 		aspect-ratio: 16 / 9;
+// 		overflow: hidden;
+// 		border-radius: 12px;
+// 		margin-bottom: 0;
+// 		cursor: pointer;
+// 		z-index: 1;
+// 		transition: transform 0.3s ease, filter 0.3s ease;
+// 	}
+
+// 	&-item-thumbnail-img {
+// 		display: block;
+// 		width: 100%;
+// 		height: 100%;
+// 		object-fit: cover;
+// 		border-radius: 16px;
+// 	}
+
+// 	&-item-title {
+// 		text-align: center;
+// 		width: 100%;
+// 		color: var(--theme_cg_blue);
+// 	}
+
+// 	&-item-description {
+// 		text-align: center;
+// 		width: 100%;
+// 		color: var(--theme_gray_700);
+// 		font-size: 0.95rem;
+// 		line-height: 1.5;
+// 		display: none;
+// 	}
+
+// 	.media_video {
+// 		width: 100%;
+// 		position: relative;
+
+// 		&:not(:has(.videos__cards-item-thumbnail)) .features-media__video-wrapper--iframe {
+// 			background: linear-gradient(135deg, rgba(0, 121, 164, 0.1) 0%, rgba(0, 121, 164, 0.05) 100%);
+// 		}
+
+// 		.features-media__video-wrapper--iframe {
+// 			background-color: #EEE;
+// 			position: relative;
+// 			width: 100%;
+// 			aspect-ratio: 16 / 9;
+// 			height: unset;
+// 			max-height: unset;
+// 			border-radius: 12px;
+// 			overflow: hidden;
+// 			cursor: pointer;
+// 			transition: transform 0.3s ease;
+
+
+// 			video,
+// 			iframe {
+// 				max-height: unset;
+// 				position: absolute;
+// 				top: 50%;
+// 				left: 50%;
+// 				transform: translate(-50%, -50%);
+// 				height: 100%;
+// 				width: auto;
+// 				min-width: 100%;
+// 				display: block;
+// 				border: 0;
+// 			}
+// 		}
+
+// 		.play-icon-video {
+// 			position: absolute;
+// 			top: 50%;
+// 			left: 50%;
+// 			transform: translate(-50%, -50%);
+// 			cursor: pointer;
+// 			z-index: 10;
+// 			pointer-events: auto;
+
+// 			.circle-icon {
+// 				width: fluid(48, 80);
+// 				height: fluid(48, 80);
+// 				filter: drop-shadow(0 30.745px 40px rgba(0, 0, 0, 0.25));
+// 				transition: transform 0.2s ease;
+// 				display: flex;
+// 				align-items: center;
+// 				justify-content: center;
+// 			}
+
+// 		}
+// 	}
+// }
+
+// // Video Modal Styles
+// .modal-content {
+// 	width: 100%;
+
+// 	&__title {
+// 		color: var(--theme_gray_900);
+// 	}
+
+// 	&__video-wrapper {
+// 		position: relative;
+// 		width: 100%;
+// 		aspect-ratio: 16 / 9;
+// 		background-color: #1a1a1a;
+// 		border-radius: 12px;
+// 		overflow: hidden;
+
+// 		iframe {
+// 			position: absolute;
+// 			top: 0;
+// 			left: 0;
+// 			width: 100%;
+// 			height: 100%;
+// 			border: none;
+// 			border-radius: 12px;
+// 		}
+// 	}
+
+// 	&__description {
+// 		color: var(--theme_gray_700);
+// 	}
+// }

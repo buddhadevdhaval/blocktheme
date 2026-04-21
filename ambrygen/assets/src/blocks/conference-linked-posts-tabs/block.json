@@ -1,0 +1,16 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/conference-linked-posts-tabs",
+  "version": "1.0.0",
+  "title": "Conference Linked Posts Tabs",
+  "category": "ambrygen",
+  "description": "Renders tabs for linked presentations and posters.",
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web"
+}

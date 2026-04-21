@@ -7,19 +7,6 @@
  * @package
  */
 import { useCallback } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
-
-/**
- * Text domain for i18n
- */
-export const TD = 'ambrygen-web';
-
-/**
- * Localized string helper with text domain
- * @param {string} text - Text to localize
- * @return {string} Localized string
- */
-export const t = ( text ) => __( text, TD );
 
 /**
  * Builds className string from array, filtering falsy values.

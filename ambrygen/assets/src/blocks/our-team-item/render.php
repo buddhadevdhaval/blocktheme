@@ -1,15 +1,5 @@
 <?php
 /**
- * Our Team Item block render template.
- *
- * @package ambrygen
- */
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
-/**
  * Render: Our Team Item Block
  *
  * @param array    $attributes The block attributes.
@@ -18,7 +8,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package ambrygen
  */
+
+defined( 'ABSPATH' ) || exit;
+
 use Ambrygen\Theme\Core\Helper;
+use Ambrygen\Theme\Core\Theme_Options;
 
 $ambrygen_post_id = isset( $attributes['postId'] )
 	? absint( $attributes['postId'] )
@@ -38,39 +32,36 @@ $ambrygen_name        = get_the_title( $ambrygen_post_id );
 $ambrygen_designation = get_post_meta( $ambrygen_post_id, 'designation', true );
 $ambrygen_image_id    = get_post_thumbnail_id( $ambrygen_post_id );
 $ambrygen_bio         = apply_filters( 'the_content', $ambrygen_post->post_content );
-$ambrygen_image_url   = '';
-
-if ( $ambrygen_image_id ) {
-	$ambrygen_image_src = wp_get_attachment_image_src( $ambrygen_image_id, 'medium' );
-	if ( $ambrygen_image_src ) {
-		$ambrygen_image_url = $ambrygen_image_src[0];
-	}
-}
-
-/* translators: %s: Team member name. */
-$ambrygen_aria_label = sprintf( __( 'View details for %s', 'ambrygen-web' ), $ambrygen_name );
+$ambrygen_display_id  = $ambrygen_image_id
+	? $ambrygen_image_id
+	: Theme_Options::get_placeholder_image_id();
+$ambrygen_image_url   = wp_get_attachment_image_url( $ambrygen_display_id, 'medium' );
+$ambrygen_image_url   = $ambrygen_image_url ? $ambrygen_image_url : '';
 ?>
 
 <div
-	class="our-team__card"
+	class="our-team__card js-gsap-fade"
 	data-team-name="<?php echo esc_attr( $ambrygen_name ); ?>"
 	data-team-designation="<?php echo esc_attr( $ambrygen_designation ); ?>"
 	data-team-image="<?php echo esc_url( $ambrygen_image_url ); ?>"
-	data-team-bio="<?php echo esc_attr( $ambrygen_bio ); ?>"
-	aria-label="<?php echo esc_attr( $ambrygen_aria_label ); ?>"
+	role="button"
+	tabindex="0"
+	aria-haspopup="dialog"
+	aria-label="<?php /* translators: %s: Team member name. */ echo esc_attr( sprintf( __( 'View details for %s', 'ambrygen-web' ), $ambrygen_name ) ); ?>"
 >
 
 	<div class="our-team__image-wrapper">
 		<?php
-		echo wp_kses_post(
-			Helper::image_with_placeholder(
-				$ambrygen_image_id,
-				'medium',
-				array(
-
-					'class' => 'our-team__image',
-				)
-			)
+		echo Helper::image_from_source( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper escapes attributes and returns sanitized image HTML.
+			$ambrygen_image_id,
+			'',
+			'medium',
+			array(
+				'loading' => 'lazy',
+				'class'   => 'our-team__image',
+				'alt'     => esc_attr( $ambrygen_name ),
+			),
+			true
 		);
 		?>
 	</div>
@@ -92,5 +83,9 @@ $ambrygen_aria_label = sprintf( __( 'View details for %s', 'ambrygen-web' ), $am
 		<?php endif; ?>
 
 	</div>
+
+	<template class="our-team__bio-template">
+		<?php echo wp_kses_post( $ambrygen_bio ); ?>
+	</template>
 
 </div>

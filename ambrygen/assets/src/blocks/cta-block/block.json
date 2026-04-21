@@ -1,0 +1,44 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/cta-block",
+  "title": "CTA Block",
+  "category": "ambrygen",
+  "icon": "megaphone",
+  "description": "Mid-page Call to Action with title and two buttons",
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Learn More About Gene-Disease Validity Assessments in Hereditary Cancer Testing"
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2"
+    },
+    "buttons": {
+      "type": "array",
+      "default": [
+        {
+          "text": "Primary Default Button",
+          "url": "",
+          "variant": "site-btn is-style-site-trailing-icon"
+        },
+        {
+          "text": "Tertiary Default Button",
+          "url": "",
+          "variant": "site-btn is-style-site-tertiary-btn is-style-site-trailing-icon"
+        }
+      ]
+    }
+
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php"
+}

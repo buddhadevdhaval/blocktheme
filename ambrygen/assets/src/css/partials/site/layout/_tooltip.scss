@@ -1,0 +1,94 @@
+.ambrygen-tooltip {
+	position: relative;
+	// cursor: help;
+	color: var(--theme_link_color);
+	border-bottom: 1px solid var(--theme_link_border_color);
+	font-weight: 700;
+
+	&:hover {
+		color: var(--theme_link_color_hover);
+		border-color: var(--theme_link_border_color_hover);
+	}
+
+	&:hover .ambrygen-tooltip__content,
+	&:focus-visible .ambrygen-tooltip__content,
+	&.is-tooltip-active .ambrygen-tooltip__content {
+		opacity: 1;
+		transform: translateX(0%) translateY(-2px);
+		pointer-events: auto;
+	}
+}
+
+.ambrygen-tooltip__content {
+	position: absolute;
+	right: 0%;
+	top: calc(100% + 10px);
+	transform: translateX(0%);
+	border-radius: 8px;
+	background-color: var(--Primary-900, #004761);
+	color: #fff;
+	padding: 12px;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 18px;
+	letter-spacing: -0.18px;
+	white-space: normal;
+	min-width: 320px;
+	max-width: 320px;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.18s ease, transform 0.18s ease;
+	z-index: 20;
+
+	&:before {
+		content: "";
+		display: block;
+		width: 28px;
+		height: 6px;
+		position: absolute;
+		top: -6px;
+		right: 14px;
+		background-image: url(../images/primary900-icons/tooltip-bottom.svg);
+		background-position: right top;
+		background-repeat: no-repeat;
+	}
+}
+
+.ambrygen-tooltip__title {
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 18px;
+	letter-spacing: -0.18px;
+	display: block;
+}
+
+.ambrygen-tooltip__description {
+	font-size: 12px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 18px;
+	letter-spacing: -0.18px;
+	margin-top: 4px;
+}
+
+@media (max-width: 480px) {
+	.ambrygen-tooltip__content {
+		left: 50%;
+		right: auto;
+		transform: translateX(-50%);
+		min-width: 0;
+		max-width: calc(100vw - 32px);
+
+		&:before {
+			right: 50%;
+			transform: translateX(50%);
+		}
+	}
+
+	.ambrygen-tooltip:hover .ambrygen-tooltip__content,
+	.ambrygen-tooltip:focus-visible .ambrygen-tooltip__content,
+	.ambrygen-tooltip.is-tooltip-active .ambrygen-tooltip__content {
+		transform: translateX(-50%) translateY(-2px);
+	}
+}

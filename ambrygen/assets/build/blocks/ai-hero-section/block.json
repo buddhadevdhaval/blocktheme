@@ -2,11 +2,12 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "ambrygen/ai-hero-section",
-  "title": "AI Hero Section",
+  "title": "Multiple Image Alongside text",
   "category": "ambrygen",
   "icon": "networking",
   "description": "Advanced hero section with AI healthcare visuals, animated counters, and multi-media layout system.",
   "supports": {
+    "anchor": true,
     "html": false
   },
   "keywords": [
@@ -17,6 +18,10 @@
     "statistics"
   ],
   "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
     "headingLevel": {
       "type": "string",
       "enum": [
@@ -28,6 +33,14 @@
         "h6"
       ],
       "default": "h2"
+    },
+    "variation": {
+      "type": "string",
+      "enum": [
+        "default",
+        "variation-history-block"
+      ],
+      "default": "default"
     },
     "heading": {
       "type": "string",
@@ -90,6 +103,18 @@
       "type": "string",
       "default": ""
     },
+    "imageExtra": {
+      "type": "string",
+      "default": ""
+    },
+    "imageExtraId": {
+      "type": "number",
+      "default": 0
+    },
+    "imageExtraAlt": {
+      "type": "string",
+      "default": ""
+    },
     "logoImage": {
       "type": "string",
       "default": ""
@@ -101,6 +126,22 @@
     "logoImageAlt": {
       "type": "string",
       "default": ""
+    },
+    "contentTopAlign": {
+      "type": "boolean",
+      "default": false
+    },
+    "imagePosition": {
+      "type": "string",
+      "enum": [
+        "left",
+        "right"
+      ],
+      "default": "left"
+    },
+    "enableCounters": {
+      "type": "boolean",
+      "default": true
     }
   },
   "variations": [
@@ -119,6 +160,7 @@
   "example": {
     "attributes": {
       "headingLevel": "h2",
+      "variation": "default",
       "heading": "Transforming Healthcare with AI Innovation",
       "content": "Leveraging artificial intelligence to revolutionize patient care, diagnostics, and medical research.",
       "counters": [
@@ -147,15 +189,21 @@
           "label": "Tests Conducted"
         }
       ],
-      "imageTop": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "imageTop": "",
       "imageTopId": 0,
       "imageTopAlt": "Ambry default preview image",
-      "imageBottom": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "imageBottom": "",
       "imageBottomId": 0,
       "imageBottomAlt": "Ambry default preview image",
-      "logoImage": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "imageExtra": "",
+      "imageExtraId": 0,
+      "imageExtraAlt": "Ambry default preview image",
+      "logoImage": "",
       "logoImageId": 0,
-      "logoImageAlt": "Ambry default preview image"
+      "logoImageAlt": "Ambry default preview image",
+      "contentTopAlign": false,
+      "imagePosition": "left",
+      "enableCounters": true
     }
   },
   "editorScript": "file:./index.js",

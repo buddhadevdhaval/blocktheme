@@ -2,16 +2,12 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "ambrygen/icon-grids",
-  "title": "Icon Grids",
+  "title": "Genetic Testing",
   "category": "ambrygen",
   "icon": "grid-view",
   "description": "Grid layout for icon cards with contact information",
   "supports": {
-    "html": false,
-    "layout": {
-      "allowSwitching": true,
-      "allowInheriting": true
-    }
+    "html": false
   },
   "attributes": {
     "heading": {
@@ -20,6 +16,14 @@
     },
     "headingTag": {
       "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
       "default": "h2"
     },
     "description": {
@@ -47,10 +51,22 @@
       "type": "array",
       "default": [
         {
-          "text": "All Tests",
+          "text": "All Products",
           "termSlug": "all"
         }
       ]
+    },
+    "isLargeIcon": {
+      "type": "boolean",
+      "default": false
+    },
+    "backgroundImage": {
+      "type": "object",
+      "default": {
+        "url": "",
+        "id": 0,
+        "alt": ""
+      }
     }
   },
   "providesContext": {

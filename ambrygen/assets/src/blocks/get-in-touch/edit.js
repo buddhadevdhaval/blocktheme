@@ -8,13 +8,24 @@ import {
 import { PanelBody } from '@wordpress/components';
 import { TagSelector } from '../_shared/components';
 import { __ } from '@wordpress/i18n';
+import { useEffect } from '@wordpress/element';
 
 const ALLOWED_BLOCKS = [ 'core/shortcode' ];
 
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	const blockProps = useBlockProps();
 
-	const { title = '', content, headingLevel = 'h2' } = attributes;
+	const { blockId, title = '', content, headingLevel = 'h2' } = attributes;
+
+	useEffect( () => {
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+
+		if ( ! blockId ) {
+			setAttributes( {
+				blockId: expectedId,
+			} );
+		}
+	}, [ clientId, blockId, setAttributes ] );
 
 	return (
 		<div { ...blockProps }>
@@ -44,7 +55,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) =>
 							setAttributes( { title: value } )
 						}
-						placeholder={ __( 'Add Title…', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 					/>
 
 					<div className="is-style-gl-s24" aria-hidden="true"></div>

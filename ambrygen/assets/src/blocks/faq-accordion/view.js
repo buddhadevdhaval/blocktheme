@@ -3,78 +3,107 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 	accordions.forEach( ( accordion ) => {
 		const summary = accordion.querySelector( 'summary' );
-		const content = accordion.querySelector( '.faq__answer' );
+		const prefersReducedMotion = window.matchMedia(
+			'(prefers-reduced-motion: reduce)'
+		).matches;
 
-		if ( ! summary || ! content ) {
+		if ( ! summary ) {
 			return;
 		}
 
-		let isAnimating = false;
+		let animation = null;
+		let isClosing = false;
+		let isExpanding = false;
+
+		summary.setAttribute(
+			'aria-expanded',
+			accordion.open ? 'true' : 'false'
+		);
+
+		const onAnimationFinish = ( open ) => {
+			accordion.open = open;
+			animation = null;
+			isClosing = false;
+			isExpanding = false;
+			accordion.style.height = '';
+			accordion.style.overflow = '';
+			summary.setAttribute( 'aria-expanded', open ? 'true' : 'false' );
+		};
+
+		const shrink = () => {
+			isClosing = true;
+			const startHeight = `${ accordion.offsetHeight }px`;
+			const endHeight = `${ summary.offsetHeight }px`;
+
+			if ( animation ) {
+				animation.cancel();
+			}
+
+			accordion.style.overflow = 'hidden';
+			animation = accordion.animate(
+				{
+					height: [ startHeight, endHeight ],
+				},
+				{
+					duration: 350,
+					easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+				}
+			);
+
+			animation.onfinish = () => onAnimationFinish( false );
+			animation.oncancel = () => {
+				isClosing = false;
+			};
+		};
+
+		const expand = () => {
+			isExpanding = true;
+			const startHeight = `${ accordion.offsetHeight }px`;
+
+			accordion.open = true;
+			summary.setAttribute( 'aria-expanded', 'true' );
+
+			requestAnimationFrame( () => {
+				const endHeight = `${ accordion.scrollHeight }px`;
+
+				if ( animation ) {
+					animation.cancel();
+				}
+
+				accordion.style.overflow = 'hidden';
+				animation = accordion.animate(
+					{
+						height: [ startHeight, endHeight ],
+					},
+					{
+						duration: 350,
+						easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+					}
+				);
+
+				animation.onfinish = () => onAnimationFinish( true );
+				animation.oncancel = () => {
+					isExpanding = false;
+				};
+			} );
+		};
 
 		summary.addEventListener( 'click', ( e ) => {
 			e.preventDefault();
 
-			if ( isAnimating ) {
+			if ( prefersReducedMotion ) {
+				accordion.open = ! accordion.open;
+				summary.setAttribute(
+					'aria-expanded',
+					accordion.open ? 'true' : 'false'
+				);
 				return;
 			}
 
-			isAnimating = true;
-			accordion.style.overflow = 'hidden';
-
-			if ( accordion.open ) {
-				// We are closing
-				summary.setAttribute( 'aria-expanded', 'false' );
-
-				const startHeight = `${ accordion.offsetHeight }px`;
-				const endHeight = `${ summary.offsetHeight }px`;
-
-				const animation = accordion.animate(
-					{
-						height: [ startHeight, endHeight ],
-					},
-					{
-						duration: 700,
-						easing: 'ease-in-out',
-					}
-				);
-
-				animation.onfinish = () => {
-					accordion.open = false;
-					accordion.style.height = '';
-					accordion.style.overflow = '';
-					isAnimating = false;
-				};
-				animation.oncancel = () => {
-					isAnimating = false;
-				};
-			} else {
-				// We are opening
-				summary.setAttribute( 'aria-expanded', 'true' );
-				accordion.open = true;
-
-				const startHeight = `${ summary.offsetHeight }px`;
-				const endHeight = `${
-					summary.offsetHeight + content.offsetHeight
-				}px`;
-
-				const animation = accordion.animate(
-					{
-						height: [ startHeight, endHeight ],
-					},
-					{
-						duration: 700,
-						easing: 'ease-in-out',
-					}
-				);
-
-				animation.onfinish = () => {
-					accordion.style.height = '';
-					accordion.style.overflow = '';
-					isAnimating = false;
-				};
-				animation.oncancel = () => {
-					isAnimating = false;
-				};
+			if ( isClosing || ! accordion.open ) {
+				expand();
+			} else if ( isExpanding || accordion.open ) {
+				shrink();
 			}
 		} );
 	} );

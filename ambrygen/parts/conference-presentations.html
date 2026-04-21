@@ -1,0 +1,80 @@
+<!--
+	Conference Presentations Template Part
+	Displays presentations linked to the current conference post.
+	Use with: do_blocks() or via PHP in single-conferences.html
+-->
+
+<!-- wp:group {"tagName":"section","className":"container-1136 conference-presentations"} -->
+<section class="wp-block-group container-1280 conference-presentations">
+	<!-- wp:group {"className":"wrapper"} -->
+	<div class="wp-block-group wrapper">
+		<!-- wp:group {"className":"conference-section"} -->
+		<div class="wp-block-group conference-section">
+			<!-- wp:heading {"level":2,"className":"heading-4"} -->
+			<h2 class="wp-block-heading heading-4">Oral Presentations</h2>
+			<!-- /wp:heading -->
+
+			<!-- wp:html -->
+			<div class="conference-linked-posts" data-conference-id="<?php echo esc_attr( get_the_ID() ); ?>" data-post-type="presentation">
+				<?php
+					$conference_id = get_the_ID();
+					$post_types = \Ambrygen\Theme\Core\PostTypes::instance();
+					$presentations = $post_types->get_linked_posts_by_type( $conference_id, 'presentation' );
+
+					if ( ! empty( $presentations ) ) {
+						echo '<div class="conference-linked-posts__grid">';
+						foreach ( $presentations as $presentation ) {
+							$post_id = $presentation->ID;
+							$title = $presentation->post_title;
+							$permalink = get_permalink( $post_id );
+							$speakers = get_post_meta( $post_id, 'speakers', true );
+							$session_id = get_post_meta( $post_id, 'session_id', true );
+							$start_at = get_post_meta( $post_id, 'start_at', true );
+
+							echo '<div class="conference-linked-post-item">';
+							echo '<div class="conference-linked-post-item__header">';
+							echo '<h3 class="conference-linked-post-item__title text-md-semibold"><a href="' . esc_url( $permalink ) . '">' . esc_html( $title ) . '</a></h3>';
+
+							if ( ! empty( $speakers ) ) {
+								echo '<div class="conference-linked-post-item__speakers body2">';
+								echo esc_html( $speakers );
+								echo '</div>';
+							}
+							echo '</div>';
+
+							echo '<div class="conference-linked-post-item__details">';
+							if ( ! empty( $session_id ) ) {
+								echo '<div class="conference-linked-post-item__meta text-small">';
+								echo '<span class="label">Session ID:</span> ';
+								echo '<span class="value">' . esc_html( $session_id ) . '</span>';
+								echo '</div>';
+							}
+							if ( ! empty( $start_at ) ) {
+								echo '<div class="conference-linked-post-item__meta text-small">';
+								echo '<span class="label">Time:</span> ';
+								$timestamp = strtotime( $start_at );
+								echo '<span class="value">' . esc_html( wp_date( 'F j, Y g:i A', $timestamp ) ) . '</span>';
+								echo '</div>';
+							}
+							echo '</div>';
+							echo '</div>';
+						}
+						echo '</div>';
+					} else {
+						echo '<div class="conference-no-items">';
+						echo '<p class="body2">No presentations linked to this conference.</p>';
+						echo '</div>';
+					}
+				?>
+			</div>
+			<!-- /wp:html -->
+		</div>
+		<!-- /wp:group -->
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
+	<div class="is-style-gl-s50" aria-hidden="true"></div>
+	<!-- /wp:spacer -->
+</section>
+<!-- /wp:group -->

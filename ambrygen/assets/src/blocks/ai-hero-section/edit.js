@@ -7,6 +7,7 @@ import {
 	ImageUploader,
 	DEFAULT_IMAGES,
 } from '../_shared/components';
+import { getThemeAssetUrl } from '../../utils/assets';
 
 /**
  * React hooks for performance optimization.
@@ -30,7 +31,12 @@ import {
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/components/
  */
-import { PanelBody } from '@wordpress/components';
+import { PanelBody, ToggleControl } from '@wordpress/components';
+
+const VALID_HEADING_LEVELS = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ];
+
+const normalizeHeadingLevel = ( value ) =>
+	VALID_HEADING_LEVELS.includes( value ) ? value : 'h2';
 
 /**
  * Creates onSelect/onRemove handlers for an image attribute group.
@@ -120,12 +126,17 @@ function CounterItem( { counter, index, updateCounter } ) {
  * @param {Object}   props               Block properties.
  * @param {Object}   props.attributes    Block attributes.
  * @param {Function} props.setAttributes Function to update attributes.
+ * @param {string}   props.clientId      Unique block client ID.
  * @return {JSX.Element} Block editor interface element.
  */
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
+	const fallbackImage = defaults?.placeholder || {};
 
 	const {
+		blockId,
+		className,
+		variation = 'default',
 		heading,
 		content,
 		counters = [],
@@ -133,29 +144,20 @@ export default function Edit( { attributes, setAttributes } ) {
 		imageTopAlt,
 		imageBottom,
 		imageBottomAlt,
+		imageExtra,
+		imageExtraAlt,
 		logoImage,
 		logoImageAlt,
 		headingLevel,
+		contentTopAlign,
+		imagePosition = 'left',
+		enableCounters,
 	} = attributes;
-
-	useEffect( () => {
-		const update = {};
-		if ( ! logoImage ) {
-			update.logoImage = defaults?.placeholder?.url;
-			update.logoImageAlt = defaults?.placeholder?.alt || '';
-		}
-		if ( ! imageTop ) {
-			update.imageTop = defaults?.placeholder?.url;
-			update.imageTopAlt = defaults?.placeholder?.alt || '';
-		}
-		if ( ! imageBottom ) {
-			update.imageBottom = defaults?.placeholder?.url;
-			update.imageBottomAlt = defaults?.placeholder?.alt || '';
-		}
-		if ( Object.keys( update ).length ) {
-			setAttributes( update );
-		}
-	}, [ logoImage, imageTop, imageBottom, defaults, setAttributes ] );
+	const isImageRight = imagePosition === 'right';
+	const isHistoryVariation =
+		'variation-history-block' === variation ||
+		( typeof className === 'string' &&
+			className.includes( 'variation-history-block' ) );
 
 	const updateCounter = useCallback(
 		( index, field, value ) => {
@@ -177,50 +179,152 @@ export default function Edit( { attributes, setAttributes } ) {
 		onSelect: handleBottomImageSelect,
 		onRemove: handleBottomImageRemove,
 	} = makeImageHandlers( 'imageBottom', setAttributes );
+	const {
+		onSelect: handleExtraImageSelect,
+		onRemove: handleExtraImageRemove,
+	} = makeImageHandlers( 'imageExtra', setAttributes );
 
 	const blockProps = useBlockProps();
-	const HeadingTag = headingLevel || 'h2';
+	const HeadingTag = normalizeHeadingLevel( headingLevel );
+	const headingClass = isHistoryVariation ? 'heading-3' : 'heading-1';
+	const logoImageUrl = logoImage || fallbackImage.url;
+	const imageTopUrl = imageTop || fallbackImage.url;
+	const imageBottomUrl = imageBottom || fallbackImage.url;
+	const imageExtraUrl = imageExtra || fallbackImage.url;
+	const VARIANTS = useMemo(
+		() => [
+			{
+				label: __( 'Stats View', 'ambrygen-web' ),
+				value: 'default',
+				image: getThemeAssetUrl(
+					'/assets/src/images/multiple-image-alongside-text/states-view.png'
+				),
+			},
+			{
+				label: __( 'Normal View', 'ambrygen-web' ),
+				value: 'variation-history-block',
+				image: getThemeAssetUrl(
+					'/assets/src/images/multiple-image-alongside-text/normal-view.png'
+				),
+			},
+		],
+		[]
+	);
+
+	useEffect( () => {
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+
+		if ( ! blockId ) {
+			setAttributes( {
+				blockId: expectedId,
+			} );
+		}
+	}, [ clientId, blockId, setAttributes ] );
 
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Settings', 'ambrygen-web' ) }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
-						value={ headingLevel || 'h2' }
+						value={ HeadingTag }
 						onChange={ ( value ) =>
-							setAttributes( { headingLevel: value } )
+							setAttributes( {
+								headingLevel: normalizeHeadingLevel( value ),
+							} )
 						}
 						type="heading"
 					/>
-				</PanelBody>
-				<PanelBody title={ __( 'Logo Image', 'ambrygen-web' ) }>
+					<div className="layout-variant-selector">
+						{ VARIANTS.map( ( variant ) => (
+							<button
+								key={ variant.value }
+								type="button"
+								className={ `variant-button ${
+									variation === variant.value
+										? 'is-selected'
+										: ''
+								}` }
+								aria-pressed={ variation === variant.value }
+								onClick={ () =>
+									setAttributes( {
+										variation: variant.value,
+									} )
+								}
+							>
+								<img
+									src={ variant.image }
+									alt={ variant.label }
+								/>
+								<span>{ variant.label }</span>
+							</button>
+						) ) }
+					</div>
+					<ToggleControl
+						label={ __(
+							'Top Align Content Column',
+							'ambrygen-web'
+						) }
+						checked={ !! contentTopAlign }
+						onChange={ ( value ) =>
+							setAttributes( { contentTopAlign: value } )
+						}
+					/>
+					<ToggleControl
+						label={ __( 'Enable Counters', 'ambrygen-web' ) }
+						checked={ enableCounters !== false }
+						onChange={ ( value ) =>
+							setAttributes( { enableCounters: value } )
+						}
+					/>
+					<ToggleControl
+						label={ __( 'Show Image on Right', 'ambrygen-web' ) }
+						checked={ isImageRight }
+						onChange={ ( value ) =>
+							setAttributes( {
+								imagePosition: value ? 'right' : 'left',
+							} )
+						}
+					/>
+
 					<ImageUploader
 						label={ __( 'Logo Image', 'ambrygen-web' ) }
 						url={ logoImage }
 						onSelect={ handleLogoSelect }
 						onRemove={ handleLogoRemove }
 					/>
-				</PanelBody>
-				<PanelBody title={ __( 'Top Image', 'ambrygen-web' ) }>
+
 					<ImageUploader
 						label={ __( 'Top Image', 'ambrygen-web' ) }
 						url={ imageTop }
 						onSelect={ handleTopImageSelect }
 						onRemove={ handleTopImageRemove }
 					/>
-				</PanelBody>
-				<PanelBody title={ __( 'Bottom Image', 'ambrygen-web' ) }>
+
 					<ImageUploader
 						label={ __( 'Bottom Image', 'ambrygen-web' ) }
 						url={ imageBottom }
 						onSelect={ handleBottomImageSelect }
 						onRemove={ handleBottomImageRemove }
 					/>
+					{ isHistoryVariation && (
+						<ImageUploader
+							label={ __( 'Bottom right', 'ambrygen-web' ) }
+							url={ imageExtra }
+							onSelect={ handleExtraImageSelect }
+							onRemove={ handleExtraImageRemove }
+						/>
+					) }
 				</PanelBody>
 			</InspectorControls>
 
-			<div className="ai-hero">
+			<div
+				className={ `ai-hero ${
+					contentTopAlign ? ' has-top-align' : ''
+				}${ isImageRight ? ' block-rtl' : '' }${
+					isHistoryVariation ? ' variation-history-block' : ''
+				}` }
+			>
 				<div className="is-style-gl-s50" />
 				<div className="ai-hero__grid">
 					<div className="ai-hero__col ai-hero__col--images">
@@ -228,11 +332,12 @@ export default function Edit( { attributes, setAttributes } ) {
 							<div className="ai-hero__image-wrapper">
 								<div className="ai-hero__logo">
 									<div className="ai-hero__logo-inner">
-										{ logoImage && (
+										{ logoImageUrl && (
 											<img
-												src={ logoImage }
+												src={ logoImageUrl }
 												alt={
 													logoImageAlt ||
+													fallbackImage.alt ||
 													__(
 														'Company logo',
 														'ambrygen-web'
@@ -245,11 +350,12 @@ export default function Edit( { attributes, setAttributes } ) {
 							</div>
 							<div className="ai-hero__image-wrapper">
 								<div className="ai-hero__image">
-									{ imageTop && (
+									{ imageTopUrl && (
 										<img
-											src={ imageTop }
+											src={ imageTopUrl }
 											alt={
 												imageTopAlt ||
+												fallbackImage.alt ||
 												__(
 													'Hero top image',
 													'ambrygen-web'
@@ -259,15 +365,22 @@ export default function Edit( { attributes, setAttributes } ) {
 									) }
 								</div>
 							</div>
-							<div className="ai-hero__image-wrapper ai-hero__image-wrapper--full">
+							<div
+								className={ `ai-hero__image-wrapper${
+									isHistoryVariation
+										? ''
+										: ' ai-hero__image-wrapper--full'
+								}` }
+							>
 								<div className="ai-hero__image">
-									{ imageBottom && (
+									{ imageBottomUrl && (
 										<img
-											src={ imageBottom }
+											src={ imageBottomUrl }
 											alt={
 												imageBottomAlt ||
+												fallbackImage.alt ||
 												__(
-													'Hero bottom image',
+													'Hero bottom Left',
 													'ambrygen-web'
 												)
 											}
@@ -275,13 +388,32 @@ export default function Edit( { attributes, setAttributes } ) {
 									) }
 								</div>
 							</div>
+							{ isHistoryVariation && (
+								<div className="ai-hero__image-wrapper">
+									<div className="ai-hero__image">
+										{ imageExtraUrl && (
+											<img
+												src={ imageExtraUrl }
+												alt={
+													imageExtraAlt ||
+													fallbackImage.alt ||
+													__(
+														'Hero bottom right',
+														'ambrygen-web'
+													)
+												}
+											/>
+										) }
+									</div>
+								</div>
+							) }
 						</div>
 					</div>
 					<div className="ai-hero__col ai-hero__col--content">
 						<div className="ai-hero__content">
 							<RichText
 								tagName={ HeadingTag }
-								className="ai-hero__heading heading-1 mb-0"
+								className={ `ai-hero__heading ${ headingClass } mb-0` }
 								value={ heading }
 								onChange={ ( value ) =>
 									setAttributes( { heading: value } )
@@ -314,17 +446,22 @@ export default function Edit( { attributes, setAttributes } ) {
 									) }
 								/>
 							</div>
-							<div className="is-style-gl-s24"></div>
-							<div className="ai-hero__counters">
-								{ counters.map( ( counter, index ) => (
-									<CounterItem
-										key={ index }
-										counter={ counter }
-										index={ index }
-										updateCounter={ updateCounter }
-									/>
-								) ) }
-							</div>
+
+							{ enableCounters !== false && (
+								<>
+									<div className="is-style-gl-s24"></div>
+									<div className="ai-hero__counters">
+										{ counters.map( ( counter, index ) => (
+											<CounterItem
+												key={ index }
+												counter={ counter }
+												index={ index }
+												updateCounter={ updateCounter }
+											/>
+										) ) }
+									</div>
+								</>
+							) }
 						</div>
 					</div>
 				</div>

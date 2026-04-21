@@ -49,7 +49,7 @@ $ambrygen_location_image_url = ! empty( $ambrygen_attributes['joblocationicon'][
 	: esc_url( get_theme_file_uri( 'assets/src/images/marker-pin-icon.svg' ) );
 ?>
 
-<div class="careers-highlight__job">
+<div class="careers-highlight__job js-gsap-fade">
 	<div class="careers-highlight__job--row">
 		<div class="careers-highlight__job-title subtitle2-sbold">
 			<a href="<?php echo esc_url( $ambrygen_permalink ); ?>">

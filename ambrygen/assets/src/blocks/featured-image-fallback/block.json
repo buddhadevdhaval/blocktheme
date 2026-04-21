@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/featured-image-fallback",
+  "version": "1.0.0",
+  "title": "Featured Image Fallback",
+  "category": "ambrygen",
+  "description": "Renders featured image with fallback support.",
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
+  "attributes": {
+    "className": { "type": "string", "default": "" },
+    "sizeSlug": { "type": "string", "default": "full" },
+    "isLink": { "type": "boolean", "default": false },
+    "previewPostId": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "usesContext": [
+    "postId",
+    "postType"
+  ],
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web"
+}

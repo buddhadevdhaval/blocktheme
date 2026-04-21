@@ -1,0 +1,52 @@
+.download-link {
+
+    &__files-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--theme_space_8);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    &__files-item {
+        margin: 0;
+        padding: 0;
+    }
+
+    &__files-link {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--theme_space_4);
+        color: var(--theme_gray_700);
+        text-decoration: none;
+        padding: 0;
+        border: none;
+
+        &:hover,
+        &:focus-visible {
+            color: var(--theme_cg_blue);
+            outline: none;
+        }
+    }
+
+    &.has-downloads {
+
+        .download-link__files-link {
+            position: relative;
+
+            &::after {
+                content: "";
+                display: block;
+                background-image: url(../images/download-icon.svg);
+                background-repeat: no-repeat;
+                background-position: right center;
+                background-size: 11px 14px;
+                width: 11px;
+                height: 14px;
+                transition: none;
+                will-change: filter;
+            }
+        }
+    }
+}

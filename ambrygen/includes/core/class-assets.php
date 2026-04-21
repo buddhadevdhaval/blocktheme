@@ -159,6 +159,7 @@ final class Assets {
 	public function register_assets(): void {
 		// Frontend bundles.
 		$this->register_style( 'ambrygen-theme-styles', 'styles.min.css' );
+		$this->register_style( 'ambrygen-scripts-styles', 'scripts.min.css' );
 		$this->register_script( 'ambrygen-scripts', 'scripts.min.js' );
 
 		// Editor bundles.
@@ -171,6 +172,7 @@ final class Assets {
 	 */
 	public function frontend(): void {
 		wp_enqueue_style( 'ambrygen-theme-styles' );
+		wp_enqueue_style( 'ambrygen-scripts-styles' );
 		wp_enqueue_script( 'ambrygen-scripts' );
 
 		
@@ -192,6 +194,15 @@ final class Assets {
 				//admin globle 
 		$this->register_script( 'ambrygen-admin-scripts', 'admin.min.js', array( 'jquery', 'media-editor' ) );
 		wp_enqueue_script( 'ambrygen-admin-scripts' );
+
+		wp_localize_script(
+			'ambrygen-admin-scripts',
+			'ambrygenAdminAjax',
+			array(
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'nonce'   => wp_create_nonce( 'ambrygen_post_search' ),
+			)
+		);
 	}
 	
 

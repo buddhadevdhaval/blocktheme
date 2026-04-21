@@ -4,7 +4,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
  */
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo } from '@wordpress/element';
+import { useMemo } from '@wordpress/element';
 import { useInstanceId } from '@wordpress/compose';
 import {
 	ImageUploader,
@@ -33,19 +33,8 @@ export default function Edit( { attributes, setAttributes } ) {
 	const { image, imageAlt, title, description, link, type } = attributes;
 
 	const instanceId = useInstanceId( Edit );
-
-	/**
-	 * Set default image on block creation if empty.
-	 * Runs when image or type changes.
-	 */
-	useEffect( () => {
-		if ( ! image ) {
-			setAttributes( {
-				image: defaults?.placeholder?.url,
-				imageAlt: defaults?.placeholder?.alt || '',
-			} );
-		}
-	}, [ image, defaults, setAttributes ] );
+	const displayImage = image || defaults?.placeholder?.url;
+	const displayImageAlt = image ? imageAlt : defaults?.placeholder?.alt || '';
 
 	const onSelectImage = ( media ) => {
 		setAttributes( {
@@ -104,7 +93,11 @@ export default function Edit( { attributes, setAttributes } ) {
 				<div
 					className={ `genetic-cards__image-wrapper genetic-cards__image-wrapper--${ type }` }
 				>
-					<img src={ image } alt={ imageAlt } loading="lazy" />
+					<img
+						src={ displayImage }
+						alt={ displayImageAlt }
+						loading="lazy"
+					/>
 				</div>
 
 				<div
@@ -117,7 +110,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						className="genetic-cards__title heading-6 mb-0 card-title"
 						value={ title }
 						onChange={ ( val ) => setAttributes( { title: val } ) }
-						placeholder={ __( 'Heading…', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Title…', 'ambrygen-web' ) }
 					/>
 
 					<div className="is-style-gl-s8" />
@@ -129,7 +122,10 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( val ) =>
 							setAttributes( { description: val } )
 						}
-						placeholder={ __( 'Description…', 'ambrygen-web' ) }
+						placeholder={ __(
+							'Add Description …',
+							'ambrygen-web'
+						) }
 					/>
 
 					<div className="is-style-gl-s20" />

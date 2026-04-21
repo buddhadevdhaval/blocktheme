@@ -4,6 +4,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
 import { registerBlockType } from '@wordpress/blocks';
+import { InnerBlocks } from '@wordpress/block-editor';
 
 import './editor.scss';
 
@@ -20,6 +21,7 @@ import metadata from './block.json';
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
 registerBlockType( metadata.name, {
+	...metadata,
 	/**
 	 * @see ./edit.js
 	 */
@@ -28,5 +30,5 @@ registerBlockType( metadata.name, {
 	/**
 	 * @see ./save.js
 	 */
-	save: () => null,
+	save: () => <InnerBlocks.Content />,
 } );

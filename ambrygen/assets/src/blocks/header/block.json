@@ -87,6 +87,10 @@
     "logoAlt": {
       "type": "string",
       "default": "Ambry Genetics"
+    },
+    "modalPosition": {
+      "type": "string",
+      "default": "center"
     }
   },
   "supports": {

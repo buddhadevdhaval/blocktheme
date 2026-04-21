@@ -10,16 +10,15 @@
  */
 defined( 'ABSPATH' ) || exit;
 
-use Ambrygen\Theme\Core\Helper;
-
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class' => 'info-list__col',
+		'class' => 'info-list__col ',
 	)
 );
 
 $ambrygen_attributes     = $attributes ?? array();
 $ambrygen_icon_variation = $block->context['ambrygen/variation'] ?? '';
+
 $ambrygen_title          = wp_strip_all_tags( $ambrygen_attributes['title'] ?? '' );
 
 $ambrygen_links = is_array( $ambrygen_attributes['links'] ?? null )
@@ -37,14 +36,14 @@ if ( 'our-testing-menu' === $ambrygen_icon_variation ) {
 
 	$ambrygen_termlinktext = ! empty( $ambrygen_attributes['termlinktext'] )
 	? $ambrygen_attributes['termlinktext']
-	: 'View Test';
+	: 'View Product';
 
 	$ambrygen_selected_term_id = isset( $ambrygen_attributes['selectedTerm'] )
 		? absint( $ambrygen_attributes['selectedTerm'] )
 		: 0;
 
 	if ( $ambrygen_selected_term_id ) {
-		$ambrygen_term = get_term( $ambrygen_selected_term_id, 'test_type' );
+		$ambrygen_term = get_term( $ambrygen_selected_term_id, 'poster_category' );
 
 		if ( $ambrygen_term && ! is_wp_error( $ambrygen_term ) ) {
 			$ambrygen_title         = wp_strip_all_tags( $ambrygen_term->name );
@@ -74,9 +73,9 @@ if ( 'our-testing-menu' === $ambrygen_icon_variation ) {
 
 $ambrygen_card_class = '';
 
-$ambrygen_wrapper_class      = 'our-testing-menu' === $ambrygen_icon_variation ? 'item-card' : 'info-list__col';
+$ambrygen_wrapper_class      = 'our-testing-menu' === $ambrygen_icon_variation ? 'item-card js-gsap-fade' : 'info-list__col js-gsap-fade';
 if ( 'variation-4' === $ambrygen_icon_variation ) {
-	$ambrygen_wrapper_class = 'icon-grid__item';
+	$ambrygen_wrapper_class = 'icon-grid__item js-gsap-fade';
 }
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
@@ -88,14 +87,13 @@ if ( 'variation-4' === $ambrygen_icon_variation ) {
 } elseif ( 'our-testing-menu' !== $ambrygen_icon_variation && 'variation-3' !== $ambrygen_icon_variation ) {
 	$ambrygen_card_class = 'info-list__card';
 }
-
 if ( 'variation-3' === $ambrygen_icon_variation ) {
 	$ambrygen_selected_post_id = isset( $ambrygen_attributes['selectedPost'] ) ? absint( $ambrygen_attributes['selectedPost'] ) : 0;
 
 	if ( ! $ambrygen_selected_post_id ) {
 		$ambrygen_fallback_posts   = get_posts(
 			array(
-				'post_type'      => 'blood-test',
+				'post_type'      => 'genetic-testing',
 				'posts_per_page' => 1,
 				'orderby'        => 'date',
 				'order'          => 'ASC',
@@ -110,7 +108,7 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 	}
 
 	$ambrygen_selected_post = get_post( $ambrygen_selected_post_id );
-	if ( ! $ambrygen_selected_post || 'blood-test' !== $ambrygen_selected_post->post_type ) {
+	if ( ! $ambrygen_selected_post || 'genetic-testing' !== $ambrygen_selected_post->post_type ) {
 		return;
 	}
 
@@ -122,7 +120,7 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 	?>
 	<div class="features-tabs__card">
 		<div class="features-tabs__content-head">
-			<div class="features-tabs__category body2-semibold">
+			<div class="features-tabs__category teste body2-semibold">
 				<?php echo esc_html( $ambrygen_category ); ?>
 			</div>
 			<div class="heading-5 features-tabs__card-title">
@@ -143,37 +141,34 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 		<div class="<?php echo esc_attr( $ambrygen_card_class ); ?>">
 	<?php endif; ?>
 
-		<?php if ( $ambrygen_icon_id && 'our-testing-menu' !== $ambrygen_icon_variation && 'variation-4' !== $ambrygen_icon_variation ) : ?>
+		<?php if ( $ambrygen_icon_id && 'our-testing-menu' !== $ambrygen_icon_variation && 'variation-4' !== $ambrygen_icon_variation  && 'variation-5' !== $ambrygen_icon_variation ) : ?>
 			<div class="info-list__image">
 				<?php
-				echo wp_kses_post(
-					Helper::image(
-						$ambrygen_icon_id,
-						'medium_large',
-						array(
-							'class'   => 'card-image',
-							'loading' => 'lazy',
-							'alt'     => $ambrygen_title ? esc_attr( $ambrygen_title ) : '',
-						)
-					)
-				);
-				?>
+				$ambrygen_icon_src = wp_get_attachment_image_url( $ambrygen_icon_id, 'medium_large' );
+				if ( $ambrygen_icon_src ) :
+					?>
+					<img
+						src="<?php echo esc_url( $ambrygen_icon_src ); ?>"
+						class="card-image"
+						loading="lazy"
+						alt="<?php echo $ambrygen_title ? esc_attr( $ambrygen_title ) : ''; ?>"
+					/>
+				<?php endif; ?>
 			</div>
 
 		<?php elseif ( 'our-testing-menu' === $ambrygen_icon_variation && $ambrygen_img_id ) : ?>
 			<div class="item-card__icon">
 				<?php
-				echo wp_kses_post(
-					Helper::image(
-						$ambrygen_img_id,
-						'medium_large',
-						array(
-							'class'   => 'card-image',
-							'loading' => 'lazy',
-							'alt'     => $ambrygen_title ? esc_attr( $ambrygen_title ) : '',
-						)
-					)
-				);
+				$ambrygen_item_icon_src = wp_get_attachment_image_url( $ambrygen_img_id, 'medium_large' );
+				if ( $ambrygen_item_icon_src ) :
+					?>
+					<img
+						src="<?php echo esc_url( $ambrygen_item_icon_src ); ?>"
+						class="card-image"
+						loading="lazy"
+						alt="<?php echo $ambrygen_title ? esc_attr( $ambrygen_title ) : ''; ?>"
+					/>
+				<?php endif; ?>
 				?>
 			</div>
 		<?php endif; ?>
@@ -216,18 +211,16 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 				<?php if ( $ambrygen_icon_id ) : ?>
 		<div class="icon-grid__icon">
 					<?php
-					echo wp_kses_post(
-						Helper::image(
-							$ambrygen_icon_id,
-							'medium_large',
-							array(
-								'class'   => '',
-								'loading' => 'lazy',
-								'alt'     => $ambrygen_title ? esc_attr( $ambrygen_title ) : '',
-							)
-						)
-					);
-					?>
+					$ambrygen_variation_icon_src = wp_get_attachment_image_url( $ambrygen_icon_id, 'medium_large' );
+					if ( $ambrygen_variation_icon_src ) :
+						?>
+						<img
+							src="<?php echo esc_url( $ambrygen_variation_icon_src ); ?>"
+							loading="lazy"
+							alt="<?php echo $ambrygen_title ? esc_attr( $ambrygen_title ) : ''; ?>"
+						/>
+					<?php endif; ?>
+					
 		</div>
 	<?php endif; ?>
 
@@ -271,6 +264,85 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 
 	<?php endif; ?>
 
+		<?php elseif ( 'variation-5' === $ambrygen_icon_variation ) : ?>
+			<?php
+			$ambrygen_count = $ambrygen_attributes['count'] ?? '';
+			?>
+			<?php if ( $ambrygen_icon_id ) : ?>
+				<div class="info-list__image">
+					<?php
+					$ambrygen_icon_src = wp_get_attachment_image_url( $ambrygen_icon_id, 'medium_large' );
+					if ( $ambrygen_icon_src ) :
+						?>
+						<img
+							src="<?php echo esc_url( $ambrygen_icon_src ); ?>"
+							class="card-image ss"
+							loading="lazy"
+							alt="<?php echo $ambrygen_title ? esc_attr( $ambrygen_title ) : ''; ?>"
+						/>
+					<?php endif; ?>
+				</div>
+			<?php endif; ?>
+
+			<div class="info-list__content">
+
+				<?php if ( $ambrygen_title ) : ?>
+					<div class="subtitle1-sbold info-list__title">
+						<?php echo esc_html( $ambrygen_title ); ?>
+					</div>
+				<?php endif; ?>
+
+				<?php if ( $ambrygen_count ) : ?>
+					<div class="info-list__count subtitle2-sbold">
+						<?php echo esc_html( $ambrygen_count ); ?> Tests
+					</div>
+				<?php endif; ?>
+
+				<div class="is-style-gl-s8"></div>
+
+				<?php if ( ! empty( $ambrygen_attributes['description'] ) ) : ?>
+					<div class="info-list__description subtitle2-sbold">
+						<?php echo wp_kses_post( $ambrygen_attributes['description'] ); ?>
+					</div>
+					<div class="is-style-gl-s16" aria-hidden="true"></div>
+				<?php endif; ?>
+
+				<?php if ( ! empty( $ambrygen_links ) ) : ?>
+					<div class="info-list__links">
+						<?php
+						foreach ( $ambrygen_links as $ambrygen_link ) :
+
+							$ambrygen_link_label  = isset( $ambrygen_link['label'] ) ? sanitize_text_field( $ambrygen_link['label'] ) : '';
+							$ambrygen_link_url    = isset( $ambrygen_link['url'] ) ? esc_url( $ambrygen_link['url'] ) : '';
+							$ambrygen_link_target = isset( $ambrygen_link['target'] ) ? sanitize_text_field( $ambrygen_link['target'] ) : '';
+
+							$ambrygen_rel = '_blank' === $ambrygen_link_target ? 'noopener noreferrer' : '';
+
+							if ( $ambrygen_link_label && $ambrygen_link_url ) :
+								?>
+							<div class="info-list__link-col text-md-Semibold">
+								<a
+									href="<?php echo esc_url( $ambrygen_link_url ); ?>"
+									class="info-list__link site-btn is-style-site-text-btn has-icon icon-arrow-up text-14"
+									<?php if ( '_blank' === $ambrygen_link_target ) : ?>
+										target="_blank"
+									<?php endif; ?>
+									<?php if ( $ambrygen_rel ) : ?>
+										rel="<?php echo esc_attr( $ambrygen_rel ); ?>"
+									<?php endif; ?>
+								>
+									<?php echo esc_html( $ambrygen_link_label ); ?>
+								</a>
+							</div>
+								<?php
+							endif;
+						endforeach;
+						?>
+					</div>
+				<?php endif; ?>
+
+			</div>
+
 		<?php else : ?>
 
 
@@ -283,6 +355,13 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 				<?php endif; ?>
 
 				<div class="is-style-gl-s8"></div>
+				
+				<?php if ( ! empty( $ambrygen_attributes['description'] ) ) : ?>
+					<div class="info-list__description text-md-reg">
+						<?php echo wp_kses_post( $ambrygen_attributes['description'] ); ?>
+					</div>
+					<div class="is-style-gl-s16" aria-hidden="true"></div>
+				<?php endif; ?>
 
 				<?php if ( ! empty( $ambrygen_links ) ) : ?>
 					<div class="info-list__links">

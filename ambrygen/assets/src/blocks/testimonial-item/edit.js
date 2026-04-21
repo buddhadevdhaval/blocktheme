@@ -3,10 +3,9 @@ import {
 	RichText,
 	InspectorControls,
 } from '@wordpress/block-editor';
-import { PanelBody } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 
 import { ImageUploader } from '../_shared/components';
-import { t } from '../_shared/utils';
 
 export default function Edit( { attributes, setAttributes, context } ) {
 	const { logo, quote, author, role } = attributes;
@@ -19,24 +18,22 @@ export default function Edit( { attributes, setAttributes, context } ) {
 			} ) }
 		>
 			<InspectorControls>
-				<PanelBody title={ t( 'Logo Image' ) }>
-					<ImageUploader
-						label={ t( 'Logo' ) }
-						url={ logo }
-						onSelect={ ( media ) =>
-							setAttributes( {
-								logoId: media?.id,
-								logo: media?.url,
-							} )
-						}
-						onRemove={ () =>
-							setAttributes( {
-								logoId: undefined,
-								logo: '',
-							} )
-						}
-					/>
-				</PanelBody>
+				<ImageUploader
+					label={ __( 'ICON', 'ambrygen-web' ) }
+					url={ logo }
+					onSelect={ ( media ) =>
+						setAttributes( {
+							logoId: media?.id,
+							logo: media?.url,
+						} )
+					}
+					onRemove={ () =>
+						setAttributes( {
+							logoId: undefined,
+							logo: '',
+						} )
+					}
+				/>
 			</InspectorControls>
 
 			<div
@@ -51,7 +48,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 					<img
 						src={ logo }
 						loading="lazy"
-						alt="Company logo"
+						alt={ __( 'Icon', 'ambrygen-web' ) }
 						className="ambry-testimonials__grid__logo"
 					/>
 				) }
@@ -62,6 +59,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 					tagName="blockquote"
 					value={ quote }
 					onChange={ ( value ) => setAttributes( { quote: value } ) }
+					placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
 					className="ambry-testimonials__grid__item__quote body2-reg"
 				/>
 
@@ -72,6 +70,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 						onChange={ ( value ) =>
 							setAttributes( { author: value } )
 						}
+						placeholder={ __( 'Add Author name…', 'ambrygen-web' ) }
 						className="ambry-testimonials__layout__author-details__author body2-medium"
 					/>
 
@@ -81,6 +80,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 						onChange={ ( value ) =>
 							setAttributes( { role: value } )
 						}
+						placeholder={ __( 'Add Designation…', 'ambrygen-web' ) }
 						className="ambry-testimonials__layout__author-details__role body2-medium"
 					/>
 				</cite>

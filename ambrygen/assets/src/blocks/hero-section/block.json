@@ -38,7 +38,6 @@
           },
           "heading":  { "type": "string", "default": "" },
           "content":  { "type": "string", "default": "" },
-          "tagline":  { "type": "string", "default": "" },
           "primarybutton": {
             "type": "object",
             "properties": {
@@ -74,12 +73,8 @@
           "overlayImage2": "",
           "overlayImage2Id": 0,
           "overlayImage2Alt": "",
-          "heading": "Industry-leading genetic testing",
-          "content": "For over 25 years our high-quality, accessible genetic testing solutions have shaped important care decisions that patients and families make with their healthcare providers.",
-          "buttonPrimaryText": "Start Your Order",
-          "buttonPrimaryUrl": "#",
-          "buttonSecondaryText": "Who We Are",
-          "buttonSecondaryUrl": "#",
+          "heading": "",
+          "content": "",
           "primarybutton": {
             "url": "",
             "text": "",
@@ -112,6 +107,10 @@
     "autoplayDelay": {
       "type": "number",
       "default": 5000
+    },
+    "showSmallImage": {
+      "type": "boolean",
+      "default": false
     }
   },
   "editorScript": "file:./index.js",
@@ -137,7 +136,6 @@
           "overlayImage2Alt": "",
           "heading": "Industry-leading genetic testing",
           "content": "For over 25 years our high-quality, accessible genetic testing solutions have shaped important care decisions that patients and families make with their healthcare providers.",
-          "tagline": "This brings the Ambry mindset to life: a relentless pursuit to find the answers.",
           "buttonPrimaryText": "Start Your Order",
           "buttonPrimaryUrl": "#",
           "buttonSecondaryText": "Who We Are",
@@ -161,7 +159,8 @@
       "showSliderNav": true,
       "showSliderDots": true,
       "autoplay": true,
-      "autoplayDelay": 5000
+      "autoplayDelay": 5000,
+      "showSmallImage": false
     }
   }
 }

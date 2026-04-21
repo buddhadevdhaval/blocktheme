@@ -4,16 +4,26 @@ import {
 	RichText,
 	InspectorControls,
 } from '@wordpress/block-editor';
-import { PanelBody, SelectControl } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
+import { useEffect } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+import { TagSelector } from '../_shared/components';
 
-// Default cards
-// Default cards matching your front-end design
+const createDefaultCta = ( text ) => ( {
+	text,
+	url: '',
+	target: '',
+	rel: '',
+	variant: 'dark',
+} );
+
 const TEMPLATE = [
 	[
 		'ambrygen/additional-links-item',
 		{
-			title: 'Title',
+			cta: createDefaultCta( 'Link 1' ),
 			icon: {
+				id: 0,
 				url: '',
 				alt: '',
 			},
@@ -22,8 +32,9 @@ const TEMPLATE = [
 	[
 		'ambrygen/additional-links-item',
 		{
-			title: 'Title',
+			cta: createDefaultCta( 'Link 2' ),
 			icon: {
+				id: 0,
 				url: '',
 				alt: '',
 			},
@@ -32,28 +43,9 @@ const TEMPLATE = [
 	[
 		'ambrygen/additional-links-item',
 		{
-			title: 'Title',
+			cta: createDefaultCta( 'Link 3' ),
 			icon: {
-				url: '',
-				alt: '',
-			},
-		},
-	],
-	[
-		'ambrygen/additional-links-item',
-		{
-			title: 'Title',
-			icon: {
-				url: '',
-				alt: '',
-			},
-		},
-	],
-	[
-		'ambrygen/additional-links-item',
-		{
-			title: 'Title',
-			icon: {
+				id: 0,
 				url: '',
 				alt: '',
 			},
@@ -61,27 +53,33 @@ const TEMPLATE = [
 	],
 ];
 
-export default function Edit( { attributes, setAttributes } ) {
-	const { heading, headingTag, description } = attributes;
+export default function Edit( { attributes, setAttributes, clientId } ) {
+	const { blockId, heading, headingTag, description } = attributes;
 	const blockProps = useBlockProps( {
 		className: 'additional-links-wrapper',
 	} );
 
+	useEffect( () => {
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+
+		if ( ! blockId ) {
+			setAttributes( {
+				blockId: expectedId,
+			} );
+		}
+	}, [ clientId, blockId, setAttributes ] );
+
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
-				<PanelBody title="Heading Settings" initialOpen={ true }>
-					<SelectControl
-						label="Heading Tag"
+				<PanelBody
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen={ true }
+				>
+					<TagSelector
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag }
-						options={ [
-							{ label: 'H1', value: 'h1' },
-							{ label: 'H2', value: 'h2' },
-							{ label: 'H3', value: 'h3' },
-							{ label: 'H4', value: 'h4' },
-							{ label: 'H5', value: 'h5' },
-							{ label: 'H6', value: 'h6' },
-						] }
+						type="heading"
 						onChange={ ( val ) =>
 							setAttributes( { headingTag: val } )
 						}
@@ -94,12 +92,20 @@ export default function Edit( { attributes, setAttributes } ) {
 					tagName={ headingTag }
 					className="careers-highlight__title block__rowflex--heading-title heading-4 mb-0"
 					value={ heading }
+					placeholder={ __( 'Add heading…', 'ambrygen-web' ) }
+					allowedFormats={ [ 'core/bold', 'core/italic' ] }
 					onChange={ ( val ) => setAttributes( { heading: val } ) }
 				/>
 				<RichText
 					tagName="div"
 					className="careers-highlight__intro block__rowflex--block-content subtitle1-reg"
 					value={ description }
+					placeholder={ __( 'Add description…', 'ambrygen-web' ) }
+					allowedFormats={ [
+						'core/bold',
+						'core/italic',
+						'core/link',
+					] }
 					onChange={ ( val ) =>
 						setAttributes( { description: val } )
 					}

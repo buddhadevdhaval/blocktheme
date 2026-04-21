@@ -1,0 +1,51 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/featured-blogs",
+  "title": "Featured Blogs",
+  "category": "ambrygen",
+  "icon": "text-page",
+  "description": "Featured Blogs slider",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "title": {
+      "type": "string",
+      "default": "Featured Articles"
+    },
+    "headingLevel": {
+      "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
+      "default": "h2"
+    },
+    "selectedPosts": {
+      "type": "array",
+      "default": []
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "title": "Featured Articles",
+      "headingLevel": "h2",
+      "selectedPosts": []
+    }
+  }
+}

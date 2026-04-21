@@ -34,7 +34,7 @@ export default function Save( { attributes } ) {
 	const classes = [
 		containerWidth,
 		backgroundStyle,
-		isFixedBackground ? 'bg-fixed' : '',
+		isFixedBackground ? 'block-bg' : '',
 	]
 		.filter( Boolean )
 		.join( ' ' );

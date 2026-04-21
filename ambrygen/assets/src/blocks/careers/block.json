@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "ambrygen/careers",
-  "title": "Careers Block",
+  "title": "Careers",
   "category": "ambrygen",
   "icon": "groups",
   "description": "Parent block for careers",
@@ -10,6 +10,10 @@
     "html": false
   },
   "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
     "title": {
       "type": "string",
       "default": ""
@@ -20,6 +24,14 @@
     },
     "headingLevel": {
       "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
       "default": "h2"
     },
     "videoUrl": {

@@ -1,13 +1,10 @@
 <?php
 /**
- * Render: Mega Menu 3 Columns Block
+ * Render template for the Mega Menu Patients block.
  *
- * @param array    $attributes The block attributes.
- * @param string   $content    The block content.
- * @param WP_Block $block      The block instance.
- *
- * @package ambrygen
+ * @package Ambrygen
  */
+
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
@@ -85,9 +82,18 @@ $wrapper_attributes = get_block_wrapper_attributes(array('class' => $wrapper_cla
                                         $link_url = isset($link['url']) ? $link['url'] : '#';
                                         $link_icon = isset($link['icon']) ? $link['icon'] : '';
                                         $link_label = isset($link['label']) ? $link['label'] : '';
+                                        $link_opens_new_tab = !empty($link['opensInNewTab']);
+                                        $link_target = $link_opens_new_tab || (isset($link['target']) && '_blank' === $link['target']) ? '_blank' : '';
+                                        $link_rel = isset($link['rel']) ? $link['rel'] : '';
+                                        if ($link_opens_new_tab && empty($link_rel)) {
+                                            $link_rel = 'noopener noreferrer';
+                                        }
                                         ?>
                                         <div class="nav__item--mega-menu__submenu-inner--link-wrapper" >
-                                            <a href="<?php echo esc_url($link_url); ?>" class="nav__item--mega-menu__submenu-inner--link">
+                                            <a href="<?php echo esc_url($link_url); ?>"
+                                                class="nav__item--mega-menu__submenu-inner--link"
+                                                <?php if (!empty($link_target)): ?>target="<?php echo esc_attr($link_target); ?>"<?php endif; ?>
+                                                <?php if (!empty($link_rel)): ?>rel="<?php echo esc_attr($link_rel); ?>"<?php endif; ?>>
                                                 <div class="nav__item--mega-menu__submenu-inner--icon">
                                                     <?php if (!empty($link_icon)): ?>
                                                         <img src="<?php echo esc_url($link_icon); ?>" alt="" loading="lazy" />

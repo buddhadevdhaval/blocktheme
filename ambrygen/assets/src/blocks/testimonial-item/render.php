@@ -8,6 +8,7 @@
  *
  * @package ambrygen
  */
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -31,15 +32,15 @@ $ambrygen_logo_id = ! empty( $ambrygen_attributes['logoId'] )
 
 $ambrygen_quote = ! empty( $ambrygen_attributes['quote'] )
 	? $ambrygen_attributes['quote']
-	: __( 'The Ambry Care Program has been a game changer for our healthcare management. Their dedicated team and innovative solutions streamlined our patient care processes, allowing us to spend more time on what truly matters—our patients’ well-being.', 'ambrygen-web' );
+	: '';
 
 $ambrygen_author = ! empty( $ambrygen_attributes['author'] )
 	? $ambrygen_attributes['author']
-	: __( 'Sarah Mitchell', 'ambrygen-web' );
+	: '';
 
 $ambrygen_role = ! empty( $ambrygen_attributes['role'] )
 	? $ambrygen_attributes['role']
-	: __( 'CEO of TechSpark', 'ambrygen-web' );
+	: '';
 
 /**
  * Block context.
@@ -65,7 +66,7 @@ $ambrygen_main_image_alt = ! empty( $ambrygen_main_image['alt'] )
  */
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class' => 'ambry-testimonials__grid__item swiper-slide',
+		'class' => 'js-gsap-fade ambry-testimonials__grid__item swiper-slide',
 	)
 );
 ?>
@@ -74,28 +75,32 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 
 	<div class="ambry-testimonials__grid__item__thumb" aria-hidden="true">
 		<?php
-		
-			echo Helper::image_with_placeholder(
-				$ambrygen_main_image_id,
-				'medium_large',
-				array(
-					'loading' => 'lazy',
+
+			echo wp_kses_post(
+				Helper::image_with_placeholder(
+					$ambrygen_main_image_id,
+					'medium_large',
+					array(
+						'loading' => 'lazy',
+					)
 				)
 			);
-		
-		?>
+
+			?>
 	</div>
 
 	<div class="ambry-testimonials__grid__item__content">
 
 		<?php if ( $ambrygen_logo_id ) : ?>
 			<?php
-			echo Helper::image(
-				$ambrygen_logo_id,
-				'medium_large',
-				array(
-					'class'   => 'ambry-testimonials__grid__logo',
-					'loading' => 'lazy',
+			echo wp_kses_post(
+				Helper::image(
+					$ambrygen_logo_id,
+					'medium_large',
+					array(
+						'class'   => 'ambry-testimonials__grid__logo',
+						'loading' => 'lazy',
+					)
 				)
 			);
 			?>

@@ -1,8 +1,5 @@
 @use "../../css/partials/variables/breakpoints" as bp;
-// Swiper Styles
 @use "swiper/css";
-// @use "swiper/css/navigation";
-// @use "swiper/css/pagination";
 @use "swiper/css/effect-fade";
 
 .hero-section {
@@ -10,6 +7,44 @@
 	overflow: hidden;
 	position: relative;
 	width: 100%;
+
+	&.inner-hero-banner {
+
+		.hero-section__slide {
+			min-height: inherit;
+		}
+
+		.hero-section__background {
+			height: 380px;
+
+			@include bp.max(lg) {
+				height: inherit;
+			}
+		}
+
+		.hero-section__content {
+			min-height: 318px;
+
+			@include bp.max(lg) {
+				min-height: inherit;
+			}
+		}
+	}
+
+	&.event-single-banner {
+
+		.hero-section__slide {
+			min-height: inherit;
+		}
+
+		.hero-section__background {
+			min-height: inherit;
+		}
+
+		.hero-section__content {
+			min-height: inherit;
+		}
+	}
 
 	.wrapper {
 		display: flex;
@@ -179,10 +214,6 @@
 		letter-spacing: -0.36px;
 		line-height: 1.5;
 
-		@include bp.max(lg) {
-			// letter-spacing: -0.27px;
-		}
-
 		@include bp.max(md) {
 			font-size: 15px;
 		}
@@ -199,6 +230,7 @@
 		}
 
 		.site-btn {
+
 			@include bp.max(sm) {
 				justify-content: center;
 				text-align: center;
@@ -208,7 +240,69 @@
 		}
 	}
 
+	&__meta {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px 24px;
+	}
+
+	&__meta-item {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 0;
+		margin: 0;
+
+		&::before {
+			display: none;
+		}
+
+		&.calendar-check {
+
+			.hero-section__meta-icon {
+				background-image: url(../../images/calendar-check-icon.svg);
+			}
+		}
+
+		&.marker-pin {
+
+			.hero-section__meta-icon {
+				background-image: url(../../images/marker-pin-variation-icon.svg);
+			}
+		}
+
+		&.flag {
+
+			.hero-section__meta-icon {
+				background-image: url(../../images/flag-variation-icon.svg);
+			}
+		}
+	}
+
+	&__meta-icon {
+		display: block;
+		flex-shrink: 0;
+		background-size: 20px 20px;
+		background-repeat: no-repeat;
+		background-position: center;
+		width: 20px;
+		height: 20px;
+	}
+
+	&__meta-text {
+		color: var(--theme_gray_600);
+	}
+
+	&__cta-wrap {
+		display: flex;
+		align-items: flex-start;
+	}
+
 	&__slider {
+
 		.swiper-button-next {
 			right: 20px;
 		}

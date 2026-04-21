@@ -8,6 +8,7 @@
  *
  * @package ambrygen
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -65,18 +66,18 @@ if ( ! empty( $ambrygen_heading ) && ! empty( $ambrygen_block_id ) ) {
 		<div class="cta-tiles-with-content__header block__rowflex">
 
 			<?php if ( ! empty( $ambrygen_heading ) ) : ?>
-				<<?php echo esc_html( $ambrygen_heading_tag ); ?>
+				<<?php echo tag_escape( $ambrygen_heading_tag ); ?>
 					<?php if ( ! empty( $ambrygen_block_id ) ) : ?>
 						id="<?php echo esc_attr( $ambrygen_block_id . '-title' ); ?>"
 					<?php endif; ?>
-					class="heading-3 block-title mb-0 block__rowflex--heading-title"
+					class="heading-3 block-title mb-0 block__rowflex--heading-title js-gsap-fade"
 				>
 					<?php echo wp_kses( $ambrygen_heading, Helper::allowed_heading_html() ); ?>
-				</<?php echo esc_html( $ambrygen_heading_tag ); ?>>
+				</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $ambrygen_description ) ) : ?>
-				<div class="block__rowflex--block-content subtitle-1-regular">
+				<div class="block__rowflex--block-content subtitle-1-regular js-gsap-fade">
 					<p><?php echo wp_kses_post( $ambrygen_description ); ?></p>
 				</div>
 			<?php endif; ?>

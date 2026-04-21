@@ -63,17 +63,20 @@
 	--theme_gray_700: #344054;
 	--theme_gray_800: #1D2939;
 	--theme_gray_900: #101828;
-	// --gray_900: #181d27;
-	// --gray_200: #E9EAEB;
-	// --gray_500: #717680;
-	// --gray_600: #535862;
-	// --gray_700: #414651;
-	// --gray_50: #FAFAFA;
 
+
+	--theme_primary_100: #B0E5F8;
 	--theme_primary_200: #8AD8F4;
+	--theme_primary_600: #009BD2;
 	--theme_cg_blue: #0079A4;
+	/* Primary 700 */
 
-	// new color
+
+	--theme_green_500: #0BC196;
+	--theme_green_50: #E7F9F5;
+	--theme_green_700: #08896B;
+
+
 	--gray-blue-50: #F8F9FC;
 	--gray-blue-200: #D5D9EB;
 	--gray-blue-700: #363F72;
@@ -89,6 +92,15 @@
 	--success-50: #ECFDF3;
 	--success-200: #ABEFC6;
 	--success-700: #067647;
+	--success-500: #17B26A;
+
+	--pink_breast_700: #AD556E;
+	--pink_breast_500: #F3789B;
+	--pink_breast_50: #FEF2F5;
+
+	--yellow_warning_700: #895E08;
+	--yellow_warning_500: #C1840B;
+	--yellow_warning_50: #F9F3E7;
 
 	--theme-brand-200: #E9D7FE;
 
@@ -216,12 +228,29 @@
 	--theme_radio_bgcolor: var(--theme_regular_text);
 	--theme_radio_after_bgcolor: var(--theme_white);
 
-	--theme_abbr_border_color: var(--theme_pure-black);
-	--theme_underline_border_color: var(--theme_color_primary);
+	--theme_abbr_border_color: var(--theme_body_color);
+	--theme_underline_border_color: var(--theme_body_color);
 	--theme_delete_color: var(--theme_red);
 	--theme_insert_color: var(--theme_cg_blue);
 	--theme_insert_border_color: var(--theme_cg_blue);
 	--theme_pre_bgcolor: var(--theme_color_primary);
-	--theme_hr_color: var(--theme_pure-black);
+	--theme_hr_color: var(--theme_body_color);
+
+
+	// Badges
+	--theme_badge_primary_bg: #E7F0FF;
+	--theme_badge_primary_border: #8FBAFF;
+	--theme_badge_primary_color: #084BB5;
+	--theme_badge_primary_dot_color: #084BB5;
+
+	--theme_badge_secondary_bg: #F3EDF7;
+	--theme_badge_secondary_border: #C6ACDB;
+	--theme_badge_secondary_color: #5C357D;
+	--theme_badge_secondary_dot_color: #7F56D9;
+
+	--theme_badge_teritary_bg: #F7E8E8;
+	--theme_badge_teritary_border: #E7B8B8;
+	--theme_badge_teritary_color: #7E1313;
+	--theme_badge_teritary_dot_color: #d43434;
 
 }

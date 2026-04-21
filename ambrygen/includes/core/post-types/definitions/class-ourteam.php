@@ -68,6 +68,16 @@ class OurTeam extends AbstractPostType {
 				'label' => __( 'Image Gallery', 'ambrygen' ),
 				'type'  => 'media_gallery',
 			),
+			'small_image'  => array(
+				'label' => __( 'Small Image', 'ambrygen' ),
+				'type'  => 'media_file',
+				'sanitize' => 'absint',
+			),
+			'large_image'  => array(
+				'label' => __( 'Large Image', 'ambrygen' ),
+				'type'  => 'media_file',
+				'sanitize' => 'absint',
+			),
 		);
 	}
 }

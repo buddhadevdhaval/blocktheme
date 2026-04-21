@@ -31,19 +31,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const HeadingTag = headingLevel || 'h2';
 
 	useEffect( () => {
-		const hasMissingIds = locations.some( ( location ) => ! location?.id );
-
-		if ( hasMissingIds ) {
-			setAttributes( {
-				locations: locations.map( ( location ) => ( {
-					...location,
-					id: location?.id || createLocationId(),
-				} ) ),
-			} );
-		}
-	}, [ locations, setAttributes ] );
-
-	useEffect( () => {
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
 		if ( ! blockId ) {
@@ -54,7 +41,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	}, [ clientId, blockId, setAttributes ] );
 
 	const onChangeTitle = ( value ) => setAttributes( { title: value } );
-	const onChangeIframe = ( value ) => setAttributes( { iframe: value } );
+	const onChangeIframe = ( value ) => {
+		if ( '' === value || value.startsWith( 'https://' ) ) {
+			setAttributes( { iframe: value } );
+		}
+	};
 
 	const updateLocation = ( id, key, value ) => {
 		setAttributes( {
@@ -72,9 +63,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			],
 		} );
 	};
-	const removeLocation = ( index ) => {
-		const newLocations = locations.filter( ( _, i ) => i !== index );
-		setAttributes( { locations: newLocations } );
+	const removeLocation = ( id ) => {
+		setAttributes( {
+			locations: locations.filter( ( loc ) => loc.id !== id ),
+		} );
 	};
 
 	return (
@@ -100,6 +92,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						<TextControl
 							label={ __( 'Map Iframe URL', 'ambrygen-web' ) }
 							value={ iframe || '' }
+							type="url"
+							help={ __(
+								'Paste an https:// Google Maps embed URL.',
+								'ambrygen-web'
+							) }
 							onChange={ onChangeIframe }
 						/>
 					</PanelRow>
@@ -134,10 +131,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							tagName={ HeadingTag }
 							value={ title }
 							onChange={ onChangeTitle }
-							placeholder={ __(
-								'Our Locations',
-								'ambrygen-web'
-							) }
+							placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 							allowedFormats={ [
 								'core/bold',
 								'core/italic',
@@ -148,11 +142,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						<div className="is-style-gl-s24"></div>
 
 						<div className="alongside-image-block__text">
-							{ locations.map( ( loc, index ) => (
+							{ locations.map( ( loc ) => (
 								<div className="location-list" key={ loc.id }>
 									<RichText
 										placeholder={ __(
-											'Location Name',
+											'Add Title…',
 											'ambrygen-web'
 										) }
 										value={ loc.name }
@@ -168,7 +162,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 									<RichText
 										placeholder={ __(
-											'Address',
+											'Add Address…',
 											'ambrygen-web'
 										) }
 										value={ loc.address }
@@ -186,7 +180,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 										<Button
 											variant="secondary"
 											onClick={ () =>
-												removeLocation( index )
+												removeLocation( loc.id )
 											}
 											className="components-button is-destructive"
 										>

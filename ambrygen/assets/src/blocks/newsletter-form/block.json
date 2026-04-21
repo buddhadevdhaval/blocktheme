@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "ambrygen/newsletter-form",
-  "title": "Newsletter Form",
+  "title": "Contact Info/Form",
   "category": "ambrygen",
   "icon": "email",
   "description": "A block for displaying a newsletter subscription form with optional heading, description, and decorative imagery.",
@@ -10,6 +10,10 @@
     "html": false
   },
   "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
     "eyebrow": {
       "type": "string",
       "default": ""
@@ -34,6 +38,31 @@
       "type": "string",
       "default": ""
     },
+    "phoneNumber": {
+      "type": "string",
+      "default": ""
+    },
+    "emailAddress": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonText": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "cta": {
+      "type": "object",
+      "default": {
+        "text": "",
+        "url": "",
+        "target": "",
+        "rel": ""
+      }
+    },
     "image": {
       "type": "string",
       "default": ""
@@ -56,11 +85,27 @@
     },
     "overlayTopImage": {
       "type": "string",
-      "default": "/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-top.svg"
+      "default": ""
     },
     "overlayBottomImage": {
       "type": "string",
-      "default": "/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-bottom.svg"
+      "default": ""
+    },
+    "backgroundImage": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "backgroundImageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "isTopAligned": {
+      "type": "boolean",
+      "default": false
     }
   },
   "textdomain": "ambrygen-web",
@@ -74,12 +119,25 @@
       "heading": "Stay Informed",
       "headingTag": "h2",
       "description": "Subscribe to the Ambry Newsletter and other updates.",
+      "phoneNumber": "",
+      "emailAddress": "",
+      "buttonText": "",
+      "buttonUrl": "",
+      "cta": {
+        "text": "",
+        "url": "",
+        "target": "",
+        "rel": ""
+      },
       "image": "/wp-content/themes/ambrygen/assets/src/images/news-latter/news-latter.jpg",
       "imageId": 0,
       "overlayTopImageId": 0,
       "overlayBottomImageId": 0,
       "overlayTopImage": "/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-top.svg",
-      "overlayBottomImage": "/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-bottom.svg"
+      "overlayBottomImage": "/wp-content/themes/ambrygen/assets/src/images/news-latter/overlay-bottom.svg",
+      "backgroundImage": "",
+      "backgroundImageId": 0,
+      "backgroundImageAlt": ""
     }
   }
 }

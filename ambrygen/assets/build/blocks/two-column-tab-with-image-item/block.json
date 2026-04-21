@@ -42,8 +42,21 @@
     "type": {
       "type": "string",
       "default": "small"
+    },
+    "showFullImage": {
+      "type": "boolean",
+      "default": false
     }
   },
+  "variations": [
+    {
+      "name": "show-full-image",
+      "title": "Show full image",
+      "attributes": {
+        "showFullImage": true
+      }
+    }
+  ],
   "textdomain": "ambrygen-web",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
@@ -52,7 +65,7 @@
     "attributes": {
       "sectiontitle": "Sample Title",
       "description": "This is a sample preview content for this block in the inserter.",
-      "imageUrl": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
+      "imageUrl": "",
       "imageAlt": "Ambry default preview image",
       "imageId": 1,
       "customStepLabel": "Sample customStepLabel",

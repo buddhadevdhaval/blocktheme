@@ -14,17 +14,29 @@
     }
   },
   "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
     "heading": {
       "type": "string",
-      "default": "Additional Links"
+      "default": ""
     },
     "headingTag": {
       "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
       "default": "h2"
     },
     "description": {
       "type": "string",
-      "default": "A company with 25+ years of history and regular industry \"firsts,\" Ambry leads new clinical product development pipelines and research collaborations. Contributing to the scientific community to empower individuals is the way we do things, driven with a desire to promote the health of people worldwide."
+      "default": ""
     }
   },
   "editorScript": "file:./index.js",
@@ -36,7 +48,7 @@
     "attributes": {
       "heading": "Additional Links",
       "headingTag": "h2",
-      "description": "A company with 25+ years of history and regular industry \"firsts,\" Ambry leads new clinical product development pipelines and research collaborations. Contributing to the scientific community to empower individuals is the way we do things, driven with a desire to promote the health of people worldwide."
+      "description": ""
     }
   }
 }

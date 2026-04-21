@@ -1,0 +1,134 @@
+.cs-wp-post-date {
+	time {
+		position: relative;
+		padding-left: 30px;
+
+		&::before {
+			content: "";
+			position: absolute;
+			left: 0;
+			top: 0;
+			display: block;
+			background-image: url(../images/primary700-icons/calendar-check-icon.svg);
+			background-repeat: no-repeat;
+			background-size: 20px;
+			width: 20px;
+			height: 20px;
+		}
+	}
+}
+
+.flag-details {
+	display: grid;
+	gap: 10px;
+
+	.single & {
+		gap: 20px;
+	}
+
+	&.flag-time-format {
+		time {
+			position: relative;
+			display: flex;
+			gap: 8px;
+			&:before {
+				content: "";
+				display: block;
+				width: 20px;
+				height: 20px;
+				background-position: top left;
+				background-repeat: no-repeat;
+				background-size: 20px;
+				background-image: url(../images/primary700-icons/calendar-check-icon.svg);
+			}
+		}
+	}
+
+	.flag-info {
+		display: flex;
+		align-items: flex-start;
+		gap: 10px;
+		font-size: var(--theme_font_size_8);
+
+		a {
+			// color: var(--theme_gray_600);
+			// padding-bottom: 0;
+			// border: none;
+
+			&:hover {
+				// color: var(--theme_link_color);
+			}
+		}
+
+		.single & {
+			font-size: var(--theme_font_size_7);
+		}
+
+		&.flag-date-info {
+			.flag-icon {
+				background-image: url(../images/primary700-icons/calendar-check-icon.svg);
+			}
+		}
+
+		&.flag-time-info {
+			.flag-icon {
+				background-image: url(../images/primary700-icons/clock-icon.svg);
+			}
+		}
+
+		&.flag-duration-info {
+			.flag-icon {
+				background-image: url(../images/primary700-icons/duration-icon.svg);
+			}
+		}
+
+		&.flag-book-info {
+			.flag-icon {
+				background-image: url(../images/primary700-icons/book-icon.svg);
+			}
+		}
+
+		&.flag-flask-info {
+			.flag-icon {
+				background-image: url(../images/primary700-icons/flask-icon.svg);
+			}
+		}
+
+		&.flag-conference-info {
+			.flag-icon {
+				background-image: url(../images/primary700-icons/conference-icon.svg);
+			}
+		}
+
+		&.flag-author-info {
+			.flag-icon {
+				background-image: url(../images/primary700-icons/author-icon.svg);
+			}
+		}
+
+		.flag-label {
+			font-size: var(--theme_font_size_8);
+			font-weight: 600;
+			display: flex;
+			gap: 8px;
+
+			.single & {
+				font-size: var(--theme_font_size_7);
+			}
+		}
+
+		.flag-icon {
+			width: 20px;
+			height: 20px;
+			display: flex;
+			align-items: center;
+			background-size: 20px 20px;
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+
+		.label-text {
+			/* Style will add here */
+		}
+	}
+}

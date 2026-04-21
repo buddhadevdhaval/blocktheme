@@ -10,6 +10,10 @@
     "html": false
   },
   "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
     "title": {
       "type": "string",
       "default": "Our Leadership Team"
@@ -20,15 +24,30 @@
     },
     "headingLevel": {
       "type": "string",
-      "default": "h2"
+      "default": "h2",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ]
     },
     "memberTypes": {
       "type": "array",
-      "default": []
+      "default": [],
+      "items": {
+        "type": "number"
+      }
     },
     "selectionMode": {
       "type": "string",
-      "default": "manual"
+      "default": "manual",
+      "enum": [
+        "manual",
+        "taxonomy"
+      ]
     },
     "slidesPerView": {
       "type": "number",
@@ -59,7 +78,7 @@
       "intro": "We are proud to be leading the industry that we love and working together.",
       "headingLevel": "h2",
       "memberTypes": [
-        "leadership"
+        1
       ],
       "selectionMode": "manual",
       "slidesPerView": 3,

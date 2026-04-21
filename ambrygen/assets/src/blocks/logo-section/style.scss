@@ -1,6 +1,7 @@
 @use "../../css/partials/variables/breakpoints" as bp;
 
 .logo-section {
+
 	.logo-section__title {
 		color: var(--theme_cg_blue);
 		text-align: center;
@@ -13,7 +14,10 @@
 	/* Header
 	   ======================================== */
 
-	&__header {}
+	&__header {
+
+		/* Style will be placed here */
+	}
 
 	/* Top — logo + downloads
 	   ======================================== */
@@ -64,7 +68,10 @@
 		gap: var(--theme_space_8);
 	}
 
-	&__downloads-title {}
+	&__downloads-title {
+
+		/* Style will be placed here */
+	}
 
 	&__downloads-list {
 		display: flex;
@@ -139,8 +146,11 @@
 		gap: var(--theme_space_11);
 
 		@include bp.max(lg) {
-			flex-direction: column;
 			gap: var(--theme_space_9);
+		}
+
+		@include bp.max(md) {
+			flex-direction: column;
 		}
 	}
 
@@ -251,7 +261,7 @@
 			li {
 				margin-bottom: var(--theme_space_4);
 
-				&:before {
+				&::before {
 					background-color: var(--theme_gray_600);
 					width: 8px;
 					height: 8px;

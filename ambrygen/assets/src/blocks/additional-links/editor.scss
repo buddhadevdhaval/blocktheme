@@ -13,6 +13,13 @@ $pattern-length: list.length($layout-pattern);
 		gap: var(--theme_space_8);
 		margin-top: clamp(32px, calc(2.25rem + ((1vw - 7.67px) * 2.4014)), 46px);
 
+		.additional-link__card {
+			margin-bottom: 0;
+		}
+	}
+
+	.wp-block-ambrygen-additional-links-item {
+
 		@for $i from 1 through $pattern-length {
 			&:nth-child(#{$pattern-length}n + #{$i}) {
 				grid-column: span list.nth($layout-pattern, $i);
@@ -25,10 +32,6 @@ $pattern-length: list.length($layout-pattern);
 
 		@include bp.max(sm) {
 			grid-column: span 12 !important;
-		}
-
-		.additional-link__card {
-			margin-bottom: 0;
 		}
 	}
 }

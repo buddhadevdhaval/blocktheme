@@ -9,6 +9,10 @@
   ],
   "icon": "format-image",
   "description": "Single image card for three column grid.",
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
   "usesContext": [
     "ambrygen/threeColumnVariation"
   ],
@@ -59,12 +63,28 @@
         "videoUrl": ""
       }
     },
-    "type": {
-      "type": "string",
-      "default": "small"
-    },
     "files": {
       "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fileId": {
+            "type": "number"
+          },
+          "fileUrl": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "sizeType": {
+            "type": "string"
+          }
+        }
+      },
       "default": []
     }
   },
@@ -73,31 +93,5 @@
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
   "viewScript": "file:./view.js",
-  "render": "file:./render.php",
-  "example": {
-    "attributes": {
-      "sectiontitle": "Sample Title",
-      "description": "This is a sample preview content for this block in the inserter.",
-      "imageUrl": "/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
-      "imageAlt": "Ambry default preview image",
-      "imageId": 1,
-      "cta": {
-        "url": "Sample url",
-        "text": "Sample text",
-        "target": "Sample target",
-        "rel": "Sample rel",
-        "variant": "dark",
-        "isVideo": false
-      },
-      "type": "small",
-      "files": [
-        {
-          "fileId": 0,
-          "fileUrl": "",
-          "fileName": "Sample PDF",
-          "sizeType": "small"
-        }
-      ]
-    }
-  }
+  "render": "file:./render.php"
 }

@@ -10,7 +10,7 @@
 
 		.faq__item {
 			border: none;
-			background-color: #FFF;
+			background-color: var(--theme_white);
 			border-radius: 16px;
 			margin-bottom: 24px;
 			counter-increment: faq-counter;
@@ -138,6 +138,7 @@
 
 		&:last-child {
 			padding-bottom: 0;
+			margin-bottom: -24px;
 		}
 
 		&[open] {

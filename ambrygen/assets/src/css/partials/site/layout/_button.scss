@@ -1,15 +1,46 @@
 @use "../../variables/breakpoints" as bp;
 
 @mixin site-btn-style {
+	// Default arrow icons
+	--btn-arrow-right-url: url(../images/white-icons/right-icon.svg);
+	--btn-arrow-download-url: url(../images/white-icons/download-arrow.svg);
+	--btn-arrow-video-url: url(../images/white-icons/play-circle-arrow.svg);
+
+
+	// Secondary arrow icons
+	--secondary-btn-arrow-right-url: url(../images/primary800-icons/right-icon.svg);
+	--secondary-btn-arrow-download-url: url(../images/primary800-icons/download-arrow.svg);
+	--secondary-btn-arrow-video-url: url(../images/primary800-icons/play-circle-arrow.svg);
+
+
+	// Tertiary arrow icons
+	--tertiary-btn-arrow-right-url: url(../images/gray700-icons/right-icon.svg);
+	--tertiary-btn-arrow-download-url: url(../images/gray700-icons/download-arrow.svg);
+	--tertiary-btn-arrow-video-url: url(../images/gray700-icons/play-circle-arrow.svg);
+
+	--tertiary-hover-btn-arrow-right-url: url(../images/primary600-icons/right-icon.svg);
+	--tertiary-hover-btn-arrow-download-url: url(../images/primary600-icons/download-arrow.svg);
+	--tertiary-hover-btn-arrow-video-url: url(../images/primary600-icons/play-circle-arrow.svg);
+
+	// Text arrow icons
+	--text-btn-arrow-right-url: url(../images/primary600-icons/right-icon.svg);
+	--text-btn-arrow-download-url: url(../images/primary600-icons/download-arrow.svg);
+	--text-btn-arrow-video-url: url(../images/primary600-icons/play-circle-arrow.svg);
+
+	--text-hover-btn-arrow-right-url: url(../images/primary700-icons/right-icon.svg);
+	--text-hover-btn-arrow-download-url: url(../images/primary700-icons/download-arrow.svg);
+	--text-hover-btn-arrow-video-url: url(../images/primary700-icons/play-circle-arrow.svg);
+
+
 	background-color: var(--theme_cg_blue);
 	border: 1px solid transparent;
 	border-radius: 8px;
-	box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+	box-shadow: 0 1px 2px 0 rgba(16, 24, 40, .05);
 	color: var(--theme_button_color);
 	display: inline-flex;
 	font-size: var(--theme_font_size_7);
 	font-weight: 600;
-	letter-spacing: -0.24px;
+	letter-spacing: -.24px;
 	line-height: 1.5;
 	outline: none;
 	overflow: hidden;
@@ -18,16 +49,15 @@
 	text-align: center;
 	text-decoration: none;
 	text-transform: capitalize;
-	transition: 0.35s;
-
-	@include bp.max(md) {
-		font-size: 15px;
-		letter-spacing: -0.22px;
-	}
+	transition: .35s;
+	align-items: center;
+	height: auto;
+	margin: 0;
 
 	&:hover {
 		background-color: var(--theme_color_primary);
-		color: #FFF;
+		color: #fff;
+		border-color: transparent;
 	}
 
 	&:focus {
@@ -56,18 +86,74 @@
 		}
 	}
 
-	&.text-14 {
-		font-size: var(--theme_font_size_8);
+	&.has-right-arrow {
+		&::after {
+			background-image: var(--btn-arrow-right-url);
+			background-repeat: no-repeat;
+			background-size: contain;
+			content: "";
+			flex: 12px 0 0;
+			height: 12px;
+			margin-left: 17px;
+			position: relative;
+			top: -1px;
+			transition: all 0.2s ease-in-out;
+			width: 12px;
+
+			@include bp.max(md) {
+				margin-left: 10px;
+			}
+		}
+	}
+
+	&.has-download-arrow {
+		&::after {
+			background-image: var(--btn-arrow-download-url);
+			background-repeat: no-repeat;
+			background-size: contain;
+			content: "";
+			flex: 20px 0 0;
+			height: 20px;
+			margin-left: 17px;
+			position: relative;
+			top: -1px;
+			transition: all 0.2s ease-in-out;
+			width: 20px;
+
+			@include bp.max(md) {
+				margin-left: 10px;
+			}
+		}
+	}
+
+	&.has-video-arrow {
+		&::after {
+			background-image: var(--btn-arrow-video-url);
+			background-repeat: no-repeat;
+			background-size: contain;
+			content: "";
+			flex: 20px 0 0;
+			height: 20px;
+			margin-left: 17px;
+			position: relative;
+			top: -1px;
+			transition: all 0.2s ease-in-out;
+			width: 20px;
+
+			@include bp.max(md) {
+				margin-left: 10px;
+			}
+		}
 	}
 }
 
 @mixin site-secondary-btn {
-	background-color: #E6F7FD;
-	color: #005E7F;
+	background-color: #e6f7fd;
+	color: #005e7f;
 
 	&:hover {
-		background-color: #B0E5F8;
-		color: #005E7F;
+		background-color: #b0e5f8;
+		color: #005e7f;
 	}
 
 	&:focus {
@@ -76,15 +162,26 @@
 		color: #FFF;
 	}
 
-	&.is-style-site-trailing-icon {
-
+	&.has-right-arrow {
 		&::after {
-			filter: brightness(0) saturate(100%) invert(64%) sepia(95%) saturate(707%) hue-rotate(167deg) brightness(103%) contrast(87%);
+			background-image: var(--secondary-btn-arrow-right-url);
+		}
+	}
+
+	&.has-download-arrow {
+		&::after {
+			background-image: var(--secondary-btn-arrow-download-url);
+		}
+	}
+
+	&.has-video-arrow {
+		&::after {
+			background-image: var(--secondary-btn-arrow-video-url);
 		}
 	}
 }
 
-@mixin site-tertiary-btn {
+@mixin site-tertiary-btn-style {
 	background-color: var(--theme_white);
 	border: 1px solid var(--theme_gray_300);
 	box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
@@ -100,16 +197,38 @@
 		box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05), 0 0 0 4px var(--theme_gray_100);
 	}
 
-	&.is-style-site-trailing-icon {
-
+	&.has-right-arrow {
 		&::after {
-			background-image: url(../images/chevron-right-icon.svg);
+			background-image: var(--tertiary-btn-arrow-right-url);
 		}
 
 		&:hover {
-
 			&::after {
-				background-image: url(../images/chevron-right-icon-hover.svg);
+				background-image: var(--tertiary-hover-btn-arrow-right-url);
+			}
+		}
+	}
+
+	&.has-download-arrow {
+		&::after {
+			background-image: var(--tertiary-btn-arrow-download-url);
+		}
+
+		&:hover {
+			&::after {
+				background-image: var(--tertiary-hover-btn-arrow-download-url);
+			}
+		}
+	}
+
+	&.has-video-arrow {
+		&::after {
+			background-image: var(--tertiary-btn-arrow-video-url);
+		}
+
+		&:hover {
+			&::after {
+				background-image: var(--tertiary-hover-btn-arrow-video-url);
 			}
 		}
 	}
@@ -137,331 +256,202 @@
 		}
 	}
 
-	&.has-icon {
-		gap: 8px;
-
+	&.has-right-arrow {
 		&::after {
-			background-image: url(../images/btn-arrow-right-icon.svg);
-			background-position: right center;
+			background-image: var(--text-btn-arrow-right-url);
+		}
+
+		&:hover {
+			&::after {
+				background-image: var(--text-hover-btn-arrow-right-url);
+			}
+		}
+	}
+
+	&.has-download-arrow {
+		&::after {
+			background-image: var(--text-btn-arrow-download-url);
+		}
+
+		&:hover {
+			&::after {
+				background-image: var(--text-hover-btn-arrow-download-url);
+			}
+		}
+	}
+
+	&.has-video-arrow {
+		&::after {
+			background-image: var(--text-btn-arrow-video-url);
+		}
+
+		&:hover {
+			&::after {
+				background-image: var(--text-hover-btn-arrow-video-url);
+			}
+		}
+	}
+}
+
+
+%site-btn-base {
+	@include site-btn-style;
+
+	&.is-style-site-tertiary-btn {
+		@include site-tertiary-btn-style;
+	}
+
+	&.is-style-site-secondary-btn {
+		@include site-secondary-btn;
+	}
+
+	&.is-style-site-text-btn {
+		@include site-text-btn;
+	}
+}
+
+.site-btn {
+	@extend %site-btn-base;
+}
+
+.wp-block-button {
+
+	.wp-block-button__link {
+		@extend %site-btn-base;
+	}
+
+	// Right Arrow
+	&.has-right-arrow .wp-block-button__link {
+		&::after {
+			background-image: var(--btn-arrow-right-url);
 			background-repeat: no-repeat;
-			background-size: 16px 16px;
+			background-size: contain;
 			content: "";
-			display: block;
+			flex: 12px 0 0;
+			height: 12px;
+			margin-left: 17px;
+			position: relative;
+			top: -1px;
+			width: 12px;
+		}
+	}
+
+	// Download Arrow
+	&.has-download-arrow .wp-block-button__link {
+		&::after {
+			background-image: var(--btn-arrow-download-url);
+			background-repeat: no-repeat;
+			background-size: contain;
+			content: "";
+			flex: 20px 0 0;
 			height: 20px;
-			transition: 0.35s;
+			margin-left: 17px;
+			position: relative;
+			top: -1px;
 			width: 20px;
 		}
-
-
-		&.prev-icon {
-
-			&::after {
-				display: none;
-			}
-
-			&::before {
-				background-image: url(../images/btn-arrow-right-icon.svg);
-				background-position: left center;
-				background-repeat: no-repeat;
-				background-size: 16px 16px;
-				content: "";
-				display: block;
-				height: 20px;
-				transition: 0.35s;
-				width: 20px;
-				transform: rotate(180deg);
-			}
-		}
-
-		&.icon-arrow-up {
-
-			&::after {
-				transform: rotate(-45deg);
-				bottom: -1px;
-				position: relative;
-			}
-		}
-	}
-}
-
-@mixin site-trailing-icon {
-	align-items: center;
-
-	@include bp.max(md) {
-		text-align: left;
 	}
 
-	&::after {
-		background-image: url(../images/right-icon.svg);
-		background-repeat: no-repeat;
-		background-size: contain;
-		content: "";
-		flex: 12px 0 0;
-		height: 12px;
-		margin-left: 17px;
-		position: relative;
-		top: 0;
-		transition: all 0.2s ease-in-out;
-		width: 12px;
-
-		@include bp.max(md) {
-			margin-left: 10px;
-		}
-	}
-
-	&.btn-small {
-
+	// Video Arrow
+	&.has-video-arrow .wp-block-button__link {
 		&::after {
-			flex: 8px 0 0;
-			top: 0;
-			margin-left: 12px;
+			background-image: var(--btn-arrow-video-url);
+			background-repeat: no-repeat;
+			background-size: contain;
+			content: "";
+			flex: 20px 0 0;
+			height: 20px;
+			margin-left: 17px;
+			position: relative;
+			top: -1px;
+			width: 20px;
 		}
 	}
-}
 
-body {
 
-	.site-btn {
+	&.is-style-site-secondary-btn {
 
-		@include site-btn-style;
-
-		&.is-style-site-secondary-btn {
-
+		.wp-block-button__link {
 			@include site-secondary-btn;
 		}
 
-		&.is-style-site-tertiary-btn {
-
-			@include site-tertiary-btn;
+		&.has-right-arrow .wp-block-button__link::after {
+			background-image: var(--secondary-btn-arrow-right-url);
 		}
 
-		&.is-style-site-text-btn {
+		&.has-download-arrow .wp-block-button__link::after {
+			background-image: var(--secondary-btn-arrow-download-url);
+		}
 
+		&.has-video-arrow .wp-block-button__link::after {
+			background-image: var(--secondary-btn-arrow-video-url);
+		}
+	}
+
+	&.is-style-site-tertiary-btn {
+
+		.wp-block-button__link {
+			@include site-tertiary-btn-style;
+		}
+
+		&.has-right-arrow .wp-block-button__link::after {
+			background-image: var(--tertiary-btn-arrow-right-url);
+		}
+
+		&.has-right-arrow .wp-block-button__link:hover::after {
+			background-image: var(--tertiary-hover-btn-arrow-right-url);
+		}
+
+		&.has-download-arrow .wp-block-button__link::after {
+			background-image: var(--tertiary-btn-arrow-download-url);
+		}
+
+		&.has-download-arrow .wp-block-button__link:hover::after {
+			background-image: var(--tertiary-hover-btn-arrow-download-url);
+		}
+
+		&.has-video-arrow .wp-block-button__link::after {
+			background-image: var(--tertiary-btn-arrow-video-url);
+		}
+
+		&.has-video-arrow .wp-block-button__link:hover::after {
+			background-image: var(--tertiary-hover-btn-arrow-video-url);
+		}
+	}
+
+	&.is-style-site-text-btn {
+
+		.wp-block-button__link {
 			@include site-text-btn;
 		}
 
-		&.is-style-site-trailing-icon {
-
-			@include site-trailing-icon;
-		}
-	}
-
-	// Backend Buttons - Use the Same Classname which used in Frontend
-	.wp-block-button {
-
-		&.has-right-arrow {
-			.wp-block-button__link {
-				align-items: center;
-
-				&::after {
-					background-image: url(../images/right-icon.svg);
-					background-repeat: no-repeat;
-					background-size: contain;
-					content: "";
-					flex: 12px 0 0;
-					height: 12px;
-					margin-left: 17px;
-					position: relative;
-					top: -1px;
-					transition: all 0.2s ease-in-out;
-					width: 12px;
-
-					@include bp.max(md) {
-						margin-left: 10px;
-					}
-				}
-			}
+		&.has-right-arrow .wp-block-button__link::after {
+			background-image: var(--text-btn-arrow-right-url);
 		}
 
-		&.has-download-arrow {
-			.wp-block-button__link {
-				align-items: center;
-
-				&::after {
-					background-image: url(../images/download-arrow.svg);
-					background-repeat: no-repeat;
-					background-size: 20px;
-					content: "";
-					flex: 20px 0 0;
-					height: 20px;
-					margin-left: 17px;
-					position: relative;
-					top: -1px;
-					transition: all 0.2s ease-in-out;
-					width: 20px;
-					filter: brightness(0) saturate(100%) invert(100%) sepia(95%) saturate(0%) hue-rotate(150deg) brightness(106%) contrast(105%);
-
-					@include bp.max(md) {
-						margin-left: 10px;
-					}
-				}
-			}
+		&.has-right-arrow .wp-block-button__link:hover::after {
+			background-image: var(--text-hover-btn-arrow-right-url);
 		}
 
-		&.has-video-arrow {
-			.wp-block-button__link {
-				align-items: center;
-
-				&::after {
-					background-image: url(../images/play-circle-arrow.svg);
-					background-repeat: no-repeat;
-					background-size: 20px;
-					content: "";
-					flex: 20px 0 0;
-					height: 20px;
-					margin-left: 17px;
-					position: relative;
-					top: -1px;
-					transition: all 0.2s ease-in-out;
-					width: 20px;
-					filter: brightness(0) saturate(100%) invert(100%) sepia(95%) saturate(0%) hue-rotate(150deg) brightness(106%) contrast(105%);
-
-					@include bp.max(md) {
-						margin-left: 10px;
-					}
-				}
-			}
+		&.has-download-arrow .wp-block-button__link::after {
+			background-image: var(--text-btn-arrow-download-url);
 		}
 
-		.wp-block-button__link {
-
-			@include site-btn-style;
-
+		&.has-download-arrow .wp-block-button__link:hover::after {
+			background-image: var(--text-hover-btn-arrow-download-url);
 		}
 
-		&.is-style-site-secondary-btn {
-
-			&.has-right-arrow {
-				.wp-block-button__link {
-					&::after {
-						filter: brightness(0) saturate(100%) invert(18%) sepia(45%) saturate(5227%) hue-rotate(178deg) brightness(97%) contrast(106%);
-					}
-				}
-			}
-
-			&.has-download-arrow {
-				.wp-block-button__link {
-					&::after {
-						filter: brightness(0) saturate(100%) invert(18%) sepia(45%) saturate(5227%) hue-rotate(178deg) brightness(97%) contrast(106%);
-					}
-				}
-			}
-
-			&.has-video-arrow {
-				.wp-block-button__link {
-					&::after {
-						filter: brightness(0) saturate(100%) invert(18%) sepia(45%) saturate(5227%) hue-rotate(178deg) brightness(97%) contrast(106%);
-					}
-				}
-			}
-
-			.wp-block-button__link {
-				@include site-secondary-btn;
-			}
+		&.has-video-arrow .wp-block-button__link::after {
+			background-image: var(--text-btn-arrow-video-url);
 		}
 
-		&.is-style-site-tertiary-btn {
-
-			&.has-right-arrow {
-				.wp-block-button__link {
-					&::after {
-						filter: brightness(0) saturate(100%) invert(23%) sepia(16%) saturate(1003%) hue-rotate(178deg) brightness(93%) contrast(90%);
-					}
-
-					&:hover {
-						&::after {
-							filter: brightness(0) saturate(100%) invert(49%) sepia(80%) saturate(3385%) hue-rotate(166deg) brightness(93%) contrast(102%);
-						}
-					}
-				}
-			}
-
-			&.has-download-arrow {
-				.wp-block-button__link {
-					&::after {
-						filter: brightness(0) saturate(100%) invert(23%) sepia(16%) saturate(1003%) hue-rotate(178deg) brightness(93%) contrast(90%);
-					}
-
-					&:hover {
-						&::after {
-							filter: brightness(0) saturate(100%) invert(49%) sepia(80%) saturate(3385%) hue-rotate(166deg) brightness(93%) contrast(102%);
-						}
-					}
-				}
-			}
-
-			&.has-video-arrow {
-				.wp-block-button__link {
-					&::after {
-						filter: brightness(0) saturate(100%) invert(23%) sepia(16%) saturate(1003%) hue-rotate(178deg) brightness(93%) contrast(90%);
-					}
-
-					&:hover {
-						&::after {
-							filter: brightness(0) saturate(100%) invert(49%) sepia(80%) saturate(3385%) hue-rotate(166deg) brightness(93%) contrast(102%);
-						}
-					}
-				}
-			}
-
-			.wp-block-button__link {
-
-				@include site-tertiary-btn;
-			}
-		}
-
-
-		&.is-style-site-text-btn {
-
-			&.has-right-arrow {
-				.wp-block-button__link {
-					&::after {
-						filter: brightness(0) saturate(100%) invert(29%) sepia(82%) saturate(1718%) hue-rotate(171deg) brightness(90%) contrast(104%);
-					}
-
-					&:hover {
-						&::after {
-							filter: brightness(0) saturate(100%) invert(25%) sepia(67%) saturate(2756%) hue-rotate(176deg) brightness(96%) contrast(101%);
-						}
-					}
-				}
-			}
-
-			&.has-download-arrow {
-				.wp-block-button__link {
-					&::after {
-						filter: brightness(0) saturate(100%) invert(23%) sepia(16%) saturate(1003%) hue-rotate(178deg) brightness(93%) contrast(90%);
-					}
-
-					&:hover {
-						&::after {
-							filter: brightness(0) saturate(100%) invert(49%) sepia(80%) saturate(3385%) hue-rotate(166deg) brightness(93%) contrast(102%);
-						}
-					}
-				}
-			}
-
-			&.has-video-arrow {
-				.wp-block-button__link {
-					&::after {
-						filter: brightness(0) saturate(100%) invert(23%) sepia(16%) saturate(1003%) hue-rotate(178deg) brightness(93%) contrast(90%);
-					}
-
-					&:hover {
-						&::after {
-							filter: brightness(0) saturate(100%) invert(49%) sepia(80%) saturate(3385%) hue-rotate(166deg) brightness(93%) contrast(102%);
-						}
-					}
-				}
-			}
-
-			.wp-block-button__link {
-
-				@include site-text-btn;
-			}
+		&.has-video-arrow .wp-block-button__link:hover::after {
+			background-image: var(--text-hover-btn-arrow-video-url);
 		}
 	}
 }
+
+
 
 /* Styles for the disabled button */
 button[disabled] {
@@ -481,8 +471,9 @@ button[disabled] {
 
 .wp-block-buttons {
 	display: flex;
-	gap: 24px;
+	gap: 20px;
 	flex-direction: row;
+	flex-wrap: wrap;
 
 	@include bp.max(sm) {
 		flex-direction: column;

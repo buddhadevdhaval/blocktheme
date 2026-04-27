@@ -23,6 +23,10 @@
 	"style": "file:./style-index.css",
 	"render": "file:./render.php",
 	"attributes": {
+		"blockId": {
+			"type": "string",
+			"default": ""
+		},
 		"title": {
 			"type": "string",
 			"default": "Resources"
@@ -87,6 +91,14 @@
 				"h5",
 				"h6"
 			]
+		},
+		"customCollaborators": {
+			"type": "array",
+			"default": []
+		},
+		"enableCustomCollaborators": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 

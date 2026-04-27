@@ -2,6 +2,7 @@
 
 namespace Ambrygen\Theme\Core\Admin\Fields;
 
+use Ambrygen\Theme\Core\Helper;
 use Ambrygen\Theme\Core\Singleton;
 
 defined('ABSPATH') || exit;
@@ -48,22 +49,23 @@ final class MarketingMaterialRepeaterField
         echo '<div class="ambrygen-mm-rows">';
         if (! empty($rows)) {
             foreach ($rows as $index => $row) {
-                echo $this->render_row_html($key, (string) $index, $row, $language_terms, $status_options);
+                echo $this->render_row_html($post_id, $key, (string) $index, $row, $language_terms, $status_options);
             }
         }
         echo '</div>';
         echo '<p><button type="button" class="button button-secondary ambrygen-mm-add-row">' . esc_html__('Add File Row', 'ambrygen-web') . '</button></p>';
         echo '<script type="text/template" class="ambrygen-mm-template">';
-        echo $this->render_row_html($key, '__INDEX__', [], $language_terms, $status_options);
+        echo $this->render_row_html($post_id, $key, '__INDEX__', [], $language_terms, $status_options);
         echo '</script>';
         echo '</div>';
     }
 
-    public function render_row_html(string $key, string $index, array $row, array $language_terms, array $status_options): string
+    public function render_row_html(int $post_id, string $key, string $index, array $row, array $language_terms, array $status_options): string
     {
         $file_id           = isset($row['file_id']) ? absint($row['file_id']) : 0;
         $media_lab_id      = isset($row['media_lab_id']) ? sanitize_text_field((string) $row['media_lab_id']) : '';
         $status            = isset($row['status']) ? sanitize_key((string) $row['status']) : 'in_production';
+        $is_active         = ! empty($row['is_active']);
         $is_web            = ! empty($row['is_web']);
         $is_print          = ! empty($row['is_print']);
         $is_self_printable = ! empty($row['is_self_printable']);
@@ -74,11 +76,22 @@ final class MarketingMaterialRepeaterField
 
         $file_title = '';
         $file_url   = '';
+        $tracking   = array(
+            'impressions' => 0,
+            'clicks'      => 0,
+            'last_impression' => '',
+            'last_click'      => '',
+            'pages'           => array(),
+        );
         if ($file_id > 0) {
             $file_post = get_post($file_id);
             $file_url  = wp_get_attachment_url($file_id);
             if ($file_post) {
                 $file_title = $file_post->post_title;
+            }
+
+            if (class_exists(Helper::class) && is_callable(array(Helper::class, 'get_marketing_material_tracking'))) {
+                $tracking = Helper::get_marketing_material_tracking($post_id ?? 0, $file_id);
             }
         }
 
@@ -101,6 +114,46 @@ final class MarketingMaterialRepeaterField
                 </div>
             </div>
 
+            <?php if ($file_id > 0): ?>
+            <div class="description" style="margin: 8px 0 14px;">
+                <?php
+                printf(
+                    /* translators: 1: impression count, 2: click count */
+                    esc_html__('Tracking: %1$d views, %2$d clicks', 'ambrygen-web'),
+                    (int) $tracking['impressions'],
+                    (int) $tracking['clicks']
+                );
+                ?>
+                <?php if (!empty($tracking['last_click'])): ?>
+                    <br />
+                    <?php
+                    printf(
+                        /* translators: %s: last click timestamp */
+                        esc_html__('Last click: %s', 'ambrygen-web'),
+                        esc_html($tracking['last_click'])
+                    );
+                    ?>
+                <?php endif; ?>
+                <?php if (!empty($tracking['pages'])): ?>
+                    <br />
+                    <?php esc_html_e('Top pages:', 'ambrygen-web'); ?>
+                    <?php foreach (array_slice($tracking['pages'], 0, 3) as $page_tracking): ?>
+                        <br />
+                        <?php
+                        $page_label = !empty($page_tracking['page_title']) ? $page_tracking['page_title'] : (!empty($page_tracking['page_path']) ? $page_tracking['page_path'] : __('Unknown page', 'ambrygen-web'));
+                        printf(
+                            /* translators: 1: page label, 2: impression count, 3: click count */
+                            esc_html__('%1$s: %2$d views, %3$d clicks', 'ambrygen-web'),
+                            esc_html($page_label),
+                            (int) $page_tracking['impressions'],
+                            (int) $page_tracking['clicks']
+                        );
+                        ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+            <?php endif; ?>
+
             <p>
                 <label><?php esc_html_e('Media Lab ID', 'ambrygen-web'); ?></label><br />
                 <input type="text" class="widefat" name="<?php echo esc_attr("{$key}[{$index}][media_lab_id]"); ?>" value="<?php echo esc_attr($media_lab_id); ?>" />
@@ -116,6 +169,11 @@ final class MarketingMaterialRepeaterField
             </p>
 
             <p>
+                <label>
+                    <input type="checkbox" name="<?php echo esc_attr("{$key}[{$index}][is_active]"); ?>" value="1" <?php checked($is_active); ?> />
+                    <?php esc_html_e('Active', 'ambrygen-web'); ?>
+                </label>
+                &nbsp;&nbsp;
                 <label>
                     <input type="checkbox" name="<?php echo esc_attr("{$key}[{$index}][is_web]"); ?>" value="1" <?php checked($is_web); ?> />
                     <?php esc_html_e('WEB', 'ambrygen-web'); ?>

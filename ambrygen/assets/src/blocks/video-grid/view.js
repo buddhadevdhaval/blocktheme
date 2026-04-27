@@ -1,7 +1,7 @@
-( function () {
+(function () {
 	const initVideoGridModal = () => {
-		const createSafeDescriptionFragment = ( sourceEl ) => {
-			const allowedTags = new Set( [
+		const createSafeDescriptionFragment = (sourceEl) => {
+			const allowedTags = new Set([
 				'A',
 				'B',
 				'BR',
@@ -13,43 +13,43 @@
 				'SPAN',
 				'STRONG',
 				'UL',
-			] );
+			]);
 
-			const sanitizeHref = ( href ) => {
-				if ( ! href ) {
+			const sanitizeHref = (href) => {
+				if (!href) {
 					return null;
 				}
 
 				try {
-					const url = new URL( href, window.location.origin );
+					const url = new URL(href, window.location.origin);
 					if (
-						[ 'http:', 'https:', 'mailto:', 'tel:' ].includes(
+						['http:', 'https:', 'mailto:', 'tel:'].includes(
 							url.protocol
 						)
 					) {
 						return url.href;
 					}
-				} catch ( error ) {
+				} catch (error) {
 					return null;
 				}
 
 				return null;
 			};
 
-			const sanitizeNode = ( node ) => {
-				if ( node.nodeType === Node.TEXT_NODE ) {
-					return document.createTextNode( node.textContent || '' );
+			const sanitizeNode = (node) => {
+				if (node.nodeType === Node.TEXT_NODE) {
+					return document.createTextNode(node.textContent || '');
 				}
 
-				if ( node.nodeType !== Node.ELEMENT_NODE ) {
+				if (node.nodeType !== Node.ELEMENT_NODE) {
 					return document.createDocumentFragment();
 				}
 
-				if ( ! allowedTags.has( node.tagName ) ) {
+				if (!allowedTags.has(node.tagName)) {
 					const fragment = document.createDocumentFragment();
-					Array.from( node.childNodes ).forEach( ( childNode ) => {
-						fragment.appendChild( sanitizeNode( childNode ) );
-					} );
+					Array.from(node.childNodes).forEach((childNode) => {
+						fragment.appendChild(sanitizeNode(childNode));
+					});
 					return fragment;
 				}
 
@@ -57,23 +57,23 @@
 					node.tagName.toLowerCase()
 				);
 
-				if ( node.tagName === 'A' ) {
+				if (node.tagName === 'A') {
 					const safeHref = sanitizeHref(
-						node.getAttribute( 'href' )
+						node.getAttribute('href')
 					);
 
-					if ( ! safeHref ) {
+					if (!safeHref) {
 						const fragment = document.createDocumentFragment();
-						Array.from( node.childNodes ).forEach( ( childNode ) => {
-							fragment.appendChild( sanitizeNode( childNode ) );
-						} );
+						Array.from(node.childNodes).forEach((childNode) => {
+							fragment.appendChild(sanitizeNode(childNode));
+						});
 						return fragment;
 					}
 
-					safeElement.setAttribute( 'href', safeHref );
+					safeElement.setAttribute('href', safeHref);
 
-					if ( node.getAttribute( 'target' ) === '_blank' ) {
-						safeElement.setAttribute( 'target', '_blank' );
+					if (node.getAttribute('target') === '_blank') {
+						safeElement.setAttribute('target', '_blank');
 						safeElement.setAttribute(
 							'rel',
 							'noopener noreferrer'
@@ -81,30 +81,30 @@
 					}
 				}
 
-				Array.from( node.childNodes ).forEach( ( childNode ) => {
-					safeElement.appendChild( sanitizeNode( childNode ) );
-				} );
+				Array.from(node.childNodes).forEach((childNode) => {
+					safeElement.appendChild(sanitizeNode(childNode));
+				});
 
 				return safeElement;
 			};
 
 			const fragment = document.createDocumentFragment();
 
-			Array.from( sourceEl.childNodes ).forEach( ( childNode ) => {
-				fragment.appendChild( sanitizeNode( childNode ) );
-			} );
+			Array.from(sourceEl.childNodes).forEach((childNode) => {
+				fragment.appendChild(sanitizeNode(childNode));
+			});
 
 			return fragment;
 		};
 
 		document
-			.querySelectorAll( '.wp-block-ambrygen-gallery.image-grid-block.video-grid' )
-			.forEach( ( blockEl ) => {
-				if ( blockEl.dataset.videoGridBound === '1' ) {
+			.querySelectorAll('.wp-block-ambrygen-gallery.image-grid-block.video-grid')
+			.forEach((blockEl) => {
+				if (blockEl.dataset.videoGridBound === '1') {
 					return;
 				}
 
-				const videoModal = blockEl.querySelector( '[data-video-modal]' );
+				const videoModal = blockEl.querySelector('[data-video-modal]');
 				const videoContainer = blockEl.querySelector(
 					'[data-video-modal-container]'
 				);
@@ -115,15 +115,15 @@
 					'[data-video-modal-description]'
 				);
 				const closeButton =
-					videoModal?.querySelector( '.modal-popup__close' );
+					videoModal?.querySelector('.modal-popup__close');
 				const overlay =
-					videoModal?.querySelector( '.modal-popup__overlay' );
+					videoModal?.querySelector('.modal-popup__overlay');
 
 				if (
-					! videoModal ||
-					! videoContainer ||
-					! videoTitleEl ||
-					! videoDescriptionEl
+					!videoModal ||
+					!videoContainer ||
+					!videoTitleEl ||
+					!videoDescriptionEl
 				) {
 					return;
 				}
@@ -131,108 +131,102 @@
 				blockEl.dataset.videoGridBound = '1';
 
 				const closeVideoModal = () => {
-					videoModal.classList.remove( 'is-active' );
+					videoModal.classList.remove('is-active');
 					videoContainer.replaceChildren();
 					videoTitleEl.textContent = '';
 					videoDescriptionEl.replaceChildren();
 				};
 
-				const openVideoModal = ( element ) => {
-					const item = element.closest( '.videos__cards-item' );
-					if ( ! item || ! blockEl.contains( item ) ) {
+				const openVideoModal = (element) => {
+					const item = element.closest('.videos__cards-item');
+					if (!item || !blockEl.contains(item)) {
 						return;
 					}
 
-					const iframe = item.querySelector( '.features-media__iframe' );
-					const videoSrc = iframe ? iframe.getAttribute( 'src' ) : null;
-					const titleEl = item.querySelector(
-						'.videos__cards-item-title'
-					);
-					const videoTitle = titleEl ? titleEl.textContent : 'Video';
-					const descEl = item.querySelector(
-						'.videos__cards-item-description'
-					);
+					const mediaContainer = item.querySelector('.media_video');
+					const videoSrc = mediaContainer?.dataset?.videoSrc || item.querySelector('.features-media__iframe')?.getAttribute('src');
+					const videoType = mediaContainer?.dataset?.videoType || 'embed';
 
-					if ( ! videoSrc ) {
+					const titleEl = item.querySelector('.videos__cards-item-title');
+					const videoTitle = titleEl ? titleEl.textContent : 'Video';
+					const descEl = item.querySelector('.videos__cards-item-description');
+
+					if (!videoSrc) {
 						return;
 					}
 
 					videoTitleEl.textContent = videoTitle;
 
-					if ( descEl ) {
+					if (descEl) {
 						videoDescriptionEl.replaceChildren(
-							createSafeDescriptionFragment( descEl )
+							createSafeDescriptionFragment(descEl)
 						);
 					} else {
 						videoDescriptionEl.replaceChildren();
 					}
 
-					const iframeEl = document.createElement( 'iframe' );
-					iframeEl.src = videoSrc;
-					iframeEl.title = videoTitle;
-					iframeEl.className = 'features-media__iframe';
-					iframeEl.allow =
-						'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-					iframeEl.allowFullscreen = true;
-					videoContainer.replaceChildren( iframeEl );
-					videoModal.classList.add( 'is-active' );
+					if (videoType === 'mp4') {
+						const videoEl = document.createElement('video');
+						videoEl.src = videoSrc;
+						videoEl.controls = true;
+						videoEl.autoplay = true;
+						videoEl.className = 'modal-video-player';
+						videoEl.style.width = '100%';
+						videoEl.style.display = 'block';
+						videoContainer.replaceChildren(videoEl);
+					} else {
+						const iframeEl = document.createElement('iframe');
+						iframeEl.src = videoSrc;
+						iframeEl.title = videoTitle;
+						iframeEl.className = 'features-media__iframe';
+						iframeEl.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+						iframeEl.allowFullscreen = true;
+						videoContainer.replaceChildren(iframeEl);
+					}
+
+					videoModal.classList.add('is-active');
 				};
 
-				if ( overlay ) {
-					overlay.addEventListener( 'click', closeVideoModal );
+				if (overlay) {
+					overlay.addEventListener('click', closeVideoModal);
 				}
 
-				if ( closeButton ) {
-					closeButton.addEventListener( 'click', closeVideoModal );
+				if (closeButton) {
+					closeButton.addEventListener('click', closeVideoModal);
 				}
 
-				const thumbnails = blockEl.querySelectorAll(
-					'.videos__cards-item-thumbnail'
-				);
-				thumbnails.forEach( ( thumbnail ) => {
-					thumbnail.style.cursor = 'pointer';
-					thumbnail.addEventListener( 'click', function ( e ) {
+				const cards = blockEl.querySelectorAll('.videos__cards-item');
+				cards.forEach((card) => {
+					card.style.cursor = 'pointer';
+
+					// Prevent iframes and videos in the grid from capturing clicks
+					const mediaEl = card.querySelectorAll('iframe, video, .play-icon-video');
+					mediaEl.forEach((el) => {
+						el.style.pointerEvents = 'none';
+					});
+
+					card.addEventListener('click', function (e) {
+						if (e.target.closest('a')) {
+							return;
+						}
 						e.preventDefault();
-						openVideoModal( this );
-					} );
-				} );
+						openVideoModal(this);
+					});
+				});
 
-				const playIcons = blockEl.querySelectorAll( '.play-icon-video' );
-				playIcons.forEach( ( icon ) => {
-					icon.style.cursor = 'pointer';
-					icon.addEventListener( 'click', function ( e ) {
-						e.preventDefault();
-						openVideoModal( this );
-					} );
-				} );
-
-				const mediaVideos = blockEl.querySelectorAll( '.media_video' );
-				mediaVideos.forEach( ( media ) => {
-					const hasThumbnail = media.querySelector(
-						'.videos__cards-item-thumbnail'
-					);
-					if ( ! hasThumbnail ) {
-						media.style.cursor = 'pointer';
-						media.addEventListener( 'click', function ( e ) {
-							e.preventDefault();
-							openVideoModal( this );
-						} );
-					}
-				} );
-
-				document.addEventListener( 'keydown', ( event ) => {
-					if ( event.key === 'Escape' && videoModal.classList.contains( 'is-active' ) ) {
+				document.addEventListener('keydown', (event) => {
+					if (event.key === 'Escape' && videoModal.classList.contains('is-active')) {
 						closeVideoModal();
 					}
-				} );
-			} );
+				});
+			});
 	};
 
-	if ( document.readyState === 'loading' ) {
-		document.addEventListener( 'DOMContentLoaded', initVideoGridModal );
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initVideoGridModal);
 	} else {
 		initVideoGridModal();
 	}
 
-	window.addEventListener( 'load', initVideoGridModal );
-} )();
+	window.addEventListener('load', initVideoGridModal);
+})();

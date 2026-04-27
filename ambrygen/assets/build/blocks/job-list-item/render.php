@@ -8,9 +8,13 @@
  *
  * @package ambrygen
  */
-use Ambrygen\Theme\Core\Helper;
 
-$ambrygen_attributes = $attributes ?? [];
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+$ambrygen_attributes = $attributes ?? array();
+$ambrygen_context    = $block->context ?? array();
 $ambrygen_post_id    = ! empty( $ambrygen_attributes['postId'] ) ? absint( $ambrygen_attributes['postId'] ) : 0;
 
 if ( ! $ambrygen_post_id ) {
@@ -23,7 +27,7 @@ if ( ! $ambrygen_post || 'publish' !== $ambrygen_post->post_status ) {
 	return;
 }
 
-$ambrygen_title = get_the_title( $ambrygen_post_id );
+$ambrygen_title     = get_the_title( $ambrygen_post_id );
 $ambrygen_permalink = get_permalink( $ambrygen_post_id );
 
 // Get taxonomy terms safely.
@@ -32,20 +36,26 @@ $ambrygen_job_location_terms = wp_get_post_terms( $ambrygen_post_id, 'job_locati
 
 // Fallback names.
 $ambrygen_type_name     = ! empty( $ambrygen_job_type_terms ) && ! is_wp_error( $ambrygen_job_type_terms )
-	? $ambrygen_job_type_terms[0]->name
-	: __( 'Full Time', 'ambrygen' );
+	? implode( ', ', wp_list_pluck( $ambrygen_job_type_terms, 'name' ) )
+	: __( 'Full Time', 'ambrygen-web' );
 
 $ambrygen_location_name = ! empty( $ambrygen_job_location_terms ) && ! is_wp_error( $ambrygen_job_location_terms )
-	? $ambrygen_job_location_terms[0]->name
-	: __( 'Headquarters', 'ambrygen' );
+	? implode( ', ', wp_list_pluck( $ambrygen_job_location_terms, 'name' ) )
+	: __( 'Headquarters', 'ambrygen-web' );
 
 // Icons.
-$ambrygen_type_image_url = ! empty( $ambrygen_attributes['jobtypeicon']['url'] )
-	? esc_url( $ambrygen_attributes['jobtypeicon']['url'] )
+$ambrygen_type_icon      = isset( $ambrygen_context['ambrygen/jobtypeicon'] ) && is_array( $ambrygen_context['ambrygen/jobtypeicon'] )
+	? $ambrygen_context['ambrygen/jobtypeicon']
+	: array();
+$ambrygen_location_icon  = isset( $ambrygen_context['ambrygen/joblocationicon'] ) && is_array( $ambrygen_context['ambrygen/joblocationicon'] )
+	? $ambrygen_context['ambrygen/joblocationicon']
+	: array();
+$ambrygen_type_image_url = ! empty( $ambrygen_type_icon['url'] )
+	? esc_url_raw( $ambrygen_type_icon['url'] )
 	: esc_url( get_theme_file_uri( 'assets/src/images/clock-icon.svg' ) );
 
-$ambrygen_location_image_url = ! empty( $ambrygen_attributes['joblocationicon']['url'] )
-	? esc_url( $ambrygen_attributes['joblocationicon']['url'] )
+$ambrygen_location_image_url = ! empty( $ambrygen_location_icon['url'] )
+	? esc_url_raw( $ambrygen_location_icon['url'] )
 	: esc_url( get_theme_file_uri( 'assets/src/images/marker-pin-icon.svg' ) );
 ?>
 

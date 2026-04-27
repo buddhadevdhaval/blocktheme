@@ -17,7 +17,6 @@ $ambrygen_block_id     = $attributes['blockId'] ?? '';
 $ambrygen_kicker      = $attributes['kicker'] ?? '';
 $ambrygen_title       = $attributes['title'] ?? '';
 $ambrygen_heading_tag = Helper::get_heading_tag( $attributes['headingTag'] ?? 'h2', 'h2' );
-$ambrygen_content_text = $attributes['content'] ?? '';
 $ambrygen_inner_content = trim( (string) $content );
 
 $ambrygen_slot_blocks = array(
@@ -30,6 +29,16 @@ $ambrygen_has_slots = false;
 if ( isset( $block ) && $block instanceof WP_Block && ! empty( $block->parsed_block['innerBlocks'] ) ) {
 	foreach ( $block->parsed_block['innerBlocks'] as $inner_block ) {
 		$slot = $inner_block['attrs']['__experimentalSlotName'] ?? '';
+		$block_name = $inner_block['blockName'] ?? '';
+
+		if ( ! $slot ) {
+			if ( in_array( $block_name, array( 'core/paragraph', 'core/buttons', 'core/button' ), true ) ) {
+				$slot = 'content';
+			} else {
+				$slot = 'items';
+			}
+		}
+
 		if ( $slot ) {
 			$ambrygen_has_slots = true;
 		}

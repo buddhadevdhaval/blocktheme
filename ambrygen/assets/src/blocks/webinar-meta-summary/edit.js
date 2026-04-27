@@ -6,19 +6,25 @@ import { useSelect } from '@wordpress/data';
  * Format duration minutes into a human-readable string.
  */
 const getDurationDisplay = ( minutes ) => {
-	const mins = parseInt( minutes, 10 );
-	if ( isNaN( mins ) || mins <= 0 ) return '';
+	const totalMins = parseInt( minutes, 10 );
+	if ( isNaN( totalMins ) || totalMins <= 0 ) return '';
 
-	if ( mins < 60 ) {
-		return `${ mins } ${ mins === 1 ? __( 'minute', 'ambrygen-web' ) : __( 'minutes', 'ambrygen-web' ) }`;
+	const hours = Math.floor( totalMins / 60 );
+	const mins = totalMins % 60;
+
+	let display = '';
+	if ( hours > 0 ) {
+		display = `${ hours } ${ hours === 1 ? __( 'hour', 'ambrygen-web' ) : __( 'hours', 'ambrygen-web' ) }`;
 	}
 
-	const hours = mins / 60;
-	if ( hours === Math.floor( hours ) ) {
-		return `${ hours } ${ hours === 1 ? __( 'hour', 'ambrygen-web' ) : __( 'hours', 'ambrygen-web' ) }`;
+	if ( mins > 0 ) {
+		if ( hours > 0 ) {
+			display += ` ${ __( 'and', 'ambrygen-web' ) } `;
+		}
+		display += `${ mins } ${ mins === 1 ? __( 'minute', 'ambrygen-web' ) : __( 'minutes', 'ambrygen-web' ) }`;
 	}
 
-	return `${ hours.toFixed( 1 ) } ${ __( 'hours', 'ambrygen-web' ) }`;
+	return display;
 };
 
 /**

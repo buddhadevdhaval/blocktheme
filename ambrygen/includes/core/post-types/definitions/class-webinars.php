@@ -36,6 +36,10 @@ class Webinars extends AbstractPostType {
 
 	public function meta_fields(): array {
 		return array(
+			'webinar_authors'   => array(
+				'label' => __( 'Webinar Authors', 'ambrygen-web' ),
+				'type'  => 'webinar_author_repeater',
+			),
 			'start_at'          => array(
 				'label' => __( 'Start At', 'ambrygen-web' ),
 				'type'  => 'date',
@@ -47,11 +51,11 @@ class Webinars extends AbstractPostType {
 			),
 			'ceu'               => array(
 				'label' => __( 'CEU', 'ambrygen-web' ),
-				'type'  => 'text',
+				'type'  => 'checkbox',
 			),
 			'pace'              => array(
 				'label' => __( 'Pace', 'ambrygen-web' ),
-				'type'  => 'text',
+				'type'  => 'checkbox',
 			),
 			'registration_link' => array(
 				'label' => __( 'Registration Link', 'ambrygen-web' ),
@@ -68,4 +72,3 @@ class Webinars extends AbstractPostType {
 		);
 	}
 }
-

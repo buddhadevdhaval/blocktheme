@@ -192,7 +192,7 @@ if ( ! empty( $attributes['buttons'] ) && is_array( $attributes['buttons'] ) ) {
 						$ambrygen_button_rel    = $button['rel'] ?? '';
 						?>
 						<a
-							class="is-style-site-trailing-icon site-btn <?php echo esc_attr( $button['variant'] ?? '' ); ?>"
+							class="site-btn has-right-arrow <?php echo esc_attr( $button['variant'] ?? '' ); ?>"
 							href="<?php echo esc_url( $button['url'] ); ?>"
 							<?php echo $ambrygen_button_target ? 'target="' . esc_attr( $ambrygen_button_target ) . '"' : ''; ?>
 							<?php echo $ambrygen_button_rel ? 'rel="' . esc_attr( $ambrygen_button_rel ) . '"' : ''; ?>

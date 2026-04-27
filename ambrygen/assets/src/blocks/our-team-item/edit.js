@@ -1,7 +1,7 @@
-import { useBlockProps } from '@wordpress/block-editor';
-import { SelectControl, Spinner, Button } from '@wordpress/components';
+import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
+import { SelectControl, Spinner, Button, ComboboxControl, PanelBody } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { useMemo } from '@wordpress/element';
+import { useMemo, useState } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
 import { DEFAULT_IMAGES } from '../_shared/components';
@@ -9,18 +9,25 @@ import { DEFAULT_IMAGES } from '../_shared/components';
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { postId = 0 } = attributes;
 	const { removeBlock } = useDispatch( 'core/block-editor' );
+	const [ searchInput, setSearchInput ] = useState( '' );
 	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
 	const hasSelectedPost = Boolean( postId );
 
-	// Get all team members
+	// Search for team members (authors) based on searchInput
 	const teamMembers = useSelect( ( select ) => {
-		return select( 'core' ).getEntityRecords( 'postType', 'our_team', {
-			per_page: -1,
+		const query = {
+			per_page: 20,
 			orderby: 'title',
 			post_status: 'publish',
 			order: 'asc',
-		} );
-	}, [] );
+		};
+
+		if ( searchInput ) {
+			query.search = searchInput;
+		}
+
+		return select( 'core' ).getEntityRecords( 'postType', 'author', query );
+	}, [ searchInput ] );
 
 	// Get current selected post details
 	const selectedPost = useSelect(
@@ -28,7 +35,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			return postId
 				? select( 'core' ).getEntityRecord(
 						'postType',
-						'our_team',
+						'author',
 						postId,
 						{
 							_embed: true,
@@ -53,39 +60,52 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		[ clientId, postId ]
 	);
 
-	// Dropdown options excluding selected
-	const options = teamMembers
-		? teamMembers
-				.filter( ( post ) => ! selectedIds.includes( post.id ) )
-				.map( ( post ) => ( {
-					label: decodeEntities( post.title.rendered ),
-					value: String( post.id ),
-				} ) )
-		: [];
+	// Searchable options (mapped from REST results)
+	const options = useMemo( () => {
+		if ( ! teamMembers ) return [];
+		return teamMembers
+			.filter( ( post ) => ! selectedIds.includes( post.id ) )
+			.map( ( post ) => ( {
+				label: decodeEntities( post.title.rendered ),
+				value: post.id,
+			} ) );
+	}, [ teamMembers, selectedIds ] );
 
 	return (
 		<div { ...useBlockProps( { className: 'our-team__card' } ) }>
-			{ /* Loading */ }
-			{ ! teamMembers && <Spinner /> }
+			<InspectorControls>
+				<PanelBody title={ __( 'Team Member Settings', 'ambrygen-web' ) }>
+					<ComboboxControl
+						label={ __( 'Select Member', 'ambrygen-web' ) }
+						value={ postId || null }
+						options={ options }
+						onFilterValueChange={ ( value ) => setSearchInput( value ) }
+						onChange={ ( value ) =>
+							setAttributes( {
+								postId: parseInt( value, 10 ) || 0,
+							} )
+						}
+						help={ __( 'Search by name to find a team member.', 'ambrygen-web' ) }
+					/>
+				</PanelBody>
+			</InspectorControls>
 
 			{ /* If no selection yet */ }
 			{ ! hasSelectedPost && (
-				<SelectControl
-					label={ __( 'Select Team Member', 'ambrygen-web' ) }
-					value=""
-					options={ [
-						{
-							label: __( 'Select a team member', 'ambrygen-web' ),
-							value: '',
-						},
-						...options,
-					] }
-					onChange={ ( value ) =>
-						setAttributes( {
-							postId: parseInt( value, 10 ) || 0,
-						} )
-					}
-				/>
+				<div className="our-team__selection-placeholder">
+					<ComboboxControl
+						label={ __( 'Search Team Member', 'ambrygen-web' ) }
+						value=""
+						options={ options }
+						onFilterValueChange={ ( value ) => setSearchInput( value ) }
+						onChange={ ( value ) =>
+							setAttributes( {
+								postId: parseInt( value, 10 ) || 0,
+							} )
+						}
+					/>
+					{ ! teamMembers && <Spinner /> }
+				</div>
 			) }
 
 			{ /* Selected Member Preview */ }
@@ -116,7 +136,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								</div>
 
 								<div className="our-team__role body1">
-									{ selectedPost.meta?.designation || '' }
+									{ selectedPost.meta?.user_designation || '' }
 								</div>
 							</div>
 

@@ -36,7 +36,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		backgroundImageAlt,
 		isTopAligned,
 	} = attributes;
-	
+
 	const PHONE_ICON_URL = getThemeAssetUrl('/assets/src/images/phone-icon.svg');
 	const MAIL_ICON_URL = getThemeAssetUrl('/assets/src/images/mail-icon.svg');
 
@@ -332,7 +332,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							/>
 							<div className="newsletter__block__button-wrapper">
 								<a
-									className="site-btn is-style-site-secondary-btn"
+									className="site-btn is-style-site-secondary-btn  has-right-arrow"
 									href={ctaValue.url || '#'}
 									role="button"
 									aria-label={ctaValue.text}

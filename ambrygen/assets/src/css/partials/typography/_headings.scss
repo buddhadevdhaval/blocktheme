@@ -33,6 +33,10 @@ h6,
 		padding: 0;
 		background-color: transparent;
 	}
+
+	@include bp.max(370px) {
+		word-break: break-word;
+	}
 }
 
 h1,
@@ -406,7 +410,7 @@ h6,
 }
 
 .button2-sbold {
-	font-size: 14px;
+	font-size: var(--theme_font_size_8);
 	font-weight: 600;
 	line-height: 142.857;
 	letter-spacing: -0.21px;

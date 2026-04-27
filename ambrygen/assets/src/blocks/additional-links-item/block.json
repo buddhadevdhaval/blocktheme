@@ -44,15 +44,15 @@
   "example": {
     "attributes": {
       "icon": {
-        "url": "Sample url",
+        "url": "https://example.com/icon.svg",
         "id": 0,
-        "alt": "Preview asset"
+        "alt": "Example icon"
       },
       "cta": {
-        "text": "Link",
-        "url": "Sample url",
-        "target": "Sample target",
-        "rel": "Sample rel",
+        "text": "Learn More",
+        "url": "https://example.com",
+        "target": "_self",
+        "rel": "",
         "variant": "dark"
       }
     }

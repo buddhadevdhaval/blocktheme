@@ -9,7 +9,7 @@
 	// flex-direction: column;
 
 	// Desktop Layout (> 991px)
-	@media (min-width: 992px) {
+	@include bp.min(lg) {
 		display: grid;
 		gap: 0 clamp(24px, 1.5rem + (1vw - 9.92px) * 10.0559, 60px);
 		grid-template-columns: 1fr 1fr;
@@ -22,7 +22,7 @@
 		// flex-direction: column;
 		border-bottom: 1px solid var(--theme_gray_300);
 
-		@media (min-width: 992px) {
+		@include bp.min(lg) {
 			display: contents;
 			border-bottom: none;
 			flex-direction: column;
@@ -39,13 +39,13 @@
 
 				&::before {
 
-					@media (min-width: 992px) {
+					@include bp.min(lg) {
 						background-color: var(--theme_link_color);
 					}
 				}
 			}
 
-			@media (min-width: 992px) {
+			@include bp.min(lg) {
 
 				.vertical-tabs__step-label {
 					color: var(--theme_cg_blue);
@@ -60,7 +60,7 @@
 
 		&:not(.is-active) {
 
-			@media (min-width: 992px) {
+			@include bp.min(lg) {
 
 				.vertical-tabs__step-label {
 					color: var(--theme_gray_500);
@@ -84,12 +84,12 @@
 		&::before {
 
 			.bg-primary_25 & {
-				@media (min-width: 992px) {
+				@include bp.min(lg) {
 					background-color: var(--theme_blue_200);
 				}
 			}
 
-			@media (min-width: 992px) {
+			@include bp.min(lg) {
 				background-color: var(--theme_gray_100);
 				content: "";
 				display: block;
@@ -104,7 +104,7 @@
 
 
 
-		@media (min-width: 992px) {
+		@include bp.min(lg) {
 			padding: 16px 0 16px 24px;
 		}
 	}
@@ -113,7 +113,7 @@
 		margin-bottom: 0;
 		color: var(--theme_gray_500);
 
-		@media (max-width: 991px) {
+		@include bp.max(lg) {
 			// Mobile specific if needed
 		}
 	}
@@ -134,7 +134,7 @@
 		margin-bottom: 24px;
 
 
-		@media (min-width: 992px) {
+		@include bp.min(lg) {
 			grid-column: 2;
 			grid-row: 1 / 20;
 			display: none;
@@ -168,7 +168,7 @@
 			box-shadow: none;
 		}
 
-		@media (min-width: 992px) {
+		@include bp.min(lg) {
 			height: 100%;
 			aspect-ratio: auto;
 			border-width: 6px;

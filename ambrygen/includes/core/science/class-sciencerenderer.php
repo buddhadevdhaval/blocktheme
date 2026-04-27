@@ -115,8 +115,9 @@ final class ScienceRenderer
             return '';
         }
 
-        $session_id = (string) get_post_meta($post_id, 'session_id', true);
+        $session_id = (string) get_post_meta($post_id, 'session', true);
         $start_at   = (string) get_post_meta($post_id, 'start_at', true);
+        $end_at     = (string) get_post_meta($post_id, 'end_at', true);
 
         $speakers      = Helper::get_presentation_speakers((int) $post_id);
         $speaker_label = ! empty($speakers) ? implode(', ', $speakers) : '--';
@@ -131,20 +132,27 @@ final class ScienceRenderer
             );
         }
 
-        $display_date = get_the_date('F j, Y', $post_id);
+        $display_date = get_the_date('l, M j, Y', $post_id);
         if ('' !== $start_at) {
-            $timestamp = strtotime($start_at);
-            if (false !== $timestamp) {
-                $display_date = wp_date('F j, Y g:ia', $timestamp);
+            $start_timestamp = strtotime($start_at);
+            if (false !== $start_timestamp) {
+                $display_date = wp_date('l, M j, Y g:ia', $start_timestamp);
+
+                if ('' !== $end_at) {
+                    $end_timestamp = strtotime($end_at);
+                    if (false !== $end_timestamp) {
+                        $display_date .= ' - ' . wp_date('g:ia', $end_timestamp);
+                    }
+                }
             }
         }
 
         ob_start();
         ?>
         <div class="ambrygen-presentation-meta listing-archive__item-meta flag-details">
-            <?php if ('' !== $session_id): ?>
+            <?php if ( '' !== $session_id && '0' !== $session_id ) : ?>
                 <div class="listing-archive__item-meta__row text-md-regular mb-0 flag-info">
-                    <div class="listing-archive__item-meta__row__label flag-label">Session:</div> <?php echo esc_html('#' . $session_id); ?>
+                    <div class="listing-archive__item-meta__row__label flag-label">Session:</div> <?php echo esc_html( '#' . $session_id ); ?>
                 </div>
             <?php endif; ?>
             <div class="listing-archive__item-meta__row text-md-regular mb-0 flag-info">
@@ -270,6 +278,7 @@ final class ScienceRenderer
 
         $session_id = (string) get_post_meta($post_id, 'session_id', true);
         $start_at   = (string) get_post_meta($post_id, 'start_at', true);
+        $end_at     = (string) get_post_meta($post_id, 'end_at', true);
 
         $authors      = Helper::get_poster_authors((int) $post_id);
         $author_label = ! empty($authors) ? implode(', ', $authors) : '--';
@@ -284,20 +293,27 @@ final class ScienceRenderer
             );
         }
 
-        $display_date = get_the_date('F j, Y', $post_id);
+        $display_date = get_the_date('l, M j, Y', $post_id);
         if ('' !== $start_at) {
-            $timestamp = strtotime($start_at);
-            if (false !== $timestamp) {
-                $display_date = wp_date('F j, Y g:ia', $timestamp);
+            $start_timestamp = strtotime($start_at);
+            if (false !== $start_timestamp) {
+                $display_date = wp_date('l, M j, Y g:ia', $start_timestamp);
+
+                if ('' !== $end_at) {
+                    $end_timestamp = strtotime($end_at);
+                    if (false !== $end_timestamp) {
+                        $display_date .= ' - ' . wp_date('g:ia', $end_timestamp);
+                    }
+                }
             }
         }
 
         ob_start();
         ?>
         <div class="ambrygen-poster-meta listing-archive__item-meta flag-details">
-            <?php if ('' !== $session_id): ?>
+            <?php if ( '' !== $session_id && '0' !== $session_id ) : ?>
                 <div class="listing-archive__item-meta__row text-md-regular mb-0 flag-info">
-                    <div class="listing-archive__item-meta__row__label flag-label">Session:</div> <?php echo esc_html('#' . $session_id); ?>
+                    <div class="listing-archive__item-meta__row__label flag-label">Session:</div> <?php echo esc_html( '#' . $session_id ); ?>
                 </div>
             <?php endif; ?>
             <div class="listing-archive__item-meta__row text-md-regular mb-0 flag-info flag-date-info">
@@ -317,6 +333,62 @@ final class ScienceRenderer
                     <div class="event-carousel__meta-list-icon flag-icon"></div>Authors:
                 </div> <?php echo esc_html($author_label); ?>
             </div>
+        </div>
+        <?php
+        return (string) ob_get_clean();
+    }
+
+    public function render_poster_pdf_files(): string
+    {
+        $post_id = get_the_ID();
+        if (! $post_id || 'poster' !== get_post_type($post_id)) {
+            return '';
+        }
+
+        $rows = get_post_meta($post_id, 'poster_pdf_files', true);
+        if (! is_array($rows)) {
+            return '';
+        }
+
+        $buttons = array();
+
+        foreach ($rows as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+
+            $pdf_type = isset($row['pdf_type']) ? trim((string) $row['pdf_type']) : '';
+            $file_id  = isset($row['file_id']) ? absint($row['file_id']) : 0;
+            $file_url = $file_id ? wp_get_attachment_url($file_id) : '';
+
+            if ('' === $pdf_type || ! $file_url) {
+                continue;
+            }
+
+            $buttons[] = array(
+                'label' => $pdf_type,
+                'url'   => $file_url,
+            );
+        }
+
+        if (empty($buttons)) {
+            return '';
+        }
+
+        ob_start();
+        ?>
+        <div class="is-style-gl-s40" aria-hidden="true"></div>
+        <div class="poster-pdf-files">
+            <?php foreach ($buttons as $button): ?>
+                <a
+                    class="site-btn btn-medium is-style-site-trailing-icon"
+                    href="<?php echo esc_url($button['url']); ?>"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    <?php echo esc_html($button['label']); ?>
+                </a>
+            <?php endforeach; ?>
         </div>
         <?php
         return (string) ob_get_clean();

@@ -441,7 +441,11 @@ final class ConferenceRenderer
 								$poster_id = $poster->ID;
 								$session_id = get_post_meta($poster_id, 'session', true);
 								$poster_name = get_post_meta($poster_id, 'pr_name', true) ?: $poster->post_title;
+
 								$authors = $this->format_meta_list_value(get_post_meta($poster_id, 'authors', true));
+								$poster_pdfs = $this->get_poster_pdf_files($poster_id);
+
+
 								?>
 								<article class="agenda-card">
 									<?php if (!empty($session_id)): ?>
@@ -457,7 +461,39 @@ final class ConferenceRenderer
 
 									<div class="agenda-card__schedule">
 										<div class="agenda-card__event-title subtitle1-sbold mb-0 subtitle2-sbold">
-											<?php echo esc_html($poster_name); ?></div>
+											<a href="<?php echo esc_url(get_permalink($poster_id)); ?>" class="agenda-card__event-link">
+												<?php echo esc_html($poster_name); ?>
+											</a>
+											<?php if (!empty($poster_pdfs)): ?>
+	<?php
+	$types = array_values(
+		array_filter(
+			array_map(
+				static function ($item) {
+					$type = isset($item['pdf_type']) ? trim($item['pdf_type']) : '';
+					return $type ? ucfirst(str_replace('_', ' ', $type)) : '';
+				},
+				$poster_pdfs
+			),
+			static fn($type) => $type !== ''
+		)
+	);
+	?>
+
+				<?php if (!empty($types)): ?>
+					<div class="is-style-gl-s12" aria-hidden="true"></div>
+					<div class="event-carousel__tags lists-item-category">
+
+						<?php foreach ($types as $type): ?>
+							<div class="category-item">
+								<a href="<?php echo esc_url(get_permalink($poster_id)); ?>" class="event-carousel__tag"><?php echo esc_html($type); ?></a>
+							</div>
+						<?php endforeach; ?>
+					</div>
+					<div class="is-style-gl-s12" aria-hidden="true"></div>
+				<?php endif; ?>
+			<?php endif; ?>
+										</div>
 										<?php if ($authors): ?>
 											<div class="agenda-card__event-speakers body1"><?php echo esc_html($authors); ?></div>
 										<?php endif; ?>
@@ -802,17 +838,17 @@ final class ConferenceRenderer
 					<?php endif; ?>
 				</div>
 				<div class="is-style-gl-s16" aria-hidden="true"></div>
-				<div class="event-carousel__body">
+				<div class="event-carousel__body  flag-details">
 					<div class="event-carousel__details">
 						<?php if ('' !== $date_range): ?>
-							<div class="text-md-medium event-carousel__date-info">
-								<div class="event-carousel__meta-icon" aria-hidden="true"></div>
+							<div class="text-md-medium event-carousel__date-info flag-info flag-date-info">
+								<div class="event-carousel__meta-icon flag-icon" aria-hidden="true"></div>
 								<span><?php echo esc_html($date_range); ?></span>
 							</div>
 						<?php endif; ?>
 						<?php if ('' !== $location): ?>
-							<div class="text-md-medium event-carousel__location">
-								<div class="event-carousel__meta-icon" aria-hidden="true"></div>
+							<div class="text-md-medium event-carousel__location flag-info flag-marker-pin">
+								<div class="event-carousel__meta-icon flag-icon" aria-hidden="true"></div>
 								<span><?php echo esc_html($location); ?></span>
 							</div>
 						<?php endif; ?>
@@ -939,185 +975,9 @@ final class ConferenceRenderer
 			</div>
 		</div>
 
-		<script>
-			(function () {
-				'use strict';
 
-				const tabButtons = document.querySelectorAll('.conference-tabs-nav__button');
-				const tabPanels = document.querySelectorAll('.conference-tabs-content__panel');
 
-				tabButtons.forEach(button => {
-					button.addEventListener('click', function (e) {
-						e.preventDefault();
 
-						const tabName = this.getAttribute('data-tab');
-
-						// Deactivate all buttons and panels
-						tabButtons.forEach(btn => {
-							btn.classList.remove('conference-tabs-nav__button--active');
-							btn.setAttribute('aria-selected', 'false');
-						});
-
-						tabPanels.forEach(panel => {
-							panel.classList.remove('conference-tabs-content__panel--active');
-						});
-
-						// Activate clicked button and corresponding panel
-						this.classList.add('conference-tabs-nav__button--active');
-						this.setAttribute('aria-selected', 'true');
-
-						const activePanel = document.getElementById('conference-' + tabName + '-panel');
-						if (activePanel) {
-							activePanel.classList.add('conference-tabs-content__panel--active');
-						}
-					});
-				});
-			})();
-		</script>
-
-		<style>
-			.conference-linked-posts-tabs-wrapper {
-				margin: 0;
-			}
-
-			.conference-tabs-nav {
-				border-bottom: 2px solid #e0e0e0;
-				margin-bottom: 2rem;
-			}
-
-			.conference-tabs-nav__list {
-				display: flex;
-				list-style: none;
-				margin: 0;
-				padding: 0;
-				gap: 0.5rem;
-			}
-
-			.conference-tabs-nav__item {
-				margin: 0;
-				padding: 0;
-			}
-
-			.conference-tabs-nav__button {
-				background: none;
-				border: none;
-				border-bottom: 3px solid transparent;
-				cursor: pointer;
-				font-size: 1rem;
-				font-weight: 500;
-				padding: 1rem 1.5rem;
-				color: #666;
-				transition: all 0.3s ease;
-				position: relative;
-				bottom: -2px;
-			}
-
-			.conference-tabs-nav__button:hover {
-				color: #333;
-			}
-
-			.conference-tabs-nav__button--active {
-				color: #006494;
-				border-bottom-color: #006494;
-			}
-
-			.conference-tabs-content__panel {
-				display: none;
-			}
-
-			.conference-tabs-content__panel--active {
-				display: block;
-			}
-
-			.conference-linked-posts__grid {
-				display: grid;
-				grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-				gap: 2rem;
-				margin-bottom: 2rem;
-			}
-
-			.conference-linked-post-item {
-				background: #f9f9f9;
-				border: 1px solid #e0e0e0;
-				border-radius: 8px;
-				overflow: hidden;
-				padding: 1.5rem;
-				transition: box-shadow 0.3s ease;
-			}
-
-			.conference-linked-post-item:hover {
-				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-			}
-
-			.conference-linked-post-item__image {
-				display: block;
-				margin: -1.5rem -1.5rem 1rem -1.5rem;
-				width: calc(100% + 3rem);
-				height: 180px;
-				overflow: hidden;
-				border-radius: 8px 8px 0 0;
-			}
-
-			.conference-linked-post-item__image img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-			}
-
-			.conference-linked-post-item__title {
-				margin: 0 0 0.5rem 0;
-			}
-
-			.conference-linked-post-item__title a {
-				color: #006494;
-				text-decoration: none;
-			}
-
-			.conference-linked-post-item__title a:hover {
-				text-decoration: underline;
-			}
-
-			.conference-linked-post-item__speakers,
-			.conference-linked-post-item__authors {
-				color: #666;
-				margin-bottom: 0.75rem;
-				font-style: italic;
-			}
-
-			.conference-linked-post-item__description {
-				color: #666;
-				margin: 0.75rem 0;
-				line-height: 1.5;
-			}
-
-			.conference-linked-post-item__details {
-				margin-top: 1rem;
-				padding-top: 1rem;
-				border-top: 1px solid #e0e0e0;
-			}
-
-			.conference-linked-post-item__meta {
-				display: flex;
-				justify-content: space-between;
-				margin-bottom: 0.5rem;
-				color: #999;
-			}
-
-			.conference-linked-post-item__meta .label {
-				font-weight: 600;
-				color: #666;
-			}
-
-			.conference-linked-post-item__link {
-				margin-top: 1rem;
-			}
-
-			.conference-no-items {
-				text-align: center;
-				padding: 2rem;
-				color: #999;
-			}
-		</style>
 		<?php
 
 		return (string) ob_get_clean();
@@ -1290,6 +1150,64 @@ final class ConferenceRenderer
 		}
 
 		return '';
+	}
+
+	/**
+	 * Get poster PDF files for a poster post.
+	 *
+	 * Expected meta structure:
+	 * [
+	 *     [
+	 *         'pdf_type' => 'abstract',
+	 *         'file_id'  => 123,
+	 *     ],
+	 *     ...
+	 * ]
+	 *
+	 * @param int         $post_id  Poster post ID.
+	 * @param string|null $pdf_type Optional PDF type to filter by.
+	 * @return array<int, array{pdf_type:string,file_id:int,url:string}>
+	 */
+	private function get_poster_pdf_files(int $post_id, ?string $pdf_type = null): array
+	{
+		$rows = get_post_meta($post_id, 'poster_pdf_files', true);
+
+		if (! is_array($rows)) {
+			return [];
+		}
+
+		$files = [];
+
+		foreach ($rows as $row) {
+			if (! is_array($row)) {
+				continue;
+			}
+
+			$type    = isset($row['pdf_type']) ? sanitize_key($row['pdf_type']) : '';
+			$file_id = isset($row['file_id']) ? absint($row['file_id']) : 0;
+
+			if (0 === $file_id) {
+				continue;
+			}
+
+			if (null !== $pdf_type && $type !== sanitize_key($pdf_type)) {
+				continue;
+			}
+
+			$file_url = wp_get_attachment_url($file_id);
+
+			if (! $file_url) {
+				continue;
+			}
+
+			$files[] = [
+				'pdf_type' => $type,
+				'file_id'  => $file_id,
+				'url'      => $file_url,
+			];
+		}
+
+		return $files;
 	}
 
 	/**

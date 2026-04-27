@@ -22,25 +22,25 @@ final class ConferenceRouteService
 
     public function register_rewrite(): void
     {
-        add_rewrite_tag('%old_id%', '([^/]+)');
+        add_rewrite_tag('%_old_id%', '([^/]+)');
         add_rewrite_tag('%pr_name%', '([^/]+)');
 
         add_rewrite_rule(
             '^conference/([^/]+)/([^/]+)/?$',
-            'index.php?post_type=conferences&old_id=$matches[1]&pr_name=$matches[2]',
+            'index.php?post_type=conferences&_old_id=$matches[1]&pr_name=$matches[2]',
             'top'
         );
 
         add_rewrite_rule(
             '^conferences/([^/]+)/([^/]+)/?$',
-            'index.php?post_type=conferences&old_id=$matches[1]&pr_name=$matches[2]',
+            'index.php?post_type=conferences&_old_id=$matches[1]&pr_name=$matches[2]',
             'bottom'
         );
     }
 
     public function register_query_vars(array $vars): array
     {
-        $vars[] = 'old_id';
+        $vars[] = '_old_id';
         $vars[] = 'pr_name';
         return $vars;
     }
@@ -51,8 +51,9 @@ final class ConferenceRouteService
             return $post_link;
         }
 
-        $old_id = get_post_meta($post->ID, 'old_id', true);
+        $old_id = get_post_meta($post->ID, '_old_id', true);
         $pr_name = get_post_meta($post->ID, 'pr_name', true);
+        $pr_name = sanitize_title($pr_name);
 
         if (! empty($old_id) && ! empty($pr_name)) {
             $post_link = home_url('/conference/' . $old_id . '/' . $pr_name);
@@ -67,26 +68,49 @@ final class ConferenceRouteService
             return;
         }
 
-        $old_id = $query->get('old_id');
+        $old_id = $query->get('_old_id');
         $pr_name = $query->get('pr_name');
 
         if (empty($old_id) || empty($pr_name)) {
             return;
         }
 
-        $query->set('post_type', 'conferences');
-        $query->set('post_status', 'publish');
-
-        $query->set('meta_query', [
-            [
-                'key'   => 'old_id',
-                'value' => $old_id,
-            ],
-            [
-                'key'   => 'pr_name',
-                'value' => $pr_name,
+        $matched_posts = get_posts([
+            'post_type'      => 'conferences',
+            'post_status'    => 'publish',
+            'posts_per_page' => 1,
+            'fields'         => 'ids',
+            'meta_query'     => [
+                [
+                    'key'   => '_old_id',
+                    'value' => $old_id,
+                ],
             ],
         ]);
+
+        if (empty($matched_posts)) {
+            return;
+        }
+
+        $matched_post_id = (int) $matched_posts[0];
+        $matched_pr_name = (string) get_post_meta($matched_post_id, 'pr_name', true);
+        $matched_pr_slug = sanitize_title($matched_pr_name);
+
+        if ($matched_pr_slug !== sanitize_title((string) $pr_name)) {
+            return;
+        }
+
+        $query->set('p', $matched_post_id);
+        $query->set('post_type', 'conferences');
+        $query->set('post_status', 'publish');
+        $query->set('name', get_post_field('post_name', $matched_post_id));
+        $query->set('posts_per_page', 1);
+        $query->is_single = true;
+        $query->is_singular = true;
+        $query->is_archive = false;
+        $query->is_home = false;
+        $query->is_post_type_archive = false;
+        $query->is_404 = false;
     }
 
     public function filter_in_progress_query(array $query, \WP_Block $block): array
@@ -345,20 +369,20 @@ final class PresentationRouteService
 
     public function register_rewrite(): void
     {
-        add_rewrite_tag('%sp_old_id%', '([^/]+)');
-        add_rewrite_tag('%sp_slug%', '([^/]+)');
+        add_rewrite_tag('%_old_id%', '([^/]+)');
+        add_rewrite_tag('%pr_name%', '([^/]+)');
 
         add_rewrite_rule(
             '^scientific-presentation/([^/]+)/([^/]+)/?$',
-            'index.php?post_type=presentation&sp_old_id=$matches[1]&sp_slug=$matches[2]',
+            'index.php?post_type=presentation&_old_id=$matches[1]&pr_name=$matches[2]',
             'top'
         );
     }
 
     public function register_query_vars(array $vars): array
     {
-        $vars[] = 'sp_old_id';
-        $vars[] = 'sp_slug';
+        $vars[] = '_old_id';
+        $vars[] = 'pr_name';
         $vars[] = 'conference_id';
         $vars[] = 'speaker';
         $vars[] = 'collaborator';
@@ -371,11 +395,12 @@ final class PresentationRouteService
             return $post_link;
         }
 
-        $old_id = get_post_meta($post->ID, 'old_id', true);
-        $slug = $post->post_name;
+        $old_id = get_post_meta($post->ID, '_old_id', true);
+        $pr_name = get_post_meta($post->ID, 'pr_name', true);
+        $pr_slug = sanitize_title($pr_name ?: $post->post_name);
 
-        if (! empty($old_id)) {
-            $post_link = home_url('/scientific-presentation/' . $old_id . '/' . $slug);
+        if (! empty($old_id) && ! empty($pr_slug)) {
+            $post_link = home_url('/scientific-presentation/' . $old_id . '/' . $pr_slug);
         }
 
         return $post_link;
@@ -387,22 +412,49 @@ final class PresentationRouteService
             return;
         }
 
-        $sp_old_id = $query->get('sp_old_id');
-        $sp_slug = $query->get('sp_slug');
+        $_old_id = $query->get('_old_id');
+        $pr_name = $query->get('pr_name');
 
-        if (empty($sp_old_id) || empty($sp_slug)) {
+        if (empty($_old_id) || empty($pr_name)) {
             return;
         }
 
-        $query->set('post_type', 'presentation');
-        $query->set('name', $sp_slug);
-
-        $query->set('meta_query', [
-            [
-                'key'   => 'old_id',
-                'value' => $sp_old_id,
+        $matched_posts = get_posts([
+            'post_type'      => 'presentation',
+            'post_status'    => 'publish',
+            'posts_per_page' => 1,
+            'fields'         => 'ids',
+            'meta_query'     => [
+                [
+                    'key'   => '_old_id',
+                    'value' => $_old_id,
+                ],
             ],
         ]);
+
+        if (empty($matched_posts)) {
+            return;
+        }
+
+        $matched_post_id = (int) $matched_posts[0];
+        $matched_pr_name = (string) get_post_meta($matched_post_id, 'pr_name', true);
+        $matched_pr_slug = sanitize_title($matched_pr_name ?: get_post_field('post_name', $matched_post_id));
+
+        if ($matched_pr_slug !== sanitize_title((string) $pr_name)) {
+            return;
+        }
+
+        $query->set('p', $matched_post_id);
+        $query->set('post_type', 'presentation');
+        $query->set('post_status', 'publish');
+        $query->set('name', get_post_field('post_name', $matched_post_id));
+        $query->set('posts_per_page', 1);
+        $query->is_single = true;
+        $query->is_singular = true;
+        $query->is_archive = false;
+        $query->is_home = false;
+        $query->is_post_type_archive = false;
+        $query->is_404 = false;
     }
 }
 
@@ -446,7 +498,7 @@ final class PosterRouteService
             return $post_link;
         }
 
-        $old_id = get_post_meta($post->ID, 'old_id', true);
+        $old_id = get_post_meta($post->ID, '_old_id', true);
         $slug = $post->post_name;
 
         if (! empty($old_id)) {
@@ -469,15 +521,40 @@ final class PosterRouteService
             return;
         }
 
-        $query->set('post_type', 'poster');
-        $query->set('name', $po_slug);
-
-        $query->set('meta_query', [
-            [
-                'key'   => 'old_id',
-                'value' => $po_old_id,
+        $matched_posts = get_posts([
+            'post_type'      => 'poster',
+            'post_status'    => 'publish',
+            'posts_per_page' => 1,
+            'fields'         => 'ids',
+            'meta_query'     => [
+                [
+                    'key'   => '_old_id',
+                    'value' => $po_old_id,
+                ],
             ],
         ]);
+
+        if (empty($matched_posts)) {
+            return;
+        }
+
+        $matched_post_id = (int) $matched_posts[0];
+
+        if (sanitize_title((string) get_post_field('post_name', $matched_post_id)) !== sanitize_title((string) $po_slug)) {
+            return;
+        }
+
+        $query->set('p', $matched_post_id);
+        $query->set('post_type', 'poster');
+        $query->set('post_status', 'publish');
+        $query->set('name', get_post_field('post_name', $matched_post_id));
+        $query->set('posts_per_page', 1);
+        $query->is_single = true;
+        $query->is_singular = true;
+        $query->is_archive = false;
+        $query->is_home = false;
+        $query->is_post_type_archive = false;
+        $query->is_404 = false;
     }
 }
 
@@ -494,6 +571,8 @@ final class PublicationRouteService
 
     public function register_query_vars(array $vars): array
     {
+        $vars[] = 'pub_old_id';
+        $vars[] = 'pub_slug';
         $vars[] = 'specialty_area';
         $vars[] = 'topic';
         $vars[] = 'collaborator';
@@ -506,7 +585,14 @@ final class PublicationRouteService
             return $post_link;
         }
 
-        return home_url('/peer-reviewed-publication/' . $post->post_name);
+        $old_id = get_post_meta($post->ID, '_old_id', true);
+        $slug = $post->post_name;
+
+        if (! empty($old_id)) {
+            $post_link = home_url('/peer-reviewed-publication/' . $old_id . '/' . $slug);
+        }
+
+        return $post_link;
     }
 
     public function filter_query(\WP_Query $query): void
@@ -515,42 +601,46 @@ final class PublicationRouteService
             return;
         }
 
-        $specialty_area = $query->get('specialty_area');
-        $topic = $query->get('topic');
-        $collaborator = $query->get('collaborator');
+        $pub_old_id = $query->get('pub_old_id');
+        $pub_slug = $query->get('pub_slug');
 
-        if (empty($specialty_area) && empty($topic) && empty($collaborator)) {
+        if (empty($pub_old_id) || empty($pub_slug)) {
             return;
         }
 
-        $tax_query = [];
+        $matched_posts = get_posts([
+            'post_type'      => 'publication',
+            'post_status'    => 'publish',
+            'posts_per_page' => 1,
+            'fields'         => 'ids',
+            'meta_query'     => [
+                [
+                    'key'   => '_old_id',
+                    'value' => $pub_old_id,
+                ],
+            ],
+        ]);
 
-        if (! empty($specialty_area)) {
-            $tax_query[] = [
-                'taxonomy' => 'specialty_area',
-                'field'    => 'slug',
-                'terms'    => $specialty_area,
-            ];
+        if (empty($matched_posts)) {
+            return;
         }
 
-        if (! empty($topic)) {
-            $tax_query[] = [
-                'taxonomy' => 'topic',
-                'field'    => 'slug',
-                'terms'    => $topic,
-            ];
+        $matched_post_id = (int) $matched_posts[0];
+
+        if (sanitize_title((string) get_post_field('post_name', $matched_post_id)) !== sanitize_title((string) $pub_slug)) {
+            return;
         }
 
-        if (! empty($collaborator)) {
-            $tax_query[] = [
-                'taxonomy' => 'collaborator',
-                'field'    => 'slug',
-                'terms'    => $collaborator,
-            ];
-        }
-
-        if (! empty($tax_query)) {
-            $query->set('tax_query', $tax_query);
-        }
+        $query->set('p', $matched_post_id);
+        $query->set('post_type', 'publication');
+        $query->set('post_status', 'publish');
+        $query->set('name', get_post_field('post_name', $matched_post_id));
+        $query->set('posts_per_page', 1);
+        $query->is_single = true;
+        $query->is_singular = true;
+        $query->is_archive = false;
+        $query->is_home = false;
+        $query->is_post_type_archive = false;
+        $query->is_404 = false;
     }
 }

@@ -1,12 +1,13 @@
 @use "../../css/partials/variables/breakpoints" as bp;
 
-// Approach Card Component
-.approach-card {
-	background: linear-gradient(0deg, #FFF 0%, #FFF 100%), var(--theme_primary_25);
-	// background: linear-gradient(90deg, #fff 0%, #fff 100%),
-	// 	linear-gradient(90deg, var(--theme_primary_25) 0%, var(--theme_primary_25) 100%);
+.three-column-card {
+	background: var(--theme_gray_100);
 	border-radius: 16px;
 	overflow: hidden;
+
+	.bg-primary_25 & {
+		background: linear-gradient(0deg, var(--theme_white) 0%, var(--theme_white) 100%), var(--theme_primary_25);
+	}
 
 	&__inner {
 		backdrop-filter: blur(20px);
@@ -88,52 +89,5 @@
 
 	&__cta {
 		width: 100%;
-		display: block;
-		gap: 10px;
-		border: none;
-		padding: 16px;
-		border-radius: 8px;
-		backdrop-filter: blur(20px);
-		font-size: var(--theme_font_size_8);
-		font-weight: 600;
-		letter-spacing: -0.21px;
-		line-height: 1.42;
-		background-color: var(--theme_cg_blue);
-		color: var(--theme_white);
-
-		@include bp.max(md) {
-			letter-spacing: -0.19px;
-		}
-
-		&:hover {
-			background-color: var(--theme_button_bgcolor_hover);
-			color: var(--theme_button_color_hover);
-		}
-
-		&:focus-visible {
-			outline: 2px solid var(--theme_white);
-			outline-offset: 2px;
-			background-color: var(--theme_button_bgcolor_hover);
-			color: var(--theme_button_color_hover);
-		}
-
-
-		&::after {
-			filter: brightness(0) saturate(100%) invert(99%) sepia(1%) saturate(2%) hue-rotate(120deg) brightness(105%) contrast(100%);
-			background-image: url(../../images/btn-arrow-right-icon.svg);
-			background-position: right center;
-			background-repeat: no-repeat;
-			background-size: 16px 16px;
-			content: "";
-			display: inline-block;
-			height: 20px;
-			transition: 0.35s;
-			transform: rotate(-45deg);
-			bottom: -1px;
-			position: relative;
-			width: 20px;
-			vertical-align: bottom;
-		}
-
 	}
 }

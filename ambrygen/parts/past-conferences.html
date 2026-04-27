@@ -1,7 +1,7 @@
 <!-- wp:group {"tagName":"section","className":"container-1280 bg-primary_25","layout":{"type":"default"}} -->
 <section class="wp-block-group container-1280 bg-primary_25">
 				<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
-	<div class="wp-block-spacer is-style-gl-s50" aria-hidden="true"></div>
+	<div style="height:50px" class="wp-block-spacer is-style-gl-s50" aria-hidden="true"></div>
 	<!-- /wp:spacer -->
 
 	<!-- wp:group {"className":"wrapper","layout":{"type":"default"}} -->
@@ -13,7 +13,7 @@
 			<!-- /wp:heading -->
 
 			<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
-			<div class="is-style-gl-s50" aria-hidden="true"></div>
+			<div style="height:50px" class="wp-block-spacer is-style-gl-s50" aria-hidden="true"></div>
 			<!-- /wp:spacer -->
 
 			<!-- wp:group {"className":"category-filter-search","layout":{"type":"default"}} -->
@@ -57,14 +57,13 @@
 			<!-- /wp:group -->
 
 			<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
-			<div class="is-style-gl-s50" aria-hidden="true"></div>
+			<div style="height:50px" class="wp-block-spacer is-style-gl-s50" aria-hidden="true"></div>
 			<!-- /wp:spacer -->
 
-			<!-- wp:html -->
-			<div class="ambrygen-ajax-pagination" data-ambrygen-scope="past" data-ambrygen-per-page="8"
-				data-ambrygen-order="DESC">
-				<div class="ambrygen-ajax-pagination__content">
-					<!-- /wp:html -->
+			<!-- wp:group {"className":"ambrygen-ajax-pagination ambrygen-ajax-pagination--past ambrygen-ajax-pagination--desc ambrygen-ajax-pagination--per-page-8","layout":{"type":"default"}} -->
+			<div class="wp-block-group ambrygen-ajax-pagination ambrygen-ajax-pagination--past ambrygen-ajax-pagination--desc ambrygen-ajax-pagination--per-page-8">
+				<!-- wp:group {"className":"ambrygen-ajax-pagination__content","layout":{"type":"default"}} -->
+				<div class="wp-block-group ambrygen-ajax-pagination__content">
 
 					<!-- wp:query {"queryId":3,"query":{"perPage":8,"postType":"conferences","order":"desc","orderBy":"date","inherit":false}} -->
 					<div class="wp-block-query">
@@ -73,7 +72,7 @@
 						<!-- /wp:post-template -->
 
 						<!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
-						<div class="is-style-gl-s50" aria-hidden="true"></div>
+						<div style="height:64px" class="wp-block-spacer is-style-gl-s64" aria-hidden="true"></div>
 						<!-- /wp:spacer -->
 
 						<!-- wp:html -->
@@ -105,8 +104,7 @@
 							</div>
 							<div class="tab-dropdown">
 								<button class="dropdown-toggle" id="category-dropdown-btn-past-perpage" type="button"
-									aria-expanded="false" aria-controls="category-dropdown-menu-past-perpage">8 /
-									page</button>
+									aria-expanded="false" aria-controls="category-dropdown-menu-past-perpage">8 / page</button>
 								<ul id="category-dropdown-menu-past-perpage" class="dropdown-menu">
 									<li style="animation-delay: 0s;"><a href="#" aria-current="page">8 / page</a></li>
 									<li style="animation-delay: 0.1s;"><a href="#">16 / page</a></li>
@@ -114,20 +112,19 @@
 								</ul>
 							</div>
 						</div>
-					
 						<!-- /wp:html -->
 					</div>
 					<!-- /wp:query -->
-					<!-- wp:html -->
 				</div>
+				<!-- /wp:group -->
 			</div>
-			<!-- /wp:html -->
+			<!-- /wp:group -->
 		</div>
 		<!-- /wp:group -->
 	</div>
 	<!-- /wp:group -->
-	<div aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
+	<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
+	<div style="height:50px" aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
+	<!-- /wp:spacer -->
 </section>
-<!-- /wp:group -->
-
 <!-- /wp:group -->

@@ -33,27 +33,39 @@
     },
     "mainImage": {
       "type": "string",
-      "default": "/wp-content/themes/ambrygen/assets/src/images/testimonials-main.jpg"
+      "default": ""
     },
     "mainImageId": {
       "type": "number",
       "default": 0
     },
+    "mainImageAlt": {
+      "type": "string",
+      "default": ""
+    },
     "secondaryImage": {
       "type": "string",
-      "default": "/wp-content/themes/ambrygen/assets/src/images/testimonial/secondary-image.png"
+      "default": ""
     },
     "secondaryImageId": {
       "type": "number",
       "default": null
     },
+    "secondaryImageAlt": {
+      "type": "string",
+      "default": ""
+    },
     "overlayImage": {
       "type": "string",
-      "default": "/wp-content/themes/ambrygen/assets/src/images/testimonial/overlay-image.png"
+      "default": ""
     },
     "overlayImageId": {
       "type": "number",
       "default": null
+    },
+    "overlayImageAlt": {
+      "type": "string",
+      "default": ""
     }
   },
   "editorScript": "file:./index.js",
@@ -64,18 +76,12 @@
   "viewScript": "file:./view.js",
   "providesContext": {
     "ambrygen/mainImage": "mainImage",
-    "ambrygen/mainImageId": "mainImageId"
+    "ambrygen/mainImageId": "mainImageId",
+    "ambrygen/mainImageAlt": "mainImageAlt"
   },
   "example": {
     "attributes": {
-      "heading": "Read About Ambry’s Impact on Patient Lives",
-      "headingTag": "h2",
-      "mainImage": "/wp-content/themes/ambrygen/assets/src/images/testimonials-main.jpg",
-      "mainImageId": 0,
-      "secondaryImage": "/wp-content/themes/ambrygen/assets/src/images/testimonial/secondary-image.png",
-      "secondaryImageId": 1,
-      "overlayImage": "/wp-content/themes/ambrygen/assets/src/images/testimonial/overlay-image.png",
-      "overlayImageId": 1
+      "blockId": "testimonials-example"
     }
   }
 }

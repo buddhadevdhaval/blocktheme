@@ -19,56 +19,43 @@ use Ambrygen\Theme\Core\Helper;
  * Attributes
  */
 $ambrygen_heading     = $attributes['heading'] ?? '';
-$ambrygen_heading_tag = $attributes['headingTag'] ?? 'h2';
+$ambrygen_heading_tag = Helper::get_heading_tag( $attributes['headingTag'] ?? 'h2', 'h2' );
 $ambrygen_description = $attributes['description'] ?? '';
-$ambrygen_block_id    = $attributes['blockId'] ?? '';
-
-/**
- * Sanitize block ID
- */
-$ambrygen_block_id = $ambrygen_block_id ? sanitize_html_class( $ambrygen_block_id ) : '';
-
-/**
- * Allowed heading tags
- */
-$ambrygen_allowed_heading_tags = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
-
-if ( ! in_array( $ambrygen_heading_tag, $ambrygen_allowed_heading_tags, true ) ) {
-	$ambrygen_heading_tag = 'h2';
-}
+$ambrygen_block_id    = isset( $attributes['blockId'] ) ? sanitize_html_class( $attributes['blockId'] ) : '';
+$ambrygen_heading_id  = '';
 
 /**
  * Wrapper attributes
  */
-$ambrygen_wrapper_attributes = get_block_wrapper_attributes(
-	array(
-		'id'    => $ambrygen_block_id ? $ambrygen_block_id : null,
-		'class' => 'cta-tiles-with-content',
-	)
+$ambrygen_wrapper_args = array(
+	'class' => 'cta-tiles-with-content',
 );
 
-/**
- * ARIA labelledby (only if valid heading + id exist)
- */
-$ambrygen_section_labelledby = '';
-
-if ( ! empty( $ambrygen_heading ) && ! empty( $ambrygen_block_id ) ) {
-	$ambrygen_section_labelledby = sprintf(
-		'aria-labelledby="%s"',
-		esc_attr( $ambrygen_block_id . '-title' )
-	);
+if ( $ambrygen_block_id ) {
+	$ambrygen_wrapper_args['id'] = $ambrygen_block_id;
 }
+
+if ( ! empty( $ambrygen_heading ) ) {
+	$ambrygen_heading_id                      = $ambrygen_block_id
+		? $ambrygen_block_id . '-title'
+		: wp_unique_id( 'two-column-solution-card-title-' );
+	$ambrygen_wrapper_args['aria-labelledby'] = $ambrygen_heading_id;
+} else {
+	$ambrygen_wrapper_args['aria-label'] = __( 'Two column solution card', 'ambrygen-web' );
+}
+
+$ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_args );
 ?>
 
-<section <?php echo wp_kses_data( $ambrygen_wrapper_attributes ); ?> <?php echo wp_kses_post( $ambrygen_section_labelledby ); ?>>
+<section <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 
 	<?php if ( ! empty( $ambrygen_heading ) || ! empty( $ambrygen_description ) ) : ?>
 		<div class="cta-tiles-with-content__header block__rowflex">
 
 			<?php if ( ! empty( $ambrygen_heading ) ) : ?>
 				<<?php echo tag_escape( $ambrygen_heading_tag ); ?>
-					<?php if ( ! empty( $ambrygen_block_id ) ) : ?>
-						id="<?php echo esc_attr( $ambrygen_block_id . '-title' ); ?>"
+					<?php if ( ! empty( $ambrygen_heading_id ) ) : ?>
+						id="<?php echo esc_attr( $ambrygen_heading_id ); ?>"
 					<?php endif; ?>
 					class="heading-3 block-title mb-0 block__rowflex--heading-title js-gsap-fade"
 				>
@@ -83,9 +70,9 @@ if ( ! empty( $ambrygen_heading ) && ! empty( $ambrygen_block_id ) ) {
 			<?php endif; ?>
 
 		</div>
-	<?php endif; ?>
 
-	<div class="is-style-gl-s50" aria-hidden="true"></div>
+		<div class="is-style-gl-s50" aria-hidden="true"></div>
+	<?php endif; ?>
 
 	<div class="cta-tiles-with-content__grid">
 		<?php

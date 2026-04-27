@@ -50,6 +50,10 @@ class Presentations extends AbstractPostType {
 				'type'     => 'number',
 				'sanitize' => 'absint',
 			),
+			'presentation_pdf_files' => array(
+				'label' => __( 'Presentation PDFs', 'ambrygen-web' ),
+				'type'  => 'presentation_pdf_repeater',
+			),
 			'launch_id'             => array(
 				'label'    => __( 'Launch ID', 'ambrygen-web' ),
 				'type'     => 'number',

@@ -127,7 +127,7 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 				<?php echo esc_html( $ambrygen_post_title ); ?> <div class="badge badge--<?php echo esc_attr( $ambrygen_badge_color ); ?>"><i class="badge__dot"></i><?php echo esc_html( $ambrygen_badge_text ); ?></div>
 			</div>
 		</div>
-		<a class="features-tabs__view-link site-btn is-style-site-text-btn has-icon icon-arrow-up" href="<?php echo esc_url( $ambrygen_post_url ); ?>" aria-label="<?php echo esc_attr( 'View test for ' . $ambrygen_post_title ); ?>">
+		<a class="features-tabs__view-link site-btn is-style-site-text-btn has-right-arrow" href="<?php echo esc_url( $ambrygen_post_url ); ?>" aria-label="<?php echo esc_attr( 'View test for ' . $ambrygen_post_title ); ?>">
 			<?php esc_html_e( 'View Test', 'ambrygen-web' ); ?>
 		</a>
 	</div>
@@ -196,7 +196,7 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 
 				<?php if ( $ambrygen_term_url ) : ?>
 					<a
-						class="site-btn is-style-site-text-btn has-icon icon-arrow-up text-14"
+						class="site-btn is-style-site-text-btn has-right-arrow text-14"
 						href="<?php echo esc_url( $ambrygen_term_url ); ?>"
 						aria-label="<?php echo esc_attr( 'View tests for ' . $ambrygen_title ); ?>"
 					>
@@ -220,7 +220,7 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 							alt="<?php echo $ambrygen_title ? esc_attr( $ambrygen_title ) : ''; ?>"
 						/>
 					<?php endif; ?>
-					
+
 		</div>
 	<?php endif; ?>
 
@@ -250,7 +250,7 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 					?>
 
 		<a
-			class="site-btn is-style-site-text-btn has-icon"
+			class="site-btn is-style-site-text-btn has-right-arrow"
 			href="<?php echo esc_url( $ambrygen_link_url ); ?>"
 					<?php if ( '_blank' === $ambrygen_link_target ) : ?>
 				target="_blank"
@@ -323,7 +323,7 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 							<div class="info-list__link-col text-md-Semibold">
 								<a
 									href="<?php echo esc_url( $ambrygen_link_url ); ?>"
-									class="info-list__link site-btn is-style-site-text-btn has-icon icon-arrow-up text-14"
+									class="info-list__link site-btn is-style-site-text-btn has-right-arrow text-14"
 									<?php if ( '_blank' === $ambrygen_link_target ) : ?>
 										target="_blank"
 									<?php endif; ?>
@@ -355,7 +355,7 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 				<?php endif; ?>
 
 				<div class="is-style-gl-s8"></div>
-				
+
 				<?php if ( ! empty( $ambrygen_attributes['description'] ) ) : ?>
 					<div class="info-list__description text-md-reg">
 						<?php echo wp_kses_post( $ambrygen_attributes['description'] ); ?>

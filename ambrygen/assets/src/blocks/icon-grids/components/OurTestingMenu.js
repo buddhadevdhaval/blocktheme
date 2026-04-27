@@ -65,7 +65,7 @@ export default function OurTestingMenu( {
 								href={ link.url }
 								target={ link.target || undefined }
 								rel={ link.rel || undefined }
-								className="site-btn is-style-site-text-btn has-icon icon-arrow-up"
+								className="site-btn is-style-site-text-btn has-right-arrow"
 								onClick={ ( e ) => e.preventDefault() }
 							>
 								{ link.text }

@@ -92,7 +92,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	}, [clientId, hasInnerBlocks, options, replaceInnerBlocks, setAttributes]);
 
 	const blockProps = useBlockProps({
-		className: 'ordering-options',
+		className: 'block-layout ordering-options',
 	});
 
 	return (

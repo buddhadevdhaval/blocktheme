@@ -47,10 +47,7 @@
   "textdomain": "ambrygen-web",
   "example": {
     "attributes": {
-      "heading": "Transforming Healthcare with Genetic Insight",
-      "headingTag": "h2",
-      "description": "This is a sample preview content for this block in the inserter.",
-      "blockId": 1
+      "blockId": "two-column-solution-card-example"
     }
   }
 }

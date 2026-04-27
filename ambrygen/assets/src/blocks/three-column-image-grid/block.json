@@ -57,10 +57,10 @@
     "variation": {
       "type": "string",
       "enum": [
-        "default",
-        "variation-three"
+        "variation-1",
+        "variation-2"
       ],
-      "default": "default"
+      "default": "variation-1"
     },
     "blockId": {
       "type": "string"
@@ -80,11 +80,7 @@
   "textdomain": "ambrygen-web",
   "example": {
     "attributes": {
-      "heading": "Transforming Healthcare with Genetic Insight",
-      "headingTag": "h2",
-      "description": "This is a sample preview content for this block in the inserter.",
-      "variation": "default",
-      "blockId": "section-example"
+      "blockId": "three-column-image-grid-example"
     }
   }
 }

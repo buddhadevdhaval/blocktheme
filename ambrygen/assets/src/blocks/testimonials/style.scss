@@ -1,7 +1,7 @@
 @use "../../css/partials/variables/breakpoints" as bp;
 @use "swiper/css";
-@use 'swiper/css/effect-fade';
-@use 'swiper/css/navigation';
+@use "swiper/css/effect-fade";
+@use "swiper/css/navigation";
 
 section:has(.ambry-testimonials) {
 	overflow: hidden;
@@ -93,7 +93,6 @@ section:has(.ambry-testimonials) {
 			gap: 20px;
 			margin-top: auto;
 
-			// Reset cite default
 			@include bp.max(md) {
 				row-gap: 5px;
 			}
@@ -106,7 +105,6 @@ section:has(.ambry-testimonials) {
 				color: var(--theme_gray_600);
 				position: relative;
 
-				// Improved contrast from gray_400
 				&::before {
 					background-color: var(--theme_gray_600);
 					border-radius: 100px;
@@ -139,7 +137,7 @@ section:has(.ambry-testimonials) {
 			@include bp.max(md) {
 				background: var(--theme_white);
 				border-radius: 24px;
-				height: auto;
+				height: 100%;
 				padding: 24px;
 			}
 

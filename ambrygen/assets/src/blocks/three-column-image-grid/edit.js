@@ -4,149 +4,198 @@ import {
 	InnerBlocks,
 	InspectorControls,
 } from '@wordpress/block-editor';
-import { PanelBody, SelectControl, ToggleControl } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
 
-import { TagSelector } from '../_shared/components';
+import {
+	BlockVariationsExamplePreview,
+	TagSelector,
+} from '../_shared/components';
 import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useMemo } from '@wordpress/element';
+import { getThemeAssetUrl } from '../../utils/assets';
 
-const ALLOWED_BLOCKS = ['ambrygen/three-column-image-grid-item'];
+const ALLOWED_BLOCKS = [ 'ambrygen/three-column-image-grid-item' ];
 
-export default function Edit({ attributes, setAttributes, clientId }) {
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
 		eyebrow,
 		heading,
 		description,
 		headingTag,
-		variation = 'default',
-		isHeaderVertical,
+		variation = 'variation-1',
 	} = attributes;
 	const { blockId } = attributes;
+	const VARIANTS = useMemo(
+		() => [
+			{
+				label: __( 'Variation 1', 'ambrygen-web' ),
+				value: 'variation-1',
+				image: getThemeAssetUrl(
+					'/assets/src/images/three-column-image/variation-1.png'
+				),
+			},
+			{
+				label: __( 'Variation 2', 'ambrygen-web' ),
+				value: 'variation-2',
+				image: getThemeAssetUrl(
+					'/assets/src/images/three-column-image/variation-2.png'
+				),
+			},
+		],
+		[]
+	);
 
-	useEffect(() => {
-		const expectedId = `section-${clientId.slice(0, 8)}`;
+	useEffect( () => {
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
-		if (!blockId) {
-			setAttributes({
+		if ( ! blockId ) {
+			setAttributes( {
 				blockId: expectedId,
-			});
+			} );
 		}
-	}, [clientId, blockId, setAttributes]);
+	}, [ clientId, blockId, setAttributes ] );
 
-	const variationClass = variation !== 'default' ? variation : '';
+	useEffect( () => {
+		const shouldBeVertical = variation !== 'variation-2';
 
-	const blockProps = useBlockProps({
-		className: `block-layout three-column-image-grid our-approach ${variationClass}`,
-	});
+		if ( attributes.isHeaderVertical !== shouldBeVertical ) {
+			setAttributes( {
+				isHeaderVertical: shouldBeVertical,
+			} );
+		}
+	}, [ attributes.isHeaderVertical, variation, setAttributes ] );
 
-	const HeadingTag = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(
-		headingTag
-	)
-		? headingTag
-		: 'h2';
+	const variationClass = variation === 'variation-2' ? 'variation-three' : '';
+	const showEyebrow = variation !== 'variation-2';
+	const isHeaderVertical = variation !== 'variation-2';
+
+	const blockProps = useBlockProps( {
+		className: `block-layout three-column-image-grid ${ variationClass }`,
+	} );
+
+	const HeadingTag = headingTag || 'h2';
+
+	if ( blockId === 'three-column-image-grid-example' ) {
+		return (
+			<BlockVariationsExamplePreview
+				variants={ VARIANTS }
+				className="three-column-image-grid-example-preview"
+				itemClass="three-column-image-grid-example-preview__item"
+			/>
+		);
+	}
 
 	return (
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={__('Heading Settings', 'ambrygen-web')}
-					initialOpen={true}
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen={ true }
 				>
+					<div className="layout-variant-selector">
+						{ VARIANTS.map( ( variantItem ) => (
+							<button
+								key={ variantItem.value }
+								type="button"
+								className={ `variant-button ${
+									variation === variantItem.value
+										? 'is-selected'
+										: ''
+								}` }
+								onClick={ () =>
+									setAttributes( {
+										variation: variantItem.value,
+									} )
+								}
+							>
+								<img
+									src={ variantItem.image }
+									alt={ variantItem.label }
+								/>
+								<span>{ variantItem.label }</span>
+							</button>
+						) ) }
+					</div>
 					<TagSelector
-						label={__('Heading Tag', 'ambrygen-web')}
-						value={headingTag || 'h2'}
-						onChange={(value) =>
-							setAttributes({ headingTag: value })
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
+						value={ headingTag || 'h2' }
+						onChange={ ( value ) =>
+							setAttributes( { headingTag: value } )
 						}
 						type="heading"
 					/>
-					<SelectControl
-						label={__('Variation', 'ambrygen-web')}
-						value={variation}
-						options={[
-							{
-								label: __('Default', 'ambrygen-web'),
-								value: 'default',
-							},
-							{
-								label: __('Variation Three', 'ambrygen-web'),
-								value: 'variation-three',
-							},
-						]}
-						onChange={(value) =>
-							setAttributes({ variation: value })
-						}
-					/>
-					<ToggleControl
-						label={__('Vertical Header Layout', 'ambrygen-web')}
-						checked={isHeaderVertical}
-						onChange={(value) =>
-							setAttributes({ isHeaderVertical: value })
-						}
-					/>
 				</PanelBody>
 			</InspectorControls>
-			<div {...blockProps}>
-				<div className={`our-approach__header block__rowflex is-${isHeaderVertical ? 'vertical' : 'horizontal'}`}>
-					<div className="block-title mb-0 block__rowflex--heading-title js-gsap-fade our-approach__header__left">
+			<div { ...blockProps }>
+				<div
+					className={ `three-column-image-grid__header block__rowflex is-${
+						isHeaderVertical ? 'vertical' : 'horizontal'
+					}` }
+				>
+					<div className="block-title mb-0 block__rowflex--heading-title js-gsap-fade three-column-image-grid__header__left">
+						{ showEyebrow && (
+							<RichText
+								tagName="div"
+								value={ eyebrow }
+								allowedFormats={ [ 'core/text-color' ] }
+								onChange={ ( value ) =>
+									setAttributes( { eyebrow: value } )
+								}
+								className="eyebrow"
+								placeholder={ __(
+									'Add Eyebrow...',
+									'ambrygen-web'
+								) }
+							/>
+						) }
+						{ showEyebrow && eyebrow && heading && (
+							<div
+								className="is-style-gl-s12"
+								aria-hidden="true"
+							/>
+						) }
 						<RichText
-							tagName="div"
-							value={eyebrow}
-							allowedFormats={['core/text-color']}
-							onChange={(value) =>
-								setAttributes({ eyebrow: value })
+							tagName={ HeadingTag }
+							className={ `block-title block__rowflex--heading-title heading-3 mb-0` }
+							value={ heading }
+							onChange={ ( value ) =>
+								setAttributes( { heading: value } )
 							}
-							className="eyebrow"
-							placeholder={__(
-								'Add Eyebrow Text…',
-								'ambrygen-web'
-							)}
-						/>
-						{(eyebrow || heading) && (
-							<div className="is-style-gl-s12" aria-hidden="true" />
-						)}
-						<RichText
-							tagName={HeadingTag}
-							className={`block-title block__rowflex--heading-title heading-3 mb-0`}
-							value={heading}
-							onChange={(value) =>
-								setAttributes({ heading: value })
-							}
-							allowedFormats={['core/text-color']}
-							placeholder={__('Add Heading', 'ambrygen-web')}
+							allowedFormats={ [ 'core/text-color' ] }
+							placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 						/>
 					</div>
 
-					<div className='heading-content-wrapper'>
+					<div className="heading-content-wrapper">
 						<div className="block__rowflex--block-content subtitle1-reg">
 							<RichText
 								tagName="div"
-								value={description}
-								onChange={(value) =>
-									setAttributes({ description: value })
+								value={ description }
+								onChange={ ( value ) =>
+									setAttributes( { description: value } )
 								}
 								multiline="p"
-								placeholder={__(
-									'Add description…',
+								placeholder={ __(
+									'Add description...',
 									'ambrygen-web'
-								)}
+								) }
 							/>
 						</div>
 					</div>
 				</div>
 
-				{(heading || description) && (
+				{ ( heading || description ) && (
 					<div className="is-style-gl-s32" aria-hidden="true"></div>
-				)}
+				) }
 
-				<div className="our-approach__content">
+				<div className="three-column-image-grid__content">
 					<InnerBlocks
-						allowedBlocks={ALLOWED_BLOCKS}
-						template={[
-							['ambrygen/three-column-image-grid-item'],
-							['ambrygen/three-column-image-grid-item'],
-							['ambrygen/three-column-image-grid-item'],
-						]}
+						allowedBlocks={ ALLOWED_BLOCKS }
+						template={ [
+							[ 'ambrygen/three-column-image-grid-item' ],
+							[ 'ambrygen/three-column-image-grid-item' ],
+							[ 'ambrygen/three-column-image-grid-item' ],
+						] }
 						templateLock="all"
 					/>
 				</div>

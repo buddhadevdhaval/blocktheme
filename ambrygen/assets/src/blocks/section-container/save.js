@@ -28,13 +28,24 @@ import { createElement } from '@wordpress/element';
  * @return {JSX.Element} Saved block markup.
  */
 export default function Save( { attributes } ) {
-	const { tagName, containerWidth, backgroundStyle, isFixedBackground } =
-		attributes;
+	const {
+		containerWidth = 'container-1340',
+		backgroundStyle = '',
+		isFixedBackground = false,
+		className = '',
+	} = attributes;
+	const hasInsideBackground = isFixedBackground === true;
+
+	const customClasses = className
+		.split( ' ' )
+		.filter( Boolean )
+		.filter( ( value ) => value !== 'block-bg' );
 
 	const classes = [
+		...customClasses,
 		containerWidth,
 		backgroundStyle,
-		isFixedBackground ? 'block-bg' : '',
+		hasInsideBackground ? 'block-bg' : '',
 	]
 		.filter( Boolean )
 		.join( ' ' );
@@ -44,7 +55,7 @@ export default function Save( { attributes } ) {
 	} );
 
 	return createElement(
-		tagName,
+		'section',
 		blockProps,
 		<div className="wrapper">
 			<InnerBlocks.Content />

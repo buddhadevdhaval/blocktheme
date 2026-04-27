@@ -11,12 +11,13 @@ final class ScienceRouteService
     use Singleton;
 
     private array $post_type_archive_slugs = [
-        'publication'  => 'peer-reviewed-publication',
+        'publication'  => 'peer-reviewed-publications',
         'presentation' => 'scientific-presentations',
         'poster'       => 'scientific-posters',
     ];
 
     private array $post_type_single_slugs = [
+        'publication'  => 'peer-reviewed-publication',
         'presentation' => 'scientific-presentation',
         'poster'       => 'scientific-poster',
     ];
@@ -39,6 +40,8 @@ final class ScienceRouteService
     public function register_rewrites(): void
     {
         $publication_archive = $this->get_archive_path('publication');
+        $publication_single  = $this->get_single_base_path('publication');
+
         if ('' !== $publication_archive) {
             add_rewrite_rule(
                 '^' . preg_quote($publication_archive, '#') . '/?$',
@@ -50,9 +53,12 @@ final class ScienceRouteService
                 'index.php?post_type=publication&paged=$matches[1]',
                 'top'
             );
+        }
+
+        if ('' !== $publication_single) {
             add_rewrite_rule(
-                '^' . preg_quote($publication_archive, '#') . '/([^/]+)/?$',
-                'index.php?post_type=publication&name=$matches[1]',
+                '^' . preg_quote($publication_single, '#') . '/([^/]+)/([^/]+)/?$',
+                'index.php?post_type=publication&pub_old_id=$matches[1]&pub_slug=$matches[2]',
                 'top'
             );
         }
@@ -74,7 +80,7 @@ final class ScienceRouteService
         if ('' !== $presentation_single) {
             add_rewrite_rule(
                 '^' . preg_quote($presentation_single, '#') . '/([^/]+)/([^/]+)/?$',
-                'index.php?post_type=presentation&sp_old_id=$matches[1]&sp_slug=$matches[2]',
+                'index.php?post_type=presentation&_old_id=$matches[1]&sp_slug=$matches[2]',
                 'top'
             );
         }
@@ -119,7 +125,7 @@ final class ScienceRouteService
         }
 
         if ('publication' === $post_type) {
-            return $archive_path;
+            return $this->post_type_single_slugs['publication'];
         }
 
         if (! isset($this->post_type_single_slugs[$post_type])) {
@@ -196,7 +202,7 @@ final class ScienceRouteService
 
     public function register_presentation_query_vars(array $vars): array
     {
-        $vars[] = 'sp_old_id';
+        $vars[] = '_old_id';
         $vars[] = 'sp_slug';
         $vars[] = 'conference_id';
         $vars[] = 'speaker';
@@ -216,6 +222,8 @@ final class ScienceRouteService
 
     public function register_publication_query_vars(array $vars): array
     {
+        $vars[] = 'pub_old_id';
+        $vars[] = 'pub_slug';
         $vars[] = 'specialty_area';
         $vars[] = 'topic';
         $vars[] = 'collaborator';

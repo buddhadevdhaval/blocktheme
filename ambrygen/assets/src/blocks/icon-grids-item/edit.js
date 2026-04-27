@@ -398,7 +398,7 @@ export default function Edit({
 								href={links[0].url}
 								target={links[0].target || undefined}
 								rel={links[0].rel || undefined}
-								className="site-btn is-style-site-text-btn has-icon"
+								className="site-btn is-style-site-text-btn has-right-arrow"
 								onClick={(e) => e.preventDefault()}
 							>
 								{links[0].label}
@@ -558,7 +558,7 @@ export default function Edit({
 											)}
 									</div>
 									<a
-										className="site-btn is-style-site-text-btn has-icon icon-arrow-up text-14"
+										className="site-btn is-style-site-text-btn has-right-arrow text-14"
 										href={selectedTermLink}
 										onClick={(e) => e.preventDefault()}
 									>
@@ -646,7 +646,7 @@ export default function Edit({
 									</div>
 								</div>
 								<a
-									className="features-tabs__view-link site-btn is-style-site-text-btn has-icon icon-arrow-up"
+									className="features-tabs__view-link site-btn is-style-site-text-btn has-right-arrow"
 									href={selectedPostData?.link || '#'}
 								>
 									View Test

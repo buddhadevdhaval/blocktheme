@@ -87,6 +87,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								'core/buttons',
 								'core/button',
 								'core/image',
+								'core/heading',
+								'core/spacer',
 							] }
 							template={ CONTENT_TEMPLATE }
 							templateLock={ false }

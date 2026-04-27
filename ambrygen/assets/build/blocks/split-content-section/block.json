@@ -20,15 +20,23 @@
     },
     "title": {
       "type": "string",
-      "default": "Section Title"
+      "default": ""
     },
     "titleTag": {
       "type": "string",
-      "default": "h2"
+      "default": "h2",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ]
     },
     "description": {
       "type": "string",
-      "default": "Ambry Genetics' mission is to empower individuals with advanced genetic testing solutions that transform healthcare and promote the health of people worldwide."
+      "default": ""
     },
     "backgroundImage": {
       "type": "string",
@@ -42,55 +50,9 @@
       "type": "string",
       "default": ""
     },
-    "primarybutton": {
-      "type": "object",
-      "properties": {
-        "url": {
-          "type": "string",
-          "default": ""
-        },
-        "text": {
-          "type": "string",
-          "default": ""
-        },
-        "target": {
-          "type": "string",
-          "default": ""
-        },
-        "rel": {
-          "type": "string",
-          "default": ""
-        },
-        "variant": {
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
-    "secondarybutton": {
-      "type": "object",
-      "properties": {
-        "url": {
-          "type": "string",
-          "default": ""
-        },
-        "text": {
-          "type": "string",
-          "default": ""
-        },
-        "target": {
-          "type": "string",
-          "default": ""
-        },
-        "rel": {
-          "type": "string",
-          "default": ""
-        },
-        "variant": {
-          "type": "string",
-          "default": ""
-        }
-      }
+    "isHeaderVertical": {
+      "type": "boolean",
+      "default": false
     },
     "isMediumText": {
       "type": "boolean",
@@ -104,26 +66,7 @@
   "textdomain": "ambrygen-web",
   "example": {
     "attributes": {
-      "title": "Section Title",
-      "titleTag": "h2",
-      "description": "Ambry Genetics' mission is to empower individuals with advanced genetic testing solutions that transform healthcare and promote the health of people worldwide.",
-      "backgroundImage": "/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
-      "backgroundImageId": 0,
-      "backgroundImageAlt": "Mission statement background",
-      "primarybutton": {
-        "url": "",
-        "text": "",
-        "target": "",
-        "rel": "",
-        "variant": ""
-      },
-      "secondarybutton": {
-        "url": "",
-        "text": "",
-        "target": "",
-        "rel": "",
-        "variant": ""
-      }
+      "blockId": "split-content-section-example"
     }
   }
 }

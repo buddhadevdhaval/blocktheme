@@ -67,7 +67,7 @@
 
 						<?php if (! empty($ambrygen_top_bar_link_text) && ! empty($ambrygen_top_bar_link_url)): ?>
 							<a href="<?php echo esc_url($ambrygen_top_bar_link_url); ?>"
-								class="top-bar__link  site-btn is-style-site-text-btn has-icon">
+								class="top-bar__link  site-btn is-style-site-text-btn has-right-arrow">
 								<?php echo esc_html($ambrygen_top_bar_link_text); ?>
 							</a>
 						<?php endif; ?>

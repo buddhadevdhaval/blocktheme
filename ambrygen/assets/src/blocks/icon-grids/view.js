@@ -33,11 +33,11 @@
 					<div class="features-tabs__card-title">
 						${ escapeHtml(
 							title
-						) } 
+						) }
 						<div class="badge badge--blue"><i class="badge__dot"></i>Tests</div>
 					</div>
 				</div>
-				<a class="features-tabs__view-link site-btn is-style-site-text-btn has-icon icon-arrow-up" href="${ escapeHtml(
+				<a class="features-tabs__view-link site-btn is-style-site-text-btn has-right-arrow" href="${ escapeHtml(
 					url
 				) }" aria-label="View product for ${ escapeHtml(
 					title

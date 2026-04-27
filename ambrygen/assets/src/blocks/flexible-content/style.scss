@@ -52,10 +52,18 @@ section:has(.iot-block__bg-image) {
 	}
 
 	&.variation-iot-author {
+		align-items: flex-start;
+
 		.iot-block__image {
 			width: fluid(311, 311);
 			height: fluid(311, 311);
 			border-radius: 16px;
+
+			@include bp.max(370px) {
+				width: 100%;
+				height: 100%;
+				aspect-ratio: 1 / 1;
+			}
 		}
 	}
 
@@ -87,6 +95,7 @@ section:has(.iot-block__bg-image) {
 		flex: 1;
 		display: flex;
 		flex-direction: column;
+		z-index: 1;
 	}
 
 	&__text {

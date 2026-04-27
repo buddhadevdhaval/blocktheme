@@ -78,6 +78,14 @@
 	overflow: hidden;
 	height: 100%;
 
+	@include bp.max(lg) {
+		border-radius: 24px;
+	}
+
+	@include bp.max(md) {
+		border-radius: 16px;
+	}
+
 	video,
 	iframe {
 		margin: 0;
@@ -152,6 +160,14 @@
 		border-radius: 32px;
 		overflow: hidden;
 
+		@include bp.max(lg) {
+			border-radius: 24px;
+		}
+
+		@include bp.max(md) {
+			border-radius: 16px;
+		}
+
 		iframe {
 			position: absolute;
 			top: 0;
@@ -167,10 +183,3 @@
 		color: var(--theme_gray_700);
 	}
 }
-
-
-
-
-
-
-

@@ -6,7 +6,6 @@ section:has(.block-bg-image) {
 }
 
 .heading-content-section {
-
 	.block-bg-image {
 		position: absolute;
 		top: 0;
@@ -28,11 +27,6 @@ section:has(.block-bg-image) {
 
 	&__inner {
 		position: relative;
-	}
-
-
-	.heading-content-section__title {
-		/* Style will be placed here */
 	}
 
 	.heading-content-section__description {

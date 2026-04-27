@@ -144,6 +144,10 @@ final class BlockVisibilityService
 	 */
 	public function inject_initial_total_pages(string $block_content, array $block): string
 	{
+		if ((defined('REST_REQUEST') && REST_REQUEST) || is_admin()) {
+			return $block_content;
+		}
+
 		if (
 			'core/query' === ($block['blockName'] ?? '')
 			&& 'post' === ($block['attrs']['query']['postType'] ?? '')
@@ -169,8 +173,10 @@ final class BlockVisibilityService
 			);
 		}
 
-		// Only target core/html blocks because our container is currently inside one
-		if ('core/html' !== ($block['blockName'] ?? '')) {
+		$block_name = (string) ($block['blockName'] ?? '');
+		$class_name = (string) ($block['attrs']['className'] ?? '');
+
+		if ('core/html' !== $block_name && 'core/group' !== $block_name) {
 			return $block_content;
 		}
 
@@ -184,13 +190,29 @@ final class BlockVisibilityService
 			$post_type = $pt_matches[1];
 		}
 
-		// Extract scope
-		if (!preg_match('/data-ambrygen-scope=["\']([^"\']+)["\']/', $block_content, $matches)) {
+		$scope = '';
+		if ('core/group' === $block_name && str_contains($class_name, 'ambrygen-ajax-pagination')) {
+			if (str_contains($class_name, 'ambrygen-ajax-pagination--past')) {
+				$scope = 'past';
+			} elseif (str_contains($class_name, 'ambrygen-ajax-pagination--upcoming')) {
+				$scope = 'upcoming';
+			} elseif (str_contains($class_name, 'ambrygen-ajax-pagination--blog')) {
+				$scope = 'blog';
+			}
+		}
+
+		if ('' === $scope && !preg_match('/data-ambrygen-scope=["\']([^"\']+)["\']/', $block_content, $matches)) {
 			return $block_content;
 		}
 
-		$scope    = $matches[1];
-		$per_page = 8; // Default
+		if ('' === $scope) {
+			$scope = $matches[1];
+		}
+
+		$per_page = 8;
+		if ('core/group' === $block_name && preg_match('/ambrygen-ajax-pagination--per-page-(\d+)/', $class_name, $per_page_matches)) {
+			$per_page = absint($per_page_matches[1]);
+		}
 		$today    = date('Y-m-d');
 
 		$query_args = array(
@@ -280,8 +302,9 @@ final class BlockVisibilityService
 
 			$block_content = preg_replace(
 				'/(class="[^"]*\bambrygen-ajax-pagination\b[^"]*")/',
-				'$1 data-ambrygen-total-pages="' . $total_pages . '"',
-				$block_content
+				'$1 data-ambrygen-total-pages="' . $total_pages . '" data-ambrygen-scope="' . esc_attr($scope) . '" data-ambrygen-per-page="' . esc_attr((string) $per_page) . '"',
+				$block_content,
+				1
 			);
 
 			return $block_content;
@@ -321,11 +344,12 @@ final class BlockVisibilityService
 			$post_type
 		);
 
-		// Inject the total pages attribute safely using regex
+		$order = 'upcoming' === $scope ? 'ASC' : 'DESC';
 		$block_content = preg_replace(
 			'/(class="[^"]*\bambrygen-ajax-pagination\b[^"]*")/',
-			'$1 data-ambrygen-total-pages="' . $total_pages . '"',
-			$block_content
+			'$1 data-ambrygen-total-pages="' . $total_pages . '" data-ambrygen-scope="' . esc_attr($scope) . '" data-ambrygen-per-page="' . esc_attr((string) $per_page) . '" data-ambrygen-order="' . esc_attr($order) . '"',
+			$block_content,
+			1
 		);
 
 		return $block_content;
@@ -553,6 +577,10 @@ final class BlockVisibilityService
 	 */
 	public function dynamic_year_dropdown_on_render(string $block_content, array $block): string
 	{
+		if ((defined('REST_REQUEST') && REST_REQUEST) || is_admin()) {
+			return $block_content;
+		}
+
 		// Identify the past conferences section by its dropdown ID
 		if (strpos($block_content, 'id="category-dropdown-menu-past"') !== false) {
 			$block_content = $this->update_year_dropdown($block_content, 0, 'conferences');

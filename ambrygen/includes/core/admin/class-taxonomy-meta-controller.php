@@ -103,6 +103,101 @@ final class TaxonomyMetaController
         }
 
         add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
+        add_action('admin_notices', [$this, 'render_collaborator_export_notice']);
+        add_action('admin_init', [$this, 'handle_collaborator_export']);
+    }
+
+    private function get_current_taxonomy_screen(): ?\WP_Screen
+    {
+        if (! function_exists('get_current_screen')) {
+            return null;
+        }
+
+        $screen = get_current_screen();
+        if (! $screen || 'edit-tags' !== $screen->base) {
+            return null;
+        }
+
+        return $screen;
+    }
+
+    public function render_collaborator_export_notice(): void
+    {
+        if (! current_user_can('manage_categories')) {
+            return;
+        }
+
+        $screen = $this->get_current_taxonomy_screen();
+        if (! $screen || 'collaborator' !== $screen->taxonomy) {
+            return;
+        }
+
+        $query_args = [
+            'taxonomy'   => 'collaborator',
+            'abr_export' => 'csv',
+            '_wpnonce'   => wp_create_nonce('abr_export_collaborator_csv'),
+        ];
+
+        if (! empty($_GET['post_type'])) {
+            $query_args['post_type'] = sanitize_key(wp_unslash($_GET['post_type']));
+        }
+
+        $export_url = add_query_arg($query_args, admin_url('edit-tags.php'));
+
+        printf(
+            '<div class="notice notice-info"><p><a href="%1$s" class="button button-secondary">%2$s</a></p></div>',
+            esc_url($export_url),
+            esc_html__('Export Collaborators CSV', 'ambrygen-web')
+        );
+    }
+
+    public function handle_collaborator_export(): void
+    {
+        if (
+            ! is_admin() ||
+            ! current_user_can('manage_categories') ||
+            empty($_GET['abr_export']) ||
+            'csv' !== sanitize_key(wp_unslash($_GET['abr_export'])) ||
+            empty($_GET['taxonomy']) ||
+            'collaborator' !== sanitize_key(wp_unslash($_GET['taxonomy']))
+        ) {
+            return;
+        }
+
+        check_admin_referer('abr_export_collaborator_csv');
+
+        $terms = get_terms([
+            'taxonomy'   => 'collaborator',
+            'hide_empty' => false,
+        ]);
+
+        if (is_wp_error($terms)) {
+            wp_die(esc_html__('Unable to export collaborators.', 'ambrygen-web'));
+        }
+
+        nocache_headers();
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=collaborators-' . gmdate('Y-m-d-H-i-s') . '.csv');
+
+        $output = fopen('php://output', 'w');
+        if (false === $output) {
+            wp_die(esc_html__('Unable to open export stream.', 'ambrygen-web'));
+        }
+
+        fputcsv($output, ['_old_id', 'name']);
+
+        foreach ($terms as $term) {
+            fputcsv(
+                $output,
+                [
+                    (string) get_term_meta($term->term_id, '_old_id', true),
+                    $term->name,
+                ]
+            );
+        }
+
+        fclose($output);
+        exit;
     }
 
     private function get_sanitize_callback(array $field, bool $is_single): callable

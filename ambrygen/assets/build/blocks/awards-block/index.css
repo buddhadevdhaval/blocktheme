@@ -1,1 +1,1 @@
-
+.marquee-slide{display:grid;gap:24px;grid-template-columns:repeat(5,1fr)}

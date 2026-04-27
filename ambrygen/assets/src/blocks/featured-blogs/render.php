@@ -43,7 +43,7 @@ $ambrygen_heading_level = in_array( $ambrygen_heading_level, array( 'h1', 'h2', 
 				<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
 				<div aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
 				<!-- /wp:spacer -->
-				
+
 				<?php if ( '' !== trim( wp_strip_all_tags( $ambrygen_title ) ) ) : ?>
 					<!-- wp:heading {"level":2,"className":"conferences-in-progress__heading heading-3 mb-0"} -->
 					<<?php echo esc_html( $ambrygen_heading_level ); ?> class="wp-block-heading conferences-in-progress__heading heading-3 mb-0">
@@ -63,7 +63,7 @@ $ambrygen_heading_level = in_array( $ambrygen_heading_level, array( 'h1', 'h2', 
 						<div class="wp-block-query swiper cip-swiper">
 							<!-- wp:post-template {"className":"wp-block-post-template"} -->
 							<div class="wp-block-post-template">
-								<?php 
+								<?php
 								$ambrygen_posts_query = new WP_Query( array(
 									'post_type'      => 'post',
 									'post_status'    => 'publish',
@@ -80,7 +80,7 @@ $ambrygen_heading_level = in_array( $ambrygen_heading_level, array( 'h1', 'h2', 
 										$ambrygen_post_thumbnail_id = get_post_thumbnail_id( $ambrygen_post_id );
 										$ambrygen_publish_date = get_the_date( 'F j, Y', $ambrygen_post_id );
 										$ambrygen_excerpt = get_the_excerpt( $ambrygen_post_id );
-										
+
 										$ambrygen_linked_author_ids = get_post_meta( $ambrygen_post_id, 'linked_author', true );
 										if ( empty( $ambrygen_linked_author_ids ) ) {
 											$ambrygen_linked_author_ids = [];
@@ -123,7 +123,7 @@ $ambrygen_heading_level = in_array( $ambrygen_heading_level, array( 'h1', 'h2', 
 
 											<!-- wp:group {"className":"cip-card__info","layout":{"type":"default"}} -->
 											<div class="wp-block-group cip-card__info">
-												<?php 
+												<?php
 												$tags_html = '';
 												$ambrygen_terms = get_the_terms( $ambrygen_post_id, 'post_tag' );
 												if ( ! is_wp_error( $ambrygen_terms ) && ! empty( $ambrygen_terms ) ) {
@@ -180,7 +180,7 @@ $ambrygen_heading_level = in_array( $ambrygen_heading_level, array( 'h1', 'h2', 
 															</div>
 															<div class="featured-blogs__card-author-info">
 																<span class="featured-blogs__card-author-name">
-																	<?php 
+																	<?php
 																	$author_names = array_map( function( $author ) {
 																		$name = esc_html( $author['name'] );
 																		if ( ! empty( $author['designation'] ) ) {
@@ -213,7 +213,7 @@ $ambrygen_heading_level = in_array( $ambrygen_heading_level, array( 'h1', 'h2', 
 
 												<?php if ( $ambrygen_permalink ) : ?>
 													<div class="cip-card__cta-wrap">
-														<a href="<?php echo esc_url( $ambrygen_permalink ); ?>" class="cip-card__cta site-btn is-style-site-trailing-icon">
+														<a href="<?php echo esc_url( $ambrygen_permalink ); ?>" class="cip-card__cta site-btn has-right-arrow">
 															<?php esc_html_e( 'Read Article', 'ambrygen-web' ); ?>
 														</a>
 													</div>
@@ -224,14 +224,14 @@ $ambrygen_heading_level = in_array( $ambrygen_heading_level, array( 'h1', 'h2', 
 										<!-- /wp:group -->
 									</div>
 									<!-- /wp:post -->
-								<?php 
+								<?php
 									endwhile;
 									wp_reset_postdata();
 								endif;
 								?>
 							</div>
 							<!-- /wp:post-template -->
-							
+
 							<!-- wp:html -->
 							<div class="conferences-in-progress__arrows">
 								<button type="button" class="cip-arrow cip-arrow--prev" aria-label="<?php esc_attr_e( 'Previous blog', 'ambrygen-web' ); ?>"></button>

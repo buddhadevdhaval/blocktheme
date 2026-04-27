@@ -12,7 +12,6 @@ import {
 	SelectControl,
 	ToggleControl,
 	TextControl,
-	PanelRow,
 	BaseControl,
 } from '@wordpress/components';
 
@@ -27,11 +26,16 @@ import {
 } from '../_shared/components';
 import { useArrayHandlers } from '../_shared/utils';
 import { __ } from '@wordpress/i18n';
+import { useEffect, useMemo } from '@wordpress/element';
 
 // Use same icon as ordering options if possible or standard play icon
 import playIcon from '../../images/play-icon.svg';
 
+const createFileId = () =>
+	`file-${ Date.now() }-${ Math.random().toString( 36 ).slice( 2, 9 ) }`;
+
 const DEFAULT_FILE = {
+	id: '',
 	fileId: 0,
 	fileUrl: '',
 	fileName: '',
@@ -42,7 +46,9 @@ export default function Edit( { attributes, setAttributes, context } ) {
 	const {
 		sectiontitle,
 		description,
+		imageId,
 		imageUrl,
+		imageAlt,
 		cta = {},
 		files,
 		videoTitle,
@@ -52,16 +58,47 @@ export default function Edit( { attributes, setAttributes, context } ) {
 	} = attributes;
 
 	const blockVariation = context?.[ 'ambrygen/threeColumnVariation' ];
-	const isVariationThree = blockVariation === 'variation-three';
-	const descriptionClass = isVariationThree ? 'body1' : 'body2-reg';
-	const hasTextContent =
-		sectiontitle || description || ( files && files.length > 0 );
+	const normalizedVariation = blockVariation || 'variation-1';
+	const isVariationTwo = normalizedVariation === 'variation-2';
+	const descriptionClass = isVariationTwo ? 'body1' : 'body2-reg';
 
-	const defaultImage = DEFAULT_IMAGES().placeholder.url;
+	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
+	const normalizedFiles = useMemo(
+		() =>
+			( files || [] ).map( ( file ) => ( {
+				...file,
+				id: file?.id || createFileId(),
+			} ) ),
+		[ files ]
+	);
+	const validFiles = useMemo(
+		() =>
+			normalizedFiles.filter(
+				( file ) => file?.fileUrl && file.fileUrl.trim()
+			),
+		[ normalizedFiles ]
+	);
+	const defaultImage = defaults?.placeholder?.url || '';
+	const defaultImageId = defaults?.placeholder?.id || 0;
+	const isDefaultImage =
+		imageUrl === defaultImage && imageId === defaultImageId;
 	const displayImage = imageUrl || defaultImage;
+	const displayImageAlt = imageUrl ? imageAlt || '' : '';
+	const hasTextContent = sectiontitle || description || validFiles.length > 0;
+
+	useEffect( () => {
+		if (
+			normalizedFiles.length > 0 &&
+			normalizedFiles.some(
+				( file, index ) => file.id !== files?.[ index ]?.id
+			)
+		) {
+			setAttributes( { files: normalizedFiles } );
+		}
+	}, [ files, normalizedFiles, setAttributes ] );
 
 	const blockProps = useBlockProps( {
-		className: 'approach-card',
+		className: 'three-column-card',
 	} );
 
 	const { update, add, remove, move } = useArrayHandlers(
@@ -69,38 +106,68 @@ export default function Edit( { attributes, setAttributes, context } ) {
 		'files'
 	);
 
+	const updateImage = ( media ) => {
+		if ( ! media?.url ) {
+			return;
+		}
+
+		setAttributes( {
+			imageUrl: media.url,
+			imageId: media.id || 0,
+			imageAlt: media.alt || '',
+		} );
+	};
+
 	const updateFileMedia = ( index, media ) => {
-		setAttributes( ( prev ) => {
-			const nextFiles = [ ...( prev.files || [] ) ];
-			nextFiles[ index ] = {
-				...nextFiles[ index ],
-				fileUrl: media?.url || '',
-				fileId: media?.id || 0,
-				fileName:
-					media?.title ||
-					media?.filename ||
-					nextFiles[ index ]?.fileName ||
-					'',
-			};
-			return { files: nextFiles };
+		if ( ! media?.url ) {
+			return;
+		}
+
+		const nextFiles = [ ...( files || [] ) ];
+		nextFiles[ index ] = {
+			...nextFiles[ index ],
+			fileUrl: media.url,
+			fileId: media.id || 0,
+			fileName:
+				media.title ||
+				media.filename ||
+				nextFiles[ index ]?.fileName ||
+				'',
+		};
+
+		setAttributes( {
+			files: nextFiles,
 		} );
 	};
 
 	const clearFileMedia = ( index ) => {
-		setAttributes( ( prev ) => {
-			const nextFiles = [ ...( prev.files || [] ) ];
-			nextFiles[ index ] = {
-				...nextFiles[ index ],
-				fileUrl: '',
-				fileId: 0,
-			};
-			return { files: nextFiles };
+		const nextFiles = [ ...( files || [] ) ];
+		nextFiles[ index ] = {
+			...nextFiles[ index ],
+			fileUrl: '',
+			fileId: 0,
+		};
+
+		setAttributes( {
+			files: nextFiles,
+		} );
+	};
+
+	const updateVideoMedia = ( media ) => {
+		if ( ! media?.url ) {
+			return;
+		}
+
+		setAttributes( {
+			cta: {
+				...cta,
+				videoUrl: media.url,
+			},
 		} );
 	};
 
 	return (
 		<>
-			{ /* Sidebar Controls */ }
 			<InspectorControls>
 				<PanelBody
 					title={ __( 'Card Settings', 'ambrygen-web' ) }
@@ -108,17 +175,13 @@ export default function Edit( { attributes, setAttributes, context } ) {
 				>
 					<ImageUploader
 						label={ __( 'Card Image', 'ambrygen-web' ) }
-						url={ imageUrl }
-						onSelect={ ( media ) =>
-							setAttributes( {
-								imageUrl: media.url,
-								imageId: media.id,
-							} )
-						}
+						url={ isDefaultImage ? '' : imageUrl }
+						onSelect={ updateImage }
 						onRemove={ () =>
 							setAttributes( {
 								imageUrl: '',
 								imageId: 0,
+								imageAlt: '',
 							} )
 						}
 					/>
@@ -199,7 +262,10 @@ export default function Edit( { attributes, setAttributes, context } ) {
 								</p>
 
 								<TextControl
-									label={ __( 'Button Text', 'ambrygen-web' ) }
+									label={ __(
+										'Button Text',
+										'ambrygen-web'
+									) }
 									value={ cta.text || '' }
 									onChange={ ( value ) =>
 										setAttributes( {
@@ -238,15 +304,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 									<div style={ { marginBottom: '16px' } }>
 										<MediaUploadCheck>
 											<MediaUpload
-												onSelect={ ( media ) =>
-													setAttributes( {
-														cta: {
-															...cta,
-															videoUrl:
-																media.url || '',
-														},
-													} )
-												}
+												onSelect={ updateVideoMedia }
 												allowedTypes={ [ 'video' ] }
 												value={ cta.videoUrl }
 												render={ ( { open } ) => (
@@ -331,7 +389,10 @@ export default function Edit( { attributes, setAttributes, context } ) {
 								</p>
 
 								<TextControl
-									label={ __( 'Button Text', 'ambrygen-web' ) }
+									label={ __(
+										'Button Text',
+										'ambrygen-web'
+									) }
 									value={ cta.text || '' }
 									onChange={ ( value ) =>
 										setAttributes( {
@@ -382,8 +443,8 @@ export default function Edit( { attributes, setAttributes, context } ) {
 						</p>
 					) }
 
-					{ ( files || [] ).map( ( fileItem, index ) => (
-						<PanelItem key={ index }>
+					{ normalizedFiles.map( ( fileItem, index ) => (
+						<PanelItem key={ fileItem.id }>
 							<ItemHeader
 								index={ index }
 								label={ fileItem.fileName || fileItem.fileUrl }
@@ -475,7 +536,9 @@ export default function Edit( { attributes, setAttributes, context } ) {
 
 					<Button
 						variant="primary"
-						onClick={ () => add( DEFAULT_FILE ) }
+						onClick={ () =>
+							add( { ...DEFAULT_FILE, id: createFileId() } )
+						}
 						style={ { width: '100%', justifyContent: 'center' } }
 					>
 						{ __( 'Add File', 'ambrygen-web' ) }
@@ -483,13 +546,15 @@ export default function Edit( { attributes, setAttributes, context } ) {
 				</PanelBody>
 			</InspectorControls>
 
-			{ /* Editor Canvas */ }
 			<div { ...blockProps }>
-				<div className="approach-card__inner">
-					<div className="approach-card__image-wrapper">
-						<div className="approach-card__image">
+				<div className="three-column-card__inner">
+					<div className="three-column-card__image-wrapper">
+						<div className="three-column-card__image">
 							{ displayImage ? (
-								<img src={ displayImage } alt="" />
+								<img
+									src={ displayImage }
+									alt={ displayImageAlt }
+								/>
 							) : (
 								<ImagePlaceholder
 									text={ __(
@@ -506,16 +571,16 @@ export default function Edit( { attributes, setAttributes, context } ) {
 							></div>
 						) }
 
-						<div className="approach-card__text-content">
+						<div className="three-column-card__text-content">
 							<RichText
 								tagName="h3"
-								className="approach-card__title heading-5 mb-0"
+								className="three-column-card__title heading-5 mb-0"
 								value={ sectiontitle }
 								onChange={ ( value ) =>
 									setAttributes( { sectiontitle: value } )
 								}
 								placeholder={ __(
-									'Card Title',
+									'Add Title...',
 									'ambrygen-web'
 								) }
 								allowedFormats={ [ 'core/text-color' ] }
@@ -523,20 +588,19 @@ export default function Edit( { attributes, setAttributes, context } ) {
 
 							<RichText
 								tagName="div"
-								className={ `approach-card__description ${ descriptionClass }` }
+								className={ `three-column-card__description ${ descriptionClass }` }
 								value={ description }
 								onChange={ ( value ) =>
 									setAttributes( { description: value } )
 								}
 								placeholder={ __(
-									'Card description…',
+									'Add Short Description...',
 									'ambrygen-web'
 								) }
 							/>
-							{ /* Show files if available */ }
-							{ files?.length > 0 && (
-								<div className="approach-card__files">
-									{ files.map( ( file, index ) => {
+							{ validFiles.length > 0 && (
+								<div className="three-column-card__files">
+									{ validFiles.map( ( file ) => {
 										const extension = file?.fileUrl
 											?.split( '.' )
 											.pop()
@@ -544,8 +608,8 @@ export default function Edit( { attributes, setAttributes, context } ) {
 
 										return (
 											<div
-												key={ index }
-												className="approach-card__file"
+												key={ file.id }
+												className="three-column-card__file"
 											>
 												{ extension && (
 													<span className="file-type">
@@ -567,15 +631,14 @@ export default function Edit( { attributes, setAttributes, context } ) {
 						></div>
 					) }
 
-					{ /* CTA Preview */ }
 					{ cta?.text && (
-						<div className="approach-card__cta-wrapper">
+						<div className="three-column-card__cta-wrapper">
 							<div
-								className={ `approach-card__cta ${
+								className={ `three-column-card__cta ${
 									cta.variant || 'dark'
 								} ${
 									cta.isVideo
-										? 'is-style-site-trailing-icon'
+										? 'site-btn has-right-arrow'
 										: ''
 								}` }
 								role="presentation"
@@ -585,7 +648,6 @@ export default function Edit( { attributes, setAttributes, context } ) {
 						</div>
 					) }
 
-					{ /* Video Preview (Backend Only) */ }
 					{ !! cta.isPopup &&
 						cta.popupType === 'video' &&
 						( cta.videoUrl || cta.iframeUrl ) && (
@@ -690,7 +752,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 												<img
 													src={ playIcon }
 													className="play-icon__img"
-													alt="Play Icon"
+													alt=""
 												/>
 											</div>
 										</div>
@@ -698,7 +760,6 @@ export default function Edit( { attributes, setAttributes, context } ) {
 								</div>
 							</div>
 						) }
-					{ /* Form Preview (Backend Only) */ }
 					{ !! cta.isPopup &&
 						cta.popupType === 'form' &&
 						( formTitle || formContent ) && (
@@ -726,11 +787,10 @@ export default function Edit( { attributes, setAttributes, context } ) {
 								<div className="heading-6 mb-2">
 									{ formTitle }
 								</div>
-								<div
+								<RichText.Content
+									tagName="div"
 									className="body2-reg mb-3"
-									dangerouslySetInnerHTML={ {
-										__html: formContent,
-									} }
+									value={ formContent }
 								/>
 							</div>
 						) }

@@ -3,7 +3,7 @@
  *
  * @see https://react.dev/reference/react
  */
-import { useCallback, useState } from '@wordpress/element';
+import { useCallback, useEffect, useState } from '@wordpress/element';
 
 /**
  * Core block editor components for building the block interface.
@@ -39,6 +39,59 @@ import {
 	CtaButtonField,
 } from '../_shared/components';
 
+const PRIMARY_BUTTON_VARIANT = 'is-style-site-tertiary-btn';
+const SECONDARY_BUTTON_VARIANT = 'dark';
+const DEFAULT_SLIDE = {
+	id: 'slide-1',
+	backgroundImage: '',
+	backgroundImageId: 0,
+	backgroundImageAlt: '',
+	overlayImage1: '',
+	overlayImage1Id: 0,
+	overlayImage1Alt: '',
+	overlayImage2: '',
+	overlayImage2Id: 0,
+	overlayImage2Alt: '',
+	heading: '',
+	eyebrow: '',
+	headingTag: 'h2',
+	content: '',
+	primarybutton: {
+		url: '',
+		text: '',
+		target: '',
+		rel: '',
+		variant: PRIMARY_BUTTON_VARIANT,
+	},
+	secondarybutton: {
+		url: '',
+		text: '',
+		target: '',
+		rel: '',
+		variant: SECONDARY_BUTTON_VARIANT,
+	},
+};
+
+const createSlideId = () => {
+	if ( typeof globalThis.crypto?.randomUUID === 'function' ) {
+		return globalThis.crypto.randomUUID();
+	}
+
+	return `${ Date.now() }-${ Math.random().toString( 36 ).slice( 2 ) }`;
+};
+
+const getMediaFields = ( media, fieldPrefix ) => {
+	if ( ! media?.url ) {
+		return null;
+	}
+
+	return {
+		[ fieldPrefix ]: media.url,
+		[ `${ fieldPrefix }Id` ]: media.id || 0,
+		[ `${ fieldPrefix }Alt` ]: media.alt || '',
+	};
+};
+
 /**
  * Edit component for the Hero Section block.
  *
@@ -57,7 +110,7 @@ import {
  */
 export default function Edit( { attributes, setAttributes } ) {
 	const {
-		slides,
+		slides = [],
 		showSliderNav,
 		showSliderDots,
 		autoplay,
@@ -66,6 +119,16 @@ export default function Edit( { attributes, setAttributes } ) {
 	} = attributes;
 
 	const [ currentSlide, setCurrentSlide ] = useState( 0 );
+
+	useEffect( () => {
+		if ( slides.length ) {
+			return;
+		}
+
+		setAttributes( {
+			slides: [ DEFAULT_SLIDE ],
+		} );
+	}, [ slides, setAttributes ] );
 
 	/**
 	 * Updates a specific slide's property or properties.
@@ -100,33 +163,8 @@ export default function Edit( { attributes, setAttributes } ) {
 		const newSlides = [
 			...slides,
 			{
-				id:
-					typeof crypto?.randomUUID === 'function'
-						? crypto.randomUUID()
-						: `${ Date.now() }-${ Math.random()
-								.toString( 36 )
-								.slice( 2 ) }`,
-				backgroundImage: '',
-				backgroundImageId: 0,
-				backgroundImageAlt: '',
-				heading: '',
-				eyebrow: '',
-				headingTag: 'h2',
-				content: '',
-				primarybutton: {
-					url: '',
-					text: '',
-					target: '',
-					rel: '',
-					variant: '',
-				},
-				secondarybutton: {
-					url: '',
-					text: '',
-					target: '',
-					rel: '',
-					variant: '',
-				},
+				...DEFAULT_SLIDE,
+				id: createSlideId(),
 			},
 		];
 		setAttributes( { slides: newSlides } );
@@ -172,13 +210,30 @@ export default function Edit( { attributes, setAttributes } ) {
 		[ slides, setAttributes ]
 	);
 
+	const updateSlideImage = useCallback(
+		( index, media, fieldPrefix ) => {
+			const imageFields = getMediaFields( media, fieldPrefix );
+
+			if ( ! imageFields ) {
+				return;
+			}
+
+			updateSlide( index, imageFields );
+		},
+		[ updateSlide ]
+	);
+
 	const blockProps = useBlockProps( {
 		className: `hero-section${
 			showSmallImage ? ' inner-hero-banner' : ''
 		}`,
 	} );
 
-	const slide = slides[ currentSlide ] || slides[ 0 ];
+	const slide = slides[ currentSlide ] || slides[ 0 ] || DEFAULT_SLIDE;
+	const hasPrimaryButton =
+		!! slide.primarybutton?.text && !! slide.primarybutton?.url;
+	const hasSecondaryButton =
+		!! slide.secondarybutton?.text && !! slide.secondarybutton?.url;
 
 	return (
 		<>
@@ -260,27 +315,25 @@ export default function Edit( { attributes, setAttributes } ) {
 						>
 							{ slides.length > 1 && (
 								<div className="hero-section__slide-controls">
-									{ /* Move Slide Up */ }
 									<Button
 										size="small"
 										disabled={ index === 0 }
 										onClick={ ( e ) => {
 											e.preventDefault();
 											e.stopPropagation();
-											moveSlide( index, -1 ); // Move up
+											moveSlide( index, -1 );
 										} }
 									>
 										{ __( 'Move Up', 'ambrygen-web' ) }
 									</Button>
 
-									{ /* Move Slide Down */ }
 									<Button
 										size="small"
 										disabled={ index === slides.length - 1 }
 										onClick={ ( e ) => {
 											e.preventDefault();
 											e.stopPropagation();
-											moveSlide( index, 1 ); // Move down
+											moveSlide( index, 1 );
 										} }
 									>
 										{ __( 'Move Down', 'ambrygen-web' ) }
@@ -295,11 +348,11 @@ export default function Edit( { attributes, setAttributes } ) {
 								) }
 								url={ slideItem.backgroundImage }
 								onSelect={ ( media ) =>
-									updateSlide( index, {
-										backgroundImage: media.url,
-										backgroundImageId: media.id,
-										backgroundImageAlt: media.alt || '',
-									} )
+									updateSlideImage(
+										index,
+										media,
+										'backgroundImage'
+									)
 								}
 								onRemove={ () =>
 									updateSlide( index, {
@@ -317,11 +370,11 @@ export default function Edit( { attributes, setAttributes } ) {
 								) }
 								url={ slideItem.overlayImage1 }
 								onSelect={ ( media ) =>
-									updateSlide( index, {
-										overlayImage1: media.url,
-										overlayImage1Id: media.id,
-										overlayImage1Alt: media.alt || '',
-									} )
+									updateSlideImage(
+										index,
+										media,
+										'overlayImage1'
+									)
 								}
 								onRemove={ () =>
 									updateSlide( index, {
@@ -338,11 +391,11 @@ export default function Edit( { attributes, setAttributes } ) {
 								) }
 								url={ slideItem.overlayImage2 }
 								onSelect={ ( media ) =>
-									updateSlide( index, {
-										overlayImage2: media.url,
-										overlayImage2Id: media.id,
-										overlayImage2Alt: media.alt || '',
-									} )
+									updateSlideImage(
+										index,
+										media,
+										'overlayImage2'
+									)
 								}
 								onRemove={ () =>
 									updateSlide( index, {
@@ -353,10 +406,6 @@ export default function Edit( { attributes, setAttributes } ) {
 								}
 							/>
 
-							{ /* <PanelBody
-								title={ __( 'Heading Settings', 'ambrygen-web' ) }
-								id={ `hero-heading-settings-${ index }` }
-							></PanelBody> */ }
 							<TagSelector
 								label={ __( 'Heading Tag', 'ambrygen-web' ) }
 								value={ slideItem.headingTag || 'h2' }
@@ -366,34 +415,36 @@ export default function Edit( { attributes, setAttributes } ) {
 								type="heading"
 							/>
 
-							{ /* <PanelBody
-								title={ __( 'Primary Button', 'ambrygen-web' ) }
-								id={ `hero-primary-button-${ index }` }
-							></PanelBody> */ }
 							<CtaButtonField
 								label={ __( 'Primary Button', 'ambrygen-web' ) }
-								value={ slideItem.primarybutton || {} }
+								value={ {
+									...( slideItem.primarybutton || {} ),
+									variant: PRIMARY_BUTTON_VARIANT,
+								} }
+								showVariant={ false }
 								onChange={ ( value ) =>
-									updateSlide( index, 'primarybutton', value )
+									updateSlide( index, 'primarybutton', {
+										...value,
+										variant: PRIMARY_BUTTON_VARIANT,
+									} )
 								}
 							/>
 
-							{ /* <PanelBody
-								title={ __( 'Secondary Button', 'ambrygen-web' ) }
-								id={ `hero-secondary-button-${ index }` }
-							></PanelBody> */ }
 							<CtaButtonField
 								label={ __(
 									'Secondary Button',
 									'ambrygen-web'
 								) }
-								value={ slideItem.secondarybutton || {} }
+								value={ {
+									...( slideItem.secondarybutton || {} ),
+									variant: SECONDARY_BUTTON_VARIANT,
+								} }
+								showVariant={ false }
 								onChange={ ( value ) =>
-									updateSlide(
-										index,
-										'secondarybutton',
-										value
-									)
+									updateSlide( index, 'secondarybutton', {
+										...value,
+										variant: SECONDARY_BUTTON_VARIANT,
+									} )
 								}
 							/>
 
@@ -511,14 +562,11 @@ export default function Edit( { attributes, setAttributes } ) {
 													),
 												} }
 												onSelect={ ( media ) =>
-													updateSlide( currentSlide, {
-														backgroundImage:
-															media.url,
-														backgroundImageId:
-															media.id,
-														backgroundImageAlt:
-															media.alt || '',
-													} )
+													updateSlideImage(
+														currentSlide,
+														media,
+														'backgroundImage'
+													)
 												}
 												accept="image/*"
 												allowedTypes={ [ 'image' ] }
@@ -540,7 +588,7 @@ export default function Edit( { attributes, setAttributes } ) {
 													)
 												}
 												placeholder={ __(
-													'Add Eyebrow…',
+													'Add Eyebrow...',
 													'ambrygen-web'
 												) }
 												aria-label={ __(
@@ -553,10 +601,12 @@ export default function Edit( { attributes, setAttributes } ) {
 												] }
 											/>
 										</div>
-										<div
-											className="is-style-gl-s24"
-											aria-hidden="true"
-										></div>
+										{ slide.eyebrow && (
+											<div
+												className="is-style-gl-s24"
+												aria-hidden="true"
+											></div>
+										) }
 
 										<RichText
 											tagName={ slide.headingTag || 'h1' }
@@ -570,7 +620,7 @@ export default function Edit( { attributes, setAttributes } ) {
 												)
 											}
 											placeholder={ __(
-												'Add Heading…',
+												'Add Heading...',
 												'ambrygen-web'
 											) }
 											allowedFormats={ [
@@ -581,10 +631,12 @@ export default function Edit( { attributes, setAttributes } ) {
 											] }
 										/>
 
-										<div
-											className="is-style-gl-s24"
-											aria-hidden="true"
-										></div>
+										{ slide.content && (
+											<div
+												className="is-style-gl-s24"
+												aria-hidden="true"
+											></div>
+										) }
 										<div className="hero-section__description">
 											<RichText
 												tagName="p"
@@ -612,35 +664,49 @@ export default function Edit( { attributes, setAttributes } ) {
 												] }
 											/>
 										</div>
-										<div
-											className="is-style-gl-s24"
-											aria-hidden="true"
-										></div>
-										<div className="hero-section__actions">
-											{ slide.primarybutton?.text && (
+										{ ( hasPrimaryButton ||
+											hasSecondaryButton ) && (
+											<>
 												<div
-													className={ `hero-section__button site-btn ${
-														slide.primarybutton
-															.variant || ''
-													}` }
-												>
-													{ slide.primarybutton.text }
+													className="is-style-gl-s24"
+													aria-hidden="true"
+												></div>
+												<div className="hero-section__actions">
+													{ hasPrimaryButton && (
+														<div
+															className={ `hero-section__button site-btn ${
+																slide
+																	.primarybutton
+																	.variant ||
+																PRIMARY_BUTTON_VARIANT
+															}` }
+														>
+															{
+																slide
+																	.primarybutton
+																	.text
+															}
+														</div>
+													) }
+													{ hasSecondaryButton && (
+														<div
+															className={ `hero-section__button site-btn ${
+																slide
+																	.secondarybutton
+																	.variant ||
+																SECONDARY_BUTTON_VARIANT
+															}` }
+														>
+															{
+																slide
+																	.secondarybutton
+																	.text
+															}
+														</div>
+													) }
 												</div>
-											) }
-											{ slide.secondarybutton?.text && (
-												<div
-													className={ `hero-section__button site-btn ${
-														slide.secondarybutton
-															.variant || ''
-													}` }
-												>
-													{
-														slide.secondarybutton
-															.text
-													}
-												</div>
-											) }
-										</div>
+											</>
+										) }
 									</div>
 								</div>
 							</div>

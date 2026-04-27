@@ -86,6 +86,42 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		[ clientId, termId ]
 	);
 
+	const postTypeArchives = useSelect( ( select ) => {
+		const { getPostType } = select( 'core' );
+		const postTypes = [
+			{
+				slug: 'publication',
+				label: __(
+					'View our Peer-Reviewed Publications',
+					'ambrygen-web'
+				),
+			},
+			{
+				slug: 'presentation',
+				label: __( 'View our Scientific Presentations', 'ambrygen-web' ),
+			},
+			{
+				slug: 'poster',
+				label: __( 'View our Scientific Posters', 'ambrygen-web' ),
+			},
+		];
+
+		return postTypes
+			.map( ( postType ) => {
+				const record = getPostType( postType.slug );
+
+				if ( ! record?.viewable || ! record?.slug ) {
+					return null;
+				}
+
+				return {
+					label: postType.label,
+					url: `/${ record.slug }/?collaborator=${ selectedTerm?.slug || '' }`,
+				};
+			} )
+			.filter( Boolean );
+	}, [ selectedTerm?.slug ] );
+
 	const imageUrl = useSelect(
 		( select ) => {
 			if ( ! selectedTerm?.meta?.term_image ) {
@@ -126,7 +162,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const previewImage = imageUrl || defaults?.placeholder?.url || '';
 
 	return (
-		<div { ...useBlockProps( { className: 'collaborator-card' } ) }>
+		<div
+			{ ...useBlockProps( {
+				className: 'timeline-block__item collaborator-card',
+			} ) }
+		>
 			{ ! hasResolved && <Spinner /> }
 
 			{ ! termId && (
@@ -173,38 +213,80 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 			{ termId && selectedTerm && (
 				<>
-					<div className="collaborator-card__layout">
-						<div className="collaborator-card__media">
+					<div className="timeline-block__badge-col collaborator-card__badge-col">
+						<div className="timeline-block__badge"></div>
+					</div>
+
+					<div className="timeline-block__content-card collaborator-card__layout">
+						<div className="timeline-block__image collaborator-card__media">
 							<img
 								src={ previewImage }
 								alt={ collaboratorName }
-								className="collaborator-card__image"
+								className="timeline-block__image-element collaborator-card__image"
 							/>
 						</div>
 
-						<div className="collaborator-card__content">
-							<div className="collaborator-card__title heading-5 mb-0">
+						<div className="timeline-block__text-content collaborator-card__content">
+							<div className="subtitle1-sbold mb-0 timeline-block__text-title collaborator-card__title">
 								{ collaboratorName }
 							</div>
 
 							{ collaboratorDescription && (
-								<div className="collaborator-card__description body1">
+								<>
+									<div
+										className="is-style-gl-s12"
+										aria-hidden="true"
+									></div>
+									<div className="text-md-regular collaborator-card__description">
 									{ collaboratorDescription }
-								</div>
+									</div>
+								</>
+							) }
+
+							{ postTypeArchives.length > 0 && (
+								<>
+									<div
+										className="is-style-gl-s12"
+										aria-hidden="true"
+									></div>
+									<ul className="collaborator-card__links">
+										{ postTypeArchives.map( ( link ) => (
+											<li key={ link.label }>
+												<a
+													href={ link.url }
+													className="site-btn is-style-site-text-btn has-right-arrow"
+													onClick={ ( event ) =>
+														event.preventDefault()
+													}
+												>
+													{ link.label }
+												</a>
+											</li>
+										) ) }
+									</ul>
+								</>
 							) }
 
 							{ collaboratorWebsite && (
-								<div className="collaborator-card__website">
-									<a
-										href={ collaboratorWebsite }
-										onClick={ ( event ) =>
-											event.preventDefault()
-										}
-									>
-										{ collaboratorWebsite }
-									</a>
-								</div>
+								<>
+									<div
+										className="is-style-gl-s12"
+										aria-hidden="true"
+									></div>
+									<div className="collaborator-card__website">
+										<a
+											href={ collaboratorWebsite }
+											className="site-btn is-style-site-text-btn has-right-arrow"
+											onClick={ ( event ) =>
+												event.preventDefault()
+											}
+										>
+											{ collaboratorWebsite }
+										</a>
+									</div>
+								</>
 							) }
+
 						</div>
 					</div>
 

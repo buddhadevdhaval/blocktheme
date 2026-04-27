@@ -15,10 +15,17 @@
 		}
 
 		.hero-section__background {
-			height: 380px;
+			min-height: 380px;
 
 			@include bp.max(lg) {
 				height: inherit;
+				min-height: inherit;
+			}
+
+			img {
+				.block-editor__container & {
+					height: 100%;
+				}
 			}
 		}
 
@@ -86,6 +93,7 @@
 		height: 100%;
 		object-fit: cover;
 		width: 100%;
+		display: block;
 	}
 
 	&__overlay {
@@ -172,6 +180,14 @@
 		width: 100%;
 		z-index: 1;
 
+		@media only screen and (min-width:992px) and (max-width:1350px) {
+			min-height: 518px;
+		}
+
+		// @include bp.between(lg, xxl) {
+		// 	min-height: 518px;
+		// }
+
 		@include bp.max(lg) {
 			margin: 0;
 			max-width: 100%;
@@ -234,8 +250,7 @@
 			@include bp.max(sm) {
 				justify-content: center;
 				text-align: center;
-
-				width: 100%
+				width: 100%;
 			}
 		}
 	}

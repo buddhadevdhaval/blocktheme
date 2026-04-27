@@ -1,5 +1,5 @@
 <!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
-<div class="is-style-gl-s50" aria-hidden="true"></div>
+<div style="height:64px" class="wp-block-spacer is-style-gl-s64" aria-hidden="true"></div>
 <!-- /wp:spacer -->
 
 <!-- wp:group {"tagName":"section","className":"container-1280","layout":{"type":"default"}} -->
@@ -13,7 +13,7 @@
 			<!-- /wp:heading -->
 
 			<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
-			<div class="is-style-gl-s50" aria-hidden="true"></div>
+			<div style="height:50px" class="wp-block-spacer is-style-gl-s50" aria-hidden="true"></div>
 			<!-- /wp:spacer -->
 
 			<!-- wp:group {"className":"category-filter-search","layout":{"type":"default"}} -->
@@ -46,14 +46,13 @@
 			<!-- /wp:group -->
 
 			<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
-			<div class="is-style-gl-s50" aria-hidden="true"></div>
+			<div style="height:50px" class="wp-block-spacer is-style-gl-s50" aria-hidden="true"></div>
 			<!-- /wp:spacer -->
 
-			<!-- wp:html -->
-			<div class="ambrygen-ajax-pagination" data-ambrygen-scope="upcoming" data-ambrygen-per-page="8"
-				data-ambrygen-order="ASC">
-				<div class="ambrygen-ajax-pagination__content">
-					<!-- /wp:html -->
+			<!-- wp:group {"className":"ambrygen-ajax-pagination ambrygen-ajax-pagination--upcoming ambrygen-ajax-pagination--asc ambrygen-ajax-pagination--per-page-8","layout":{"type":"default"}} -->
+			<div class="wp-block-group ambrygen-ajax-pagination ambrygen-ajax-pagination--upcoming ambrygen-ajax-pagination--asc ambrygen-ajax-pagination--per-page-8">
+				<!-- wp:group {"className":"ambrygen-ajax-pagination__content","layout":{"type":"default"}} -->
+				<div class="wp-block-group ambrygen-ajax-pagination__content">
 
 					<!-- wp:query {"queryId":2,"query":{"perPage":8,"postType":"conferences","order":"asc","orderBy":"date","inherit":false}} -->
 					<div class="wp-block-query">
@@ -62,7 +61,7 @@
 						<!-- /wp:post-template -->
 
 						<!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
-						<div class="is-style-gl-s50" aria-hidden="true"></div>
+						<div style="height:64px" class="wp-block-spacer is-style-gl-s64" aria-hidden="true"></div>
 						<!-- /wp:spacer -->
 
 						<!-- wp:html -->
@@ -103,86 +102,21 @@
 								</ul>
 							</div>
 						</div>
-						<script>
-							document.addEventListener('DOMContentLoaded', function () {
-								document.querySelectorAll('.ambrygen-ajax-pagination').forEach(function (container) {
-									var totalPages = parseInt(container.getAttribute('data-ambrygen-total-pages'), 10);
-									if (isNaN(totalPages)) {
-										return;
-									}
-
-									var currentPage = parseInt(container.getAttribute('data-ambrygen-current') || '1', 10) || 1;
-									var paginationRow = container.querySelector('.pagination-buttons-row');
-									var desktopList = container.querySelector('.desktop-pages .pagination-list');
-									var mobileTrigger = container.querySelector('.mobile-pagination .page-trigger');
-									var popupGrid = container.querySelector('.pagination-popup .popup-grid');
-
-									function renderDesktopPages() {
-										if (totalPages <= 1) {
-											return '<button class="page-btn active">1</button>';
-										}
-
-										var html = '';
-										var showDots = false;
-										var range = 1;
-
-										for (var i = 1; i <= totalPages; i += 1) {
-											if (i === 1 || i === totalPages || (i >= currentPage - range && i <= currentPage + range)) {
-												html += '<button class="page-btn' + (i === currentPage ? ' active' : '') + '">' + i + '</button>';
-												showDots = true;
-											} else if (showDots) {
-												html += '<span class="dots">...</span>';
-												showDots = false;
-											}
-										}
-
-										return html;
-									}
-
-									function renderPopupPages() {
-										var html = '';
-										for (var j = 1; j <= Math.max(1, totalPages); j += 1) {
-											html += '<button class="page-btn' + (j === currentPage ? ' active' : '') + '">' + j + '</button>';
-										}
-
-										return html;
-									}
-
-									if (paginationRow) {
-										paginationRow.style.display = totalPages <= 1 ? 'none' : '';
-									}
-
-									if (desktopList) {
-										desktopList.innerHTML = renderDesktopPages();
-									}
-
-									if (mobileTrigger) {
-										mobileTrigger.textContent = currentPage + '/' + Math.max(1, totalPages);
-									}
-
-									if (popupGrid) {
-										popupGrid.innerHTML = renderPopupPages();
-									}
-								});
-							});
-						</script>
 						<!-- /wp:html -->
 					</div>
 					<!-- /wp:query -->
 
-					<!-- wp:html -->
 				</div>
+				<!-- /wp:group -->
 			</div>
-			<!-- /wp:html -->
+			<!-- /wp:group -->
 		</div>
 		<!-- /wp:group -->
 	</div>
 	<!-- /wp:group -->
 
 	<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
-	<div class="is-style-gl-s50" aria-hidden="true"></div>
+	<div style="height:50px" class="wp-block-spacer is-style-gl-s50" aria-hidden="true"></div>
 	<!-- /wp:spacer -->
 </section>
-<!-- /wp:group -->
-
 <!-- /wp:group -->

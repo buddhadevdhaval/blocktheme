@@ -13,6 +13,10 @@
     "logoId": {
       "type": "number"
     },
+    "logoAlt": {
+      "type": "string",
+      "default": ""
+    },
     "quote": {
       "type": "string",
       "default": ""
@@ -33,15 +37,7 @@
   "textdomain": "ambrygen-web",
   "usesContext": [
     "ambrygen/mainImage",
-    "ambrygen/mainImageId"
-  ],
-  "example": {
-    "attributes": {
-      "logo": "",
-      "logoId": 0,
-      "quote": "",
-      "author": "",
-      "role": ""
-    }
-  }
+    "ambrygen/mainImageId",
+    "ambrygen/mainImageAlt"
+  ]
 }

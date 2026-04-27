@@ -25,12 +25,12 @@
         {
           "text": "Primary Default Button",
           "url": "",
-          "variant": "site-btn is-style-site-trailing-icon"
+          "variant": "site-btn has-right-arrow"
         },
         {
           "text": "Tertiary Default Button",
           "url": "",
-          "variant": "site-btn is-style-site-tertiary-btn is-style-site-trailing-icon"
+          "variant": "site-btn is-style-site-tertiary-btn has-right-arrow"
         }
       ]
     }

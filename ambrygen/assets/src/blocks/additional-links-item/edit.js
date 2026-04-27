@@ -9,7 +9,19 @@ import {
 import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
-const isValidHttpUrl = ( value ) => /^https?:\/\//i.test( value || '' );
+const getSafePreviewUrl = ( value ) => {
+	const url = ( value || '' ).trim();
+
+	if ( ! url ) {
+		return '';
+	}
+
+	if ( /^(https?:|mailto:|tel:)/i.test( url ) || url.startsWith( '/' ) ) {
+		return url;
+	}
+
+	return '';
+};
 
 const getLinkRel = ( target, rel ) => {
 	const relParts = ( rel || '' ).split( ' ' ).filter( Boolean );
@@ -29,8 +41,21 @@ export default function Edit( { attributes, setAttributes } ) {
 	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
 	const placeholder = defaults?.placeholder || {};
 	const displayIcon = icon?.url ? icon : placeholder;
-	const safeUrl = isValidHttpUrl( url ) ? url : '';
+	const safeUrl = getSafePreviewUrl( url );
 	const linkRel = getLinkRel( target, rel );
+	const handleImageSelect = ( media ) => {
+		if ( ! media?.url ) {
+			return;
+		}
+
+		setAttributes( {
+			icon: {
+				id: media.id || 0,
+				url: media.url,
+				alt: media.alt || media.title || '',
+			},
+		} );
+	};
 
 	return (
 		<>
@@ -39,7 +64,6 @@ export default function Edit( { attributes, setAttributes } ) {
 					title={ __( 'Card Settings', 'ambrygen-web' ) }
 					initialOpen={ true }
 				>
-					{ /* Title */ }
 					<CtaButtonField
 						label={ __( 'Link', 'ambrygen-web' ) }
 						value={ cta }
@@ -52,25 +76,16 @@ export default function Edit( { attributes, setAttributes } ) {
 							} )
 						}
 						textPlaceholder={ __(
-							'Enter link text…',
+							'Enter link text...',
 							'ambrygen-web'
 						) }
 						showVariant={ false }
 					/>
 
-					{ /* Icon upload */ }
 					<ImageUploader
 						label={ __( 'Image', 'ambrygen-web' ) }
 						url={ icon?.url }
-						onSelect={ ( media ) =>
-							setAttributes( {
-								icon: {
-									id: media.id,
-									url: media.url,
-									alt: media.alt || media.title || '',
-								},
-							} )
-						}
+						onSelect={ handleImageSelect }
 						onRemove={ () =>
 							setAttributes( {
 								icon: {
@@ -84,7 +99,6 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 			</InspectorControls>
 
-			{ /* Front-end preview */ }
 			<div { ...blockProps }>
 				<div className="additional-link__card-image">
 					{ displayIcon?.url && (

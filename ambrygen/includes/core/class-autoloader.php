@@ -32,6 +32,10 @@ foreach (glob(__DIR__ . '/webinars/*.php') ?: array() as $file) {
     require_once $file;
 }
 
+foreach (glob(__DIR__ . '/genetic-testing/*.php') ?: array() as $file) {
+    require_once $file;
+}
+
 foreach (glob(__DIR__ . '/blog/*.php') ?: array() as $file) {
     require_once $file;
 }
@@ -57,6 +61,7 @@ foreach (glob(__DIR__ . '/routes/*.php') ?: array() as $file) {
 
 // Core components (order can matter if classes reference each other).
 require_once __DIR__ . '/class-theme-options.php';
+require_once __DIR__ . '/class-login-customizer.php';
 require_once __DIR__ . '/class-assets.php';
 require_once __DIR__ . '/class-helper.php';
 require_once __DIR__ . '/class-blocks.php';
@@ -66,3 +71,4 @@ require_once __DIR__ . '/class-theme.php';
 
 Theme::instance();
 PostTypes::instance();
+Login_Customizer::instance();

@@ -29,7 +29,7 @@ if ( ! $ambrygen_post || 'publish' !== $ambrygen_post->post_status ) {
 }
 
 $ambrygen_name        = get_the_title( $ambrygen_post_id );
-$ambrygen_designation = get_post_meta( $ambrygen_post_id, 'designation', true );
+$ambrygen_designation = get_post_meta( $ambrygen_post_id, 'user_designation', true );
 $ambrygen_image_id    = get_post_thumbnail_id( $ambrygen_post_id );
 $ambrygen_bio         = apply_filters( 'the_content', $ambrygen_post->post_content );
 $ambrygen_display_id  = $ambrygen_image_id
@@ -43,7 +43,9 @@ $ambrygen_image_url   = $ambrygen_image_url ? $ambrygen_image_url : '';
 	class="our-team__card js-gsap-fade"
 	data-team-name="<?php echo esc_attr( $ambrygen_name ); ?>"
 	data-team-designation="<?php echo esc_attr( $ambrygen_designation ); ?>"
-	data-team-image="<?php echo esc_url( $ambrygen_image_url ); ?>"
+	<?php if ( $ambrygen_image_url ) : ?>
+		data-team-image="<?php echo esc_url( $ambrygen_image_url ); ?>"
+	<?php endif; ?>
 	role="button"
 	tabindex="0"
 	aria-haspopup="dialog"

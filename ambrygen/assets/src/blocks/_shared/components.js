@@ -16,10 +16,12 @@ import {
 	MediaUpload,
 	MediaUploadCheck,
 	LinkControl,
+	useBlockProps,
 } from '@wordpress/block-editor';
 import { __ } from '@wordpress/i18n';
 import { useMemo } from '@wordpress/element';
 import { trash, chevronUp, chevronDown, upload } from '@wordpress/icons';
+import { getThemeAssetUrl } from '../../utils/assets';
 
 /**
  * Shared global configuration
@@ -357,6 +359,68 @@ export function ImagePlaceholder( {
 	};
 
 	return <span style={ placeholderStyle }>{ text }</span>;
+}
+
+/**
+ * Shared single-image preview for inserter examples.
+ *
+ * @param {Object} props            Component props.
+ * @param {string} props.imagePath  Theme-relative image path.
+ * @param {string} props.className  Preview wrapper class.
+ * @param {number} props.width      Preview image width.
+ */
+export function BlockExamplePreview( {
+	imagePath,
+	className = 'block-example-preview',
+	width = 620,
+} ) {
+	const blockProps = useBlockProps( {
+		className,
+	} );
+
+	return (
+		<div { ...blockProps }>
+			<img src={ getThemeAssetUrl( imagePath ) } alt="" width={ width } />
+		</div>
+	);
+}
+
+/**
+ * Shared multi-variation preview for inserter examples.
+ *
+ * @param {Object}  props           Component props.
+ * @param {Array}   props.variants  Variation items with image and value.
+ * @param {string}  props.className Preview wrapper class.
+ * @param {string}  props.itemClass Preview item class.
+ */
+export function BlockVariationsExamplePreview( {
+	variants = [],
+	className = 'block-example-preview',
+	itemClass = 'block-example-preview__item',
+} ) {
+	const blockProps = useBlockProps( {
+		className,
+	} );
+
+	return (
+		<div { ...blockProps }>
+			{ variants.map( ( variant ) => (
+				<div
+					key={ variant.value || variant.imagePath || variant.image }
+					className={ itemClass }
+				>
+					<img
+						src={
+							variant.imagePath
+								? getThemeAssetUrl( variant.imagePath )
+								: variant.image
+						}
+						alt=""
+					/>
+				</div>
+			) ) }
+		</div>
+	);
 }
 /**
  * HTML tag selector.

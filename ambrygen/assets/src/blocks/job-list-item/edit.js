@@ -4,6 +4,7 @@ import { useSelect, useDispatch } from '@wordpress/data';
 import { getThemeAssetUrl } from '../../utils/assets';
 import { useMemo } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
+import { __ } from '@wordpress/i18n';
 
 export default function Edit( {
 	attributes,
@@ -92,12 +93,16 @@ export default function Edit( {
 	// Get post IDs already used in other blocks
 	const selectedIds = useSelect(
 		( select ) => {
-			const blocks = select( 'core/block-editor' ).getBlocks();
-			return blocks
+			const rootClientId =
+				select( 'core/block-editor' ).getBlockRootClientId( clientId );
+			const siblingBlocks =
+				select( 'core/block-editor' ).getBlocks( rootClientId );
+
+			return siblingBlocks
 				.map( ( b ) => b.attributes?.postId )
 				.filter( ( id ) => id && id !== postId );
 		},
-		[ postId ]
+		[ clientId, postId ]
 	);
 
 	// Job options for SelectControl
@@ -114,14 +119,19 @@ export default function Edit( {
 		<div { ...useBlockProps( { className: 'careers-highlight__job' } ) }>
 			{ ! postId && (
 				<SelectControl
-					label="Select Job"
+					label={ __( 'Select Job', 'ambrygen-web' ) }
 					value=""
 					options={ [
-						{ label: 'Select a Job', value: '' },
+						{
+							label: __( 'Select a Job', 'ambrygen-web' ),
+							value: '',
+						},
 						...options,
 					] }
 					onChange={ ( value ) =>
-						setAttributes( { postId: parseInt( value ) || null } )
+						setAttributes( {
+							postId: value ? Number( value ) : null,
+						} )
 					}
 				/>
 			) }
@@ -135,7 +145,7 @@ export default function Edit( {
 						<div className="careers-highlight__job-tag text-small-medium">
 							{ jobTypeTerms
 								?.map( ( t ) => t.name )
-								.join( ', ' ) || 'Job Type' }
+								.join( ', ' ) || __( 'Job Type', 'ambrygen-web' ) }
 						</div>
 					</div>
 					<div className="careers-highlight__job-meta">
@@ -143,44 +153,45 @@ export default function Edit( {
 							{ jobLocationIcon && (
 								<img
 									src={ jobLocationIcon }
-									alt="Job Location"
+									alt={ __( 'Job Location', 'ambrygen-web' ) }
 									style={ { maxWidth: '50px' } }
 								/>
 							) }
 							<span>
 								{ jobLocationTerms
 									?.map( ( t ) => t.name )
-									.join( ', ' ) || 'Job location' }
+									.join( ', ' ) ||
+									__( 'Job location', 'ambrygen-web' ) }
 							</span>
 						</div>
 						<div className="careers-highlight__job-type text-md-medium">
 							{ jobTypeIcon && (
 								<img
 									src={ jobTypeIcon }
-									alt="Job Type Icon"
+									alt={ __( 'Job Type Icon', 'ambrygen-web' ) }
 									style={ { maxWidth: '50px' } }
 								/>
 							) }
 							<span>
 								{ jobTypeTerms
 									?.map( ( t ) => t.name )
-									.join( ', ' ) || 'Job Type' }
+									.join( ', ' ) || __( 'Job Type', 'ambrygen-web' ) }
 							</span>
 						</div>
 					</div>
 					<div className="is-style-gl-s20"></div>
 					<div className="careers-highlight__actions actions-button">
 						<Button
-							isSecondary
+							variant="secondary"
 							onClick={ () => setAttributes( { postId: null } ) }
 						>
-							Change Job
+							{ __( 'Change Job', 'ambrygen-web' ) }
 						</Button>
 						<Button
 							isDestructive
 							onClick={ () => removeBlock( clientId ) }
 						>
-							Remove Job
+							{ __( 'Remove Job', 'ambrygen-web' ) }
 						</Button>
 					</div>
 				</>

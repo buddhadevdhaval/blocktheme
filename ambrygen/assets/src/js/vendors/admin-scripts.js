@@ -9,6 +9,7 @@
 	const ajaxConfig = window.ambrygenAdminAjax || {};
 	const ajaxUrl = ajaxConfig.ajaxUrl || window.ajaxurl || '';
 	const ajaxNonce = ajaxConfig.nonce || '';
+	const trackingNonce = ajaxConfig.trackingNonce || '';
 
 	function escapeHtml( value ) {
 		return String( value || '' )
@@ -55,29 +56,175 @@
 		return $linkedPostsContainer;
 	}
 
-	$( document ).ready( function () {
-		const $uploadBtn = $( '#ambrygen-upload-button' );
-
-		// Prevent unused variable error before early return.
-		if ( ! $uploadBtn.length ) {
-			return;
+	function renderTrackingPages( pages ) {
+		if ( ! Array.isArray( pages ) || ! pages.length ) {
+			return '<p class="ambrygen-tracking-pages-empty">No page usage recorded yet.</p>';
 		}
 
-		let frame;
+		let html = '<div class="ambrygen-tracking-pages">';
 
-		const $removeBtn = $( '#ambrygen-remove-button' );
-		const $imageId = $( '#ambrygen-placeholder-image-id' );
-		const $wrapper = $( '#ambrygen-placeholder-wrapper' );
+		pages.forEach( function ( page ) {
+			const pageLabel =
+				page.page_title || page.page_path || 'Unknown page';
+			let linksHtml = '';
 
-		$uploadBtn.on( 'click', function ( e ) {
-			e.preventDefault();
-
-			if ( frame ) {
-				frame.open();
-				return;
+			if ( page.edit_url ) {
+				linksHtml +=
+					'<a href="' +
+					escapeAttr( page.edit_url ) +
+					'" target="_blank" rel="noopener">Edit page</a>';
 			}
 
-			frame = wp.media( {
+			if ( page.view_url ) {
+				linksHtml +=
+					( linksHtml ? ' | ' : '' ) +
+					'<a href="' +
+					escapeAttr( page.view_url ) +
+					'" target="_blank" rel="noopener">View page</a>';
+			}
+
+			html +=
+				'<div class="ambrygen-tracking-page-row">' +
+				'<div>' +
+				'<strong>' +
+				escapeHtml( pageLabel ) +
+				'</strong>' +
+				( linksHtml
+					? '<div class="ambrygen-tracking-page-links">' +
+					  linksHtml +
+					  '</div>'
+					: '' ) +
+				'</div>' +
+				'<div>' +
+				escapeHtml(
+					'Used in ' + String( page.usage_count || 0 ) + ' block(s)'
+				) +
+				' | ' +
+				escapeHtml(
+					String( page.impressions || 0 ) +
+						' views, ' +
+						String( page.clicks || 0 ) +
+						' clicks'
+				) +
+				'</div>' +
+				'</div>';
+		} );
+
+		html += '</div>';
+
+		return html;
+	}
+
+	function renderTrackingModalContent( responseData ) {
+		const files = Array.isArray( responseData.files ) ? responseData.files : [];
+		let html =
+			'<div class="ambrygen-tracking-modal__header">' +
+			'<h2>' +
+			escapeHtml( responseData.post_title || 'Tracking Info' ) +
+			'</h2>' +
+			'<button type="button" class="button-link ambrygen-tracking-modal__close" aria-label="Close">×</button>' +
+			'</div>';
+
+		if ( ! files.length ) {
+			return (
+				html +
+				'<div class="ambrygen-tracking-modal__body"><p>No marketing material files found.</p></div>'
+			);
+		}
+
+		html += '<div class="ambrygen-tracking-modal__body">';
+
+		files.forEach( function ( file, index ) {
+			const fileTitle = file.file_title || 'Untitled file';
+			const mediaLabId = file.media_lab_id || 'No Media Lab ID';
+			const pagesHtml = renderTrackingPages( file.pages );
+			const panelId = 'ambrygen-tracking-panel-' + index;
+
+			html +=
+				'<div class="ambrygen-tracking-card">' +
+				'<button type="button" class="ambrygen-tracking-card__toggle" data-target="#' +
+				escapeAttr( panelId ) +
+				'">' +
+				'<span><strong>' +
+				escapeHtml( mediaLabId ) +
+				'</strong> - ' +
+				escapeHtml( fileTitle ) +
+				'</span>' +
+				'<span>' +
+				escapeHtml(
+					String( file.impressions || 0 ) +
+						' views, ' +
+						String( file.clicks || 0 ) +
+						' clicks'
+				) +
+				'</span>' +
+				'</button>' +
+				'<div class="ambrygen-tracking-card__panel" id="' +
+				escapeAttr( panelId ) +
+				'" hidden>' +
+				'<p><strong>Tracking:</strong> ' +
+				escapeHtml(
+					String( file.impressions || 0 ) +
+						' views, ' +
+						String( file.clicks || 0 ) +
+						' clicks'
+				) +
+				'</p>' +
+				'<p><strong>Last click:</strong> ' +
+				escapeHtml( file.last_click || 'No clicks yet' ) +
+				'</p>' +
+				'<p><strong>Total page list:</strong> ' +
+				escapeHtml( String( file.pages.length || 0 ) ) +
+				'</p>' +
+				'<button type="button" class="button button-link ambrygen-tracking-pages-toggle" data-target="#' +
+				escapeAttr( panelId ) +
+				'-pages">Where is used check</button>' +
+				'<div class="ambrygen-tracking-card__pages" id="' +
+				escapeAttr( panelId ) +
+				'-pages" hidden>' +
+				pagesHtml +
+				'</div>' +
+				'</div>' +
+				'</div>';
+		} );
+
+		html += '</div>';
+
+		return html;
+	}
+
+	function ensureTrackingModal() {
+		let $modal = $( '#ambrygen-tracking-modal' );
+
+		if ( $modal.length ) {
+			return $modal;
+		}
+
+		$modal = $(
+			'<div id="ambrygen-tracking-modal" class="ambrygen-tracking-modal" style="display:none;">' +
+				'<div class="ambrygen-tracking-modal__backdrop"></div>' +
+				'<div class="ambrygen-tracking-modal__dialog">' +
+					'<div class="ambrygen-tracking-modal__content"></div>' +
+				'</div>' +
+			'</div>'
+		);
+
+		$( 'body' ).append( $modal );
+
+		return $modal;
+	}
+
+	$( document ).ready( function () {
+		// Handle generic theme option image fields
+		$( document ).on( 'click', '.ambrygen-theme-option-image-field .upload-button', function ( e ) {
+			e.preventDefault();
+
+			const $button = $( this );
+			const $field = $button.closest( '.ambrygen-theme-option-image-field' );
+			const $imageId = $field.find( '.image-id' );
+			const $wrapper = $field.find( '.image-preview' );
+
+			const frame = wp.media( {
 				title: 'Select Image',
 				button: { text: 'Use this image' },
 				multiple: false,
@@ -93,20 +240,135 @@
 				$imageId.val( attachment.id );
 
 				const imageUrl =
-					attachment?.sizes?.medium?.url || attachment.url;
+					attachment?.sizes?.medium?.url || attachment.url || '';
 
 				$wrapper.html(
-					`<img src="${ imageUrl }" style="max-width:150px;margin-bottom:10px;" />`
+					'<img src="' + imageUrl + '" style="max-width:150px;display:block;" />'
 				);
 			} );
 
 			frame.open();
 		} );
 
-		$removeBtn.on( 'click', function () {
-			$imageId.val( '' );
-			$wrapper.html( '' );
+		$( document ).on( 'click', '.ambrygen-theme-option-image-field .remove-button', function ( e ) {
+			e.preventDefault();
+			const $field = $( this ).closest( '.ambrygen-theme-option-image-field' );
+			$field.find( '.image-id' ).val( '' );
+			$field.find( '.image-preview' ).html( '' );
 		} );
+
+		// Legacy support for the single ID if still used elsewhere
+		const $uploadBtn = $( '#ambrygen-upload-button' );
+		if ( $uploadBtn.length ) {
+			let frame;
+			const $removeBtn = $( '#ambrygen-remove-button' );
+			const $imageId = $( '#ambrygen-placeholder-image-id' );
+			const $wrapper = $( '#ambrygen-placeholder-wrapper' );
+
+			$uploadBtn.on( 'click', function ( e ) {
+				e.preventDefault();
+				if ( frame ) { frame.open(); return; }
+				frame = wp.media( {
+					title: 'Select Image',
+					button: { text: 'Use this image' },
+					multiple: false,
+				} );
+				frame.on( 'select', function () {
+					const attachment = frame.state().get( 'selection' ).first().toJSON();
+					$imageId.val( attachment.id );
+					const imageUrl = attachment?.sizes?.medium?.url || attachment.url;
+					$wrapper.html( `<img src="${ imageUrl }" style="max-width:150px;margin-bottom:10px;" />` );
+				} );
+				frame.open();
+			} );
+
+			$removeBtn.on( 'click', function () {
+				$imageId.val( '' );
+				$wrapper.html( '' );
+			} );
+		}
+	} );
+
+	$( document ).on(
+		'click',
+		'.ambrygen-tracking-info-button',
+		function ( event ) {
+			event.preventDefault();
+
+			const postId = parseInt( $( this ).data( 'post-id' ), 10 ) || 0;
+
+			if ( ! postId || ! ajaxUrl || ! trackingNonce ) {
+				return;
+			}
+
+			const $modal = ensureTrackingModal();
+			const $content = $modal.find( '.ambrygen-tracking-modal__content' );
+
+			$content.html( '<div class="ambrygen-tracking-modal__body"><p>Loading tracking info...</p></div>' );
+			$modal.show();
+
+			$.ajax( {
+				url: ajaxUrl,
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					action: 'ambrygen_marketing_material_tracking_details',
+					post_id: postId,
+					nonce: trackingNonce,
+				},
+				success( response ) {
+					if ( response && response.success && response.data ) {
+						$content.html(
+							renderTrackingModalContent( response.data )
+						);
+						return;
+					}
+
+					$content.html(
+						'<div class="ambrygen-tracking-modal__body"><p>Unable to load tracking info.</p></div>'
+					);
+				},
+				error() {
+					$content.html(
+						'<div class="ambrygen-tracking-modal__body"><p>Unable to load tracking info.</p></div>'
+					);
+				},
+			} );
+		}
+	);
+
+	$( document ).on(
+		'click',
+		'.ambrygen-tracking-modal__backdrop, .ambrygen-tracking-modal__close',
+		function () {
+			$( '#ambrygen-tracking-modal' ).hide();
+		}
+	);
+
+	$( document ).on( 'click', '.ambrygen-tracking-card__toggle', function () {
+		const target = $( this ).data( 'target' );
+		const $panel = $( target );
+		const isHidden = $panel.attr( 'hidden' ) !== undefined;
+
+		if ( isHidden ) {
+			$panel.removeAttr( 'hidden' );
+			return;
+		}
+
+		$panel.attr( 'hidden', 'hidden' );
+	} );
+
+	$( document ).on( 'click', '.ambrygen-tracking-pages-toggle', function () {
+		const target = $( this ).data( 'target' );
+		const $panel = $( target );
+		const isHidden = $panel.attr( 'hidden' ) !== undefined;
+
+		if ( isHidden ) {
+			$panel.removeAttr( 'hidden' );
+			return;
+		}
+
+		$panel.attr( 'hidden', 'hidden' );
 	} );
 
 	$( document ).on( 'click', '.ambrygen-remove-link', function ( e ) {
@@ -441,6 +703,74 @@
 		}
 	}
 
+	function renderSingleImagePreview( $field, attachment ) {
+		const $input = $field.find( '.ambrygen-single-image-input' );
+		const $preview = $field.find( '.ambrygen-single-image-preview' );
+
+		if ( ! $input.length || ! $preview.length ) {
+			return;
+		}
+
+		if ( ! attachment ) {
+			$input.val( '' ).trigger( 'change' );
+			$preview.html(
+				'<span class="ambrygen-single-image-empty">No image selected.</span>'
+			);
+			return;
+		}
+
+		const id = attachment.get( 'id' ) || 0;
+		const url = getAttachmentPreviewUrl( attachment );
+
+		$input.val( id ).trigger( 'change' );
+
+		if ( url ) {
+			$preview.html(
+				'<img src="' +
+					escapeAttr( url ) +
+					'" alt="" style="width:96px;height:96px;object-fit:cover;border:1px solid #ddd;border-radius:4px;" />'
+			);
+		} else {
+			$preview.html(
+				'<span class="ambrygen-single-image-empty">No image selected.</span>'
+			);
+		}
+	}
+
+	function renderTermImagePreview( $field, attachment ) {
+		const $input = $field.find( '.term-image-field' );
+		const $preview = $field.find( '.term_image_prev' );
+
+		if ( ! $input.length || ! $preview.length ) {
+			return;
+		}
+
+		if ( ! attachment ) {
+			$input.val( '' ).trigger( 'change' );
+			$preview.attr( 'src', '' ).hide();
+			return;
+		}
+
+		const id =
+			( typeof attachment.get === 'function' && attachment.get( 'id' ) ) ||
+			attachment.id ||
+			0;
+		const url =
+			( typeof attachment.get === 'function' &&
+				getAttachmentPreviewUrl( attachment ) ) ||
+			attachment.url ||
+			'';
+
+		$input.val( id ).trigger( 'change' );
+
+		if ( url ) {
+			$preview.attr( 'src', url ).show();
+			return;
+		}
+
+		$preview.attr( 'src', '' ).hide();
+	}
+
 	function renderMediaGalleryPreview( $field, attachments ) {
 		const $preview = $field.find( '.ambrygen-media-gallery-preview' );
 		if ( ! $preview.length ) {
@@ -595,6 +925,131 @@
 		renderMediaFilePreview( $field, null );
 	} );
 
+	$( document ).on(
+		'click',
+		'.ambrygen-webinar-author-image-upload',
+		function ( e ) {
+			e.preventDefault();
+
+			if ( ! window.wp || ! window.wp.media ) {
+				return;
+			}
+
+			const $button = $( this );
+			const $field = $button.closest( '.ambrygen-single-image-field' );
+			const $input = $field.find( '.ambrygen-single-image-input' );
+			const currentId = parseInt( $input.val(), 10 ) || 0;
+
+			let frame = $field.data( 'ambrygenSingleImageFrame' );
+			if ( frame ) {
+				frame.open();
+				return;
+			}
+
+			frame = wp.media( {
+				title: 'Select Image',
+				button: { text: 'Use this image' },
+				multiple: false,
+				library: { type: 'image' },
+			} );
+			$field.data( 'ambrygenSingleImageFrame', frame );
+
+			frame.on( 'open', function () {
+				if ( ! currentId ) {
+					return;
+				}
+
+				const selection = frame.state().get( 'selection' );
+				const attachment = wp.media.attachment( currentId );
+				attachment.fetch();
+				selection.add( attachment );
+			} );
+
+			frame.on( 'select', function () {
+				const selection = frame.state().get( 'selection' );
+				const attachment = selection && selection.first();
+				if ( ! attachment ) {
+					return;
+				}
+
+				renderSingleImagePreview( $field, attachment );
+			} );
+
+			frame.open();
+		}
+	);
+
+	$( document ).on(
+		'click',
+		'.ambrygen-webinar-author-image-remove',
+		function ( e ) {
+			e.preventDefault();
+
+			const $button = $( this );
+			const $field = $button.closest( '.ambrygen-single-image-field' );
+			renderSingleImagePreview( $field, null );
+		}
+	);
+
+	$( document ).on( 'click', '.upload-term-image', function ( e ) {
+		e.preventDefault();
+
+		if ( ! window.wp || ! window.wp.media ) {
+			return;
+		}
+
+		const $button = $( this );
+		const $field = $button.closest( '.term-image-wrap' );
+		const $input = $field.find( '.term-image-field' );
+		const currentId = parseInt( $input.val(), 10 ) || 0;
+
+		let frame = $field.data( 'ambrygenTermImageFrame' );
+		if ( frame ) {
+			frame.open();
+			return;
+		}
+
+		frame = wp.media( {
+			title: 'Select Image',
+			button: { text: 'Use this image' },
+			multiple: false,
+			library: { type: 'image' },
+		} );
+		$field.data( 'ambrygenTermImageFrame', frame );
+
+		frame.on( 'open', function () {
+			if ( ! currentId ) {
+				return;
+			}
+
+			const selection = frame.state().get( 'selection' );
+			const attachment = wp.media.attachment( currentId );
+			attachment.fetch();
+			selection.add( attachment );
+		} );
+
+		frame.on( 'select', function () {
+			const selection = frame.state().get( 'selection' );
+			const attachment = selection && selection.first();
+
+			if ( ! attachment ) {
+				return;
+			}
+
+			renderTermImagePreview( $field, attachment );
+		} );
+
+		frame.open();
+	} );
+
+	$( document ).on( 'click', '.remove-term-image', function ( e ) {
+		e.preventDefault();
+
+		const $button = $( this );
+		const $field = $button.closest( '.term-image-wrap' );
+		renderTermImagePreview( $field, null );
+	} );
+
 	function getNextRepeaterIndex( $rowsContainer ) {
 		let maxIndex = -1;
 
@@ -612,7 +1067,74 @@
 		return maxIndex + 1;
 	}
 
-	$( document ).on( 'click', '.ambrygen-mm-add-row', function ( e ) {
+	function initializeDynamicWysiwygEditors( $scope ) {
+		if (
+			! window.wp ||
+			! wp.editor ||
+			typeof wp.editor.initialize !== 'function'
+		) {
+			return;
+		}
+
+		$scope.find( 'textarea.ambrygen-wysiwyg-textarea' ).each( function () {
+			const textarea = this;
+			const editorId = textarea.getAttribute( 'id' );
+
+			if ( ! editorId || textarea.dataset.editorReady === '1' ) {
+				return;
+			}
+
+			if ( window.tinymce && tinymce.get( editorId ) ) {
+				textarea.dataset.editorReady = '1';
+				return;
+			}
+
+			wp.editor.initialize( editorId, {
+				tinymce: {
+					wpautop: true,
+					toolbar1:
+						'bold,italic,bullist,numlist,link,unlink,undo,redo',
+				},
+				quicktags: true,
+				mediaButtons: false,
+			} );
+
+			textarea.dataset.editorReady = '1';
+		} );
+	}
+
+	function maybeInitializeDynamicWysiwygEditors( $scope ) {
+		initializeDynamicWysiwygEditors( $scope );
+
+		window.setTimeout( function () {
+			initializeDynamicWysiwygEditors( $scope );
+		}, 50 );
+	}
+
+	$( document )
+		.off( 'input.ambrygenWebinarAuthorSearch', '.ambrygen-webinar-author-search' )
+		.on(
+			'input.ambrygenWebinarAuthorSearch',
+			'.ambrygen-webinar-author-search',
+			function () {
+				const $input = $( this );
+				const $row = $input.closest( '.ambrygen-mm-row' );
+				const $hiddenInput = $row.find( '.ambrygen-webinar-author-id' );
+				let matchedId = '';
+
+				$row.find( '.ambrygen-webinar-author-option' ).each( function () {
+					if ( $( this ).val() === $input.val() ) {
+						matchedId = $( this ).data( 'author-id' ) || '';
+					}
+				} );
+
+				$hiddenInput.val( matchedId );
+			}
+		);
+
+	$( document )
+		.off( 'click.ambrygenMmAddRow', '.ambrygen-mm-add-row' )
+		.on( 'click.ambrygenMmAddRow', '.ambrygen-mm-add-row', function ( e ) {
 		e.preventDefault();
 
 		const $button = $( this );
@@ -631,6 +1153,16 @@
 		);
 
 		$rows.append( html );
+
+		const repeaterKey = $repeater.data( 'key' );
+		if ( repeaterKey === 'webinar_authors' || repeaterKey === 'webinar_additional_sections' ) {
+			const $newRow = $rows.children().last();
+			maybeInitializeDynamicWysiwygEditors( $newRow );
+		}
+	} );
+
+	$( function () {
+		maybeInitializeDynamicWysiwygEditors( $( document ) );
 	} );
 
 	$( document ).on( 'click', '.ambrygen-mm-remove-row', function ( e ) {

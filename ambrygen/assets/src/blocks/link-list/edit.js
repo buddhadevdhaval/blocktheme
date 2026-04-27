@@ -27,9 +27,19 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		id: blockId,
 	} );
 
-	const ITEMS_ALLOWED_BLOCKS = [ 'ambrygen/link-item' ];
+	const ITEMS_ALLOWED_BLOCKS = [
+		'ambrygen/link-item',
+		'core/paragraph',
+		'core/buttons',
+		'core/button',
+		'core/spacer',
+	];
 
-	const ITEMS_TEMPLATE = [ [ 'ambrygen/link-item', { cta: { text: 'Download Brochure' } } ] ];
+	const ITEMS_TEMPLATE = [
+		[ 'core/paragraph', { placeholder: __( 'Add content...', 'ambrygen-web' ) } ],
+		[ 'core/buttons', {}, [ [ 'core/button', { text: __( 'Learn more', 'ambrygen-web' ) } ] ] ],
+		[ 'ambrygen/link-item', { cta: { text: 'Download Brochure' } } ],
+	];
 
 	return (
 		<div { ...blockProps }>

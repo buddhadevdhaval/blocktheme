@@ -199,8 +199,9 @@ final class Assets {
 			'ambrygen-admin-scripts',
 			'ambrygenAdminAjax',
 			array(
-				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-				'nonce'   => wp_create_nonce( 'ambrygen_post_search' ),
+				'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
+				'nonce'          => wp_create_nonce( 'ambrygen_post_search' ),
+				'trackingNonce'  => wp_create_nonce( 'ambrygen_marketing_material_tracking' ),
 			)
 		);
 	}

@@ -17,6 +17,7 @@ use Ambrygen\Theme\Core\Helper;
 
 $ambrygen_attributes = is_array( $attributes ?? null ) ? $attributes : array();
 
+$ambrygen_block_id          = isset( $ambrygen_attributes['blockId'] ) ? $ambrygen_attributes['blockId'] : '';
 $ambrygen_title            = isset( $ambrygen_attributes['title'] ) ? $ambrygen_attributes['title'] : '';
 $ambrygen_subtitle         = isset( $ambrygen_attributes['subtitle'] ) ? $ambrygen_attributes['subtitle'] : '';
 $ambrygen_heading_level    = isset( $ambrygen_attributes['headingLevel'] ) ? $ambrygen_attributes['headingLevel'] : 'h2';
@@ -30,7 +31,16 @@ if ( ! in_array( $ambrygen_heading_level, array( 'h1', 'h2', 'h3', 'h4', 'h5', '
 	$ambrygen_heading_level = 'h2';
 }
 
-$ambrygen_wrapper_attributes = get_block_wrapper_attributes( array( 'class' => 'resources' ) );
+$ambrygen_wrapper_attributes = get_block_wrapper_attributes(
+	$ambrygen_block_id
+		? array(
+			'class' => 'resources',
+			'id'    => $ambrygen_block_id,
+		)
+		: array(
+			'class' => 'resources',
+		)
+);
 ?>
 
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
@@ -99,10 +109,13 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( array( 'class' => '
 						<?php echo wp_kses_post( $ambrygen_org_title ); ?>
 					</h3>
 				<?php endif; ?>
-				<?php if ( ! empty( $ambrygen_collaborator_ids ) ) : ?>
+				<?php 
+				$ambrygen_enable_custom      = isset( $ambrygen_attributes['enableCustomCollaborators'] ) ? (bool) $ambrygen_attributes['enableCustomCollaborators'] : false;
+				$ambrygen_custom_collaborators = isset( $ambrygen_attributes['customCollaborators'] ) && is_array( $ambrygen_attributes['customCollaborators'] ) ? $ambrygen_attributes['customCollaborators'] : array();
+				
+				if ( ! empty( $ambrygen_collaborator_ids ) || ( $ambrygen_enable_custom && ! empty( $ambrygen_custom_collaborators ) ) ) : ?>
 					<div class="resources__card-logo-grid resources__card-logo-grid--3-col">
 						<?php
-
 						foreach ( $ambrygen_collaborator_ids as $ambrygen_term_id ) :
 							$ambrygen_term = get_term( $ambrygen_term_id, 'collaborator' );
 							if ( ! $ambrygen_term || is_wp_error( $ambrygen_term ) ) {
@@ -110,22 +123,36 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( array( 'class' => '
 							}
 							$ambrygen_term_image_id = get_term_meta( $ambrygen_term->term_id, 'term_image', true );
 							$ambrygen_term_link     = get_term_meta( $ambrygen_term->term_id, 'link', true );
-							
 							?>
-							
 								<a href="<?php echo esc_url( $ambrygen_term_link ?: '#' ); ?>" class="resources__card-logo-link" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr( $ambrygen_term->name ); ?>">
-									
 									<?php
-									
 									echo wp_kses_post(
-							Helper::image_with_placeholder(
-								isset( $ambrygen_term_image_id ) ? absint( $ambrygen_term_image_id ) : 0,
-								'large',
-							)
-						); ?>
+										Helper::image_with_placeholder(
+											isset( $ambrygen_term_image_id ) ? absint( $ambrygen_term_image_id ) : 0,
+											'large',
+										)
+									); ?>
 								</a>
-						
 						<?php endforeach; ?>
+
+						<?php
+						if ( $ambrygen_enable_custom ) {
+							foreach ( $ambrygen_custom_collaborators as $ambrygen_custom ) :
+								$ambrygen_custom_name     = isset( $ambrygen_custom['name'] ) ? $ambrygen_custom['name'] : '';
+								$ambrygen_custom_url      = isset( $ambrygen_custom['url'] ) ? $ambrygen_custom['url'] : '#';
+								$ambrygen_custom_image_id = isset( $ambrygen_custom['imageId'] ) ? absint( $ambrygen_custom['imageId'] ) : 0;
+								?>
+								<a href="<?php echo esc_url( $ambrygen_custom_url ); ?>" class="resources__card-logo-link" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr( $ambrygen_custom_name ); ?>">
+									<?php
+									echo wp_kses_post(
+										Helper::image_with_placeholder(
+											$ambrygen_custom_image_id,
+											'large',
+										)
+									); ?>
+								</a>
+							<?php endforeach;
+						} ?>
 					</div>
 				<?php endif; ?>
 			</div>

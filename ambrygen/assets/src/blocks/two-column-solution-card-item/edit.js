@@ -3,17 +3,14 @@ import {
 	RichText,
 	InspectorControls,
 } from '@wordpress/block-editor';
-import { useEffect, useMemo } from '@wordpress/element';
+import { useMemo } from '@wordpress/element';
 import { PanelBody } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import {
-	ImageUploader,
-	ImagePlaceholder,
-	DEFAULT_IMAGES,
-} from '../_shared/components';
+import { ImageUploader, DEFAULT_IMAGES } from '../_shared/components';
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { sectiontitle, description, imageUrl, imageAlt } = attributes;
+	const { sectiontitle, description, imageUrl, imageAlt, imageId } =
+		attributes;
 
 	const blockProps = useBlockProps( {
 		className: 'cta-tiles-with-content__item',
@@ -23,30 +20,21 @@ export default function Edit( { attributes, setAttributes } ) {
 		() => DEFAULT_IMAGES()?.placeholder || {},
 		[]
 	);
-
-	useEffect( () => {
-		if ( ! imageUrl ) {
-			if ( defaultPlaceholder.url ) {
-				setAttributes( {
-					imageUrl: defaultPlaceholder.url,
-					imageId: defaultPlaceholder.id,
-				} );
-			}
-		}
-	}, [
-		imageUrl,
-		defaultPlaceholder.url,
-		defaultPlaceholder.id,
-		setAttributes,
-	] );
+	const displayImageUrl = imageUrl || defaultPlaceholder.url || '';
+	const isDefaultImage =
+		imageUrl === defaultPlaceholder.url &&
+		imageId === defaultPlaceholder.id;
 
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Card Image', 'ambrygen-web' ) } initialOpen>
+				<PanelBody
+					title={ __( 'Card Image', 'ambrygen-web' ) }
+					initialOpen
+				>
 					<ImageUploader
 						label={ __( 'Card Image', 'ambrygen-web' ) }
-						url={ imageUrl || defaultPlaceholder.url }
+						url={ isDefaultImage ? '' : imageUrl }
 						onSelect={ ( media ) =>
 							setAttributes( {
 								imageUrl: media.url,
@@ -74,7 +62,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) =>
 							setAttributes( { sectiontitle: value } )
 						}
-						placeholder={ __( 'Card Title', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Title…', 'ambrygen-web' ) }
 						allowedFormats={ [] }
 					/>
 
@@ -85,19 +73,20 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) =>
 							setAttributes( { description: value } )
 						}
-						placeholder={ __( 'Card description...', 'ambrygen-web' ) }
+						placeholder={ __(
+							'Add Short Description…',
+							'ambrygen-web'
+						) }
 					/>
 				</div>
 
 				<div className="cta-tiles-with-content__image-container">
-					{ imageUrl ? (
+					{ displayImageUrl && (
 						<img
 							className="cta-tiles-with-content__image"
-							src={ imageUrl }
-							alt={ imageAlt || '' }
+							src={ displayImageUrl }
+							alt={ imageUrl ? imageAlt || '' : '' }
 						/>
-					) : (
-						<ImagePlaceholder />
 					) }
 				</div>
 			</div>

@@ -6,6 +6,16 @@
   "title": "Event Grid Card",
   "category": "ambrygen",
   "description": "Renders an event card for grid view.",
+  "attributes": {
+    "previewPostId": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "usesContext": [
+    "postId",
+    "postType"
+  ],
   "supports": {
     "html": false,
     "reusable": false

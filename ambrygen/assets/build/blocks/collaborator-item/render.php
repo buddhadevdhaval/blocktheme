@@ -116,14 +116,18 @@ foreach ( $ambrygen_related_post_types as $ambrygen_related_post_type ) {
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class' => 'collaborator-card js-gsap-fade',
+		'class' => 'timeline-block__item collaborator-card js-gsap-fade',
 	)
 );
 ?>
 
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-	<div class="collaborator-card__layout">
-		<div class="collaborator-card__media">
+	<div class="timeline-block__badge-col collaborator-card__badge-col">
+		<div class="timeline-block__badge"></div>
+	</div>
+
+	<div class="timeline-block__content-card collaborator-card__layout">
+		<div class="timeline-block__image collaborator-card__media">
 			<?php
 			echo wp_kses_post(
 				Helper::image_with_placeholder(
@@ -138,22 +142,24 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 			?>
 		</div>
 
-		<div class="collaborator-card__content">
-			<h3 class="collaborator-card__title heading-5 mb-0">
+		<div class="timeline-block__text-content collaborator-card__content">
+			<h3 class="subtitle1-sbold mb-0 timeline-block__text-title collaborator-card__title">
 				<?php echo esc_html( $ambrygen_name ); ?>
 			</h3>
 
 			<?php if ( ! empty( $ambrygen_description ) ) : ?>
-				<div class="collaborator-card__description body1">
+				<div class="is-style-gl-s12" aria-hidden="true"></div>
+				<div class="text-md-regular collaborator-card__description">
 					<?php echo wp_kses_post( $ambrygen_description ); ?>
 				</div>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $ambrygen_related_links ) ) : ?>
+				<div class="is-style-gl-s12" aria-hidden="true"></div>
 				<ul class="collaborator-card__links">
 					<?php foreach ( $ambrygen_related_links as $ambrygen_related_link ) : ?>
 						<li>
-							<a href="<?php echo esc_url( $ambrygen_related_link['url'] ); ?>">
+							<a href="<?php echo esc_url( $ambrygen_related_link['url'] ); ?>" class="site-btn is-style-site-text-btn has-right-arrow">
 								<?php echo esc_html( $ambrygen_related_link['label'] ); ?>
 							</a>
 						</li>
@@ -162,12 +168,13 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 			<?php endif; ?>
 
 			<?php if ( ! empty( $ambrygen_website_url ) ) : ?>
+				<div class="is-style-gl-s12" aria-hidden="true"></div>
 				<div class="collaborator-card__website">
-					<a href="<?php echo esc_url( $ambrygen_website_url ); ?>" target="_blank" rel="noopener noreferrer">
+					<a href="<?php echo esc_url( $ambrygen_website_url ); ?>" target="_blank" rel="noopener noreferrer" class="site-btn is-style-site-text-btn has-right-arrow">
 						<?php echo esc_html( $ambrygen_website_label ); ?>
 					</a>
 				</div>
 			<?php endif; ?>
 		</div>
-		</div>
+	</div>
 </div>

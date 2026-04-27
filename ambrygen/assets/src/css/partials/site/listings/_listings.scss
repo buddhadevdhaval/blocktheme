@@ -21,7 +21,6 @@
 
 	&__query {
 
-		// Apply grid layout to the post-template loop
 		>ul,
 		.wp-block-post-template {
 			list-style: none;
@@ -84,38 +83,6 @@
 		}
 	}
 
-	// Category container to ensure proper flex constraints
-	// &__item-category {
-	// 	display: flex;
-	// 	flex-wrap: wrap;
-	// 	gap: 8px;
-
-	// 	a {
-	// 		display: inline-flex;
-	// 		align-items: center;
-	// 		gap: 6px;
-	// 		padding: 3px 10px;
-	// 		border-radius: 16px;
-	// 		font-size: 14px;
-	// 		font-weight: 500;
-	// 		background: var(--theme_badge_primary_bg);
-	// 		border: 1px solid var(--theme_badge_primary_border);
-	// 		color: var(--theme_badge_primary_color);
-
-	// 		&:nth-child(2) {
-	// 			background: var(--theme_badge_secondary_bg);
-	// 			border: 1px solid var(--theme_badge_secondary_border);
-	// 			color: var(--theme_badge_secondary_color);
-	// 		}
-
-	// 		&:nth-child(3) {
-	// 			background: var(--theme_badge_teritary_bg);
-	// 			border: 1px solid var(--theme_badge_teritary_border);
-	// 			color: var(--theme_badge_teritary_color);
-	// 		}
-	// 	}
-	// }
-
 	// ── Poster Title ───────────────────────────────────────────────────────
 
 	&__item-title {
@@ -137,81 +104,6 @@
 			}
 		}
 	}
-
-	// ── Metadata Row ───────────────────────────────────────────────────────
-
-	// &__item-meta {
-	// 	display: grid;
-	// 	gap: 10px 20px;
-	// 	color: var(--theme_gray_600);
-	// 	font-size: var(--theme_font_size_8);
-	// 	margin: 0;
-
-	// 	@include bp.max(md) {
-	// 		gap: 20px;
-	// 	}
-
-	// 	.single-poster &,
-	// 	.single-publication & {
-	// 		font-size: var(--theme_font_size_7);
-	// 	}
-
-	// 	// WP block wrapper override
-	// 	&.wp-block-group {
-	// 		display: flex;
-	// 	}
-
-	// 	&__row {
-	// 		// color: var(--theme_gray_600);
-	// 		// font-size: var(--theme_font_size_8);
-	// 		// margin: 0;
-	// 		display: flex;
-	// 		gap: 6px;
-
-	// 		@include bp.max(md) {
-	// 			flex-wrap: wrap;
-	// 		}
-
-	// 		&.flag-info {
-	// 			// align-items: flex-start;
-	// 		}
-
-	// 		.single-poster &,
-	// 		.single-publication & {
-	// 			// font-size: var(--theme_font_size_7);
-	// 		}
-
-	// 		&__label {
-	// 			// font-size: 14px;
-	// 			// color: var(--theme_cg_blue);
-	// 			// font-weight: 600;
-	// 			// display: inline-flex;
-	// 			// position: relative;
-	// 			// gap: 8px;
-
-	// 			@include bp.max(md) {
-	// 				// flex: 100% 0 0;
-	// 			}
-
-	// 			.single-poster &,
-	// 			.single-publication & {
-	// 				// font-size: var(--theme_font_size_7);
-	// 			}
-
-	// 		}
-
-	// 		a {
-	// 			color: var(--theme_gray_600);
-	// 			text-decoration: none;
-	// 			border: none;
-	// 			padding: 0;
-
-	// 			&:hover {
-	// 				color: var(--theme_color_primary);
-	// 			}
-	// 		}
-	// 	}
-	// }
 
 	// ── Collaborators Row ──────────────────────────────────────────────────
 
@@ -241,42 +133,6 @@
 			}
 		}
 
-		// .collaborators-items {
-		// 	// display: grid;
-		// 	// grid-template-columns: 1fr 1fr;
-		// 	// gap: 12px;
-		// 	margin-top: 12px;
-		// 	column-count: 2;
-
-		// 	@include bp.max(md) {
-		// 		grid-template-columns: 1fr;
-		// 	}
-
-		// 	>.item-card {
-		// 		-webkit-column-break-inside: avoid;
-		// 		page-break-inside: avoid;
-		// 		break-inside: avoid-column;
-		// 		margin-bottom: 7px;
-
-		// 		a {
-		// 			position: relative;
-		// 			padding: 0 0 0 25px;
-		// 			display: inline-block;
-
-		// 			&::before {
-		// 				content: "";
-		// 				width: 8px;
-		// 				height: 8px;
-		// 				background-position: left top;
-		// 				position: absolute;
-		// 				background-color: var(--theme_color_primary);
-		// 				left: 0;
-		// 				top: 8px;
-		// 				border-radius: 50%;
-		// 			}
-		// 		}
-		// 	}
-		// }
 	}
 
 	// ── Separator — completely hidden, cards handle separation ─────────────

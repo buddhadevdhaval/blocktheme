@@ -18,6 +18,7 @@ use Ambrygen\Theme\Core\PostTypes\Definitions\Presentations;
 use Ambrygen\Theme\Core\PostTypes\Definitions\PressRelease;
 use Ambrygen\Theme\Core\PostTypes\Definitions\ProductVersions;
 use Ambrygen\Theme\Core\PostTypes\Definitions\Publications;
+use Ambrygen\Theme\Core\PostTypes\Definitions\Posts;
 use Ambrygen\Theme\Core\PostTypes\Definitions\SharedTaxonomies;
 use Ambrygen\Theme\Core\PostTypes\Definitions\TreadShows;
 use Ambrygen\Theme\Core\PostTypes\Definitions\Webinars;
@@ -38,6 +39,7 @@ final class PostTypes
     private const DEFINITIONS = [
         OurTeam::class,
         Authors::class,
+        Posts::class,
         Jobs::class,
         TreadShows::class,
         Presentations::class,
@@ -213,7 +215,7 @@ final class PostTypes
                     continue;
                 }
 
-                if ('poster_pdf_repeater' === $type) {
+                if (in_array($type, ['poster_pdf_repeater', 'presentation_pdf_repeater'], true)) {
                     register_post_meta(
                         $slug,
                         $meta_key,
@@ -231,6 +233,43 @@ final class PostTypes
                                                 'type' => 'string',
                                             ],
                                             'file_id'  => [
+                                                'type' => 'integer',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'auth_callback'     => static fn(): bool => current_user_can('edit_posts'),
+                        ]
+                    );
+
+                    continue;
+                }
+
+                if ('webinar_author_repeater' === $type) {
+                    register_post_meta(
+                        $slug,
+                        $meta_key,
+                        [
+                            'type'              => 'array',
+                            'single'            => true,
+                            'sanitize_callback' => null,
+                            'show_in_rest'      => [
+                                'schema' => [
+                                    'type'  => 'array',
+                                    'items' => [
+                                        'type'       => 'object',
+                                        'properties' => [
+                                            'linked_author' => [
+                                                'type' => 'integer',
+                                            ],
+                                            'designation'   => [
+                                                'type' => 'string',
+                                            ],
+                                            'bio'           => [
+                                                'type' => 'string',
+                                            ],
+                                            'image_id'      => [
                                                 'type' => 'integer',
                                             ],
                                         ],

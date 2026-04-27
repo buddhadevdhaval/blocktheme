@@ -94,6 +94,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 
 		<?php if ( ! empty( trim( wp_strip_all_tags( $ambrygen_subheading ) ) ) || ! empty( trim( wp_strip_all_tags( $ambrygen_sub_intro ) ) ) ) : ?>
 			<!-- Section subheading -->
+			 <div class="is-style-gl-s32" aria-hidden="true"></div>
 			<div class="two-column-videos__subheading">
 				<?php if ( ! empty( trim( wp_strip_all_tags( $ambrygen_subheading ) ) ) ) : ?>
 					<h2 class="heading-4 block-title mb-0">
@@ -104,7 +105,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 					<div class="is-style-gl-s16"></div>
 				<?php endif; ?>
 				<?php if ( ! empty( trim( wp_strip_all_tags( $ambrygen_sub_intro ) ) ) ) : ?>
-					<div class="body2-reg two-column-videos__subheading-description">
+					<div class="body1-reg two-column-videos__subheading-description">
 						<?php echo wp_kses_post( $ambrygen_sub_intro ); ?>
 					</div>
 				<?php endif; ?>

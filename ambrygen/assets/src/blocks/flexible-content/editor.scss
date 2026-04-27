@@ -1,3 +1,5 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+
 /**
  * Editor styles for C.flexible-content block
  * Mirrors frontend layout exactly with proper aspect ratios
@@ -13,7 +15,7 @@
         // Standard layout (default)
         &.standard {
 
-            @media (min-width: 768px) {
+            @include bp.min(md) {
                 grid-template-columns: 1fr 1fr;
             }
         }
@@ -22,13 +24,13 @@
         &.overlap {
             position: relative;
             
-            @media (min-width: 768px) {
+            @include bp.min(md) {
                 grid-template-columns: 1fr;
             }
             
             .image-wrapper {
 
-                @media (min-width: 768px) {
+                @include bp.min(md) {
                     position: absolute;
                     top: 0;
                     right: 0;
@@ -40,7 +42,7 @@
             
             .text-wrapper {
 
-                @media (min-width: 768px) {
+                @include bp.min(md) {
                     z-index: 2;
                     padding-right: 25%;
                 }
@@ -73,8 +75,8 @@
         .components-placeholder {
             position: absolute;
             inset: 0;
-            border: 2px dashed #cbd5e1;
-            background: #f8fafc;
+            border: 2px dashed var(--theme_gray_300);
+            background: var(--theme_gray_50);
             border-radius: 12px;
             display: flex;
             flex-direction: column;
@@ -83,13 +85,13 @@
             margin: 0;
 
             .components-placeholder__label {
-                color: #64748b;
+                color: var(--theme_gray_500);
                 font-weight: 600;
                 margin-bottom: 0.5rem;
             }
 
             .components-placeholder__instructions {
-                color: #94a3b8;
+                color: var(--theme_gray_400);
                 font-size: 0.875rem;
                 line-height: 1.4;
                 text-align: center;
@@ -107,7 +109,7 @@
 
         h2, h3, h4, h5, h6 {
             margin-bottom: 1.5rem;
-            color: #1a202c;
+            color: var(--theme_gray_900);
             font-weight: 700;
         }
 
@@ -123,7 +125,7 @@
 
         p {
             line-height: 1.6;
-            color: #4a5568;
+            color: var(--theme_gray_600);
             margin-bottom: 1rem;
         }
 
@@ -142,7 +144,7 @@
 
         .content-wrapper {
 
-            @media (min-width: 768px) {
+            @include bp.min(md) {
                 grid-template-columns: 1fr 1fr;
                 
                 .image-wrapper {
@@ -154,7 +156,7 @@
                 }
             }
             
-            @media (max-width: 767px) {
+            @include bp.max(md) {
                 grid-template-columns: 1fr;
             }
         }
@@ -165,7 +167,7 @@
 
         .content-wrapper {
 
-            @media (min-width: 768px) {
+            @include bp.min(md) {
                 grid-template-columns: 1fr 1fr;
                 
                 .image-wrapper {
@@ -177,7 +179,7 @@
                 }
             }
             
-            @media (max-width: 767px) {
+            @include bp.max(md) {
                 grid-template-columns: 1fr;
             }
         }
@@ -230,13 +232,13 @@
 
             .image-size {
                 font-size: 0.75rem;
-                color: #718096;
+                color: var(--theme_gray_500);
                 margin: 0 0 0.5rem 0;
             }
 
             .image-alt {
                 font-size: 0.75rem;
-                color: #4a5568;
+                color: var(--theme_gray_600);
                 margin: 0;
                 word-break: break-word;
             }

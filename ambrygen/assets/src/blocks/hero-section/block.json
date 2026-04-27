@@ -45,7 +45,7 @@
               "text":    { "type": "string", "default": "" },
               "target":  { "type": "string", "default": "" },
               "rel":     { "type": "string", "default": "" },
-              "variant": { "type": "string", "default": "" }
+              "variant": { "type": "string", "default": "is-style-site-tertiary-btn" }
             }
           },
           "secondarybutton": {
@@ -55,42 +55,12 @@
               "text":    { "type": "string", "default": "" },
               "target":  { "type": "string", "default": "" },
               "rel":     { "type": "string", "default": "" },
-              "variant": { "type": "string", "default": "" }
+              "variant": { "type": "string", "default": "dark" }
             }
           }
         }
       },
-      "default": [
-        {
-          "backgroundImage": "",
-          "backgroundImageId": 0,
-          "backgroundImageAlt": "",
-          "overlayImage1": "",
-          "overlayImage1Id": 0,
-          "eyebrow": "",
-          "overlayImage1Alt": "",
-          "headingTag": "h2",
-          "overlayImage2": "",
-          "overlayImage2Id": 0,
-          "overlayImage2Alt": "",
-          "heading": "",
-          "content": "",
-          "primarybutton": {
-            "url": "",
-            "text": "",
-            "target": "",
-            "rel": "",
-            "variant": ""
-          },
-          "secondarybutton": {
-            "url": "",
-            "text": "",
-            "target": "",
-            "rel": "",
-            "variant": ""
-          }
-        }
-      ]
+      "default": []
     },
     "showSliderNav": {
       "type": "boolean",
@@ -136,23 +106,19 @@
           "overlayImage2Alt": "",
           "heading": "Industry-leading genetic testing",
           "content": "For over 25 years our high-quality, accessible genetic testing solutions have shaped important care decisions that patients and families make with their healthcare providers.",
-          "buttonPrimaryText": "Start Your Order",
-          "buttonPrimaryUrl": "#",
-          "buttonSecondaryText": "Who We Are",
-          "buttonSecondaryUrl": "#",
           "primarybutton": {
-            "url": "",
-            "text": "",
+            "url": "#",
+            "text": "Start Your Order",
             "target": "",
             "rel": "",
-            "variant": ""
+            "variant": "is-style-site-tertiary-btn"
           },
           "secondarybutton": {
-            "url": "",
-            "text": "",
+            "url": "#",
+            "text": "Who We Are",
             "target": "",
             "rel": "",
-            "variant": ""
+            "variant": "dark"
           }
         }
       ],

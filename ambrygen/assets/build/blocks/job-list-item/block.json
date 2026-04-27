@@ -21,10 +21,5 @@
   "usesContext": [
     "ambrygen/joblocationicon",
     "ambrygen/jobtypeicon"
-  ],
-  "example": {
-    "attributes": {
-      "postId": 1
-    }
-  }
+  ]
 }

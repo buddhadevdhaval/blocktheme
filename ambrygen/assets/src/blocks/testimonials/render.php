@@ -23,7 +23,9 @@ use Ambrygen\Theme\Core\Helper;
  */
 $ambrygen_attributes = isset( $attributes ) && is_array( $attributes ) ? $attributes : array();
 $ambrygen_content    = isset( $content ) ? $content : '';
-$ambrygen_block_id   = isset( $ambrygen_attributes['blockId'] ) ? $ambrygen_attributes['blockId'] : '';
+$ambrygen_block_id   = isset( $ambrygen_attributes['blockId'] )
+	? sanitize_html_class( $ambrygen_attributes['blockId'] )
+	: '';
 
 
 /**
@@ -32,23 +34,26 @@ $ambrygen_block_id   = isset( $ambrygen_attributes['blockId'] ) ? $ambrygen_attr
 $ambrygen_heading = isset( $ambrygen_attributes['heading'] )
 	? $ambrygen_attributes['heading']
 	: '';
+$ambrygen_has_heading = '' !== trim( wp_strip_all_tags( $ambrygen_heading ) );
 
 $ambrygen_heading_tag = isset( $ambrygen_attributes['headingTag'] )
 	? $ambrygen_attributes['headingTag']
 	: 'h2';
 
-if ( ! in_array( $ambrygen_heading_tag, array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div' ), true ) ) {
-	$ambrygen_heading_tag = 'h2';
-}
+$ambrygen_heading_tag = Helper::get_heading_tag( $ambrygen_heading_tag, 'h2' );
 
-$ambrygen_secondary_image_id = isset( $ambrygen_attributes['secondaryImageId'] ) ? $ambrygen_attributes['secondaryImageId'] : null;
-$ambrygen_overlay_image_id   = isset( $ambrygen_attributes['overlayImageId'] ) ? $ambrygen_attributes['overlayImageId'] : null;
+$ambrygen_secondary_image_id  = isset( $ambrygen_attributes['secondaryImageId'] ) ? absint( $ambrygen_attributes['secondaryImageId'] ) : 0;
+$ambrygen_secondary_image_url = isset( $ambrygen_attributes['secondaryImage'] ) ? esc_url_raw( $ambrygen_attributes['secondaryImage'] ) : '';
+$ambrygen_secondary_image_alt = isset( $ambrygen_attributes['secondaryImageAlt'] ) ? sanitize_text_field( $ambrygen_attributes['secondaryImageAlt'] ) : '';
+$ambrygen_overlay_image_id    = isset( $ambrygen_attributes['overlayImageId'] ) ? absint( $ambrygen_attributes['overlayImageId'] ) : 0;
+$ambrygen_overlay_image_url   = isset( $ambrygen_attributes['overlayImage'] ) ? esc_url_raw( $ambrygen_attributes['overlayImage'] ) : '';
+$ambrygen_overlay_image_alt   = isset( $ambrygen_attributes['overlayImageAlt'] ) ? sanitize_text_field( $ambrygen_attributes['overlayImageAlt'] ) : '';
 
 /**
  * Generate a unique ID for the heading to be used in aria-labelledby.
  */
 $ambrygen_id         = wp_unique_id();
-$ambrygen_heading_id = 'testimonials-heading-' . $ambrygen_id;
+$ambrygen_heading_id = $ambrygen_has_heading ? 'testimonials-heading-' . $ambrygen_id : '';
 
 /**
  * Wrapper attributes.
@@ -61,7 +66,7 @@ if ( $ambrygen_block_id ) {
 	$ambrygen_wrapper_attributes_array['id'] = $ambrygen_block_id;
 }
 
-if ( ! empty( $ambrygen_heading ) ) {
+if ( $ambrygen_has_heading ) {
 	$ambrygen_wrapper_attributes_array['aria-labelledby'] = $ambrygen_heading_id;
 }
 
@@ -70,53 +75,49 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 
 <section <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 
-	<!-- Overlay Graphics -->
 	<div class="ambry-testimonials__graphic-images" aria-hidden="true">
 
-		<?php if ( ! empty( $ambrygen_overlay_image_id ) ) : ?>
+		<?php if ( $ambrygen_overlay_image_id || $ambrygen_overlay_image_url ) : ?>
 			<div class="ambry-testimonials__graphic-images__overlay-left ambry-testimonials__graphic-images__img-block">
-					<?php
-					echo wp_kses_post(
-						Helper::image(
-							$ambrygen_overlay_image_id,
-							'large',
-							array(
-								'class'   => 'overlay__img',
-								'loading' => 'lazy',
-								'alt'     => '',
-							)
-						)
-					);
-
-
-					?>
+				<?php
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper returns escaped image markup from a sanitized attachment ID or URL.
+				echo Helper::image_from_source(
+					$ambrygen_overlay_image_id,
+					$ambrygen_overlay_image_url,
+					'large',
+					array(
+						'class'    => 'overlay__img',
+						'loading'  => 'lazy',
+						'decoding' => 'async',
+						'alt'      => $ambrygen_overlay_image_alt,
+					)
+				);
+				?>
 			</div>
 		<?php endif; ?>
 
-		<?php if ( ! empty( $ambrygen_secondary_image_id ) ) : ?>
+		<?php if ( $ambrygen_secondary_image_id || $ambrygen_secondary_image_url ) : ?>
 			<div class="ambry-testimonials__graphic-images__overlay-right ambry-testimonials__graphic-images__img-block">
-					<?php
-					echo wp_kses_post(
-						Helper::image(
-							$ambrygen_secondary_image_id,
-							'large',
-							array(
-								'class'   => 'overlay__img',
-								'loading' => 'lazy',
-								'alt'     => '',
-							)
-						)
-					);
-
-					?>
-					
+				<?php
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper returns escaped image markup from a sanitized attachment ID or URL.
+				echo Helper::image_from_source(
+					$ambrygen_secondary_image_id,
+					$ambrygen_secondary_image_url,
+					'large',
+					array(
+						'class'    => 'overlay__img',
+						'loading'  => 'lazy',
+						'decoding' => 'async',
+						'alt'      => $ambrygen_secondary_image_alt,
+					)
+				);
+				?>
 			</div>
 		<?php endif; ?>
 
 	</div>
 
-	<?php if ( ! empty( $ambrygen_heading ) ) : ?>
-		<!-- Heading -->
+	<?php if ( $ambrygen_has_heading ) : ?>
 		<<?php echo tag_escape( $ambrygen_heading_tag ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="js-gsap-fade ambry-testimonials__heading heading-3 mb-0">
 			<?php
 				echo wp_kses(
@@ -126,10 +127,9 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 			?>
 		</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 
-		<div class="is-style-gl-s32"></div>
+		<div class="is-style-gl-s32" aria-hidden="true"></div>
 	<?php endif; ?>
 
-	<!-- Layout -->
 	<div class="ambry-testimonials__layout">
 		<div class="ambry-testimonials__grid">
 

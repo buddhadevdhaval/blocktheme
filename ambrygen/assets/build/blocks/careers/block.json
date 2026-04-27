@@ -44,15 +44,15 @@
     },
     "videoType": {
       "type": "string",
+      "enum": [
+        "mp4",
+        "embed"
+      ],
       "default": "mp4"
     },
     "videoPoster": {
       "type": "object",
       "default": null
-    },
-    "careersLink": {
-      "type": "string",
-      "default": ""
     },
     "link": {
       "type": "object",
@@ -73,10 +73,6 @@
         "rel": "",
         "variant": ""
       }
-    },
-    "viewAllText ": {
-      "type": "string",
-      "default": ""
     },
     "joblocationicon": {
       "type": "object",
@@ -99,44 +95,7 @@
   },
   "example": {
     "attributes": {
-      "title": "Our Executive Team",
-      "intro": "We are proud to be leading the industry that we love and working together.",
-      "headingLevel": "h2",
-      "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-      "videoType": "mp4",
-      "videoPoster": {},
-      "careersLink": {
-        "url": "https://example.com",
-        "text": "Learn More",
-        "target": "_self",
-        "rel": "Sample rel",
-        "variant": "primary"
-      },
-      "link": {
-        "url": "Sample url",
-        "text": "Sample text",
-        "target": "Sample target",
-        "rel": "Sample rel",
-        "variant": "Sample variant"
-      },
-      "careerslink": {
-        "url": "Sample url",
-        "text": "Sample text",
-        "target": "Sample target",
-        "rel": "Sample rel",
-        "variant": "Sample variant"
-      },
-      "viewAllText ": "Sample viewAllText ",
-      "joblocationicon": {
-        "id": 1,
-        "url": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
-        "alt": "Icon"
-      },
-      "jobtypeicon": {
-        "id": 1,
-        "url": "https://ambry-1-develop.go-vip.net/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
-        "alt": "Icon"
-      }
+      "blockId": "careers-example"
     }
   }
 }

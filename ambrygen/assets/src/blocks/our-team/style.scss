@@ -129,7 +129,7 @@
 		color: var(--theme_cg_blue);
 	}
 
-	@media (max-width: 480px) {
+	@include bp.max(480px) {
 
 		&__card {
 			flex: 0 0 100%;
@@ -231,7 +231,7 @@
 		color: var(--theme_cg_blue);
 	}
 
-	@media (max-width: 480px) {
+	@include bp.max(480px) {
 
 		&__card {
 			flex: 0 0 100%;
@@ -300,6 +300,10 @@
 		align-items: flex-start;
 		gap: 20px;
 		padding-right: 48px;
+
+		@include bp.max(md) {
+			flex-wrap: wrap;
+		}
 	}
 
 	&__image-wrapper {
@@ -328,10 +332,15 @@
 		flex-direction: column;
 		gap: 4px;
 		padding-top: 8px;
+
+		@include bp.max(md) {
+			flex: 100% 0 0;
+			width: 100%;
+		}
 	}
 
 	&__name {
-		color: var(--theme_gray_900, #1c1c1e);
+		color: var(--theme_gray_900);
 	}
 
 	&__role {
@@ -339,7 +348,7 @@
 	}
 
 	&__bio {
-		color: var(--theme_gray_700, #48484a);
+		color: var(--theme_gray_700);
 		line-height: 1.7;
 
 		p {

@@ -9,6 +9,7 @@ namespace Ambrygen\Theme\Core;
 
 use Ambrygen\Theme\Core\Blocks\BlockVisibilityService;
 use Ambrygen\Theme\Core\Blog\BlogAjaxController;
+use Ambrygen\Theme\Core\Admin\MarketingMaterialTrackingAdminController;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -96,6 +97,7 @@ final class Theme {
 		\Ambrygen\Theme\Core\Webinars\WebinarAjaxController::instance();
 		\Ambrygen\Theme\Core\Blog\BlogAjaxController::instance();
 		\Ambrygen\Theme\Core\Admin\PostSearchAjaxController::instance();
+		MarketingMaterialTrackingAdminController::instance();
 
 		// Custom Post Types
 		PostTypes::instance();

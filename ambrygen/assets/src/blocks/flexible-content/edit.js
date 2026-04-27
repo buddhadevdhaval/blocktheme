@@ -280,7 +280,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									},
 									{
 										label: 'Text Button',
-										value: 'site-btn is-style-site-text-btn has-icon',
+										value: 'site-btn is-style-site-text-btn has-right-arrow',
 									},
 									{ label: 'Dark', value: 'site-btn' },
 								] }
@@ -338,7 +338,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									},
 									{
 										label: 'Text Button',
-										value: 'site-btn is-style-site-text-btn has-icon',
+										value: 'site-btn is-style-site-text-btn has-right-arrow',
 									},
 									{ label: 'Dark', value: 'site-btn' },
 								] }
@@ -475,7 +475,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 													button.target || undefined
 												}
 												rel={ button.rel || undefined }
-												className={ ` is-style-site-trailing-icon site-btn ${ button.variant }` }
+												className={ ` site-btn has-right-arrow ${ button.variant }` }
 											>
 												{ button.text }
 											</a>

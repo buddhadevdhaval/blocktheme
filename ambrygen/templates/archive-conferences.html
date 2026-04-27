@@ -4,14 +4,14 @@
 <main id="main-content" class="wp-block-group">
 
 	<!-- Conferences In-Progress Section -->
-			<!-- wp:group {"tagName":"section","className":"container-1340 conference-in-progress-wrapper","layout":{"type":"default"},"htmlId":"cip-heading-container"} -->
-    <section class="wp-block-group container-1340 conference-in-progress-wrapper" aria-labelledby="cip-heading">
+	<!-- wp:group {"tagName":"section","className":"container-1340 conference-in-progress-wrapper","layout":{"type":"default"},"htmlId":"cip-heading-container"} -->
+	<section id="cip-heading-container" class="wp-block-group container-1340 conference-in-progress-wrapper" aria-labelledby="cip-heading">
 		<!-- wp:group {"className":"wrapper","layout":{"type":"default"}} -->
 		<div class="wp-block-group wrapper">
 			<!-- wp:group {"className":"conferences-in-progress","layout":{"type":"default"}} -->
 			<div class="wp-block-group conferences-in-progress">
 				<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
-				<div aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
+				<div style="height:50px" aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
 				<!-- /wp:spacer -->
 
 				<!-- wp:heading {"level":2,"className":"conferences-in-progress__heading heading-3 mb-0","htmlId":"cip-heading"} -->
@@ -20,7 +20,7 @@
 				<!-- /wp:heading -->
 
 				<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
-				<div aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
+				<div style="height:50px" aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
 				<!-- /wp:spacer -->
 
 				<!-- wp:group {"className":"conferences-in-progress__slider-wrap","layout":{"type":"default"}} -->
@@ -46,14 +46,14 @@
 						<!-- /wp:group -->
 						<!-- /wp:post-template -->
 
-						<!-- wp:html -->
-						<div class="conferences-in-progress__arrows">
+						<!-- wp:group {"className":"conferences-in-progress__arrows","layout":{"type":"default"}} -->
+						<div class="wp-block-group conferences-in-progress__arrows">
 							<button type="button" class="cip-arrow cip-arrow--prev"
 								aria-label="Previous conference"></button>
 							<button type="button" class="cip-arrow cip-arrow--next"
 								aria-label="Next conference"></button>
 						</div>
-						<!-- /wp:html -->
+						<!-- /wp:group -->
 					</div>
 					<!-- /wp:query -->
 				</div>
@@ -63,8 +63,6 @@
 		</div>
 		<!-- /wp:group -->
 	</section>
-	<!-- /wp:group -->
-
 	<!-- /wp:group -->
 
 	<!-- wp:template-part {"slug":"upcoming-conferences"} /-->

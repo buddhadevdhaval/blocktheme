@@ -17,11 +17,14 @@ import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import {
 	ImageUploader,
+	BlockExamplePreview,
 	CtaButtonField,
 	TagSelector,
 } from '../_shared/components';
-import { isValidVideoUrl, getIframeSrc } from '../../utils/validation.js';
+import { getIframeSrc } from '../../utils/validation.js';
 import playIcon from '../../images/play-icon.svg';
+
+const DEFAULT_TEMPLATE = [ [ 'ambrygen/job-list-item', {} ] ];
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
@@ -71,6 +74,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		setIsVideoModalOpen( true );
 	};
 
+	if ( blockId === 'careers-example' ) {
+		return (
+			<BlockExamplePreview
+				className="cta-tiles-with-3-card-example-preview"
+				imagePath="/assets/src/images/cta-tiles-with-3-card/default-image.png"
+			/>
+		);
+	}
+
 	return (
 		<>
 			<InspectorControls>
@@ -119,31 +131,35 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									allowedTypes={ [ 'video' ] }
 									value={ videoObj?.id }
 									render={ ( { open } ) => (
-										<Button isSecondary onClick={ open }>
+										<Button variant="secondary" onClick={ open }>
 											{ videoObj?.url
-												? 'Change Video'
-												: 'Select / Upload Video' }
+												? __(
+														'Change Video',
+														'ambrygen-web'
+												  )
+												: __(
+														'Select / Upload Video',
+														'ambrygen-web'
+												  ) }
 										</Button>
 									) }
 								/>
 							</MediaUploadCheck>
 
-							{ videoObj?.url && (
-								<p>Selected: { videoObj.url }</p>
-							) }
+							{ videoObj?.url && <p>{ `${ __( 'Selected:', 'ambrygen-web' ) } ${ videoObj.url }` }</p> }
 
 							<Button
-								isLink
+								variant="link"
 								isDestructive
 								onClick={ () =>
 									setAttributes( { videoObj: null } )
 								}
 							>
-								Remove Video
+								{ __( 'Remove Video', 'ambrygen-web' ) }
 							</Button>
 
 							<ImageUploader
-								label="Video Poster Image"
+								label={ __( 'Video Poster Image', 'ambrygen-web' ) }
 								url={ videoPoster?.url }
 								onSelect={ ( media ) =>
 									setAttributes( { videoPoster: media } )
@@ -157,17 +173,19 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 					{ videoType === 'embed' && (
 						<TextControl
-							label="YouTube or Vimeo URL"
-							help="Supports youtube.com, youtu.be, vimeo.com"
+							label={ __( 'YouTube or Vimeo URL', 'ambrygen-web' ) }
+							help={ __(
+								'Supports youtube.com, youtu.be, vimeo.com',
+								'ambrygen-web'
+							) }
 							value={ videoUrl || '' }
 							onChange={ ( value ) =>
-								isValidVideoUrl( value ) &&
 								setAttributes( { videoUrl: value } )
 							}
 						/>
 					) }
 					<ImageUploader
-						label="Job Type Icon"
+						label={ __( 'Job Type Icon', 'ambrygen-web' ) }
 						url={ jobtypeicon?.url }
 						onSelect={ ( media ) =>
 							setAttributes( { jobtypeicon: media } )
@@ -177,7 +195,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 					/>
 					<ImageUploader
-						label="Job Location Icon"
+						label={ __( 'Job Location Icon', 'ambrygen-web' ) }
 						url={ joblocationicon?.url }
 						onSelect={ ( media ) =>
 							setAttributes( { joblocationicon: media } )
@@ -214,7 +232,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					<RichText
 						tagName={ headingLevel || 'h2' }
 						value={ title }
-						placeholder="Add Heading..."
+						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 						className="careers-highlight__title block__rowflex--heading-title heading-4 mb-0"
 						onChange={ ( value ) =>
 							setAttributes( { title: value } )
@@ -229,17 +247,20 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						<RichText
 							tagName="div"
 							value={ intro }
-							placeholder="Add Description..."
+							placeholder={ __(
+								'Add Description...',
+								'ambrygen-web'
+							) }
 							onChange={ ( value ) =>
 								setAttributes( { intro: value } )
 							}
 						/>
 
-						{ link?.text && (
+						{ link?.text && link?.url && (
 							<div className="block_rowflex-link">
 								<a
 									href={ link.url || '#' }
-									className="site-btn is-style-site-text-btn has-icon"
+									className="site-btn is-style-site-text-btn has-right-arrow"
 								>
 									{ link.text }
 								</a>
@@ -257,16 +278,18 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									allowedBlocks={ [
 										'ambrygen/job-list-item',
 									] }
+									template={ DEFAULT_TEMPLATE }
+									templateLock={ false }
 								/>
 							</div>
 						</div>
 
-						{ careerslink?.text && (
+						{ careerslink?.text && careerslink?.url && (
 							<div className="block-btn">
 								<div className="is-style-gl-s32"></div>
 								<a
 									href={ careerslink.url || '#' }
-									className="site-btn is-style-site-text-btn has-icon"
+									className="site-btn is-style-site-text-btn has-right-arrow"
 								>
 									{ careerslink.text }
 								</a>
@@ -295,7 +318,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								<div className="careers-highlight__media  media_video video-embed">
 									<iframe
 										src={ iframeSrc }
-										title="Embedded video"
+										title={ __(
+											'Embedded video',
+											'ambrygen-web'
+										) }
 										frameBorder="0"
 										allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 										allowFullScreen
@@ -304,7 +330,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							) }
 							{ ! hasEditorVideo && (
 								<div className="videos-placeholder">
-									Add video URL in block settings
+									{ __(
+										'Add video URL in block settings',
+										'ambrygen-web'
+									) }
 								</div>
 							) }
 							{ hasEditorVideo && (

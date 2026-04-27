@@ -149,53 +149,6 @@ function BackgroundStyleControl( { value, onChange } ) {
 }
 
 /**
- * TagNameControl Component
- *
- * Reusable component for HTML tag selection.
- * Provides semantic HTML options for better accessibility and SEO.
- *
- * @param {Object}   props          Component properties.
- * @param {string}   props.value    Current tag name value.
- * @param {Function} props.onChange Callback when tag changes.
- * @return {JSX.Element} TagNameControl component.
- */
-function TagNameControl( { value, onChange } ) {
-	return (
-		<SelectControl
-			label={ __( 'HTML Tag', 'ambrygen-web' ) }
-			help={ __(
-				'Choose the semantic HTML tag for this section.',
-				'ambrygen-web'
-			) }
-			value={ value }
-			options={ [
-				{
-					label: __( '<section> (Default)', 'ambrygen-web' ),
-					value: 'section',
-				},
-				{
-					label: __( '<div> (Generic)', 'ambrygen-web' ),
-					value: 'div',
-				},
-				{
-					label: __( '<article> (Article Content)', 'ambrygen-web' ),
-					value: 'article',
-				},
-				{
-					label: __( '<aside> (Sidebar Content)', 'ambrygen-web' ),
-					value: 'aside',
-				},
-				{
-					label: __( '<main> (Main Content)', 'ambrygen-web' ),
-					value: 'main',
-				},
-			] }
-			onChange={ onChange }
-		/>
-	);
-}
-
-/**
  * Edit component for the Section Container block.
  *
  * Renders the block interface in the editor with:
@@ -212,8 +165,27 @@ function TagNameControl( { value, onChange } ) {
  * @return {JSX.Element} Block editor interface element.
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const { tagName, containerWidth, backgroundStyle, isFixedBackground } =
-		attributes;
+	const {
+		containerWidth = 'container-1340',
+		backgroundStyle = '',
+		isFixedBackground = false,
+		className = '',
+	} = attributes;
+	const hasInsideBackground = isFixedBackground === true;
+
+	const customClasses = className
+		.split( ' ' )
+		.filter( Boolean )
+		.filter( ( value ) => value !== 'block-bg' );
+
+	const classes = [
+		...customClasses,
+		containerWidth,
+		backgroundStyle,
+		hasInsideBackground ? 'block-bg' : '',
+	]
+		.filter( Boolean )
+		.join( ' ' );
 
 	/**
 	 * Handles container width change.
@@ -254,23 +226,8 @@ export default function Edit( { attributes, setAttributes } ) {
 		[ setAttributes ]
 	);
 
-	/**
-	 * Handles HTML tag change.
-	 * Memoized with useCallback for performance.
-	 *
-	 * @param {string} value New tag name value.
-	 */
-	const handleTagChange = useCallback(
-		( value ) => {
-			setAttributes( { tagName: value } );
-		},
-		[ setAttributes ]
-	);
-
 	const blockProps = useBlockProps( {
-		className: `${ containerWidth } ${ backgroundStyle } ${
-			isFixedBackground ? 'block-bg' : ''
-		}`,
+		className: classes || undefined,
 	} );
 
 	return (
@@ -304,20 +261,10 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ handleFixedBackgroundChange }
 					/>
 				</PanelBody>
-
-				<PanelBody
-					title={ __( 'Advanced Settings', 'ambrygen-web' ) }
-					initialOpen={ false }
-				>
-					<TagNameControl
-						value={ tagName }
-						onChange={ handleTagChange }
-					/>
-				</PanelBody>
 			</InspectorControls>
 
 			{ createElement(
-				tagName,
+				'section',
 				blockProps,
 				<div className="wrapper">
 					<InnerBlocks />

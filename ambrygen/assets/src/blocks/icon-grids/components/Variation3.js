@@ -261,7 +261,7 @@ export default function Variation3( { attributes, setAttributes } ) {
 											</div>
 
 											<a
-												className="features-tabs__view-link site-btn is-style-site-text-btn has-icon icon-arrow-up"
+												className="features-tabs__view-link site-btn is-style-site-text-btn has-right-arrow"
 												href={ post.link || '#' }
 											>
 												View Product

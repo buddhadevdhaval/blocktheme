@@ -4,6 +4,7 @@ namespace Ambrygen\Theme\Core\Blocks;
 
 use Ambrygen\Theme\Core\Conferences\ConferenceQueryService;
 use Ambrygen\Theme\Core\Conferences\ConferenceRenderer;
+use Ambrygen\Theme\Core\GeneticTesting\GeneticTestingRenderer;
 use Ambrygen\Theme\Core\Science\ScienceRenderer;
 use Ambrygen\Theme\Core\Webinars\WebinarQueryService;
 use Ambrygen\Theme\Core\Webinars\WebinarRenderer;
@@ -70,14 +71,49 @@ final class BlockRenderService
         return WebinarRenderer::instance()->render_webinar_meta_summary($post_id);
     }
 
-    public function render_webinar_share_post(int $post_id): string
+    public function render_social_share(int $post_id): string
     {
         return WebinarRenderer::instance()->render_share_post($post_id);
+    }
+
+    public function render_webinar_registration_button(int $post_id, array $attributes = []): string
+    {
+        return WebinarRenderer::instance()->render_webinar_registration_button($post_id, $attributes);
     }
 
     public function render_webinar_author_swiper(int $post_id, array $attributes = []): string
     {
         return WebinarRenderer::instance()->render_author_swiper($post_id, $attributes);
+    }
+
+    public function render_webinar_additional_info(int $post_id): string
+    {
+        return WebinarRenderer::instance()->render_webinar_additional_info($post_id);
+    }
+
+    public function render_genetic_testing_details(int $post_id): string
+    {
+        return GeneticTestingRenderer::instance()->render_details($post_id);
+    }
+
+    public function render_genetic_testing_genes(int $post_id): string
+    {
+        return GeneticTestingRenderer::instance()->render_genes_analyzed($post_id);
+    }
+    
+    public function render_genetic_testing_quick_reference(int $post_id): string
+    {
+        return GeneticTestingRenderer::instance()->render_quick_reference_block($post_id);
+    }
+
+    public function render_genetic_testing_description(int $post_id): string
+    {
+        return GeneticTestingRenderer::instance()->render_post_description($post_id);
+    }
+
+    public function render_genetic_testing_downloads(int $post_id): string
+    {
+        return GeneticTestingRenderer::instance()->render_post_downloads($post_id);
     }
 
     public function render_presentation_filters(): string
@@ -108,6 +144,11 @@ final class BlockRenderService
     public function render_poster_meta(): string
     {
         return ScienceRenderer::instance()->render_poster_meta();
+    }
+
+    public function render_poster_pdf_files(): string
+    {
+        return ScienceRenderer::instance()->render_poster_pdf_files();
     }
 
     public function render_publication_filters(): string

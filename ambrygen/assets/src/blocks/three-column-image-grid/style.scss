@@ -1,75 +1,73 @@
 @use "../../css/partials/variables/breakpoints" as bp;
 
+.three-column-image-grid {
+	margin: 0;
 
-.our-approach {
-    margin: 0;
+	&.variation-three {
+		.three-column-card {
+			background: var(--theme_gray_100);
 
-    &.variation-three {
-        .approach-card {
-            background: var(--theme_gray_100);
+			.bg-primary_25 & {
+				background-color: var(--theme_white);
+			}
 
-            .bg-primary_25 & {
-                background-color: var(--theme_white);
-            }
+			.three-column-card__image {
+				height: 183px;
+			}
+		}
+	}
 
-            .approach-card__image {
-                height: 183px;
-            }
-        }
-    }
+	&.variation-two {
+		.three-column-card {
 
-    &.variation-two {
+			&__title {
+				color: var(--theme_gray_900);
 
-        .approach-card {
+				a {
+					color: var(--theme_gray_900);
 
-            &__title {
-                color: var(--theme_gray_900);
+					&:hover {
+						color: var(--theme_cg_blue);
+					}
+				}
+			}
 
-                a {
-                    color: var(--theme_gray_900);
+			&__inner {
+				padding: var(--theme_space_8);
+			}
+		}
+	}
 
-                    &:hover {
-                        color: var(--theme_cg_blue);
-                    }
-                }
-            }
+	&__content {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: var(--theme_space_8);
+		justify-content: space-between;
 
-            &__inner {
-                padding: var(--theme_space_8);
-            }
-        }
-    }
+		@include bp.max(lg) {
+			grid-template-columns: repeat(2, 1fr);
+		}
 
-    &__content {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--theme_space_8);
-        justify-content: space-between;
+		@include bp.max(md) {
+			grid-template-columns: repeat(1, 1fr);
+		}
+	}
 
-        @include bp.max(lg) {
-            grid-template-columns: repeat(2, 1fr);
-        }
+	.three-column-card {
 
-        @include bp.max(md) {
-            grid-template-columns: repeat(1, 1fr);
-        }
-    }
+		&__title {
+			color: var(--theme_gray_900);
 
-    .approach-card {
+			a {
+				color: var(--theme_gray_900);
+				outline: none;
+				padding: 0;
+				border: none;
 
-        &__title {
-            color: var(--theme_gray_900);
-
-            a {
-                color: var(--theme_gray_900);
-                outline: none;
-                padding: 0;
-                border: none;
-
-                &:hover {
-                    color: var(--theme_cg_blue);
-                }
-            }
-        }
-    }
+				&:hover {
+					color: var(--theme_cg_blue);
+				}
+			}
+		}
+	}
 }

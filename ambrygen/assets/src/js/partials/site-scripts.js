@@ -1512,3 +1512,61 @@ document.addEventListener('DOMContentLoaded', () => {
 	initTabsTableContent();
 
 });
+
+/**
+ * Admin Meta Box Helper Scripts
+ *
+ * Handles dynamic field toggling and Select2 initialization
+ * within the WordPress post editor.
+ */
+( function ( $ ) {
+	'use strict';
+
+	if ( ! $ ) {
+		return;
+	}
+
+	$( document ).ready( function () {
+		const $videoTypeSelect = $( 'select[name="video_type"]' );
+
+		const toggleVideoFields = function () {
+			const val = $videoTypeSelect.val();
+			const $mp4Field = $( '.field-video_url' );
+			const $embedField = $( '.field-iframe_url' );
+			const $posterField = $( '.field-poster_image_id' );
+
+			if ( ! val ) {
+				$mp4Field.hide();
+				$embedField.hide();
+				$posterField.hide();
+			} else if ( val === 'mp4' ) {
+				$mp4Field.show();
+				$embedField.hide();
+				$posterField.show();
+			} else if ( val === 'embed' ) {
+				$mp4Field.hide();
+				$embedField.show();
+				$posterField.show();
+			}
+		};
+
+		if ( $videoTypeSelect.length ) {
+			$videoTypeSelect.on( 'change', toggleVideoFields );
+			toggleVideoFields();
+		}
+
+		if ( $.fn.select2 ) {
+			$( '.ambrygen-select2' ).each( function () {
+				const $select = $( this );
+
+				if ( ! $select.hasClass( 'select2-hidden-accessible' ) ) {
+					$select.select2( {
+						width: '100%',
+						placeholder: 'Search...',
+						allowClear: true,
+					} );
+				}
+			} );
+		}
+	} );
+} )( window.jQuery );

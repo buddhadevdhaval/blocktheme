@@ -43,9 +43,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			</InspectorControls>
 
 			<div { ...useBlockProps() }>
-				<div className="collaborators">
-					<div className="collaborators__header block__rowflex">
-						<TagName className="collaborators__title block__rowflex--heading-title heading-3 mb-0">
+				<div className="block-layout timeline-block collaborators">
+					<div className="timeline-block__header collaborators__header">
+						<TagName className="heading-3 block-title mb-0 collaborators__title">
 							<RichText
 								tagName="span"
 								value={ title }
@@ -59,9 +59,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							/>
 						</TagName>
 
+						<div className="is-style-gl-s24" aria-hidden="true"></div>
+
 						<RichText
 							tagName="div"
-							className="collaborators__intro block__rowflex--block-content subtitle1"
+							className="text-md-regular block-description collaborators__intro"
 							value={ intro }
 							onChange={ ( value ) =>
 								setAttributes( { intro: value } )
@@ -73,9 +75,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						/>
 					</div>
 
-					<div className="is-style-gl-s50" aria-hidden="true"></div>
+					<div className="is-style-gl-s24" aria-hidden="true"></div>
 
-					<div className="collaborators__list">
+					<div className="timeline-block__items collaborators__list">
 						<InnerBlocks
 							allowedBlocks={ [ 'ambrygen/collaborator-item' ] }
 							renderAppender={ InnerBlocks.ButtonBlockAppender }

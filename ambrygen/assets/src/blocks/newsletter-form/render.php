@@ -221,7 +221,7 @@
 			<div class="is-style-gl-s36" aria-hidden="true"></div>
 			<div class="newsletter__block__button-wrapper">
 				<a
-					class="site-btn is-style-site-secondary-btn"
+					class="site-btn is-style-site-secondary-btn  has-right-arrow"
 					href="<?php echo esc_url( ! empty( $ambrygen_button_url ) ? $ambrygen_button_url : '#' ); ?>"
 					role="button"
 					aria-label="<?php echo esc_attr( $ambrygen_button_text ); ?>"

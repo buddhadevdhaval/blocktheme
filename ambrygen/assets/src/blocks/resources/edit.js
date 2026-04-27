@@ -12,6 +12,7 @@ import {
 	FormTokenField,
 	Button,
 	TextControl,
+	ToggleControl,
 } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { trash, link as linkIcon, plus } from '@wordpress/icons';
@@ -20,9 +21,11 @@ import {
 	DEFAULT_IMAGES,
 	TagSelector,
 } from '../_shared/components';
+import { useEffect } from '@wordpress/element';
 
-export default function Edit({ attributes, setAttributes }) {
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
+		blockId,
 		title,
 		subtitle,
 		resourceCards,
@@ -30,13 +33,26 @@ export default function Edit({ attributes, setAttributes }) {
 		collaboratorIds,
 		headingLevel,
 		resourcesCardTitle,
+		customCollaborators = [],
+		enableCustomCollaborators = false,
 	} = attributes;
+
+	useEffect( () => {
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+
+		if ( ! blockId ) {
+			setAttributes( {
+				blockId: expectedId,
+			} );
+		}
+	}, [ clientId, blockId, setAttributes ] );
 
 	const defaultPlaceholder = DEFAULT_IMAGES().placeholder;
 
-	const blockProps = useBlockProps({
+	const blockProps = useBlockProps( {
 		className: 'resources',
-	});
+		id: blockId || undefined,
+	} );
 
 	// Fetch collaborators for the selection
 	const collaborators = useSelect((select) => {
@@ -117,6 +133,31 @@ export default function Edit({ attributes, setAttributes }) {
 			})
 			.filter(Boolean);
 		setAttributes({ collaboratorIds: newIds });
+	};
+
+	const addCustomCollaborator = () => {
+		const newCustom = [
+			...customCollaborators,
+			{
+				name: '',
+				url: '',
+				imageId: 0,
+				imageUrl: '',
+			}
+		];
+		setAttributes({ customCollaborators: newCustom });
+	};
+
+	const removeCustomCollaborator = (index) => {
+		const newCustom = [...customCollaborators];
+		newCustom.splice(index, 1);
+		setAttributes({ customCollaborators: newCustom });
+	};
+
+	const updateCustomCollaborator = (index, field, value) => {
+		const newCustom = [...customCollaborators];
+		newCustom[index] = { ...newCustom[index], [field]: value };
+		setAttributes({ customCollaborators: newCustom });
 	};
 
 	return (
@@ -274,6 +315,73 @@ export default function Edit({ attributes, setAttributes }) {
 						suggestions={suggestions}
 						onChange={onCollaboratorsChange}
 					/>
+					<hr />
+					<ToggleControl
+						label={__('Enable Custom Collaborators', 'ambrygen-web')}
+						checked={enableCustomCollaborators}
+						onChange={(val) => setAttributes({ enableCustomCollaborators: val })}
+					/>
+					{enableCustomCollaborators && (
+						<div className="resources__custom-collabs-wrap">
+							<p><strong>{__('Custom Collaborators', 'ambrygen-web')}</strong></p>
+							{(customCollaborators || []).map((collab, index) => (
+								<div key={index} className="resources__custom-collab-editor">
+									<div className="resources__custom-collab-editor-header">
+										<span>{__('Collaborator', 'ambrygen-web')} {index + 1}</span>
+										<Button
+											icon={trash}
+											isDestructive
+											onClick={() => removeCustomCollaborator(index)}
+											size="small"
+										/>
+									</div>
+									<TextControl
+										label={__('Name', 'ambrygen-web')}
+										value={collab.name}
+										onChange={(val) => updateCustomCollaborator(index, 'name', val)}
+									/>
+									<TextControl
+										label={__('Link URL', 'ambrygen-web')}
+										value={collab.url}
+										onChange={(val) => updateCustomCollaborator(index, 'url', val)}
+									/>
+									<div className="resources__custom-collab-image">
+										<p><strong>{__('Image', 'ambrygen-web')}</strong></p>
+										<ImageUploader
+											url={collab.imageUrl}
+											onSelect={(media) => {
+												const newCustom = [...customCollaborators];
+												newCustom[index] = { 
+													...newCustom[index], 
+													imageId: media.id,
+													imageUrl: media.url 
+												};
+												setAttributes({ customCollaborators: newCustom });
+											}}
+											onRemove={() => {
+												const newCustom = [...customCollaborators];
+												newCustom[index] = { 
+													...newCustom[index], 
+													imageId: 0,
+													imageUrl: '' 
+												};
+												setAttributes({ customCollaborators: newCustom });
+											}}
+										/>
+									</div>
+									<hr />
+								</div>
+							))}
+							<Button
+								variant="secondary"
+								icon={plus}
+								onClick={addCustomCollaborator}
+								className="resources__full-width-btn"
+							>
+								{__('Add Custom Collaborator', 'ambrygen-web')}
+							</Button>
+						</div>
+					)}
 				</PanelBody>
 			</InspectorControls>
 
@@ -381,7 +489,7 @@ export default function Edit({ attributes, setAttributes }) {
 								)}
 							/>
 							<div className="resources__card-logo-grid resources__card-logo-grid--3-col">
-								{collaboratorIds.length === 0 && (
+								{collaboratorIds.length === 0 && ( !enableCustomCollaborators || (customCollaborators || []).length === 0 ) && (
 									<div className="resources__logo-placeholder">
 										{__(
 											'Select Organizations in the sidebar',
@@ -402,6 +510,14 @@ export default function Edit({ attributes, setAttributes }) {
 										</div>
 									);
 								})}
+								{enableCustomCollaborators && (customCollaborators || []).map((collab, index) => (
+									<div
+										key={`custom-${index}`}
+										className="resources__card-logo-link"
+									>
+										{collab.name || __('Custom Collaborator', 'ambrygen-web')}
+									</div>
+								))}
 							</div>
 						</div>
 					</div>

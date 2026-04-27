@@ -12,7 +12,7 @@ import { __ } from '@wordpress/i18n';
 
 import { TagSelector } from '../_shared/components';
 
-const ALLOWED_BLOCKS = [ 'ambrygen/icon-card-grid-item' ];
+const ALLOWED_BLOCKS = ['ambrygen/icon-card-grid-item'];
 
 const TEMPLATE = [
 	[
@@ -65,8 +65,8 @@ const TEMPLATE = [
 	],
 ];
 
-export default function Edit( { attributes, setAttributes, clientId } ) {
-	const { insertBlock } = useDispatch( 'core/block-editor' );
+export default function Edit({ attributes, setAttributes, clientId }) {
+	const { insertBlock } = useDispatch('core/block-editor');
 	const {
 		blockId,
 		tagline,
@@ -75,72 +75,72 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		description,
 	} = attributes;
 
-	useEffect( () => {
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+	useEffect(() => {
+		const expectedId = `section-${clientId.slice(0, 8)}`;
 
-		if ( ! blockId ) {
-			setAttributes( { blockId: expectedId } );
+		if (!blockId) {
+			setAttributes({ blockId: expectedId });
 		}
-	}, [ blockId, clientId, setAttributes ] );
+	}, [blockId, clientId, setAttributes]);
 
-	const blockProps = useBlockProps( {
+	const blockProps = useBlockProps({
 		className: 'icon-card-grid',
-	} );
+	});
 
 	const addCard = () => {
-		const newBlock = createBlock( 'ambrygen/icon-card-grid-item', {} );
+		const newBlock = createBlock('ambrygen/icon-card-grid-item', {});
 
-		insertBlock( newBlock, undefined, clientId );
+		insertBlock(newBlock, undefined, clientId);
 	};
 
 	return (
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Content Settings', 'ambrygen-web' ) }
-					initialOpen={ true }
+					title={__('Content Settings', 'ambrygen-web')}
+					initialOpen={true}
 				>
 					<TagSelector
-						label={ __( 'Heading Level', 'ambrygen-web' ) }
+						label={__('Heading Level', 'ambrygen-web')}
 						type="heading"
-						value={ headingLevel }
-						onChange={ ( value ) =>
-							setAttributes( { headingLevel: value } )
+						value={headingLevel}
+						onChange={(value) =>
+							setAttributes({ headingLevel: value })
 						}
 					/>
 				</PanelBody>
 			</InspectorControls>
 
-			<div { ...blockProps }>
+			<div {...blockProps}>
 				<div className="icon-card-grid__header">
 					<RichText
 						tagName="div"
 						className="hero-kicker icon-card-grid__tagline"
-						value={ tagline }
-						onChange={ ( value ) =>
-							setAttributes( { tagline: value } )
+						value={tagline}
+						onChange={(value) =>
+							setAttributes({ tagline: value })
 						}
-						placeholder={ __( 'Add tagline…', 'ambrygen-web' ) }
+						placeholder={__('Add tagline…', 'ambrygen-web')}
 					/>
 					<div className="is-style-gl-s12"></div>
 					<RichText
-						tagName={ headingLevel }
+						tagName={headingLevel}
 						className="heading-4 block-title mb-0 icon-card-grid__heading"
-						value={ heading }
-						onChange={ ( value ) =>
-							setAttributes( { heading: value } )
+						value={heading}
+						onChange={(value) =>
+							setAttributes({ heading: value })
 						}
-						placeholder={ __( 'Add heading…', 'ambrygen-web' ) }
+						placeholder={__('Add heading…', 'ambrygen-web')}
 					/>
 					<div className="is-style-gl-s12"></div>
 					<RichText
 						tagName="div"
 						className="body1 icon-card-grid__desc"
-						value={ description }
-						onChange={ ( value ) =>
-							setAttributes( { description: value } )
+						value={description}
+						onChange={(value) =>
+							setAttributes({ description: value })
 						}
-						placeholder={ __( 'Add description…', 'ambrygen-web' ) }
+						placeholder={__('Add description…', 'ambrygen-web')}
 					/>
 				</div>
 
@@ -148,18 +148,18 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 				<div className="icon-card-grid__grid">
 					<InnerBlocks
-						allowedBlocks={ ALLOWED_BLOCKS }
-						template={ TEMPLATE }
-						renderAppender={ () => false }
+						allowedBlocks={ALLOWED_BLOCKS}
+						template={TEMPLATE}
+						renderAppender={() => false}
 					/>
 				</div>
 
 				<div
 					className="icon-card-grid__add-item"
-					style={ { marginTop: '20px', textAlign: 'center' } }
+					style={{ marginTop: '20px', textAlign: 'center' }}
 				>
-					<Button variant="primary" onClick={ addCard }>
-						{ __( '+ Add Card', 'ambrygen-web' ) }
+					<Button variant="primary" onClick={addCard}>
+						{__('+ Add Card', 'ambrygen-web')}
 					</Button>
 				</div>
 			</div>

@@ -51,9 +51,9 @@
 		border-radius: 50%;
 		overflow: hidden;
 		flex-shrink: 0;
-		border: 2px solid #fff;
+		border: 2px solid var(--theme_white);
 		margin-right: -12px;
-		background: #eee;
+		background: var(--theme_gray_2);
 		position: relative;
 		z-index: 1;
 

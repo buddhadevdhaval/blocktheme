@@ -21,12 +21,28 @@ $ambrygen_image_alt  = $ambrygen_attributes['imageAlt'] ?? '';
 $ambrygen_title      = $ambrygen_attributes['title'] ?? '';
 $ambrygen_subtitle   = $ambrygen_attributes['subtitle'] ?? '';
 $ambrygen_footnote   = $ambrygen_attributes['footnote'] ?? '';
-$ambrygen_cta        = is_array( $ambrygen_attributes['cta'] ?? null ) ? $ambrygen_attributes['cta'] : array();
-$ambrygen_cta_text   = $ambrygen_cta['text'] ?? '';
-$ambrygen_cta_url    = $ambrygen_cta['url'] ?? '';
-$ambrygen_cta_target = $ambrygen_cta['target'] ?? '';
-$ambrygen_cta_rel    = $ambrygen_cta['rel'] ?? '';
-$ambrygen_copy_html  = trim( $content );
+$ambrygen_copy_html  = '';
+$ambrygen_cta_html   = '';
+$ambrygen_blocks     = parse_blocks( $content );
+
+foreach ( $ambrygen_blocks as $ambrygen_block ) {
+	$ambrygen_block_name = $ambrygen_block['blockName'] ?? '';
+	$ambrygen_block_html = render_block( $ambrygen_block );
+
+	if ( ! trim( $ambrygen_block_html ) ) {
+		continue;
+	}
+
+	if ( in_array( $ambrygen_block_name, array( 'core/buttons', 'core/button' ), true ) ) {
+		$ambrygen_cta_html .= $ambrygen_block_html;
+		continue;
+	}
+
+	$ambrygen_copy_html .= $ambrygen_block_html;
+}
+
+$ambrygen_copy_html = trim( $ambrygen_copy_html );
+$ambrygen_cta_html  = trim( $ambrygen_cta_html );
 
 if ( $ambrygen_copy_html ) {
 	$ambrygen_copy_processor = new WP_HTML_Tag_Processor( $ambrygen_copy_html );
@@ -47,23 +63,6 @@ if ( $ambrygen_copy_html ) {
 		}
 	}
 }
-
-$ambrygen_cta_rel_parts = $ambrygen_cta_rel
-	? array_filter( array_unique( explode( ' ', $ambrygen_cta_rel ) ) )
-	: array();
-
-if ( '_blank' === $ambrygen_cta_target ) {
-	$ambrygen_cta_rel_parts = array_unique(
-		array_merge( $ambrygen_cta_rel_parts, array( 'noopener', 'noreferrer' ) )
-	);
-}
-
-$ambrygen_cta_rel = implode( ' ', $ambrygen_cta_rel_parts );
-
-// Avoid undefined variable notices when CTA/video is not configured.
-$ambrygen_is_video   = false;
-$ambrygen_video_type = '';
-$ambrygen_video_src  = '';
 ?>
 
 <div <?php echo get_block_wrapper_attributes( array( 'class' => 'ordering-options__card' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
@@ -110,36 +109,9 @@ $ambrygen_video_src  = '';
 			<?php endif; ?>
 		</div>
 
-		<?php if ( $ambrygen_cta_text && ( $ambrygen_cta_url || ! empty( $ambrygen_cta['isVideo'] ) ) ) : 
-			$ambrygen_is_video = ! empty( $ambrygen_cta['isVideo'] );
-
-			if ( $ambrygen_is_video ) {
-				$ambrygen_video_type = $ambrygen_cta['videoType'] ?? 'embed';
-				$ambrygen_video_src  = 'mp4' === $ambrygen_video_type 
-					? ( $ambrygen_cta['videoUrl'] ?? '' ) 
-					: Helper::get_iframe_src( $ambrygen_cta['iframeUrl'] ?? '' );
-			}
-		?>
+		<?php if ( $ambrygen_cta_html ) : ?>
 			<div class="is-style-gl-s24" aria-hidden="true"></div>
-			<div class="ordering-options__card-cta">
-				<a
-					href="<?php echo esc_url( $ambrygen_cta_url ); ?>"
-					class="site-btn is-style-site-trailing-icon"
-					<?php if ( ! empty( $ambrygen_cta_target ) ) : ?>
-						target="<?php echo esc_attr( $ambrygen_cta_target ); ?>"
-					<?php endif; ?>
-					<?php if ( ! empty( $ambrygen_cta_rel ) ) : ?>
-						rel="<?php echo esc_attr( $ambrygen_cta_rel ); ?>"
-					<?php endif; ?>
-				>
-					<?php echo esc_html( $ambrygen_cta_text ); ?>
-					<?php if ( '_blank' === $ambrygen_cta_target ) : ?>
-						<span class="screen-reader-text">
-							<?php echo esc_html__( '(opens in new tab)', 'ambrygen-web' ); ?>
-						</span>
-					<?php endif; ?>
-				</a>
-			</div>
+			<?php echo $ambrygen_cta_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- InnerBlocks content is rendered by WordPress. ?>
 		<?php endif; ?>
 	</div>
 </div>

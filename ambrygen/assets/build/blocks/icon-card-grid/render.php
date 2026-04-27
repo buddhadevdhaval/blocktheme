@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Ambrygen\Theme\Core\Helper;
 
+$ambrygen_block_id          = isset( $attributes['blockId'] ) ? sanitize_html_class( $attributes['blockId'] ) : '';
 $ambrygen_tagline          = $attributes['tagline'] ?? '';
 $ambrygen_heading          = $attributes['heading'] ?? '';
 $ambrygen_heading_level    = $attributes['headingLevel'] ?? 'h2';
@@ -31,10 +32,20 @@ $ambrygen_has_heading     = '' !== trim( wp_strip_all_tags( $ambrygen_heading ) 
 $ambrygen_has_description = '' !== trim( wp_strip_all_tags( $ambrygen_description ) );
 $ambrygen_has_header      = $ambrygen_has_tagline || $ambrygen_has_heading || $ambrygen_has_description;
 $ambrygen_has_cards       = '' !== $ambrygen_cards_content;
+
+$ambrygen_wrapper_attributes_array = array(
+	'class' => 'icon-card-grid',
+);
+
+if ( $ambrygen_block_id ) {
+	$ambrygen_wrapper_attributes_array['id'] = $ambrygen_block_id;
+}
+
+$ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_attributes_array );
 ?>
 
 <?php if ( $ambrygen_has_header || $ambrygen_has_cards ) : ?>
-<div class="icon-card-grid">
+<div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 
 	<?php if ( $ambrygen_has_header ) : ?>
 		<!-- Section Header -->

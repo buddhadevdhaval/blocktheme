@@ -166,7 +166,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 							<?php if ($ambrygen_cta_text && $ambrygen_cta_url): ?>
 								<div class="is-style-gl-s24" aria-hidden="true"></div>
 								<div class="ordering-options__card-cta">
-									<a href="<?php echo esc_url($ambrygen_cta_url); ?>" class="site-btn is-style-site-trailing-icon"
+									<a href="<?php echo esc_url($ambrygen_cta_url); ?>" class="site-btn has-right-arrow"
 										<?php if (!empty($ambrygen_cta_target)): ?>
 											target="<?php echo esc_attr($ambrygen_cta_target); ?>" <?php endif; ?> 				<?php if (!empty($ambrygen_cta_rel)): ?> rel="<?php echo esc_attr($ambrygen_cta_rel); ?>" <?php endif; ?>>
 										<?php echo esc_html($ambrygen_cta_text); ?>

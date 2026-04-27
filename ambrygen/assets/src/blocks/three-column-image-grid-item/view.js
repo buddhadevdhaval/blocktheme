@@ -1,6 +1,8 @@
 ( function () {
 	const initThreeColumnVideo = () => {
-		const cards = document.querySelectorAll( '.approach-card' );
+		const cards = document.querySelectorAll(
+			'.wp-block-ambrygen-three-column-image-grid-item'
+		);
 
 		cards.forEach( ( card ) => {
 			if ( card.dataset.videoBound === '1' ) {

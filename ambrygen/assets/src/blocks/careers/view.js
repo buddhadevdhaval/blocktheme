@@ -20,7 +20,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		modal.className = 'modal-popup modal-popup--video';
 		modal.innerHTML = `
 			<div class="modal-popup__overlay"></div>
-			<div class="modal-popup__panel" role="dialog" aria-modal="true">
+			<div class="modal-popup__panel" role="dialog" aria-modal="true" aria-label="Video dialog">
 				<button type="button" class="modal-popup__close" aria-label="Close modal">
 					<img decoding="async" src="${ closeIcon }" alt="Close" />
 				</button>
@@ -149,6 +149,15 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		};
 
 		toggleWrap.addEventListener( 'click', ( event ) => {
+			event.preventDefault();
+			openModal();
+		} );
+
+		toggleWrap.addEventListener( 'keydown', ( event ) => {
+			if ( event.key !== 'Enter' && event.key !== ' ' ) {
+				return;
+			}
+
 			event.preventDefault();
 			openModal();
 		} );

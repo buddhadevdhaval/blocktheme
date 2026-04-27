@@ -10,6 +10,8 @@
 	&__subheading {
 		text-align: center;
 		width: 100%;
+		max-width: 960px;
+		margin: 0 auto;
 	}
 
 	&__subheading-highlight {
@@ -20,7 +22,8 @@
 
 
 
-.videos__cards {
+.videos__cards,
+.videos__cards .block-editor-inner-blocks .block-editor-block-list__layout {
 	display: grid;
 	gap: fluid(32, 50);
 	grid-template-columns: repeat(2, 1fr);

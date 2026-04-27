@@ -41,7 +41,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const { postOptions, featuredPosts, isFetching } = useSelect( ( select ) => {
 		const { getEntityRecords, isResolving } = select( 'core' );
-		
+
 		const allPostsArgs = {
 			per_page: 100,
 			status: 'publish',
@@ -55,10 +55,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 		return {
 			postOptions: getEntityRecords( 'postType', 'post', allPostsArgs ) || [],
-			featuredPosts: selectedPosts.length > 0 
-				? getEntityRecords( 'postType', 'post', featuredPostsArgs ) 
+			featuredPosts: selectedPosts.length > 0
+				? getEntityRecords( 'postType', 'post', featuredPostsArgs )
 				: [],
-			isFetching: selectedPosts.length > 0 
+			isFetching: selectedPosts.length > 0
 				? isResolving( 'core', 'getEntityRecords', [ 'postType', 'post', featuredPostsArgs ] )
 				: false,
 		};
@@ -168,7 +168,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					<div className="wp-block-group wrapper">
 						<div className="wp-block-group conferences-in-progress">
 							<div className="is-style-gl-s50" aria-hidden="true"></div>
-							
+
 							<RichText
 								tagName={ TagName }
 								className="wp-block-heading conferences-in-progress__heading heading-3 mb-0"
@@ -241,7 +241,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 												<div className="cip-card__description body1 mb-4" dangerouslySetInnerHTML={ { __html: post?.excerpt?.rendered || '' } } />
 
 												<div className="cip-card__cta-wrap">
-													<span className="cip-card__cta site-btn is-style-site-trailing-icon">
+													<span className="cip-card__cta site-btn has-right-arrow">
 														{ __( 'Read Article', 'ambrygen-web' ) }
 													</span>
 												</div>
@@ -254,7 +254,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 											! isFetching && <p>{ __( 'Select posts in the sidebar to see a preview.', 'ambrygen-web' ) }</p>
 										) }
 									</div>
-									
+
 									{ featuredPosts && featuredPosts.length > 1 && (
 										<div className="conferences-in-progress__arrows">
 											<button type="button" className="cip-arrow cip-arrow--prev" aria-label={ __( 'Previous blog', 'ambrygen-web' ) }></button>

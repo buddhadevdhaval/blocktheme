@@ -16,6 +16,23 @@ document.addEventListener( 'DOMContentLoaded', function () {
 			const getTopPosition = function ( element ) {
 				return element.getBoundingClientRect().top + window.pageYOffset;
 			};
+			const getOffset = function () {
+				return parseInt(
+					wrapper.getAttribute( 'data-offset' ) || '250',
+					10
+				);
+			};
+			const scrollToTarget = function ( target ) {
+				const targetPosition =
+					target.getBoundingClientRect().top +
+					window.pageYOffset -
+					getOffset();
+
+				window.scrollTo( {
+					top: targetPosition,
+					behavior: 'smooth',
+				} );
+			};
 			const resolveTargetElement = function ( targetId ) {
 				if ( ! targetId ) {
 					return null;
@@ -183,45 +200,41 @@ document.addEventListener( 'DOMContentLoaded', function () {
 					}
 
 					setActiveTab( clickedPair.tab );
-
-					if ( tabBehavior === 'scroll' ) {
-						const offset = parseInt(
-							wrapper.getAttribute( 'data-offset' ) || '250',
-							10
-						);
-						const targetPosition =
-							clickedPair.target.getBoundingClientRect().top +
-							window.pageYOffset -
-							offset;
-
-						window.scrollTo( {
-							top: targetPosition,
-							behavior: 'smooth',
-						} );
-					}
+					scrollToTarget( clickedPair.target );
 				} );
 			} );
 
-			if ( tabBehavior === 'scroll' ) {
-				const offset = parseInt(
-					wrapper.getAttribute( 'data-offset' ) || '250',
-					10
-				);
+			const updateActiveTabFromScroll = function () {
+				const offset = getOffset();
+				const scrollPoint = window.pageYOffset + offset;
+				const firstPair = sectionPairs[ 0 ];
+				const wrapperBottom =
+					getTopPosition( wrapper ) + wrapper.offsetHeight;
+				let currentTab = null;
 
-				window.addEventListener( 'scroll', function () {
-					let currentTab = null;
+				if ( firstPair && scrollPoint <= wrapperBottom ) {
+					setActiveTab( firstPair.tab );
+					return;
+				}
 
-					sectionPairs.forEach( function ( item ) {
-						const rect = item.target.getBoundingClientRect();
-						if ( rect.top <= offset && rect.bottom > offset ) {
-							currentTab = item.tab;
-						}
-					} );
+				if ( tabBehavior !== 'scroll' ) {
+					return;
+				}
 
-					if ( currentTab ) {
-						setActiveTab( currentTab );
+				sectionPairs.forEach( function ( item ) {
+					const targetTop = getTopPosition( item.target );
+					const targetBottom = targetTop + item.target.offsetHeight;
+
+					if ( targetTop <= scrollPoint && targetBottom > scrollPoint ) {
+						currentTab = item.tab;
 					}
 				} );
-			}
+
+				if ( currentTab ) {
+					setActiveTab( currentTab );
+				}
+			};
+
+			window.addEventListener( 'scroll', updateActiveTabFromScroll );
 		} );
 } );

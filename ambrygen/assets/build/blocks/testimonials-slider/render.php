@@ -23,7 +23,7 @@ $ambrygen_attributes = is_array($attributes ?? null) ? $attributes : array();
 $ambrygen_block_id = $ambrygen_attributes['blockId'] ?? '';
 $ambrygen_title = $ambrygen_attributes['title'] ?? 'Words from the Team';
 $ambrygen_heading_level = $ambrygen_attributes['headingLevel'] ?? 'h2';
-$ambrygen_testimonials = is_array($ambrygen_attributes['testimonials'] ?? null) ? $ambrygen_attributes['testimonials'] : array();
+$ambrygen_content = isset($content) ? trim((string) $content) : '';
 $ambrygen_graphic_left_id = isset($ambrygen_attributes['graphicLeftId']) ? absint($ambrygen_attributes['graphicLeftId']) : 0;
 $ambrygen_graphic_left_url = isset($ambrygen_attributes['graphicLeftUrl']) ? esc_url($ambrygen_attributes['graphicLeftUrl']) : '';
 $ambrygen_graphic_left_alt = isset($ambrygen_attributes['graphicLeftAlt']) ? sanitize_text_field($ambrygen_attributes['graphicLeftAlt']) : '';
@@ -32,7 +32,7 @@ $ambrygen_graphic_right_url = isset($ambrygen_attributes['graphicRightUrl']) ? e
 $ambrygen_graphic_right_alt = isset($ambrygen_attributes['graphicRightAlt']) ? sanitize_text_field($ambrygen_attributes['graphicRightAlt']) : '';
 
 $ambrygen_wrapper_args = array(
-	'class' => 'testimonial-slider testingsssss',
+	'class' => 'testimonial-slider ',
 );
 
 if ($ambrygen_block_id) {
@@ -92,50 +92,26 @@ $ambrygen_heading_level = in_array($ambrygen_heading_level, array('h1', 'h2', 'h
 			<?php endif; ?>
 		</div>
 		<div class="is-style-gl-s50"></div>
-		<?php if (!empty($ambrygen_testimonials)): ?>
+		<?php if ('' !== $ambrygen_content): ?>
 			<div class="testimonial-slider__swiper">
-				<div class="testimonial-slider-wrapper swiper testimonial-swiper">
+				<div
+					class="testimonial-slider-wrapper swiper testimonial-swiper"
+					data-slides-per-view="<?php echo esc_attr(max(1, (int) ($ambrygen_attributes['slidesPerView'] ?? 1))); ?>"
+					data-autoplay="<?php echo !empty($ambrygen_attributes['autoplay']) ? 'true' : 'false'; ?>"
+				>
 					<div class="swiper-wrapper">
-						<?php foreach ($ambrygen_testimonials as $ambrygen_testimonial): ?>
-							<?php
-							$ambrygen_content = isset($ambrygen_testimonial['content']) ? wp_kses_post($ambrygen_testimonial['content']) : '';
-							$ambrygen_image_id = isset($ambrygen_testimonial['imageId']) ? absint($ambrygen_testimonial['imageId']) : 0;
-							$ambrygen_image_url = isset($ambrygen_testimonial['imageUrl']) ? esc_url($ambrygen_testimonial['imageUrl']) : '';
-							$ambrygen_image_alt = isset($ambrygen_testimonial['imageAlt']) ? sanitize_text_field($ambrygen_testimonial['imageAlt']) : '';
-							?>
-							<div class="swiper-slide">
-								<div class="testimonial-slider__card">
-									<?php if ($ambrygen_content): ?>
-										<div class="testimonial-slider__quote heading-5 mb-0">
-											<?php echo $ambrygen_content; ?>
-										</div>
-									<?php endif; ?>
-									<div class="is-style-gl-s24"></div>
-									<?php if ($ambrygen_image_id || $ambrygen_image_url): ?>
-										<div class="testimonial-slider__logo">
-											<?php if ($ambrygen_image_id): ?>
-												<?php
-												echo Helper::image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-													$ambrygen_image_id,
-													'full',
-													array(
-														'alt' => $ambrygen_image_alt,
-														'loading' => 'lazy',
-													)
-												);
-												?>
-											<?php elseif ($ambrygen_image_url): ?>
-												<img src="<?php echo esc_url($ambrygen_image_url); ?>"
-													alt="<?php echo esc_attr($ambrygen_image_alt); ?>" loading="lazy" />
-											<?php endif; ?>
-										</div>
-									<?php endif; ?>
-								</div>
-							</div>
-						<?php endforeach; ?>
+						<?php echo $ambrygen_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					</div>
 				</div>
-				<div class="swiper-pagination testimonial-swiper-pagination"></div>
+				<?php if (!empty($ambrygen_attributes['showNavigation'])): ?>
+					<div class="swiper-buttons">
+						<button type="button" class="custom-prev" aria-label="<?php esc_attr_e('Previous testimonial', 'ambrygen-web'); ?>"></button>
+						<button type="button" class="custom-next" aria-label="<?php esc_attr_e('Next testimonial', 'ambrygen-web'); ?>"></button>
+					</div>
+				<?php endif; ?>
+				<?php if (!empty($ambrygen_attributes['showPagination'])): ?>
+					<div class="swiper-pagination testimonial-swiper-pagination"></div>
+				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 	</div>

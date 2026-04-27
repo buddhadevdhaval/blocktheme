@@ -92,7 +92,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					tagName={ headingTag }
 					className="careers-highlight__title block__rowflex--heading-title heading-4 mb-0"
 					value={ heading }
-					placeholder={ __( 'Add heading…', 'ambrygen-web' ) }
+					placeholder={ __( 'Add heading...', 'ambrygen-web' ) }
 					allowedFormats={ [ 'core/bold', 'core/italic' ] }
 					onChange={ ( val ) => setAttributes( { heading: val } ) }
 				/>
@@ -100,7 +100,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					tagName="div"
 					className="careers-highlight__intro block__rowflex--block-content subtitle1-reg"
 					value={ description }
-					placeholder={ __( 'Add description…', 'ambrygen-web' ) }
+					placeholder={ __( 'Add description...', 'ambrygen-web' ) }
 					allowedFormats={ [
 						'core/bold',
 						'core/italic',

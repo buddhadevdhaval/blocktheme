@@ -1,74 +1,74 @@
-@use "../../variables/breakpoints" as bp;
-@use "../../variables/fluid_mixins" as *;
+// @use "../../variables/breakpoints" as bp;
+// @use "../../variables/fluid_mixins" as *;
 
-// ============================================================
-// Awards & Recognition Block
-// ============================================================
+// // ============================================================
+// // Awards & Recognition Block
+// // ============================================================
 
-.awards-block {
-
-
-    &__ctas {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        flex-wrap: wrap;
-    }
-}
+// .awards-block {
 
 
-// ============================================================
-// Awards Listing Grid (outside wrapper — full container bleed)
-// ============================================================
+//     &__ctas {
+//         display: flex;
+//         align-items: center;
+//         gap: 16px;
+//         flex-wrap: wrap;
+//     }
+// }
 
-.awards-block_listing {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: fluid(12, 24);
-    // padding: 0 fluid(24, 80);
 
-    @include bp.max(md) {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
-    }
+// // ============================================================
+// // Awards Listing Grid (outside wrapper — full container bleed)
+// // ============================================================
 
-    @include bp.max(sm) {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-    }
+// .awards-block_listing {
+//     display: grid;
+//     grid-template-columns: repeat(4, 1fr);
+//     gap: fluid(12, 24);
+//     // padding: 0 fluid(24, 80);
 
-    &__item {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: fluid(8, 16);
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+//     @include bp.max(md) {
+//         grid-template-columns: repeat(3, 1fr);
+//         gap: 16px;
+//     }
 
-        @media (prefers-reduced-motion: no-preference) {
-            transition: background 0.25s ease, transform 0.25s ease;
-        }
+//     @include bp.max(sm) {
+//         grid-template-columns: repeat(2, 1fr);
+//         gap: 12px;
+//     }
 
-        &:hover {
-            background: rgba(255, 255, 255, 0.10);
-            // transform: translateY(-4px);
-        }
+//     &__item {
+//         display: flex;
+//         align-items: center;
+//         justify-content: center;
+//         padding: fluid(8, 16);
+//         border-radius: 12px;
+//         background: rgba(255, 255, 255, 0.04);
+//         border: 1px solid rgba(255, 255, 255, 0.08);
 
-        img {
-            width: 100%;
-            height: auto;
-            max-height: 160px;
-            object-fit: contain;
-            display: block;
+//         @media (prefers-reduced-motion: no-preference) {
+//             transition: background 0.25s ease, transform 0.25s ease;
+//         }
 
-            @include bp.max(md) {
-                max-height: 120px;
-            }
-        }
-    }
-}
+//         &:hover {
+//             background: rgba(255, 255, 255, 0.10);
+//             // transform: translateY(-4px);
+//         }
 
-// ============================================================
-// Awards & Recognition Block - END
-// ============================================================
+//         img {
+//             width: 100%;
+//             height: auto;
+//             max-height: 160px;
+//             object-fit: contain;
+//             display: block;
+
+//             @include bp.max(md) {
+//                 max-height: 120px;
+//             }
+//         }
+//     }
+// }
+
+// // ============================================================
+// // Awards & Recognition Block - END
+// // ============================================================

@@ -10,6 +10,86 @@ final class WebinarRenderer
 {
     use Singleton;
 
+    private function is_checkbox_enabled(int $post_id, string $meta_key): bool
+    {
+        $value = (string) get_post_meta($post_id, $meta_key, true);
+
+        return '' !== $value && '0' !== $value && 'false' !== $value;
+    }
+
+    private function get_webinar_author_entries(int $post_id): array
+    {
+        $rows = get_post_meta($post_id, 'webinar_authors', true);
+        $entries = [];
+
+        if (is_array($rows)) {
+            foreach ($rows as $row) {
+                if (! is_array($row)) {
+                    continue;
+                }
+
+                $author_id = isset($row['linked_author']) ? absint($row['linked_author']) : 0;
+                if ($author_id <= 0) {
+                    continue;
+                }
+
+                $author_post = get_post($author_id);
+                if (! $author_post || 'author' !== $author_post->post_type) {
+                    continue;
+                }
+
+                $override_image_id = isset($row['image_id']) ? absint($row['image_id']) : 0;
+                $designation       = isset($row['designation']) ? sanitize_text_field((string) $row['designation']) : '';
+                $bio               = isset($row['bio']) ? wp_kses_post((string) $row['bio']) : '';
+
+                $entries[] = [
+                    'author_id'    => $author_id,
+                    'title'        => get_the_title($author_id),
+                    'designation'  => '' !== $designation ? $designation : (string) get_post_meta($author_id, 'user_designation', true),
+                    'excerpt'      => get_the_excerpt($author_id),
+                    'content'      => '' !== trim(wp_strip_all_tags($bio)) ? $bio : apply_filters('the_content', $author_post->post_content),
+                    'image_id'     => $override_image_id > 0 ? $override_image_id : get_post_thumbnail_id($author_id),
+                ];
+            }
+        }
+
+        if (! empty($entries)) {
+            return $entries;
+        }
+
+        $author_ids = get_post_meta($post_id, 'linked_author', true);
+        if (empty($author_ids)) {
+            return [];
+        }
+
+        if (! is_array($author_ids)) {
+            $author_ids = [$author_ids];
+        }
+
+        foreach (array_filter($author_ids) as $author_id) {
+            $author_id = absint($author_id);
+            if ($author_id <= 0) {
+                continue;
+            }
+
+            $author_post = get_post($author_id);
+            if (! $author_post || 'author' !== $author_post->post_type) {
+                continue;
+            }
+
+            $entries[] = [
+                'author_id'   => $author_id,
+                'title'       => get_the_title($author_id),
+                'designation' => (string) get_post_meta($author_id, 'user_designation', true),
+                'excerpt'     => get_the_excerpt($author_id),
+                'content'     => apply_filters('the_content', $author_post->post_content),
+                'image_id'    => get_post_thumbnail_id($author_id),
+            ];
+        }
+
+        return $entries;
+    }
+
     public function render_webinar_grid_card(int $post_id): string
     {
         if (!$post_id) {
@@ -22,29 +102,47 @@ final class WebinarRenderer
         $subtitle = (string) get_post_meta($post_id, 'subtitle', true);
         $start_at = (string) get_post_meta($post_id, 'start_at', true);
         $duration = (string) get_post_meta($post_id, 'duration', true);
-        $ceu = (string) get_post_meta($post_id, 'ceu', true);
-        $pace = (string) get_post_meta($post_id, 'pace', true);
+        $has_ceu = $this->is_checkbox_enabled($post_id, 'ceu');
+        $has_pace = $this->is_checkbox_enabled($post_id, 'pace');
         $registration_link = (string) get_post_meta($post_id, 'registration_link', true);
 
         $start_ts = $start_at ? strtotime($start_at) : false;
         $date_display = $start_ts ? date_i18n('l, F j, Y', $start_ts) : '';
-        $time_display = $start_ts ? date_i18n('g:i a T', $start_ts) : '';
+        
+        $time_display = '';
+        if ($start_at) {
+            try {
+                $date = new \DateTime($start_at, new \DateTimeZone('UTC'));
+                $date->setTimezone(new \DateTimeZone('America/Los_Angeles'));
+                $time_display = $date->format('g:ia T');
+            } catch (\Exception $e) {
+                $time_display = $start_ts ? date_i18n('g:ia T', $start_ts) : '';
+            }
+        }
         $day_badge = $start_ts ? date_i18n('jS', $start_ts) : '';
         $month_badge = $start_ts ? strtoupper(date_i18n('M', $start_ts)) : '';
 
         $duration_mins = (int) $duration;
         $duration_display = '';
         if ($duration_mins > 0) {
-            if ($duration_mins < 60) {
-                $duration_display = $duration_mins . ' ' . _n('minute', 'minutes', $duration_mins, 'ambrygen');
-            } else {
-                $duration_hours = $duration_mins / 60;
-                if ($duration_hours == (int) $duration_hours) {
-                    $duration_label = (1 === (int) $duration_hours) ? __('hour', 'ambrygen') : __('hours', 'ambrygen');
-                    $duration_display = (int) $duration_hours . ' ' . $duration_label;
-                } else {
-                    $duration_display = $duration_hours . ' ' . __('hours', 'ambrygen');
+            $hours = floor($duration_mins / 60);
+            $mins = $duration_mins % 60;
+
+            if ($hours > 0) {
+                $duration_display = sprintf(
+                    _n('%d hour', '%d hours', $hours, 'ambrygen'),
+                    $hours
+                );
+            }
+
+            if ($mins > 0) {
+                if ($hours > 0) {
+                    $duration_display .= ' ' . __('and', 'ambrygen') . ' ';
                 }
+                $duration_display .= sprintf(
+                    _n('%d minute', '%d minutes', $mins, 'ambrygen'),
+                    $mins
+                );
             }
         }
 
@@ -105,18 +203,16 @@ final class WebinarRenderer
                             <?php echo esc_html($duration_display); ?>
                         </div>
                     <?php endif; ?>
-                    <?php if ('' !== $ceu): ?>
+                    <?php if ($has_ceu): ?>
                         <div class="text-md-medium event-carousel__ceu-row flag-info flag-book-info">
                             <span class="event-carousel__meta-list-icon flag-icon"></span>
                             <span class="event-carousel__meta-label">C.E.U.:</span>
-                            <span class="event-carousel__ceu-text"><?php echo esc_html($ceu); ?></span>
                         </div>
                     <?php endif; ?>
-                    <?php if ('' !== $pace): ?>
+                    <?php if ($has_pace): ?>
                         <div class="text-md-medium event-carousel__pace-row flag-info flag-flask-info">
                             <span class="event-carousel__meta-list-icon flag-icon"></span>
                             <span class="event-carousel__meta-label">P.A.C.E.:</span>
-                            <span class="event-carousel__pace-text"><?php echo esc_html($pace); ?></span>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -150,26 +246,44 @@ final class WebinarRenderer
 
         $start_at = (string) get_post_meta($post_id, 'start_at', true);
         $duration = (string) get_post_meta($post_id, 'duration', true);
-        $ceu      = (string) get_post_meta($post_id, 'ceu', true);
-        $pace     = (string) get_post_meta($post_id, 'pace', true);
+        $has_ceu  = $this->is_checkbox_enabled($post_id, 'ceu');
+        $has_pace = $this->is_checkbox_enabled($post_id, 'pace');
 
         $start_ts     = $start_at ? strtotime($start_at) : false;
         $date_display = $start_ts ? date_i18n('l, F j, Y', $start_ts) : '';
-        $time_display = $start_ts ? date_i18n('g:i a T', $start_ts) : '';
+        
+        $time_display = '';
+        if ($start_at) {
+            try {
+                $date = new \DateTime($start_at, new \DateTimeZone('UTC'));
+                $date->setTimezone(new \DateTimeZone('America/Los_Angeles'));
+                $time_display = $date->format('g:ia T');
+            } catch (\Exception $e) {
+                $time_display = $start_ts ? date_i18n('g:ia T', $start_ts) : '';
+            }
+        }
 
-        $duration_mins    = (int) $duration;
+        $duration_mins = (int) $duration;
         $duration_display = '';
         if ($duration_mins > 0) {
-            if ($duration_mins < 60) {
-                $duration_display = $duration_mins . ' ' . _n('minute', 'minutes', $duration_mins, 'ambrygen-web');
-            } else {
-                $duration_hours = $duration_mins / 60;
-                if ($duration_hours == (int) $duration_hours) {
-                    $duration_label   = (1 === (int) $duration_hours) ? __('hour', 'ambrygen-web') : __('hours', 'ambrygen-web');
-                    $duration_display = (int) $duration_hours . ' ' . $duration_label;
-                } else {
-                    $duration_display = $duration_hours . ' ' . __('hours', 'ambrygen-web');
+            $hours = floor($duration_mins / 60);
+            $mins = $duration_mins % 60;
+
+            if ($hours > 0) {
+                $duration_display = sprintf(
+                    _n('%d hour', '%d hours', $hours, 'ambrygen-web'),
+                    $hours
+                );
+            }
+
+            if ($mins > 0) {
+                if ($hours > 0) {
+                    $duration_display .= ' ' . __('and', 'ambrygen-web') . ' ';
                 }
+                $duration_display .= sprintf(
+                    _n('%d minute', '%d minutes', $mins, 'ambrygen-web'),
+                    $mins
+                );
             }
         }
 
@@ -197,19 +311,17 @@ final class WebinarRenderer
                 </div>
             <?php endif; ?>
 
-            <?php if (!empty($ceu)) : ?>
+            <?php if ($has_ceu) : ?>
                 <div class="text-md-medium event-carousel__ceu-row flag-info flag-book-info">
                     <span class="event-carousel__meta-list-icon flag-icon"></span>
                     <span class="event-carousel__meta-label"><?php esc_html_e('C.E.U.:', 'ambrygen-web'); ?></span>
-                    <span class="event-carousel__ceu-text"><?php echo esc_html($ceu); ?></span>
                 </div>
             <?php endif; ?>
 
-            <?php if (!empty($pace)) : ?>
+            <?php if ($has_pace) : ?>
                 <div class="text-md-medium event-carousel__pace-row flag-info flag-flask-info">
                     <span class="event-carousel__meta-list-icon flag-icon"></span>
                     <span class="event-carousel__meta-label"><?php esc_html_e('P.A.C.E.:', 'ambrygen-web'); ?></span>
-                    <span class="event-carousel__pace-text"><?php echo esc_html($pace); ?></span>
                 </div>
             <?php endif; ?>
         </div>
@@ -256,27 +368,41 @@ final class WebinarRenderer
         return ob_get_clean();
     }
 
+    public function render_webinar_registration_button(int $post_id, array $attributes = []): string
+    {
+        if (!$post_id) {
+            return '';
+        }
+
+        $registration_link = (string) get_post_meta($post_id, 'registration_link', true);
+
+        if (empty($registration_link)) {
+            return '';
+        }
+
+        $new_tab = isset($attributes['newTab']) ? (bool) $attributes['newTab'] : true;
+        $target  = $new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+
+        ob_start();
+        ?>
+        <div class="banner-btn">
+            <a class="site-btn is-style-site-trailing-icon" href="<?php echo esc_url($registration_link); ?>" 
+               title="<?php esc_attr_e('Register Now', 'ambrygen-web'); ?>" role="Button"
+               aria-label="<?php esc_attr_e('Register Now', 'ambrygen-web'); ?>"<?php echo $target; ?>><?php esc_html_e('Register Now', 'ambrygen-web'); ?></a>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
     public function render_author_swiper(int $post_id, array $attributes = []): string
     {
         if (!$post_id) {
             return '';
         }
 
-        $author_ids = get_post_meta($post_id, 'linked_author', true);
-        
-        // Ensure we have a valid array of IDs
-        if (empty($author_ids)) {
-            return '';
-        }
+        $author_entries = $this->get_webinar_author_entries($post_id);
 
-        if (!is_array($author_ids)) {
-            $author_ids = [$author_ids];
-        }
-        
-        // Filter out any zero or empty values
-        $author_ids = array_filter($author_ids);
-        
-        if (empty($author_ids)) {
+        if (empty($author_entries)) {
             return '';
         }
 
@@ -293,7 +419,7 @@ final class WebinarRenderer
 
         ob_start();
         ?>
-        <div class="wp-block-group author-slider-block container-1280">
+        <div class="wp-block-group author-slider-block container-1280 bg-lightblue-gradient">
             <div class="graphic-images" aria-hidden="true">
                 <div class="graphic-images__overlay-left graphic-images__img-block">
                     <img decoding="async" src="<?php echo esc_url($graphic_left); ?>" class="overlay__img" loading="lazy" alt="" width="1024" height="1024">
@@ -307,39 +433,27 @@ final class WebinarRenderer
 
             <div class="author-slider swiper wrapper">
                 <div class="swiper-wrapper">
-                    <?php foreach ($author_ids as $author_id) : ?>
-                        <?php 
-                        $author_post = get_post($author_id);
-                        if (!$author_post || 'author' !== $author_post->post_type) {
-                            continue;
-                        }
-
-                        $title       = get_the_title($author_id);
-                        $designation = get_post_meta($author_id, 'designation', true);
-                        $excerpt     = get_the_excerpt($author_id);
-                        $content     = apply_filters('the_content', $author_post->post_content);
-                        $image_id    = get_post_thumbnail_id($author_id);
-                        ?>
+                    <?php foreach ($author_entries as $author_entry) : ?>
                         <div class="swiper-slide">
                             <div class="author-slider__card">
                                 <div class="author-slider__media">
-                                    <?php if ($image_id) : ?>
-                                        <?php echo \Ambrygen\Theme\Core\Helper::image($image_id, 'large', ['class' => 'author-slider__image']); ?>
+                                    <?php if (!empty($author_entry['image_id'])) : ?>
+                                        <?php echo \Ambrygen\Theme\Core\Helper::image((int) $author_entry['image_id'], 'large', ['class' => 'author-slider__image']); ?>
                                     <?php else : ?>
                                         <div class="author-slider__image placeholder"></div>
                                     <?php endif; ?>
                                 </div>
                                 <div class="author-slider__content">
-                                    <div class="heading-5 author-slider__name"><?php echo esc_html($title); ?></div>
+                                    <div class="heading-5 author-slider__name"><?php echo esc_html($author_entry['title']); ?></div>
                                     <div class="is-style-gl-s8" aria-hidden="true"></div>
-                                    <div class="text-md-medium author-slider__job-title"><?php echo esc_html($designation); ?></div>
+                                    <div class="text-md-medium author-slider__job-title"><?php echo esc_html($author_entry['designation']); ?></div>
                                     <div class="is-style-gl-s4" aria-hidden="true"></div>
-                                    <?php if (!empty($excerpt)) : ?>
-                                        <div class="text-sm-regular author-slider__disambiguation"><?php echo esc_html($excerpt); ?></div>
+                                    <?php if (!empty($author_entry['excerpt'])) : ?>
+                                        <div class="text-sm-regular author-slider__disambiguation"><?php echo esc_html($author_entry['excerpt']); ?></div>
                                     <?php endif; ?>
                                     <div class="is-style-gl-s16" aria-hidden="true"></div>
                                     <div class="text-md-regular author-slider__description">
-                                        <?php echo wp_kses_post($content); ?>
+                                        <?php echo wp_kses_post($author_entry['content']); ?>
                                     </div>
                                 </div>
                             </div>
@@ -353,6 +467,55 @@ final class WebinarRenderer
             </div>
 
             <div class="is-style-gl-s50" aria-hidden="true"></div>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
+    public function render_webinar_additional_info(int $post_id): string
+    {
+        $options = get_option('ambrygen_theme_options');
+        $content = $options['webinar_additional_content'] ?? [];
+        $sections = [];
+
+        if ($this->is_checkbox_enabled($post_id, 'ceu') && !empty($content['ceu']) && is_array($content['ceu'])) {
+            $sections[] = $content['ceu'];
+        }
+
+        if ($this->is_checkbox_enabled($post_id, 'pace') && !empty($content['pace']) && is_array($content['pace'])) {
+            $sections[] = $content['pace'];
+        }
+
+        if (empty($sections)) {
+            return '';
+        }
+
+        ob_start();
+        ?>
+        <div class="webinar-additional-info">
+            <div class="webinar-additional-info__grid">
+                <?php foreach ($sections as $section) : 
+                    $title   = isset($section['title']) ? (string) $section['title'] : '';
+                    $logo_id = isset($section['image_id']) ? absint($section['image_id']) : 0;
+                    $desc    = isset($section['desc']) ? $section['desc'] : '';
+                    if (!$logo_id && '' === trim($title) && empty(trim(wp_strip_all_tags($desc)))) continue;
+                ?>
+                    <div class="webinar-additional-info__item" style="margin-bottom: 24px;">
+
+                        <?php if ($logo_id) : ?>
+                            <div class="webinar-additional-info__logo" style="margin-bottom: 8px;">
+                                <?php echo wp_get_attachment_image($logo_id, 'full'); ?>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <?php if ($desc) : ?>
+                            <div class="webinar-additional-info__description text-md-regular">
+                                <p><?php echo wp_kses_post($desc); ?></p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
         </div>
         <?php
         return ob_get_clean();

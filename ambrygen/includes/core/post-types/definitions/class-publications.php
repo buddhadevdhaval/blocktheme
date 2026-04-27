@@ -32,11 +32,16 @@ class Publications extends AbstractPostType {
 		return 'dashicons-media-document';
 	}
 
+	public function has_archive(): bool {
+		return true;
+	}
+
 	public function extra_args(): array {
 		return array(
 			'rewrite' => array(
 				'slug' => 'peer-reviewed-publication',
 			),
+			'has_archive' => 'peer-reviewed-publications',
 		);
 	}
 

@@ -33,13 +33,55 @@ class Authors extends AbstractPostType {
 	}
 
 	public function supports(): array {
-		return array( 'title', 'author', 'thumbnail', 'excerpt', 'custom-fields' );
+		return array( 'title', 'author', 'thumbnail', 'excerpt', 'custom-fields','editor' );
 	}
 
 	public function meta_fields(): array {
 		return array(
-			'designation' => array(
+			'user_designation' => array(
 				'label' => __( 'Designation', 'ambrygen' ),
+				'type'  => 'text',
+			),
+			'address_line1' => array(
+				'label' => __( 'Address Line 1', 'ambrygen' ),
+				'type'  => 'text',
+			),
+			'address_line2' => array(
+				'label' => __( 'Address Line 2', 'ambrygen' ),
+				'type'  => 'text',
+			),
+			'city' => array(
+				'label' => __( 'City', 'ambrygen' ),
+				'type'  => 'text',
+			),
+			'birth_date' => array(
+				'label' => __( 'Birth Date', 'ambrygen' ),
+				'type'  => 'date',
+			),
+			'country' => array(
+				'label' => __( 'Country', 'ambrygen' ),
+				'type'  => 'text',
+			),
+			'image_gallry' => array(
+				'label' => __( 'Image Gallery', 'ambrygen' ),
+				'type'  => 'media_gallery',
+			),
+			'small_image'  => array(
+				'label' => __( 'Small Image', 'ambrygen' ),
+				'type'  => 'media_file',
+				'sanitize' => 'absint',
+			),
+			'large_image'  => array(
+				'label' => __( 'Large Image', 'ambrygen' ),
+				'type'  => 'media_file',
+				'sanitize' => 'absint',
+			),
+			'email' => array(
+				'label' => __( 'Email', 'ambrygen' ),
+				'type'  => 'email',
+			),
+			'phone_number' => array(
+				'label' => __( 'Phone Number', 'ambrygen' ),
 				'type'  => 'text',
 			),
 		);

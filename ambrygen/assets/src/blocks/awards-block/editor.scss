@@ -1,0 +1,7 @@
+.marquee-slide {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+
+    .awards-block_listing__item {}
+}

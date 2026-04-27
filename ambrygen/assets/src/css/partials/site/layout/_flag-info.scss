@@ -106,6 +106,12 @@
 			}
 		}
 
+		&.flag-marker-pin {
+			.flag-icon {
+				background-image: url(../images/primary700-icons/marker-pin-variation-icon.svg);
+			}
+		}
+
 		.flag-label {
 			font-size: var(--theme_font_size_8);
 			font-weight: 600;

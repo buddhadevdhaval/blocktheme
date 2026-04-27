@@ -1,3 +1,35 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+
+.genes-table__search {
+	form {
+		position: relative;
+		max-width: 640px;
+
+		@include bp.max(md) {
+			max-width: 100%;
+		}
+
+		.genes-table__search-button {
+			background-image: url(../../images/search-icon.svg);
+			background-color: transparent;
+			background-repeat: no-repeat;
+			background-size: 20px;
+			border: none;
+			font-size: 0;
+			height: 20px;
+			margin: 0;
+			padding: 0;
+			position: absolute;
+			right: 16px;
+			top: 14px;
+			width: 20px;
+		}
+	}
+}
+
+
 .genes-table {
-	/* Intentionally empty for now; relies on existing gl-data-table styles. */
+	.gl-data-table  {
+		margin: 24px 0 0 0;
+	}
 }

@@ -208,6 +208,15 @@
 		@include bp.max(md) {
 			padding-top: 0;
 		}
+
+		.agenda-card__event-link {
+			color: var(--theme_body_color);
+			border: none;
+			padding-bottom: 0;
+			&:hover {
+				color: var(--theme_link_color);
+			}
+		}
 	}
 
 	&__row {
@@ -242,6 +251,7 @@
 
 		@include bp.max(md) {
 			min-width: 0;
+			flex: 100% 0 0;
 		}
 	}
 

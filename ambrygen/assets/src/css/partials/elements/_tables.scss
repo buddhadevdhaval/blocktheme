@@ -33,7 +33,7 @@ table {
 
 tr,
 tbody tr {
-	border-bottom: 1px solid var(--theme_table_border_color);
+	border-bottom: 1px solid var(--theme_gray_200);
 
 	&:last-child {
 		border-bottom: none;
@@ -53,7 +53,7 @@ thead {
 	}
 
 	tr:last-child {
-		border-bottom: 1px solid var(--theme_table_head_border_color);
+		border-bottom: 1px solid var(--theme_gray_200);
 	}
 
 	th {
@@ -62,14 +62,14 @@ thead {
 }
 
 tfoot {
-	border-top: 1px solid var(--theme_table_foot_border_color);
+	border-top: 1px solid var(--theme_gray_200);
 
 	tr {
 		border: none;
 	}
 
 	tr:first-child {
-		border-top: 1px solid var(--theme_table_foot_border_color);
+		border-top: 1px solid var(--theme_gray_200);
 	}
 
 	td {
@@ -79,7 +79,7 @@ tfoot {
 
 
 .wp-block-table {
-	box-shadow: 0 4px 8px -2px rgba(16, 24, 40, 0.10), 0 2px 4px -2px rgba(16, 24, 40, 0.06);
+	// box-shadow: 0 4px 8px -2px rgba(16, 24, 40, 0.10), 0 2px 4px -2px rgba(16, 24, 40, 0.06);
 
 	.has-fixed-layout {
 		table-layout: fixed;
@@ -89,6 +89,20 @@ tfoot {
 	thead {
 		background-color: var(--theme_gray_50);
 		border-bottom: 1px solid var(--theme_gray_200);
+
+		tr {
+			th {
+				color: var(--theme_gray_500);
+			}
+		}
+	}
+
+	tbody {
+		tr {
+			td {
+				background-color: var(--theme_white);
+			}
+		}
 	}
 
 	th,
@@ -99,7 +113,7 @@ tfoot {
 
 	tfoot {
 		background-color: var(--theme_gray_50);
-		border-top: 1px solid var(--theme_table_foot_border_color);
+		border-top: 1px solid var(--theme_gray_200);
 
 		tr {
 			border: none;
@@ -127,7 +141,7 @@ tfoot {
 		tfoot {
 
 			tr {
-				border-top: 1px solid var(--theme_table_head_border_color);
+				border-top: 1px solid var(--theme_gray_200);
 			}
 		}
 
@@ -144,7 +158,7 @@ tfoot {
 		}
 
 		tfoot tr {
-			border-top: 1px solid var(--theme_table_head_border_color);
+			border-top: 1px solid var(--theme_gray_200);
 		}
 	}
 }
@@ -185,12 +199,23 @@ tfoot {
 
 	&__row {
 		display: grid;
+		// Fallback for 4-col tables; overridden by .gl-data-table--cols-* modifiers below
 		grid-template-columns: 280px 240px 1fr 160px;
 		align-items: stretch;
 		border-bottom: 1px solid var(--theme_gray_200);
 
 		&:last-child {
 			border-bottom: none;
+		}
+
+		&:has(.data-not-found) {
+			grid-template-columns: 1fr !important;
+
+			.data-not-found {
+				text-align: center;
+				display: block;
+				color: var(--theme_gray_900);
+			}
 		}
 
 		&--header {
@@ -205,13 +230,13 @@ tfoot {
 			}
 		}
 
-		@include bp.max(xl) {
-			grid-template-columns: 240px 200px 1fr 140px;
-		}
+		// @include bp.max(xl) {
+		// 	grid-template-columns: 240px 200px 1fr 140px;
+		// }
 
-		@include bp.max(lg) {
-			grid-template-columns: 200px 180px 1fr 120px;
-		}
+		// @include bp.max(lg) {
+		// 	grid-template-columns: 200px 180px 1fr 120px;
+		// }
 
 		@include bp.max(md) {
 			display: flex;
@@ -268,6 +293,71 @@ tfoot {
 					display: none;
 				}
 			}
+		}
+	}
+}
+
+/* -------------------------------------------------
+>> Dynamic column modifiers: .gl-data-table--cols-3 … --cols-7
+   Usage: add the modifier class to the .gl-data-table wrapper.
+   The __row elements will automatically inherit the correct grid.
+   Example: <div class="gl-data-table gl-data-table--cols-5">
+------------------------------------------------- */
+
+// Column config map: $cols -> (first-col, last-col, first-col-xl, last-col-xl, first-col-lg, last-col-lg)
+$gl-col-config: (
+	3: (260px, 160px, 220px, 140px, 180px, 120px),
+	4: (280px, 160px, 240px, 140px, 200px, 120px),
+	// matches the existing default
+	5: (240px, 200px, 200px, 200px, 150px, 150px),
+	6: (200px, 120px, 160px, 100px, 140px, 90px),
+	7: (180px, 110px, 150px, 90px, 120px, 80px),
+);
+
+@each $cols, $cfg in $gl-col-config {
+	$first: nth($cfg, 1);
+	$last: nth($cfg, 2);
+	$first-xl: nth($cfg, 3);
+	$last-xl: nth($cfg, 4);
+	$first-lg: nth($cfg, 5);
+	$last-lg: nth($cfg, 6);
+
+	// Middle columns = total - 2 (first + last)
+	$mid: $cols - 2;
+
+	.gl-data-table--cols-#{$cols} {
+		.gl-data-table__row {
+
+			// Desktop default
+			@if $mid >0 {
+				grid-template-columns: #{$first} repeat(#{$mid}, 1fr) #{$last};
+			}
+
+			@else {
+				grid-template-columns: #{$first} #{$last};
+			}
+
+			@include bp.max(xl) {
+				@if $mid >0 {
+					grid-template-columns: #{$first-xl} repeat(#{$mid}, 1fr) #{$last-xl};
+				}
+
+				@else {
+					grid-template-columns: #{$first-xl} #{$last-xl};
+				}
+			}
+
+			@include bp.max(lg) {
+				@if $mid >0 {
+					grid-template-columns: #{$first-lg} repeat(#{$mid}, 1fr) #{$last-lg};
+				}
+
+				@else {
+					grid-template-columns: #{$first-lg} #{$last-lg};
+				}
+			}
+
+			// md and below: already handled by the base __row stacking rules
 		}
 	}
 }

@@ -231,7 +231,7 @@ $ambrygen_content = $content ?? '';
 													<div class="badge badge--blue"><i class="badge__dot"></i>Product</div>
 												</div>
 											</div>
-											<a class="features-tabs__view-link site-btn is-style-site-text-btn has-icon icon-arrow-up"
+											<a class="features-tabs__view-link site-btn is-style-site-text-btn has-right-arrow"
 												href="<?php the_permalink(); ?>"
 												aria-label="<?php echo esc_attr('View test for ' . $ambrygen_post_title); ?>">
 												<?php esc_html_e('View Test', 'ambrygen-web'); ?>
@@ -285,7 +285,7 @@ $ambrygen_content = $content ?? '';
 						}
 						?>
 						<div class="block_rowflex-link js-gsap-fade">
-							<a class="site-btn is-style-site-text-btn has-icon icon-arrow-up text-14"
+							<a class="site-btn is-style-site-text-btn has-right-arrow text-14"
 								href="<?php echo esc_url($ambrygen_link['url']); ?>" <?php echo $ambrygen_target ? ' target="' . esc_attr($ambrygen_target) . '"' : ''; ?> 			<?php echo $ambrygen_rel ? ' rel="' . esc_attr($ambrygen_rel) . '"' : ''; ?>>
 								<?php echo esc_html($ambrygen_link['text']); ?>
 							</a>

@@ -9,77 +9,90 @@
  * @package ambrygen
  */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 use Ambrygen\Theme\Core\Helper;
 
-$ambrygen_attributes = $attributes ?? array();
-$ambrygen_eyebrow = $ambrygen_attributes['eyebrow'] ?? '';
-$ambrygen_heading = $ambrygen_attributes['heading'] ?? '';
-$ambrygen_description = $ambrygen_attributes['description'] ?? '';
-$ambrygen_variation = $ambrygen_attributes['variation'] ?? 'default';
-$ambrygen_block_id = $ambrygen_attributes['blockId'] ?? wp_unique_id('three-column-grid-');
-$ambrygen_is_header_vertical = $ambrygen_attributes['isHeaderVertical'] ?? false;
+$ambrygen_attributes         = is_array( $attributes ) ? $attributes : array();
+$ambrygen_eyebrow            = $ambrygen_attributes['eyebrow'] ?? '';
+$ambrygen_heading            = $ambrygen_attributes['heading'] ?? '';
+$ambrygen_description        = $ambrygen_attributes['description'] ?? '';
+$ambrygen_variation          = $ambrygen_attributes['variation'] ?? 'variation-1';
+$ambrygen_block_id           = isset( $ambrygen_attributes['blockId'] )
+	? sanitize_html_class( $ambrygen_attributes['blockId'] )
+	: sanitize_html_class( wp_unique_id( 'three-column-grid-' ) );
+$ambrygen_heading_tag        = Helper::get_heading_tag( $ambrygen_attributes['headingTag'] ?? 'h2', 'h2' );
+$ambrygen_allowed_variations = array( 'variation-1', 'variation-2' );
+$ambrygen_variation          = in_array( $ambrygen_variation, $ambrygen_allowed_variations, true ) ? $ambrygen_variation : 'variation-1';
+$ambrygen_variation_class    = 'variation-2' === $ambrygen_variation ? 'variation-three' : '';
+$ambrygen_show_eyebrow       = 'variation-2' !== $ambrygen_variation;
+$ambrygen_is_header_vertical = 'variation-2' !== $ambrygen_variation;
 
-$ambrygen_heading_tag = $ambrygen_attributes['headingTag'] ?? 'h2';
-$ambrygen_allowed_tags = array('h1', 'h2', 'h3', 'h4', 'h5', 'h6');
-$ambrygen_allowed_variations = array('default', 'variation-three');
-$ambrygen_heading_tag = in_array($ambrygen_heading_tag, $ambrygen_allowed_tags, true) ? $ambrygen_heading_tag : 'h2';
-$ambrygen_variation = in_array($ambrygen_variation, $ambrygen_allowed_variations, true) ? $ambrygen_variation : 'default';
-$ambrygen_variation_class = 'default' !== $ambrygen_variation ? sanitize_html_class($ambrygen_variation) : '';
+$ambrygen_has_heading        = '' !== trim( wp_strip_all_tags( $ambrygen_heading ) );
+$ambrygen_has_description    = '' !== trim( wp_strip_all_tags( $ambrygen_description ) );
+$ambrygen_has_eyebrow        = '' !== trim( wp_strip_all_tags( $ambrygen_eyebrow ) );
+$ambrygen_heading_id         = $ambrygen_has_heading ? wp_unique_id( 'three-column-grid-heading-' ) : '';
 
-$wrapper_attributes = get_block_wrapper_attributes(
-	array(
-		'id' => $ambrygen_block_id,
-		'class' => trim('block-layout our-approach ' . $ambrygen_variation_class),
-	)
+$wrapper_args = array(
+	'class' => trim( 'block-layout three-column-image-grid ' . $ambrygen_variation_class ),
 );
+
+if ( $ambrygen_block_id ) {
+	$wrapper_args['id'] = $ambrygen_block_id;
+}
+
+if ( $ambrygen_heading_id ) {
+	$wrapper_args['role']            = 'region';
+	$wrapper_args['aria-labelledby'] = $ambrygen_heading_id;
+}
+
+$wrapper_attributes = get_block_wrapper_attributes( $wrapper_args );
 ?>
 
 <div <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 
 	<div
-		class="our-approach__header block__rowflex is-<?php echo $ambrygen_is_header_vertical ? 'vertical' : 'horizontal'; ?>">
+		class="three-column-image-grid__header block__rowflex is-<?php echo esc_attr( $ambrygen_is_header_vertical ? 'vertical' : 'horizontal' ); ?>">
 
-		<div class="block-title mb-0 block__rowflex--heading-title js-gsap-fade our-approach__header__left">
-			<?php if ($ambrygen_eyebrow): ?>
+		<div class="block-title mb-0 block__rowflex--heading-title js-gsap-fade three-column-image-grid__header__left">
+			   <?php if ( $ambrygen_show_eyebrow && $ambrygen_has_eyebrow ) : ?>
 				<div class="hero-kicker js-gsap-fade">
-					<?php echo wp_kses_post($ambrygen_eyebrow); ?>
+					<?php echo wp_kses_post( $ambrygen_eyebrow ); ?>
 				</div>
 			<?php endif; ?>
 
-			<?php if ($ambrygen_eyebrow || $ambrygen_heading): ?>
+			   <?php if ( $ambrygen_show_eyebrow && $ambrygen_has_eyebrow && $ambrygen_has_heading ) : ?>
 				<div class="is-style-gl-s12" aria-hidden="true"></div>
 			<?php endif; ?>
 
-			<?php if ($ambrygen_heading): ?>
-				<<?php echo tag_escape($ambrygen_heading_tag); ?> class="heading-3 block-title mb-0 ">
+			<?php if ( $ambrygen_has_heading ) : ?>
+				<<?php echo tag_escape( $ambrygen_heading_tag ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-3 block-title mb-0 ">
 					<?php
 					echo wp_kses(
 						$ambrygen_heading,
 						Helper::allowed_heading_html()
 					);
 					?>
-				</<?php echo tag_escape($ambrygen_heading_tag); ?>>
+				</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 			<?php endif; ?>
 		</div>
 
-		<?php if ($ambrygen_description): ?>
+		<?php if ( $ambrygen_has_description ) : ?>
 			<div class="heading-content-wrapper">
 				<div class="block__rowflex--block-content subtitle1-reg js-gsap-fade">
-					<?php echo wp_kses_post($ambrygen_description); ?>
+					<?php echo wp_kses_post( $ambrygen_description ); ?>
 				</div>
 			</div>
 		<?php endif; ?>
 
 	</div>
 
-	<?php if ($ambrygen_heading || $ambrygen_description): ?>
+	<?php if ( $ambrygen_has_heading || $ambrygen_has_description ) : ?>
 		<div class="is-style-gl-s32" aria-hidden="true"></div>
 	<?php endif; ?>
 
-	<div class="our-approach__content">
-		<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	<div class="three-column-image-grid__content">
+		<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- InnerBlocks content is escaped by WordPress core. ?>
 	</div>
 
 </div>

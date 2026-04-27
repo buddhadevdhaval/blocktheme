@@ -1,5 +1,7 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+
 .collaborator-card {
-	border-top: 1px solid var(--theme_gray_201, #d9dee5);
+	border-top: 1px solid var(--theme_gray_201);
 	padding-top: 2rem;
 
 	&:first-child {
@@ -12,7 +14,7 @@
 		grid-template-columns: 140px minmax(0, 1fr);
 		gap: 2rem;
 
-		@media (max-width: 767px) {
+		@include bp.max(md) {
 			grid-template-columns: 1fr;
 		}
 	}
@@ -36,11 +38,11 @@
 	}
 
 	&__title {
-		color: var(--theme_primary, #003b6f);
+		color: var(--theme_color_primary);
 	}
 
 	&__description {
-		color: var(--theme_gray_900, #23323f);
+		color: var(--theme_gray_900);
 		line-height: 1.7;
 	}
 
@@ -55,7 +57,7 @@
 
 	&__links a,
 	&__website a {
-		color: var(--theme_cg_blue, #009bd2);
+		color: var(--theme_cg_blue);
 		text-decoration: none;
 	}
 

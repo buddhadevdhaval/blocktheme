@@ -2,31 +2,149 @@
 
 <!-- wp:group {"tagName":"main","className":"wp-block-group","htmlId":"main-content"} -->
 <main id="main-content" class="wp-block-group">
-	<!-- wp:group {"tagName":"section","className":"container-1136"} -->
-	<section class="wp-block-group container-1280">
+	<!-- wp:group {"tagName":"section","className":"container-1280 bg-primary_25 variation-hero-single"} -->
+	<section class="wp-block-group container-1280 bg-primary_25 variation-hero-single">
 		<!-- wp:group {"className":"wrapper"} -->
 		<div class="wp-block-group wrapper">
-			<!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
-			<div class="is-style-gl-s50" aria-hidden="true"></div>
+			<!-- wp:spacer {"height":"72px","className":"is-style-gl-s72"} -->
+			<div class="is-style-gl-s72" aria-hidden="true"></div>
 			<!-- /wp:spacer -->
 
-			<!-- wp:post-title {"level":1,"className":"heading-2 mb-3"} /-->
+			<!-- wp:columns {"verticalAlignment":"center","className":"hero-split-columns"} -->
+			<div class="wp-block-columns are-vertically-aligned-center hero-split-columns">
+				<!-- wp:column {"verticalAlignment":"center","width":"50%"} -->
+				<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:50%">
+					<!-- wp:ambrygen/post-hero-media {"className":"hero-featured-image"} /-->
+				</div>
+				<!-- /wp:column -->
 
-			<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap"},"className":"post-meta-details mb-4"} -->
-			<div class="wp-block-group post-meta-details mb-4">
-				<!-- wp:paragraph {"className":"body1 italic text-gray-400"} -->
-				<p class="body1 italic text-gray-400">Frankie Fann, MS, CGC | </p>
-				<!-- /wp:paragraph -->
-				<!-- wp:post-date {"format":"F j, Y","className":"body1 italic text-gray-400"} /-->
+				<!-- wp:column {"verticalAlignment":"center","width":"50%"} -->
+				<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:50%">
+		
+					<!-- wp:group {"className":"back-link"} -->
+					<div class="wp-block-group back-link">
+						<a class="site-btn is-style-site-text-btn has-icon prev-icon" href="#">Back to Blog</a>
+					</div>
+					<!-- /wp:group -->	
+
+					<!-- wp:spacer {"height":"24px","className":"is-style-gl-s24"} -->
+					<div class="is-style-gl-s24" aria-hidden="true"></div>
+					<!-- /wp:spacer -->
+
+					<!-- wp:post-terms {"term":"post_tag","className":"is-style-pill blog-hero-tags"} /-->
+
+					<!-- wp:post-title {"level":1,"className":"heading-2 mb-3"} /-->
+
+					<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap"},"className":"post-meta-details mb-4"} -->
+					<div class="wp-block-group post-meta-details mb-4">
+						<!-- wp:ambrygen/linked-authors /-->
+						<p class="body1 italic text-gray-400"> | </p>
+						<!-- /wp:paragraph -->
+						<!-- wp:post-date {"format":"F j, Y","className":"body1 italic text-gray-400"} /-->
+					</div>
+					<!-- /wp:group -->
+
+					<!-- wp:ambrygen/social-share /-->
+				</div>
+				<!-- /wp:column -->
 			</div>
-			<!-- /wp:group -->
+			<!-- /wp:columns -->
 
-			<!-- wp:post-content {"layout":{"type":"default"}} /-->
-
-			<!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
-			<div class="is-style-gl-s50" aria-hidden="true"></div>
+			<!-- wp:spacer {"height":"72px","className":"is-style-gl-s72"} -->
+			<div class="is-style-gl-s72" aria-hidden="true"></div>
+			<!-- /wp:spacer -->
+		</div>
+		<!-- /wp:group -->
+	</section>
+	<!-- /wp:group -->
+	<!-- wp:group {"tagName":"section","className":"container-1280 single-main-content"} -->
+	<section class="wp-block-group container-1280 single-main-content">
+		<!-- wp:group {"className":"wrapper"} -->
+		<div class="wp-block-group wrapper">
+			<!-- wp:spacer {"height":"72px","className":"is-style-gl-s72"} -->
+			<div class="is-style-gl-s72" aria-hidden="true"></div>
 			<!-- /wp:spacer -->
 
+			<!-- wp:columns {"className":"blog-post-content-columns"} -->
+			<div class="wp-block-columns blog-post-content-columns">
+				<!-- wp:column {"width":"70%"} -->
+				<div class="wp-block-column" style="flex-basis:70%">
+					<!-- wp:post-content {"layout":{"type":"default"}} /-->
+				</div>
+				<!-- /wp:column -->
+
+				<!-- wp:column {"width":"30%"} -->
+				<div class="wp-block-column" style="flex-basis:30%">
+					<!-- wp:group {"className":"sidebar-content"} -->
+					<div class="wp-block-group sidebar-content">
+						
+						<!-- wp:group {"className":"sidebar-block related-articles-section"} -->
+						<div class="wp-block-group sidebar-block related-articles-section">
+							<!-- wp:heading {"level":4,"className":"heading-5 mb-3"} -->
+							<h4 class="wp-block-heading heading-5 mb-3">Related Articles</h4>
+							<!-- /wp:heading -->
+							<!-- wp:query {"queryId":100,"query":{"perPage":3,"postType":"post","inherit":false},"className":"related-articles-query"} -->
+							<div class="wp-block-query related-articles-query">
+								<!-- wp:post-template -->
+								<!-- wp:group {"className":"related-article-item mb-4"} -->
+								<div class="wp-block-group related-article-item mb-4">
+									<div class="related-article-item__image mb-2">
+										<!-- wp:ambrygen/featured-image-fallback {"sizeSlug":"medium","isLink":true} /-->
+									</div>
+									<!-- wp:post-title {"level":5,"isLink":true,"className":"text-md-semibold mb-0"} /-->
+								</div>
+								<!-- /wp:group -->
+								<!-- /wp:post-template -->
+							</div>
+							<!-- /wp:query -->
+						</div>
+						<!-- /wp:group -->
+
+						<!-- wp:spacer {"height":"40px","className":"is-style-gl-s40"} -->
+						<div class="is-style-gl-s40" aria-hidden="true"></div>
+						<!-- /wp:spacer -->
+
+						<!-- wp:group {"className":"sidebar-block tag-cloud-section"} -->
+						<div class="wp-block-group sidebar-block tag-cloud-section">
+							<!-- wp:heading {"level":4,"className":"heading-5 mb-3"} -->
+							<h4 class="wp-block-heading heading-5 mb-3">Find Articles by Tags</h4>
+							<!-- /wp:heading -->
+							<!-- wp:tag-cloud {"taxonomy":"post_tag","numberOfTags":15} /-->
+						</div>
+						<!-- /wp:group -->
+
+						<!-- wp:spacer {"height":"40px","className":"is-style-gl-s40"} -->
+						<div class="is-style-gl-s40" aria-hidden="true"></div>
+						<!-- /wp:spacer -->
+
+						<!-- wp:ambrygen/newsletter-form {"heading":"Subscribe to Newsletter","headingTag":"h4","buttonText":"Sign Up"} /-->
+
+						<!-- wp:spacer {"height":"40px","className":"is-style-gl-s40"} -->
+						<div class="is-style-gl-s40" aria-hidden="true"></div>
+						<!-- /wp:spacer -->
+
+						<!-- wp:ambrygen/linked-authors {"title":"Authors","showExcerpt":true} /-->
+
+						<!-- wp:spacer {"height":"40px","className":"is-style-gl-s40"} -->
+						<div class="is-style-gl-s40" aria-hidden="true"></div>
+						<!-- /wp:spacer -->
+
+						<!-- wp:group {"className":"sidebar-block disclaimer-section"} -->
+						<div class="wp-block-group sidebar-block disclaimer-section">
+							<!-- wp:ambrygen/disclaimer-note /-->
+						</div>
+						<!-- /wp:group -->
+
+					</div>
+					<!-- /wp:group -->
+				</div>
+				<!-- /wp:column -->
+			</div>
+			<!-- /wp:columns -->
+
+			<!-- wp:spacer {"height":"72px","className":"is-style-gl-s72"} -->
+			<div class="is-style-gl-s72" aria-hidden="true"></div>
+			<!-- /wp:spacer -->
 		</div>
 		<!-- /wp:group -->
 	</section>

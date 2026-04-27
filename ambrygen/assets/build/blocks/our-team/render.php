@@ -16,15 +16,12 @@ use Ambrygen\Theme\Core\Helper;
 $ambrygen_attributes = isset( $attributes ) && is_array( $attributes )
 	? $attributes
 	: array();
-$ambrygen_block_id   = $ambrygen_attributes['blockId'] ?? '';
+$ambrygen_block_id   = isset( $ambrygen_attributes['blockId'] )
+	? sanitize_html_class( $ambrygen_attributes['blockId'] )
+	: '';
 
-$ambrygen_title = isset( $ambrygen_attributes['title'] )
-	? $ambrygen_attributes['title']
-	: 'Title';
-
-$ambrygen_intro = isset( $ambrygen_attributes['intro'] )
-	? $ambrygen_attributes['intro']
-	: 'We are proud to be leading the industry that we love and working together.';
+$ambrygen_title = $ambrygen_attributes['title'] ?? '';
+$ambrygen_intro = $ambrygen_attributes['intro'] ?? '';
 
 $ambrygen_heading_level = isset( $ambrygen_attributes['headingLevel'] )
 	? sanitize_key( $ambrygen_attributes['headingLevel'] )
@@ -41,6 +38,9 @@ if ( ! empty( $ambrygen_block_id ) ) {
 }
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_args );
+$ambrygen_offcanvas_name_id  = $ambrygen_block_id
+	? $ambrygen_block_id . '-team-offcanvas-name'
+	: wp_unique_id( 'team-offcanvas-name-' );
 ?>
 
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
@@ -79,7 +79,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 			class="offcanvas-sidebar__panel"
 			role="dialog"
 			aria-modal="true"
-			aria-label="<?php esc_attr_e( 'Team Member Details', 'ambrygen-web' ); ?>"
+			aria-labelledby="<?php echo esc_attr( $ambrygen_offcanvas_name_id ); ?>"
 		>
 			<button
 				type="button"
@@ -94,7 +94,10 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 					<img class="our-team-offcanvas__image" src="" alt="" />
 				</div>
 				<div class="our-team-offcanvas__meta">
-					<div class="our-team-offcanvas__name heading-4 mb-0"></div>
+					<div
+						id="<?php echo esc_attr( $ambrygen_offcanvas_name_id ); ?>"
+						class="our-team-offcanvas__name heading-4 mb-0"
+					></div>
 					<div class="our-team-offcanvas__role body1"></div>
 				</div>
 			</div>

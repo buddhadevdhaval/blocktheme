@@ -22,7 +22,13 @@ final class Helper {
 	/**
 	 * Constructor.
 	 */
-	protected function __construct() {}
+	protected function __construct() {
+		add_action( 'rest_api_init', array( $this, 'register_marketing_material_tracking_routes' ) );
+		add_action( 'wp_ajax_ambrygen_track_marketing_material_click', array( $this, 'handle_marketing_material_click' ) );
+		add_action( 'wp_ajax_nopriv_ambrygen_track_marketing_material_click', array( $this, 'handle_marketing_material_click' ) );
+	}
+
+	private const MARKETING_MATERIAL_TRACKING_META_KEY = '_marketing_material_file_tracking';
 
 	/**
 	 * Allowed HTML for headings (supports <mark>).
@@ -596,14 +602,22 @@ final class Helper {
 		$speakers = array_values( array_unique( $speakers ) );
 		sort( $speakers, SORT_NATURAL | SORT_FLAG_CASE );
 
-		$collaborators = get_terms(
-			array(
-				'taxonomy'   => 'collaborator',
-				'hide_empty' => false,
-				'orderby'    => 'name',
-				'order'      => 'ASC',
-			)
-		);
+		$collaborator_ids = array();
+		if ( ! empty( $presentation_ids ) ) {
+			$collaborator_ids = wp_get_object_terms( $presentation_ids, 'collaborator', array( 'fields' => 'ids' ) );
+		}
+
+		$collaborators = array();
+		if ( ! empty( $collaborator_ids ) && ! is_wp_error( $collaborator_ids ) ) {
+			$collaborators = get_terms(
+				array(
+					'taxonomy' => 'collaborator',
+					'include'  => array_unique( $collaborator_ids ),
+					'orderby'  => 'name',
+					'order'    => 'ASC',
+				)
+			);
+		}
 
 		if ( is_wp_error( $collaborators ) ) {
 			$collaborators = array();
@@ -653,14 +667,22 @@ final class Helper {
 		$authors = array_values( array_unique( $authors ) );
 		sort( $authors, SORT_NATURAL | SORT_FLAG_CASE );
 
-		$collaborators = get_terms(
-			array(
-				'taxonomy'   => 'collaborator',
-				'hide_empty' => false,
-				'orderby'    => 'name',
-				'order'      => 'ASC',
-			)
-		);
+		$collaborator_ids = array();
+		if ( ! empty( $poster_ids ) ) {
+			$collaborator_ids = wp_get_object_terms( $poster_ids, 'collaborator', array( 'fields' => 'ids' ) );
+		}
+
+		$collaborators = array();
+		if ( ! empty( $collaborator_ids ) && ! is_wp_error( $collaborator_ids ) ) {
+			$collaborators = get_terms(
+				array(
+					'taxonomy' => 'collaborator',
+					'include'  => array_unique( $collaborator_ids ),
+					'orderby'  => 'name',
+					'order'    => 'ASC',
+				)
+			);
+		}
 
 		if ( is_wp_error( $collaborators ) ) {
 			$collaborators = array();
@@ -683,41 +705,67 @@ final class Helper {
 	 * }
 	 */
 	public static function get_publication_filter_data(): array {
-		$specialty_areas = get_terms(
+		$publication_ids = get_posts(
 			array(
-				'taxonomy'   => 'poster_category',
-				'hide_empty' => false,
-				'orderby'    => 'name',
-				'order'      => 'ASC',
+				'post_type'      => 'publication',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
 			)
 		);
+
+		$specialty_ids = array();
+		$topic_ids     = array();
+		$collab_ids    = array();
+
+		if ( ! empty( $publication_ids ) ) {
+			$specialty_ids = wp_get_object_terms( $publication_ids, 'poster_category', array( 'fields' => 'ids' ) );
+			$topic_ids     = wp_get_object_terms( $publication_ids, 'post_tag', array( 'fields' => 'ids' ) );
+			$collab_ids    = wp_get_object_terms( $publication_ids, 'collaborator', array( 'fields' => 'ids' ) );
+		}
+
+		$specialty_areas = array();
+		if ( ! empty( $specialty_ids ) && ! is_wp_error( $specialty_ids ) ) {
+			$specialty_areas = get_terms(
+				array(
+					'taxonomy' => 'poster_category',
+					'include'  => array_unique( $specialty_ids ),
+					'orderby'  => 'name',
+					'order'    => 'ASC',
+				)
+			);
+		}
+
+		$topics = array();
+		if ( ! empty( $topic_ids ) && ! is_wp_error( $topic_ids ) ) {
+			$topics = get_terms(
+				array(
+					'taxonomy' => 'post_tag',
+					'include'  => array_unique( $topic_ids ),
+					'orderby'  => 'name',
+					'order'    => 'ASC',
+				)
+			);
+		}
+
+		$collaborators = array();
+		if ( ! empty( $collab_ids ) && ! is_wp_error( $collab_ids ) ) {
+			$collaborators = get_terms(
+				array(
+					'taxonomy' => 'collaborator',
+					'include'  => array_unique( $collab_ids ),
+					'orderby'  => 'name',
+					'order'    => 'ASC',
+				)
+			);
+		}
 
 		if ( is_wp_error( $specialty_areas ) ) {
 			$specialty_areas = array();
 		}
-
-		$topics = get_terms(
-			array(
-				'taxonomy'   => 'post_tag',
-				'hide_empty' => false,
-				'orderby'    => 'name',
-				'order'      => 'ASC',
-			)
-		);
-
 		if ( is_wp_error( $topics ) ) {
 			$topics = array();
 		}
-
-		$collaborators = get_terms(
-			array(
-				'taxonomy'   => 'collaborator',
-				'hide_empty' => false,
-				'orderby'    => 'name',
-				'order'      => 'ASC',
-			)
-		);
-
 		if ( is_wp_error( $collaborators ) ) {
 			$collaborators = array();
 		}
@@ -1060,8 +1108,9 @@ final class Helper {
 
 			$file_id = isset( $row['file_id'] ) ? absint( $row['file_id'] ) : 0;
 			$status  = isset( $row['status'] ) ? sanitize_key( (string) $row['status'] ) : '';
+			$is_active = isset( $row['is_active'] ) ? absint( $row['is_active'] ) : 0;
 
-			if ( $file_id <= 0 || 'disabled_urgent' === $status ) {
+			if ( $file_id <= 0 || 'disabled_urgent' === $status || 1 !== $is_active ) {
 				continue;
 			}
 
@@ -1106,6 +1155,879 @@ final class Helper {
 	}
 
 	/**
+	 * Build a compact label for a marketing material language term.
+	 *
+	 * @param \WP_Term|null $term Language term.
+	 * @return string
+	 */
+	public static function get_test_catalog_language_label( $term ): string {
+		if ( ! $term instanceof \WP_Term ) {
+			return __( 'PDF', 'ambrygen-web' );
+		}
+
+		$slug = strtoupper( preg_replace( '/[^A-Za-z]/', '', (string) $term->slug ) );
+		if ( '' !== $slug && strlen( $slug ) <= 3 ) {
+			return $slug;
+		}
+
+		$words = preg_split( '/[\s\-_]+/', (string) $term->name );
+		$label = '';
+
+		if ( is_array( $words ) ) {
+			foreach ( $words as $word ) {
+				if ( '' === $word ) {
+					continue;
+				}
+				$label .= strtoupper( substr( $word, 0, 1 ) );
+			}
+		}
+
+		if ( '' === $label ) {
+			$label = strtoupper( substr( (string) $term->name, 0, 2 ) );
+		}
+
+		return substr( $label, 0, 3 );
+	}
+
+	/**
+	 * Fetch latest marketing material download links per language for a gene term.
+	 *
+	 * @param int   $gene_id      Gene term ID.
+	 * @param int   $type_id      Optional marketing material type filter.
+	 * @param array $page_context Optional page context for click tracking.
+	 * @return array<int,array<string,string>>
+	 */
+	public static function get_test_catalog_gene_links( int $gene_id, int $type_id = 0, array $page_context = array() ): array {
+		static $cache = array();
+
+		$page_cache_key = wp_json_encode(
+			array(
+				'page_id'    => isset( $page_context['page_id'] ) ? absint( $page_context['page_id'] ) : 0,
+				'page_title' => isset( $page_context['page_title'] ) ? sanitize_text_field( (string) $page_context['page_title'] ) : '',
+				'page_path'  => isset( $page_context['page_path'] ) ? sanitize_text_field( (string) $page_context['page_path'] ) : '',
+			)
+		);
+		$cache_key = $gene_id . '_' . $type_id . '_' . md5( (string) $page_cache_key );
+
+		if ( isset( $cache[ $cache_key ] ) ) {
+			return $cache[ $cache_key ];
+		}
+
+		$cache[ $cache_key ] = array();
+
+		if ( $gene_id <= 0 ) {
+			return $cache[ $cache_key ];
+		}
+
+		$tax_query = array(
+			'relation' => 'AND',
+			array(
+				'taxonomy' => 'gene',
+				'field'    => 'term_id',
+				'terms'    => $gene_id,
+			),
+		);
+
+		if ( $type_id > 0 ) {
+			$tax_query[] = array(
+				'taxonomy' => 'marketing_material_type',
+				'field'    => 'term_id',
+				'terms'    => $type_id,
+			);
+		}
+
+		$query = new \WP_Query(
+			array(
+				'post_type'      => 'marketing_material',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+				'tax_query'      => $tax_query,
+			)
+		);
+
+		$latest = array();
+
+		if ( $query->have_posts() ) {
+			foreach ( $query->posts as $material_post ) {
+				$post_date = strtotime( (string) $material_post->post_date );
+				$rows      = get_post_meta( $material_post->ID, 'marketing_material_files', true );
+
+				if ( ! is_array( $rows ) ) {
+					continue;
+				}
+
+				foreach ( $rows as $row ) {
+					if ( ! is_array( $row ) ) {
+						continue;
+					}
+
+					$file_id   = isset( $row['file_id'] ) ? absint( $row['file_id'] ) : 0;
+					$status    = isset( $row['status'] ) ? sanitize_key( (string) $row['status'] ) : '';
+					$is_active = isset( $row['is_active'] ) ? absint( $row['is_active'] ) : 0;
+
+					if ( $file_id <= 0 || 'disabled_urgent' === $status || 1 !== $is_active ) {
+						continue;
+					}
+
+					$url = wp_get_attachment_url( $file_id );
+					if ( ! $url ) {
+						continue;
+					}
+
+					$language_id = isset( $row['language_term_id'] ) ? absint( $row['language_term_id'] ) : 0;
+					$language    = $language_id > 0 ? get_term( $language_id, 'marketing_material_language' ) : null;
+					$label       = self::get_test_catalog_language_label( $language );
+					$lang_key    = $language_id ?: 'default';
+
+					if ( ! isset( $latest[ $lang_key ] ) || $post_date > $latest[ $lang_key ]['date'] ) {
+						$latest[ $lang_key ] = array(
+							'label'       => $label,
+							'url'         => $url,
+							'raw_url'     => $url,
+							'material_id' => (int) $material_post->ID,
+							'file_id'     => (int) $file_id,
+							'date'        => $post_date,
+						);
+					}
+				}
+			}
+		}
+
+		wp_reset_postdata();
+
+		foreach ( $latest as $item ) {
+			$cache[ $cache_key ][] = array(
+				'label'       => (string) $item['label'],
+				'url'         => (string) $item['url'],
+				'raw_url'     => (string) $item['raw_url'],
+				'material_id' => (string) $item['material_id'],
+				'file_id'     => (string) $item['file_id'],
+			);
+		}
+
+		return $cache[ $cache_key ];
+	}
+
+	/**
+	 * Build a tracked download URL for a marketing material file.
+	 *
+	 * @param int    $post_id Marketing material post ID.
+	 * @param int    $file_id Attachment ID.
+	 * @param string $context Tracking context.
+	 * @param array  $page_context Optional page context.
+	 * @return string
+	 */
+	public static function get_marketing_material_tracked_url( int $post_id, int $file_id, string $context = 'default', array $page_context = array() ): string {
+		$post_id = absint( $post_id );
+		$file_id = absint( $file_id );
+		$context = sanitize_key( $context );
+
+		if ( $post_id <= 0 || $file_id <= 0 || ! self::marketing_material_has_file( $post_id, $file_id ) ) {
+			return '';
+		}
+
+		return add_query_arg(
+			array(
+				'action'           => 'ambrygen_track_marketing_material_click',
+				'material_id'      => $post_id,
+				'file_id'          => $file_id,
+				'context'          => $context ?: 'default',
+				'source_page_id'   => isset( $page_context['page_id'] ) ? absint( $page_context['page_id'] ) : 0,
+				'source_page_path' => isset( $page_context['page_path'] ) ? rawurlencode( sanitize_text_field( (string) $page_context['page_path'] ) ) : '',
+				'source_page'      => isset( $page_context['page_title'] ) ? rawurlencode( sanitize_text_field( (string) $page_context['page_title'] ) ) : '',
+			),
+			admin_url( 'admin-ajax.php' )
+		);
+	}
+
+	/**
+	 * Get tracking totals for one file row.
+	 *
+	 * @param int $post_id Marketing material post ID.
+	 * @param int $file_id Attachment ID.
+	 * @return array{impressions:int,clicks:int,last_impression:string,last_click:string,pages:array<int,array<string,mixed>>}
+	 */
+	public static function get_marketing_material_tracking( int $post_id, int $file_id ): array {
+		$post_id = absint( $post_id );
+		$file_id = absint( $file_id );
+		$all     = get_post_meta( $post_id, self::MARKETING_MATERIAL_TRACKING_META_KEY, true );
+
+		if ( ! is_array( $all ) ) {
+			$all = array();
+		}
+
+		$entry = isset( $all[ $file_id ] ) && is_array( $all[ $file_id ] ) ? $all[ $file_id ] : array();
+
+		return array(
+			'impressions'     => isset( $entry['impressions'] ) ? absint( $entry['impressions'] ) : 0,
+			'clicks'          => isset( $entry['clicks'] ) ? absint( $entry['clicks'] ) : 0,
+			'last_impression' => isset( $entry['last_impression'] ) ? sanitize_text_field( (string) $entry['last_impression'] ) : '',
+			'last_click'      => isset( $entry['last_click'] ) ? sanitize_text_field( (string) $entry['last_click'] ) : '',
+			'pages'           => self::normalize_marketing_material_tracking_pages( $entry['pages'] ?? array() ),
+		);
+	}
+
+	/**
+	 * Build an admin-friendly tracking report for all marketing material files.
+	 *
+	 * @param int $post_id Marketing material post ID.
+	 * @return array<int,array<string,mixed>>
+	 */
+	public static function get_marketing_material_tracking_report( int $post_id ): array {
+		$post_id = absint( $post_id );
+		$rows    = get_post_meta( $post_id, 'marketing_material_files', true );
+
+		if ( ! is_array( $rows ) ) {
+			return array();
+		}
+
+		$report = array();
+
+		foreach ( $rows as $index => $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+
+			$file_id      = isset( $row['file_id'] ) ? absint( $row['file_id'] ) : 0;
+			$media_lab_id = isset( $row['media_lab_id'] ) ? sanitize_text_field( (string) $row['media_lab_id'] ) : '';
+
+			if ( $file_id <= 0 ) {
+				continue;
+			}
+
+			$file_post  = get_post( $file_id );
+			$file_title = $file_post instanceof \WP_Post ? $file_post->post_title : '';
+			$file_url   = wp_get_attachment_url( $file_id );
+			$tracking   = self::get_marketing_material_tracking( $post_id, $file_id );
+			$used_pages = self::get_marketing_material_used_pages( $post_id );
+
+			$report[] = array(
+				'row_index'        => absint( $index ),
+				'file_id'          => $file_id,
+				'file_title'       => $file_title,
+				'file_url'         => $file_url ? (string) $file_url : '',
+				'media_lab_id'     => $media_lab_id,
+				'impressions'      => $tracking['impressions'],
+				'clicks'           => $tracking['clicks'],
+				'last_impression'  => $tracking['last_impression'],
+				'last_click'       => $tracking['last_click'],
+				'pages'            => self::merge_marketing_material_usage_with_tracking_pages(
+					$used_pages,
+					$tracking['pages'],
+					$tracking['impressions'],
+					$tracking['clicks']
+				),
+			);
+		}
+
+		return $report;
+	}
+
+	/**
+	 * Get a list of all published pages/posts where a marketing material can be used.
+	 *
+	 * @param int $post_id Marketing material post ID.
+	 * @return array<int,array<string,mixed>>
+	 */
+	private static function get_marketing_material_used_pages( int $post_id ): array {
+		static $cache = array();
+
+		$post_id = absint( $post_id );
+		if ( isset( $cache[ $post_id ] ) ) {
+			return $cache[ $post_id ];
+		}
+
+		$material_gene_ids = wp_get_object_terms( $post_id, 'gene', array( 'fields' => 'ids' ) );
+		$material_type_ids = wp_get_object_terms( $post_id, 'marketing_material_type', array( 'fields' => 'ids' ) );
+
+		$material_gene_ids = is_wp_error( $material_gene_ids ) ? array() : array_map( 'absint', (array) $material_gene_ids );
+		$material_type_ids = is_wp_error( $material_type_ids ) ? array() : array_map( 'absint', (array) $material_type_ids );
+
+		if ( empty( $material_gene_ids ) ) {
+			$cache[ $post_id ] = array();
+			return $cache[ $post_id ];
+		}
+
+		$post_types = array_values(
+			array_filter(
+				get_post_types(
+					array(
+						'publicly_queryable' => true,
+					),
+					'names'
+				),
+				static function ( string $post_type ): bool {
+					return ! in_array( $post_type, array( 'attachment', 'marketing_material' ), true );
+				}
+			)
+		);
+
+		$query = new \WP_Query(
+			array(
+				'post_type'      => $post_types,
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+			)
+		);
+
+		$pages = array();
+
+		foreach ( (array) $query->posts as $candidate_id ) {
+			$candidate_id = absint( $candidate_id );
+			if ( $candidate_id <= 0 || ! has_block( 'ambrygen/test-catalog', $candidate_id ) ) {
+				continue;
+			}
+
+			$post = get_post( $candidate_id );
+			if ( ! $post instanceof \WP_Post ) {
+				continue;
+			}
+
+			$usage_count = self::count_marketing_material_usage_in_blocks(
+				parse_blocks( (string) $post->post_content ),
+				$material_gene_ids,
+				$material_type_ids
+			);
+
+			if ( $usage_count <= 0 ) {
+				continue;
+			}
+
+			$pages[] = array(
+				'page_id'         => $candidate_id,
+				'page_title'      => get_the_title( $candidate_id ),
+				'page_path'       => (string) wp_parse_url( (string) get_permalink( $candidate_id ), PHP_URL_PATH ),
+				'edit_url'        => (string) get_edit_post_link( $candidate_id, '' ),
+				'view_url'        => (string) get_permalink( $candidate_id ),
+				'usage_count'     => $usage_count,
+				'impressions'     => 0,
+				'clicks'          => 0,
+				'last_impression' => '',
+				'last_click'      => '',
+			);
+		}
+
+		wp_reset_postdata();
+
+		$cache[ $post_id ] = $pages;
+		return $cache[ $post_id ];
+	}
+
+	/**
+	 * Count how many matching test-catalog block instances can surface a material.
+	 *
+	 * @param array $blocks Parsed blocks.
+	 * @param array $material_gene_ids Material gene term IDs.
+	 * @param array $material_type_ids Material type term IDs.
+	 * @return int
+	 */
+	private static function count_marketing_material_usage_in_blocks( array $blocks, array $material_gene_ids, array $material_type_ids ): int {
+		$count = 0;
+
+		foreach ( $blocks as $block ) {
+			if ( ! is_array( $block ) ) {
+				continue;
+			}
+
+			$block_name = isset( $block['blockName'] ) ? (string) $block['blockName'] : '';
+			$attrs      = isset( $block['attrs'] ) && is_array( $block['attrs'] ) ? $block['attrs'] : array();
+
+			if ( 'ambrygen/test-catalog' === $block_name && self::does_test_catalog_block_use_marketing_material( $attrs, $material_gene_ids, $material_type_ids ) ) {
+				++$count;
+			}
+
+			if ( ! empty( $block['innerBlocks'] ) && is_array( $block['innerBlocks'] ) ) {
+				$count += self::count_marketing_material_usage_in_blocks( $block['innerBlocks'], $material_gene_ids, $material_type_ids );
+			}
+		}
+
+		return $count;
+	}
+
+	/**
+	 * Determine whether a specific test-catalog block can surface a marketing material.
+	 *
+	 * @param array $attrs Block attributes.
+	 * @param array $material_gene_ids Material gene term IDs.
+	 * @param array $material_type_ids Material type term IDs.
+	 * @return bool
+	 */
+	private static function does_test_catalog_block_use_marketing_material( array $attrs, array $material_gene_ids, array $material_type_ids ): bool {
+		$block_type_id = isset( $attrs['marketingMaterialTypeId'] ) ? absint( $attrs['marketingMaterialTypeId'] ) : 0;
+		if ( $block_type_id > 0 && ! in_array( $block_type_id, $material_type_ids, true ) ) {
+			return false;
+		}
+
+		$product_version_ids = self::get_test_catalog_block_product_version_ids( $attrs );
+		if ( empty( $product_version_ids ) ) {
+			return false;
+		}
+
+		foreach ( $product_version_ids as $product_version_id ) {
+			$gene_ids = wp_get_object_terms( $product_version_id, 'gene', array( 'fields' => 'ids' ) );
+			$gene_ids = is_wp_error( $gene_ids ) ? array() : array_map( 'absint', (array) $gene_ids );
+
+			if ( array_intersect( $material_gene_ids, $gene_ids ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Resolve product version IDs shown by a test-catalog block.
+	 *
+	 * @param array $attrs Block attributes.
+	 * @return array<int>
+	 */
+	private static function get_test_catalog_block_product_version_ids( array $attrs ): array {
+		static $cache = array();
+
+		$cache_key = md5( wp_json_encode( $attrs ) ?: '' );
+		if ( isset( $cache[ $cache_key ] ) ) {
+			return $cache[ $cache_key ];
+		}
+
+		$ids          = array();
+		$edit_variant = isset( $attrs['editVariant'] ) ? sanitize_key( (string) $attrs['editVariant'] ) : 'tabs';
+
+		if ( 'single' === $edit_variant ) {
+			$ids = isset( $attrs['singleProductVersionIds'] ) && is_array( $attrs['singleProductVersionIds'] )
+				? array_map( 'absint', $attrs['singleProductVersionIds'] )
+				: array();
+
+			if ( empty( $ids ) && ! empty( $attrs['singleProductVersionId'] ) ) {
+				$ids[] = absint( $attrs['singleProductVersionId'] );
+			}
+
+			$cache[ $cache_key ] = array_values( array_filter( $ids ) );
+			return $cache[ $cache_key ];
+		}
+
+		$tabs = isset( $attrs['selectedTabs'] ) && is_array( $attrs['selectedTabs'] ) ? $attrs['selectedTabs'] : array();
+
+		foreach ( $tabs as $tab ) {
+			if ( ! is_array( $tab ) ) {
+				continue;
+			}
+
+			$term_id      = isset( $tab['termId'] ) ? absint( $tab['termId'] ) : 0;
+			$excluded_ids = isset( $tab['excludedPostIds'] ) && is_array( $tab['excludedPostIds'] ) ? array_map( 'absint', $tab['excludedPostIds'] ) : array();
+
+			if ( $term_id <= 0 ) {
+				continue;
+			}
+
+			$query = new \WP_Query(
+				array(
+					'post_type'      => 'product_version',
+					'post_status'    => 'publish',
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+					'no_found_rows'  => true,
+					'post__not_in'   => $excluded_ids,
+					'tax_query'      => array(
+						array(
+							'taxonomy' => 'poster_category',
+							'field'    => 'term_id',
+							'terms'    => $term_id,
+						),
+					),
+				)
+			);
+
+			$ids = array_merge( $ids, array_map( 'absint', (array) $query->posts ) );
+		}
+
+		$cache[ $cache_key ] = array_values( array_unique( array_filter( $ids ) ) );
+		return $cache[ $cache_key ];
+	}
+
+	/**
+	 * Merge discovered usage pages with tracked counts.
+	 *
+	 * @param array $used_pages Usage-discovered pages.
+	 * @param array $tracked_pages Tracked pages.
+	 * @param int   $total_impressions Total tracked impressions.
+	 * @param int   $total_clicks Total tracked clicks.
+	 * @return array<int,array<string,mixed>>
+	 */
+	private static function merge_marketing_material_usage_with_tracking_pages(
+		array $used_pages,
+		array $tracked_pages,
+		int $total_impressions = 0,
+		int $total_clicks = 0
+	): array {
+		$merged = array();
+
+		foreach ( $used_pages as $page ) {
+			if ( ! is_array( $page ) ) {
+				continue;
+			}
+
+			$key = self::get_marketing_material_tracking_page_key( $page );
+			if ( '' === $key ) {
+				continue;
+			}
+
+			$merged[ $key ] = $page;
+		}
+
+		foreach ( $tracked_pages as $page ) {
+			if ( ! is_array( $page ) ) {
+				continue;
+			}
+
+			$key = self::get_marketing_material_tracking_page_key( $page );
+			if ( '' === $key ) {
+				continue;
+			}
+
+			if ( ! isset( $merged[ $key ] ) ) {
+				$merged[ $key ] = array(
+					'page_id'         => isset( $page['page_id'] ) ? absint( $page['page_id'] ) : 0,
+					'page_title'      => isset( $page['page_title'] ) ? sanitize_text_field( (string) $page['page_title'] ) : '',
+					'page_path'       => isset( $page['page_path'] ) ? sanitize_text_field( (string) $page['page_path'] ) : '',
+					'edit_url'        => isset( $page['edit_url'] ) ? esc_url_raw( (string) $page['edit_url'] ) : '',
+					'view_url'        => isset( $page['view_url'] ) ? esc_url_raw( (string) $page['view_url'] ) : '',
+					'usage_count'     => 0,
+					'impressions'     => 0,
+					'clicks'          => 0,
+					'last_impression' => '',
+					'last_click'      => '',
+				);
+			}
+
+			$merged[ $key ]['impressions']     = isset( $page['impressions'] ) ? absint( $page['impressions'] ) : 0;
+			$merged[ $key ]['clicks']          = isset( $page['clicks'] ) ? absint( $page['clicks'] ) : 0;
+			$merged[ $key ]['last_impression'] = isset( $page['last_impression'] ) ? sanitize_text_field( (string) $page['last_impression'] ) : '';
+			$merged[ $key ]['last_click']      = isset( $page['last_click'] ) ? sanitize_text_field( (string) $page['last_click'] ) : '';
+		}
+
+		$sum_impressions = 0;
+		$sum_clicks      = 0;
+
+		foreach ( $merged as $page ) {
+			$sum_impressions += isset( $page['impressions'] ) ? absint( $page['impressions'] ) : 0;
+			$sum_clicks      += isset( $page['clicks'] ) ? absint( $page['clicks'] ) : 0;
+		}
+
+		$remaining_impressions = max( 0, absint( $total_impressions ) - $sum_impressions );
+		$remaining_clicks      = max( 0, absint( $total_clicks ) - $sum_clicks );
+
+		if ( $remaining_impressions > 0 || $remaining_clicks > 0 ) {
+			$merged[] = array(
+				'page_id'         => 0,
+				'page_title'      => __( 'Legacy / Unattributed Tracking', 'ambrygen-web' ),
+				'page_path'       => '',
+				'edit_url'        => '',
+				'view_url'        => '',
+				'usage_count'     => 0,
+				'impressions'     => $remaining_impressions,
+				'clicks'          => $remaining_clicks,
+				'last_impression' => '',
+				'last_click'      => '',
+			);
+		}
+
+		$merged = array_values( $merged );
+
+		usort(
+			$merged,
+			static function ( array $left, array $right ): int {
+				$left_score  = absint( $left['usage_count'] ?? 0 ) + absint( $left['impressions'] ?? 0 ) + absint( $left['clicks'] ?? 0 );
+				$right_score = absint( $right['usage_count'] ?? 0 ) + absint( $right['impressions'] ?? 0 ) + absint( $right['clicks'] ?? 0 );
+				return $right_score <=> $left_score;
+			}
+		);
+
+		return $merged;
+	}
+
+	/**
+	 * Record a marketing material event.
+	 *
+	 * @param int    $post_id Marketing material post ID.
+	 * @param int    $file_id Attachment ID.
+	 * @param string $event   Supported: impression|click.
+	 * @param array  $page_context Optional page context.
+	 * @return bool
+	 */
+	public static function track_marketing_material_event( int $post_id, int $file_id, string $event, array $page_context = array() ): bool {
+		$post_id = absint( $post_id );
+		$file_id = absint( $file_id );
+		$event   = sanitize_key( $event );
+
+		if ( $post_id <= 0 || $file_id <= 0 || ! in_array( $event, array( 'impression', 'click' ), true ) ) {
+			return false;
+		}
+
+		if ( ! self::marketing_material_has_file( $post_id, $file_id ) ) {
+			return false;
+		}
+
+		$tracking = get_post_meta( $post_id, self::MARKETING_MATERIAL_TRACKING_META_KEY, true );
+		if ( ! is_array( $tracking ) ) {
+			$tracking = array();
+		}
+
+		if ( ! isset( $tracking[ $file_id ] ) || ! is_array( $tracking[ $file_id ] ) ) {
+			$tracking[ $file_id ] = array(
+				'impressions'     => 0,
+				'clicks'          => 0,
+				'last_impression' => '',
+				'last_click'      => '',
+				'pages'           => array(),
+			);
+		}
+
+		$timestamp = current_time( 'mysql' );
+		$page_key  = self::get_marketing_material_tracking_page_key( $page_context );
+
+		if ( 'impression' === $event ) {
+			$tracking[ $file_id ]['impressions'] = absint( $tracking[ $file_id ]['impressions'] ) + 1;
+			$tracking[ $file_id ]['last_impression'] = $timestamp;
+		} else {
+			$tracking[ $file_id ]['clicks'] = absint( $tracking[ $file_id ]['clicks'] ) + 1;
+			$tracking[ $file_id ]['last_click'] = $timestamp;
+		}
+
+		if ( '' !== $page_key ) {
+			if ( ! isset( $tracking[ $file_id ]['pages'] ) || ! is_array( $tracking[ $file_id ]['pages'] ) ) {
+				$tracking[ $file_id ]['pages'] = array();
+			}
+
+			if ( ! isset( $tracking[ $file_id ]['pages'][ $page_key ] ) || ! is_array( $tracking[ $file_id ]['pages'][ $page_key ] ) ) {
+				$tracking[ $file_id ]['pages'][ $page_key ] = array(
+					'page_id'         => isset( $page_context['page_id'] ) ? absint( $page_context['page_id'] ) : 0,
+					'page_title'      => isset( $page_context['page_title'] ) ? sanitize_text_field( (string) $page_context['page_title'] ) : '',
+					'page_path'       => isset( $page_context['page_path'] ) ? sanitize_text_field( (string) $page_context['page_path'] ) : '',
+					'impressions'     => 0,
+					'clicks'          => 0,
+					'last_impression' => '',
+					'last_click'      => '',
+				);
+			}
+
+			if ( 'impression' === $event ) {
+				$tracking[ $file_id ]['pages'][ $page_key ]['impressions'] = absint( $tracking[ $file_id ]['pages'][ $page_key ]['impressions'] ) + 1;
+				$tracking[ $file_id ]['pages'][ $page_key ]['last_impression'] = $timestamp;
+			} else {
+				$tracking[ $file_id ]['pages'][ $page_key ]['clicks'] = absint( $tracking[ $file_id ]['pages'][ $page_key ]['clicks'] ) + 1;
+				$tracking[ $file_id ]['pages'][ $page_key ]['last_click'] = $timestamp;
+			}
+		}
+
+		return false !== update_post_meta( $post_id, self::MARKETING_MATERIAL_TRACKING_META_KEY, $tracking );
+	}
+
+	/**
+	 * Register REST routes for marketing material tracking.
+	 *
+	 * @return void
+	 */
+	public function register_marketing_material_tracking_routes(): void {
+		register_rest_route(
+			'ambrygen/v1',
+			'/marketing-material-impressions',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( $this, 'handle_marketing_material_impressions_rest' ),
+				'permission_callback' => '__return_true',
+			)
+		);
+
+		register_rest_route(
+			'ambrygen/v1',
+			'/marketing-material-click',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( $this, 'handle_marketing_material_click_rest' ),
+				'permission_callback' => '__return_true',
+			)
+		);
+	}
+
+	/**
+	 * Handle batched impression tracking requests.
+	 *
+	 * @param \WP_REST_Request $request Request object.
+	 * @return \WP_REST_Response
+	 */
+	public function handle_marketing_material_impressions_rest( \WP_REST_Request $request ): \WP_REST_Response {
+		$params       = $request->get_json_params();
+		$page_context = array(
+			'page_id'    => isset( $params['page_id'] ) ? absint( $params['page_id'] ) : 0,
+			'page_title' => isset( $params['page_title'] ) ? sanitize_text_field( (string) $params['page_title'] ) : '',
+			'page_path'  => isset( $params['page_path'] ) ? sanitize_text_field( (string) $params['page_path'] ) : '',
+		);
+		$items        = isset( $params['items'] ) && is_array( $params['items'] ) ? $params['items'] : array();
+		$tracked      = 0;
+
+		foreach ( $items as $item ) {
+			if ( ! is_array( $item ) ) {
+				continue;
+			}
+
+			$post_id = isset( $item['material_id'] ) ? absint( $item['material_id'] ) : 0;
+			$file_id = isset( $item['file_id'] ) ? absint( $item['file_id'] ) : 0;
+
+			if ( self::track_marketing_material_event( $post_id, $file_id, 'impression', $page_context ) ) {
+				++$tracked;
+			}
+		}
+
+		return new \WP_REST_Response(
+			array(
+				'tracked' => $tracked,
+			),
+			200
+		);
+	}
+
+	/**
+	 * Handle click tracking requests while keeping the public PDF URL unchanged.
+	 *
+	 * @param \WP_REST_Request $request Request object.
+	 * @return \WP_REST_Response
+	 */
+	public function handle_marketing_material_click_rest( \WP_REST_Request $request ): \WP_REST_Response {
+		$params       = $request->get_json_params();
+		$page_context = array(
+			'page_id'    => isset( $params['page_id'] ) ? absint( $params['page_id'] ) : 0,
+			'page_title' => isset( $params['page_title'] ) ? sanitize_text_field( (string) $params['page_title'] ) : '',
+			'page_path'  => isset( $params['page_path'] ) ? sanitize_text_field( (string) $params['page_path'] ) : '',
+		);
+		$post_id      = isset( $params['material_id'] ) ? absint( $params['material_id'] ) : 0;
+		$file_id      = isset( $params['file_id'] ) ? absint( $params['file_id'] ) : 0;
+
+		if ( self::track_marketing_material_event( $post_id, $file_id, 'click', $page_context ) ) {
+			return new \WP_REST_Response( array( 'tracked' => true ), 200 );
+		}
+
+		return new \WP_REST_Response( array( 'tracked' => false ), 400 );
+	}
+
+	/**
+	 * Handle click tracking requests and redirect to the actual file.
+	 *
+	 * @return void
+	 */
+	public function handle_marketing_material_click(): void {
+		$post_id      = isset( $_GET['material_id'] ) ? absint( wp_unslash( $_GET['material_id'] ) ) : 0;
+		$file_id      = isset( $_GET['file_id'] ) ? absint( wp_unslash( $_GET['file_id'] ) ) : 0;
+		$page_context = array(
+			'page_id'    => isset( $_GET['source_page_id'] ) ? absint( wp_unslash( $_GET['source_page_id'] ) ) : 0,
+			'page_title' => isset( $_GET['source_page'] ) ? sanitize_text_field( rawurldecode( wp_unslash( $_GET['source_page'] ) ) ) : '',
+			'page_path'  => isset( $_GET['source_page_path'] ) ? sanitize_text_field( rawurldecode( wp_unslash( $_GET['source_page_path'] ) ) ) : '',
+		);
+		$url          = $file_id > 0 ? wp_get_attachment_url( $file_id ) : '';
+
+		if ( ! $url || ! self::marketing_material_has_file( $post_id, $file_id ) ) {
+			wp_die( esc_html__( 'Marketing material file not found.', 'ambrygen-web' ), 404 );
+		}
+
+		self::track_marketing_material_event( $post_id, $file_id, 'click', $page_context );
+
+		wp_safe_redirect( $url );
+		exit;
+	}
+
+	/**
+	 * Confirm an attachment belongs to the marketing material repeater rows.
+	 *
+	 * @param int $post_id Marketing material post ID.
+	 * @param int $file_id Attachment ID.
+	 * @return bool
+	 */
+	private static function marketing_material_has_file( int $post_id, int $file_id ): bool {
+		$rows = get_post_meta( $post_id, 'marketing_material_files', true );
+
+		if ( ! is_array( $rows ) ) {
+			return false;
+		}
+
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+
+			if ( $file_id === absint( $row['file_id'] ?? 0 ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Normalize stored page analytics rows.
+	 *
+	 * @param mixed $pages Raw page analytics data.
+	 * @return array<int,array<string,mixed>>
+	 */
+	private static function normalize_marketing_material_tracking_pages( $pages ): array {
+		if ( ! is_array( $pages ) ) {
+			return array();
+		}
+
+		$normalized = array();
+
+		foreach ( $pages as $page ) {
+			if ( ! is_array( $page ) ) {
+				continue;
+			}
+
+			$normalized[] = array(
+				'page_id'         => isset( $page['page_id'] ) ? absint( $page['page_id'] ) : 0,
+				'page_title'      => isset( $page['page_title'] ) ? sanitize_text_field( (string) $page['page_title'] ) : '',
+				'page_path'       => isset( $page['page_path'] ) ? sanitize_text_field( (string) $page['page_path'] ) : '',
+				'impressions'     => isset( $page['impressions'] ) ? absint( $page['impressions'] ) : 0,
+				'clicks'          => isset( $page['clicks'] ) ? absint( $page['clicks'] ) : 0,
+				'last_impression' => isset( $page['last_impression'] ) ? sanitize_text_field( (string) $page['last_impression'] ) : '',
+				'last_click'      => isset( $page['last_click'] ) ? sanitize_text_field( (string) $page['last_click'] ) : '',
+			);
+		}
+
+		usort(
+			$normalized,
+			static function ( array $left, array $right ): int {
+				$left_total  = $left['impressions'] + $left['clicks'];
+				$right_total = $right['impressions'] + $right['clicks'];
+				return $right_total <=> $left_total;
+			}
+		);
+
+		return $normalized;
+	}
+
+	/**
+	 * Build a stable page key for grouped analytics.
+	 *
+	 * @param array $page_context Optional page context.
+	 * @return string
+	 */
+	private static function get_marketing_material_tracking_page_key( array $page_context ): string {
+		$page_id   = isset( $page_context['page_id'] ) ? absint( $page_context['page_id'] ) : 0;
+		$page_path = isset( $page_context['page_path'] ) ? sanitize_text_field( (string) $page_context['page_path'] ) : '';
+
+		if ( $page_id > 0 ) {
+			return 'id:' . $page_id;
+		}
+
+		if ( '' !== $page_path ) {
+			return 'path:' . md5( $page_path );
+		}
+
+		return '';
+	}
+
+	/**
 	 * Get the newest valid file per language from the marketing material repeater.
 	 *
 	 * @param int          $post_id        Marketing material post ID.
@@ -1144,9 +2066,10 @@ final class Helper {
 
 			$file_id          = isset( $row['file_id'] ) ? absint( $row['file_id'] ) : 0;
 			$status           = isset( $row['status'] ) ? sanitize_key( (string) $row['status'] ) : '';
+			$is_active        = isset( $row['is_active'] ) ? absint( $row['is_active'] ) : 0;
 			$language_term_id = isset( $row['language_term_id'] ) ? absint( $row['language_term_id'] ) : 0;
 
-			if ( $file_id <= 0 || 'disabled_urgent' === $status || $language_term_id <= 0 ) {
+			if ( $file_id <= 0 || 'disabled_urgent' === $status || 1 !== $is_active || $language_term_id <= 0 ) {
 				continue;
 			}
 
@@ -1420,20 +2343,23 @@ final class Helper {
 		ob_start();
 		?>
 		<div class="test-catlouge__row">
-			<?php foreach ( $links as $link ) : ?>
-				<a
-					class="test-catlouge__gene-name test-catlouge__link"
-					href="<?php echo esc_url( $link['url'] ); ?>"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<?php echo esc_html( $post_title ); ?>
-					<?php if ( '' !== $link['label'] ) : ?>
-						<span class="test-catlouge__language"> (<?php echo esc_html( $link['label'] ); ?>)</span>
-					<?php endif; ?>
-					<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/src/images/download-icon.svg' ); ?>" alt="" />
-				</a>
-			<?php endforeach; ?>
+			<div class="test-catlouge__gene-name">
+				<?php echo esc_html( $post_title ); ?>
+			</div>
+			<div class="test-catlouge__links">
+				<?php foreach ( $links as $link ) : ?>
+					<a class="test-catlouge__link" href="<?php echo esc_url( $link['url'] ); ?>" target="_blank" rel="noopener noreferrer">
+						<?php if ( '' !== $link['label'] ) : ?>
+							<span class="test-catlouge__language"> (<?php echo esc_html( $link['label'] ); ?>)</span>
+						<?php endif; ?>
+						<img
+							decoding="async"
+							src="<?php echo esc_url( get_template_directory_uri() . '/assets/src/images/download-icon.svg' ); ?>"
+							alt=""
+						/>
+					</a>
+				<?php endforeach; ?>
+			</div>
 		</div>
 		<?php
 		return (string) ob_get_clean();

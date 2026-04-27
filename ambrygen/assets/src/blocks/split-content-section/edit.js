@@ -4,17 +4,25 @@ import {
 	RichText,
 	InspectorControls,
 } from '@wordpress/block-editor';
+import { useSelect } from '@wordpress/data';
 import { PanelBody, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
 
 import {
+	BlockExamplePreview,
 	ImageUploader,
 	TagSelector,
-	CtaButtonField,
 } from '../_shared/components';
 
-export default function Edit({ attributes, setAttributes, clientId }) {
+const CONTENT_TEMPLATE = [
+	[
+		'core/paragraph',
+		{ placeholder: __( 'Add paragraph...', 'ambrygen-web' ) },
+	],
+];
+
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
 		blockId,
 		title,
@@ -22,191 +30,165 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		description,
 		backgroundImage,
 		backgroundImageAlt,
-		primarybutton,
-		secondarybutton,
 		isMediumText,
+		isHeaderVertical,
 	} = attributes;
 
-	const CONTENT_TEMPLATE = [
-		[
-			'core/paragraph',
-			{ placeholder: __('Add paragraph...', 'ambrygen-web') },
-		],
-	];
+	useEffect( () => {
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
-	useEffect(() => {
-		const expectedId = `section-${clientId.slice(0, 8)}`;
-
-		if (!blockId) {
-			setAttributes({
+		if ( ! blockId ) {
+			setAttributes( {
 				blockId: expectedId,
-			});
+			} );
 		}
-	}, [clientId, blockId, setAttributes]);
+	}, [ clientId, blockId, setAttributes ] );
 
-	const blockProps = useBlockProps({
-		className: `heading-content-section ${isMediumText ? 'variation-medium-text' : ''
-			}`,
-	});
+	const hasInnerBlocks = useSelect(
+		( select ) => {
+			const { getBlockOrder } = select( 'core/block-editor' );
+
+			return getBlockOrder( clientId ).length > 0;
+		},
+		[ clientId ]
+	);
+
+	const blockProps = useBlockProps( {
+		className: `heading-content-section ${
+			isMediumText ? 'variation-medium-text' : ''
+		}`,
+	} );
+
+	const handleImageSelect = ( media ) => {
+		if ( ! media?.url ) {
+			return;
+		}
+
+		setAttributes( {
+			backgroundImage: media.url,
+			backgroundImageId: media.id || 0,
+			backgroundImageAlt: media.alt || '',
+		} );
+	};
+
+	if ( blockId === 'split-content-section-example' ) {
+		return (
+			<BlockExamplePreview
+				className="split-content-section-example-preview"
+				imagePath="/assets/src/images/ambrygen-default-image.png"
+			/>
+		);
+	}
 
 	return (
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={__('Section Intro Settings', 'ambrygen-web')}
+					title={ __( 'Section Intro Settings', 'ambrygen-web' ) }
 					initialOpen
 				>
 					<TagSelector
-						label={__('Title Tag', 'ambrygen-web')}
+						label={ __( 'Title Tag', 'ambrygen-web' ) }
 						type="heading"
-						value={titleTag || 'h2'}
-						onChange={(value) =>
-							setAttributes({ titleTag: value })
+						value={ titleTag || 'h2' }
+						onChange={ ( value ) =>
+							setAttributes( { titleTag: value } )
 						}
 					/>
 
 					<ImageUploader
-						label={__('Background Image', 'ambrygen-web')}
-						url={backgroundImage}
-						onSelect={(media) =>
-							setAttributes({
-								backgroundImage: media.url,
-								backgroundImageId: media.id,
-								backgroundImageAlt: media.alt || '',
-							})
-						}
-						onRemove={() =>
-							setAttributes({
+						label={ __( 'Background Image', 'ambrygen-web' ) }
+						url={ backgroundImage }
+						onSelect={ handleImageSelect }
+						onRemove={ () =>
+							setAttributes( {
 								backgroundImage: '',
 								backgroundImageId: 0,
 								backgroundImageAlt: '',
-							})
+							} )
 						}
 					/>
 
 					<ToggleControl
-						label={__('Medium Text', 'ambrygen-web')}
-						checked={isMediumText}
-						onChange={(value) =>
-							setAttributes({ isMediumText: value })
-						}
-					/>
-
-					<CtaButtonField
-						label={__('Primary Button', 'ambrygen-web')}
-						value={primarybutton || {}}
-						onChange={(value) =>
-							setAttributes({ primarybutton: value })
-						}
-					/>
-
-					<CtaButtonField
-						label={__('Secondary Button', 'ambrygen-web')}
-						value={secondarybutton || {}}
-						onChange={(value) =>
-							setAttributes({ secondarybutton: value })
+						label={ __( 'Vertical Header Layout', 'ambrygen-web' ) }
+						checked={ isHeaderVertical }
+						onChange={ ( value ) =>
+							setAttributes( { isHeaderVertical: value } )
 						}
 					/>
 				</PanelBody>
 			</InspectorControls>
 
-			<div {...blockProps}>
-				{backgroundImage && (
+			<div { ...blockProps }>
+				{ backgroundImage && (
 					<div className="block-bg-image">
 						<img
-							src={backgroundImage}
-							alt={backgroundImageAlt}
+							src={ backgroundImage }
+							alt={ backgroundImageAlt || '' }
 						/>
 					</div>
-				)}
-				<div className="heading-content-section__inner block__rowflex">
+				) }
+				<div
+					className={ `heading-content-section__inner block__rowflex is-${
+						isHeaderVertical ? 'vertical' : 'horizontal'
+					}` }
+				>
 					<RichText
-						tagName={titleTag || 'h2'}
+						tagName={ titleTag || 'h2' }
 						className="heading-content-section__title heading-3 block-title mb-0 block__rowflex--heading-title"
-						value={title}
-						onChange={(value) =>
-							setAttributes({ title: value })
+						value={ title }
+						onChange={ ( value ) =>
+							setAttributes( { title: value } )
 						}
-						allowedFormats={[
+						allowedFormats={ [
 							'core/bold',
 							'core/italic',
 							'core/text-color',
 							'ambrygen/tooltip',
-						]}
-						placeholder={__('Add Title', 'ambrygen-web')}
+						] }
+						placeholder={ __( 'Add Heading', 'ambrygen-web' ) }
 					/>
-					<div className='heading-content-wrapper'>
+					<div className="heading-content-wrapper">
 						<div className="heading-content-section__description block__rowflex--block-content block-description">
 							<RichText
 								tagName="div"
-								value={description}
-								onChange={(value) =>
-									setAttributes({ description: value })
+								value={ description }
+								onChange={ ( value ) =>
+									setAttributes( { description: value } )
 								}
-								allowedFormats={[
+								allowedFormats={ [
 									'core/bold',
 									'core/italic',
 									'core/link',
 									'ambrygen/tooltip',
-								]}
-								placeholder={__(
+								] }
+								placeholder={ __(
 									'Add Description',
 									'ambrygen-web'
-								)}
+								) }
 							/>
 						</div>
 						<div className="heading-content-section__content js-gsap-fade">
-							<div class="is-style-gl-s24" aria-hidden="true"></div>
+							{ hasInnerBlocks && (
+								<div
+									className="is-style-gl-s24"
+									aria-hidden="true"
+								></div>
+							) }
 							<InnerBlocks
-								allowedBlocks={[
+								allowedBlocks={ [
 									'core/paragraph',
 									'core/list',
 									'core/buttons',
 									'core/button',
 									'core/spacer',
-								]}
-								template={CONTENT_TEMPLATE}
-								templateLock={false}
-								renderAppender={InnerBlocks.ButtonBlockAppender}
+								] }
+								template={ CONTENT_TEMPLATE }
+								templateLock={ false }
+								renderAppender={ InnerBlocks.ButtonBlockAppender }
 							/>
 						</div>
 					</div>
-
-
-					{(primarybutton?.text || secondarybutton?.text) && (
-						<div className="heading-content-section__actions">
-							{primarybutton?.text && (
-								<a
-									href={primarybutton.url || '#'}
-									className={`site-btn ${primarybutton.variant || ''
-										}`}
-									target={primarybutton.target || undefined}
-									rel={
-										primarybutton.target === '_blank'
-											? 'noopener noreferrer'
-											: undefined
-									}
-								>
-									{primarybutton.text}
-								</a>
-							)}
-							{secondarybutton?.text && (
-								<a
-									href={secondarybutton.url || '#'}
-									className={`site-btn ${secondarybutton.variant || ''
-										}`}
-									target={secondarybutton.target || undefined}
-									rel={
-										secondarybutton.target === '_blank'
-											? 'noopener noreferrer'
-											: undefined
-									}
-								>
-									{secondarybutton.text}
-								</a>
-							)}
-						</div>
-					)}
 				</div>
 			</div>
 		</>

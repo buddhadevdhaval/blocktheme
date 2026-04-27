@@ -1,0 +1,76 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/cta-tiles",
+  "title": "CTA Tiles",
+  "category": "ambrygen",
+  "icon": "grid-view",
+  "description": "Responsive CTA tiles with design variants.",
+  "textdomain": "ambrygen-web",
+  "supports": {
+    "html": false,
+    "align": true,
+    "color": {
+      "background": true
+    }
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
+      "default": "h2"
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "variation": {
+      "type": "string",
+      "default": "image-only-title",
+      "enum": [
+        "image-only-title",
+        "image-title-description-icon",
+        "image-title-description"
+      ]
+    },
+    "topImageID": {
+      "type": "number",
+      "default": null
+    },
+    "topImageURL": {
+      "type": "string",
+      "default": ""
+    },
+    "topImageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "blockId": {
+      "type": "string"
+    }
+  },
+  "providesContext": {
+    "ambrygen/ctaTilesVariation": "variation"
+  },
+  "example": {
+    "attributes": {
+      "blockId": "cta-tiles-example"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/genetic-testing-downloads",
+  "version": "1.0.0",
+  "title": "Genetic Testing Downloads",
+  "category": "ambrygen",
+  "description": "Displays linked marketing materials as a list of downloads.",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

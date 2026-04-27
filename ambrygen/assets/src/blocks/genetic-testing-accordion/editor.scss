@@ -1,0 +1,29 @@
+.genetic-testing-accordion-admin {
+	border: 2px dashed #ddd;
+	padding: 20px;
+	background: #fdfdfd;
+
+	.genetic-testing-accordion__admin-header {
+		margin-bottom: 20px;
+		color: #006494;
+	}
+
+	.genetic-testing-selection__item {
+		margin-bottom: 15px;
+		padding: 10px;
+		background: #fff;
+		border: 1px solid #eee;
+		border-radius: 4px;
+	}
+
+	.genetic-testing-selection__selected {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.genetic-testing-selection__actions {
+		display: flex;
+		gap: 8px;
+	}
+}

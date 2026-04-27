@@ -1,0 +1,44 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ambrygen/timeline",
+	"title": "Timeline",
+	"textdomain": "ambrygen-web",
+	"category": "ambrygen",
+	"icon": "schedule",
+	"description": "Timeline section with editable timeline items.",
+	"supports": {
+		"html": false,
+		"anchor": true
+	},
+	"attributes": {
+		"blockId": {
+			"type": "string",
+			"default": ""
+		},
+		"title": {
+			"type": "string",
+			"default": ""
+		},
+		"description": {
+			"type": "string",
+			"default": ""
+		},
+		"headingTag": {
+			"type": "string",
+			"default": "h2",
+			"enum": [ "h1", "h2", "h3", "h4", "h5", "h6" ]
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"example": {
+		"attributes": {
+			"title": "Six steps from sample to report",
+			"description": "Every sample moves through six quality checkpoints before a result reaches your patient.",
+			"headingTag": "h2"
+		}
+	}
+}

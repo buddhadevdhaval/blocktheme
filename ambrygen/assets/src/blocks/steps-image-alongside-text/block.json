@@ -1,0 +1,67 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/steps-image-alongside-text",
+  "title": "Steps Image Alongside Text",
+  "category": "ambrygen",
+  "icon": "columns",
+  "description": "A layout with two stacked cards on the left and one large featured card on the right.",
+  "supports": {
+    "html": false
+  },
+  "keywords": [
+    "cards",
+    "genetic",
+    "layout",
+    "grid"
+  ],
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
+      "default": "h2"
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "blockId": {
+      "type": "string"
+    },
+    "showFullImage": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "variations": [
+    {
+      "name": "show-full-image",
+      "title": "Show full image",
+      "attributes": {
+        "showFullImage": true
+      }
+    }
+  ],
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "viewScript": "file:./view.js",
+  "textdomain": "ambrygen-web",
+  "example": {
+    "attributes": {
+      "blockId": "steps-image-alongside-text-example"
+    }
+  }
+}

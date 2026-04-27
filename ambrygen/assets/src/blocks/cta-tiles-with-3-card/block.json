@@ -1,0 +1,50 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/cta-tiles-with-3-card",
+  "title": "CTA Tiles with 3 Card",
+  "category": "ambrygen",
+  "icon": "grid-view",
+  "description": "",
+  "supports": {
+    "html": false
+  },
+  "keywords": [
+    "cta",
+    "tiles",
+    "cards",
+    "grid"
+  ],
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "sectionTitle": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
+      "default": "h2"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web",
+  "example": {
+    "attributes": {
+      "blockId": "cta-tiles-with-3-card-example"
+    }
+  }
+}

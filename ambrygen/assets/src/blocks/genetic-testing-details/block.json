@@ -1,0 +1,16 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ambrygen/genetic-testing-details",
+	"version": "0.1.0",
+	"title": "Genetic Testing Details",
+	"category": "theme-blocks",
+	"icon": "clipboard",
+	"description": "Displays the dynamic intro, consider, and important sections for genetic testing posts.",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "ambrygen-web",
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

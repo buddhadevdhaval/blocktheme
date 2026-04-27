@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "ambrygen/webinar-registration-button",
+  "version": "0.1.0",
+  "title": "Webinar Registration Button",
+  "category": "theme-blocks",
+  "icon": "button",
+  "description": "Displays the dynamic webinar registration button from the post meta.",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "newTab": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

@@ -1,0 +1,76 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/steps-image-alongside-text-item",
+  "title": "Steps Image Alongside Text Item",
+  "category": "ambrygen",
+  "parent": [
+    "ambrygen/steps-image-alongside-text"
+  ],
+  "icon": "format-image",
+  "description": "Single image card for three column grid.",
+  "attributes": {
+    "stepTitle": {
+      "type": "string",
+      "default": ""
+    },
+    "sectiontitle": {
+      "type": "string",
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "imageId": {
+      "type": "number"
+    },
+    "stepLabel": {
+      "type": "string",
+      "default": ""
+    },
+    "customStepLabel": {
+      "type": "string",
+      "default": ""
+    },
+    "cta": {
+      "type": "object",
+      "default": {
+        "url": "",
+        "text": "",
+        "target": "",
+        "rel": "",
+        "variant": ""
+      }
+    },
+    "type": {
+      "type": "string",
+      "default": "small"
+    },
+    "showFullImage": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "variations": [
+    {
+      "name": "show-full-image",
+      "title": "Show full image",
+      "attributes": {
+        "showFullImage": true
+      }
+    }
+  ],
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "render": "file:./render.php"
+}

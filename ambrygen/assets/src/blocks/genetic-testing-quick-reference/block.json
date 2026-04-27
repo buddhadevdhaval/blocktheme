@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "ambrygen/genetic-testing-quick-reference",
+    "version": "1.0.0",
+    "title": "Genetic Testing Quick Reference",
+    "category": "ambrygen",
+    "description": "Displays custom data for the genetic testing post.",
+    "supports": {
+        "html": false
+    },
+    "textdomain": "ambrygen-web",
+    "editorScript": "file:./index.js",
+    "render": "file:./render.php"
+}

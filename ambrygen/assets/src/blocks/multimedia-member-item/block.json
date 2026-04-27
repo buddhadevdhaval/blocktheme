@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/multimedia-member-item",
+  "title": "Multimedia Member Item",
+  "category": "ambrygen",
+  "icon": "format-image",
+  "parent": [
+    "ambrygen/multimedia-member"
+  ],
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "postId": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php"
+}

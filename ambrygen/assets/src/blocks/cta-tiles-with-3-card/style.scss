@@ -1,0 +1,156 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+
+.cta-tiles-with-3-card {
+
+	&__container {
+		display: grid;
+		gap: 24px;
+		grid-template-columns: repeat(2, 1fr);
+		grid-template-rows: repeat(2, auto);
+		margin: 0 auto;
+
+		@include bp.max(xl-large) {
+			grid-template-columns: 1fr 1fr 1fr;
+			grid-template-rows: auto;
+			gap: 18px;
+		}
+
+		@include bp.max(lg) {
+			grid-template-columns: 1fr 1fr;
+		}
+
+		@include bp.max(sm) {
+			grid-template-columns: 1fr;
+		}
+
+	}
+
+	&__card {
+		align-items: center;
+		background-color: var(--theme_gray_100);
+		border-radius: 16px;
+		color: inherit;
+		display: flex;
+		flex-direction: row;
+		gap: 25px;
+		overflow: hidden;
+		padding: 24px;
+		position: relative;
+		text-decoration: none;
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+		@include bp.max(xl-large) {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		@include bp.max(xl-large) {
+			border-radius: 16px;
+		}
+
+		&--main {
+			width: 100%;
+
+			@include bp.min(xl-large) {
+				gap: 32px;
+				flex-direction: column;
+				grid-column: 2;
+				grid-row: 1 / span 2;
+			}
+
+		}
+	}
+
+	&__image-wrapper,
+	.block-editor__container {
+		border-radius: 10px;
+		flex-shrink: 0;
+		overflow: hidden;
+		position: relative;
+
+		@include bp.max(xl-large) {
+			width: 100%;
+			aspect-ratio: 1 / 1;
+		}
+
+		img,
+		.block-editor__container img {
+			display: block;
+			height: 100%;
+			object-fit: cover;
+			width: 100%;
+		}
+
+		&--main {
+			border-radius: 16px;
+			height: 398px;
+			width: 100%;
+
+			@include bp.max(xl-large) {
+				aspect-ratio: 1 / 1;
+				height: inherit;
+				width: 244px;
+			}
+
+			@include bp.max(xl-large) {
+				width: 100%;
+				aspect-ratio: 1 / 1;
+				height: inherit;
+			}
+		}
+
+		&--small {
+			height: 245px;
+			width: 244px;
+
+			@include bp.between(991px, 1199px) {
+				width: 200px;
+			}
+
+			@include bp.max(xl-large) {
+				aspect-ratio: 1 / 1;
+				height: inherit;
+			}
+
+			@include bp.max(xl-large) {
+				width: 100%;
+				aspect-ratio: 1 / 1;
+				height: inherit;
+			}
+		}
+	}
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		// justify-content: center;
+
+		@include bp.max(xl-large) {
+			// justify-content: inherit;
+		}
+	}
+
+	&__title,
+	.card-title {
+		color: var(--theme_gray_900);
+		max-width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: normal;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+	}
+
+	&__description {
+		color: var(--theme_gray_500);
+		max-width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: normal;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+	}
+}

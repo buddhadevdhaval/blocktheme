@@ -1,0 +1,1 @@
+document.addEventListener("DOMContentLoaded",()=>{const e=document.querySelector(".vertical-tabs");if(e){const t=e.querySelectorAll(".vertical-tabs__item");t.length>0&&t[0].classList.add("is-active"),t.forEach(e=>{e.addEventListener("click",()=>{t.forEach(e=>e.classList.remove("is-active")),e.classList.add("is-active")})})}});

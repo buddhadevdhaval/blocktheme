@@ -1,0 +1,123 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/logo-section",
+  "title": "Multimedia Logo",
+  "category": "ambrygen",
+  "icon": "format-image",
+  "description": "Multimedia logo section with grouped file downloads.",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "blockId": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "headingTag": {
+      "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
+      "default": "h2"
+    },
+    "image1Url": {
+      "type": "string"
+    },
+    "image1Id": {
+      "type": "number"
+    },
+    "image1Alt": {
+      "type": "string"
+    },
+    "webGroups": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "properties": {
+          "groupName": {
+            "type": "string"
+          },
+          "linkName": {
+            "type": "string"
+          },
+          "fileUrl": {
+            "type": "string"
+          },
+          "fileId": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "printGroups": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "properties": {
+          "groupName": {
+            "type": "string"
+          },
+          "linkName": {
+            "type": "string"
+          },
+          "fileUrl": {
+            "type": "string"
+          },
+          "fileId": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "image2Url": {
+      "type": "string"
+    },
+    "image2Id": {
+      "type": "number"
+    },
+    "image2Alt": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    }
+  },
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "heading": "Heading",
+      "headingTag": "h2",
+      "webGroups": [
+        {
+          "groupName": "Group Name",
+          "linkName": "ZIP File",
+          "fileUrl": "#",
+          "fileId": 0
+        }
+      ],
+      "printGroups": [
+        {
+          "groupName": "Group Name",
+          "linkName": "PDF File",
+          "fileUrl": "#",
+          "fileId": 0
+        }
+      ],
+      "description": "Description"
+    }
+  }
+}

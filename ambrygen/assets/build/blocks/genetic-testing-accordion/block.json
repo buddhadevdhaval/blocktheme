@@ -1,0 +1,37 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/genetic-testing-accordion",
+  "title": "Genetic Testing Accordion",
+  "category": "ambrygen-web",
+  "icon": "list-view",
+  "description": "Displays selected genetic testing posts in a category-based accordion.",
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "title": {
+      "type": "string",
+      "default": "Genetic Testing"
+    },
+    "headingLevel": {
+      "type": "string",
+      "default": "h2"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "title": "Genetic Testing"
+    }
+  }
+}

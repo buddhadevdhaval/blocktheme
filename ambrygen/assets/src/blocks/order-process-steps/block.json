@@ -1,0 +1,68 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ambrygen/order-process-steps",
+	"title": "Order Process Steps",
+	"category": "ambrygen",
+	"icon": "list-view",
+	"description": "Displays a step-by-step order process section.",
+	"supports": {
+		"html": false
+	},
+	"attributes": {
+		"blockId": {
+			"type": "string",
+			"default": ""
+		},
+		"headingTag": {
+			"type": "string",
+			"enum": [ "h1", "h2", "h3", "h4", "h5", "h6" ],
+			"default": "h2"
+		},
+		"headingText": {
+			"type": "string",
+			"default": ""
+		},
+		"subtitle": {
+			"type": "string",
+			"default": ""
+		},
+		"steps": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"iconUrl": {
+						"type": "string"
+					},
+					"iconId": {
+						"type": "number"
+					},
+					"iconAlt": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"textdomain": "ambrygen-web",
+	"example": {
+		"attributes": {
+			"blockId": "order-process-steps-example"
+		}
+	}
+}

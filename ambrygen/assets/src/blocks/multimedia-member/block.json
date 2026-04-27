@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/multimedia-member",
+  "title": "Multimedia Member",
+  "category": "ambrygen",
+  "icon": "images-alt2",
+  "description": "Slider of multimedia member content pulled from our_team posts.",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ]
+    },
+    "memberTypes": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "default": []
+    },
+    "selectionMode": {
+      "type": "string",
+      "default": "manual",
+      "enum": [
+        "manual",
+        "taxonomy"
+      ]
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "blockId": "multimedia-member-example"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/genetic-testing-description",
+  "version": "1.0.0",
+  "title": "Genetic Testing Description",
+  "category": "ambrygen",
+  "description": "Displays the post content with a conditional heading.",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

@@ -1,0 +1,75 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/cta-tiles-with-3-card-item",
+  "title": "CTA Tiles with 3 Card Item",
+  "category": "ambrygen",
+  "parent": [
+    "ambrygen/cta-tiles-with-3-card"
+  ],
+  "icon": "format-image",
+  "description": "An individual CTA tiles with 3 card item block.",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "image": {
+      "type": "string",
+      "default": ""
+    },
+    "imageId": {
+      "type": "number",
+      "default": 0
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "link": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "rel": {
+          "type": "string"
+        },
+        "variant": {
+          "type": "string"
+        }
+      },
+      "default": {
+        "url": "",
+        "text": "",
+        "target": "",
+        "rel": "",
+        "variant": ""
+      }
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "small",
+        "main"
+      ],
+      "default": "small"
+    }
+  },
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

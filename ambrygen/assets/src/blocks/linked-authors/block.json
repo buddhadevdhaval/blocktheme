@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ambrygen/linked-authors",
+	"title": "Linked Authors",
+	"category": "ambrygen",
+	"description": "Displays authors linked to a post via relationship meta.",
+	"textdomain": "ambrygen-web",
+	"supports": {
+		"html": false,
+		"anchor": true
+	},
+	"attributes": {
+		"title": {
+			"type": "string"
+		},
+		"showExcerpt": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"render": "file:./render.php"
+}

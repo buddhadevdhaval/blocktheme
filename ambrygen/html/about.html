@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<!-- <link rel="apple-touch-icon" sizes="180x180" href="../assets/src/images/pwa/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="../assets/src/images/pwa/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="../assets/src/images/pwa/favicon-16x16.png">
+	<link rel="manifest" href="../assets/src/images/pwa/site.webmanifest"> -->
+	<title>About</title>
+	<link rel="stylesheet" href="../assets/build/styles.min.css" />
+</head>
+
+<body>
+
+	<section class="container-1280">
+		<div class="wrapper">
+			<div class="stats-counter">
+				<div class="stats-counter__item">
+					<div class="stats-counter__number heading-3 mb-0">20,000</div>
+					<div class="stats-counter__label subtitle1-sbold">Cases</div>
+					<div class="is-style-gl-s8" aria-hidden="true"></div>
+					<div class="stats-counter__description">In landmark methodology study (2016)</div>
+				</div>
+				<div class="stats-counter__item">
+					<div class="stats-counter__number heading-3 mb-0">60,000</div>
+					<div class="stats-counter__label subtitle1-sbold">Square feet</div>
+					<div class="is-style-gl-s8" aria-hidden="true"></div>
+					<div class="stats-counter__description">State-of-the-art, CLIA/CAP certified custom facility</div>
+				</div>
+				<div class="stats-counter__item">
+					<div class="stats-counter__number heading-3 mb-0">25+</div>
+					<div class="stats-counter__label subtitle1-sbold">Years</div>
+					<div class="is-style-gl-s8" aria-hidden="true"></div>
+					<div class="stats-counter__description">Pioneering genetic diagnostics since 1999</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script>
+		// Stats Counter Number Animation
+		function animateCounter(element, duration = 1500) {
+			const text = element.textContent.trim();
+			const suffix = text.replace(/[0-9,]/g, ''); // Extract "+ or other suffix
+			const numText = text.replace(/[^0-9]/g, ''); // Extract only numbers
+			const finalValue = parseInt(numText, 10);
+
+			if (isNaN(finalValue)) return;
+
+			let startValue = 0;
+			const startTime = Date.now();
+
+			function updateCounter() {
+				const elapsed = Date.now() - startTime;
+				const progress = Math.min(elapsed / duration, 1);
+
+				// Easing function for smooth animation
+				const easeOut = 1 - Math.pow(1 - progress, 3);
+				const currentValue = Math.floor(finalValue * easeOut);
+
+				// Format number with commas
+				const formatted = currentValue.toLocaleString();
+				element.textContent = formatted + suffix;
+
+				if (progress < 1) {
+					requestAnimationFrame(updateCounter);
+				} else {
+					element.textContent = text; // Ensure exact final value
+				}
+			}
+
+			updateCounter();
+		}
+
+		// Intersection Observer to trigger animations
+		const observerOptions = {
+			threshold: 0.5,
+			rootMargin: '0px'
+		};
+
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					const numberElements = entry.target.querySelectorAll('.stats-counter__number');
+					numberElements.forEach((element, index) => {
+						setTimeout(() => {
+							animateCounter(element, 1500);
+						}, index * 150); // Stagger each counter
+					});
+					observer.unobserve(entry.target);
+				}
+			});
+		}, observerOptions);
+
+		const statsCounter = document.querySelector('.stats-counter');
+		if (statsCounter) {
+			observer.observe(statsCounter);
+		}
+	</script>
+
+</body>
+
+</html>

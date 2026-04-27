@@ -1,0 +1,50 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+
+.features-media {
+
+	// &.is-playing {
+
+	// 	.play-icon-video {
+	// 		display: none;
+	// 	}
+
+	// 	&:hover {
+
+	// 		.play-icon-video {
+	// 			display: block;
+	// 		}
+	// 	}
+	// }
+
+	&.has-image {
+		margin: 0 auto;
+		text-align: center;
+		display: block;
+		width: 100%;
+		border-radius: 16px;
+		border: 1px solid var(--theme_gray_200);
+
+		img {
+			height: auto;
+		}
+	}
+
+	// &__video-wrapper {
+	// 	position: relative;
+	// 	width: 100%;
+	// 	border-radius: 32px;
+	// 	overflow: hidden;
+
+	// 	video,
+	// 	iframe {
+	// 		max-height: clamp(240px, calc(15rem + ((1vw - 3.75px) * 52.7179)), 754px);
+	// 	}
+
+	// 	&--iframe {
+	// 		max-height: clamp(240px, calc(15rem + ((1vw - 3.75px) * 52.7179)), 754px);
+	// 		height: clamp(240px, calc(15rem + ((1vw - 3.75px) * 52.7179)), 754px);
+	// 		display: block;
+	// 	}
+	// }
+
+}

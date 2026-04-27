@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<!-- <link rel="apple-touch-icon" sizes="180x180" href="../assets/src/images/pwa/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="../assets/src/images/pwa/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="../assets/src/images/pwa/favicon-16x16.png">
+	<link rel="manifest" href="../assets/src/images/pwa/site.webmanifest"> -->
+	<title>Our Tests - Hereditary Cancer (CD)</title>
+	<link rel="stylesheet" href="../assets/build/styles.min.css" />
+</head>
+
+<body>
+
+	<div class="wp-block-group is-style-gl-s236"></div>
+
+	<div class="container-1280 bg-primary_25 block-bg">
+		<div class="wrapper">
+
+			<div class="block-layout risk-checklist">
+
+				<!-- Section Header -->
+				<div class="risk-checklist__header">
+					<div class="overline-text risk-checklist__eyebrow hero-kicker">Assess Your Risk</div>
+					<div class="is-style-gl-s12"></div>
+					<h2 class="heading-4 block-title mb-0">Could hereditary cancer run in your family?</h2>
+				</div>
+
+				<div class="is-style-gl-s32"></div>
+
+				<!-- Checklist Card -->
+				<div class="risk-checklist__card">
+
+					<!-- Card Header -->
+					<div class="risk-checklist__card-header">
+						<h3 class="heading-5 risk-checklist__card-title mb-0">Hereditary Cancer Risk Checklist</h3>
+						<div class="is-style-gl-s8"></div>
+						<div class="subtitle2-sbold risk-checklist__card-subtitle">Select all that apply to you or your
+							family members</div>
+					</div>
+
+					<!-- Card Body -->
+					<div class="risk-checklist__card-body">
+
+						<!-- Checklist Items -->
+						<div class="risk-checklist__items" id="riskChecklistItems">
+
+							<div class="risk-checklist__item">
+								<label class="risk-checklist__item-label">
+									<input type="checkbox" class="risk-checklist__checkbox js-risk-checkbox" />
+									<span class="risk-checklist__checkbox-custom" aria-hidden="true"></span>
+									<span class="body1 risk-checklist__item-text">
+										You or a family member was diagnosed with cancer <strong>at a young age</strong>
+										(younger than 50 years old)
+									</span>
+								</label>
+							</div>
+
+							<div class="risk-checklist__item">
+								<label class="risk-checklist__item-label">
+									<input type="checkbox" class="risk-checklist__checkbox js-risk-checkbox" />
+									<span class="risk-checklist__checkbox-custom" aria-hidden="true"></span>
+									<span class="body1 risk-checklist__item-text">
+										You or a family member has been diagnosed with <strong>more than one
+											cancer</strong>
+									</span>
+								</label>
+							</div>
+
+							<div class="risk-checklist__item">
+								<label class="risk-checklist__item-label">
+									<input type="checkbox" class="risk-checklist__checkbox js-risk-checkbox" />
+									<span class="risk-checklist__checkbox-custom" aria-hidden="true"></span>
+									<span class="body1 risk-checklist__item-text">
+										You've been told your cancer type is <strong>typically rare</strong> — such as
+										ovarian or pancreatic cancer
+									</span>
+								</label>
+							</div>
+
+							<div class="risk-checklist__item">
+								<label class="risk-checklist__item-label">
+									<input type="checkbox" class="risk-checklist__checkbox js-risk-checkbox" />
+									<span class="risk-checklist__checkbox-custom" aria-hidden="true"></span>
+									<span class="body1 risk-checklist__item-text">
+										<strong>Multiple people on the same side</strong> of your family have had cancer
+									</span>
+								</label>
+							</div>
+
+							<div class="risk-checklist__item">
+								<label class="risk-checklist__item-label">
+									<input type="checkbox" class="risk-checklist__checkbox js-risk-checkbox" />
+									<span class="risk-checklist__checkbox-custom" aria-hidden="true"></span>
+									<span class="body1 risk-checklist__item-text">
+										A family member has already been found to have a <strong>cancer gene
+											mutation</strong>
+									</span>
+								</label>
+							</div>
+
+						</div>
+
+						<div class="is-style-gl-s24"></div>
+
+						<!-- Result: No risk factors (default) -->
+						<div class="risk-checklist__result risk-checklist__result--no-risk" id="resultNoRisk">
+							<div class="body1-sbold risk-checklist__result-title">No risk factors selected.</div>
+							<div class="is-style-gl-s8"></div>
+							<p class="body1 risk-checklist__result-text">
+								Based on your current answers, you may not have the typical risk indicators for
+								hereditary cancer. Speak with your healthcare provider if you have any concerns — they
+								may have additional reasons to consider testing.
+							</p>
+						</div>
+
+						<!-- Result: At risk (shown when 1+ checkboxes are checked) -->
+						<div class="risk-checklist__result risk-checklist__result--at-risk risk-checklist__result--hidden"
+							id="resultAtRisk">
+							<div class="body1-sbold risk-checklist__result-title">Based on your responses, you may
+								want
+								to consider speaking with your healthcare provider about hereditary cancer genetic
+								testing.</div>
+							<div class="is-style-gl-s24"></div>
+							<p><strong>If your
+									responses indicate that you may be at-risk for hereditary cancer, there are
+									important
+									next steps to take.</strong></p>
+							<p>
+								Not everyone who has a risk will necessarily go on to develop disease. Ambry's genetic
+								testing and counseling supports you and your healthcare provider in determining the best
+								plan of action moving forward.*
+							</p>
+							<p>
+								*Your healthcare provider may identify other reasons why it may be beneficial for you to
+								pursue genetic testing.
+							</p>
+						</div>
+
+					</div>
+					<!-- /.risk-checklist__card-body -->
+
+				</div>
+				<!-- /.risk-checklist__card -->
+
+				<div class="is-style-gl-s32"></div>
+
+				<!-- CTA Buttons -->
+				<div class="risk-checklist__cta">
+					<a href="#" class="site-btn is-style-site-trailing-icon" role="button"
+						aria-label="Take the Quiz in English">
+						Take The Quiz (English)
+					</a>
+					<a href="#" class="site-btn is-style-site-trailing-icon" role="button"
+						aria-label="Cuestionario en Español">
+						Cuestionario (Español)
+					</a>
+				</div>
+
+			</div>
+			<!-- /.risk-checklist -->
+
+		</div>
+	</div>
+
+	<div class="wp-block-group is-style-gl-s236"></div>
+
+	<div class="container-1280 bg-primary_800">
+		<div class="wp-block-group is-style-gl-s50"></div>
+		<div class="wrapper">
+
+			<div class="supporting-graphs">
+
+				<!-- Chart Image Card -->
+				<div class="supporting-graphs__chart-card">
+					<div class="supporting-graphs__chart-image">
+						<img src="http://localhost:3845/assets/624d797b3096aa62112e5a6aab1422c66e4b8864.png"
+							alt="Lifetime Cancer Risk chart showing highest risks for Colorectal, Pancreatic, Prostate, Ovarian, Uterine, and Breast cancers for General Population versus Gene Mutation carriers" />
+					</div>
+				</div>
+
+				<!-- Text Content -->
+				<div class="supporting-graphs__content">
+					<h2 class="heading-4 block-title mb-0 supporting-graphs__heading">Lifetime Cancer Risk for Common
+						Cancers (%)</h2>
+					<div class="is-style-gl-s24"></div>
+					<div class="subtitle1-regular supporting-graphs__description">This graph represents the highest
+						risks associated with some genes in Hereditary Cancer.</div>
+				</div>
+
+			</div>
+			<!-- /.supporting-graphs -->
+		</div>
+		<div class="wp-block-group is-style-gl-s50"></div>
+	</div>
+
+	<div class="wp-block-group is-style-gl-s236"></div>
+
+	<div class="container-1280">
+		<div class="wrapper">
+
+			<div class="principles-steps">
+
+				<!-- Section Header -->
+				<div class="principles-steps__header text-center">
+					<div class="overline-text principles-steps__eyebrow hero-kicker">Understanding Results</div>
+					<div class="is-style-gl-s12"></div>
+					<h2 class="heading-4 block-title mb-0 principles-steps__title">What your result actually means</h2>
+					<div class="is-style-gl-s12"></div>
+					<div class="body1 principles-steps__subtitle">Results from hereditary cancer genetic testing fall
+						into
+						one of three categories. Here's what each one means in plain language.</div>
+				</div>
+
+				<div class="is-style-gl-s50"></div>
+
+				<!-- Cards -->
+				<div class="principles-steps__grid">
+
+					<!-- Card 1: Negative -->
+					<div class="principles-steps__card principles-steps__card--negative">
+						<div class="principles-steps__card-icon">
+							<img src="https://ambry-1-develop.go-vip.net/wp-content/uploads/2026/04/patient-hereditary-cancer-step1.svg"
+								alt="Negative Icon" />
+						</div>
+						<div class="is-style-gl-s20"></div>
+						<div class="principles-steps__card-content">
+							<h3 class="heading-5 principles-steps__card-title mb-0">Negative</h3>
+							<div class="is-style-gl-s8"></div>
+							<div class="body1-sbold principles-steps__card-summary">No cancer-linked genetic mutations
+								were found in any of your tested genes.</div>
+							<div class="is-style-gl-s16"></div>
+							<div class="body1 principles-steps__card-description">
+								<p>A negative result is reassuring, but since risk is also based on personal and family
+									history, discuss next steps with your provider.</p>
+								<p>Depending on their clinical history, genetic testing may still be advisable for
+									family
+									members.</p>
+							</div>
+						</div>
+					</div>
+
+					<!-- Card 2: Positive -->
+					<div class="principles-steps__card principles-steps__card--positive">
+						<div class="principles-steps__card-icon">
+							<img src="https://ambry-1-develop.go-vip.net/wp-content/uploads/2026/04/patient-hereditary-cancer-step2.svg"
+								alt="Positive Icon" />
+						</div>
+						<div class="is-style-gl-s20"></div>
+						<div class="principles-steps__card-content">
+							<h3 class="heading-5 principles-steps__card-title mb-0">Positive</h3>
+							<div class="is-style-gl-s8"></div>
+							<div class="body1-sbold principles-steps__card-summary">A mutation linked to hereditary
+								cancer
+								was found in at least one of your tested genes.</div>
+							<div class="is-style-gl-s16"></div>
+							<div class="body1 principles-steps__card-description">
+								<p>A positive result confirms an increased cancer risk and may be the basis for specific
+									medical management recommendations tied to that gene.</p>
+								<p>There may be up to a 50/50 chance that your close family members carry the same
+									mutation. Testing for them may be recommended.</p>
+							</div>
+						</div>
+					</div>
+
+					<!-- Card 3: VUS -->
+					<div class="principles-steps__card principles-steps__card--vus">
+						<div class="principles-steps__card-icon">
+							<img src="https://ambry-1-develop.go-vip.net/wp-content/uploads/2026/04/patient-hereditary-cancer-step3.svg"
+								alt="VUS Icon" />
+						</div>
+						<div class="is-style-gl-s20"></div>
+						<div class="principles-steps__card-content">
+							<h3 class="heading-5 principles-steps__card-title mb-0">VUS</h3>
+							<div class="is-style-gl-s8"></div>
+							<div class="body1-sbold principles-steps__card-summary">A mutation was found, but it's
+								currently unclear if it increases cancer risk.</div>
+							<div class="is-style-gl-s16"></div>
+							<div class="body1 principles-steps__card-description">
+								<p>VUS = Variant of Unknown Significance. Management should be based on personal and
+									family history until more is known.</p>
+								<p>These results can change over time as science advances — Ambry's Patient for Life
+									program may notify you of updates.</p>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<!-- /.principles-steps__grid -->
+
+			</div>
+			<!-- /.principles-steps -->
+
+		</div>
+	</div>
+
+	<div class="wp-block-group is-style-gl-s236"></div>
+
+	<div class="wp-block-group is-style-gl-s236"></div>
+
+	<!-- Test Catalogue Section -->
+	<div class="container-1280">
+		<div class="wrapper">
+			<div class="test-catlouge">
+
+				<!-- Section Header -->
+				<div class="test-catlouge__header">
+					<div class="hero-kicker overline-text test-catlouge__eyebrow">TEST CATALOG</div>
+					<div class="is-style-gl-s12"></div>
+					<h2 class="heading-4 block-title mb-0 test-catlouge__title">Available hereditary cancer tests</h2>
+					<div class="is-style-gl-s12"></div>
+					<div class="body1 test-catlouge__subtitle">Browse tests by category. Ask your healthcare provider
+						which panel is right for your situation.</div>
+				</div>
+
+				<div class="is-style-gl-s32"></div>
+
+				<!-- Tabs System -->
+				<div class="tabs">
+					<div class="tabs__mobile-nav">
+						<select class="tabs__select text-md-sbold">
+							<option value="test-1">Arrhythmia</option>
+							<option value="test-2">Cardiomyopathy</option>
+							<option value="test-3">Aortic Aneurysms</option>
+							<option value="test-4">Familial Hypercholesterolemia</option>
+							<option value="test-5">Comprehensive</option>
+							<option value="test-6">Other Lipid Disorders</option>
+							<option value="test-7">Noonan / RASopathies</option>
+							<option value="test-8">Other</option>
+						</select>
+					</div>
+
+					<div class="tabs__nav">
+						<button class="tabs__tab is-active text-md-sbold">Arrhythmia</button>
+						<button class="tabs__tab text-md-sbold">Cardiomyopathy</button>
+						<button class="tabs__tab text-md-sbold">Aortic Aneurysms</button>
+						<button class="tabs__tab text-md-sbold">Familial Hypercholesterolemia</button>
+						<button class="tabs__tab text-md-sbold">Comprehensive</button>
+						<button class="tabs__tab text-md-sbold">Other Lipid Disorders</button>
+						<button class="tabs__tab text-md-sbold">Noonan / RASopathies</button>
+						<button class="tabs__tab text-md-sbold">Other</button>
+					</div>
+
+					<div class="is-style-gl-s32"></div>
+
+					<div class="tabs__panels">
+						<!-- Panel 1 -->
+						<div class="tabs__panel is-active">
+							<div class="test-catlouge__items">
+
+								<!-- Item -->
+								<div class="test-catlouge__item">
+									<div class="test-catlouge__item-main">
+										<div class="test-catlouge__item-top">
+											<div class="subtitle1-sbold mb-0 test-catlouge__item-title">BRCA1/BRCA2
+											</div>
+											<div class="text-sm-medium test-catlouge__badge">2 Genes</div>
+										</div>
+										<div class="body2-semibold test-catlouge__item-desc">Most common causes of
+											hereditary breast and ovarian cancer (HBOC)</div>
+
+										<div class="test-catlouge__item-content">
+											<div class="test-catlouge__divider"></div>
+											<div class="test-catlouge__grid test-catlouge__grid--2col">
+												<div class="test-catlouge__row">
+													<div class="test-catlouge__gene-name">BRCA1</div>
+													<div class="test-catlouge__links">
+														<a href="#" class="test-catlouge__link">EN
+															<img src="../assets/src/images/download-icon.svg" />
+														</a>
+														<a href="#" class="test-catlouge__link">ES
+															<img src="../assets/src/images/download-icon.svg" />
+														</a>
+													</div>
+												</div>
+												<div class="test-catlouge__row">
+													<div class="test-catlouge__gene-name">BRCA2</div>
+													<div class="test-catlouge__links">
+														<a href="#" class="test-catlouge__link">EN
+															<img src="../assets/src/images/download-icon.svg" />
+														</a>
+														<a href="#" class="test-catlouge__link">ES
+															<img src="../assets/src/images/download-icon.svg" />
+														</a>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<button class="test-catlouge__item-toggle" aria-label="Toggle Test Details">
+										<span class="test-catlouge__icon-cross"></span>
+									</button>
+								</div>
+
+								<!-- Item -->
+								<div class="test-catlouge__item">
+									<div class="test-catlouge__item-main">
+										<div class="test-catlouge__item-top">
+											<div class="subtitle1-sbold mb-0 test-catlouge__item-title">BRCAplus&reg;
+											</div>
+											<div class="text-sm-medium test-catlouge__badge">13 Genes</div>
+										</div>
+										<div class="body2-semibold test-catlouge__item-desc">13-gene test for hereditary
+											breast cancer; breast, ovarian, and other cancers</div>
+
+										<div class="test-catlouge__item-content">
+											<div class="test-catlouge__divider"></div>
+											<div class="test-catlouge__grid test-catlouge__grid--2col">
+												<div class="test-catlouge__row">
+													<div class="test-catlouge__gene-name">ATM</div>
+													<div class="test-catlouge__links">
+														<a href="#" class="test-catlouge__link">EN <img
+																src="../assets/src/images/download-icon.svg" /></a>
+														<a href="#" class="test-catlouge__link">ES <img
+																src="../assets/src/images/download-icon.svg" /></a>
+													</div>
+												</div>
+												<div class="test-catlouge__row">
+													<div class="test-catlouge__gene-name">BARD1</div>
+													<div class="test-catlouge__links">
+														<a href="#" class="test-catlouge__link">EN <img
+																src="../assets/src/images/download-icon.svg" /></a>
+														<a href="#" class="test-catlouge__link">ES <img
+																src="../assets/src/images/download-icon.svg" /></a>
+													</div>
+												</div>
+												<div class="test-catlouge__row">
+													<div class="test-catlouge__gene-name">BRCA1</div>
+													<div class="test-catlouge__links">
+														<a href="#" class="test-catlouge__link">EN <img
+																src="../assets/src/images/download-icon.svg" /></a>
+														<a href="#" class="test-catlouge__link">ES <img
+																src="../assets/src/images/download-icon.svg" /></a>
+													</div>
+												</div>
+												<div class="test-catlouge__row">
+													<div class="test-catlouge__gene-name">BRCA2</div>
+													<div class="test-catlouge__links">
+														<a href="#" class="test-catlouge__link">EN <img
+																src="../assets/src/images/download-icon.svg" /></a>
+														<a href="#" class="test-catlouge__link">ES <img
+																src="../assets/src/images/download-icon.svg" /></a>
+													</div>
+												</div>
+											</div>
+											<div class="is-style-gl-s16"></div>
+											<div class="test-catlouge__management-title">Clinician Management Resources
+												+ Understanding Your Results</div>
+											<div class="test-catlouge__grid">
+												<div class="test-catlouge__row">
+													<div class="test-catlouge__gene-name">Negative Hereditary Cancer
+													</div>
+													<div class="test-catlouge__links">
+														<a href="#" class="test-catlouge__link">EN <img
+																src="../assets/src/images/download-icon.svg" /></a>
+														<a href="#" class="test-catlouge__link">ES <img
+																src="../assets/src/images/download-icon.svg" /></a>
+													</div>
+												</div>
+												<div class="test-catlouge__row">
+													<div class="test-catlouge__gene-name">VUS Hereditary Cancer</div>
+													<div class="test-catlouge__links">
+														<a href="#" class="test-catlouge__link">EN <img
+																src="../assets/src/images/download-icon.svg" /></a>
+														<a href="#" class="test-catlouge__link">ES <img
+																src="../assets/src/images/download-icon.svg" /></a>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<button class="test-catlouge__item-toggle" aria-label="Toggle Test Details">
+										<span class="test-catlouge__icon-cross"></span>
+									</button>
+								</div>
+
+								<!-- Item -->
+								<div class="test-catlouge__item">
+									<div class="test-catlouge__item-main">
+										<div class="test-catlouge__item-top">
+											<div class="subtitle1-sbold mb-0 test-catlouge__item-title">BRCANext&reg;
+											</div>
+											<div class="text-sm-medium test-catlouge__badge">19 Genes</div>
+										</div>
+										<div class="body2-semibold test-catlouge__item-desc">Hereditary breast and
+											gynecologic cancers; breast, ovarian, uterine, and other cancers</div>
+										<div class="test-catlouge__item-content">
+											<div class="test-catlouge__divider"></div>
+											<p>Testing up to 19 genes related predominantly to female reproductive and
+												upper gastrointestinal cancers. Expanding options for early detection.
+											</p>
+										</div>
+									</div>
+									<button class="test-catlouge__item-toggle" aria-label="Toggle Test Details">
+										<span class="test-catlouge__icon-cross"></span>
+									</button>
+								</div>
+
+								<!-- Item -->
+								<div class="test-catlouge__item">
+									<div class="test-catlouge__item-main">
+										<div class="test-catlouge__item-top">
+											<div class="subtitle1-sbold mb-0 test-catlouge__item-title">CancerNext&reg;
+											</div>
+											<div class="text-sm-medium test-catlouge__badge">41 Genes</div>
+										</div>
+										<div class="body2-semibold test-catlouge__item-desc">Most common causes of
+											hereditary breast and ovarian cancer (HBOC)</div>
+										<div class="test-catlouge__item-content">
+											<div class="test-catlouge__divider"></div>
+											<p>A broad-spectrum hereditary cancer test containing 41 carefully selected
+												genes designed to catch mutations across various overlapping cancer
+												disorders.</p>
+										</div>
+									</div>
+									<button class="test-catlouge__item-toggle" aria-label="Toggle Test Details">
+										<span class="test-catlouge__icon-cross"></span>
+									</button>
+								</div>
+
+								<!-- Item -->
+								<div class="test-catlouge__item">
+									<div class="test-catlouge__item-main">
+										<div class="test-catlouge__item-top">
+											<div class="subtitle1-sbold mb-0 test-catlouge__item-title">
+												CancerNext-Expanded&reg;</div>
+											<div class="text-sm-medium test-catlouge__badge">80 Genes</div>
+										</div>
+										<div class="body2-semibold test-catlouge__item-desc">Brain tumors, breast,
+											colon,
+											ovarian, pancreatic, prostate, kidney, uterine, and/or other cancers</div>
+										<div class="test-catlouge__item-content">
+											<div class="test-catlouge__divider"></div>
+											<p>Our most robust screening metric. Evaluates 80 distinct genetic links
+												covering a significant majority of documented hereditary syndromes
+												globally.</p>
+										</div>
+									</div>
+									<button class="test-catlouge__item-toggle" aria-label="Toggle Test Details">
+										<span class="test-catlouge__icon-cross"></span>
+									</button>
+								</div>
+
+								<!-- Item -->
+								<div class="test-catlouge__item">
+									<div class="test-catlouge__item-main">
+										<div class="test-catlouge__item-top">
+											<div class="subtitle1-sbold mb-0 test-catlouge__item-title">Lynch Syndrome
+											</div>
+											<div class="text-sm-medium test-catlouge__badge">5 Genes</div>
+										</div>
+										<div class="body2-semibold test-catlouge__item-desc">Hereditary colorectal and
+											uterine cancer condition</div>
+										<div class="test-catlouge__item-content">
+											<div class="test-catlouge__divider"></div>
+											<p>Direct testing for genes associated with Lynch Syndrome, the most
+												prevalent origin factor for hereditary colorectal and uterine cancers.
+											</p>
+										</div>
+									</div>
+									<button class="test-catlouge__item-toggle" aria-label="Toggle Test Details">
+										<span class="test-catlouge__icon-cross"></span>
+									</button>
+								</div>
+
+							</div>
+						</div>
+
+						<!-- Panel 2 -->
+						<div class="tabs__panel">
+							<div class="test-catlouge__items no-results">
+								<p>Gastrointestinal tests content will go here.</p>
+							</div>
+						</div>
+
+						<!-- Panel 3 -->
+						<div class="tabs__panel">
+							<div class="test-catlouge__items no-results">
+								<p>Comprehensive tests content will go here.</p>
+							</div>
+						</div>
+
+					</div>
+					<!-- /.tabs__panels -->
+				</div>
+				<!-- /.tabs -->
+
+			</div>
+			<!-- /.test-catlouge -->
+		</div>
+	</div>
+
+	<div class="wp-block-group is-style-gl-s236"></div>
+
+	<!-- Resources Section -->
+	<div class="container-1280">
+		<div class="wrapper">
+			<div class="resources">
+
+				<!-- Section Header -->
+				<div class="resources__header">
+					<h2 class="heading-4 block-title mb-0 resources__title">Resources</h2>
+					<div class="is-style-gl-s12"></div>
+					<div class="body1 resources__subtitle">Everything you need to understand your results and take next
+						steps.</div>
+				</div>
+
+				<div class="is-style-gl-s50"></div>
+
+				<div class="resources__layout">
+					<!-- Resources Cards Group -->
+					<div class="resources__cards-group">
+						<!-- Card 1 -->
+						<div class="resources__card">
+							<img src="https://ambry-1-develop.go-vip.net/wp-content/uploads/2026/04/patient-hereditary-resource1.jpg"
+								alt="Patient Guide" class="resources__card-image" />
+							<div class="resources__card-content">
+								<h3 class="subtitle2-sbold resources__card-title">Hereditary Cancer Testing — Patient
+									Guide
+								</h3>
+								<div class="resources__links">
+									<a href="#" class="resources__link">EN
+										<img src="../assets/src/images/download-icon.svg" alt="Download English" />
+									</a>
+									<a href="#" class="resources__link">ES
+										<img src="../assets/src/images/download-icon.svg" alt="Download Spanish" />
+									</a>
+								</div>
+							</div>
+						</div>
+
+						<!-- Card 2 -->
+						<div class="resources__card">
+							<img src="https://ambry-1-develop.go-vip.net/wp-content/uploads/2026/04/patient-hereditary-resource2.jpg"
+								alt="Family Member Testing" class="resources__card-image" />
+							<div class="resources__card-content">
+								<h3 class="subtitle2-sbold resources__card-title">Family Member Testing for Hereditary
+									Cancer Risk</h3>
+								<div class="resources__links">
+									<a href="#" class="resources__link">EN
+										<img src="../assets/src/images/download-icon.svg" alt="Download English" />
+									</a>
+									<a href="#" class="resources__link">ES
+										<img src="../assets/src/images/download-icon.svg" alt="Download Spanish" />
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Card 3 -->
+					<div class="resources__orgs-group">
+						<div class="resources__card">
+							<h3 class="subtitle2-sbold resources__card-title text-center">Helpful Organizations</h3>
+							<div class="resources__card-logo-grid resources__card-logo-grid--3-col">
+								<!-- 2-col is default -->
+								<a href="#" class="resources__card-logo-link" target="_blank"
+									aria-label="American Cancer Society">
+									<img src="https://ambry-1-develop.go-vip.net/wp-content/uploads/2026/04/american-cancer-society-logo.png"
+										alt="American Cancer Society Logo" />
+								</a>
+								<a href="#" class="resources__card-logo-link" target="_blank" aria-label="ASCO">
+									<img src="https://ambry-1-develop.go-vip.net/wp-content/uploads/2026/04/asco-logo.png"
+										alt="ASCO Logo" />
+								</a>
+								<a href="#" class="resources__card-logo-link" target="_blank" aria-label="ASHG">
+									<img src="https://ambry-1-develop.go-vip.net/wp-content/uploads/2026/04/ashg-logo.png"
+										alt="ASHG Logo" />
+								</a>
+								<a href="#" class="resources__card-logo-link" target="_blank"
+									aria-label="National Cancer Institute">
+									<img src="https://ambry-1-develop.go-vip.net/wp-content/uploads/2026/04/National_Cancer_Institute_logo-1.svg"
+										alt="National Cancer Institute Logo" />
+								</a>
+
+								<a href="#" class="resources__card-logo-link" target="_blank"
+									aria-label="National Cancer Institute">
+									<img src="https://ambry-1-develop.go-vip.net/wp-content/uploads/2026/04/HCMA-Logo-wTag-28HOME-29-1920w-1.png"
+										alt="National Cancer Institute Logo" />
+								</a>
+								<a href="#" class="resources__card-logo-link" target="_blank"
+									aria-label="National Cancer Institute">
+									<img src="https://ambry-1-develop.go-vip.net/wp-content/uploads/2026/04/images-1.png"
+										alt="National Cancer Institute Logo" />
+								</a>
+								<a href="#" class="resources__card-logo-link" target="_blank"
+									aria-label="National Cancer Institute">
+									<img src="https://ambry-1-develop.go-vip.net/wp-content/uploads/2026/04/f3fb61b03183a628d15ff56d9b07b56f-1.png"
+										alt="National Cancer Institute Logo" />
+								</a>
+								<a href="#" class="resources__card-logo-link" target="_blank"
+									aria-label="National Cancer Institute">
+									<img src="https://ambry-1-develop.go-vip.net/wp-content/uploads/2026/04/FamilyHeartLogo_20220908_200x451-1.png"
+										alt="National Cancer Institute Logo" />
+								</a>
+								<a href="#" class="resources__card-logo-link" target="_blank"
+									aria-label="National Cancer Institute">
+									<img src="https://ambry-1-develop.go-vip.net/wp-content/uploads/2026/04/54a37f64-9c91-11ef-be4a-0a58a9feac02-1.png"
+										alt="National Cancer Institute Logo" />
+								</a>
+								<a href="#" class="resources__card-logo-link" target="_blank"
+									aria-label="National Cancer Institute">
+									<img src="https://ambry-1-develop.go-vip.net/wp-content/uploads/2026/04/3e3f1be0-e7c5-11e6-a362-0ef29dd210a6-1.png"
+										alt="" />
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="wp-block-group is-style-gl-s236"></div>
+
+	<script>
+		(function () {
+			// Checkbox logic
+			const checkboxes = document.querySelectorAll('.js-risk-checkbox');
+			const resultNoRisk = document.getElementById('resultNoRisk');
+			const resultAtRisk = document.getElementById('resultAtRisk');
+
+			function updateResult() {
+				const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+
+				if (anyChecked) {
+					resultNoRisk.classList.add('risk-checklist__result--hidden');
+					resultAtRisk.classList.remove('risk-checklist__result--hidden');
+				} else {
+					resultNoRisk.classList.remove('risk-checklist__result--hidden');
+					resultAtRisk.classList.add('risk-checklist__result--hidden');
+				}
+			}
+
+			checkboxes.forEach(cb => cb.addEventListener('change', updateResult));
+
+			// Tabs logic for Test Catalog
+			const tabs = document.querySelectorAll('.tabs__tab');
+			const panels = document.querySelectorAll('.tabs__panel');
+
+			if (tabs.length > 0) {
+				tabs.forEach((tab, index) => {
+					tab.addEventListener('click', () => {
+						tabs.forEach(t => t.classList.remove('is-active'));
+						panels.forEach(p => p.classList.remove('is-active'));
+
+						tab.classList.add('is-active');
+						if (panels[index]) panels[index].classList.add('is-active');
+					});
+				});
+			}
+
+			// Accordion logic for Test Catalog Items
+			const accordionToggles = document.querySelectorAll('.test-catlouge__item-toggle');
+			if (accordionToggles.length > 0) {
+				accordionToggles.forEach(toggle => {
+					toggle.addEventListener('click', () => {
+						const parentItem = toggle.closest('.test-catlouge__item');
+						const content = parentItem.querySelector('.test-catlouge__item-content');
+
+						if (parentItem.classList.contains('is-open')) {
+							// Close
+							content.style.maxHeight = '0px';
+							parentItem.classList.remove('is-open');
+						} else {
+							// Open
+							parentItem.classList.add('is-open');
+							content.style.maxHeight = content.scrollHeight + 'px';
+
+							// Optional: update max height if window resizes while opened
+							// to avoid clipping text that wraps differently. 
+							// Setting to 'none' after transition ends lets it grow natively.
+							// For simple catalogs, scrollHeight is usually sufficient.
+						}
+					});
+				});
+
+				// Re-calculate heights on resize for any open items to prevent clipping
+				window.addEventListener('resize', () => {
+					document.querySelectorAll('.test-catlouge__item.is-open .test-catlouge__item-content').forEach(content => {
+						content.style.maxHeight = 'none'; // reset temporarily to measure natural height
+						content.style.maxHeight = content.scrollHeight + 'px';
+					});
+				});
+			}
+		})();
+	</script>
+
+</body>
+
+</html>

@@ -1,0 +1,679 @@
+<?php
+
+namespace Ambrygen\Theme\Core\Admin;
+
+use Ambrygen\Theme\Core\Admin\Fields\PostRelationshipField;
+use Ambrygen\Theme\Core\Admin\Fields\MarketingMaterialRepeaterField;
+use Ambrygen\Theme\Core\Admin\Fields\EventMeetExpertRepeaterField;
+use Ambrygen\Theme\Core\Admin\Fields\PosterPdfRepeaterField;
+use Ambrygen\Theme\Core\Admin\Fields\WebinarAuthorRepeaterField;
+use Ambrygen\Theme\Core\Admin\Fields\PostSelectField;
+use Ambrygen\Theme\Core\Singleton;
+use WP_Post;
+
+defined('ABSPATH') || exit;
+
+final class MetaBoxController
+{
+    use Singleton;
+
+    private array $definitions = [];
+
+    protected function __construct(array $definitions = [])
+    {
+        $this->definitions = $definitions;
+        $this->register_hooks();
+    }
+
+    public function set_definitions(array $definitions): void
+    {
+        $this->definitions = $definitions;
+    }
+
+    private function register_hooks(): void
+    {
+        add_action('add_meta_boxes', [$this, 'register_meta_boxes']);
+        add_action('save_post', [$this, 'save_meta_boxes'], 10, 2);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_post_meta_media']);
+    }
+
+    public function register_meta_boxes(): void
+    {
+        foreach ($this->definitions as $slug => $def) {
+            if (empty($def->meta_fields())) {
+                continue;
+            }
+
+            add_meta_box(
+                $slug . '_meta_box',
+                sprintf(__('%s Details', 'ambrygen-web'), $def->singular_label()),
+                [$this, 'render_meta_box'],
+                $slug,
+                'normal',
+                'default',
+                ['slug' => $slug]
+            );
+        }
+
+        add_meta_box(
+            'post_author_meta_box',
+            __('Author Selection', 'ambrygen-web'),
+            [$this, 'render_post_author_meta_box'],
+            'post',
+            'normal',
+            'default'
+        );
+  add_meta_box(
+            'webinar_author_meta_box',
+            __('Author Selection', 'ambrygen-web'),
+            [$this, 'render_post_author_meta_box'],
+            'webinar',
+            'normal',
+            'default'
+        );
+    }
+
+    public function render_post_author_meta_box(WP_Post $post): void
+    {
+        wp_nonce_field('ambrygen_meta_box', 'ambrygen_meta_nonce');
+        echo '<div class="sample cs-wpblock-form-layout">';
+        
+        $key = 'linked_author';
+        $field = [
+            'label'       => __('Author(s)', 'ambrygen-web'),
+            'type'        => 'post_relationship',
+            'description' => __('Select one or more authors to link to this post.', 'ambrygen-web'),
+            'multiple'    => true,
+            'post_types'  => ['author'],
+        ];
+        
+        PostRelationshipField::instance()->render($post->ID, $key, $field);
+        
+        echo '</div>';
+    }
+
+    public function render_meta_box(WP_Post $post, array $box): void
+    {
+        $def    = $this->definitions[$box['args']['slug']] ?? null;
+        $fields = $def ? $def->meta_fields() : [];
+
+        wp_nonce_field('ambrygen_meta_box', 'ambrygen_meta_nonce');
+        echo '<div class="sample cs-wpblock-form-layout">';
+        foreach ($fields as $key => $field) {
+            $raw_meta = get_post_meta($post->ID, $key, true);
+            $value    = is_scalar($raw_meta) ? (string) $raw_meta : '';
+            $type     = $field['type'] ?? 'text';
+            $input_id = esc_attr($key);
+
+            echo '<div class="form-field form-field-' . esc_attr($type) . '">';
+            printf(
+                '<label for="%1$s">%2$s</label>',
+                $input_id,
+                esc_html($field['label'])
+            );
+
+            if ('textarea' === $type) {
+                printf(
+                    '<textarea name="%1$s" id="%1$s" class="widefat" rows="4">%2$s</textarea>',
+                    $input_id,
+                    esc_textarea($value)
+                );
+            } elseif ('wysiwyg' === $type) {
+                wp_editor(
+                    $value,
+                    $key,
+                    [
+                        'textarea_name' => $key,
+                        'textarea_rows' => 8,
+                        'media_buttons' => false,
+                    ]
+                );
+            } elseif ('checkbox' === $type) {
+                $is_checked  = ('' !== $value && '0' !== $value && 'false' !== $value);
+                $field_value = isset($field['value']) ? $field['value'] : '1';
+                printf(
+                    '<input type="checkbox" name="%1$s" id="%1$s" value="%2$s" %3$s>',
+                    $input_id,
+                    esc_attr($field_value),
+                    checked($is_checked, true, false)
+                );
+            } elseif ('date' === $type) {
+                $date_val = ! empty($value) ? gmdate('Y-m-d', strtotime($value)) : '';
+                printf(
+                    '<input type="date" name="%1$s" id="%1$s" class="widefat" value="%2$s">',
+                    $input_id,
+                    esc_attr($date_val)
+                );
+            } elseif ('post_relationship' === $type) {
+                PostRelationshipField::instance()->render($post->ID, $key, $field);
+            } elseif ('marketing_material_repeater' === $type) {
+                MarketingMaterialRepeaterField::instance()->render($post->ID, $key, $field);
+            } elseif ('event_meet_expert_repeater' === $type) {
+                EventMeetExpertRepeaterField::instance()->render($post->ID, $key, $field);
+            } elseif ('poster_pdf_repeater' === $type) {
+                PosterPdfRepeaterField::instance()->render($post->ID, $key, $field);
+            } elseif ('webinar_author_repeater' === $type) {
+                WebinarAuthorRepeaterField::instance()->render($post->ID, $key, $field);
+            } elseif ('media_gallery' === $type) {
+                $this->render_media_gallery_field($post->ID, $key, $field, $value);
+            } elseif ('media_file' === $type) {
+                $this->render_media_file_field($post->ID, $key, $field, $value);
+            } else {
+                printf(
+                    '<input type="%1$s" name="%2$s" id="%2$s" value="%3$s">',
+                    esc_attr($type),
+                    $input_id,
+                    esc_attr($value)
+                );
+            }
+
+            echo '</div>';
+        }
+        echo '</div>';
+    }
+
+    private function render_media_gallery_field(int $post_id, string $key, array $field, string $value): void
+    {
+        $ids = array_filter(
+            array_map(
+                'absint',
+                array_map(
+                    'trim',
+                    explode(',', (string) $value)
+                )
+            )
+        );
+
+        echo '<div class="ambrygen-media-gallery-field">';
+        printf(
+            '<label for="%1$s">%2$s</label>',
+            esc_attr($key),
+            esc_html($field['label'])
+        );
+        printf(
+            '<input type="hidden" name="%1$s" id="%1$s" class="widefat ambrygen-media-gallery-input" value="%2$s" />',
+            esc_attr($key),
+            esc_attr($value)
+        );
+        echo '<div class="ambrygen-media-gallery-preview" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;">';
+        foreach ($ids as $image_id) {
+            $thumb = wp_get_attachment_image_url($image_id, 'thumbnail');
+            if (! $thumb) {
+                continue;
+            }
+            printf(
+                '<img src="%1$s" alt="" style="width:72px;height:72px;object-fit:cover;border:1px solid #ddd;border-radius:4px;" />',
+                esc_url($thumb)
+            );
+        }
+        echo '</div>';
+        echo '<div class="form-field form-field-button">';
+        echo '<button type="button" class="button button-secondary ambrygen-media-gallery-upload">';
+        esc_html_e('Select Images', 'ambrygen-web');
+        echo '</button> ';
+        echo '<button type="button" class="button button-secondary ambrygen-media-gallery-remove">';
+        esc_html_e('Clear', 'ambrygen-web');
+        echo '</button>';
+        echo '</div>';
+        echo '<p class="description">';
+        esc_html_e('Selected image IDs are saved as comma-separated values.', 'ambrygen-web');
+        echo '</p>';
+        echo '</div>';
+    }
+
+    private function render_media_file_field(int $post_id, string $key, array $field, string $value): void
+    {
+        $file_id    = absint($value);
+        $file_title = '';
+        $file_url   = '';
+
+        if ($file_id > 0) {
+            $file_post = get_post($file_id);
+            $file_url  = wp_get_attachment_url($file_id);
+            if ($file_post) {
+                $file_title = $file_post->post_title;
+            }
+        }
+
+        echo '<div class="ambrygen-media-file-field" >';
+        printf(
+            '<label for="%1$s">%2$s</label>',
+            esc_attr($key),
+            esc_html($field['label'])
+        );
+        printf(
+            '<input type="hidden" name="%1$s" id="%1$s" class="widefat ambrygen-media-file-input" value="%2$s" />',
+            esc_attr($key),
+            esc_attr($file_id)
+        );
+        echo '<div class="ambrygen-media-file-preview" style="margin:8px 0;">';
+        if ($file_id > 0 && $file_url) {
+            printf(
+                '<a class="ambrygen-media-file-link" href="%1$s" target="_blank" rel="noopener">%2$s</a>',
+                esc_url($file_url),
+                esc_html($file_title ?: basename($file_url))
+            );
+        } else {
+            echo '<span class="ambrygen-media-file-empty">' . esc_html__('No file selected.', 'ambrygen-web') . '</span>';
+        }
+        echo '</div>';
+        echo '<div class="form-field form-field-button">';
+        echo '<button type="button" class="button button-secondary ambrygen-media-file-upload">';
+        esc_html_e('Select File', 'ambrygen-web');
+        echo '</button> ';
+        echo '<button type="button" class="button button-secondary ambrygen-media-file-remove">';
+        esc_html_e('Clear', 'ambrygen-web');
+        echo '</button>';
+        echo '</div>';
+        echo '</div>';
+    }
+
+    public function save_meta_boxes(int $post_id, WP_Post $post): void
+    {
+        $ambrygen_nonce_ok = false;
+        if (! empty($_POST['ambrygen_meta_nonce'])) {
+            $ambrygen_nonce_ok = wp_verify_nonce(
+                sanitize_text_field(wp_unslash($_POST['ambrygen_meta_nonce'])),
+                'ambrygen_meta_box'
+            );
+        }
+
+        // Fallback for editor flows where the custom meta-box nonce isn't present,
+        // but core post edit nonce is (e.g. Block Editor / metabox save flow).
+        $core_nonce_ok = false;
+        if (! $ambrygen_nonce_ok && ! empty($_POST['_wpnonce'])) {
+            $core_nonce_ok = wp_verify_nonce(
+                sanitize_text_field(wp_unslash($_POST['_wpnonce'])),
+                'update-post_' . $post_id
+            );
+        }
+
+        if (! $ambrygen_nonce_ok && ! $core_nonce_ok) {
+            // Some editor flows may not include either nonce for metabox saves, but will still include
+            // a matching post_ID from the edit form request.
+            $posted_post_id = isset($_POST['post_ID']) ? absint(wp_unslash($_POST['post_ID'])) : 0;
+            if (0 === $posted_post_id || $posted_post_id !== $post_id) {
+                return;
+            }
+        }
+
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+
+        if (! current_user_can('edit_post', $post_id)) {
+            return;
+        }
+
+        if ('post' === $post->post_type) {
+            if (isset($_POST['linked_author'])) {
+                $author_ids = is_array($_POST['linked_author']) ? array_map('absint', $_POST['linked_author']) : [absint($_POST['linked_author'])];
+                $author_ids = array_filter($author_ids);
+                if (!empty($author_ids)) {
+                    update_post_meta($post_id, 'linked_author', $author_ids);
+                } else {
+                    delete_post_meta($post_id, 'linked_author');
+                }
+            } else {
+                delete_post_meta($post_id, 'linked_author');
+            }
+            return;
+        }
+
+        $def    = $this->definitions[$post->post_type] ?? null;
+        $fields = $def ? $def->meta_fields() : [];
+
+        foreach ($fields as $key => $field) {
+            $type     = $field['type'] ?? 'text';
+            $sanitize = $field['sanitize'] ?? 'sanitize_text_field';
+
+            if ('marketing_material_repeater' === $type) {
+                $this->save_marketing_material_repeater($post_id, $key, $field);
+                continue;
+            }
+
+            if ('event_meet_expert_repeater' === $type) {
+                $this->save_event_meet_expert_repeater($post_id, $key, $field);
+                continue;
+            }
+
+            if ('poster_pdf_repeater' === $type) {
+                $this->save_poster_pdf_repeater($post_id, $key, $field);
+                continue;
+            }
+
+            if ('webinar_author_repeater' === $type) {
+                $this->save_webinar_author_repeater($post_id, $key, $field);
+                continue;
+            }
+
+            if (! isset($_POST[$key])) {
+                if ('checkbox' === $type) {
+                    update_post_meta($post_id, $key, '0');
+                } elseif (isset($field['multiple']) && $field['multiple']) {
+                    delete_post_meta($post_id, $key);
+                }
+                continue;
+            }
+
+            $raw_val = wp_unslash($_POST[$key]);
+
+            if ('date' === $type) {
+                if (empty($raw_val)) {
+                    delete_post_meta($post_id, $key);
+                    continue;
+                }
+
+                $parsed = strtotime($raw_val);
+                if ($parsed) {
+                    $raw_val = wp_date('Y-m-d H:i:s', $parsed);
+                }
+            }
+
+            if (isset($field['multiple']) && $field['multiple']) {
+                if (! is_array($raw_val)) {
+                    $raw_val = [];
+                }
+
+                if (is_callable($sanitize) && 'sanitize_text_field' !== $sanitize) {
+                    $sanitized_value = call_user_func($sanitize, $raw_val);
+                } else {
+                    $sanitized_value = $this->sanitize_array($raw_val);
+                }
+
+                if (! is_array($sanitized_value)) {
+                    $sanitized_value = [];
+                }
+
+                $sanitized_value = array_values(
+                    array_filter(
+                        array_map('absint', $sanitized_value)
+                    )
+                );
+
+                if (empty($sanitized_value)) {
+                    delete_post_meta($post_id, $key);
+                } else {
+                    update_post_meta($post_id, $key, $sanitized_value);
+                }
+            } else {
+                update_post_meta(
+                    $post_id,
+                    $key,
+                    call_user_func($sanitize, $raw_val)
+                );
+            }
+        }
+    }
+
+    private function save_marketing_material_repeater(int $post_id, string $key, array $field): void
+    {
+        $rows_raw = isset($_POST[$key]) ? wp_unslash($_POST[$key]) : [];
+        if (! is_array($rows_raw)) {
+            delete_post_meta($post_id, $key);
+            return;
+        }
+
+        $allowed_statuses = ['in_production', 'on_staging', 'disabled_urgent'];
+        $taxonomy_slug    = isset($field['language_taxonomy']) ? (string) $field['language_taxonomy'] : 'marketing_material_language';
+        $now              = (string) current_time('mysql');
+        $rows             = [];
+
+        foreach ($rows_raw as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+
+            $file_id          = isset($row['file_id']) ? absint($row['file_id']) : 0;
+            $media_lab_id     = isset($row['media_lab_id']) ? sanitize_text_field((string) $row['media_lab_id']) : '';
+            $status           = isset($row['status']) ? sanitize_key((string) $row['status']) : '';
+            $language_term_id = isset($row['language_term_id']) ? absint($row['language_term_id']) : 0;
+            $replacement_date = isset($row['replacement_date']) ? sanitize_text_field((string) $row['replacement_date']) : '';
+            $created_at       = isset($row['created_at']) ? sanitize_text_field((string) $row['created_at']) : '';
+
+            $replacement_date = $replacement_date ? gmdate('Y-m-d', strtotime($replacement_date)) : '';
+            if (! in_array($status, $allowed_statuses, true)) {
+                $status = 'in_production';
+            }
+
+            if ($language_term_id > 0) {
+                $term = get_term($language_term_id, $taxonomy_slug);
+                if (! $term || is_wp_error($term)) {
+                    $language_term_id = 0;
+                }
+            }
+
+            $is_web            = ! empty($row['is_web']);
+            $is_print          = ! empty($row['is_print']);
+            $is_self_printable = ! empty($row['is_self_printable']);
+
+            $is_empty_row = (0 === $file_id)
+                && ('' === $media_lab_id)
+                && (0 === $language_term_id)
+                && ('' === $replacement_date)
+                && ! $is_web
+                && ! $is_print
+                && ! $is_self_printable;
+
+            if ($is_empty_row) {
+                continue;
+            }
+
+            if ('' === $created_at) {
+                $created_at = $now;
+            }
+
+            $rows[] = [
+                'file_id'           => $file_id,
+                'media_lab_id'      => $media_lab_id,
+                'status'            => $status,
+                'is_web'            => $is_web ? 1 : 0,
+                'is_print'          => $is_print ? 1 : 0,
+                'is_self_printable' => $is_self_printable ? 1 : 0,
+                'language_term_id'  => $language_term_id,
+                'replacement_date'  => $replacement_date,
+                'created_at'        => $created_at,
+                'updated_at'        => $now,
+            ];
+        }
+
+        if (empty($rows)) {
+            delete_post_meta($post_id, $key);
+        } else {
+            update_post_meta($post_id, $key, $rows);
+        }
+    }
+
+    private function save_event_meet_expert_repeater(int $post_id, string $key, array $field): void
+    {
+        $rows_raw = isset($_POST[$key]) ? wp_unslash($_POST[$key]) : [];
+        if (! is_array($rows_raw)) {
+            delete_post_meta($post_id, $key);
+            return;
+        }
+
+        $rows = [];
+
+        foreach ($rows_raw as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+
+            $session_date = isset($row['session_date']) ? sanitize_text_field((string) $row['session_date']) : '';
+            $session_time = isset($row['session_time']) ? sanitize_text_field((string) $row['session_time']) : '';
+            $session_date = $session_date ? gmdate('Y-m-d', strtotime($session_date)) : '';
+
+            $members_raw = isset($row['members']) && is_array($row['members']) ? $row['members'] : [];
+            if (empty($members_raw)) {
+                $members_raw = [
+                    [
+                        'name'        => isset($row['name']) ? $row['name'] : '',
+                        'designation' => isset($row['designation']) ? $row['designation'] : '',
+                        'bio'         => isset($row['bio']) ? $row['bio'] : '',
+                        'image_id'    => isset($row['image_id']) ? $row['image_id'] : 0,
+                    ],
+                ];
+            }
+
+            $members = [];
+            foreach ($members_raw as $member_row) {
+                if (! is_array($member_row)) {
+                    continue;
+                }
+
+                $name        = isset($member_row['name']) ? sanitize_text_field((string) $member_row['name']) : '';
+                $designation = isset($member_row['designation']) ? sanitize_text_field((string) $member_row['designation']) : '';
+                $bio         = isset($member_row['bio']) ? wp_kses_post((string) $member_row['bio']) : '';
+                $image_id    = isset($member_row['image_id']) ? absint($member_row['image_id']) : 0;
+
+                if ('' === $name && '' === $designation && '' === trim(wp_strip_all_tags($bio)) && 0 === $image_id) {
+                    continue;
+                }
+
+                $members[] = [
+                    'name'        => $name,
+                    'designation' => $designation,
+                    'bio'         => $bio,
+                    'image_id'    => $image_id,
+                ];
+            }
+
+            if ('' === $session_date && '' === $session_time && empty($members)) {
+                continue;
+            }
+
+            $rows[] = [
+                'session_date' => $session_date,
+                'session_time' => $session_time,
+                'members'      => $members,
+            ];
+        }
+
+        if (empty($rows)) {
+            delete_post_meta($post_id, $key);
+        } else {
+            update_post_meta($post_id, $key, $rows);
+        }
+    }
+
+    private function save_poster_pdf_repeater(int $post_id, string $key, array $field): void
+    {
+        $rows_raw = isset($_POST[$key]) ? wp_unslash($_POST[$key]) : [];
+        if (! is_array($rows_raw)) {
+            delete_post_meta($post_id, $key);
+            return;
+        }
+
+        $rows = [];
+
+        foreach ($rows_raw as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+
+            $file_id  = isset($row['file_id']) ? absint($row['file_id']) : 0;
+            $pdf_type = isset($row['pdf_type']) ? sanitize_text_field((string) $row['pdf_type']) : '';
+
+            if (0 === $file_id && '' === $pdf_type) {
+                continue;
+            }
+
+            $rows[] = [
+                'pdf_type' => $pdf_type,
+                'file_id'  => $file_id,
+            ];
+        }
+
+        if (empty($rows)) {
+            delete_post_meta($post_id, $key);
+        } else {
+            update_post_meta($post_id, $key, $rows);
+        }
+    }
+
+    private function save_webinar_author_repeater(int $post_id, string $key, array $field): void
+    {
+        $rows_raw = isset($_POST[$key]) ? wp_unslash($_POST[$key]) : [];
+        if (! is_array($rows_raw)) {
+            delete_post_meta($post_id, $key);
+            return;
+        }
+
+        $rows       = [];
+        $author_ids = [];
+
+        foreach ($rows_raw as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+
+            $linked_author = isset($row['linked_author']) ? absint($row['linked_author']) : 0;
+            $designation   = isset($row['designation']) ? sanitize_text_field((string) $row['designation']) : '';
+            $bio           = isset($row['bio']) ? wp_kses_post((string) $row['bio']) : '';
+            $image_id      = isset($row['image_id']) ? absint($row['image_id']) : 0;
+
+            if (0 === $linked_author && '' === $designation && '' === trim(wp_strip_all_tags($bio)) && 0 === $image_id) {
+                continue;
+            }
+
+            if ($linked_author > 0) {
+                $author_post = get_post($linked_author);
+                if (! $author_post || 'author' !== $author_post->post_type) {
+                    $linked_author = 0;
+                }
+            }
+
+            $rows[] = [
+                'linked_author' => $linked_author,
+                'designation'   => $designation,
+                'bio'           => $bio,
+                'image_id'      => $image_id,
+            ];
+
+            if ($linked_author > 0) {
+                $author_ids[] = $linked_author;
+            }
+        }
+
+        if (empty($rows)) {
+            delete_post_meta($post_id, $key);
+            delete_post_meta($post_id, 'linked_author');
+            return;
+        }
+
+        update_post_meta($post_id, $key, $rows);
+
+        $author_ids = array_values(array_unique(array_filter(array_map('absint', $author_ids))));
+        if (empty($author_ids)) {
+            delete_post_meta($post_id, 'linked_author');
+        } else {
+            update_post_meta($post_id, 'linked_author', $author_ids);
+        }
+    }
+
+    private function sanitize_array($value): array
+    {
+        if (! is_array($value)) {
+            $value = [];
+        }
+
+        return array_filter(
+            array_map('absint', $value)
+        );
+    }
+
+    public function enqueue_post_meta_media(): void
+    {
+        $screen = get_current_screen();
+        if (! $screen || ! in_array($screen->post_type, array_keys($this->definitions), true)) {
+            return;
+        }
+
+        wp_enqueue_media();
+        if (function_exists('wp_enqueue_editor')) {
+            wp_enqueue_editor();
+        }
+        wp_enqueue_script('jquery-ui-autocomplete');
+        wp_enqueue_script('jquery-ui-sortable');
+    }
+}

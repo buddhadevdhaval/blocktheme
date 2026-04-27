@@ -1,0 +1,39 @@
+/**
+ * Registers a new block provided a unique name and an object defining its behavior.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
+ */
+import { registerBlockType } from '@wordpress/blocks';
+import { InnerBlocks } from '@wordpress/block-editor';
+/**
+ * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
+ * The style.scss file is bundled and loaded on both frontend and editor.
+ *
+ * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
+ */
+import './style.scss';
+import './editor.scss';
+
+/**
+ * Internal dependencies
+ */
+import Edit from './edit';
+
+import metadata from './block.json';
+
+/**
+ * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
+ */
+registerBlockType( metadata.name, {
+	...metadata,
+
+	/**
+	 * @see ./edit.js
+	 */
+	edit: Edit,
+
+	/**
+	 * @see ./save.js
+	 */
+	save: () => <InnerBlocks.Content />,
+} );

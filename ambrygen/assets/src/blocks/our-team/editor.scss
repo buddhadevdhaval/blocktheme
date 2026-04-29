@@ -1,5 +1,125 @@
 @use "../../css/partials/variables/breakpoints" as bp;
 
+.layout-variant-selector {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 12px;
+}
+
+.variant-button {
+	display: block;
+	width: 100%;
+	padding: 8px;
+	border: 1px solid #ddd;
+	background: #fff;
+	text-align: left;
+	cursor: pointer;
+
+	&.is-selected {
+		border-color: var(--wp-admin-theme-color);
+		box-shadow: 0 0 0 1px var(--wp-admin-theme-color);
+	}
+
+	img {
+		display: block;
+		width: 100%;
+		height: auto;
+		margin-bottom: 8px;
+		border: 1px solid #e0e0e0;
+		background: #fff;
+	}
+
+	span {
+		display: block;
+		font-weight: 600;
+	}
+}
+
+.our-team__member-count,
+.our-team__member-help {
+	margin: 0 0 12px;
+}
+
+.our-team__member-help {
+	color: #757575;
+}
+
+.our-team__member-picker {
+	display: grid;
+	gap: 10px;
+
+	.components-base-control__help {
+		margin-bottom: 0;
+	}
+}
+
+.our-team__member-options {
+	display: grid;
+	gap: 4px;
+	max-height: 220px;
+	margin-top: 8px;
+	overflow-y: auto;
+	border: 1px solid #ddd;
+	background: #fff;
+}
+
+.our-team__selected-members {
+	display: grid;
+	gap: 8px;
+}
+
+.our-team__member-picker-label {
+	font-weight: 600;
+}
+
+.our-team__selected-member-list {
+	display: grid;
+	gap: 4px;
+	max-height: 220px;
+	overflow-y: auto;
+	border: 1px solid #ddd;
+	background: #fff;
+}
+
+.our-team__selected-member,
+.our-team__member-option {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	padding: 8px 10px;
+	border-bottom: 1px solid #eee;
+
+	&:last-child {
+		border-bottom: 0;
+	}
+
+	> span {
+		min-width: 0;
+		overflow-wrap: anywhere;
+	}
+
+	.components-button {
+		flex: 0 0 auto;
+	}
+}
+
+.our-team__member-picker-field {
+	min-width: 0;
+
+	.components-base-control {
+		margin-bottom: 0;
+	}
+
+	.components-base-control__field {
+		margin-bottom: 0;
+	}
+
+	.components-base-control__label {
+		margin-bottom: 8px;
+	}
+}
+
 .our-team {
 
 	.block-editor-block-list__layout {
@@ -33,6 +153,11 @@
 
 .our-leadership {
 
+	&-slider {
+		overflow: hidden;
+		position: relative;
+	}
+
 	&__card {
 		display: flex;
 		flex-direction: column;
@@ -62,4 +187,33 @@
 			--gap: 18px;
 		}
 	}
+}
+
+.wp-block-ambrygen-our-team-item.swiper-slide {
+	flex-shrink: 0;
+}
+
+.custom-prev,
+.custom-next {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 10;
+	background: rgba(0, 0, 0, 0.5);
+	color: var(--theme_white);
+	border: none;
+	padding: 10px;
+	cursor: pointer;
+}
+
+.custom-prev {
+	left: 10px;
+}
+
+.custom-next {
+	right: 10px;
+}
+
+.swiper-pagination {
+	bottom: 10px;
 }

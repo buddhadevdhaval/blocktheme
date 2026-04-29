@@ -1,0 +1,126 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+@use "../../css/partials/variables/fluid_mixins" as *;
+
+.principles-steps {
+
+    &__header {
+        margin: 0 auto;
+        text-align: center;
+        max-width: 920px;
+    }
+
+    &__grid,
+    .block-editor-inner-blocks .block-editor-block-list__layout {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(282px, 1fr));
+        gap: fluid(24, 50);
+
+
+        &--columns-4 {
+            @include bp.min(xxxl) {
+                gap: fluid(18, 36);
+            }
+        }
+    }
+
+    &__card {
+        background-color: var(--theme_white);
+        border-radius: 16px;
+        padding: fluid(18, 24);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: left;
+        /* the layout inside is left-aligned but icon is centered */
+
+        &-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            /* Ensure icon is centered */
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+        }
+
+        &-content {
+            width: 100%;
+        }
+
+        /* Negative Card */
+        &--negative,
+        &--card-bg-green {
+            background-color: var(--theme_green_50);
+
+            .principles-steps__card-title {
+                body & {
+                    color: var(--theme_green_700);
+                }
+            }
+        }
+
+        /* Positive Card */
+        &--positive,
+        &--card-bg-pink {
+            background-color: var(--pink_breast_50);
+
+            .principles-steps__card-title {
+                body & {
+                    color: var(--pink_breast_700);
+                }
+            }
+        }
+
+        /* VUS Card */
+        &--vus,
+        &--card-bg-yellow {
+            background-color: var(--yellow_warning_50);
+
+            .principles-steps__card-title {
+                body & {
+                    color: var(--yellow_warning_700);
+                }
+            }
+        }
+
+        /* Neurology Card */
+        &--neurology,
+        &--card-bg-purple {
+            background-color: #F3EDF7;
+
+            .principles-steps__card-title {
+                body & {
+                    color: #5C357D;
+                }
+            }
+        }
+
+        &-summary {
+            color: var(--theme_gray_900);
+        }
+
+        &-description {
+            body & {
+                color: var(--theme_gray_600);
+            }
+
+            p {
+                body & {
+                    color: var(--theme_gray_600);
+                }
+            }
+        }
+    }
+
+    .foot-content {
+        max-width: 960px;
+        margin: 0 auto;
+
+        &.text-center {
+            text-align: center;
+        }
+    }
+}

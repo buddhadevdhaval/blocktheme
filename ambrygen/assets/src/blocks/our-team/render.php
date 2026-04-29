@@ -20,8 +20,14 @@ $ambrygen_block_id   = isset( $ambrygen_attributes['blockId'] )
 	? sanitize_html_class( $ambrygen_attributes['blockId'] )
 	: '';
 
-$ambrygen_title = $ambrygen_attributes['title'] ?? '';
-$ambrygen_intro = $ambrygen_attributes['intro'] ?? '';
+$ambrygen_title     = $ambrygen_attributes['title'] ?? '';
+$ambrygen_intro     = $ambrygen_attributes['intro'] ?? '';
+$ambrygen_variation = isset( $ambrygen_attributes['variation'] ) && 'slider-view' === $ambrygen_attributes['variation']
+	? 'slider-view'
+	: 'grid-view';
+
+$ambrygen_is_slider_view = 'slider-view' === $ambrygen_variation;
+$ambrygen_block_class    = $ambrygen_is_slider_view ? 'our-leadership' : 'our-team';
 
 $ambrygen_heading_level = isset( $ambrygen_attributes['headingLevel'] )
 	? sanitize_key( $ambrygen_attributes['headingLevel'] )
@@ -29,8 +35,44 @@ $ambrygen_heading_level = isset( $ambrygen_attributes['headingLevel'] )
 
 $ambrygen_heading_level = Helper::get_heading_tag( $ambrygen_heading_level, 'h2' );
 
+$ambrygen_show_navigation = isset( $ambrygen_attributes['showNavigation'] )
+	? (bool) $ambrygen_attributes['showNavigation']
+	: true;
+$ambrygen_show_pagination = isset( $ambrygen_attributes['showPagination'] )
+	? (bool) $ambrygen_attributes['showPagination']
+	: true;
+
+$ambrygen_team_member_count = 0;
+
+if ( isset( $block->inner_blocks ) && is_array( $block->inner_blocks ) ) {
+	foreach ( $block->inner_blocks as $ambrygen_inner_block ) {
+		$ambrygen_inner_attrs = isset( $ambrygen_inner_block->attributes ) && is_array( $ambrygen_inner_block->attributes )
+			? $ambrygen_inner_block->attributes
+			: array();
+		$ambrygen_post_id     = isset( $ambrygen_inner_attrs['postId'] )
+			? absint( $ambrygen_inner_attrs['postId'] )
+			: 0;
+		$ambrygen_post        = $ambrygen_post_id ? get_post( $ambrygen_post_id ) : null;
+
+		if ( $ambrygen_post && 'publish' === $ambrygen_post->post_status ) {
+			++$ambrygen_team_member_count;
+		}
+	}
+}
+
+$ambrygen_has_team_members     = 0 < $ambrygen_team_member_count && '' !== trim( $content );
+$ambrygen_has_multiple_members = 1 < $ambrygen_team_member_count;
+$ambrygen_show_navigation      = $ambrygen_show_navigation && $ambrygen_has_multiple_members;
+$ambrygen_show_pagination      = $ambrygen_show_pagination && $ambrygen_has_multiple_members;
+$ambrygen_swiper_config       = wp_json_encode(
+	array(
+		'autoplay'        => ! empty( $ambrygen_attributes['autoplay'] ),
+		'navigation_show' => $ambrygen_show_navigation,
+	)
+);
+
 $ambrygen_wrapper_args = array(
-	'class' => 'our-team',
+	'class' => $ambrygen_block_class,
 );
 
 if ( ! empty( $ambrygen_block_id ) ) {
@@ -41,20 +83,25 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 $ambrygen_offcanvas_name_id  = $ambrygen_block_id
 	? $ambrygen_block_id . '-team-offcanvas-name'
 	: wp_unique_id( 'team-offcanvas-name-' );
+$ambrygen_offcanvas_id       = $ambrygen_block_id
+	? $ambrygen_block_id . '-team-offcanvas'
+	: wp_unique_id( 'team-offcanvas-' );
 ?>
 
-<div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+<div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() output is escaped by WordPress core. ?>>
 
-	<?php if ( ! empty( $ambrygen_title ) ) : ?>
+	<?php if ( ! empty( $ambrygen_title ) || ! empty( $ambrygen_intro ) ) : ?>
 
-		<div class="our-team__header block__rowflex">
+		<div class="<?php echo esc_attr( $ambrygen_block_class ); ?>__header block__rowflex">
 
-			<<?php echo tag_escape( $ambrygen_heading_level ); ?> class="our-team__title block__rowflex--heading-title heading-3 mb-0 js-gsap-fade">
-				<?php echo wp_kses_post( $ambrygen_title ); ?>
-			</<?php echo tag_escape( $ambrygen_heading_level ); ?>>
+			<?php if ( ! empty( $ambrygen_title ) ) : ?>
+				<<?php echo tag_escape( $ambrygen_heading_level ); ?> class="<?php echo esc_attr( $ambrygen_block_class ); ?>__title block__rowflex--heading-title heading-3 mb-0 js-gsap-fade">
+					<?php echo wp_kses_post( $ambrygen_title ); ?>
+				</<?php echo tag_escape( $ambrygen_heading_level ); ?>>
+			<?php endif; ?>
 
 			<?php if ( ! empty( $ambrygen_intro ) ) : ?>
-				<div class="our-team__intro block__rowflex--block-content subtitle1 js-gsap-fade">
+				<div class="<?php echo esc_attr( $ambrygen_block_class ); ?>__intro block__rowflex--block-content <?php echo esc_attr( $ambrygen_is_slider_view ? 'subtitle1-reg' : 'subtitle1' ); ?> js-gsap-fade">
 					<?php echo wp_kses_post( $ambrygen_intro ); ?>
 				</div>
 			<?php endif; ?>
@@ -65,45 +112,87 @@ $ambrygen_offcanvas_name_id  = $ambrygen_block_id
 
 	<?php endif; ?>
 
-	<div class="our-team__grid">
-		<?php
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $content is block-rendered content.
-		echo $content;
-		?>
-	</div>
-
-	<!-- Offcanvas Panel -->
-	<div class="offcanvas-sidebar our-team-offcanvas" aria-hidden="true">
-		<div class="offcanvas-sidebar__overlay"></div>
+	<?php if ( $ambrygen_is_slider_view ) : ?>
 		<div
-			class="offcanvas-sidebar__panel"
-			role="dialog"
-			aria-modal="true"
-			aria-labelledby="<?php echo esc_attr( $ambrygen_offcanvas_name_id ); ?>"
+			class="our-leadership__grid our-leadership-slider swiper"
+			data-swiper-config='<?php echo esc_attr( $ambrygen_swiper_config ); ?>'
+			role="region"
+			aria-roledescription="<?php esc_attr_e( 'carousel', 'ambrygen-web' ); ?>"
+			aria-label="<?php echo esc_attr( $ambrygen_title ? wp_strip_all_tags( $ambrygen_title ) : __( 'Team members', 'ambrygen-web' ) ); ?>"
 		>
-			<button
-				type="button"
-				class="offcanvas-sidebar__close"
-				aria-label="<?php esc_attr_e( 'Close', 'ambrygen-web' ); ?>"
-			>
-				<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/src/images/close-icon.svg' ); ?>" alt="" />
-			</button>
-
-			<div class="our-team-offcanvas__header">
-				<div class="our-team-offcanvas__image-wrapper">
-					<img class="our-team-offcanvas__image" src="" alt="" />
-				</div>
-				<div class="our-team-offcanvas__meta">
-					<div
-						id="<?php echo esc_attr( $ambrygen_offcanvas_name_id ); ?>"
-						class="our-team-offcanvas__name heading-4 mb-0"
-					></div>
-					<div class="our-team-offcanvas__role body1"></div>
-				</div>
+			<div class="swiper-wrapper" aria-live="polite">
+				<?php
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $content is block-rendered content.
+				echo $content;
+				?>
 			</div>
 
-			<div class="our-team-offcanvas__bio"></div>
+			<?php if ( $ambrygen_show_navigation ) : ?>
+				<div class="swiper-buttons">
+					<button
+						type="button"
+						class="custom-prev"
+						aria-label="<?php esc_attr_e( 'Previous slide', 'ambrygen-web' ); ?>"
+					></button>
+					<button
+						type="button"
+						class="custom-next"
+						aria-label="<?php esc_attr_e( 'Next slide', 'ambrygen-web' ); ?>"
+					></button>
+				</div>
+			<?php endif; ?>
+
+			<?php if ( $ambrygen_show_pagination ) : ?>
+				<div class="swiper-pagination"></div>
+			<?php endif; ?>
 		</div>
-	</div>
+	<?php else : ?>
+		<div class="our-team__grid">
+			<?php
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $content is block-rendered content.
+			echo $content;
+			?>
+		</div>
+	<?php endif; ?>
+
+	<?php if ( $ambrygen_has_team_members ) : ?>
+		<div
+			id="<?php echo esc_attr( $ambrygen_offcanvas_id ); ?>"
+			class="offcanvas-sidebar our-team-offcanvas"
+			aria-hidden="true"
+		>
+			<div class="offcanvas-sidebar__overlay"></div>
+			<div
+				class="offcanvas-sidebar__panel"
+				role="dialog"
+				aria-modal="true"
+				aria-labelledby="<?php echo esc_attr( $ambrygen_offcanvas_name_id ); ?>"
+				tabindex="-1"
+			>
+				<button
+					type="button"
+					class="offcanvas-sidebar__close"
+					aria-label="<?php esc_attr_e( 'Close', 'ambrygen-web' ); ?>"
+				>
+					<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/src/images/close-icon.svg' ); ?>" alt="" />
+				</button>
+
+				<div class="our-team-offcanvas__header">
+					<div class="our-team-offcanvas__image-wrapper">
+						<img class="our-team-offcanvas__image" src="" alt="" />
+					</div>
+					<div class="our-team-offcanvas__meta">
+						<div
+							id="<?php echo esc_attr( $ambrygen_offcanvas_name_id ); ?>"
+							class="our-team-offcanvas__name heading-4 mb-0"
+						></div>
+						<div class="our-team-offcanvas__role body1"></div>
+					</div>
+				</div>
+
+				<div class="our-team-offcanvas__bio"></div>
+			</div>
+		</div>
+	<?php endif; ?>
 
 </div>

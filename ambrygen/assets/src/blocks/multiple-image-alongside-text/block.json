@@ -2,19 +2,18 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "ambrygen/multiple-image-alongside-text",
-  "title": "Multiple Image Alongside text",
+  "title": "Multiple Image Alongside Text",
   "category": "ambrygen",
   "icon": "networking",
-  "description": "Advanced hero section with AI healthcare visuals, animated counters, and multi-media layout system.",
+  "description": "Multiple foreground images alongside heading, description, and optional stats.",
   "supports": {
     "anchor": true,
     "html": false
   },
   "keywords": [
-    "hero",
-    "ai",
-    "healthcare",
-    "counter",
+    "images",
+    "text",
+    "stats",
     "statistics"
   ],
   "attributes": {
@@ -44,88 +43,39 @@
     },
     "heading": {
       "type": "string",
-      "default": "Transforming Healthcare with AI Innovation"
+      "default": ""
     },
     "content": {
       "type": "string",
-      "default": "Leveraging artificial intelligence to revolutionize patient care, diagnostics, and medical research."
+      "default": ""
     },
-    "counters": {
+    "stats": {
       "type": "array",
-      "default": [
-        {
-          "number": "100",
-          "prefix": "",
-          "suffix": "",
-          "label": "Publications"
-        },
-        {
-          "number": "50",
-          "prefix": "",
-          "suffix": "+",
-          "label": "Partners"
-        },
-        {
-          "number": "50",
-          "prefix": "",
-          "suffix": "k",
-          "label": "Variants to ClinVar"
-        },
-        {
-          "number": "100",
-          "prefix": "",
-          "suffix": "k+",
-          "label": "Tests Conducted"
+      "default": [],
+      "items": {
+        "type": "object",
+        "properties": {
+          "prefix": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string"
+          },
+          "postfix": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
         }
-      ]
+      }
     },
-    "imageTop": {
-      "type": "string",
-      "default": ""
-    },
-    "imageTopId": {
-      "type": "number",
-      "default": 0
-    },
-    "imageTopAlt": {
-      "type": "string",
-      "default": ""
-    },
-    "imageBottom": {
-      "type": "string",
-      "default": ""
-    },
-    "imageBottomId": {
-      "type": "number",
-      "default": 0
-    },
-    "imageBottomAlt": {
-      "type": "string",
-      "default": ""
-    },
-    "imageExtra": {
-      "type": "string",
-      "default": ""
-    },
-    "imageExtraId": {
-      "type": "number",
-      "default": 0
-    },
-    "imageExtraAlt": {
-      "type": "string",
-      "default": ""
-    },
-    "logoImage": {
-      "type": "string",
-      "default": ""
-    },
-    "logoImageId": {
-      "type": "number",
-      "default": 0
-    },
-    "logoImageAlt": {
-      "type": "string",
-      "default": ""
+    "images": {
+      "type": "array",
+      "default": []
     },
     "contentTopAlign": {
       "type": "boolean",
@@ -138,19 +88,26 @@
         "right"
       ],
       "default": "left"
-    },
-    "enableCounters": {
-      "type": "boolean",
-      "default": true
     }
   },
   "variations": [
     {
-      "name": "multiple-image-alongside-text-simple",
-      "title": "Multiple Image Alongside Text (Simple)",
-      "description": "Multiple image alongside text layout without counters",
+      "name": "stats-view",
+      "title": "Stats View",
+      "description": "Three foreground images with a stats repeater.",
       "attributes": {
-        "counters": []
+        "variation": "stats-view"
+      },
+      "scope": [
+        "inserter"
+      ]
+    },
+    {
+      "name": "normal-view",
+      "title": "Normal View",
+      "description": "Four foreground images without stats.",
+      "attributes": {
+        "variation": "normal-view"
       },
       "scope": [
         "inserter"
@@ -163,52 +120,66 @@
       "variation": "stats-view",
       "heading": "Transforming Healthcare with AI Innovation",
       "content": "Leveraging artificial intelligence to revolutionize patient care, diagnostics, and medical research.",
-      "counters": [
+      "stats": [
         {
-          "number": "100",
           "prefix": "",
-          "suffix": "",
-          "label": "Publications"
+          "number": "",
+          "postfix": "",
+          "label": "",
+          "description": ""
         },
         {
-          "number": "50",
           "prefix": "",
-          "suffix": "+",
-          "label": "Partners"
+          "number": "",
+          "postfix": "",
+          "label": "",
+          "description": ""
         },
         {
-          "number": "50",
           "prefix": "",
-          "suffix": "k",
-          "label": "Variants to ClinVar"
+          "number": "",
+          "postfix": "",
+          "label": "",
+          "description": ""
         },
         {
-          "number": "100",
           "prefix": "",
-          "suffix": "k+",
-          "label": "Tests Conducted"
+          "number": "",
+          "postfix": "",
+          "label": "",
+          "description": ""
         }
       ],
-      "imageTop": "",
-      "imageTopId": 0,
-      "imageTopAlt": "Ambry default preview image",
-      "imageBottom": "",
-      "imageBottomId": 0,
-      "imageBottomAlt": "Ambry default preview image",
-      "imageExtra": "",
-      "imageExtraId": 0,
-      "imageExtraAlt": "Ambry default preview image",
-      "logoImage": "",
-      "logoImageId": 0,
-      "logoImageAlt": "Ambry default preview image",
+      "images": [
+        {
+          "url": "",
+          "id": 0,
+          "alt": "Ambry default preview image"
+        },
+        {
+          "url": "",
+          "id": 0,
+          "alt": "Ambry default preview image"
+        },
+        {
+          "url": "",
+          "id": 0,
+          "alt": "Ambry default preview image"
+        },
+        {
+          "url": "",
+          "id": 0,
+          "alt": "Ambry default preview image"
+        }
+      ],
       "contentTopAlign": false,
-      "imagePosition": "left",
-      "enableCounters": true
+      "imagePosition": "left"
     }
   },
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
   "render": "file:./render.php",
   "textdomain": "ambrygen-web"
 }

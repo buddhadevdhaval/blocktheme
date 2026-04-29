@@ -1,9 +1,22 @@
-//editor scss
+.multiple-image-alongside-text__stats {
 
+	&--stat-data {
+		display: inline-block;
+	}
+}
 
-.ai-hero__counters {
+.multiple-image-alongside-text__stat-controls {
+	display: grid;
+	gap: 8px;
+	padding-bottom: 16px;
+	margin-bottom: 16px;
+	border-bottom: 1px solid #ddd;
+}
 
-    &--counter-data {
-        display: inline-block;
-    }
+.multiple-image-alongside-text__image-wrapper.is-placeholder {
+	opacity: 0.55;
+}
+
+.multiple-image-alongside-text__stats--stat-item.is-placeholder {
+	opacity: 0.55;
 }

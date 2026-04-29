@@ -8,6 +8,10 @@
   "parent": [
     "ambrygen/our-team"
   ],
+  "usesContext": [
+    "ambrygen/ourTeamVariation",
+    "ambrygen/ourTeamBlockId"
+  ],
   "attributes": {
     "postId": {
       "type": "number",

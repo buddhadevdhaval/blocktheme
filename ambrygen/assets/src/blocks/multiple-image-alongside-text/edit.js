@@ -4,13 +4,13 @@
 import { __ } from '@wordpress/i18n';
 import {
 	TagSelector,
-	ImageUploader,
 	DEFAULT_IMAGES,
+	ImageUploader,
 } from '../_shared/components';
 import { getThemeAssetUrl } from '../../utils/assets';
 
 /**
- * React hooks for performance optimization.
+ * React hooks.
  *
  * @see https://react.dev/reference/react
  */
@@ -31,84 +31,88 @@ import {
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/components/
  */
-import { PanelBody, ToggleControl } from '@wordpress/components';
+import {
+	Button,
+	PanelBody,
+	TextareaControl,
+	TextControl,
+	ToggleControl,
+} from '@wordpress/components';
 
 const VALID_HEADING_LEVELS = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ];
+const MAX_STATS = 4;
+const MAX_IMAGES = 4;
+const EMPTY_STAT_PLACEHOLDER = '0';
 
 const normalizeHeadingLevel = ( value ) =>
 	VALID_HEADING_LEVELS.includes( value ) ? value : 'h2';
 
-/**
- * Creates onSelect/onRemove handlers for an image attribute group.
- * Assumes attribute keys follow the pattern: baseKey, baseKeyId, baseKeyAlt, baseKeySrcSet, baseKeySizes.
- *
- * @param {string}   baseKey       Base attribute key (e.g. 'logoImage', 'imageTop').
- * @param {Function} setAttributes Block setAttributes function.
- * @return {{ onSelect: Function, onRemove: Function }} Image handler pair.
- */
-function makeImageHandlers( baseKey, setAttributes ) {
-	const onSelect = ( media ) =>
-		setAttributes( {
-			[ baseKey ]: media.url,
-			[ baseKey + 'Id' ]: media.id,
-			[ baseKey + 'Alt' ]: media.alt || '',
-		} );
+const getHeadingClass = ( headingLevel ) =>
+	`heading-${ normalizeHeadingLevel( headingLevel ).replace( 'h', '' ) }`;
 
-	const onRemove = () =>
-		setAttributes( {
-			[ baseKey ]: '',
-			[ baseKey + 'Id' ]: 0,
-			[ baseKey + 'Alt' ]: '',
-		} );
+const normalizeImage = ( image = {} ) => ( {
+	url: image.url || '',
+	id: Number( image.id ) || 0,
+	alt: image.alt || '',
+} );
 
-	return { onSelect, onRemove };
-}
+const normalizeStat = ( stat = {} ) => ( {
+	prefix: stat.prefix || '',
+	number: stat.number || '',
+	postfix: stat.postfix ?? stat.suffix ?? '',
+	label: stat.label ?? stat.title ?? '',
+	description: stat.description || '',
+} );
 
-/**
- * CounterItem Component
- *
- * Renders a single counter item with number, suffix, and label.
- * Extracted for better code organization and reusability.
- *
- * @param {Object}   props               Component properties.
- * @param {Object}   props.counter       Counter data object.
- * @param {number}   props.index         Counter index.
- * @param {Function} props.updateCounter Callback to update counter values.
- * @return {JSX.Element} CounterItem component.
- */
-function CounterItem( { counter, index, updateCounter } ) {
+const getStatKey = ( _stat, index ) => `stat-slot-${ index + 1 }`;
+
+const hasStatContent = ( stat ) =>
+	Boolean(
+		stat.prefix ||
+			stat.number ||
+			stat.postfix ||
+			stat.label ||
+			stat.description
+	);
+
+function StatControls( { stat, index, updateStat, removeStat } ) {
 	return (
-		<div className="ai-hero__counters--counter-item">
-			<div className="ai-hero__counters--counter-number heading-3 mb-0">
-				<RichText
-					tagName="div"
-					className="ai-hero__counters--count ai-hero__counters--counter-data"
-					value={ counter.number }
-					onChange={ ( value ) =>
-						updateCounter( index, 'number', value )
-					}
-					placeholder="0"
-					aria-label={ __( 'Counter number', 'ambrygen-web' ) }
-				/>
-				<RichText
-					tagName="div"
-					className="ai-hero__counters--counter-suffix ai-hero__counters--counter-data"
-					value={ counter.suffix }
-					onChange={ ( value ) =>
-						updateCounter( index, 'suffix', value )
-					}
-					placeholder=""
-					aria-label={ __( 'Counter suffix', 'ambrygen-web' ) }
-				/>
-			</div>
-			<RichText
-				tagName="div"
-				className="ai-hero__counters--counter-title body1"
-				value={ counter.label }
-				onChange={ ( value ) => updateCounter( index, 'label', value ) }
-				placeholder={ __( 'Label', 'ambrygen-web' ) }
-				aria-label={ __( 'Counter label', 'ambrygen-web' ) }
+		<div className="multiple-image-alongside-text__stat-controls">
+			<TextControl
+				label={ __( 'Prefix', 'ambrygen-web' ) }
+				value={ stat.prefix }
+				onChange={ ( value ) => updateStat( index, 'prefix', value ) }
 			/>
+			<TextControl
+				label={ __( 'Number', 'ambrygen-web' ) }
+				value={ stat.number }
+				onChange={ ( value ) => updateStat( index, 'number', value ) }
+			/>
+			<TextControl
+				label={ __( 'Postfix', 'ambrygen-web' ) }
+				value={ stat.postfix }
+				onChange={ ( value ) => updateStat( index, 'postfix', value ) }
+			/>
+			<TextControl
+				label={ __( 'Label', 'ambrygen-web' ) }
+				value={ stat.label }
+				onChange={ ( value ) => updateStat( index, 'label', value ) }
+			/>
+			<TextareaControl
+				label={ __( 'Description', 'ambrygen-web' ) }
+				value={ stat.description }
+				onChange={ ( value ) =>
+					updateStat( index, 'description', value )
+				}
+			/>
+			<Button
+				isDestructive
+				size="small"
+				variant="tertiary"
+				onClick={ () => removeStat( index ) }
+			>
+				{ __( 'Remove Stat', 'ambrygen-web' ) }
+			</Button>
 		</div>
 	);
 }
@@ -117,9 +121,9 @@ function CounterItem( { counter, index, updateCounter } ) {
  * Edit component for the Multiple Image Alongside Text block.
  *
  * Renders the block interface in the editor with:
- * - Three configurable images (logo, top, bottom)
+ * - Three or four configurable foreground images
  * - Rich text heading and content
- * - Four animated counters with number, suffix, and label
+ * - Four animated stats with prefix, number, postfix, label, and description
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
  *
@@ -130,92 +134,147 @@ function CounterItem( { counter, index, updateCounter } ) {
  * @return {JSX.Element} Block editor interface element.
  */
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
-	const fallbackImage = defaults?.placeholder || {};
-
 	const {
 		blockId,
-		className,
 		variation = 'stats-view',
 		heading,
 		content,
-		counters = [],
-		imageTop,
-		imageTopAlt,
-		imageBottom,
-		imageBottomAlt,
-		imageExtra,
-		imageExtraAlt,
-		logoImage,
-		logoImageAlt,
+		stats = [],
+		images = [],
 		headingLevel,
 		contentTopAlign,
 		imagePosition = 'left',
-		enableCounters,
 	} = attributes;
+	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
+	const placeholderImage = defaults?.placeholder || {};
 	const isImageRight = imagePosition === 'right';
-	const isNormalView =
-		'normal-view' === variation ||
-		'variation-history-block' === variation ||
-		( typeof className === 'string' &&
-			className.includes( 'variation-history-block' ) );
+	const normalizedVariation =
+		variation === 'normal-view' ? 'normal-view' : 'stats-view';
+	const isNormalView = 'normal-view' === normalizedVariation;
+	const isStatsView = ! isNormalView;
+	const normalizedStats = useMemo(
+		() => ( Array.isArray( stats ) ? stats : [] ).map( normalizeStat ),
+		[ stats ]
+	);
+	const visibleStats = normalizedStats.slice( 0, MAX_STATS );
+	const sourceImages = Array.isArray( images ) ? images : [];
+	const normalizedImages = useMemo(
+		() =>
+			Array.from( { length: MAX_IMAGES }, ( _value, index ) =>
+				normalizeImage( sourceImages[ index ] )
+			),
+		[ sourceImages ]
+	);
+	const visibleImageCount = isNormalView ? MAX_IMAGES : 3;
+	const visibleImages = normalizedImages.slice( 0, visibleImageCount );
 
-	const updateCounter = useCallback(
+	const updateStat = useCallback(
 		( index, field, value ) => {
-			const newCounters = [ ...counters ];
-			newCounters[ index ] = {
-				...newCounters[ index ],
+			const newStats = [ ...normalizedStats ];
+			newStats[ index ] = {
+				...newStats[ index ],
 				[ field ]: value,
 			};
-			setAttributes( { counters: newCounters } );
+			setAttributes( { stats: newStats } );
 		},
-		[ counters, setAttributes ]
+		[ normalizedStats, setAttributes ]
 	);
 
-	const { onSelect: handleLogoSelect, onRemove: handleLogoRemove } =
-		makeImageHandlers( 'logoImage', setAttributes );
-	const { onSelect: handleTopImageSelect, onRemove: handleTopImageRemove } =
-		makeImageHandlers( 'imageTop', setAttributes );
-	const {
-		onSelect: handleBottomImageSelect,
-		onRemove: handleBottomImageRemove,
-	} = makeImageHandlers( 'imageBottom', setAttributes );
-	const {
-		onSelect: handleExtraImageSelect,
-		onRemove: handleExtraImageRemove,
-	} = makeImageHandlers( 'imageExtra', setAttributes );
+	const addStat = useCallback( () => {
+		if ( normalizedStats.length >= MAX_STATS ) {
+			return;
+		}
+
+		setAttributes( {
+			stats: [
+				...normalizedStats,
+				{
+					prefix: '',
+					number: '',
+					postfix: '',
+					label: '',
+					description: '',
+				},
+			],
+		} );
+	}, [ normalizedStats, setAttributes ] );
+
+	const removeStat = useCallback(
+		( index ) => {
+			setAttributes( {
+				stats: normalizedStats.filter(
+					( _stat, statIndex ) => statIndex !== index
+				),
+			} );
+		},
+		[ normalizedStats, setAttributes ]
+	);
+
+	const updateImage = useCallback(
+		( index, media ) => {
+			const nextImages = [ ...normalizedImages ];
+			nextImages[ index ] = normalizeImage( {
+				url: media?.url,
+				id: media?.id,
+				alt: media?.alt,
+			} );
+			setAttributes( { images: nextImages } );
+		},
+		[ normalizedImages, setAttributes ]
+	);
+
+	const removeImage = useCallback(
+		( index ) => {
+			const nextImages = [ ...normalizedImages ];
+			nextImages[ index ] = normalizeImage();
+			setAttributes( { images: nextImages } );
+		},
+		[ normalizedImages, setAttributes ]
+	);
 
 	const blockProps = useBlockProps();
 	const HeadingTag = normalizeHeadingLevel( headingLevel );
-	const headingClass = isNormalView ? 'heading-3' : 'heading-1';
-	const logoImageUrl = logoImage || fallbackImage.url;
-	const imageTopUrl = imageTop || fallbackImage.url;
-	const imageBottomUrl = imageBottom || fallbackImage.url;
-	const imageExtraUrl = imageExtra || fallbackImage.url;
-	const layoutVariants = useMemo(
-		() => [
-			{
-				label: __( 'Stats View', 'ambrygen-web' ),
-				value: 'stats-view',
-				image: getThemeAssetUrl(
-					'/assets/src/images/multiple-image-alongside-text/states-view.png'
-				),
-			},
-			{
-				label: __( 'Normal View', 'ambrygen-web' ),
-				value: 'normal-view',
-				image: getThemeAssetUrl(
-					'/assets/src/images/multiple-image-alongside-text/normal-view.png'
-				),
-			},
-		],
-		[]
-	);
+	const headingClass = getHeadingClass( HeadingTag );
+	const hasHeading = Boolean( heading );
+	const hasContent = Boolean( content );
+	const showStats = isStatsView;
+	const hasVisibleStats = showStats && visibleStats.length > 0;
+	const previewImages = visibleImages
+		.map( ( image, index ) => ( {
+			key: `preview-image-slot-${ index + 1 }`,
+			url: image.url || placeholderImage.url || '',
+			alt:
+				image.alt ||
+				placeholderImage.alt ||
+				`${ __( 'Foreground image', 'ambrygen-web' ) } ${
+					index + 1
+				}`,
+			isPlaceholder: ! image.url,
+			isFullImage: ! isNormalView && index === 2,
+		} ) )
+		.filter( ( image ) => image.url );
+	const layoutVariants = [
+		{
+			label: __( 'Stats View', 'ambrygen-web' ),
+			value: 'stats-view',
+			image: getThemeAssetUrl(
+				'/assets/src/images/multiple-image-alongside-text/states-view.png'
+			),
+		},
+		{
+			label: __( 'Normal View', 'ambrygen-web' ),
+			value: 'normal-view',
+			image: getThemeAssetUrl(
+				'/assets/src/images/multiple-image-alongside-text/normal-view.png'
+			),
+		},
+	];
 
 	useEffect( () => {
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+		const clientIdSuffix = clientId.slice( 0, 8 );
+		const expectedId = `section-${ clientIdSuffix }`;
 
-		if ( ! blockId ) {
+		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
@@ -225,7 +284,44 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
-				<PanelBody title={ __( 'Settings', 'ambrygen-web' ) }>
+				<PanelBody
+					title={ __( 'Layout Variation', 'ambrygen-web' ) }
+					initialOpen
+				>
+					<div className="layout-variant-selector">
+						{ layoutVariants.map( ( variant ) => (
+							<button
+								key={ variant.value }
+								type="button"
+								className={ `variant-button ${
+									normalizedVariation === variant.value
+										? 'is-selected'
+										: ''
+								}` }
+								aria-pressed={
+									normalizedVariation === variant.value
+								}
+								onClick={ () =>
+									setAttributes( {
+										variation: variant.value,
+									} )
+								}
+							>
+								<img
+									src={ variant.image }
+									alt=""
+									aria-hidden="true"
+								/>
+								<span>{ variant.label }</span>
+							</button>
+						) ) }
+					</div>
+				</PanelBody>
+
+				<PanelBody
+					title={ __( 'Content Layout', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ HeadingTag }
@@ -236,31 +332,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 						type="heading"
 					/>
-					<div className="layout-variant-selector">
-						{ layoutVariants.map( ( variant ) => (
-							<button
-								key={ variant.value }
-								type="button"
-								className={ `variant-button ${
-									variation === variant.value
-										? 'is-selected'
-										: ''
-								}` }
-								aria-pressed={ variation === variant.value }
-								onClick={ () =>
-									setAttributes( {
-										variation: variant.value,
-									} )
-								}
-							>
-								<img
-									src={ variant.image }
-									alt={ variant.label }
-								/>
-								<span>{ variant.label }</span>
-							</button>
-						) ) }
-					</div>
 					<ToggleControl
 						label={ __(
 							'Top Align Content Column',
@@ -272,13 +343,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 					/>
 					<ToggleControl
-						label={ __( 'Enable Counters', 'ambrygen-web' ) }
-						checked={ enableCounters !== false }
-						onChange={ ( value ) =>
-							setAttributes( { enableCounters: value } )
-						}
-					/>
-					<ToggleControl
 						label={ __( 'Show Image on Right', 'ambrygen-web' ) }
 						checked={ isImageRight }
 						onChange={ ( value ) =>
@@ -287,150 +351,113 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							} )
 						}
 					/>
-
-					<ImageUploader
-						label={ __( 'Logo Image', 'ambrygen-web' ) }
-						url={ logoImage }
-						onSelect={ handleLogoSelect }
-						onRemove={ handleLogoRemove }
-					/>
-
-					<ImageUploader
-						label={ __( 'Top Image', 'ambrygen-web' ) }
-						url={ imageTop }
-						onSelect={ handleTopImageSelect }
-						onRemove={ handleTopImageRemove }
-					/>
-
-					<ImageUploader
-						label={ __( 'Bottom Image', 'ambrygen-web' ) }
-						url={ imageBottom }
-						onSelect={ handleBottomImageSelect }
-						onRemove={ handleBottomImageRemove }
-					/>
-					{ isNormalView && (
-						<ImageUploader
-							label={ __( 'Bottom right', 'ambrygen-web' ) }
-							url={ imageExtra }
-							onSelect={ handleExtraImageSelect }
-							onRemove={ handleExtraImageRemove }
-						/>
-					) }
 				</PanelBody>
+
+				<PanelBody
+					title={ __( 'Images', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
+					{ visibleImages.map( ( image, index ) => (
+						<ImageUploader
+							key={ `foreground-image-${ index + 1 }` }
+							label={ `${
+								__( 'Foreground Image', 'ambrygen-web' )
+							} ${ index + 1 }` }
+							url={ image.url }
+							onSelect={ ( media ) =>
+								updateImage( index, media )
+							}
+							onRemove={ () => removeImage( index ) }
+						/>
+					) ) }
+				</PanelBody>
+
+				{ isStatsView && (
+					<PanelBody
+						title={ __( 'Stats', 'ambrygen-web' ) }
+						initialOpen={ false }
+					>
+						{ visibleStats.map( ( stat, index ) => (
+							<StatControls
+								key={ getStatKey( stat, index ) }
+								stat={ stat }
+								index={ index }
+								updateStat={ updateStat }
+								removeStat={ removeStat }
+							/>
+						) ) }
+						{ visibleStats.length < MAX_STATS && (
+							<Button variant="secondary" onClick={ addStat }>
+								{ __( 'Add Stat', 'ambrygen-web' ) }
+							</Button>
+						) }
+					</PanelBody>
+				) }
 			</InspectorControls>
 
 			<div
-				className={ `ai-hero ${
+				className={ `multiple-image-alongside-text ${
 					contentTopAlign ? ' has-top-align' : ''
 				}${ isImageRight ? ' block-rtl' : '' }${
-					isNormalView ? ' variation-history-block' : ''
+					isNormalView ? ' is-normal-view' : ''
 				}` }
 			>
-				<div className="is-style-gl-s50" />
-				<div className="ai-hero__grid">
-					<div className="ai-hero__col ai-hero__col--images">
-						<div className="ai-hero__images">
-							<div className="ai-hero__image-wrapper">
-								<div className="ai-hero__logo">
-									<div className="ai-hero__logo-inner">
-										{ logoImageUrl && (
+				<div className="is-style-gl-s50" aria-hidden="true" />
+				<div className="multiple-image-alongside-text__grid">
+					<div className="multiple-image-alongside-text__col multiple-image-alongside-text__col--images">
+						<div className="multiple-image-alongside-text__images">
+							{ previewImages.map( ( image, index ) => (
+								<div
+									key={ image.key }
+									className={ `multiple-image-alongside-text__image-wrapper${
+										image.isFullImage
+											? ' multiple-image-alongside-text__image-wrapper--full'
+											: ''
+									}${
+										image.isPlaceholder
+											? ' is-placeholder'
+											: ''
+									}` }
+								>
+									<div className="multiple-image-alongside-text__image">
+										{ image.url && (
 											<img
-												src={ logoImageUrl }
-												alt={
-													logoImageAlt ||
-													fallbackImage.alt ||
-													__(
-														'Company logo',
-														'ambrygen-web'
-													)
-												}
+												src={ image.url }
+												alt={ image.alt }
 											/>
 										) }
 									</div>
 								</div>
-							</div>
-							<div className="ai-hero__image-wrapper">
-								<div className="ai-hero__image">
-									{ imageTopUrl && (
-										<img
-											src={ imageTopUrl }
-											alt={
-												imageTopAlt ||
-												fallbackImage.alt ||
-												__(
-													'Hero top image',
-													'ambrygen-web'
-												)
-											}
-										/>
-									) }
-								</div>
-							</div>
-							<div
-								className={ `ai-hero__image-wrapper${
-									isNormalView
-										? ''
-										: ' ai-hero__image-wrapper--full'
-								}` }
-							>
-								<div className="ai-hero__image">
-									{ imageBottomUrl && (
-										<img
-											src={ imageBottomUrl }
-											alt={
-												imageBottomAlt ||
-												fallbackImage.alt ||
-												__(
-													'Hero bottom Left',
-													'ambrygen-web'
-												)
-											}
-										/>
-									) }
-								</div>
-							</div>
-							{ isNormalView && (
-								<div className="ai-hero__image-wrapper">
-									<div className="ai-hero__image">
-										{ imageExtraUrl && (
-											<img
-												src={ imageExtraUrl }
-												alt={
-													imageExtraAlt ||
-													fallbackImage.alt ||
-													__(
-														'Hero bottom right',
-														'ambrygen-web'
-													)
-												}
-											/>
-										) }
-									</div>
-								</div>
-							) }
+							) ) }
 						</div>
 					</div>
-					<div className="ai-hero__col ai-hero__col--content">
-						<div className="ai-hero__content">
+					<div className="multiple-image-alongside-text__col multiple-image-alongside-text__col--content">
+						<div className="multiple-image-alongside-text__content">
 							<RichText
 								tagName={ HeadingTag }
-								className={ `ai-hero__heading ${ headingClass } mb-0` }
+								className={ `multiple-image-alongside-text__heading ${ headingClass } mb-0` }
 								value={ heading }
 								onChange={ ( value ) =>
 									setAttributes( { heading: value } )
 								}
 								allowedFormats={ [ 'core/text-color' ] }
 								placeholder={ __(
-									'Hero heading…',
+									'Add Heading...',
 									'ambrygen-web'
 								) }
 								aria-label={ __(
-									'Hero heading',
+									'Add Heading...',
 									'ambrygen-web'
 								) }
+								aria-label={ __( 'Heading', 'ambrygen-web' ) }
 							/>
-							<div className="is-style-gl-s24"></div>
-							<div className="ai-hero__description-text body1 block-description">
+							{ hasHeading && hasContent && (
+								<div
+									className="is-style-gl-s24"
+									aria-hidden="true"
+								></div>
+							) }
+							<div className="multiple-image-alongside-text__description-text body1 block-description">
 								<RichText
 									tagName="div"
 									value={ content }
@@ -438,35 +465,88 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 										setAttributes( { content: value } )
 									}
 									placeholder={ __(
-										'Hero content…',
+										'Add Description...',
 										'ambrygen-web'
 									) }
 									aria-label={ __(
-										'Hero description',
+										'Description',
 										'ambrygen-web'
 									) }
 								/>
 							</div>
 
-							{ enableCounters !== false && (
+							{ showStats && (
 								<>
-									<div className="is-style-gl-s24"></div>
-									<div className="ai-hero__counters">
-										{ counters.map( ( counter, index ) => (
-											<CounterItem
-												key={ index }
-												counter={ counter }
-												index={ index }
-												updateCounter={ updateCounter }
-											/>
-										) ) }
-									</div>
+									{ ( hasHeading || hasContent ) &&
+										hasVisibleStats && (
+											<div
+												className="is-style-gl-s24"
+												aria-hidden="true"
+											></div>
+										) }
+					{ hasVisibleStats && (
+										<div className="multiple-image-alongside-text__stats">
+											{ visibleStats.map(
+												( stat, index ) => {
+													const isEmpty =
+														! hasStatContent(
+															stat
+														);
+
+													return (
+														<div
+															key={ getStatKey(
+																stat,
+																index
+															) }
+															className={ `multiple-image-alongside-text__stats--stat-item${
+																isEmpty
+																	? ' is-placeholder'
+																	: ''
+															}` }
+														>
+															<div className="multiple-image-alongside-text__stats--stat-number heading-3 mb-0">
+																<span className="multiple-image-alongside-text__stats--stat-prefix">
+																	{
+																		stat.prefix
+																	}
+																</span>
+																<span className="multiple-image-alongside-text__stats--count multiple-image-alongside-text__stats--stat-data">
+																	{ stat.number ||
+																		EMPTY_STAT_PLACEHOLDER }
+																</span>
+																<span className="multiple-image-alongside-text__stats--stat-postfix multiple-image-alongside-text__stats--stat-data">
+																	{
+																		stat.postfix
+																	}
+																</span>
+															</div>
+															{ stat.label && (
+																<div className="multiple-image-alongside-text__stats--stat-title body1">
+																	{
+																		stat.label
+																	}
+																</div>
+															) }
+															{ stat.description && (
+																<div className="multiple-image-alongside-text__stats--stat-description">
+																	{
+																		stat.description
+																	}
+																</div>
+															) }
+														</div>
+													);
+												}
+											) }
+										</div>
+									) }
 								</>
 							) }
 						</div>
 					</div>
 				</div>
-				<div className="is-style-gl-s50" />
+				<div className="is-style-gl-s50" aria-hidden="true" />
 			</div>
 		</div>
 	);

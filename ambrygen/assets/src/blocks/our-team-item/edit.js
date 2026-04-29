@@ -1,5 +1,10 @@
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
-import { SelectControl, Spinner, Button, ComboboxControl, PanelBody } from '@wordpress/components';
+import {
+	Spinner,
+	Button,
+	ComboboxControl,
+	PanelBody,
+} from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { useMemo, useState } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -8,17 +13,32 @@ import { DEFAULT_IMAGES } from '../_shared/components';
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { postId = 0 } = attributes;
+	const selectedPostId = Number( postId ) || 0;
 	const { removeBlock } = useDispatch( 'core/block-editor' );
 	const [ searchInput, setSearchInput ] = useState( '' );
 	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
-	const hasSelectedPost = Boolean( postId );
+	const hasSelectedPost = Boolean( selectedPostId );
+	const parentVariation = useSelect(
+		( select ) => {
+			const blockEditor = select( 'core/block-editor' );
+			const parentId = blockEditor.getBlockRootClientId( clientId );
+			const parentBlock = parentId
+				? blockEditor.getBlock( parentId )
+				: null;
 
-	// Search for team members (authors) based on searchInput
+			return parentBlock?.attributes?.variation || 'grid-view';
+		},
+		[ clientId ]
+	);
+	const isSliderView = parentVariation === 'slider-view';
+	const classPrefix = isSliderView ? 'our-leadership' : 'our-team';
+
+	// Search for team members based on searchInput.
 	const teamMembers = useSelect( ( select ) => {
 		const query = {
 			per_page: 20,
 			orderby: 'title',
-			post_status: 'publish',
+			status: 'publish',
 			order: 'asc',
 		};
 
@@ -26,27 +46,40 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			query.search = searchInput;
 		}
 
-		return select( 'core' ).getEntityRecords( 'postType', 'author', query );
+		return select( 'core' ).getEntityRecords(
+			'postType',
+			'our_team',
+			query
+		);
 	}, [ searchInput ] );
 
-	// Get current selected post details
+	// Get current selected post details.
 	const selectedPost = useSelect(
 		( select ) => {
-			return postId
-				? select( 'core' ).getEntityRecord(
-						'postType',
-						'author',
-						postId,
-						{
-							_embed: true,
-						}
-				  )
-				: null;
+			if ( ! selectedPostId ) {
+				return null;
+			}
+
+			const teamPost = select( 'core' ).getEntityRecord(
+				'postType',
+				'our_team',
+				selectedPostId,
+				{
+					_embed: true,
+					context: 'edit',
+				}
+			);
+
+			if ( teamPost ) {
+				return teamPost;
+			}
+
+			return null;
 		},
-		[ postId ]
+		[ selectedPostId ]
 	);
 
-	// Get sibling selected IDs
+	// Get sibling selected IDs.
 	const selectedIds = useSelect(
 		( select ) => {
 			const blockEditor = select( 'core/block-editor' );
@@ -54,39 +87,68 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			const siblings = blockEditor.getBlocks( parentId );
 
 			return siblings
-				.map( ( block ) => block.attributes?.postId )
-				.filter( ( id ) => id && id !== postId );
+				.map( ( block ) => Number( block.attributes?.postId ) || 0 )
+				.filter( ( id ) => id && id !== selectedPostId );
 		},
-		[ clientId, postId ]
+		[ clientId, selectedPostId ]
 	);
 
-	// Searchable options (mapped from REST results)
+	// Searchable options mapped from REST results.
 	const options = useMemo( () => {
-		if ( ! teamMembers ) return [];
+		if ( ! teamMembers ) {
+			return [];
+		}
+
 		return teamMembers
 			.filter( ( post ) => ! selectedIds.includes( post.id ) )
 			.map( ( post ) => ( {
-				label: decodeEntities( post.title.rendered ),
+				label: decodeEntities(
+					post?.title?.rendered || post?.title?.raw || ''
+				),
 				value: post.id,
 			} ) );
 	}, [ teamMembers, selectedIds ] );
 
+	const blockProps = useBlockProps( {
+		className: isSliderView ? 'swiper-slide' : 'our-team__card',
+	} );
+
 	return (
-		<div { ...useBlockProps( { className: 'our-team__card' } ) }>
+		<div { ...blockProps }>
 			<InspectorControls>
-				<PanelBody title={ __( 'Team Member Settings', 'ambrygen-web' ) }>
+				<PanelBody
+					title={ __( 'Team Member Settings', 'ambrygen-web' ) }
+				>
 					<ComboboxControl
-						label={ __( 'Select Member', 'ambrygen-web' ) }
-						value={ postId || null }
+						label={
+							hasSelectedPost
+								? __( 'Change Member', 'ambrygen-web' )
+								: __( 'Select Member', 'ambrygen-web' )
+						}
+						value={ selectedPostId || null }
 						options={ options }
-						onFilterValueChange={ ( value ) => setSearchInput( value ) }
+						onFilterValueChange={ ( value ) =>
+							setSearchInput( value )
+						}
 						onChange={ ( value ) =>
 							setAttributes( {
 								postId: parseInt( value, 10 ) || 0,
 							} )
 						}
-						help={ __( 'Search by name to find a team member.', 'ambrygen-web' ) }
+						help={ __(
+							'Search by name to find a team member.',
+							'ambrygen-web'
+						) }
 					/>
+					{ hasSelectedPost && (
+						<Button
+							isDestructive
+							variant="secondary"
+							onClick={ () => removeBlock( clientId ) }
+						>
+							{ __( 'Remove Member', 'ambrygen-web' ) }
+						</Button>
+					) }
 				</PanelBody>
 			</InspectorControls>
 
@@ -97,7 +159,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						label={ __( 'Search Team Member', 'ambrygen-web' ) }
 						value=""
 						options={ options }
-						onFilterValueChange={ ( value ) => setSearchInput( value ) }
+						onFilterValueChange={ ( value ) =>
+							setSearchInput( value )
+						}
 						onChange={ ( value ) =>
 							setAttributes( {
 								postId: parseInt( value, 10 ) || 0,
@@ -115,52 +179,52 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					const imageUrl =
 						selectedPost?._embedded?.[ 'wp:featuredmedia' ]?.[ 0 ]
 							?.source_url || defaults?.placeholder?.url;
-					return (
+					const designation =
+						selectedPost.meta?.user_designation ||
+						selectedPost.meta?.designation ||
+						'';
+
+					const cardContent = (
 						<>
-							<div className="our-team__image-wrapper">
+							<div className={ `${ classPrefix }__image-wrapper` }>
 								<img
 									src={ imageUrl }
 									alt={ decodeEntities(
 										selectedPost.title.rendered
 									) }
-									className="our-team__image"
+									className={ `${ classPrefix }__image` }
 								/>
 							</div>
 
-							<div className="our-team__info">
-								<div className="our-team__name subtitle1-sbold">
+							<div className={ `${ classPrefix }__info` }>
+								<div
+									className={ `${ classPrefix }__name subtitle1-sbold` }
+								>
 									{ decodeEntities(
 										selectedPost.title.rendered
 									) }
-									<div className="our-team__link"></div>
+									<div
+										className={ `${ classPrefix }__link` }
+									></div>
 								</div>
 
-								<div className="our-team__role body1">
-									{ selectedPost.meta?.user_designation || '' }
+								<div
+									className={ `${ classPrefix }__role ${
+										isSliderView ? 'subtitle2' : 'body1'
+									}` }
+								>
+									{ designation }
 								</div>
-							</div>
-
-							<div className="is-style-gl-s24"></div>
-
-							{ /* Actions */ }
-							<div className="our-team__actions actions-button">
-								<Button
-									variant="secondary"
-									onClick={ () =>
-										setAttributes( { postId: 0 } )
-									}
-								>
-									{ __( 'Change Member', 'ambrygen-web' ) }
-								</Button>
-
-								<Button
-									isDestructive
-									onClick={ () => removeBlock( clientId ) }
-								>
-									{ __( 'Remove Member', 'ambrygen-web' ) }
-								</Button>
 							</div>
 						</>
+					);
+
+					return isSliderView ? (
+						<div className="our-leadership__card">
+							{ cardContent }
+						</div>
+					) : (
+						cardContent
 					);
 				} )() }
 		</div>

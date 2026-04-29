@@ -1,0 +1,35 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ambrygen/medium-icon-grid-item",
+	"title": "Medium Icon Grid Item",
+	"category": "ambrygen",
+	"icon": "format-image",
+	"parent": [ "ambrygen/medium-icon-grid" ],
+	"description": "A single card for the Medium Icon Grid block.",
+	"textdomain": "ambrygen-web",
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"attributes": {
+		"iconId": {
+			"type": "number",
+			"default": 0
+		},
+		"iconAlt": {
+			"type": "string",
+			"default": ""
+		},
+		"title": {
+			"type": "string",
+			"default": ""
+		},
+		"description": {
+			"type": "string",
+			"default": ""
+		}
+	}
+}

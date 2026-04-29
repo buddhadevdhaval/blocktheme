@@ -9,6 +9,10 @@
   "supports": {
     "html": false
   },
+  "providesContext": {
+    "ambrygen/ourTeamVariation": "variation",
+    "ambrygen/ourTeamBlockId": "blockId"
+  },
   "attributes": {
     "blockId": {
       "type": "string",
@@ -26,6 +30,35 @@
       "type": "string",
       "default": "h2",
       "enum": ["h1", "h2", "h3", "h4", "h5", "h6"]
+    },
+    "variation": {
+      "type": "string",
+      "default": "grid-view",
+      "enum": ["grid-view", "slider-view"]
+    },
+    "memberTypes": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "number"
+      }
+    },
+    "selectionMode": {
+      "type": "string",
+      "default": "manual",
+      "enum": ["manual", "taxonomy"]
+    },
+    "showNavigation": {
+      "type": "boolean",
+      "default": true
+    },
+    "showPagination": {
+      "type": "boolean",
+      "default": true
+    },
+    "autoplay": {
+      "type": "boolean",
+      "default": false
     }
   },
   "editorScript": "file:./index.js",
@@ -38,7 +71,8 @@
     "attributes": {
       "title": "Title",
       "intro": "We are proud to be leading the industry that we love and working together.",
-      "headingLevel": "h2"
+      "headingLevel": "h2",
+      "variation": "grid-view"
     }
   }
 }

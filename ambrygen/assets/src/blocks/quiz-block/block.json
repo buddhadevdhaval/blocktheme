@@ -1,0 +1,102 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/quiz-block",
+  "title": "Quiz Block",
+  "category": "ambrygen",
+  "icon": "forms",
+  "description": "Interactive hereditary cancer risk checklist with dynamic result messaging and CTA buttons.",
+  "textdomain": "ambrygen-web",
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "viewScript": "file:./view.js",
+  "attributes": {
+    "blockId": {
+      "type": "string"
+    },
+    "eyebrowText": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "headingTag": {
+      "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ]
+    },
+    "cardTitle": {
+      "type": "string"
+    },
+    "cardSubtitle": {
+      "type": "string"
+    },
+    "checklistItems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "noRiskText": {
+      "type": "string"
+    },
+    "atRiskText": {
+      "type": "string"
+    },
+    "buttons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "rel": {
+            "type": "string"
+          },
+          "variant": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "attributes": {
+      "blockId": "quiz-block-example"
+    }
+  }
+}

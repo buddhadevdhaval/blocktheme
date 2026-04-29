@@ -1,0 +1,52 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/generic-result-cards",
+  "title": "Generic Result Cards",
+  "category": "ambrygen",
+  "icon": "columns",
+  "description": "Section block for generic result cards.",
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "attributes": {
+    "blockId": {
+      "type": "string"
+    },
+    "eyebrowText": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2",
+      "enum": ["h1", "h2", "h3", "h4", "h5", "h6"]
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "footContent": {
+      "type": "string"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web",
+  "example": {
+    "attributes": {
+      "blockId": "generic-result-cards-example"
+    }
+  }
+}

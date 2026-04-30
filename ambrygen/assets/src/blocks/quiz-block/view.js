@@ -34,8 +34,10 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			}
 		};
 
-		checkboxes.forEach( ( checkbox ) => {
-			checkbox.addEventListener( 'change', updateResults );
+		block.addEventListener( 'change', ( event ) => {
+			if ( event.target.classList.contains( 'js-risk-checkbox' ) ) {
+				updateResults();
+			}
 		} );
 
 		updateResults();

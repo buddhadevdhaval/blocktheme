@@ -14,18 +14,19 @@ import {
 } from '../_shared/components';
 
 const createChecklistId = () =>
-	`risk-item-${Date.now().toString(36)}-${Math.random()
-		.toString(36)
-		.slice(2, 8)}`;
+	`risk-item-${ Date.now().toString( 36 ) }-${ Math.random()
+		.toString( 36 )
+		.slice( 2, 8 ) }`;
 
-const createChecklistItem = () => ({
+const createChecklistItem = () => ( {
 	id: createChecklistId(),
 	text: '',
-});
+} );
 
 const BUTTON_VARIANT_MAP = {
 	dark: 'site-btn',
-	'is-style-site-tertiary-btn': 'site-btn is-style-site-tertiary-btn has-right-arrow',
+	'is-style-site-tertiary-btn':
+		'site-btn is-style-site-tertiary-btn has-right-arrow',
 };
 
 const getFieldButtonValue = ( button = {} ) => ( {
@@ -92,6 +93,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		} );
 	}, [ checklistItems, setAttributes ] );
 
+	const blockProps = useBlockProps( {
+		className: 'block-layout risk-checklist',
+	} );
+
 	if ( blockId === 'quiz-block-example' ) {
 		return (
 			<BlockExamplePreview
@@ -111,7 +116,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const addChecklistItem = () => {
 		setAttributes( {
-			checklistItems: [...checklistItems, createChecklistItem()],
+			checklistItems: [ ...checklistItems, createChecklistItem() ],
 		} );
 	};
 
@@ -127,11 +132,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		} );
 	};
 
-	const primaryButton = buttons?.[0] || {};
-	const secondaryButton = buttons?.[1] || {};
-	const blockProps = useBlockProps( {
-		className: 'block-layout risk-checklist',
-	} );
+	const primaryButton = buttons?.[ 0 ] || {};
+	const secondaryButton = buttons?.[ 1 ] || {};
 	const hasEyebrowText = Boolean( eyebrowText );
 	const hasHeading = Boolean( heading );
 	const hasCardTitle = Boolean( cardTitle );
@@ -209,10 +211,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { eyebrowText: value } )
 						}
-						placeholder={ __( 'Add Eyebrow...', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Eyebrow…', 'ambrygen-web' ) }
 					/>
 					{ hasEyebrowText && hasHeading && (
-						<div className="is-style-gl-s12" aria-hidden="true"></div>
+						<div
+							className="is-style-gl-s12"
+							aria-hidden="true"
+						></div>
 					) }
 					<RichText
 						tagName={ headingTag || 'h2' }
@@ -221,7 +226,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { heading: value } )
 						}
-						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 					/>
 				</div>
 
@@ -238,10 +243,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							onChange={ ( value ) =>
 								setAttributes( { cardTitle: value } )
 							}
-							placeholder={ __( 'Add Card Title...', 'ambrygen-web' ) }
+							placeholder={ __(
+								'Add Card Title…',
+								'ambrygen-web'
+							) }
 						/>
 						{ hasCardTitle && hasCardSubtitle && (
-							<div className="is-style-gl-s8" aria-hidden="true"></div>
+							<div
+								className="is-style-gl-s8"
+								aria-hidden="true"
+							></div>
 						) }
 						<RichText
 							tagName="div"
@@ -251,7 +262,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								setAttributes( { cardSubtitle: value } )
 							}
 							placeholder={ __(
-								'Add Card Short Description...',
+								'Add Card Short Description…',
 								'ambrygen-web'
 							) }
 						/>
@@ -259,29 +270,46 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 					<div className="risk-checklist__card-body">
 						<div className="risk-checklist__actions">
-							<Button variant="primary" onClick={ addChecklistItem }>
+							<Button
+								variant="primary"
+								onClick={ addChecklistItem }
+							>
 								{ __( 'Add Checklist Item', 'ambrygen-web' ) }
 							</Button>
-							<div className="is-style-gl-s32" aria-hidden="true"></div>
+							<div
+								className="is-style-gl-s32"
+								aria-hidden="true"
+							></div>
 						</div>
 
 						<div className="risk-checklist__items">
 							{ checklistItems.map( ( item, index ) => (
-								<div className="risk-checklist__item" key={ item.id }>
+								<div
+									className="risk-checklist__item"
+									key={ item.id }
+								>
 									<div className="risk-checklist__item-toolbar">
 										<div className="subtitle2-sbold risk-checklist__item-toolbar-title">
-											{ __( 'Item', 'ambrygen-web' ) } { index + 1 }
+											{ __( 'Item', 'ambrygen-web' ) }{ ' ' }
+											{ index + 1 }
 										</div>
 										<Button
 											icon={ trash }
 											size="small"
 											isDestructive
-											disabled={ checklistItems.length <= 1 }
-											onClick={ () => removeChecklistItem( item.id ) }
-											label={ __( 'Remove', 'ambrygen-web' ) }
+											disabled={
+												checklistItems.length <= 1
+											}
+											onClick={ () =>
+												removeChecklistItem( item.id )
+											}
+											label={ __(
+												'Remove',
+												'ambrygen-web'
+											) }
 										/>
 									</div>
-									<label className="risk-checklist__item-label">
+									<div className="risk-checklist__item-label">
 										<input
 											type="checkbox"
 											className="risk-checklist__checkbox"
@@ -296,20 +324,26 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 											className="body1 risk-checklist__item-text"
 											value={ item.text || '' }
 											onChange={ ( value ) =>
-												updateChecklistItem( item.id, value )
+												updateChecklistItem(
+													item.id,
+													value
+												)
 											}
 											placeholder={ __(
 												'Checklist Item Text',
 												'ambrygen-web'
 											) }
 										/>
-									</label>
+									</div>
 								</div>
 							) ) }
 						</div>
 
 						{ ( hasNoRiskText || hasAtRiskText ) && (
-							<div className="is-style-gl-s24" aria-hidden="true"></div>
+							<div
+								className="is-style-gl-s24"
+								aria-hidden="true"
+							></div>
 						) }
 
 						<div className="risk-checklist__result risk-checklist__result--no-risk">
@@ -321,13 +355,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									setAttributes( { noRiskText: value } )
 								}
 								placeholder={ __(
-									'Add Instructions...',
+									'Add Instructions…',
 									'ambrygen-web'
 								) }
 							/>
 						</div>
-						
-						<div className="is-style-gl-s24" aria-hidden="true"></div>
+
+						<div
+							className="is-style-gl-s24"
+							aria-hidden="true"
+						></div>
 
 						<div className="risk-checklist__result risk-checklist__result--at-risk">
 							<RichText
@@ -338,7 +375,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									setAttributes( { atRiskText: value } )
 								}
 								placeholder={ __(
-									'Add Risk Instructions...',
+									'Add Risk Instructions…',
 									'ambrygen-web'
 								) }
 							/>

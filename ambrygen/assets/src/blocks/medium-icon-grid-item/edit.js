@@ -26,9 +26,25 @@ export default function Edit( { attributes, setAttributes } ) {
 				return '';
 			}
 
-			const media = select( 'core' ).getMedia( iconId );
+			const media = select( 'core' ).getMedia( iconId, {
+				context: 'view',
+			} );
+
+			if ( media === undefined ) {
+				return '';
+			}
 
 			return media?.source_url || '';
+		},
+		[ iconId ]
+	);
+	const isLoadingImage = useSelect(
+		( select ) => {
+			if ( ! iconId ) {
+				return false;
+			}
+
+			return select( 'core' ).isResolving( 'getMedia', [ iconId ] );
 		},
 		[ iconId ]
 	);
@@ -57,6 +73,11 @@ export default function Edit( { attributes, setAttributes } ) {
 			</InspectorControls>
 
 			<div { ...blockProps }>
+				{ isLoadingImage && ! iconPreviewUrl && (
+					<div className="icon-card-grid__icon-wrap">
+						<div className="icon-card-grid__icon" aria-hidden="true"></div>
+					</div>
+				) }
 				{ iconPreviewUrl && (
 					<div className="icon-card-grid__icon-wrap">
 						<img

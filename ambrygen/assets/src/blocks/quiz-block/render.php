@@ -1,6 +1,6 @@
 <?php
 /**
- * Render: Quize Block
+ * Render: Quiz Block
  *
  * @param array    $attributes The block attributes.
  * @param string   $content    The block content.
@@ -35,6 +35,20 @@ $ambrygen_buttons       = isset( $ambrygen_attributes['buttons'] ) && is_array( 
 $ambrygen_heading_tag      = Helper::get_heading_tag( $ambrygen_heading_tag, 'h2' );
 $ambrygen_has_no_risk_text = '' !== trim( wp_strip_all_tags( $ambrygen_no_risk_text ) );
 $ambrygen_has_at_risk_text = '' !== trim( wp_strip_all_tags( $ambrygen_at_risk_text ) );
+$ambrygen_valid_checklist  = array_values(
+	array_filter(
+		$ambrygen_checklist,
+		static function ( $ambrygen_item ) {
+			if ( ! is_array( $ambrygen_item ) ) {
+				return false;
+			}
+
+			$ambrygen_item_text = isset( $ambrygen_item['text'] ) ? $ambrygen_item['text'] : '';
+
+			return '' !== trim( wp_strip_all_tags( $ambrygen_item_text ) );
+		}
+	)
+);
 $ambrygen_valid_buttons    = array_values(
 	array_filter(
 		$ambrygen_buttons,
@@ -64,6 +78,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 $ambrygen_id_base            = $ambrygen_block_id ? $ambrygen_block_id : wp_unique_id( 'risk-checklist-' );
 $ambrygen_heading_id         = '' !== trim( wp_strip_all_tags( $ambrygen_heading ) ) ? $ambrygen_id_base . '-title' : '';
 $ambrygen_card_title_id      = '' !== trim( wp_strip_all_tags( $ambrygen_card_title ) ) ? $ambrygen_id_base . '-card-title' : '';
+$ambrygen_checklist_help_id  = $ambrygen_id_base . '-instructions';
 $ambrygen_has_header_content = '' !== $ambrygen_eyebrow_text || '' !== $ambrygen_heading;
 $ambrygen_has_card_header    = '' !== $ambrygen_card_title || '' !== $ambrygen_card_subtitle;
 $ambrygen_card_labelledby    = $ambrygen_heading_id ? $ambrygen_heading_id : $ambrygen_card_title_id;
@@ -96,6 +111,8 @@ $ambrygen_card_labelledby    = $ambrygen_heading_id ? $ambrygen_heading_id : $am
 		role="region"
 		<?php if ( $ambrygen_card_labelledby ) : ?>
 			aria-labelledby="<?php echo esc_attr( $ambrygen_card_labelledby ); ?>"
+		<?php elseif ( '' !== trim( wp_strip_all_tags( $ambrygen_card_title ) ) ) : ?>
+			aria-label="<?php echo esc_attr( wp_strip_all_tags( $ambrygen_card_title ) ); ?>"
 		<?php else : ?>
 			aria-label="<?php echo esc_attr__( 'Risk checklist card', 'ambrygen-web' ); ?>"
 		<?php endif; ?>
@@ -124,23 +141,32 @@ $ambrygen_card_labelledby    = $ambrygen_heading_id ? $ambrygen_heading_id : $am
 		</div>
 
 		<div class="risk-checklist__card-body">
-			<div class="risk-checklist__items" role="group">
-				<?php foreach ( $ambrygen_checklist as $ambrygen_item ) : ?>
-					<?php
-					if ( ! is_array( $ambrygen_item ) ) {
-						continue;
-					}
+			<div class="screen-reader-text">
+				<?php esc_html_e( 'Select any items that apply to you. Results will update automatically as you make selections.', 'ambrygen-web' ); ?>
+			</div>
 
-					$ambrygen_item_text = isset( $ambrygen_item['text'] ) ? $ambrygen_item['text'] : '';
+				<?php if ( empty( $ambrygen_checklist ) ) : ?>
+				<div class="risk-checklist__empty-message">
+					<?php esc_html_e( 'No checklist items have been added yet.', 'ambrygen-web' ); ?>
+				</div>
+				<?php else : ?>
+			<div class="risk-checklist__items" role="group" aria-label="<?php esc_attr_e( 'Risk factors checklist', 'ambrygen-web' ); ?>">
+					<?php foreach ( $ambrygen_checklist as $ambrygen_item ) : ?>
+						<?php
+						if ( ! is_array( $ambrygen_item ) ) {
+							continue;
+						}
 
-					if ( '' === trim( wp_strip_all_tags( $ambrygen_item_text ) ) ) {
-						continue;
-					}
+						$ambrygen_item_text = isset( $ambrygen_item['text'] ) ? $ambrygen_item['text'] : '';
 
-					$ambrygen_item_id = ! empty( $ambrygen_item['id'] )
+						if ( '' === trim( wp_strip_all_tags( $ambrygen_item_text ) ) ) {
+							continue;
+						}
+
+						$ambrygen_item_id = ! empty( $ambrygen_item['id'] )
 						? sanitize_html_class( $ambrygen_id_base . '-' . (string) $ambrygen_item['id'] )
 						: wp_unique_id( 'risk-checklist-item-' );
-					?>
+						?>
 					<div class="risk-checklist__item">
 						<label class="risk-checklist__item-label" for="<?php echo esc_attr( $ambrygen_item_id ); ?>">
 							<input
@@ -156,13 +182,19 @@ $ambrygen_card_labelledby    = $ambrygen_heading_id ? $ambrygen_heading_id : $am
 					</div>
 				<?php endforeach; ?>
 			</div>
+				<?php endif; ?>
 
 			<?php if ( $ambrygen_has_no_risk_text || $ambrygen_has_at_risk_text ) : ?>
 				<div class="is-style-gl-s24" aria-hidden="true"></div>
 			<?php endif; ?>
 
 			<?php if ( $ambrygen_has_no_risk_text ) : ?>
-				<div class="risk-checklist__result risk-checklist__result--no-risk">
+				<div
+					class="risk-checklist__result risk-checklist__result--no-risk"
+					role="status"
+					aria-live="polite"
+					aria-atomic="true"
+				>
 					<p class="body1 risk-checklist__result-text">
 						<?php echo wp_kses_post( $ambrygen_no_risk_text ); ?>
 					</p>
@@ -173,6 +205,9 @@ $ambrygen_card_labelledby    = $ambrygen_heading_id ? $ambrygen_heading_id : $am
 				<div class="is-style-gl-s24" aria-hidden="true"></div>
 				<div
 					class="risk-checklist__result risk-checklist__result--at-risk<?php echo $ambrygen_has_no_risk_text ? ' risk-checklist__result--hidden' : ''; ?>"
+					role="status"
+					aria-live="polite"
+					aria-atomic="true"
 				>
 					<p class="body1 risk-checklist__result-text">
 						<?php echo wp_kses_post( $ambrygen_at_risk_text ); ?>
@@ -187,17 +222,13 @@ $ambrygen_card_labelledby    = $ambrygen_heading_id ? $ambrygen_heading_id : $am
 		<div class="risk-checklist__cta">
 			<?php foreach ( $ambrygen_valid_buttons as $ambrygen_button ) : ?>
 				<?php
-				if ( ! is_array( $ambrygen_button ) ) {
-					continue;
-				}
-
-				$ambrygen_button_text       = isset( $ambrygen_button['text'] ) ? sanitize_text_field( (string) $ambrygen_button['text'] ) : '';
-				$ambrygen_button_url        = isset( $ambrygen_button['url'] ) ? (string) $ambrygen_button['url'] : '';
-				$ambrygen_button_href       = esc_url( $ambrygen_button_url );
-				$ambrygen_button_target     = ! empty( $ambrygen_button['target'] ) && '_blank' === $ambrygen_button['target'] ? '_blank' : '';
-				$ambrygen_button_rel        = isset( $ambrygen_button['rel'] ) ? sanitize_text_field( (string) $ambrygen_button['rel'] ) : '';
-				$ambrygen_button_variant    = isset( $ambrygen_button['variant'] ) ? sanitize_text_field( (string) $ambrygen_button['variant'] ) : 'site-btn has-right-arrow';
-				$ambrygen_button_variant    = in_array(
+				$ambrygen_button_text      = sanitize_text_field( (string) $ambrygen_button['text'] );
+				$ambrygen_button_url       = (string) $ambrygen_button['url'];
+				$ambrygen_button_href      = esc_url( $ambrygen_button_url );
+				$ambrygen_button_target    = ! empty( $ambrygen_button['target'] ) && '_blank' === $ambrygen_button['target'] ? '_blank' : '';
+				$ambrygen_button_rel       = isset( $ambrygen_button['rel'] ) ? sanitize_text_field( (string) $ambrygen_button['rel'] ) : '';
+				$ambrygen_button_variant   = isset( $ambrygen_button['variant'] ) ? sanitize_text_field( (string) $ambrygen_button['variant'] ) : 'site-btn has-right-arrow';
+				$ambrygen_button_variant   = in_array(
 					$ambrygen_button_variant,
 					array(
 						'site-btn',
@@ -206,12 +237,8 @@ $ambrygen_card_labelledby    = $ambrygen_heading_id ? $ambrygen_heading_id : $am
 					),
 					true
 				) ? $ambrygen_button_variant : 'site-btn has-right-arrow';
-				$ambrygen_button_rel_parts  = preg_split( '/\s+/', trim( (string) $ambrygen_button_rel ) );
-				$ambrygen_button_rel_parts  = is_array( $ambrygen_button_rel_parts ) ? array_filter( $ambrygen_button_rel_parts ) : array();
-
-				if ( '' === $ambrygen_button_text || '' === $ambrygen_button_href ) {
-					continue;
-				}
+				$ambrygen_button_rel_parts = preg_split( '/\s+/', trim( (string) $ambrygen_button_rel ) );
+				$ambrygen_button_rel_parts = is_array( $ambrygen_button_rel_parts ) ? array_filter( $ambrygen_button_rel_parts ) : array();
 
 				if ( '_blank' === $ambrygen_button_target ) {
 					if ( ! in_array( 'noopener', $ambrygen_button_rel_parts, true ) ) {

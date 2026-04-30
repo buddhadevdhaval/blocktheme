@@ -168,6 +168,9 @@ if ( $ambrygen_is_popup && 'video' === $ambrygen_popup_type ) {
 					<button
 						type="button"
 						class="three-column-card__cta <?php echo esc_attr( $ambrygen_cta_variant ); ?> site-btn has-video-arrow"
+						aria-haspopup="dialog"
+						aria-expanded="false"
+						aria-controls="ambry-global-video-modal"
 						data-video-type="<?php echo esc_attr( $ambrygen_video_type ); ?>"
 						data-video-title="<?php echo esc_attr( $ambrygen_video_title_popup ); ?>"
 						<?php if ( $ambrygen_video_src ) : ?>
@@ -193,6 +196,9 @@ if ( $ambrygen_is_popup && 'video' === $ambrygen_popup_type ) {
 					<button
 						type="button"
 						class="three-column-card__cta <?php echo esc_attr( $ambrygen_cta_variant ); ?> site-btn has-form-arrow has-right-arrow"
+						aria-haspopup="dialog"
+						aria-expanded="false"
+						aria-controls="ambry-global-video-modal"
 						data-form-title="<?php echo esc_attr( $ambrygen_form_title ); ?>"
 						data-form-content="<?php echo esc_attr( $ambrygen_form_content ); ?>"
 					>

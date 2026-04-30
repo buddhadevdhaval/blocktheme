@@ -118,6 +118,7 @@
 					videoModal?.querySelector('.modal-popup__close');
 				const overlay =
 					videoModal?.querySelector('.modal-popup__overlay');
+				let activeTrigger = null;
 
 				if (
 					!videoModal ||
@@ -132,9 +133,16 @@
 
 				const closeVideoModal = () => {
 					videoModal.classList.remove('is-active');
+					videoModal.setAttribute('aria-hidden', 'true');
 					videoContainer.replaceChildren();
 					videoTitleEl.textContent = '';
 					videoDescriptionEl.replaceChildren();
+
+					if (activeTrigger) {
+						activeTrigger.setAttribute('aria-expanded', 'false');
+						activeTrigger.focus();
+						activeTrigger = null;
+					}
 				};
 
 				const openVideoModal = (element) => {
@@ -155,6 +163,7 @@
 						return;
 					}
 
+					activeTrigger = element;
 					videoTitleEl.textContent = videoTitle;
 
 					if (descEl) {
@@ -184,7 +193,10 @@
 						videoContainer.replaceChildren(iframeEl);
 					}
 
+					element.setAttribute('aria-expanded', 'true');
+					videoModal.setAttribute('aria-hidden', 'false');
 					videoModal.classList.add('is-active');
+					closeButton?.focus();
 				};
 
 				if (overlay) {
@@ -195,20 +207,49 @@
 					closeButton.addEventListener('click', closeVideoModal);
 				}
 
-				const cards = blockEl.querySelectorAll('.videos__cards-item');
-				cards.forEach((card) => {
-					card.style.cursor = 'pointer';
+				const triggers = blockEl.querySelectorAll('.open_video_popup');
+				triggers.forEach((trigger) => {
+					trigger.style.cursor = 'pointer';
+					trigger.setAttribute('role', 'button');
+					trigger.setAttribute('tabindex', '0');
+					trigger.setAttribute('aria-haspopup', 'dialog');
+					trigger.setAttribute('aria-expanded', 'false');
 
-					// Prevent iframes and videos in the grid from capturing clicks
-					const mediaEl = card.querySelectorAll('iframe, video, .play-icon-video');
+					if (videoModal.id) {
+						trigger.setAttribute('aria-controls', videoModal.id);
+					}
+
+					const titleEl = trigger
+						.closest('.videos__cards-item')
+						?.querySelector('.videos__cards-item-title');
+					const triggerLabel = titleEl?.textContent?.trim();
+
+					if (triggerLabel && !trigger.hasAttribute('aria-label')) {
+						trigger.setAttribute(
+							'aria-label',
+							`Play video: ${triggerLabel}`
+						);
+					}
+
+					// Prevent nested media from capturing clicks over the popup trigger area.
+					const mediaEl = trigger.querySelectorAll('iframe, video, .play-icon-video');
 					mediaEl.forEach((el) => {
 						el.style.pointerEvents = 'none';
 					});
 
-					card.addEventListener('click', function (e) {
+					trigger.addEventListener('click', function (e) {
 						if (e.target.closest('a')) {
 							return;
 						}
+						e.preventDefault();
+						openVideoModal(this);
+					});
+
+					trigger.addEventListener('keydown', function (e) {
+						if (e.key !== 'Enter' && e.key !== ' ') {
+							return;
+						}
+
 						e.preventDefault();
 						openVideoModal(this);
 					});
@@ -228,5 +269,4 @@
 		initVideoGridModal();
 	}
 
-	window.addEventListener('load', initVideoGridModal);
 })();

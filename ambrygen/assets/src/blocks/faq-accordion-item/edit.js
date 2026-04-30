@@ -3,8 +3,11 @@ import { __ } from '@wordpress/i18n';
 
 const CONTENT_TEMPLATE = [ [ 'core/paragraph', { content: '' } ] ];
 
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit( { attributes, setAttributes, context } ) {
 	const { question, subHeading } = attributes;
+	const parentVariant =
+		context?.[ 'ambrygen/faqAccordionVariant' ] || 'default';
+	const showSubHeading = parentVariant === 'without-image';
 
 	const blockProps = useBlockProps( {
 		className: 'faq__item editor',
@@ -21,24 +24,25 @@ export default function Edit( { attributes, setAttributes } ) {
 					onChange={ ( value ) =>
 						setAttributes( { question: value } )
 					}
-					placeholder={ __( 'FAQ Question', 'ambrygen-web' ) }
+					placeholder={ __( 'Add Question...', 'ambrygen-web' ) }
 					withoutInteractiveFormatting={ true }
 				/>
 
-				{ /* These RichText fields are rendered as plain text in PHP. */ }
-				<RichText
-					tagName="div"
-					className="block-sub-heading faq__sub-heading body2-semibold"
-					value={ subHeading }
-					onChange={ ( value ) =>
-						setAttributes( { subHeading: value } )
-					}
-					placeholder={ __(
-						'Sub heading (e.g. Most Common)',
-						'ambrygen-web'
-					) }
-					withoutInteractiveFormatting={ true }
-				/>
+				{ showSubHeading && (
+					<RichText
+						tagName="div"
+						className="block-sub-heading faq__sub-heading body2-semibold"
+						value={ subHeading }
+						onChange={ ( value ) =>
+							setAttributes( { subHeading: value } )
+						}
+						placeholder={ __(
+							'Add Subheading...',
+							'ambrygen-web'
+						) }
+						withoutInteractiveFormatting={ true }
+					/>
+				) }
 
 				<span className="faq__icon" aria-hidden="true"></span>
 			</div>

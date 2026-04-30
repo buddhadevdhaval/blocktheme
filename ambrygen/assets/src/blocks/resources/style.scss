@@ -23,16 +23,6 @@
         }
     }
 
-    &__cards-group {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 24px;
-
-        @include bp.min(md) {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
     &__orgs-group {
         display: flex;
         flex-direction: column;
@@ -50,19 +40,6 @@
         display: flex;
         flex-direction: column;
         gap: 18px;
-    }
-
-    &__card-image {
-        width: 100%;
-        height: 202px;
-        border-radius: 16px;
-        object-fit: cover;
-
-        @include bp.max(md) {
-            height: auto;
-            max-height: 340px;
-            aspect-ratio: 1 / 1;
-        }
     }
 
     &__card-logo-grid {
@@ -99,7 +76,6 @@
             }
         }
 
-        // Default to 2 columns if no modifier is present
         &:not(.resources__card-logo-grid--2-col):not(.resources__card-logo-grid--3-col) {
             .resources__card-logo-link {
                 flex: 0 0 calc(50% - 12px);
@@ -136,12 +112,11 @@
                 max-height: 60px;
             }
         }
-    }
 
-    &__card-content {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
+        &:focus-visible {
+            outline: 2px solid var(--theme_cg_blue);
+            outline-offset: 3px;
+        }
     }
 
     &__card-title {
@@ -151,12 +126,6 @@
         &.text-center {
             text-align: center;
         }
-    }
-
-    &__links {
-        display: flex;
-        gap: 12px;
-        align-items: center;
     }
 
     &__link {
@@ -181,9 +150,12 @@
         &:hover {
             color: var(--theme_cg_blue);
         }
-    }
 
-    
+        &:focus-visible {
+            outline: 2px solid var(--theme_cg_blue);
+            outline-offset: 3px;
+        }
+    }
 }
 
 .test-lists-downloads {

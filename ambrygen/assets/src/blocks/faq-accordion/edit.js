@@ -5,16 +5,18 @@ import {
 	RichText,
 	useBlockProps,
 } from '@wordpress/block-editor';
-import { PanelBody, ToggleControl } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useEffect, useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import {
+	BlockVariationsExamplePreview,
 	DEFAULT_IMAGES,
 	ImageUploader,
 	TagSelector,
 } from '../_shared/components';
+import { getThemeAssetUrl } from '../../utils/assets';
 
 const createParagraphBlock = ( content = '' ) =>
 	createBlock( 'core/paragraph', {
@@ -60,11 +62,16 @@ const createFaqItemBlock = ( faq = {} ) => {
 };
 
 const TEMPLATE = [ [ 'ambrygen/faq-accordion-item' ] ];
+const FAQ_VARIANTS = {
+	WITH_IMAGE: 'default',
+	NORMAL: 'without-image',
+};
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
 		blockId,
 		imageUrl,
+		imageId,
 		imageAlt,
 		faqs = [],
 		title,
@@ -83,16 +90,43 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		[ clientId ]
 	);
 	const hasInnerBlocks = innerBlocks.length > 0;
+	const hasDescription = Boolean( description );
+	const hasFaqContent = hasInnerBlocks || faqs.length > 0;
 	const blockProps = useBlockProps( {
 		className: `block-layout alongside-faq ${ variantClassName }`,
 	} );
-	const defaultImages = useMemo( () => DEFAULT_IMAGES(), [] );
-	const displayImageUrl = imageUrl || defaultImages?.placeholder?.url || '';
+	const defaultImage = useMemo(
+		() => DEFAULT_IMAGES()?.placeholder || {},
+		[]
+	);
+	const displayImageUrl = imageUrl || defaultImage.url || '';
+	const isDefaultImage =
+		imageUrl === defaultImage.url && imageId === defaultImage.id;
+	const variants = useMemo(
+		() => [
+			{
+				label: __( 'With Image View', 'ambrygen-web' ),
+				value: FAQ_VARIANTS.WITH_IMAGE,
+				image: getThemeAssetUrl(
+					'/assets/src/images/faq-accordion/withimage.png'
+				),
+			},
+			{
+				label: __( 'Normal View', 'ambrygen-web' ),
+				value: FAQ_VARIANTS.NORMAL,
+				image: getThemeAssetUrl(
+					'/assets/src/images/faq-accordion/without-image.png'
+				),
+			},
+		],
+		[]
+	);
 
 	useEffect( () => {
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+		const clientIdSuffix = clientId.slice( 0, 8 );
+		const expectedId = `section-${ clientIdSuffix }`;
 
-		if ( ! blockId ) {
+		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
@@ -107,23 +141,50 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		replaceInnerBlocks( clientId, faqs.map( createFaqItemBlock ), false );
 	}, [ clientId, faqs, hasInnerBlocks, replaceInnerBlocks ] );
 
-	useEffect( () => {
-		if ( showImage && ! imageUrl && defaultImages.placeholder.url ) {
-			setAttributes( {
-				imageUrl: defaultImages.placeholder.url,
-				imageId: defaultImages.placeholder.id,
-				imageAlt: defaultImages.placeholder.alt || '',
-			} );
-		}
-	}, [ showImage, imageUrl, setAttributes, defaultImages ] );
+	if ( blockId === 'faq-accordion-example' ) {
+		return (
+			<BlockVariationsExamplePreview
+				variants={ variants }
+				className="cta-tiles-example-preview"
+				itemClass="cta-tiles-example-preview__item"
+			/>
+		);
+	}
 
 	return (
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'FAQ Setting', 'ambrygen-web' ) }
+					title={ __( 'FAQ Settings', 'ambrygen-web' ) }
 					initialOpen
 				>
+					<div className="layout-variant-selector">
+						{ variants.map( ( item ) => (
+							<button
+								key={ item.value }
+								type="button"
+								className={ `variant-button ${
+									variant === item.value
+										? 'is-selected'
+										: ''
+								}` }
+								aria-pressed={ variant === item.value }
+								onClick={ () =>
+									setAttributes( {
+										variant: item.value,
+									} )
+								}
+							>
+								<img
+									src={ item.image }
+									alt=""
+									aria-hidden="true"
+								/>
+								<span>{ item.label }</span>
+							</button>
+						) ) }
+					</div>
+
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag }
@@ -132,26 +193,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 					/>
 
-					<ToggleControl
-						label={ __( 'Keep FAQ without image', 'ambrygen-web' ) }
-						checked={ variant === 'without-image' }
-						onChange={ ( isChecked ) =>
-							setAttributes( {
-								variant: isChecked
-									? 'without-image'
-									: 'default',
-							} )
-						}
-						help={ __(
-							'Enable this to hide the FAQ image.',
-							'ambrygen-web'
-						) }
-					/>
-
 					{ showImage && (
 						<ImageUploader
 							label={ __( 'FAQ Image', 'ambrygen-web' ) }
-							url={ imageUrl }
+							url={ isDefaultImage ? '' : imageUrl }
 							onSelect={ ( media ) =>
 								setAttributes( {
 									imageUrl: media.url,
@@ -200,14 +245,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									setAttributes( { title: value } )
 								}
 								placeholder={ __(
-									'Frequently Asked Questions',
+									'Add Heading...',
 									'ambrygen-web'
 								) }
 							/>
-							<div
-								className="is-style-gl-s24"
-								aria-hidden="true"
-							></div>
+							{ hasDescription && (
+								<div
+									className="is-style-gl-s12"
+									aria-hidden="true"
+								></div>
+							) }
 							<RichText
 								tagName="div"
 								className="block-description alongside-faq__description"
@@ -216,15 +263,17 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									setAttributes( { description: value } )
 								}
 								placeholder={ __(
-									'Description',
+									'Add Description...',
 									'ambrygen-web'
 								) }
 							/>
 
-							<div
-								className="is-style-gl-s64"
-								aria-hidden="true"
-							></div>
+							{ hasFaqContent && (
+								<div
+									className="is-style-gl-s24"
+									aria-hidden="true"
+								></div>
+							) }
 
 							<div className="faq">
 								<InnerBlocks

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/theme-quote",
+  "title": "Theme Quote",
+  "category": "ambrygen",
+  "icon": "format-quote",
+  "description": "Quote and supporting description layout.",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "heading": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2",
+      "enum": ["h1", "h2", "h3", "h4", "h5", "h6"]
+    },
+    "quoteAttribution": {
+      "type": "string",
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web",
+  "example": {
+    "attributes": {
+      "blockId": "theme-quote-example"
+    }
+  }
+}

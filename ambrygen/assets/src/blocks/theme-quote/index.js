@@ -1,16 +1,12 @@
 import { registerBlockType } from '@wordpress/blocks';
-import './style.scss';
-import Edit from './edit';
 import metadata from './block.json';
+import Edit from './edit';
+import './style.scss';
+import './editor.scss';
+import '../shared/tooltip-format';
 
 registerBlockType( metadata.name, {
 	...metadata,
-	/**
-	 * @see ./edit.js
-	 */
 	edit: Edit,
-	/**
-	 * @see ./save.js
-	 */
 	save: () => null,
 } );

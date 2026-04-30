@@ -1,0 +1,26 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+
+
+.mid-page-cta {
+	text-align: center;
+
+	&.text-center {
+
+		.block-title {
+			max-width: 980px;
+			margin: 0 auto;
+		}
+	}
+
+	.blocks-btn {
+		display: inline-flex;
+		justify-content: center;
+
+		&.two-btn-row {
+
+			.site-btn {
+				min-width: 200px;
+			}
+		}
+	}
+}

@@ -197,6 +197,11 @@
 	&__answer-list {
 		padding-left: 15px;
 
+		ul {
+			padding-left: 0;
+			margin-left: 0;
+		}
+
 		li {
 			&:before {
 				background-color: var(--theme_gray_600);

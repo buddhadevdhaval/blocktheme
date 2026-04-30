@@ -1,0 +1,9 @@
+.theme-quote {
+	&__header {
+		position: relative;
+	}
+
+	&__quote-attribution {
+		color: var(--theme_cg_blue);
+	}
+}

@@ -22,11 +22,11 @@
   "attributes": {
     "heading": {
       "type": "string",
-      "default": "DISCLAIMER: THIS BLOG DOES NOT PROVIDE MEDICAL ADVICE"
+      "default": ""
     },
     "content": {
       "type": "string",
-      "default": "The information contained in this article is intended for informational and educational purposes only and does not constitute medical advice, diagnosis, or treatment. Always consult with a qualified healthcare professional or genetic counselor before making any decisions related to genetic testing or your personal health. Individual results may vary. Ambry Genetics does not provide direct-to-consumer genetic testing services."
+      "default": ""
     }
   },
   "example": {

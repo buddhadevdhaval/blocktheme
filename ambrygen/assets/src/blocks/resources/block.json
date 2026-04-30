@@ -29,56 +29,58 @@
 		},
 		"title": {
 			"type": "string",
-			"default": "Resources"
+			"default": ""
 		},
 		"subtitle": {
 			"type": "string",
-			"default": "Everything you need to understand your results and take next steps."
+			"default": ""
 		},
 		"resourceCards": {
 			"type": "array",
-			"default": [
-				{
-					"title": "Exome Patient Brochure",
-					"pdfLinks": [
-						{ "label": "EN", "url": "#" },
-						{ "label": "ES", "url": "#" }
-					]
-				},
-				{
-					"title": "Positive Epilepsy Result Guide",
-					"pdfLinks": [
-						{ "label": "EN", "url": "#" },
-						{ "label": "ES", "url": "#" }
-					]
-				},
-				{
-					"title": "Positive AutismNext Result Guide",
-					"pdfLinks": [
-						{ "label": "EN", "url": "#" },
-						{ "label": "ES", "url": "#" }
-					]
-				},
-				{
-					"title": "Carrier Result Guide — Epilepsy & Autism",
-					"pdfLinks": [
-						{ "label": "EN", "url": "#" },
-						{ "label": "ES", "url": "#" }
-					]
+			"default": [],
+			"items": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"pdfLinks": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"label": {
+									"type": "string"
+								},
+								"url": {
+									"type": "string"
+								}
+							}
+						}
+					}
 				}
-			]
+			}
 		},
 		"orgTitle": {
 			"type": "string",
-			"default": "Helpful Organizations"
+			"default": ""
 		},
 		"collaboratorIds": {
 			"type": "array",
-			"default": []
+			"default": [],
+			"items": {
+				"type": "integer"
+			}
 		},
 		"resourcesCardTitle": {
 			"type": "string",
-			"default": "Test Lists & Downloads"
+			"default": ""
 		},
 		"headingLevel": {
 			"type": "string",
@@ -94,52 +96,39 @@
 		},
 		"customCollaborators": {
 			"type": "array",
-			"default": []
+			"default": [],
+			"items": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					},
+					"imageId": {
+						"type": "integer"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"imageAlt": {
+						"type": "string"
+					}
+				}
+			}
 		},
 		"enableCustomCollaborators": {
 			"type": "boolean",
 			"default": false
 		}
 	},
-
 	"example": {
 		"attributes": {
-			"title": "Resources",
-			"subtitle": "Everything you need to understand your results and take next steps.",
-			"resourceCards": [
-				{
-					"title": "Exome Patient Brochure",
-					"pdfLinks": [
-						{ "label": "EN", "url": "#" },
-						{ "label": "ES", "url": "#" }
-					]
-				},
-				{
-					"title": "Positive Epilepsy Result Guide",
-					"pdfLinks": [
-						{ "label": "EN", "url": "#" },
-						{ "label": "ES", "url": "#" }
-					]
-				},
-				{
-					"title": "Positive AutismNext Result Guide",
-					"pdfLinks": [
-						{ "label": "EN", "url": "#" },
-						{ "label": "ES", "url": "#" }
-					]
-				},
-				{
-					"title": "Carrier Result Guide — Epilepsy & Autism",
-					"pdfLinks": [
-						{ "label": "EN", "url": "#" },
-						{ "label": "ES", "url": "#" }
-					]
-				}
-			],
-			"orgTitle": "Helpful Organizations",
-			"resourcesCardTitle": "Test Lists & Downloads",
-			"collaboratorIds": []
+			"blockId": "resources-example"
 		}
 	}
-
 }

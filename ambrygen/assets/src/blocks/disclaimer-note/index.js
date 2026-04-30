@@ -4,6 +4,7 @@ import Edit from './edit';
 import './style.scss';
 
 registerBlockType( metadata.name, {
+	...metadata,
 	edit: Edit,
 	save: () => null, // Rendered via PHP
 } );

@@ -35,14 +35,14 @@ export default function Edit( { attributes, setAttributes } ) {
 					className="blog-disclaimer__heading text-small-semibold"
 					value={ heading }
 					onChange={ ( value ) => setAttributes( { heading: value } ) }
-					placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+					placeholder={ __( 'Add Header...', 'ambrygen-web' ) }
 				/>
 				<RichText
 					tagName="div"
 					className="blog-disclaimer__text text-small"
 					value={ content }
 					onChange={ ( value ) => setAttributes( { content: value } ) }
-					placeholder={ __( 'Add Disclaimer...', 'ambrygen-web' ) }
+					placeholder={ __( 'Add Description...', 'ambrygen-web' ) }
 				/>
 			</div>
 		</div>

@@ -48,7 +48,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	} );
 	const previewImageUrl = imageUrl || defaultPlaceholder.url;
 	const previewImageAlt = imageAlt || defaultPlaceholder.alt || '';
-	
 
 	const handleImageSelect = useCallback(
 		( media ) => {
@@ -64,13 +63,17 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		},
 		[ setAttributes ]
 	);
-	const linkRelParts = ( cta?.rel || '' ).split( ' ' ).filter( Boolean );
-	const linkRel =
-		cta?.target === '_blank'
-			? [ ...new Set( [ ...linkRelParts, 'noopener', 'noreferrer' ] ) ].join(
-					' '
-			  )
-			: linkRelParts.join( ' ' );
+	const linkRel = useMemo( () => {
+		const parts = ( cta?.rel || '' ).split( ' ' ).filter( Boolean );
+
+		if ( cta?.target === '_blank' ) {
+			return [ ...new Set( [ ...parts, 'noopener', 'noreferrer' ] ) ].join(
+				' '
+			);
+		}
+
+		return parts.join( ' ' );
+	}, [ cta?.rel, cta?.target ] );
 
 	return (
 		<>
@@ -148,7 +151,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								sectiontitle: '',
 							} )
 						}
-						placeholder={ __( 'Add Step Title', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Step Title...', 'ambrygen-web' ) }
 						allowedFormats={ [] }
 					/>
 
@@ -160,7 +163,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							setAttributes( { description: value } )
 						}
 						placeholder={ __(
-							'Add Step Description',
+							'Add Step Description...',
 							'ambrygen-web'
 						) }
 					/>

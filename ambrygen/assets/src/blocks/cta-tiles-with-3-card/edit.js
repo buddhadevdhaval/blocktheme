@@ -44,7 +44,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	useEffect( () => {
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId ) {
+		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
@@ -59,7 +59,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		return (
 			<BlockExamplePreview
 				className="cta-tiles-with-3-card-example-preview"
-				imagePath={ getThemeAssetUrl( '/assets/src/images/cta-tiles-with-3-card/default-image.png' ) }
+				imagePath='/assets/src/images/cta-tiles-with-3-card/default-image.png'
 			/>
 		);
 	}

@@ -22,7 +22,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	useEffect( () => {
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId ) {
+		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
@@ -63,29 +63,32 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					value={ title }
 					allowedFormats={ [ 'core/text-color' ] }
 					onChange={ ( value ) => setAttributes( { title: value } ) }
-					placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
+					placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 				/>
 
-				<div className="is-style-gl-s24" aria-hidden="true"></div>
+				{ content && (
+					<div className="is-style-gl-s24" aria-hidden="true"></div>
+				) }
+
 				<div className="heading-content text-md-regular">
-					   <RichText
-						   tagName="div"
-						   value={ content }
-						   onChange={ ( value ) =>
-							   setAttributes( { content: value } )
-						   }
-						   __unstableMultilineTag="p"
-						   placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
-					   />
+					<RichText
+						tagName="p"
+						multiline="p"
+						value={ content }
+						onChange={ ( value ) =>
+							setAttributes( { content: value } )
+						}
+						placeholder={ __( 'Add Description...', 'ambrygen-web' ) }
+					/>
 				</div>
 			</div>
 
 			<div className="theme-form-block__form">
-				   <InnerBlocks
-					   allowedBlocks={ ALLOWED_BLOCKS }
-					   template={ [ [ 'core/shortcode' ] ] }
-					   templateLock="all"
-				   />
+				<InnerBlocks
+					allowedBlocks={ ALLOWED_BLOCKS }
+					template={ [ [ 'core/shortcode' ] ] }
+					templateLock="all"
+				/>
 			</div>
 		</div>
 	);

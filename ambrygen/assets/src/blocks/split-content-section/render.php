@@ -21,7 +21,7 @@ $ambrygen_description          = $ambrygen_attributes['description'] ?? '';
 $ambrygen_is_medium            = ! empty( $ambrygen_attributes['isMediumText'] );
 $ambrygen_is_header_vertical   = ! empty( $ambrygen_attributes['isHeaderVertical'] );
 $ambrygen_background_image_id  = isset( $ambrygen_attributes['backgroundImageId'] ) ? absint( $ambrygen_attributes['backgroundImageId'] ) : 0;
-$ambrygen_background_image_url = isset( $ambrygen_attributes['backgroundImage'] ) ? esc_url_raw( $ambrygen_attributes['backgroundImage'] ) : '';
+$ambrygen_background_image_url = isset( $ambrygen_attributes['backgroundImage'] ) ? (string) $ambrygen_attributes['backgroundImage'] : '';
 $ambrygen_background_image_alt = isset( $ambrygen_attributes['backgroundImageAlt'] ) ? sanitize_text_field( $ambrygen_attributes['backgroundImageAlt'] ) : '';
 $ambrygen_has_title            = '' !== trim( wp_strip_all_tags( $ambrygen_title ) );
 $ambrygen_has_description      = '' !== trim( wp_strip_all_tags( $ambrygen_description ) );

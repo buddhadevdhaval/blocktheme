@@ -17,9 +17,8 @@ $attributes = is_array( $attributes ?? null ) ? $attributes : array();
 
 $ambrygen_member_title       = $attributes['title'] ?? '';
 $ambrygen_member_block_id    = isset( $attributes['blockId'] ) ? sanitize_html_class( $attributes['blockId'] ) : '';
-$ambrygen_member_heading_tag = $attributes['headingTag'] ?? 'h2';
+$ambrygen_member_heading_tag = Helper::get_heading_tag( (string) ( $attributes['headingTag'] ?? 'h2' ), 'h2' );
 $ambrygen_has_member_title   = '' !== trim( wp_strip_all_tags( (string) $ambrygen_member_title ) );
-$ambrygen_member_heading_tag = Helper::get_heading_tag( (string) $ambrygen_member_heading_tag, 'h2' );
 
 $ambrygen_wrapper_args = array(
 	'class' => 'multimedia-member',

@@ -71,7 +71,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						/>
 
 						<CtaButtonField
-							label={ __( 'Link setting', 'ambrygen-web' ) }
+							label={ __( '', 'ambrygen-web' ) }
 							textLabel={ __( 'Link Text', 'ambrygen-web' ) }
 							defaultVariant="primary"
 							value={ link }
@@ -103,7 +103,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					}` }
 				>
 					<RichText
-						tagName="div"
+						tagName="h3"
 						className="cta-tiles-with-3-card__title heading-6 mb-0 card-title"
 						value={ title }
 						allowedFormats={ [

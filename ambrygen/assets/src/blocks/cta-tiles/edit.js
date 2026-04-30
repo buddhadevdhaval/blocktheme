@@ -133,7 +133,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	// Initialize block ID
 	useEffect( () => {
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
-		if ( ! blockId ) {
+		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
 			setAttributes( { blockId: expectedId } );
 		}
 	}, [ clientId, blockId, setAttributes ] );
@@ -282,7 +282,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				{ variation ===
 					CTA_TILES_VARIATIONS.IMAGE_TITLE_DESCRIPTION_ICON && (
 					<PanelBody
-						title={ __( 'Top Image', 'ambrygen-web' ) }
+						title={ __( 'Icon', 'ambrygen-web' ) }
 						initialOpen={ false }
 					>
 						<MediaUploadCheck>

@@ -28,13 +28,95 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		const prevEl = sliderElement.querySelector( '.custom-prev' );
 		const paginationEl =
 			sliderElement.querySelector( '.swiper-pagination' );
+		const slideCount =
+			sliderElement.querySelectorAll( '.swiper-slide' ).length;
+		const announcerElement =
+			sliderElement.querySelector( '[data-slide-announcer]' );
+		let shouldManageFocus = false;
+		const updateSlideAnnouncer = ( swiperInstance ) => {
+			if ( ! announcerElement || ! swiperInstance || slideCount < 1 ) {
+				return;
+			}
+
+			announcerElement.textContent = sprintf(
+				/* translators: 1: Current slide number, 2: Total slides. */
+				__( 'Slide %1$d of %2$d', 'ambrygen-web' ),
+				swiperInstance.realIndex + 1,
+				slideCount
+			);
+		};
+		const focusableSelector =
+			'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
+		let swiperInstance = null;
+		const manageSlideFocus = ( swiperInstance ) => {
+			if ( ! shouldManageFocus || ! swiperInstance ) {
+				return;
+			}
+
+			const activeElement = document.activeElement;
+
+			if (
+				! activeElement ||
+				document.body === activeElement ||
+				! sliderElement.contains( activeElement )
+			) {
+				shouldManageFocus = false;
+				return;
+			}
+
+			const activeSlide = swiperInstance.slides[ swiperInstance.activeIndex ];
+
+			if ( ! activeSlide ) {
+				shouldManageFocus = false;
+				return;
+			}
+
+			const firstFocusable = activeSlide.querySelector( focusableSelector );
+
+			if ( firstFocusable ) {
+				firstFocusable.focus();
+			}
+
+			shouldManageFocus = false;
+		};
+
+		sliderElement.addEventListener( 'keydown', ( event ) => {
+			if (
+				'ArrowLeft' === event.key ||
+				'ArrowRight' === event.key ||
+				'Enter' === event.key ||
+				' ' === event.key
+			) {
+				shouldManageFocus = true;
+			}
+
+			if ( ! swiperInstance || slideCount < 2 ) {
+				return;
+			}
+
+			if ( 'ArrowLeft' === event.key ) {
+				event.preventDefault();
+				swiperInstance.slidePrev();
+			}
+
+			if ( 'ArrowRight' === event.key ) {
+				event.preventDefault();
+				swiperInstance.slideNext();
+			}
+		} );
+
+		sliderElement.addEventListener( 'click', () => {
+			if ( sliderElement.contains( document.activeElement ) ) {
+				shouldManageFocus = true;
+			}
+		} );
 
 		const swiperOptions = {
 			effect: 'fade',
 			fadeEffect: {
 				crossFade: true,
 			},
-			loop: sliderElement.querySelectorAll( '.swiper-slide' ).length > 1,
+			loop: slideCount > 1,
 			speed: 800,
 			autoplay: config.autoplay || false,
 			navigation:
@@ -70,12 +152,18 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					  }
 					: false,
 			on: {
-				init() {
+				init( instance ) {
+					swiperInstance = instance;
 					sliderElement.classList.add( 'is-initialized' );
+					updateSlideAnnouncer( instance );
+				},
+				slideChange( instance ) {
+					updateSlideAnnouncer( instance );
+					manageSlideFocus( instance );
 				},
 			},
 		};
 
-		new Swiper( sliderElement, swiperOptions );
+		swiperInstance = new Swiper( sliderElement, swiperOptions );
 	} );
 } );

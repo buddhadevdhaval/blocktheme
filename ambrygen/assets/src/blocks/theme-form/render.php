@@ -14,8 +14,9 @@ defined( 'ABSPATH' ) || exit;
 use Ambrygen\Theme\Core\Helper;
 
 // Prefix all variables with theme/plugin name.
-$ambrygen_theme_form_attributes = $attributes ?? array();
-$ambrygen_theme_form_content    = $content ?? '';
+$ambrygen_theme_form_attributes      = $attributes ?? array();
+$ambrygen_theme_form_content         = $content ?? '';
+$ambrygen_theme_form_has_form_output = '' !== trim( wp_strip_all_tags( $ambrygen_theme_form_content ) );
 
 $ambrygen_theme_form_block_id      = isset( $ambrygen_theme_form_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_theme_form_attributes['blockId'] ) : '';
 $ambrygen_theme_form_title         = $ambrygen_theme_form_attributes['title'] ?? '';
@@ -50,7 +51,7 @@ $ambrygen_wrapper_attributes    = get_block_wrapper_attributes(
 		<?php endif; ?>
 	</div>
 
-	<?php if ( ! empty( $ambrygen_theme_form_content ) ) : ?>
+	<?php if ( $ambrygen_theme_form_has_form_output ) : ?>
 		<section class="theme-form-block__form js-gsap-fade"
 			<?php if ( $ambrygen_theme_form_title ) : ?>
 				aria-labelledby="<?php echo esc_attr( $ambrygen_theme_form_heading_id ); ?>"

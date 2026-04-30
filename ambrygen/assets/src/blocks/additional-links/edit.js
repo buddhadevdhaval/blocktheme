@@ -62,7 +62,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	useEffect( () => {
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId ) {
+		// Re-seed when the stored ID was copied from another block instance.
+		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );

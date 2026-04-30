@@ -18,7 +18,7 @@ import {
 const CONTENT_TEMPLATE = [
 	[
 		'core/paragraph',
-		{ placeholder: __( 'Add paragraph...', 'ambrygen-web' ) },
+		{ placeholder: __( 'Add Paragraph...', 'ambrygen-web' ) },
 	],
 ];
 
@@ -37,7 +37,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	useEffect( () => {
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId ) {
+		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
@@ -88,7 +88,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					initialOpen
 				>
 					<TagSelector
-						label={ __( 'Title Tag', 'ambrygen-web' ) }
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						type="heading"
 						value={ titleTag || 'h2' }
 						onChange={ ( value ) =>
@@ -114,6 +114,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						checked={ isHeaderVertical }
 						onChange={ ( value ) =>
 							setAttributes( { isHeaderVertical: value } )
+						}
+					/>
+
+					<ToggleControl
+						label={ __( 'Medium Text Variation', 'ambrygen-web' ) }
+						checked={ isMediumText }
+						onChange={ ( value ) =>
+							setAttributes( { isMediumText: value } )
 						}
 					/>
 				</PanelBody>
@@ -146,7 +154,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							'core/text-color',
 							'ambrygen/tooltip',
 						] }
-						placeholder={ __( 'Add Heading', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 					/>
 					<div className="heading-content-wrapper">
 						<div className="heading-content-section__description block__rowflex--block-content block-description">
@@ -163,7 +171,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									'ambrygen/tooltip',
 								] }
 								placeholder={ __(
-									'Add Description',
+									'Add Description...',
 									'ambrygen-web'
 								) }
 							/>

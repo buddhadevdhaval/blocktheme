@@ -31,9 +31,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const activeIndex = useRef( 0 );
 
 	useEffect( () => {
-		if ( ! blockId ) {
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+
+		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
 			setAttributes( {
-				blockId: `section-${ clientId.slice( 0, 8 ) }`,
+				blockId: expectedId,
 			} );
 		}
 	}, [ blockId, clientId, setAttributes ] );
@@ -135,7 +137,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { heading: value } )
 						}
-						placeholder={ __( 'Add Heading', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 					/>
 
 					<div className="block__rowflex--block-content subtitle-1-regular">
@@ -146,7 +148,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								setAttributes( { description: value } )
 							}
 							placeholder={ __(
-								'Add Description',
+								'Add Description...',
 								'ambrygen-web'
 							) }
 						/>

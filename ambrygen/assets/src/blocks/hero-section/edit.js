@@ -92,6 +92,24 @@ const getMediaFields = ( media, fieldPrefix ) => {
 	};
 };
 
+const isSlideConfigured = ( slide = {} ) => {
+	const hasPrimaryButton =
+		!! slide.primarybutton?.text && !! slide.primarybutton?.url;
+	const hasSecondaryButton =
+		!! slide.secondarybutton?.text && !! slide.secondarybutton?.url;
+
+	return Boolean(
+		slide.backgroundImage ||
+			slide.overlayImage1 ||
+			slide.overlayImage2 ||
+			slide.eyebrow ||
+			slide.heading ||
+			slide.content ||
+			hasPrimaryButton ||
+			hasSecondaryButton
+	);
+};
+
 /**
  * Edit component for the Hero Section block.
  *
@@ -230,6 +248,8 @@ export default function Edit( { attributes, setAttributes } ) {
 	} );
 
 	const slide = slides[ currentSlide ] || slides[ 0 ] || DEFAULT_SLIDE;
+	const configuredSlidesCount = slides.filter( isSlideConfigured ).length;
+	const hasMultipleConfiguredSlides = configuredSlidesCount > 1;
 	const hasPrimaryButton =
 		!! slide.primarybutton?.text && !! slide.primarybutton?.url;
 	const hasSecondaryButton =
@@ -241,7 +261,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				<ToolbarGroup>
 					<ToolbarButton
 						icon="plus-alt2"
-						label={ __( 'Add Slide', 'ambrygen-web' ) }
+						label={ __( 'Add New Slide', 'ambrygen-web' ) }
 						onClick={ addSlide }
 					/>
 				</ToolbarGroup>
@@ -471,7 +491,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<div className="hero-section__slider swiper">
 						<div className="swiper-wrapper">
 							<div className="hero-section__slide swiper-slide active">
-								{ slides.length > 1 && showSliderNav && (
+								{ hasMultipleConfiguredSlides && showSliderNav && (
 									<div className="hero-section__slide-nav">
 										<Button
 											onClick={ () =>
@@ -649,7 +669,7 @@ export default function Edit( { attributes, setAttributes } ) {
 													)
 												}
 												placeholder={ __(
-													'Add Description',
+													'Add Description...',
 													'ambrygen-web'
 												) }
 												aria-label={ __(

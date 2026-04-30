@@ -87,9 +87,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const hasMissingIds = steps.some( ( step ) => ! step?.id );
 
 	useEffect( () => {
-		if ( ! blockId ) {
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+
+		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
 			setAttributes( {
-				blockId: `section-${ clientId.slice( 0, 8 ) }`,
+				blockId: expectedId,
 			} );
 		}
 	}, [ clientId, blockId, setAttributes ] );
@@ -106,10 +108,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const updateStep = ( stepId, field, value ) => {
 		setAttributes( {
-			steps: normalizeSteps(
-				steps.map( ( step ) =>
-					step.id === stepId ? { ...step, [ field ]: value } : step
-				)
+			steps: steps.map( ( step ) =>
+				step.id === stepId ? { ...step, [ field ]: value } : step
 			),
 		} );
 	};
@@ -234,6 +234,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								index={ index }
 								label={ step.title }
 								total={ steps.length }
+								prefix="STEP"
 								onMove={ ( i, dir ) =>
 									moveStep( steps[ i ].id, dir )
 								}

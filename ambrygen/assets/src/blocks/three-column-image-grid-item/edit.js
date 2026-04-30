@@ -636,10 +636,16 @@ export default function Edit( { attributes, setAttributes, context } ) {
 							<div
 								className={ `three-column-card__cta ${
 									cta.variant || 'dark'
-								} ${
-									cta.isVideo
-										? 'site-btn has-right-arrow'
+								} site-btn ${
+									cta.isPopup && cta.popupType === 'video'
+										? 'has-video-arrow has-right-arrow'
 										: ''
+								}${
+									cta.isPopup && cta.popupType === 'form'
+										? ' has-form-arrow has-right-arrow'
+										: ''
+								}${
+									! cta.isPopup ? ' has-right-arrow' : ''
 								}` }
 								role="presentation"
 							>

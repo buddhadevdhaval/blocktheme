@@ -48,22 +48,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	useEffect( () => {
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId ) {
+		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
 		}
 	}, [ clientId, blockId, setAttributes ] );
-
-	useEffect( () => {
-		const shouldBeVertical = variation !== 'variation-2';
-
-		if ( attributes.isHeaderVertical !== shouldBeVertical ) {
-			setAttributes( {
-				isHeaderVertical: shouldBeVertical,
-			} );
-		}
-	}, [ attributes.isHeaderVertical, variation, setAttributes ] );
 
 	const variationClass = variation === 'variation-2' ? 'variation-three' : '';
 	const showEyebrow = variation !== 'variation-2';

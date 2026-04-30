@@ -1,4 +1,15 @@
 ( function () {
+	const handleGlobalKeydown = ( event ) => {
+		if ( event.key !== 'Escape' ) {
+			return;
+		}
+
+		const activeModal = document.querySelector( '[data-video-modal].is-active' );
+		if ( activeModal ) {
+			activeModal.dispatchEvent( new CustomEvent( 'video:close' ) );
+		}
+	};
+
 	const initThreeColumnVideo = () => {
 		const cards = document.querySelectorAll(
 			'.wp-block-ambrygen-three-column-image-grid-item'
@@ -30,6 +41,7 @@
 				if ( videoDescriptionEl ) {
 					videoDescriptionEl.replaceChildren();
 				}
+				videoButton.focus();
 			};
 
 			const createSafeDescriptionFragment = ( sourceEl ) => {
@@ -100,6 +112,8 @@
 				videoModal.classList.add( 'is-active' );
 			};
 
+			videoModal.addEventListener( 'video:close', closeVideoModal );
+
 			videoButton.addEventListener( 'click', ( e ) => {
 				e.preventDefault();
 				openVideoModal();
@@ -118,20 +132,14 @@
 					closeVideoModal();
 				});
 			}
-
-			document.addEventListener( 'keydown', ( event ) => {
-				if ( event.key === 'Escape' && videoModal.classList.contains( 'is-active' ) ) {
-					closeVideoModal();
-				}
-			} );
 		} );
 	};
+
+	document.addEventListener( 'keydown', handleGlobalKeydown );
 
 	if ( document.readyState === 'loading' ) {
 		document.addEventListener( 'DOMContentLoaded', initThreeColumnVideo );
 	} else {
 		initThreeColumnVideo();
 	}
-
-	window.addEventListener( 'load', initThreeColumnVideo );
 } )();

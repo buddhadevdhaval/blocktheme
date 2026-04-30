@@ -54,12 +54,17 @@ $ambrygen_overlay_image_alt   = isset( $ambrygen_attributes['overlayImageAlt'] )
  */
 $ambrygen_id         = wp_unique_id();
 $ambrygen_heading_id = $ambrygen_has_heading ? 'testimonials-heading-' . $ambrygen_id : '';
+$ambrygen_status_id  = 'testimonials-status-' . $ambrygen_id;
 
 /**
  * Wrapper attributes.
  */
 $ambrygen_wrapper_attributes_array = array(
-	'class' => 'wp-block-ambrygen-testimonials ambry-testimonials testimonials-slider',
+	'class'                             => 'wp-block-ambrygen-testimonials ambry-testimonials testimonials-slider',
+	'data-testimonials-status-id'       => $ambrygen_status_id,
+	'data-testimonials-prev-label'      => __( 'Previous testimonial', 'ambrygen-web' ),
+	'data-testimonials-next-label'      => __( 'Next testimonial', 'ambrygen-web' ),
+	'data-testimonials-status-template' => __( 'Slide %1$d of %2$d', 'ambrygen-web' ),
 );
 
 if ( $ambrygen_block_id ) {
@@ -140,10 +145,16 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 					echo $ambrygen_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					?>
 				</div>
+				<div class="screen-reader-text" aria-live="polite" aria-atomic="true" id="<?php echo esc_attr( $ambrygen_status_id ); ?>">
+					<?php
+					/* translators: %1$d: current slide, %2$d: total slides */
+					printf( esc_html__( 'Slide %1$d of %2$d', 'ambrygen-web' ), 1, 0 );
+					?>
+				</div>
 				<div class="swiper-buttons">
-					<button type="button" class="custom-prev" aria-label="<?php esc_attr_e( 'Previous testimonial', 'ambrygen-web' ); ?>">
+					<button type="button" class="custom-prev" aria-label="<?php esc_attr_e( 'Previous testimonial', 'ambrygen-web' ); ?>" aria-controls="<?php echo esc_attr( $ambrygen_status_id ); ?>">
 					</button>
-					<button type="button" class="custom-next" aria-label="<?php esc_attr_e( 'Next testimonial', 'ambrygen-web' ); ?>">
+					<button type="button" class="custom-next" aria-label="<?php esc_attr_e( 'Next testimonial', 'ambrygen-web' ); ?>" aria-controls="<?php echo esc_attr( $ambrygen_status_id ); ?>">
 					</button>
 				</div>
 			</div>

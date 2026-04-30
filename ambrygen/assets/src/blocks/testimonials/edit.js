@@ -80,9 +80,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	);
 
 	useEffect( () => {
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+		const expectedId = `testimonials-${ clientId }`;
 
-		if ( ! blockId ) {
+		if ( ! blockId || ! blockId.endsWith( clientId ) ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
@@ -150,7 +150,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				>
 					<ImageUploader
 						url={ overlayImage }
-						label={ __( 'Top Overlay Image', 'ambrygen-web' ) }
+						label={ __( 'Top Left Overlay Image', 'ambrygen-web' ) }
 						onSelect={ ( media ) =>
 							updateImage( media, 'overlayImage' )
 						}
@@ -164,7 +164,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 					<ImageUploader
 						url={ secondaryImage }
-						label={ __( 'Bottom Overlay Image', 'ambrygen-web' ) }
+						label={ __( 'Bottom Right Overlay Image', 'ambrygen-web' ) }
 						onSelect={ ( media ) =>
 							updateImage( media, 'secondaryImage' )
 						}

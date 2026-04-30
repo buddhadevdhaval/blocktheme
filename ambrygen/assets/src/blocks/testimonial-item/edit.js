@@ -4,26 +4,34 @@ import {
 	InspectorControls,
 } from '@wordpress/block-editor';
 import { __ } from '@wordpress/i18n';
+import { useMemo } from '@wordpress/element';
 
-import { ImageUploader } from '../_shared/components';
+import { DEFAULT_IMAGES, ImageUploader } from '../_shared/components';
 
 export default function Edit( { attributes, setAttributes, context } ) {
+	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
+	const fallbackImage = defaults?.placeholder || {};
 	const { logo, logoAlt, quote, author, role } = attributes;
 	const mainImage = context?.[ 'ambrygen/mainImage' ];
 	const mainImageAlt = context?.[ 'ambrygen/mainImageAlt' ];
+	const displayMainImage = mainImage || fallbackImage.url || '';
+	const displayMainImageAlt = mainImage
+		? mainImageAlt || ''
+		: fallbackImage.alt || '';
 	const blockProps = useBlockProps( {
 		className: 'ambry-testimonials__grid__item',
 	} );
+
 	const updateLogo = ( media ) => {
 		if ( ! media?.url ) {
 			return;
 		}
 
-		   setAttributes( {
-			   logoId: media.id ?? undefined,
-			   logo: media.url,
-			   logoAlt: media.alt || '',
-		   } );
+		setAttributes( {
+			logoId: media.id || 0,
+			logo: media.url || '',
+			logoAlt: media.alt || '',
+		} );
 	};
 
 	return (
@@ -35,7 +43,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 					onSelect={ updateLogo }
 					onRemove={ () =>
 						setAttributes( {
-							logoId: undefined,
+							logoId: 0,
 							logo: '',
 							logoAlt: '',
 						} )
@@ -43,14 +51,14 @@ export default function Edit( { attributes, setAttributes, context } ) {
 				/>
 			</InspectorControls>
 
-			{ mainImage && (
+			{ displayMainImage && (
 				<div
 					className="ambry-testimonials__grid__item__thumb"
 					aria-hidden="true"
 				>
 					<img
-						src={ mainImage }
-						alt={ mainImageAlt || '' }
+						src={ displayMainImage }
+						alt={ displayMainImageAlt }
 						loading="lazy"
 					/>
 				</div>
@@ -72,13 +80,13 @@ export default function Edit( { attributes, setAttributes, context } ) {
 					</>
 				) }
 
-					<RichText
-						tagName="blockquote"
-						value={ quote }
-						onChange={ ( value ) => setAttributes( { quote: value } ) }
-						placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
-						className="ambry-testimonials__grid__item__quote body2-reg"
-					/>
+				<RichText
+					tagName="blockquote"
+					value={ quote }
+					onChange={ ( value ) => setAttributes( { quote: value } ) }
+					placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
+					className="ambry-testimonials__grid__item__quote body2-reg"
+				/>
 
 				<cite className="ambry-testimonials__layout__author-details">
 					<RichText
@@ -87,7 +95,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 						onChange={ ( value ) =>
 							setAttributes( { author: value } )
 						}
-						   placeholder={ __( 'Add Author name…', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Author name…', 'ambrygen-web' ) }
 						className="ambry-testimonials__layout__author-details__author body2-medium"
 					/>
 
@@ -97,7 +105,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 						onChange={ ( value ) =>
 							setAttributes( { role: value } )
 						}
-						   placeholder={ __( 'Add Designation…', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Designation…', 'ambrygen-web' ) }
 						className="ambry-testimonials__layout__author-details__role body2-medium"
 					/>
 				</cite>

@@ -67,8 +67,9 @@ $ambrygen_cta_rel      = implode( ' ', array_unique( array_filter( $ambrygen_cta
 $ambrygen_wrapper_attrs = get_block_wrapper_attributes( array( 'class' => 'three-column-card js-gsap-fade' ) );
 
 // Video specific logic.
-$ambrygen_video_type = '';
-$ambrygen_video_src  = '';
+$ambrygen_video_type        = '';
+$ambrygen_video_src         = '';
+$ambrygen_video_title_popup = '';
 
 if ( $ambrygen_is_popup && 'video' === $ambrygen_popup_type ) {
 	$ambrygen_video_type = isset( $ambrygen_cta['videoType'] ) ? sanitize_text_field( $ambrygen_cta['videoType'] ) : 'embed';
@@ -140,12 +141,13 @@ if ( $ambrygen_is_popup && 'video' === $ambrygen_popup_type ) {
 											<a
 												class="three-column-card__files-link download-link__files-link"
 												href="<?php echo esc_url( $file_url ); ?>"
-												aria-label="<?php echo esc_attr( $file_label ); ?>"
 												download
 											>
+												<?php echo esc_html( $file_label ); ?>
 												<?php if ( $file_size_type ) : ?>
-														<?php echo esc_html( $file_size_type ); ?>
+													<span class="download-link__size">(<?php echo esc_html( $file_size_type ); ?>)</span>
 												<?php endif; ?>
+												<span class="screen-reader-text"><?php esc_html_e( ' - download', 'ambrygen-web' ); ?></span>
 											</a>
 										</div>
 									<?php endif; ?>
@@ -168,7 +170,6 @@ if ( $ambrygen_is_popup && 'video' === $ambrygen_popup_type ) {
 						class="three-column-card__cta <?php echo esc_attr( $ambrygen_cta_variant ); ?> site-btn has-video-arrow"
 						data-video-type="<?php echo esc_attr( $ambrygen_video_type ); ?>"
 						data-video-title="<?php echo esc_attr( $ambrygen_video_title_popup ); ?>"
-						data-video-content="<?php echo esc_attr( $ambrygen_video_content ); ?>"
 						<?php if ( $ambrygen_video_src ) : ?>
 							data-video-src="<?php echo esc_url( $ambrygen_video_src ); ?>"
 						<?php endif; ?>
@@ -191,7 +192,7 @@ if ( $ambrygen_is_popup && 'video' === $ambrygen_popup_type ) {
 				<?php elseif ( $ambrygen_is_popup && 'form' === $ambrygen_popup_type ) : ?>
 					<button
 						type="button"
-						class="three-column-card__cta <?php echo esc_attr( $ambrygen_cta_variant ); ?> site-btn has-right-arrow"
+						class="three-column-card__cta <?php echo esc_attr( $ambrygen_cta_variant ); ?> site-btn has-form-arrow has-right-arrow"
 						data-form-title="<?php echo esc_attr( $ambrygen_form_title ); ?>"
 						data-form-content="<?php echo esc_attr( $ambrygen_form_content ); ?>"
 					>

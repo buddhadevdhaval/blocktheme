@@ -16,9 +16,9 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	)
 );
 
-$ambrygen_title    = $attributes['title'] ?? '';
-$ambrygen_tag      = $attributes['headingTag'] ?? 'h2';
-$ambrygen_buttons  = $attributes['buttons'] ?? array();
+$ambrygen_title         = $attributes['title'] ?? '';
+$ambrygen_tag           = $attributes['headingTag'] ?? 'h2';
+$ambrygen_buttons       = $attributes['buttons'] ?? array();
 $ambrygen_inner_content = trim( (string) $content );
 
 ?>
@@ -33,7 +33,7 @@ $ambrygen_inner_content = trim( (string) $content );
 	<div class="is-style-gl-s32" aria-hidden="true"></div>
 
 	<?php if ( $ambrygen_inner_content ) : ?>
-		<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		<?php echo wp_kses_post( $ambrygen_inner_content ); ?>
 	<?php else : ?>
 		<div class="blocks-btn two-btn-row">
 			<?php

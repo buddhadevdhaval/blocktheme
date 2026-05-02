@@ -1,0 +1,206 @@
+<?php
+/**
+ * Render: Multimedia Asset Item Block
+ *
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
+ *
+ * @package ambrygen
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+use Ambrygen\Theme\Core\Helper;
+
+$ambrygen_attributes    = $attributes ?? array();
+$ambrygen_title         = $ambrygen_attributes['sectiontitle'] ?? '';
+$ambrygen_image_id      = absint( $ambrygen_attributes['imageId'] ?? 0 );
+$ambrygen_image_url     = isset( $ambrygen_attributes['imageUrl'] ) ? esc_url_raw( $ambrygen_attributes['imageUrl'] ) : '';
+$ambrygen_image_alt     = isset( $ambrygen_attributes['imageAlt'] ) ? sanitize_text_field( $ambrygen_attributes['imageAlt'] ) : '';
+$ambrygen_video_title   = $ambrygen_attributes['videoTitle'] ?? '';
+$ambrygen_video_content = isset( $ambrygen_attributes['videoContent'] ) ? wp_kses_post( $ambrygen_attributes['videoContent'] ) : '';
+$ambrygen_cta           = $ambrygen_attributes['cta'] ?? array();
+$ambrygen_files         = $ambrygen_attributes['files'] ?? array();
+
+$ambrygen_cta_text     = $ambrygen_cta['text'] ?? '';
+$ambrygen_cta_url      = isset( $ambrygen_cta['url'] ) ? esc_url_raw( $ambrygen_cta['url'] ) : '';
+$ambrygen_cta_target   = isset( $ambrygen_cta['target'] ) ? sanitize_text_field( $ambrygen_cta['target'] ) : '';
+$ambrygen_cta_rel      = isset( $ambrygen_cta['rel'] ) ? sanitize_text_field( $ambrygen_cta['rel'] ) : '';
+$ambrygen_cta_variant  = isset( $ambrygen_cta['variant'] ) ? sanitize_html_class( $ambrygen_cta['variant'] ) : 'dark';
+$ambrygen_is_popup     = ! empty( $ambrygen_cta['isPopup'] );
+$ambrygen_popup_type   = isset( $ambrygen_cta['popupType'] ) ? sanitize_text_field( $ambrygen_cta['popupType'] ) : 'video';
+$ambrygen_form_title   = isset( $ambrygen_attributes['formTitle'] ) ? sanitize_text_field( $ambrygen_attributes['formTitle'] ) : '';
+$ambrygen_form_content = isset( $ambrygen_attributes['formContent'] ) ? wp_kses_post( $ambrygen_attributes['formContent'] ) : '';
+
+$ambrygen_allowed_popup_types = array( 'video', 'form' );
+$ambrygen_popup_type          = in_array( $ambrygen_popup_type, $ambrygen_allowed_popup_types, true ) ? $ambrygen_popup_type : 'video';
+
+if ( ! is_array( $ambrygen_files ) ) {
+	$ambrygen_files = array();
+}
+
+$ambrygen_files            = array_values(
+	array_filter(
+		$ambrygen_files,
+		static function ( $file ) {
+			return ! empty( $file['fileUrl'] );
+		}
+	)
+);
+$ambrygen_has_text_content = ! empty( $ambrygen_title ) || ! empty( $ambrygen_files );
+
+/*
+|--------------------------------------------------------------------------
+| Ensure rel attribute is secure if target=_blank
+|--------------------------------------------------------------------------
+*/
+if ( '_blank' === $ambrygen_cta_target && empty( $ambrygen_cta_rel ) ) {
+	$ambrygen_cta_rel = 'noopener noreferrer';
+}
+
+$ambrygen_wrapper_attrs = get_block_wrapper_attributes( array( 'class' => 'approach-card js-gsap-fade' ) );
+
+// Video specific logic.
+$ambrygen_video_type = '';
+$ambrygen_video_src  = '';
+
+if ( $ambrygen_is_popup && 'video' === $ambrygen_popup_type ) {
+	$ambrygen_video_type = isset( $ambrygen_cta['videoType'] ) ? sanitize_text_field( $ambrygen_cta['videoType'] ) : 'embed';
+	$ambrygen_video_type = in_array( $ambrygen_video_type, array( 'embed', 'mp4' ), true ) ? $ambrygen_video_type : 'embed';
+	$ambrygen_video_src  = 'mp4' === $ambrygen_video_type
+		? esc_url_raw( $ambrygen_cta['videoUrl'] ?? '' )
+		: Helper::get_iframe_src( $ambrygen_cta['iframeUrl'] ?? '' );
+
+	$ambrygen_video_title_popup = ! empty( $ambrygen_video_title )
+		? $ambrygen_video_title
+		: ( ! empty( $ambrygen_title ) ? $ambrygen_title : $ambrygen_cta_text );
+}
+?>
+
+<div <?php echo $ambrygen_wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+	<div class="approach-card__inner">
+
+		<div class="approach-card__image-wrapper">
+			<div class="approach-card__image">
+				<?php
+				// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() escapes attributes and returns wp_kses_post()-sanitized image markup.
+				echo Helper::image_from_source(
+					$ambrygen_image_id,
+					$ambrygen_image_url,
+					'medium_large',
+					array(
+						'class'   => 'card-image',
+						'loading' => 'lazy',
+						'alt'     => $ambrygen_image_alt,
+					),
+					true
+				);
+				// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
+				?>
+			</div>
+			<?php if ( $ambrygen_has_text_content ) : ?>
+				<div class="is-style-gl-s24" aria-hidden="true"></div>
+			<?php endif; ?>
+				<div class="approach-card__text-content">
+					<?php if ( ! empty( $ambrygen_title ) ) : ?>
+						<h3 class="approach-card__title heading-5 mb-0">
+							<?php
+							echo wp_kses(
+								$ambrygen_title,
+								Helper::allowed_heading_html()
+							);
+							?>
+						</h3>
+					<?php endif; ?>
+
+					<?php if ( ! empty( $ambrygen_files ) ) : ?>
+						<div class="approach-card__files download-link has-downloads mt-2">
+							<div class="approach-card__files-list download-link__files-list">
+								<?php foreach ( $ambrygen_files as $file ) : ?>
+									<?php
+									$file_url       = isset( $file['fileUrl'] ) ? esc_url_raw( $file['fileUrl'] ) : '';
+									$file_name      = isset( $file['fileName'] ) ? sanitize_text_field( $file['fileName'] ) : '';
+									$file_size_type = isset( $file['sizeType'] ) ? sanitize_text_field( $file['sizeType'] ) : '';
+									$file_label     = $file_name ? $file_name : wp_basename( $file_url );
+									?>
+									<?php if ( $file_url ) : ?>
+										<div class="approach-card__files-item download-link__files-item">
+											<a
+												class="approach-card__files-link download-link__files-link"
+												href="<?php echo esc_url( $file_url ); ?>"
+												aria-label="<?php echo esc_attr( $file_label ); ?>"
+												download
+											>
+												<?php if ( $file_size_type ) : ?>
+														<?php echo esc_html( $file_size_type ); ?>
+												<?php endif; ?>
+											</a>
+										</div>
+									<?php endif; ?>
+								<?php endforeach; ?>
+							</div>
+						</div>
+					<?php endif; ?>
+			</div>
+		</div>
+
+		<?php if ( $ambrygen_cta_text && $ambrygen_has_text_content ) : ?>
+			<div class="is-style-gl-s32" aria-hidden="true"></div>
+		<?php endif; ?>
+
+		<?php if ( $ambrygen_cta_text ) : ?>
+			<div class="approach-card__cta-wrapper">
+				<?php if ( $ambrygen_is_popup && 'video' === $ambrygen_popup_type ) : ?>
+					<button
+						type="button"
+						class="approach-card__cta <?php echo esc_attr( $ambrygen_cta_variant ); ?> site-btn has-video-arrow"
+						data-video-type="<?php echo esc_attr( $ambrygen_video_type ); ?>"
+						data-video-title="<?php echo esc_attr( $ambrygen_video_title_popup ); ?>"
+						data-video-content="<?php echo esc_attr( $ambrygen_video_content ); ?>"
+						<?php if ( $ambrygen_video_src ) : ?>
+							data-video-src="<?php echo esc_url( $ambrygen_video_src ); ?>"
+						<?php endif; ?>
+					>
+						<?php echo esc_html( $ambrygen_cta_text ); ?>
+					</button>
+
+					<div style="display: none;" aria-hidden="true">
+						<?php if ( ! empty( $ambrygen_video_title ) ) : ?>
+							<div class="subtitle2-sbold videos__cards-item-title">
+								<?php echo wp_kses( $ambrygen_video_title, Helper::allowed_heading_html() ); ?>
+							</div>
+						<?php endif; ?>
+						<?php if ( ! empty( $ambrygen_video_content ) ) : ?>
+							<div class="subtitle2-sbold videos__cards-item-description">
+								<?php echo wp_kses_post( $ambrygen_video_content ); ?>
+							</div>
+						<?php endif; ?>
+					</div>
+				<?php elseif ( $ambrygen_is_popup && 'form' === $ambrygen_popup_type ) : ?>
+					<button
+						type="button"
+						class="approach-card__cta <?php echo esc_attr( $ambrygen_cta_variant ); ?> site-btn has-right-arrow"
+						data-form-title="<?php echo esc_attr( $ambrygen_form_title ); ?>"
+						data-form-content="<?php echo esc_attr( $ambrygen_form_content ); ?>"
+					>
+						<?php echo esc_html( $ambrygen_cta_text ); ?>
+					</button>
+				<?php elseif ( $ambrygen_cta_url ) : ?>
+					<a
+						href="<?php echo esc_url( $ambrygen_cta_url ); ?>"
+						class="approach-card__cta site-btn has-right-arrow <?php echo esc_attr( $ambrygen_cta_variant ); ?>"
+						<?php echo $ambrygen_cta_target ? ' target="' . esc_attr( $ambrygen_cta_target ) . '"' : ''; ?>
+						<?php echo $ambrygen_cta_rel ? ' rel="' . esc_attr( $ambrygen_cta_rel ) . '"' : ''; ?>
+					>
+						<?php echo esc_html( $ambrygen_cta_text ); ?>
+						<?php if ( '_blank' === $ambrygen_cta_target ) : ?>
+							<span class="screen-reader-text"><?php esc_html_e( '(opens in new tab)', 'ambrygen-web' ); ?></span>
+						<?php endif; ?>
+					</a>
+				<?php endif; ?>
+			</div>
+		<?php endif; ?>
+
+	</div>
+</div>

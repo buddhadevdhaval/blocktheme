@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/genetic-testing-product-stats",
+  "version": "0.1.0",
+  "title": "Genetic Testing Product Stats",
+  "category": "ambrygen",
+  "description": "Displays product distribution stats from linked marketing materials.",
+  "attributes": {
+    "previewPostId": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "supports": {
+    "html": false
+  },
+  "textdomain": "ambrygen",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "usesContext": [
+    "postId"
+  ]
+}

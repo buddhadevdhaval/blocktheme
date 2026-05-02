@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/sidebar-related-posts",
+  "title": "Sidebar Related Posts",
+  "category": "ambrygen",
+  "description": "Displays related posts in the blog sidebar.",
+  "textdomain": "ambrygen-web",
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Related Articles"
+    }
+  },
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

@@ -1,20 +1,19 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "ambrygen/logo-section",
+  "name": "ambrygen/multimedia-logo",
   "title": "Multimedia Logo",
   "category": "ambrygen",
   "icon": "format-image",
-  "description": "Multimedia logo section with grouped file downloads.",
+  "description": "Logo section with grouped downloads and supporting media.",
   "supports": {
-    "html": false
+    "html": false,
+    "anchor": true
   },
   "attributes": {
-    "blockId": {
-      "type": "string"
-    },
-    "heading": {
-      "type": "string"
+    "sectionTitle": {
+      "type": "string",
+      "default": ""
     },
     "headingTag": {
       "type": "string",
@@ -28,25 +27,34 @@
       ],
       "default": "h2"
     },
-    "image1Url": {
-      "type": "string"
+    "logoImageUrl": {
+      "type": "string",
+      "default": ""
     },
-    "image1Id": {
-      "type": "number"
+    "logoImageId": {
+      "type": "number",
+      "default": 0
     },
-    "image1Alt": {
-      "type": "string"
+    "logoImageAlt": {
+      "type": "string",
+      "default": ""
     },
-    "webGroups": {
+    "downloads": {
       "type": "array",
       "default": [],
       "items": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string"
+          },
+          "group": {
+            "type": "string"
+          },
           "groupName": {
             "type": "string"
           },
-          "linkName": {
+          "label": {
             "type": "string"
           },
           "fileUrl": {
@@ -58,38 +66,21 @@
         }
       }
     },
-    "printGroups": {
-      "type": "array",
-      "default": [],
-      "items": {
-        "type": "object",
-        "properties": {
-          "groupName": {
-            "type": "string"
-          },
-          "linkName": {
-            "type": "string"
-          },
-          "fileUrl": {
-            "type": "string"
-          },
-          "fileId": {
-            "type": "number"
-          }
-        }
-      }
+    "secondaryImageUrl": {
+      "type": "string",
+      "default": ""
     },
-    "image2Url": {
-      "type": "string"
+    "secondaryImageId": {
+      "type": "number",
+      "default": 0
     },
-    "image2Id": {
-      "type": "number"
-    },
-    "image2Alt": {
-      "type": "string"
+    "secondaryImageAlt": {
+      "type": "string",
+      "default": ""
     },
     "description": {
-      "type": "string"
+      "type": "string",
+      "default": ""
     }
   },
   "textdomain": "ambrygen-web",
@@ -99,25 +90,7 @@
   "render": "file:./render.php",
   "example": {
     "attributes": {
-      "heading": "Heading",
-      "headingTag": "h2",
-      "webGroups": [
-        {
-          "groupName": "Group Name",
-          "linkName": "ZIP File",
-          "fileUrl": "#",
-          "fileId": 0
-        }
-      ],
-      "printGroups": [
-        {
-          "groupName": "Group Name",
-          "linkName": "PDF File",
-          "fileUrl": "#",
-          "fileId": 0
-        }
-      ],
-      "description": "Description"
+      "sectionTitle": "multimedia-logo-example"
     }
   }
 }

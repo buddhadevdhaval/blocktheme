@@ -40,8 +40,13 @@ const TEMPLATE = [
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { blockId, sectionTitle, headingTag } = attributes;
+	const isExample = blockId === 'cta-tiles-with-3-card-example';
 
 	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
+
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
 		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
@@ -49,13 +54,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				blockId: expectedId,
 			} );
 		}
-	}, [ clientId, blockId, setAttributes ] );
+	}, [ clientId, blockId, isExample, setAttributes ] );
 
 	const blockProps = useBlockProps( {
 		className: 'cta-tiles-with-3-card',
 	} );
 
-	if ( blockId === 'cta-tiles-with-3-card-example' ) {
+	if ( isExample ) {
 		return (
 			<BlockExamplePreview
 				className="cta-tiles-with-3-card-example-preview"
@@ -67,7 +72,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Section Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag }
@@ -105,3 +110,4 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
+

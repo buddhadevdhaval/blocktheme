@@ -40,6 +40,7 @@ $ambrygen_variation           = in_array( $ambrygen_variation, $ambrygen_allowed
 $ambrygen_description_class   = 'variation-2' === $ambrygen_variation ? 'body1' : 'body2-reg';
 $ambrygen_allowed_popup_types = array( 'video', 'form' );
 $ambrygen_popup_type          = in_array( $ambrygen_popup_type, $ambrygen_allowed_popup_types, true ) ? $ambrygen_popup_type : 'video';
+$ambrygen_is_popup            = 'variation-2' === $ambrygen_variation ? $ambrygen_is_popup : false;
 
 if ( ! is_array( $ambrygen_files ) ) {
 	$ambrygen_files = array();
@@ -173,6 +174,7 @@ if ( $ambrygen_is_popup && 'video' === $ambrygen_popup_type ) {
 						aria-controls="ambry-global-video-modal"
 						data-video-type="<?php echo esc_attr( $ambrygen_video_type ); ?>"
 						data-video-title="<?php echo esc_attr( $ambrygen_video_title_popup ); ?>"
+						data-video-content="<?php echo esc_attr( $ambrygen_video_content ); ?>"
 						<?php if ( $ambrygen_video_src ) : ?>
 							data-video-src="<?php echo esc_url( $ambrygen_video_src ); ?>"
 						<?php endif; ?>

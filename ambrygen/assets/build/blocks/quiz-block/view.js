@@ -1,0 +1,33 @@
+/******/ (() => { // webpackBootstrap
+/*!**********************************************!*\
+  !*** ./assets/src/blocks/quiz-block/view.js ***!
+  \**********************************************/
+document.addEventListener('DOMContentLoaded', () => {
+  const blocks = document.querySelectorAll('.risk-checklist');
+  blocks.forEach(block => {
+    const checkboxes = block.querySelectorAll('.js-risk-checkbox');
+    const noRiskResult = block.querySelector('.risk-checklist__result--no-risk');
+    const atRiskResult = block.querySelector('.risk-checklist__result--at-risk');
+    if (!checkboxes.length || !noRiskResult && !atRiskResult) {
+      return;
+    }
+    const updateResults = () => {
+      const hasSelectedRisk = Array.from(checkboxes).some(checkbox => checkbox.checked);
+      if (noRiskResult) {
+        noRiskResult.classList.toggle('risk-checklist__result--hidden', hasSelectedRisk);
+      }
+      if (atRiskResult) {
+        atRiskResult.classList.toggle('risk-checklist__result--hidden', !hasSelectedRisk);
+      }
+    };
+    block.addEventListener('change', event => {
+      if (event.target.classList.contains('js-risk-checkbox')) {
+        updateResults();
+      }
+    });
+    updateResults();
+  });
+});
+/******/ })()
+;
+//# sourceMappingURL=view.js.map

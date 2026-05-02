@@ -95,7 +95,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					initialOpen={ true }
 				>
 					<TagSelector
-						label={ __( 'Heading Level', 'ambrygen-web' ) }
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						type="heading"
 						value={ headingTag }
 						onChange={ ( value ) =>
@@ -116,9 +116,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 						placeholder={ __( 'Add Eyebrow...', 'ambrygen-web' ) }
 					/>
-					{ hasTagline && ( hasHeading || hasDescription ) && (
-						<div className="is-style-gl-s12"></div>
-					) }
+					<div className="is-style-gl-s12"></div>
 					<RichText
 						tagName={ headingTag }
 						className="heading-4 block-title mb-0 icon-card-grid__heading"
@@ -128,9 +126,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 					/>
-					{ hasHeading && hasDescription && (
-						<div className="is-style-gl-s12"></div>
-					) }
+					<div className="is-style-gl-s12"></div>
 					<RichText
 						tagName="div"
 						className="body1 icon-card-grid__desc"
@@ -142,9 +138,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 				</div>
 
-				{ hasHeader && hasCards && (
-					<div className="is-style-gl-s32"></div>
-				) }
+				<div className="is-style-gl-s32"></div>
 
 				<div className="icon-card-grid__grid">
 					<InnerBlocks
@@ -166,3 +160,4 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
+

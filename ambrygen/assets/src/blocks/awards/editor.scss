@@ -1,0 +1,41 @@
+.wp-block-ambrygen-awards {
+    max-width: 100%;
+    overflow: hidden;
+
+    .marquee-slide {
+        white-space: nowrap;
+        overflow-y: auto;
+
+        &__slider {
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            height: auto !important;
+            width: 100% !important;
+        }
+
+        &__wrapper {
+            position: relative !important;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center;
+            gap: 24px;
+            width: max-content !important;
+            height: auto !important;
+            padding-bottom: 12px;
+        }
+
+        &__item {
+            position: relative !important;
+            flex: 0 0 253px !important;
+            width: 253px !important;
+            height: auto !important;
+
+            img {
+                max-width: 100%;
+                height: auto;
+                display: block;
+                margin: 0 auto;
+            }
+        }
+    }
+}

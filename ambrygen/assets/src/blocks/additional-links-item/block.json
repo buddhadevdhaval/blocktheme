@@ -40,21 +40,5 @@
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
   "textdomain": "ambrygen-web",
-  "render": "file:./render.php",
-  "example": {
-    "attributes": {
-      "icon": {
-        "url": "https://example.com/icon.svg",
-        "id": 0,
-        "alt": "Example icon"
-      },
-      "cta": {
-        "text": "Learn More",
-        "url": "https://example.com",
-        "target": "_self",
-        "rel": "",
-        "variant": "dark"
-      }
-    }
-  }
+  "render": "file:./render.php"
 }

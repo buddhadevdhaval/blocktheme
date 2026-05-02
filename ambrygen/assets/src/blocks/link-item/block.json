@@ -2,7 +2,9 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "ambrygen/link-item",
-	"parent": ["ambrygen/link-list"],
+	"parent": [
+		"ambrygen/link-list"
+	],
 	"version": "0.1.0",
 	"title": "Link Item",
 	"category": "ambrygen",
@@ -22,6 +24,7 @@
 	},
 	"textdomain": "ambrygen-web",
 	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
 	"style": "file:./style.scss",
 	"render": "file:./render.php"
 }

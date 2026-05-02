@@ -1,5 +1,13 @@
 (function () {
 	const initVideoGridModal = () => {
+		const addAutoplay = (src) => {
+			if (!src || src.includes('autoplay=1')) {
+				return src;
+			}
+
+			return `${src}${src.includes('?') ? '&' : '?'}autoplay=1`;
+		};
+
 		const createSafeDescriptionFragment = (sourceEl) => {
 			const allowedTags = new Set([
 				'A',
@@ -175,17 +183,27 @@
 					}
 
 					if (videoType === 'mp4') {
+						const previewVideo = item.querySelector('video');
 						const videoEl = document.createElement('video');
 						videoEl.src = videoSrc;
 						videoEl.controls = true;
 						videoEl.autoplay = true;
+						videoEl.playsInline = true;
 						videoEl.className = 'modal-video-player';
 						videoEl.style.width = '100%';
 						videoEl.style.display = 'block';
+						videoEl.setAttribute('aria-label', videoTitle);
+						videoEl.setAttribute('preload', 'metadata');
+						videoEl.setAttribute('controlsList', 'nodownload'); // Optional: Prevent downloads
+
+						if (previewVideo?.poster) {
+							videoEl.poster = previewVideo.poster;
+						}
+
 						videoContainer.replaceChildren(videoEl);
 					} else {
 						const iframeEl = document.createElement('iframe');
-						iframeEl.src = videoSrc;
+						iframeEl.src = addAutoplay(videoSrc);
 						iframeEl.title = videoTitle;
 						iframeEl.className = 'features-media__iframe';
 						iframeEl.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
@@ -197,6 +215,11 @@
 					videoModal.setAttribute('aria-hidden', 'false');
 					videoModal.classList.add('is-active');
 					closeButton?.focus();
+
+					const modalVideo = videoContainer.querySelector('video');
+					if (modalVideo) {
+						modalVideo.play().catch(() => {});
+					}
 				};
 
 				if (overlay) {

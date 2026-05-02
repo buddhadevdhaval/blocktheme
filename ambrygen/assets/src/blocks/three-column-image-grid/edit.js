@@ -55,7 +55,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 	}, [ clientId, blockId, setAttributes ] );
 
-	const variationClass = variation === 'variation-2' ? 'variation-three' : '';
+	const variationClass = variation === 'variation-2' ? 'is-variation-2' : '';
 	const showEyebrow = variation !== 'variation-2';
 	const isHeaderVertical = variation !== 'variation-2';
 
@@ -79,7 +79,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					title={ __( 'Layout Variation', 'ambrygen-web' ) }
 					initialOpen={ true }
 				>
 					<div className="layout-variant-selector">
@@ -106,6 +106,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							</button>
 						) ) }
 					</div>
+				</PanelBody>
+				<PanelBody
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen={ true }
+				>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag || 'h2' }

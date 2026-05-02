@@ -4,21 +4,32 @@ import {
 	InspectorControls,
 	InnerBlocks,
 } from '@wordpress/block-editor';
-import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
+import {
+	PanelBody,
+	TextControl,
+	ToggleControl,
+} from '@wordpress/components';
 import {
 	ImageUploader,
 	DEFAULT_IMAGES,
 	TagSelector,
 	CtaButtonField,
+	BlockVariationsExamplePreview,
 } from '../_shared/components';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo } from '@wordpress/element';
+import { useSelect } from '@wordpress/data';
 import { getThemeAssetUrl } from '../../utils/assets';
 
+const NEWSLETTER_VARIATIONS = {
+	INFO: 'info-view',
+	FORM: 'form-view',
+};
 
 export default function Edit({ attributes, setAttributes, clientId }) {
 	const {
 		blockId,
+		variation = '',
 		eyebrow,
 		heading,
 		headingTag = 'h2',
@@ -41,11 +52,58 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const MAIL_ICON_URL = getThemeAssetUrl('/assets/src/images/mail-icon.svg');
 
 	const blockProps = useBlockProps();
+	const currentBlock = useSelect(
+		(select) => select('core/block-editor').getBlock(clientId),
+		[clientId]
+	);
 	const defaults = useMemo(() => DEFAULT_IMAGES(), []);
+	const variants = useMemo(
+		() => [
+			{
+				label: __('Info View', 'ambrygen-web'),
+				value: NEWSLETTER_VARIATIONS.INFO,
+				image: getThemeAssetUrl(
+					'/assets/src/images/contact-info/info-var.png'
+				),
+			},
+			{
+				label: __('Form View', 'ambrygen-web'),
+				value: NEWSLETTER_VARIATIONS.FORM,
+				image: getThemeAssetUrl(
+					'/assets/src/images/contact-info/form-var.png'
+				),
+			},
+		],
+		[]
+	);
+
+	if ( blockId === 'newsletter-form-example' ) {
+		return (
+			<BlockVariationsExamplePreview
+				variants={ variants }
+				className="cta-tiles-example-preview"
+				itemClass="cta-tiles-example-preview__item"
+			/>
+		);
+	}
+
 	const defaultImage = defaults?.placeholder || {};
 	const displayImage = image || defaultImage.url || '';
 	const displayImageAlt = image ? imageAlt || '' : defaultImage.alt || '';
 	const phoneHref = phoneNumber.replace(/[^0-9+]/g, '');
+	const hasShortcodeBlock = currentBlock?.innerBlocks?.some(
+		(innerBlock) => innerBlock?.name === 'core/shortcode'
+	);
+	const hasInfoContent = Boolean(
+		phoneNumber || emailAddress || cta?.text || buttonText
+	);
+	const normalizedVariation =
+		variation ||
+		(hasShortcodeBlock && !hasInfoContent
+			? NEWSLETTER_VARIATIONS.FORM
+			: NEWSLETTER_VARIATIONS.INFO);
+	const isInfoView = normalizedVariation === NEWSLETTER_VARIATIONS.INFO;
+	const isFormView = normalizedVariation === NEWSLETTER_VARIATIONS.FORM;
 	const ctaValue = {
 		text: cta?.text || buttonText || '',
 		url: cta?.url || buttonUrl || '',
@@ -69,9 +127,52 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		}
 	}, [clientId, blockId, setAttributes]);
 
+	useEffect(() => {
+		if (!variation) {
+			setAttributes({
+				variation: normalizedVariation,
+			});
+		}
+	}, [variation, normalizedVariation, setAttributes]);
+
 	return (
 		<div {...blockProps}>
 			<InspectorControls>
+				<PanelBody title={__('Layout Variation', 'ambrygen-web')}>
+					<div className="layout-variant-selector">
+						{variants.map((item) => (
+							<button
+								key={item.value}
+								type="button"
+								className={`variant-button ${normalizedVariation === item.value
+									? 'is-selected'
+									: ''
+									}`}
+								aria-pressed={
+									normalizedVariation === item.value
+								}
+								onClick={() =>
+									setAttributes({
+										variation: item.value,
+									})
+								}
+							>
+								<img src={item.image} alt={item.label} />
+								<span>{item.label}</span>
+							</button>
+						))}
+					</div>
+				</PanelBody>
+				<PanelBody title={__('Heading Settings', 'ambrygen-web')}>
+					<TagSelector
+						label={__('Heading Tag', 'ambrygen-web')}
+						value={headingTag || 'h2'}
+						type="heading"
+						onChange={(value) =>
+							setAttributes({ headingTag: value })
+						}
+					/>
+				</PanelBody>
 				<PanelBody title={__('Newsletter Section', 'ambrygen-web')}>
 					<ImageUploader
 						url={image}
@@ -91,41 +192,43 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						}
 						label={__('Newsletter Image', 'ambrygen-web')}
 					/>
-					<TagSelector
-						label={__('Heading Tag', 'ambrygen-web')}
-						value={headingTag || 'h2'}
-						type="heading"
-						onChange={(value) =>
-							setAttributes({ headingTag: value })
-						}
-					/>
-					<TextControl
-						label={__('Phone Number', 'ambrygen-web')}
-						value={phoneNumber}
-						onChange={(value) =>
-							setAttributes({ phoneNumber: value || '' })
-						}
-					/>
-					<TextControl
-						type="email"
-						label={__('Email Address', 'ambrygen-web')}
-						value={emailAddress}
-						onChange={(value) =>
-							setAttributes({ emailAddress: value || '' })
-						}
-					/>
-					<CtaButtonField
-						label={__('CTA', 'ambrygen-web')}
-						value={ctaValue}
-						showVariant={false}
-						onChange={(value) =>
-							setAttributes({
-								cta: value,
-								buttonText: value?.text || '',
-								buttonUrl: value?.url || '',
-							})
-						}
-					/>
+					{isInfoView && (
+						<>
+							<TextControl
+								label={__('Phone Number', 'ambrygen-web')}
+								value={phoneNumber}
+								onChange={(value) =>
+									setAttributes({
+										phoneNumber: value || '',
+									})
+								}
+							/>
+							<TextControl
+								type="email"
+								label={__('Email Address', 'ambrygen-web')}
+								value={emailAddress}
+								onChange={(value) =>
+									setAttributes({
+										emailAddress: value || '',
+									})
+								}
+							/>
+							<CtaButtonField
+								label={__('CTA', 'ambrygen-web')}
+								value={ctaValue}
+								showVariant={false}
+								onChange={(value) =>
+									setAttributes({
+										cta: value,
+										buttonText:
+											value?.text || '',
+										buttonUrl:
+											value?.url || '',
+									})
+								}
+							/>
+						</>
+					)}
 					<ImageUploader
 						url={overlayTopImage}
 						onSelect={(img) =>
@@ -250,7 +353,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						)}
 					/>
 
-					<div className="is-style-gl-s12" aria-hidden="true" />
+					{eyebrow && (
+						<div
+							className="is-style-gl-s12"
+							aria-hidden="true"
+						/>
+					)}
 
 					<RichText
 						tagName={headingTag}
@@ -263,7 +371,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						placeholder={__('Add Heading…', 'ambrygen-web')}
 					/>
 
-					<div className="is-style-gl-s12" aria-hidden="true" />
+					{heading && (
+						<div
+							className="is-style-gl-s12"
+							aria-hidden="true"
+						/>
+					)}
 
 					<RichText
 						tagName="div"
@@ -275,7 +388,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						placeholder={__('Add Description…', 'ambrygen-web')}
 					/>
 
-					{(phoneNumber || emailAddress) && (
+					{isInfoView && (phoneNumber || emailAddress) && (
 						<>
 							<div
 								className="is-style-gl-s36"
@@ -324,7 +437,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						</>
 					)}
 
-					{ctaValue.text && (
+					{isInfoView && ctaValue.text && (
 						<>
 							<div
 								className="is-style-gl-s36"
@@ -345,22 +458,30 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						</>
 					)}
 
-					<div className="is-style-gl-s12" aria-hidden="true" />
-					<div
-						className="newsletter-form-placeholder"
-						role="group"
-						aria-label={__(
-							'Newsletter signup form',
-							'ambrygen-web'
-						)}
-					>
-						<InnerBlocks
-							allowedBlocks={['core/shortcode']}
-							templateLock={false}
-						/>
-					</div>
+					{isFormView && (
+						<>
+							<div
+								className="is-style-gl-s12"
+								aria-hidden="true"
+							/>
+							<div
+								className="newsletter-form-placeholder"
+								role="group"
+								aria-label={__(
+									'Newsletter signup form',
+									'ambrygen-web'
+								)}
+							>
+								<InnerBlocks
+									allowedBlocks={['core/shortcode']}
+									templateLock={false}
+								/>
+							</div>
+						</>
+					)}
 				</div>
 			</div>
 		</div>
 	);
 }
+

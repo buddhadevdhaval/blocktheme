@@ -2,3 +2,44 @@
     overflow: hidden;
     position: relative;
 }
+
+.testimonial-slider {
+    .testimonial-slider__swiper > div > .block-editor-inner-blocks > .block-editor-block-list__layout,
+    .testimonial-slider__swiper > div > .block-editor-block-list__layout {
+        position: relative;
+    }
+
+    .testimonial-slider__swiper .is-editor-inactive-slide {
+        display: none !important;
+    }
+
+    .testimonial-slider__swiper .is-editor-active-slide {
+        display: block !important;
+    }
+
+    .testimonial-swiper-pagination {
+        align-items: center;
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        min-height: 16px;
+    }
+
+    .testimonial-swiper-pagination:empty {
+        display: none;
+    }
+
+    .swiper-pagination-bullet {
+        background: var(--theme_gray_400, #c4cdd5);
+        border-radius: 999px;
+        cursor: pointer;
+        display: block;
+        height: 8px;
+        opacity: 1;
+        width: 8px;
+    }
+
+    .swiper-pagination-bullet-active {
+        background: var(--theme_cg_blue, #0e5f7f);
+    }
+}

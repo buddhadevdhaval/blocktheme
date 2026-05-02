@@ -24,6 +24,22 @@
 		return escapeHtml( value );
 	}
 
+	function renderThemeOptionLinkValue( input ) {
+		const url = String( input?.value || '' ).trim();
+
+		if ( ! url ) {
+			return '<span class="description">No link selected yet.</span>';
+		}
+
+		return (
+			'<a href="' +
+			escapeAttr( url ) +
+			'" target="_blank" rel="noopener noreferrer">' +
+			escapeHtml( url ) +
+			'</a>'
+		);
+	}
+
 	function getSelectedIds( $selectedContainer ) {
 		return $selectedContainer
 			.find( 'input' )
@@ -215,6 +231,35 @@
 	}
 
 	$( document ).ready( function () {
+		const $themeOptionsTabs = $( '.ambrygen-theme-options-tabs' );
+		let activeLinkInput = null;
+
+		if ( $themeOptionsTabs.length ) {
+			$themeOptionsTabs.each( function () {
+				const $container = $( this );
+				const $tabButtons = $container.find( '[data-tab-target]' );
+				const $tabPanels = $container.find( '[data-tab-panel]' );
+
+				$tabButtons.on( 'click', function () {
+					const target = $( this ).data( 'tab-target' );
+
+					$tabButtons
+						.removeClass( 'nav-tab-active' )
+						.attr( 'aria-selected', 'false' );
+
+					$tabPanels.each( function () {
+						const isMatch =
+							$( this ).data( 'tab-panel' ) === target;
+						$( this ).prop( 'hidden', ! isMatch );
+					} );
+
+					$( this )
+						.addClass( 'nav-tab-active' )
+						.attr( 'aria-selected', 'true' );
+				} );
+			} );
+		}
+
 		// Handle generic theme option image fields
 		$( document ).on( 'click', '.ambrygen-theme-option-image-field .upload-button', function ( e ) {
 			e.preventDefault();
@@ -287,6 +332,74 @@
 				$wrapper.html( '' );
 			} );
 		}
+
+		$( document ).on(
+			'click',
+			'.ambrygen-link-picker__select',
+			function ( event ) {
+				event.preventDefault();
+
+				if ( typeof window.wpLink === 'undefined' ) {
+					return;
+				}
+
+				const field = this.closest( '.ambrygen-link-picker' );
+				activeLinkInput = field
+					? field.querySelector( '.ambrygen-link-picker__input' )
+					: null;
+
+				if ( ! activeLinkInput ) {
+					return;
+				}
+
+				window.wpLink.textarea = $( activeLinkInput );
+				window.wpLink.open();
+
+				setTimeout( function () {
+					const urlField = document.getElementById( 'wp-link-url' );
+
+					if ( urlField ) {
+						urlField.value = activeLinkInput.value || '';
+					}
+				}, 0 );
+			}
+		);
+
+		$( document ).on(
+			'click',
+			'.ambrygen-link-picker__clear',
+			function ( event ) {
+				event.preventDefault();
+
+				const field = this.closest( '.ambrygen-link-picker' );
+				const input = field
+					? field.querySelector( '.ambrygen-link-picker__input' )
+					: null;
+
+				if ( input ) {
+					input.value = '';
+					input.dispatchEvent( new Event( 'change', { bubbles: true } ) );
+					$( field )
+						.find( '.ambrygen-link-picker__value' )
+						.html( renderThemeOptionLinkValue( input ) );
+				}
+			}
+		);
+
+		$( document ).on( 'click', '#wp-link-submit', function () {
+			const selectedUrl = document.getElementById( 'wp-link-url' );
+
+			if ( ! activeLinkInput || ! selectedUrl ) {
+				return;
+			}
+
+			activeLinkInput.value = selectedUrl.value || '';
+			activeLinkInput.dispatchEvent( new Event( 'change', { bubbles: true } ) );
+			$( activeLinkInput )
+				.closest( '.ambrygen-link-picker' )
+				.find( '.ambrygen-link-picker__value' )
+				.html( renderThemeOptionLinkValue( activeLinkInput ) );
+		} );
 	} );
 
 	$( document ).on(
@@ -666,6 +779,59 @@
 		return attachment.get( 'title' ) || attachment.get( 'filename' ) || '';
 	}
 
+	function getMediaFilePreviewHtml( attachment ) {
+		if ( ! attachment ) {
+			return '<span class="ambrygen-media-file-empty">No file selected.</span>';
+		}
+
+		const id = attachment.get( 'id' ) || 0;
+		const url = attachment.get( 'url' ) || '';
+		const title = getAttachmentTitle( attachment );
+		const linkLabel = title || url.split( '/' ).pop() || url;
+		const removeLabel = `Remove file ${ linkLabel }`;
+
+		if ( ! url ) {
+			return '<span class="ambrygen-media-file-empty">No file selected.</span>';
+		}
+
+		return (
+			'<span class="ambrygen-media-file-preview-item" data-attachment-id="' +
+			escapeAttr( id ) +
+			'">' +
+			'<a class="ambrygen-media-file-link" href="' +
+			escapeAttr( url ) +
+			'" target="_blank" rel="noopener">' +
+			escapeHtml( linkLabel ) +
+			'</a>' +
+			'</span>'
+		);
+	}
+
+	function getMediaGalleryPreviewItemHtml( attachment ) {
+		const id = attachment.get( 'id' ) || 0;
+		const url = getAttachmentPreviewUrl( attachment );
+		const title = getAttachmentTitle( attachment ) || id;
+
+		if ( ! id || ! url ) {
+			return '';
+		}
+
+		return (
+			'<div class="ambrygen-media-gallery-preview-item" data-attachment-id="' +
+			escapeAttr( id ) +
+			'" style="position:relative;display:inline-flex;">' +
+			'<img src="' +
+			escapeAttr( url ) +
+			'" alt="" style="width:72px;height:72px;object-fit:cover;border:1px solid #ddd;border-radius:4px;display:block;" />' +
+			'<button type="button" class="button-link-delete ambrygen-media-gallery-remove-item" aria-label="' +
+			escapeAttr( `Remove image ${ title }` ) +
+			'" title="' +
+			escapeAttr( `Remove image ${ title }` ) +
+			'" style="position:absolute;top:4px;right:4px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:999px;background:rgba(17,24,39,0.82);color:#fff;text-align:center;text-decoration:none;font-size:15px;font-weight:700;line-height:1;border:1px solid rgba(255,255,255,0.22);box-shadow:0 1px 3px rgba(0,0,0,0.22);">&times;</button>' +
+			'</div>'
+		);
+	}
+
 	function renderMediaFilePreview( $field, attachment ) {
 		const $input = $field.find( '.ambrygen-media-file-input' );
 		const $preview = $field.find( '.ambrygen-media-file-preview' );
@@ -676,31 +842,13 @@
 
 		if ( ! attachment ) {
 			$input.val( '' ).trigger( 'change' );
-			$preview.html(
-				'<span class="ambrygen-media-file-empty">No file selected.</span>'
-			);
+			$preview.html( getMediaFilePreviewHtml( null ) );
 			return;
 		}
 
 		const id = attachment.get( 'id' ) || 0;
-		const url = attachment.get( 'url' ) || '';
-		const title = getAttachmentTitle( attachment );
-
 		$input.val( id ).trigger( 'change' );
-
-		if ( url ) {
-			$preview.html(
-				'<a class="ambrygen-media-file-link" href="' +
-					escapeAttr( url ) +
-					'" target="_blank" rel="noopener">' +
-					escapeHtml( title || url.split( '/' ).pop() || url ) +
-					'</a>'
-			);
-		} else {
-			$preview.html(
-				'<span class="ambrygen-media-file-empty">No file selected.</span>'
-			);
-		}
+		$preview.html( getMediaFilePreviewHtml( attachment ) );
 	}
 
 	function renderSingleImagePreview( $field, attachment ) {
@@ -785,9 +933,7 @@
 				return;
 			}
 
-			$preview.append(
-				`<img src="${ escapeAttr( url ) }" alt="" style="width:72px;height:72px;object-fit:cover;border:1px solid #ddd;border-radius:4px;" />`
-			);
+			$preview.append( getMediaGalleryPreviewItemHtml( attachment ) );
 		} );
 	}
 
@@ -812,7 +958,6 @@
 		const $button = $( this );
 		const $field = $button.closest( '.ambrygen-media-gallery-field' );
 		const $input = $field.find( '.ambrygen-media-gallery-input' );
-		const currentIds = parseIdList( $input.val() );
 
 		let frame = $field.data( 'ambrygenMediaGalleryFrame' );
 		if ( frame ) {
@@ -830,6 +975,10 @@
 
 		frame.on( 'open', function () {
 			const selection = frame.state().get( 'selection' );
+			const currentIds = parseIdList( $input.val() );
+
+			selection.reset();
+
 			currentIds.forEach( function ( id ) {
 				const attachment = wp.media.attachment( id );
 				attachment.fetch();
@@ -842,8 +991,9 @@
 			const attachments = selection.toArray().filter( function ( model ) {
 				return model && model.get;
 			} );
+			const existingIds = parseIdList( $input.val() );
 
-			const ids = attachments
+			const selectedIds = attachments
 				.map( function ( model ) {
 					return model.get( 'id' ) || 0;
 				} )
@@ -851,8 +1001,30 @@
 					return id > 0;
 				} );
 
+			const ids = Array.from(
+				new Set( [ ...existingIds, ...selectedIds ] )
+			);
+
+			const attachmentMap = new Map();
+
+			attachments.forEach( function ( attachment ) {
+				const attachmentId = attachment.get( 'id' ) || 0;
+
+				if ( attachmentId > 0 ) {
+					attachmentMap.set( attachmentId, attachment );
+				}
+			} );
+
+			const previewAttachments = ids.map( function ( id ) {
+				if ( attachmentMap.has( id ) ) {
+					return attachmentMap.get( id );
+				}
+
+				return wp.media.attachment( id );
+			} );
+
 			$input.val( ids.join( ',' ) ).trigger( 'change' );
-			renderMediaGalleryPreview( $field, attachments );
+			renderMediaGalleryPreview( $field, previewAttachments );
 		} );
 
 		frame.open();
@@ -868,6 +1040,33 @@
 		$input.val( '' ).trigger( 'change' );
 		$field.find( '.ambrygen-media-gallery-preview' ).empty();
 	} );
+
+	$( document ).on(
+		'click',
+		'.ambrygen-media-gallery-remove-item',
+		function ( e ) {
+			e.preventDefault();
+
+			const $button = $( this );
+			const $item = $button.closest(
+				'.ambrygen-media-gallery-preview-item'
+			);
+			const $field = $button.closest( '.ambrygen-media-gallery-field' );
+			const $input = $field.find( '.ambrygen-media-gallery-input' );
+			const removeId = parseInt( $item.data( 'attachment-id' ), 10 ) || 0;
+
+			if ( ! removeId ) {
+				return;
+			}
+
+			const nextIds = parseIdList( $input.val() ).filter( function ( id ) {
+				return id !== removeId;
+			} );
+
+			$input.val( nextIds.join( ',' ) ).trigger( 'change' );
+			$item.remove();
+		}
+	);
 
 	$( document ).on( 'click', '.ambrygen-media-file-upload', function ( e ) {
 		e.preventDefault();

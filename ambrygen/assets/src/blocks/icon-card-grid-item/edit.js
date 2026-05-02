@@ -10,7 +10,7 @@ import { __ } from '@wordpress/i18n';
 import { ImageUploader } from '../_shared/components';
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { iconId = 0, title = '', description = '' } = attributes;
+	const { iconId = 0, iconAlt = '', title = '', description = '' } = attributes;
 	const blockProps = useBlockProps( {
 		className: 'icon-card-grid__card',
 	} );
@@ -41,9 +41,10 @@ export default function Edit( { attributes, setAttributes } ) {
 						onSelect={ ( media ) =>
 							setAttributes( {
 								iconId: media.id || 0,
+								iconAlt: media.alt || media.title || '',
 							} )
 						}
-						onRemove={ () => setAttributes( { iconId: 0 } ) }
+						onRemove={ () => setAttributes( { iconId: 0, iconAlt: '' } ) }
 					/>
 				</PanelBody>
 			</InspectorControls>
@@ -53,7 +54,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<div className="icon-card-grid__icon-wrap">
 						<img
 							src={ iconPreviewUrl }
-							alt=""
+							alt={ iconAlt || '' }
 							className="icon-card-grid__icon"
 							width="70"
 							height="70"
@@ -69,7 +70,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) =>
 							setAttributes( { title: value } )
 						}
-						placeholder={ __( 'Add title…', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Title...', 'ambrygen-web' ) }
 					/>
 					<RichText
 						tagName="div"
@@ -78,7 +79,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) =>
 							setAttributes( { description: value } )
 						}
-						placeholder={ __( 'Add description…', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Short Description...', 'ambrygen-web' ) }
 					/>
 				</div>
 			</div>

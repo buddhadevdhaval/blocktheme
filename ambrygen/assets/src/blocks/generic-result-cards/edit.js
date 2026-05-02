@@ -78,7 +78,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Header Settings', 'ambrygen-web' ) }
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
 					initialOpen={ true }
 				>
 					<TagSelector
@@ -177,3 +177,4 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
+

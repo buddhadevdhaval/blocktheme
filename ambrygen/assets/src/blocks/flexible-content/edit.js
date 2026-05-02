@@ -19,7 +19,9 @@ import {
 	ImageUploader,
 	TagSelector,
 	DEFAULT_IMAGES,
+	BlockVariationsExamplePreview,
 } from '../_shared/components';
+import { getThemeAssetUrl } from '../../utils/assets';
 
 const ALLOWED_CONTENT_BLOCKS = [
 	'core/paragraph',
@@ -46,7 +48,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		layoutStyle,
 		contentAlignment,
 		contentTopAlign,
-		variation,
+		variation = 'simple-content-with-image',
 		buttons,
 		borderRequired,
 		isOriginalImage,
@@ -56,7 +58,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	useEffect( () => {
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId ) {
+		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
@@ -66,7 +68,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const isImageRight =
 		currentImagePosition === 'right' ||
 		currentImagePosition === 'iot-block__rtl';
-	const imagePositionClass = isImageRight ? 'iot-block__rtl' : '';
+	const imagePositionClass = ( variation === 'simple-content-with-image' && isImageRight ) || variation === 'title-content-with-image' ? 'iot-block__rtl' : '';
 
 	const defaultPlaceholder = useMemo(
 		() => DEFAULT_IMAGES().placeholder,
@@ -74,16 +76,43 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	);
 	const resolvedImageUrl = imageUrl || defaultPlaceholder?.url || '';
 
-	const borderClass = borderRequired ? 'iot-block--border' : '';
+	const borderClass = variation === 'title-content-with-image' && borderRequired ? 'iot-block--border' : '';
 	const topAlignClass = contentTopAlign ? 'has-top-align' : '';
-	const variationClass =
-		variation && variation !== 'default' ? variation : '';
-	const headingClass =
-		variation === 'variation-iot-author' ? 'heading-4' : 'heading-2';
+	
+	let imageSizeClass = '';
+	let headingClass = 'heading-2';
+	if ( variation === 'title-content-with-image' ) {
+		imageSizeClass = 'size-578x564';
+	} else if ( variation === 'profile-content-with-image' ) {
+		imageSizeClass = 'size-311x311';
+		headingClass = 'heading-4';
+	}
+
 	const originalImageClass = isOriginalImage ? 'orignal-image' : '';
 
+	const VARIANTS = useMemo(
+		() => [
+			{
+				label: __( 'Simple Content with Image', 'ambrygen-web' ),
+				value: 'simple-content-with-image',
+				image: getThemeAssetUrl( '/assets/src/images/flexible-content/simple-content-with-image.png' ),
+			},
+			{
+				label: __( 'Title Content with Image', 'ambrygen-web' ),
+				value: 'title-content-with-image',
+				image: getThemeAssetUrl( '/assets/src/images/flexible-content/title-content-with-image.png' ),
+			},
+			{
+				label: __( 'Profile Content with Image', 'ambrygen-web' ),
+				value: 'profile-content-with-image',
+				image: getThemeAssetUrl( '/assets/src/images/flexible-content/profile-content-with-image.png' ),
+			},
+		],
+		[]
+	);
+
 	const blockProps = useBlockProps( {
-		className: `iot-block ${ layoutStyle } ${ imagePositionClass } ${ borderClass } ${ topAlignClass } ${ variationClass } ${ originalImageClass }`,
+		className: `iot-block ${ layoutStyle } ${ imagePositionClass } ${ borderClass } ${ topAlignClass } ${ imageSizeClass } ${ originalImageClass }`,
 		style: {
 			'--content-alignment': contentAlignment,
 		},
@@ -111,10 +140,47 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		Array.isArray( buttons ) &&
 		buttons.some( ( button ) => button.text && button.url );
 
+	if ( blockId === 'flexible-content-example' ) {
+		return (
+			<BlockVariationsExamplePreview
+				variants={ VARIANTS }
+				className="flexible-content-example-preview"
+				itemClass="flexible-content-example-preview__item"
+			/>
+		);
+	}
+
 	return (
 		<Fragment>
 			<InspectorControls>
-				<PanelBody title={ __( 'Content Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Select Variation', 'ambrygen-web' ) }>
+					<div className="layout-variant-selector">
+						{ VARIANTS.map( ( variant ) => (
+							<button
+								key={ variant.value }
+								type="button"
+								className={ `variant-button ${
+									variation === variant.value
+										? 'is-selected'
+										: ''
+								}` }
+								onClick={ () => {
+									setAttributes( { variation: variant.value } );
+								} }
+							>
+								{ variant.image && (
+									<img
+										src={ variant.image }
+										alt={ variant.label }
+									/>
+								) }
+								<span>{ variant.label }</span>
+							</button>
+						) ) }
+					</div>
+				</PanelBody>
+
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag }
@@ -123,49 +189,35 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 						type="heading"
 					/>
-					<ToggleControl
-						label={ __( 'Show Image on right', 'ambrygen-web' ) }
-						checked={ isImageRight }
-						onChange={ ( value ) =>
-							setAttributes( {
-								imagePosition: value ? 'right' : 'left',
-							} )
-						}
-					/>
+				</PanelBody>
+				<PanelBody title={ __( 'Content Settings', 'ambrygen-web' ) }>
+					{ variation === 'simple-content-with-image' && (
+						<ToggleControl
+							label={ __( 'Show Image on right', 'ambrygen-web' ) }
+							checked={ isImageRight }
+							onChange={ ( value ) =>
+								setAttributes( {
+									imagePosition: value ? 'right' : 'left',
+								} )
+							}
+						/>
+					) }
 
-					<ToggleControl
-						label={ __( 'Image on Border', 'ambrygen-web' ) }
-						checked={ borderRequired || false }
-						onChange={ ( value ) =>
-							setAttributes( { borderRequired: value } )
-						}
-					/>
+					{ variation === 'title-content-with-image' && (
+						<ToggleControl
+							label={ __( 'Image on Border', 'ambrygen-web' ) }
+							checked={ borderRequired || false }
+							onChange={ ( value ) =>
+								setAttributes( { borderRequired: value } )
+							}
+						/>
+					) }
+
 					<ToggleControl
 						label={ __( 'Top Align Content', 'ambrygen-web' ) }
 						checked={ !! contentTopAlign }
 						onChange={ ( value ) =>
 							setAttributes( { contentTopAlign: value } )
-						}
-					/>
-					<SelectControl
-						label={ __( 'Variation', 'ambrygen-web' ) }
-						value={ variation || 'default' }
-						options={ [
-							{
-								label: __( 'Default', 'ambrygen-web' ),
-								value: 'default',
-							},
-							{
-								label: __( 'Ordering Process', 'ambrygen-web' ),
-								value: 'variation-process',
-							},
-							{
-								label: __( 'IOT Author', 'ambrygen-web' ),
-								value: 'variation-iot-author',
-							},
-						] }
-						onChange={ ( value ) =>
-							setAttributes( { variation: value } )
 						}
 					/>
 					<ToggleControl
@@ -386,7 +438,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								></div>
 							</>
 						) }
-						{ variation === 'variation-iot-author' && (
+						{ variation === 'profile-content-with-image' && (
 							<>
 								<RichText
 									tagName="div"
@@ -416,26 +468,30 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							}
 							className={ `${ headingClass } block-title mb-0` }
 						/>
-						<div
-							className="is-style-gl-s4"
-							aria-hidden="true"
-						></div>
-						<RichText
-							tagName="div"
-							className="block-sub-heading iot-block__sub-heading subtitle2-sbold js-gsap-fade"
-							value={ subheading }
-							onChange={ ( value ) =>
-								setAttributes( { subheading: value } )
-							}
-							placeholder={ __(
-								'Add subheading',
-								'ambrygen-web'
-							) }
-						/>
-						<div
-							className="is-style-gl-s20"
-							aria-hidden="true"
-						></div>
+						{ variation === 'title-content-with-image' && (
+							<>
+								<div
+									className="is-style-gl-s4"
+									aria-hidden="true"
+								></div>
+								<RichText
+									tagName="div"
+									className="block-sub-heading iot-block__sub-heading subtitle2-sbold js-gsap-fade"
+									value={ subheading }
+									onChange={ ( value ) =>
+										setAttributes( { subheading: value } )
+									}
+									placeholder={ __(
+										'Add subheading',
+										'ambrygen-web'
+									) }
+								/>
+								<div
+									className="is-style-gl-s20"
+									aria-hidden="true"
+								></div>
+							</>
+						) }
 						<RichText
 							tagName="div"
 							className="block-description body1 iot-block__description"
@@ -489,3 +545,4 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</Fragment>
 	);
 }
+

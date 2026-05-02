@@ -15,9 +15,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $ambrygen_heading = $attributes['heading'] ?? '';
 $ambrygen_content = $attributes['content'] ?? '';
+$ambrygen_has_heading = '' !== trim( wp_strip_all_tags( $ambrygen_heading ) );
 
 if (
-	'' === trim( wp_strip_all_tags( $ambrygen_heading ) )
+	! $ambrygen_has_heading
 	&& '' === trim( wp_strip_all_tags( $ambrygen_content ) )
 ) {
 	return;
@@ -30,12 +31,14 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 );
 ?>
 
-<div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() output is escaped by WordPress core. ?>>
-	<div class="blog-disclaimer__icon" aria-hidden="true">
-		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<path d="M10 1.667A8.333 8.333 0 1 0 10 18.334 8.333 8.333 0 0 0 10 1.667zm0 3.75a.833.833 0 1 1 0 1.667.833.833 0 0 1 0-1.667zm1.25 8.75h-2.5v-5h2.5v5z" fill="currentColor"></path>
-		</svg>
-	</div>
+<aside <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() output is escaped by WordPress core. ?> role="complementary" aria-label="<?php echo esc_attr__( 'Medical Disclaimer', 'ambrygen-web' ); ?>">
+	<?php if ( $ambrygen_has_heading ) : ?>
+		<div class="blog-disclaimer__icon" aria-hidden="true">
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M10 1.667A8.333 8.333 0 1 0 10 18.334 8.333 8.333 0 0 0 10 1.667zm0 3.75a.833.833 0 1 1 0 1.667.833.833 0 0 1 0-1.667zm1.25 8.75h-2.5v-5h2.5v5z" fill="currentColor"></path>
+			</svg>
+		</div>
+	<?php endif; ?>
 	<div class="blog-disclaimer__body">
 		<?php if ( ! empty( $ambrygen_heading ) ) : ?>
 			<div class="blog-disclaimer__heading text-small-semibold">
@@ -49,4 +52,4 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 			</div>
 		<?php endif; ?>
 	</div>
-</div>
+</aside>

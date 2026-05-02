@@ -7,14 +7,14 @@ defined( 'ABSPATH' ) || exit;
 
 use Ambrygen\Theme\Core\Blocks\BlockRenderService;
 
-$ambrygen_post_id = $attributes['postId'] ?? 0;
+$ambrygen_post_id = isset( $attributes['postId'] ) ? absint( $attributes['postId'] ) : 0;
 
 if ( ! $ambrygen_post_id ) {
 	return;
 }
 
 $ambrygen_post = get_post( $ambrygen_post_id );
-if ( ! $ambrygen_post ) {
+if ( ! $ambrygen_post || 'publish' !== $ambrygen_post->post_status ) {
 	return;
 }
 

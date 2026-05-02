@@ -1,0 +1,161 @@
+/*!***************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./assets/src/blocks/genetic-testing-grid/editor.scss ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************/
+section:has(.icon-grid-block) {
+  position: relative;
+  overflow: hidden;
+}
+
+.block-layout:has(.icon-grid-block) .block-bg-image {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100%;
+  margin-left: calc(-50vw + 50%);
+  opacity: 0.2;
+}
+
+.icon-grid-block {
+  position: relative;
+}
+
+.features-tabs__no-post {
+  display: block;
+  text-align: center;
+}
+
+.features-tabs__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .features-tabs__grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .features-tabs__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 575px) {
+  .features-tabs__grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+.features-tabs__grid.variation-two-column {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 575px) {
+  .features-tabs__grid.variation-two-column {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+.features-tabs__card {
+  background: var(--theme_white);
+  border: 1px solid var(--theme_gray_200);
+  border-radius: 16px;
+  padding: 24px 24px 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 48px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+@media (max-width: 767px) {
+  .features-tabs__card {
+    gap: 36px;
+  }
+}
+
+.features-tabs__card:hover {
+  box-shadow: 0 12px 16px -4px rgba(16, 24, 40, 0.08), 0 4px 6px -2px rgba(16, 24, 40, 0.03);
+}
+
+.features-tabs__content-head {
+  width: 100%;
+}
+
+.features-tabs__category {
+  color: var(--theme_cg_blue);
+  margin: 0 0 4px 0;
+}
+
+.features-tabs__card-title {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+  letter-spacing: -0.27px;
+  margin-bottom: 0;
+  color: var(--theme_gray_900);
+}
+
+.features-tabs .badge {
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+.features-tabs__view-link {
+  margin-top: auto;
+}
+
+.features-tabs .tabs-content {
+  padding: var(--theme_space_11);
+  border-radius: 32px;
+}
+
+@media (max-width: 767px) {
+  .features-tabs .tabs-content {
+    border-radius: 24px;
+    padding: 24px;
+  }
+}
+
+.features-tabs__footer {
+  display: flex;
+  justify-content: center;
+}
+
+.wp-block-ambrygen-genetic-testing-grid .features-tabs__grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 24px !important;
+}
+
+@media (max-width: 1400px) {
+  .wp-block-ambrygen-genetic-testing-grid .features-tabs__grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .wp-block-ambrygen-genetic-testing-grid .features-tabs__grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .wp-block-ambrygen-genetic-testing-grid .features-tabs__grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.wp-block-ambrygen-genetic-testing-grid .badge {
+  display: inline-flex !important;
+  align-items: center;
+  vertical-align: middle;
+}
+
+/*# sourceMappingURL=index.css.map*/

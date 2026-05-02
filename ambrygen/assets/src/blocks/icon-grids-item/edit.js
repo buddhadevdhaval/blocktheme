@@ -17,6 +17,7 @@ import { decodeEntities } from '@wordpress/html-entities';
 
 import { __ } from '@wordpress/i18n';
 import { ImageUploader } from '../_shared/components';
+import { getThemeAssetUrl } from '../../utils/assets';
 
 export default function Edit({
 	attributes,
@@ -37,6 +38,11 @@ export default function Edit({
 	} = attributes;
 
 	const variation = context?.['ambrygen/variation'];
+	const placeholderIcon = {
+		url: getThemeAssetUrl('/assets/src/images/logo.png'),
+		alt: __('Ambrygen logo', 'ambrygen-web'),
+	};
+	const displayIcon = icon?.url ? icon : placeholderIcon;
 
 	const posts = useSelect(
 		(select) => {
@@ -287,6 +293,19 @@ export default function Edit({
 								}
 								onRemove={() => setAttributes({ icon: {} })}
 							/>
+							<p
+								style={{
+									marginTop: '-4px',
+									marginBottom: '12px',
+									fontSize: '12px',
+									color: '#666',
+								}}
+							>
+								{__(
+									'Use only 50px x 50px icon size.',
+									'ambrygen-web'
+								)}
+							</p>
 
 							{links.map((link, i) => (
 								<div
@@ -357,9 +376,12 @@ export default function Edit({
 			<div {...blockProps}>
 				{variation === 'variation-4' && (
 					<>
-						{icon?.url && (
+						{displayIcon?.url && (
 							<div className="icon-grid__icon">
-								<img src={icon.url} alt={icon.alt || ''} />
+								<img
+									src={displayIcon.url}
+									alt={icon?.url ? icon.alt || '' : ''}
+								/>
 							</div>
 						)}
 
@@ -411,8 +433,11 @@ export default function Edit({
 
 					<div className="info-list__card">
 						<div className="info-list__image">
-							{icon?.url && (
-								<img src={icon.url} alt={icon.alt || ''} />
+							{displayIcon?.url && (
+								<img
+									src={displayIcon.url}
+									alt={icon?.url ? icon.alt || '' : ''}
+								/>
 							)}
 						</div>
 
@@ -676,10 +701,10 @@ export default function Edit({
 					variation !== 'variation-5' && (
 						<div className="info-list__card">
 							<div className="info-list__image">
-								{icon?.url && (
+								{displayIcon?.url && (
 									<img
-										src={icon.url}
-										alt={icon.alt || ''}
+										src={displayIcon.url}
+										alt={icon?.url ? icon.alt || '' : ''}
 									/>
 								)}
 							</div>

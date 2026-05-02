@@ -6,6 +6,16 @@
   "title": "Poster Meta",
   "category": "ambrygen",
   "description": "Renders meta details for posters.",
+  "attributes": {
+    "previewPostId": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "usesContext": [
+    "postId",
+    "postType"
+  ],
   "supports": {
     "html": false,
     "reusable": false

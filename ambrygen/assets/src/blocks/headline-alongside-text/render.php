@@ -20,7 +20,6 @@ $ambrygen_headline = $ambrygen_attributes['headline'] ?? ( $ambrygen_attributes[
 $ambrygen_headline_tag = Helper::get_heading_tag( $ambrygen_attributes['headlineTag'] ?? ( $ambrygen_attributes['titleTag'] ?? 'h2' ), 'h2' );
 $ambrygen_description = $ambrygen_attributes['description'] ?? '';
 $ambrygen_is_medium = $ambrygen_attributes['isMediumText'] ?? false;
-$ambrygen_is_header_vertical = $ambrygen_attributes['isHeaderVertical'] ?? false;
 $ambrygen_background_image_id = isset( $ambrygen_attributes['backgroundImageId'] ) ? absint( $ambrygen_attributes['backgroundImageId'] ) : 0;
 $ambrygen_background_image_url = isset( $ambrygen_attributes['backgroundImage'] ) ? esc_url_raw( $ambrygen_attributes['backgroundImage'] ) : '';
 $ambrygen_background_image_alt = isset( $ambrygen_attributes['backgroundImageAlt'] ) ? sanitize_text_field( $ambrygen_attributes['backgroundImageAlt'] ) : '';
@@ -86,7 +85,7 @@ $ambrygen_richtext_allowed = array(
 			?>
 		</div>
 	<?php endif; ?>
-	<div class="heading-content-section__inner block__rowflex is-<?php echo esc_attr( $ambrygen_is_header_vertical ? 'vertical' : 'horizontal' ); ?>">
+	<div class="heading-content-section__inner block__rowflex is-horizontal">
 		<?php if (!empty($ambrygen_headline)): ?>
 			<<?php echo esc_attr($ambrygen_headline_tag); ?> id="<?php echo esc_attr( $ambrygen_headline_id ); ?>" class="heading-content-section__title heading-3 block-title mb-0
 				block__rowflex--heading-title js-gsap-fade">

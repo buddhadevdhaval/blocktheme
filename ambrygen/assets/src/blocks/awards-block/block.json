@@ -57,22 +57,6 @@
       },
       "default": []
     },
-    "autoplay": {
-      "type": "boolean",
-      "default": false
-    },
-    "showNavigation": {
-      "type": "boolean",
-      "default": true
-    },
-    "showPagination": {
-      "type": "boolean",
-      "default": true
-    },
-    "slidesPerView": {
-      "type": "number",
-      "default": 4
-    },
     "isHeaderVertical": {
       "type": "boolean",
       "default": false

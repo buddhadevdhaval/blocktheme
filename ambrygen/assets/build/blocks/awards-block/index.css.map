@@ -1,0 +1,1 @@
+{"version":3,"file":"awards-block/index.css","mappings":";;;AAAA;EACI;EACA;EACA;AACJ,C","sources":["webpack://ambrygen/./assets/src/blocks/awards-block/editor.scss"],"sourcesContent":[".marquee-slide {\n    display: grid;\n    grid-template-columns: repeat(5, 1fr);\n    gap: 24px;\n\n    .awards-block_listing__item {}\n}"],"names":[],"ignoreList":[],"sourceRoot":""}

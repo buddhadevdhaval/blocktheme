@@ -25,6 +25,13 @@ h6,
 	margin: 0 0 20px;
 	text-transform: initial;
 
+	.single-genetic-testing .cardio-info__content &,
+	.single-post .primary-with-sidebar .primary-with-sidebar__content & {
+		color: var(--theme_cg_blue);
+		margin: 36px 0 12px 0;
+	}
+
+
 	span,
 	mark {
 		background-color: transparent;

@@ -7,10 +7,19 @@
 	"category": "theme-blocks",
 	"icon": "clipboard",
 	"description": "Displays the dynamic intro, consider, and important sections for genetic testing posts.",
+	"attributes": {
+		"previewPostId": {
+			"type": "number",
+			"default": 0
+		}
+	},
 	"supports": {
 		"html": false
 	},
 	"textdomain": "ambrygen-web",
 	"editorScript": "file:./index.js",
-	"render": "file:./render.php"
+	"render": "file:./render.php",
+	"usesContext": [
+		"postId"
+	]
 }

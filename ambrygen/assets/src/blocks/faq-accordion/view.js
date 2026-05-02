@@ -1,3 +1,7 @@
+const ACCORDION_EXPAND_DURATION = 350;
+const ACCORDION_COLLAPSE_DURATION = 425;
+const ACCORDION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
+
 const initAccordionItem = ( accordion ) => {
 	if ( ! accordion ) {
 		return;
@@ -46,8 +50,8 @@ const initAccordionItem = ( accordion ) => {
 				height: [ startHeight, endHeight ],
 			},
 			{
-				duration: 350,
-				easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+				duration: ACCORDION_COLLAPSE_DURATION,
+				easing: ACCORDION_EASING,
 			}
 		);
 
@@ -77,8 +81,8 @@ const initAccordionItem = ( accordion ) => {
 					height: [ startHeight, endHeight ],
 				},
 				{
-					duration: 350,
-					easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+					duration: ACCORDION_EXPAND_DURATION,
+					easing: ACCORDION_EASING,
 				}
 			);
 

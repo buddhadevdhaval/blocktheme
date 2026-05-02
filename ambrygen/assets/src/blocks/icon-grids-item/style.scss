@@ -1,7 +1,8 @@
 @use "../../css/partials/variables/breakpoints" as bp;
 
 // Our Testing Menu Section
-.our-testing-menu {
+.our-testing-menu,
+.icon-grid-with-count {
 
 	// Tests Grid
 	&__grid {

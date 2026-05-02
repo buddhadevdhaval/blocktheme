@@ -6,6 +6,16 @@
   "title": "Poster PDF Files",
   "category": "ambrygen",
   "description": "Renders poster PDF file buttons for single poster pages.",
+  "attributes": {
+    "previewPostId": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "usesContext": [
+    "postId",
+    "postType"
+  ],
   "supports": {
     "html": false,
     "reusable": false

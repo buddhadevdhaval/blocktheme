@@ -17,13 +17,13 @@
 	"attributes": {
 		"tagline": {
 			"type": "string",
-			"default": "Who Should Consider Testing?"
+			"default": ""
 		},
 		"heading": {
 			"type": "string",
-			"default": "Situations where genetic testing may be helpful"
+			"default": ""
 		},
-		"headingLevel": {
+		"headingTag": {
 			"type": "string",
 			"enum": [
 				"h1",
@@ -37,7 +37,7 @@
 		},
 		"description": {
 			"type": "string",
-			"default": "Unlike some conditions with clear risk checklists, neurological disorders don't follow a single pattern. Instead, testing is helpful in a range of situations. Select those that apply to your family."
+			"default": ""
 		},
 		"blockId": {
 			"type": "string",
@@ -46,10 +46,7 @@
 	},
 	"example": {
 		"attributes": {
-			"tagline": "Who Should Consider Testing?",
-			"heading": "Situations where genetic testing may be helpful",
-			"headingLevel": "h2",
-			"description": "Unlike some conditions with clear risk checklists, neurological disorders don't follow a single pattern. Instead, testing is helpful in a range of situations. Select those that apply to your family."
+			"blockId": "icon-card-grid-example"
 		}
 	}
 }

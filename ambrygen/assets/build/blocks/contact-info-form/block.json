@@ -1,0 +1,137 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/contact-info-form",
+  "title": "Contact Info/Form",
+  "category": "ambrygen",
+  "icon": "email",
+  "description": "A block for displaying contact info or a shortcode form with optional heading, description, and decorative imagery.",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "variation": {
+      "type": "string",
+      "enum": [
+        "info-view",
+        "form-view"
+      ],
+      "default": "info-view"
+    },
+    "eyebrow": {
+      "type": "string",
+      "default": ""
+    },
+    "heading": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "phoneNumber": {
+      "type": "string",
+      "default": ""
+    },
+    "emailAddress": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonText": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "cta": {
+      "type": "object",
+      "default": {
+        "text": "",
+        "url": "",
+        "target": "",
+        "rel": ""
+      }
+    },
+    "image": {
+      "type": "string",
+      "default": ""
+    },
+    "imageId": {
+      "type": "number",
+      "default": 0
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "overlayTopImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "overlayBottomImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "overlayTopImage": {
+      "type": "string",
+      "default": ""
+    },
+    "overlayBottomImage": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "variations": [
+    {
+      "name": "contact-info-form-info-view",
+      "title": "Info View",
+      "description": "Display phone number, email address, and CTA button.",
+      "attributes": {
+        "variation": "info-view"
+      },
+      "scope": [
+        "inserter"
+      ]
+    },
+    {
+      "name": "contact-info-form-form-view",
+      "title": "Form View",
+      "description": "Display a shortcode-based form.",
+      "attributes": {
+        "variation": "form-view"
+      },
+      "scope": [
+        "inserter"
+      ]
+    }
+  ],
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "example": {
+    "attributes": {
+      "blockId": "contact-info-form-example"
+    }
+  }
+}

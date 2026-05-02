@@ -1,1 +1,121 @@
-!function(){function t(t){const e=document.createElement("textarea");return e.innerHTML=t||"",e.value}function e(t){return(t||"").replace(/[&<>"']/g,t=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[t]))}function a(a){const n=t(a?.title?.rendered||""),i=a?.link||"#",s=a?._embedded?.["wp:term"]?.flat?.()||[];return`\n\t\t\t<div class="features-tabs__card">\n\t\t\t\t<div class="features-tabs__content-head">\n\t\t\t\t\t<div class="features-tabs__category body2-semibold">${e(t(s?.[0]?.name||"Category"))}</div>\n\t\t\t\t\t<div class="features-tabs__card-title">\n\t\t\t\t\t\t${e(n)}\n\t\t\t\t\t\t<div class="badge badge--blue"><i class="badge__dot"></i>Tests</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<a class="features-tabs__view-link site-btn is-style-site-text-btn has-right-arrow" href="${e(i)}" aria-label="View product for ${e(n)}">View Product</a>\n\t\t\t</div>\n\t\t`}function n(t){if(!t)return;const e=Array.from(t.querySelectorAll(".icon_ajax_tab[data-tab-target]")),n=Array.from(t.querySelectorAll(".tabs__panel"));if(!e.length||!n.length)return;const i=t=>{e.forEach(e=>{e.classList.toggle("is-active",e.dataset.tabTarget===t)}),n.forEach(e=>{e.classList.toggle("is-active",e.id===t)}),async function(t,e){if(t&&"1"!==t.dataset.loaded){t.dataset.loaded="loading",t.innerHTML='<div class="features-tabs__grid"><p>Loading...</p></div>';try{const n=window?.wpApiSettings?.root?window.wpApiSettings.root.replace(/\/$/,""):`${window.location.origin}/wp-json`;let i=null;if(e&&"all"!==e){const t=await fetch(`${n}/wp/v2/poster_category?slug=${encodeURIComponent(e)}`),a=await t.json();i=Array.isArray(a)&&a[0]?.id?Number(a[0].id):null}let s=`${n}/wp/v2/genetic-testing?per_page=12&_embed=wp:term`;i&&(s+=`&poster_category=${i}`),e&&"all"!==e&&!i&&(s=`${n}/wp/v2/genetic-testing?per_page=1&include=0`);const r=await fetch(s),d=await r.json();if(!Array.isArray(d)||0===d.length)return t.innerHTML='<div class="features-tabs__grid--no-post"><p>No Tests found for this tab.</p></div>',void(t.dataset.loaded="1");t.innerHTML=`<div class="features-tabs__grid">${d.map(a).join("")}</div>`,t.dataset.loaded="1"}catch(e){t.innerHTML='<div class="features-tabs__grid"><p>Unable to load Tests.</p></div>',t.dataset.loaded="0"}}}(n.find(e=>e.id===t),t)};let s=e.find(t=>t.classList.contains("is-active"))?.dataset.tabTarget;!s&&e[0]&&(s=e[0].dataset.tabTarget),s&&i(s),e.forEach(t=>{t.addEventListener("click",e=>{e.preventDefault(),i(t.dataset.tabTarget||"")})})}window.addEventListener("load",()=>{document.querySelectorAll(".tabs-content").forEach(n)})}();
+/******/ (() => { // webpackBootstrap
+/*!**********************************************!*\
+  !*** ./assets/src/blocks/icon-grids/view.js ***!
+  \**********************************************/
+(function () {
+  function decodeHtml(value) {
+    const txt = document.createElement('textarea');
+    txt.innerHTML = value || '';
+    return txt.value;
+  }
+  function escapeHtml(value) {
+    return (value || '').replace(/[&<>"']/g, char => {
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return map[char];
+    });
+  }
+  function buildCard(post) {
+    const title = decodeHtml(post?.title?.rendered || '');
+    const url = post?.link || '#';
+    const terms = post?._embedded?.['wp:term']?.flat?.() || [];
+    const category = decodeHtml(terms?.[0]?.name || 'Category');
+    return `
+			<div class="features-tabs__card">
+				<div class="features-tabs__content-head">
+					<div class="features-tabs__category body2-semibold">${escapeHtml(category)}</div>
+					<div class="features-tabs__card-title">
+						${escapeHtml(title)}
+						<div class="badge badge--blue"><i class="badge__dot"></i>Tests</div>
+					</div>
+				</div>
+				<a class="features-tabs__view-link site-btn is-style-site-text-btn has-right-arrow" href="${escapeHtml(url)}" aria-label="View product for ${escapeHtml(title)}">View Product</a>
+			</div>
+		`;
+  }
+  function getApiBase() {
+    if (window?.wpApiSettings?.root) {
+      return window.wpApiSettings.root.replace(/\/$/, '');
+    }
+    return `${window.location.origin}/wp-json`;
+  }
+  async function loadPanelPosts(panel, termSlug) {
+    if (!panel || panel.dataset.loaded === '1') {
+      return;
+    }
+    panel.dataset.loaded = 'loading';
+    panel.innerHTML = '<div class="features-tabs__grid"><p>Loading...</p></div>';
+    try {
+      const apiBase = getApiBase();
+      let termId = null;
+      if (termSlug && termSlug !== 'all') {
+        const termRes = await fetch(`${apiBase}/wp/v2/poster_category?slug=${encodeURIComponent(termSlug)}`);
+        const termData = await termRes.json();
+        termId = Array.isArray(termData) && termData[0]?.id ? Number(termData[0].id) : null;
+      }
+      let postsUrl = `${apiBase}/wp/v2/genetic-testing?per_page=12&_embed=wp:term`;
+      if (termId) {
+        postsUrl += `&poster_category=${termId}`;
+      }
+      if (termSlug && termSlug !== 'all' && !termId) {
+        postsUrl = `${apiBase}/wp/v2/genetic-testing?per_page=1&include=0`;
+      }
+      const postsRes = await fetch(postsUrl);
+      const posts = await postsRes.json();
+      if (!Array.isArray(posts) || posts.length === 0) {
+        panel.innerHTML = '<div class="features-tabs__grid--no-post"><p>No Tests found for this tab.</p></div>';
+        panel.dataset.loaded = '1';
+        return;
+      }
+      panel.innerHTML = `<div class="features-tabs__grid">${posts.map(buildCard).join('')}</div>`;
+      panel.dataset.loaded = '1';
+    } catch (error) {
+      panel.innerHTML = '<div class="features-tabs__grid"><p>Unable to load Tests.</p></div>';
+      panel.dataset.loaded = '0';
+    }
+  }
+  function initTabs(container) {
+    if (!container) {
+      return;
+    }
+    const tabs = Array.from(container.querySelectorAll('.icon_ajax_tab[data-tab-target]'));
+    const panels = Array.from(container.querySelectorAll('.tabs__panel'));
+    if (!tabs.length || !panels.length) {
+      return;
+    }
+    const activateTab = target => {
+      tabs.forEach(tab => {
+        tab.classList.toggle('is-active', tab.dataset.tabTarget === target);
+      });
+      panels.forEach(panel => {
+        panel.classList.toggle('is-active', panel.id === target);
+      });
+      const activePanel = panels.find(panel => panel.id === target);
+      loadPanelPosts(activePanel, target);
+    };
+    let activeTarget = tabs.find(tab => tab.classList.contains('is-active'))?.dataset.tabTarget;
+    if (!activeTarget && tabs[0]) {
+      activeTarget = tabs[0].dataset.tabTarget;
+    }
+    if (activeTarget) {
+      activateTab(activeTarget);
+    }
+    tabs.forEach(tab => {
+      tab.addEventListener('click', event => {
+        event.preventDefault();
+        activateTab(tab.dataset.tabTarget || '');
+      });
+    });
+  }
+  window.addEventListener('load', () => {
+    document.querySelectorAll('.tabs-content').forEach(initTabs);
+  });
+})();
+/******/ })()
+;
+//# sourceMappingURL=view.js.map

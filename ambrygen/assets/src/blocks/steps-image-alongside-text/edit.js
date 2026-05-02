@@ -4,8 +4,10 @@ import {
 	InnerBlocks,
 	InspectorControls,
 } from '@wordpress/block-editor';
+import { createBlock } from '@wordpress/blocks';
 import { useEffect, useRef } from '@wordpress/element';
-import { PanelBody, ToggleControl } from '@wordpress/components';
+import { PanelBody, ToggleControl, Button } from '@wordpress/components';
+import { useDispatch } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
 import { BlockExamplePreview, TagSelector } from '../_shared/components';
@@ -19,7 +21,8 @@ const TEMPLATE = [
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { blockId, heading, headingTag, description, showFullImage } =
 		attributes;
-	const hasHeaderContent = Boolean( heading || description );
+
+	const { insertBlock } = useDispatch( 'core/block-editor' );
 
 	const blockProps = useBlockProps( {
 		className: `steps-iot-block ${
@@ -29,6 +32,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const containerRef = useRef( null );
 	const activeIndex = useRef( 0 );
+
+	if ( blockId === 'steps-image-alongside-text-example' ) {
+		return (
+			<BlockExamplePreview
+				className="steps-image-alongside-text-example-preview"
+				imagePath="/assets/src/images/steps-image-alongside-text/preview.png"
+			/>
+		);
+	}
 
 	useEffect( () => {
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
@@ -93,29 +105,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		};
 	}, [] );
 
-	if ( blockId === 'steps-image-alongside-text-example' ) {
-		return (
-			<BlockExamplePreview
-				className="steps-image-alongside-text-example-preview"
-				imagePath="/assets/src/images/steps-image-alongside-text/preview.png"
-			/>
-		);
-	}
-
 	return (
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Block Settings', 'ambrygen-web' ) }
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
 					initialOpen
 				>
-					<ToggleControl
-						label={ __( 'Show full image', 'ambrygen-web' ) }
-						checked={ !! showFullImage }
-						onChange={ ( value ) =>
-							setAttributes( { showFullImage: value } )
-						}
-					/>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag }
@@ -126,10 +122,22 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						type="heading"
 					/>
 				</PanelBody>
+				<PanelBody
+					title={ __( 'Image Settings', 'ambrygen-web' ) }
+					initialOpen
+				>
+					<ToggleControl
+						label={ __( 'Show full image', 'ambrygen-web' ) }
+						checked={ !! showFullImage }
+						onChange={ ( value ) =>
+							setAttributes( { showFullImage: value } )
+						}
+					/>
+				</PanelBody>
 			</InspectorControls>
 
 			<section { ...blockProps }>
-				<div className="vertical-tabs-block__header block__rowflex">
+				<div className="steps-iot-block__header block__rowflex">
 					<RichText
 						tagName={ headingTag || 'h2' }
 						className="heading-3 block-title mb-0 block__rowflex--heading-title"
@@ -155,9 +163,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					</div>
 				</div>
 
-				{ hasHeaderContent && (
+
 					<div className="is-style-gl-s50" aria-hidden="true"></div>
-				) }
 
 				<div className="vertical-tabs" ref={ containerRef }>
 					<InnerBlocks
@@ -165,9 +172,27 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							'ambrygen/steps-image-alongside-text-item',
 						] }
 						template={ TEMPLATE }
+						renderAppender={ false }
 					/>
 				</div>
+				<div className="is-style-gl-s24" aria-hidden="true"></div>
+
+				<Button
+					variant="primary"
+					onClick={ () => {
+						insertBlock(
+							createBlock(
+								'ambrygen/steps-image-alongside-text-item'
+							),
+							undefined,
+							clientId
+						);
+					} }
+				>
+					{ __( 'Add New Record', 'ambrygen-web' ) }
+				</Button>
 			</section>
 		</>
 	);
 }
+

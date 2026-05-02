@@ -176,7 +176,11 @@
 				'alt' => $ambrygen_member_featured_alt,
 			);
 		} else {
-			return;
+			$ambrygen_member_media_items[] = array(
+				'id'  => 0,
+				'url' => '',
+				'alt' => $ambrygen_member_title,
+			);
 		}
 	}
 
@@ -235,7 +239,8 @@
 									'loading'  => 'lazy',
 									'decoding' => 'async',
 									'alt'      => sanitize_text_field( $ambrygen_member_media_item['alt'] ?? '' ),
-								)
+								),
+								true
 							);
 						?>
 					</div>
@@ -255,15 +260,14 @@
 			<div class="multimedia-member__title heading-5 mb-0">
 				<?php echo esc_html( $ambrygen_member_title ); ?>
 			</div>
-			<?php if ( ! empty( $ambrygen_member_designation ) || ! empty( $ambrygen_member_download_files ) ) : ?>
-				<div class="is-style-gl-s12" aria-hidden="true"></div>
-			<?php endif; ?>
-
+				
 			<?php if ( ! empty( $ambrygen_member_designation ) ) : ?>
+				<div class="is-style-gl-s12" aria-hidden="true"></div>
 				<div class="multimedia-member__role text-small">
 					<?php echo esc_html( $ambrygen_member_designation ); ?>
 				</div>
 			<?php endif; ?>
+
 			<?php if ( ! empty( $ambrygen_member_download_files ) ) : ?>
 				<div class="is-style-gl-s12" aria-hidden="true"></div>
 				<div class="download-link has-downloads">

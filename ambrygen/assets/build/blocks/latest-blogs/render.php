@@ -10,6 +10,7 @@
  */
 
 use Ambrygen\Theme\Core\Helper;
+use Ambrygen\Theme\Core\Blog\BlogRenderer;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -18,7 +19,7 @@ $ambrygen_attributes = is_array( $attributes ?? null ) ? $attributes : array();
 $ambrygen_block_id      = $ambrygen_attributes['blockId'] ?? '';
 $ambrygen_title         = $ambrygen_attributes['title'] ?? 'Latest Articles';
 $ambrygen_heading_level = $ambrygen_attributes['headingLevel'] ?? 'h2';
-$ambrygen_posts_per_page = $ambrygen_attributes['postsPerPage'] ?? 9;
+$ambrygen_posts_per_page = $ambrygen_attributes['postsPerPage'] ?? 6;
 
 $ambrygen_wrapper_args = array(
 	'class' => 'latest-blogs',
@@ -27,6 +28,10 @@ $ambrygen_wrapper_args = array(
 if ( $ambrygen_block_id ) {
 	$ambrygen_wrapper_args['id'] = $ambrygen_block_id;
 }
+
+// Detect archive context
+$ambrygen_is_tag_archive = is_tag();
+$ambrygen_wrapper_args['data-is-tag-archive'] = $ambrygen_is_tag_archive ? 'true' : 'false';
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_args );
 
@@ -57,7 +62,15 @@ if ( $initial_cat_id === ( ! empty( $blog_categories ) ? $blog_categories[0]->te
 	}
 }
 
-// Initial Query (Ambry News by default)
+$ambrygen_current_tag_id = 0;
+
+if ( $ambrygen_is_tag_archive ) {
+	$ambrygen_current_tag_id = get_queried_object_id();
+	$tag_name = get_queried_object()->name;
+	$ambrygen_title = sprintf( __( 'Articles Tagged: %s', 'ambrygen-web' ), $tag_name );
+}
+
+// Initial Query (Ambry News by default, or current tag if archive)
 $paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
 
 $query_args = array(
@@ -68,135 +81,127 @@ $query_args = array(
 	'cat'            => $initial_cat_id,
 );
 
+if ( $ambrygen_is_tag_archive ) {
+	$query_args['tag_id'] = $ambrygen_current_tag_id;
+}
+
 $blogs_query = new WP_Query( $query_args );
 ?>
 
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-	<div class="is-style-gl-s50" aria-hidden="true"></div>
-	<div class="wp-block-group wrapper">
-		<div class="event-carousel">
-			<<?php echo esc_html( $ambrygen_heading_level ); ?> class="heading-3 block-title mb-0">
-				<?php echo wp_kses_post( $ambrygen_title ); ?>
-			</<?php echo esc_html( $ambrygen_heading_level ); ?>>
+	<!-- SECTION 2 — Filter Bar (Tags Dropdown + Tabs) -->
 
-			<div class="is-style-gl-s50" aria-hidden="true"></div>
 
-			<div class="category-filter-search category-filter-search--blog">
-				<!-- Left: Tags Dropdown -->
-				<div class="category-filter-search__dropdown">
-					<div class="filter-label text-small-semibold mb-2"><?php esc_html_e( 'FILTER BY TAG', 'ambrygen-web' ); ?></div>
-					<div class="tab-dropdown">
-						<button class="dropdown-toggle" id="blog-tag-dropdown-btn" type="button" aria-expanded="false" aria-controls="blog-tag-dropdown-menu">
-							<?php esc_html_e( 'All Tags', 'ambrygen-web' ); ?>
-						</button>
-						<ul id="blog-tag-dropdown-menu" class="dropdown-menu">
-							<li><a href="#" data-tag-id="0" aria-current="page"><?php esc_html_e( 'All Tags', 'ambrygen-web' ); ?></a></li>
-							<?php foreach ( $blog_tags as $tag ) : ?>
-								<li><a href="#" data-tag-id="<?php echo esc_attr( $tag->term_id ); ?>"><?php echo esc_html( $tag->name ); ?></a></li>
+			<div class="blog-listing-header">
+				<<?php echo esc_html( $ambrygen_heading_level ); ?> class="heading-4 block-title mb-0">
+					<?php echo wp_kses_post( $ambrygen_title ); ?>
+				</<?php echo esc_html( $ambrygen_heading_level ); ?>>
+
+				<div class="is-style-gl-s32" aria-hidden="true"></div>
+
+				<div class="blog-filters">
+					<!-- Left: Tags Dropdown -->
+					<div class="blog-filters__dropdown">
+						<label class="blog-filters__label text-small-semibold" for="blog-tags-select"><?php esc_html_e( 'Filter by Tag', 'ambrygen-web' ); ?></label>
+						<div class="is-style-gl-s8" aria-hidden="true"></div>
+						<select id="blog-tags-select" class="blog-filters__select text-md-medium" aria-label="<?php esc_attr_e( 'Filter blog posts by tag', 'ambrygen-web' ); ?>">
+							<option value="0" data-url="<?php echo esc_url( get_post_type_archive_link( 'post' ) ); ?>"><?php esc_html_e( 'All Tags', 'ambrygen-web' ); ?></option>
+							<?php foreach ( $blog_tags as $tag ) :
+								$is_selected = ( (int) $tag->term_id === (int) $ambrygen_current_tag_id );
+								$tag_link = get_term_link( $tag );
+								?>
+								<option value="<?php echo esc_attr( $tag->term_id ); ?>" data-url="<?php echo esc_url( $tag_link ); ?>" <?php selected( $is_selected ); ?>><?php echo esc_html( $tag->name ); ?></option>
 							<?php endforeach; ?>
-						</ul>
+						</select>
 					</div>
-				</div>
 
-				<!-- Middle: Categories Tabs -->
-				<div class="category-filter-search__tabs">
-					<div class="horizontal-tabs tabs__nav" role="tablist" id="latest-blog-tabs">
-						<?php foreach ( $blog_categories as $index => $cat ) : ?>
-							<button type="button" 
-								class="tab-button <?php echo ( $cat->term_id === $initial_cat_id ) ? 'active is-active' : ''; ?> tabs__tab text-md-Semibold" 
-								data-category-id="<?php echo esc_attr( $cat->term_id ); ?>" 
-								role="tab" 
-								aria-selected="<?php echo ( $cat->term_id === $initial_cat_id ) ? 'true' : 'false'; ?>" 
-								aria-controls="latest-blog-results">
-								<?php echo esc_html( $cat->name ); ?>
-							</button>
-						<?php endforeach; ?>
+					<!-- Right: Tabs -->
+					<div class="blog-filters__tabs-wrap">
+						<div class="horizontal-tabs tabs__nav" role="tablist">
+							<?php
+							$current_active_cat = $initial_cat_id;
+							foreach ( $blog_categories as $cat ) :
+								$is_active = ( (int) $cat->term_id === (int) $current_active_cat );
+								?>
+								<button type="button"
+									class="tabs__tab text-md-Semibold tab-button <?php echo $is_active ? 'is-active active' : ''; ?>"
+									data-category-id="<?php echo esc_attr( $cat->term_id ); ?>"
+									role="tab"
+									aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>">
+									<?php echo esc_html( $cat->name ); ?>
+								</button>
+							<?php endforeach; ?>
+						</div>
 					</div>
-				</div>
 
-				<!-- Right: Search Dropdown -->
-				<div class="category-filter-search__search">
-					<form id="blog-search-form" class="category-search-form-past" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-						<input type="text" name="s" aria-label="<?php esc_attr_e( 'Search blog posts', 'ambrygen-web' ); ?>" placeholder="<?php esc_attr_e( 'Search', 'ambrygen-web' ); ?>">
-						<button class="button" type="submit"><?php esc_html_e( 'Search', 'ambrygen-web' ); ?></button>
-					</form>
+					<!-- Right: Search -->
+					<div class="blog-filters__search search-bar-block">
+						<form id="blog-search-form" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+							<input type="text" name="s" aria-label="<?php esc_attr_e( 'Search blog posts', 'ambrygen-web' ); ?>" placeholder="<?php esc_attr_e( 'Search', 'ambrygen-web' ); ?>">
+							<button class="button" type="submit"><?php esc_html_e( 'Search', 'ambrygen-web' ); ?></button>
+						</form>
+					</div>
 				</div>
 			</div>
 
-			<div class="is-style-gl-s50" aria-hidden="true"></div>
 
-			<div id="latest-blog-results" class="ambrygen-ajax-pagination" 
-				data-ambrygen-scope="latest-blog" 
-				data-ambrygen-post-type="post" 
-				data-ambrygen-per-page="<?php echo esc_attr( $ambrygen_posts_per_page ); ?>" 
-				data-ambrygen-current="1" 
+
+	<div class="is-style-gl-s40" aria-hidden="true"></div>
+
+	<!-- SECTION 3 — Blog Listing Grid -->
+
+
+			<div id="latest-blog-results" class="ambrygen-ajax-pagination"
+				data-ambrygen-scope="latest-blog"
+				data-ambrygen-post-type="post"
+				data-ambrygen-per-page="<?php echo esc_attr( $ambrygen_posts_per_page ); ?>"
+				data-ambrygen-current="1"
 				data-ambrygen-total-pages="<?php echo esc_attr( $blogs_query->max_num_pages ); ?>"
 				data-ambrygen-category="<?php echo esc_attr( $initial_cat_id ); ?>"
+				data-ambrygen-tag="<?php echo esc_attr( $ambrygen_current_tag_id ); ?>"
 				data-ambrygen-order="DESC">
-				
+
 				<div class="ambrygen-ajax-pagination__content">
 					<?php if ( $blogs_query->have_posts() ) : ?>
-						<div class="event-carousel__grid">
+						<div class="blog-listing">
 							<?php while ( $blogs_query->have_posts() ) : $blogs_query->the_post(); ?>
-								<?php 
+								<?php
 								$post_id = get_the_ID();
 								$thumbnail_id = get_post_thumbnail_id( $post_id );
 								$publish_date = get_the_date( 'F j, Y', $post_id );
 								?>
-								<div class="event-carousel__card">
-									<div class="event-carousel__image-wrap">
-										<a href="<?php the_permalink(); ?>">
-											<?php 
-											echo Helper::image_with_placeholder(
-												$thumbnail_id,
-												'large',
-												array( 'class' => 'event-carousel__image' )
-											);
-											?>
-										</a>
-										<div class="event-carousel__month-info">
-											<span class="event-carousel__month"><?php echo get_the_date( 'F j, Y', $post_id ); ?></span>
+								<a href="<?php the_permalink(); ?>" class="blog-listing__card">
+									<div class="blog-listing__image-wrap">
+										<?php
+										echo Helper::image_with_placeholder(
+											(int) $thumbnail_id,
+											'large',
+											array( 'class' => 'blog-listing__image' )
+										);
+										?>
+										<div class="blog-listing__date flag-details">
+											<span><?php echo esc_html( $publish_date ); ?></span>
 										</div>
 									</div>
-									<div class="event-carousel__body">
-										<div class="is-style-gl-s16" aria-hidden="true"></div>
-										<div class="event-carousel__static-content">
-											<h3 class="event-carousel__card-title text-lg-semibold mb-0">
-												<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-											</h3>
-											<div class="is-style-gl-s8" aria-hidden="true"></div>
-											<?php 
-											$linked_author_ids = get_post_meta( $post_id, 'linked_author', true );
-											if ( empty( $linked_author_ids ) ) {
-												$linked_author_ids = [];
-											} elseif ( ! is_array( $linked_author_ids ) ) {
-												$linked_author_ids = [ $linked_author_ids ];
-											}
+									<div class="blog-listing__content">
+										<h3 class="text-lg-semibold blog-listing__title mb-0">
+											<?php the_title(); ?>
+										</h3>
+										<div class="is-style-gl-s12" aria-hidden="true"></div>
 
-											$authors_data = [];
-											foreach ( $linked_author_ids as $author_id ) {
-												if ( 'author' === get_post_type( $author_id ) ) {
-													$authors_data[] = [
-														'name'        => get_the_title( $author_id ),
-														'avatar_id'   => get_post_thumbnail_id( $author_id ),
-														'designation' => get_post_meta( $author_id, 'designation', true ),
-													];
-												}
-											}
+										<?php
+										$authors_data = BlogRenderer::instance()->get_post_authors_data( $post_id );
+										if ( ! empty( $authors_data ) ) :
 											?>
-											<?php if ( ! empty( $authors_data ) ) : ?>
-												<div class="event-carousel__author-block">
-													<div class="event-carousel__author-avatars">
-														<?php foreach ( $authors_data as $author ) : ?>
-															<?php if ( $author['avatar_id'] ) : ?>
-																<div class="event-carousel__author-avatar">
-																	<?php echo Helper::image( $author['avatar_id'], 'thumbnail' ); ?>
-																</div>
-															<?php endif; ?>
-														<?php endforeach; ?>
-													</div>
-													<div class="event-carousel__author-name text-small-semibold">
-														<?php 
+											<div class="blog-listing__author-block">
+												<?php if ( ! empty( $authors_data[0]['avatar_id'] ) ) : ?>
+													<?php echo Helper::image( $authors_data[0]['avatar_id'], 'thumbnail', array( 'class' => 'blog-listing__author-avatar', 'width' => 36, 'height' => 36 ) ); ?>
+												<?php else: ?>
+													<img class="blog-listing__author-avatar" src="https://i.pravatar.cc/40?img=47" alt="" width="36" height="36" />
+												<?php endif; ?>
+												<div class="blog-listing__author-info">
+													<span class="blog-listing__author-name text-small-semibold">
+														<?php
 														$author_names = array_map( function( $author ) {
 															$out = esc_html( $author['name'] );
 															if ( ! empty( $author['designation'] ) ) {
@@ -204,50 +209,41 @@ $blogs_query = new WP_Query( $query_args );
 															}
 															return $out;
 														}, $authors_data );
-														echo implode( ' | ', $author_names ); 
+														echo implode( ' | ', $author_names );
 														?>
-													</div>
+													</span>
+												</div>
+											</div>
+										<?php endif; ?>
+
+										<div class="is-style-gl-s12" aria-hidden="true"></div>
+										<div class="blog-listing__body" data-sync-height="category">
+											<div class="body-s blog-listing__description">
+												<?php echo wp_kses_post( wp_trim_words( get_the_excerpt(), 25 ) ); ?>
+											</div>
+											<?php
+											$terms = get_the_terms( $post_id, 'post_tag' );
+											if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) : ?>
+												<div class="body-s blog-listing__category">
+													<?php foreach ( $terms as $term ) : ?>
+														<div class="blog-listing__category__item"><?php echo esc_html( $term->name ); ?></div>
+													<?php endforeach; ?>
 												</div>
 											<?php endif; ?>
 										</div>
-
-										<div class="is-style-gl-s16" aria-hidden="true"></div>
-
-										<div class="event-carousel__content-wrap">
-											<div class="event-carousel__details">
-												<div class="body-s">
-													<?php echo wp_kses_post( wp_trim_words( get_the_excerpt(), 15 ) ); ?>
-												</div>
-											</div>
-
-											<div class="event-carousel__description">
-												<?php 
-												$tags = get_the_terms( $post_id, 'post_tag' );
-												if ( ! empty( $tags ) && ! is_wp_error( $tags ) ) : ?>
-													<div class="event-carousel__tags" aria-hidden="true">
-														<div class="event-carousel__tags lists-item-category">
-															<?php foreach ( $tags as $tag ) : ?>
-																<div class="category-item">
-																	<a href="<?php echo esc_url( get_term_link( $tag ) ); ?>" class="event-carousel__tag event-carousel__tag--success">
-																		<div class="event-carousel__tag-dot"></div> <?php echo esc_html( $tag->name ); ?>
-																	</a>
-																</div>
-															<?php endforeach; ?>
-														</div>
-													</div>
-												<?php endif; ?>
-											</div>
-										</div>
 									</div>
-								</div>
+								</a>
 							<?php endwhile; wp_reset_postdata(); ?>
 						</div>
-						
-						<div class="load-more-wrap text-center <?php echo ( $blogs_query->max_num_pages <= 1 ) ? 'is-hidden' : ''; ?>">
-							<button type="button" class="load-more-btn text-small-semibold" 
+
+						<div class="is-style-gl-s50" aria-hidden="true"></div>
+
+						<div class="load-more-btn <?php echo ( $blogs_query->found_posts <= 6 || $blogs_query->max_num_pages <= 1 ) ? 'is-hidden' : ''; ?>"
+							style="<?php echo ( $blogs_query->found_posts <= 6 || $blogs_query->max_num_pages <= 1 ) ? 'display: none;' : ''; ?>"
+							data-found-posts="<?php echo esc_attr( $blogs_query->found_posts ); ?>">
+							<button type="button" class="site-btn is-style-site-text-btn has-right-arrow"
 								data-total-pages="<?php echo esc_attr( $blogs_query->max_num_pages ); ?>">
-								<?php esc_html_e( 'LOAD MORE', 'ambrygen-web' ); ?>
-								<span class="load-more-icon"></span>
+								<?php esc_html_e( 'Load More', 'ambrygen-web' ); ?>
 							</button>
 						</div>
 					<?php else : ?>
@@ -255,7 +251,7 @@ $blogs_query = new WP_Query( $query_args );
 					<?php endif; ?>
 				</div>
 			</div>
-		</div>
-	</div>
+
+
 	<div class="is-style-gl-s50" aria-hidden="true"></div>
 </div>

@@ -6,10 +6,19 @@
   "title": "Genetic Testing Quick Reference",
   "category": "ambrygen",
   "description": "Displays custom data for the genetic testing post.",
+  "attributes": {
+    "previewPostId": {
+      "type": "number",
+      "default": 0
+    }
+  },
   "supports": {
     "html": false
   },
   "textdomain": "ambrygen-web",
   "editorScript": "file:./index.js",
-  "render": "file:./render.php"
+  "render": "file:./render.php",
+  "usesContext": [
+    "postId"
+  ]
 }

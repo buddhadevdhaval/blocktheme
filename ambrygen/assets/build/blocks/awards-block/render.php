@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Ambrygen\Theme\Core\Helper;
 
-$ambrygen_block_id           = $attributes['blockId'] ?? '';
+$ambrygen_block_id           = isset( $attributes['blockId'] ) ? sanitize_html_class( $attributes['blockId'] ) : '';
 $ambrygen_title              = $attributes['title'] ?? 'Awards';
 $ambrygen_description        = $attributes['description'] ?? '';
 $ambrygen_awards             = is_array( $attributes['awards'] ?? null ) ? $attributes['awards'] : array();
@@ -23,12 +23,20 @@ $ambrygen_awards_with_images = array_filter(
 	$ambrygen_awards,
 	static function ( $ambrygen_award ) {
 		$ambrygen_image_id  = isset( $ambrygen_award['imageId'] ) ? absint( $ambrygen_award['imageId'] ) : 0;
-		$ambrygen_image_url = isset( $ambrygen_award['imageUrl'] ) ? $ambrygen_award['imageUrl'] : '';
+		$ambrygen_image_url = isset( $ambrygen_award['imageUrl'] ) ? (string) $ambrygen_award['imageUrl'] : '';
 
 		return $ambrygen_image_id || $ambrygen_image_url;
 	}
 );
 $ambrygen_is_header_vertical = $attributes['isHeaderVertical'] ?? false;
+
+if (
+	'' === trim( wp_strip_all_tags( $ambrygen_title ) )
+	&& '' === trim( wp_strip_all_tags( $ambrygen_description ) )
+	&& empty( $ambrygen_awards_with_images )
+) {
+	return;
+}
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	$ambrygen_block_id
@@ -67,7 +75,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 							<?php foreach ( $ambrygen_awards_with_images as $ambrygen_award ) : ?>
 								<?php
 								$ambrygen_image_id  = isset( $ambrygen_award['imageId'] ) ? absint( $ambrygen_award['imageId'] ) : 0;
-								$ambrygen_image_url = isset( $ambrygen_award['imageUrl'] ) ? $ambrygen_award['imageUrl'] : '';
+								$ambrygen_image_url = isset( $ambrygen_award['imageUrl'] ) ? (string) $ambrygen_award['imageUrl'] : '';
 								$ambrygen_image_alt = isset( $ambrygen_award['imageAlt'] ) ? sanitize_text_field( $ambrygen_award['imageAlt'] ) : '';
 								?>
 								<div class="marquee-slide__item is-visible">

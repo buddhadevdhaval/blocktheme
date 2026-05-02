@@ -8,6 +8,8 @@
  *
  * @package ambrygen
  */
+use Ambrygen\Theme\Core\Helper;
+
 defined( 'ABSPATH' ) || exit;
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
@@ -19,7 +21,8 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 $ambrygen_attributes     = $attributes ?? array();
 $ambrygen_icon_variation = $block->context['ambrygen/variation'] ?? '';
 
-$ambrygen_title          = wp_strip_all_tags( $ambrygen_attributes['title'] ?? '' );
+$ambrygen_title_raw      = $ambrygen_attributes['title'] ?? '';
+$ambrygen_title          = wp_strip_all_tags( $ambrygen_title_raw );
 
 $ambrygen_links = is_array( $ambrygen_attributes['links'] ?? null )
 	? $ambrygen_attributes['links']
@@ -29,6 +32,7 @@ $ambrygen_count        = 0;
 $ambrygen_img_id       = 0;
 $ambrygen_icon_id      = 0;
 $ambrygen_icon_url     = '';
+$ambrygen_icon_alt     = '';
 $ambrygen_term_url     = '';
 $ambrygen_termlinktext = '';
 
@@ -46,7 +50,8 @@ if ( 'our-testing-menu' === $ambrygen_icon_variation ) {
 		$ambrygen_term = get_term( $ambrygen_selected_term_id, 'poster_category' );
 
 		if ( $ambrygen_term && ! is_wp_error( $ambrygen_term ) ) {
-			$ambrygen_title         = wp_strip_all_tags( $ambrygen_term->name );
+			$ambrygen_title_raw     = $ambrygen_term->name;
+			$ambrygen_title         = wp_strip_all_tags( $ambrygen_title_raw );
 			$ambrygen_count         = isset( $ambrygen_term->count ) ? absint( $ambrygen_term->count ) : 0;
 			$ambrygen_img_id        = absint( get_term_meta( $ambrygen_term->term_id, 'term_image', true ) );
 			$ambrygen_term_link_raw = get_term_link( $ambrygen_term );
@@ -62,6 +67,22 @@ if ( 'our-testing-menu' === $ambrygen_icon_variation ) {
 	$ambrygen_icon_id  = isset( $ambrygen_icon['id'] ) ? absint( $ambrygen_icon['id'] ) : 0;
 	$ambrygen_icon_url = isset( $ambrygen_icon['url'] ) ? esc_url( $ambrygen_icon['url'] ) : '';
 	$ambrygen_icon_alt = isset( $ambrygen_icon['alt'] ) ? sanitize_text_field( $ambrygen_icon['alt'] ) : '';
+
+	if ( ! $ambrygen_icon_url ) {
+		$ambrygen_icon_url = esc_url( get_theme_file_uri( 'assets/src/images/logo.png' ) );
+	}
+}
+
+$ambrygen_description = $ambrygen_attributes['description'] ?? '';
+if ( 'our-testing-menu' !== $ambrygen_icon_variation ) {
+	$ambrygen_count = $ambrygen_attributes['count'] ?? '';
+}
+
+// Check if card has any content.
+$ambrygen_has_content = ! empty( $ambrygen_title ) || ! empty( $ambrygen_description ) || ! empty( $ambrygen_count ) || ! empty( $ambrygen_icon_id ) || ! empty( $ambrygen_links ) || ( 'our-testing-menu' !== $ambrygen_icon_variation && ! empty( $ambrygen_icon_url ) );
+
+if ( ! $ambrygen_has_content && 'variation-3' !== $ambrygen_icon_variation ) {
+	return;
 }
 
 /**
@@ -141,34 +162,40 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 		<div class="<?php echo esc_attr( $ambrygen_card_class ); ?>">
 	<?php endif; ?>
 
-		<?php if ( $ambrygen_icon_id && 'our-testing-menu' !== $ambrygen_icon_variation && 'variation-4' !== $ambrygen_icon_variation  && 'variation-5' !== $ambrygen_icon_variation ) : ?>
+		<?php if ( 'our-testing-menu' !== $ambrygen_icon_variation && 'variation-4' !== $ambrygen_icon_variation  && 'variation-5' !== $ambrygen_icon_variation && ( $ambrygen_icon_id || $ambrygen_icon_url ) ) : ?>
 			<div class="info-list__image">
 				<?php
-				$ambrygen_icon_src = wp_get_attachment_image_url( $ambrygen_icon_id, 'medium_large' );
-				if ( $ambrygen_icon_src ) :
-					?>
-					<img
-						src="<?php echo esc_url( $ambrygen_icon_src ); ?>"
-						class="card-image"
-						loading="lazy"
-						alt="<?php echo $ambrygen_title ? esc_attr( $ambrygen_title ) : ''; ?>"
-					/>
-				<?php endif; ?>
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() returns escaped image markup.
+				echo Helper::image_from_source(
+					$ambrygen_icon_id,
+					$ambrygen_icon_url,
+					'medium_large',
+					array(
+						'class'    => 'card-image',
+						'loading'  => 'lazy',
+						'decoding' => 'async',
+						'alt'      => $ambrygen_icon_id ? $ambrygen_icon_alt ?: $ambrygen_title : '',
+					),
+					false
+				);
+				?>
 			</div>
 
 		<?php elseif ( 'our-testing-menu' === $ambrygen_icon_variation && $ambrygen_img_id ) : ?>
 			<div class="item-card__icon">
 				<?php
-				$ambrygen_item_icon_src = wp_get_attachment_image_url( $ambrygen_img_id, 'medium_large' );
-				if ( $ambrygen_item_icon_src ) :
-					?>
-					<img
-						src="<?php echo esc_url( $ambrygen_item_icon_src ); ?>"
-						class="card-image"
-						loading="lazy"
-						alt="<?php echo $ambrygen_title ? esc_attr( $ambrygen_title ) : ''; ?>"
-					/>
-				<?php endif; ?>
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() returns escaped image markup.
+				echo Helper::image_from_source(
+					$ambrygen_img_id,
+					'',
+					'medium_large',
+					array(
+						'class'    => 'card-image',
+						'loading'  => 'lazy',
+						'decoding' => 'async',
+						'alt'      => $ambrygen_title,
+					)
+				);
 				?>
 			</div>
 		<?php endif; ?>
@@ -208,19 +235,22 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 
 			<?php elseif ( 'variation-4' === $ambrygen_icon_variation ) : ?>
 
-				<?php if ( $ambrygen_icon_id ) : ?>
+				<?php if ( $ambrygen_icon_id || $ambrygen_icon_url ) : ?>
 		<div class="icon-grid__icon">
 					<?php
-					$ambrygen_variation_icon_src = wp_get_attachment_image_url( $ambrygen_icon_id, 'medium_large' );
-					if ( $ambrygen_variation_icon_src ) :
-						?>
-						<img
-							src="<?php echo esc_url( $ambrygen_variation_icon_src ); ?>"
-							loading="lazy"
-							alt="<?php echo $ambrygen_title ? esc_attr( $ambrygen_title ) : ''; ?>"
-						/>
-					<?php endif; ?>
-
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() returns escaped image markup.
+					echo Helper::image_from_source(
+						$ambrygen_icon_id,
+						$ambrygen_icon_url,
+						'medium_large',
+						array(
+							'loading'  => 'lazy',
+							'decoding' => 'async',
+							'alt'      => $ambrygen_icon_id ? $ambrygen_icon_alt ?: $ambrygen_title : '',
+						),
+						false
+					);
+					?>
 		</div>
 	<?php endif; ?>
 
@@ -268,19 +298,23 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 			<?php
 			$ambrygen_count = $ambrygen_attributes['count'] ?? '';
 			?>
-			<?php if ( $ambrygen_icon_id ) : ?>
+			<?php if ( $ambrygen_icon_id || $ambrygen_icon_url ) : ?>
 				<div class="info-list__image">
 					<?php
-					$ambrygen_icon_src = wp_get_attachment_image_url( $ambrygen_icon_id, 'medium_large' );
-					if ( $ambrygen_icon_src ) :
-						?>
-						<img
-							src="<?php echo esc_url( $ambrygen_icon_src ); ?>"
-							class="card-image ss"
-							loading="lazy"
-							alt="<?php echo $ambrygen_title ? esc_attr( $ambrygen_title ) : ''; ?>"
-						/>
-					<?php endif; ?>
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() returns escaped image markup.
+					echo Helper::image_from_source(
+						$ambrygen_icon_id,
+						$ambrygen_icon_url,
+						'medium_large',
+						array(
+							'class'    => 'card-image ss',
+							'loading'  => 'lazy',
+							'decoding' => 'async',
+							'alt'      => $ambrygen_icon_id ? $ambrygen_icon_alt ?: $ambrygen_title : '',
+						),
+						false
+					);
+					?>
 				</div>
 			<?php endif; ?>
 
@@ -288,7 +322,7 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 
 				<?php if ( $ambrygen_title ) : ?>
 					<div class="subtitle1-sbold info-list__title">
-						<?php echo esc_html( $ambrygen_title ); ?>
+						<?php echo wp_kses_post( $ambrygen_title_raw ); ?>
 					</div>
 				<?php endif; ?>
 
@@ -350,7 +384,7 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 
 				<?php if ( $ambrygen_title ) : ?>
 					<div class="subtitle1-sbold info-list__title">
-						<?php echo esc_html( $ambrygen_title ); ?>
+						<?php echo wp_kses_post( $ambrygen_title_raw ); ?>
 					</div>
 				<?php endif; ?>
 

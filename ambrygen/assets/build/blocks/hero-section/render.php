@@ -28,6 +28,27 @@ $ambrygen_show_slider_dots = isset( $ambrygen_attributes['showSliderDots'] ) ? (
 $ambrygen_autoplay         = isset( $ambrygen_attributes['autoplay'] ) ? (bool) $ambrygen_attributes['autoplay'] : false;
 $ambrygen_autoplay_delay   = isset( $ambrygen_attributes['autoplayDelay'] ) ? absint( $ambrygen_attributes['autoplayDelay'] ) : 5000;
 $ambrygen_show_small_image = isset( $ambrygen_attributes['showSmallImage'] ) ? (bool) $ambrygen_attributes['showSmallImage'] : false;
+$ambrygen_slides           = array_values(
+	array_filter(
+		$ambrygen_slides,
+		static function ( $ambrygen_slide ) {
+			$ambrygen_slide            = is_array( $ambrygen_slide ) ? $ambrygen_slide : array();
+			$ambrygen_primary_button   = isset( $ambrygen_slide['primarybutton'] ) && is_array( $ambrygen_slide['primarybutton'] ) ? $ambrygen_slide['primarybutton'] : array();
+			$ambrygen_secondary_button = isset( $ambrygen_slide['secondarybutton'] ) && is_array( $ambrygen_slide['secondarybutton'] ) ? $ambrygen_slide['secondarybutton'] : array();
+			$ambrygen_has_primary_cta  = ! empty( $ambrygen_primary_button['text'] ) && ! empty( $ambrygen_primary_button['url'] );
+			$ambrygen_has_secondary_cta = ! empty( $ambrygen_secondary_button['text'] ) && ! empty( $ambrygen_secondary_button['url'] );
+
+			return ! empty( $ambrygen_slide['backgroundImage'] )
+				|| ! empty( $ambrygen_slide['overlayImage1'] )
+				|| ! empty( $ambrygen_slide['overlayImage2'] )
+				|| ! empty( $ambrygen_slide['eyebrow'] )
+				|| ! empty( $ambrygen_slide['heading'] )
+				|| ! empty( $ambrygen_slide['content'] )
+				|| $ambrygen_has_primary_cta
+				|| $ambrygen_has_secondary_cta;
+		}
+	)
+);
 $ambrygen_slide_count      = count( $ambrygen_slides );
 $ambrygen_has_slider       = $ambrygen_slide_count > 1;
 $ambrygen_autoplay_delay   = max( 1000, min( 10000, $ambrygen_autoplay_delay ) );
@@ -47,6 +68,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	)
 );
 $ambrygen_index              = 0;
+$ambrygen_slides_region_id   = wp_unique_id( 'hero-section-slides-' );
 
 if ( ! $ambrygen_slide_count ) {
 	return;
@@ -58,10 +80,53 @@ if ( ! $ambrygen_slide_count ) {
 		class="hero-section__slider swiper container-1340"
 		data-swiper-config="<?php echo esc_attr( wp_json_encode( $ambrygen_swiper_config ) ); ?>"
 		role="region"
-		aria-roledescription="carousel"
-		aria-label="<?php esc_attr_e( 'Hero', 'ambrygen-web' ); ?>"
+		aria-roledescription="<?php esc_attr_e( 'carousel', 'ambrygen-web' ); ?>"
+		aria-label="<?php esc_attr_e( 'Hero Section', 'ambrygen-web' ); ?>"
+		<?php if ( $ambrygen_autoplay ) : ?>
+			aria-live="polite"
+		<?php endif; ?>
 	>
-		<div class="swiper-wrapper">
+		<?php if ( $ambrygen_autoplay ) : ?>
+			<div
+				class="hero-section__autoplay-controls"
+				role="group"
+				aria-label="<?php esc_attr_e( 'Carousel autoplay controls', 'ambrygen-web' ); ?>"
+			>
+				<button
+					type="button"
+					class="hero-section__pause-button"
+					aria-label="<?php esc_attr_e( 'Pause autoplay', 'ambrygen-web' ); ?>"
+					aria-pressed="false"
+					data-hero-autoplay-toggle
+				>
+					<span class="hero-section__pause-label" aria-hidden="true"><?php esc_html_e( 'Pause', 'ambrygen-web' ); ?></span>
+					<span class="hero-section__play-label" aria-hidden="true"><?php esc_html_e( 'Play', 'ambrygen-web' ); ?></span>
+				</button>
+			</div>
+		<?php endif; ?>
+
+		<div
+			class="swiper-wrapper"
+			id="<?php echo esc_attr( $ambrygen_slides_region_id ); ?>"
+		>
+			<?php if ( $ambrygen_autoplay || $ambrygen_has_slider ) : ?>
+				<div
+					class="screen-reader-text"
+					role="status"
+					aria-live="polite"
+					aria-atomic="true"
+					data-slide-announcer
+				>
+					<?php
+					printf(
+						/* translators: 1: Current slide number, 2: Total slides. */
+						esc_html__( 'Slide %1$d of %2$d', 'ambrygen-web' ),
+						1,
+						$ambrygen_slide_count
+					);
+					?>
+				</div>
+			<?php endif; ?>
 
 			<?php
 			foreach ( $ambrygen_slides as $ambrygen_index => $ambrygen_slide ) :
@@ -70,13 +135,13 @@ if ( ! $ambrygen_slide_count ) {
 				<?php
 
 				$ambrygen_background_image_id = isset( $ambrygen_slide['backgroundImageId'] ) ? absint( $ambrygen_slide['backgroundImageId'] ) : 0;
-				$ambrygen_background_image    = isset( $ambrygen_slide['backgroundImage'] ) ? esc_url_raw( $ambrygen_slide['backgroundImage'] ) : '';
+				$ambrygen_background_image    = isset( $ambrygen_slide['backgroundImage'] ) ? esc_url( $ambrygen_slide['backgroundImage'] ) : '';
 				$ambrygen_background_alt      = isset( $ambrygen_slide['backgroundImageAlt'] ) ? sanitize_text_field( $ambrygen_slide['backgroundImageAlt'] ) : '';
 				$ambrygen_overlay_image_1_id  = isset( $ambrygen_slide['overlayImage1Id'] ) ? absint( $ambrygen_slide['overlayImage1Id'] ) : 0;
-				$ambrygen_overlay_image_1     = isset( $ambrygen_slide['overlayImage1'] ) ? esc_url_raw( $ambrygen_slide['overlayImage1'] ) : '';
+				$ambrygen_overlay_image_1     = isset( $ambrygen_slide['overlayImage1'] ) ? esc_url( $ambrygen_slide['overlayImage1'] ) : '';
 				$ambrygen_overlay_image_1_alt = isset( $ambrygen_slide['overlayImage1Alt'] ) ? sanitize_text_field( $ambrygen_slide['overlayImage1Alt'] ) : '';
 				$ambrygen_overlay_image_2_id  = isset( $ambrygen_slide['overlayImage2Id'] ) ? absint( $ambrygen_slide['overlayImage2Id'] ) : 0;
-				$ambrygen_overlay_image_2     = isset( $ambrygen_slide['overlayImage2'] ) ? esc_url_raw( $ambrygen_slide['overlayImage2'] ) : '';
+				$ambrygen_overlay_image_2     = isset( $ambrygen_slide['overlayImage2'] ) ? esc_url( $ambrygen_slide['overlayImage2'] ) : '';
 				$ambrygen_overlay_image_2_alt = isset( $ambrygen_slide['overlayImage2Alt'] ) ? sanitize_text_field( $ambrygen_slide['overlayImage2Alt'] ) : '';
 
 				$ambrygen_heading = $ambrygen_slide['heading'] ?? '';
@@ -89,10 +154,20 @@ if ( ! $ambrygen_slide_count ) {
 				$ambrygen_button_secondary = $ambrygen_slide['secondarybutton'] ?? array();
 
 				$ambrygen_button_primary_text    = isset( $ambrygen_button_primary['text'] ) ? sanitize_text_field( $ambrygen_button_primary['text'] ) : '';
-				$ambrygen_button_primary_url     = isset( $ambrygen_button_primary['url'] ) ? esc_url_raw( $ambrygen_button_primary['url'] ) : '';
+				$ambrygen_button_primary_url     = isset( $ambrygen_button_primary['url'] ) ? esc_url( $ambrygen_button_primary['url'] ) : '';
 				$ambrygen_button_primary_target  = isset( $ambrygen_button_primary['target'] ) && '_blank' === $ambrygen_button_primary['target'] ? '_blank' : '';
-				$ambrygen_button_primary_rel     = isset( $ambrygen_button_primary['rel'] ) ? preg_split( '/\s+/', sanitize_text_field( $ambrygen_button_primary['rel'] ), -1, PREG_SPLIT_NO_EMPTY ) : array();
+				$ambrygen_button_primary_rel_raw = isset( $ambrygen_button_primary['rel'] ) ? sanitize_text_field( $ambrygen_button_primary['rel'] ) : '';
+				$ambrygen_button_primary_rel     = '' !== $ambrygen_button_primary_rel_raw
+					? preg_split( '/\s+/', $ambrygen_button_primary_rel_raw, -1, PREG_SPLIT_NO_EMPTY )
+					: array();
 				$ambrygen_button_primary_variant = ! empty( $ambrygen_button_primary['variant'] ) ? sanitize_html_class( $ambrygen_button_primary['variant'] ) : 'is-style-site-tertiary-btn';
+				$ambrygen_allowed_rel_values     = array( 'nofollow', 'noopener', 'noreferrer', 'external', 'sponsored' );
+
+				if ( false === $ambrygen_button_primary_rel ) {
+					$ambrygen_button_primary_rel = array();
+				}
+
+				$ambrygen_button_primary_rel = array_intersect( $ambrygen_button_primary_rel, $ambrygen_allowed_rel_values );
 
 				if ( '_blank' === $ambrygen_button_primary_target ) {
 					$ambrygen_button_primary_rel = array_merge( $ambrygen_button_primary_rel, array( 'noopener', 'noreferrer' ) );
@@ -101,10 +176,19 @@ if ( ! $ambrygen_slide_count ) {
 				$ambrygen_button_primary_rel = implode( ' ', array_unique( array_filter( $ambrygen_button_primary_rel ) ) );
 
 				$ambrygen_button_secondary_text    = isset( $ambrygen_button_secondary['text'] ) ? sanitize_text_field( $ambrygen_button_secondary['text'] ) : '';
-				$ambrygen_button_secondary_url     = isset( $ambrygen_button_secondary['url'] ) ? esc_url_raw( $ambrygen_button_secondary['url'] ) : '';
+				$ambrygen_button_secondary_url     = isset( $ambrygen_button_secondary['url'] ) ? esc_url( $ambrygen_button_secondary['url'] ) : '';
 				$ambrygen_button_secondary_target  = isset( $ambrygen_button_secondary['target'] ) && '_blank' === $ambrygen_button_secondary['target'] ? '_blank' : '';
-				$ambrygen_button_secondary_rel     = isset( $ambrygen_button_secondary['rel'] ) ? preg_split( '/\s+/', sanitize_text_field( $ambrygen_button_secondary['rel'] ), -1, PREG_SPLIT_NO_EMPTY ) : array();
+				$ambrygen_button_secondary_rel_raw = isset( $ambrygen_button_secondary['rel'] ) ? sanitize_text_field( $ambrygen_button_secondary['rel'] ) : '';
+				$ambrygen_button_secondary_rel     = '' !== $ambrygen_button_secondary_rel_raw
+					? preg_split( '/\s+/', $ambrygen_button_secondary_rel_raw, -1, PREG_SPLIT_NO_EMPTY )
+					: array();
 				$ambrygen_button_secondary_variant = ! empty( $ambrygen_button_secondary['variant'] ) ? sanitize_html_class( $ambrygen_button_secondary['variant'] ) : 'dark';
+
+				if ( false === $ambrygen_button_secondary_rel ) {
+					$ambrygen_button_secondary_rel = array();
+				}
+
+				$ambrygen_button_secondary_rel = array_intersect( $ambrygen_button_secondary_rel, $ambrygen_allowed_rel_values );
 
 				if ( '_blank' === $ambrygen_button_secondary_target ) {
 					$ambrygen_button_secondary_rel = array_merge( $ambrygen_button_secondary_rel, array( 'noopener', 'noreferrer' ) );
@@ -118,6 +202,8 @@ if ( ! $ambrygen_slide_count ) {
 				$ambrygen_heading_tag = Helper::get_heading_tag( $ambrygen_heading_tag, 'h2' );
 
 				$ambrygen_heading_tag_escaped = tag_escape( $ambrygen_heading_tag );
+				$ambrygen_heading_id          = 'hero-heading-' . $ambrygen_index;
+				$ambrygen_content_id          = 'hero-content-' . $ambrygen_index;
 
 				?>
 
@@ -195,8 +281,11 @@ if ( ! $ambrygen_slide_count ) {
 							<?php endif; ?>
 							<?php if ( $ambrygen_heading ) : ?>
 								<<?php echo $ambrygen_heading_tag_escaped; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Sanitized with tag_escape(). ?>
-									id="<?php echo esc_attr( 'hero-heading-' . $ambrygen_index ); ?>"
+									id="<?php echo esc_attr( $ambrygen_heading_id ); ?>"
 									class="hero-section__heading heading-2 mb-0 js-gsap-fade"
+									<?php if ( $ambrygen_content ) : ?>
+										aria-describedby="<?php echo esc_attr( $ambrygen_content_id ); ?>"
+									<?php endif; ?>
 								>
 									<?php
 									// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -209,7 +298,10 @@ if ( ! $ambrygen_slide_count ) {
 							<?php endif; ?>
 							<?php if ( $ambrygen_content ) : ?>
 								<div class="is-style-gl-s24" aria-hidden="true"></div>
-								<div class="hero-section__description js-gsap-fade">
+								<div
+									id="<?php echo esc_attr( $ambrygen_content_id ); ?>"
+									class="hero-section__description js-gsap-fade"
+								>
 									<?php echo wp_kses_post( wpautop( $ambrygen_content ) ); ?>
 								</div>
 							<?php endif; ?>
@@ -249,9 +341,25 @@ if ( ! $ambrygen_slide_count ) {
 		</div>
 
 		<?php if ( $ambrygen_show_slider_nav ) : ?>
-			<div class="swiper-buttons">
-				<button class="custom-prev" aria-label="<?php esc_attr_e( 'Previous slide', 'ambrygen-web' ); ?>"></button>
-				<button class="custom-next" aria-label="<?php esc_attr_e( 'Next slide', 'ambrygen-web' ); ?>"></button>
+			<div
+				class="swiper-buttons"
+				role="group"
+				aria-label="<?php esc_attr_e( 'Slide navigation', 'ambrygen-web' ); ?>"
+			>
+				<button
+					type="button"
+					class="custom-prev"
+					aria-label="<?php esc_attr_e( 'Previous slide (Left arrow key)', 'ambrygen-web' ); ?>"
+					aria-controls="<?php echo esc_attr( $ambrygen_slides_region_id ); ?>"
+					aria-keyshortcuts="ArrowLeft"
+				></button>
+				<button
+					type="button"
+					class="custom-next"
+					aria-label="<?php esc_attr_e( 'Next slide (Right arrow key)', 'ambrygen-web' ); ?>"
+					aria-controls="<?php echo esc_attr( $ambrygen_slides_region_id ); ?>"
+					aria-keyshortcuts="ArrowRight"
+				></button>
 			</div>
 		<?php endif; ?>
 

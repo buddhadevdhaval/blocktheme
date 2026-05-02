@@ -78,7 +78,7 @@ ins {
 
 sub,
 sup {
-	font-size: 70%;
+	// font-size: 70%;
 	line-height: 0;
 	position: relative;
 	vertical-align: baseline;
@@ -89,7 +89,8 @@ sub {
 }
 
 sup {
-	top: -8px;
+	// top: -8px;
+	top: 0px;
 }
 
 code,

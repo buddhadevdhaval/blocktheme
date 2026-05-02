@@ -1,9 +1,34 @@
-﻿import { registerBlockType } from '@wordpress/blocks';
+import { registerBlockType, unregisterBlockType } from '@wordpress/blocks';
+import { select, subscribe } from '@wordpress/data';
 import metadata from './block.json';
 import Edit from './edit';
 import save from './save';
 
-registerBlockType( metadata.name, {
+const BLOCK_NAME = metadata.name;
+
+registerBlockType( BLOCK_NAME, {
 	edit: Edit,
 	save,
+} );
+
+const unsubscribe = subscribe( () => {
+	const editSite = select( 'core/edit-site' );
+	const editPost = select( 'core/editor' );
+
+	if ( editSite?.getEditedPostType?.() ) {
+		unsubscribe();
+		return;
+	}
+
+	if ( ! editPost?.getCurrentPostType ) {
+		return;
+	}
+
+	const postType = editPost.getCurrentPostType();
+
+	// Allow only for conferences
+	if ( postType && postType !== 'conferences' ) {
+		unregisterBlockType( BLOCK_NAME );
+		unsubscribe();
+	}
 } );

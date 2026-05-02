@@ -6,6 +6,16 @@
   "title": "Publication Filters",
   "category": "ambrygen",
   "description": "Renders filters for publications.",
+  "attributes": {
+    "previewPostId": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "usesContext": [
+    "postId",
+    "postType"
+  ],
   "supports": {
     "html": false,
     "reusable": false

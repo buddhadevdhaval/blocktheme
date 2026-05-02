@@ -64,10 +64,6 @@
     },
     "blockId": {
       "type": "string"
-    },
-    "isHeaderVertical": {
-      "type": "boolean",
-      "default": false
     }
   },
   "providesContext": {

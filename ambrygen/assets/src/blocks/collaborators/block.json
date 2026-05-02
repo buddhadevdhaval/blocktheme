@@ -11,16 +11,13 @@
   },
   "attributes": {
     "blockId": {
-      "type": "string",
-      "default": ""
+      "type": "string"
     },
     "title": {
-      "type": "string",
-      "default": "Collaborators"
+      "type": "string"
     },
     "intro": {
-      "type": "string",
-      "default": ""
+      "type": "string"
     },
     "headingLevel": {
       "type": "string",
@@ -31,8 +28,7 @@
         "h4",
         "h5",
         "h6"
-      ],
-      "default": "h2"
+      ]
     }
   },
   "editorScript": "file:./index.js",
@@ -41,10 +37,6 @@
   "textdomain": "ambrygen-web",
   "render": "file:./render.php",
   "example": {
-    "attributes": {
-      "title": "Collaborators",
-      "intro": "",
-      "headingLevel": "h2"
-    }
+    "attributes": {}
   }
 }

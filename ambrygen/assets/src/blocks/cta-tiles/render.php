@@ -64,6 +64,9 @@ if ( empty( trim( wp_strip_all_tags( $ambrygen_heading ) ) ) ) {
 	$ambrygen_heading = '';
 }
 
+$ambrygen_has_description = ! empty( trim( wp_strip_all_tags( $ambrygen_description ) ) );
+$ambrygen_has_intro       = ! empty( $ambrygen_heading ) || $ambrygen_has_description;
+
 /**
  * WCAG 2.1 AA: Accessible block labeling (2.4.6)
  */
@@ -118,10 +121,38 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 					<div class="is-style-gl-s50" aria-hidden="true"></div>
 
 				<?php endif; ?>
-				<div class="logo-title-section__content">
+				<?php if ( $ambrygen_has_intro ) : ?>
+					<div class="logo-title-section__content">
+						<?php if ( $ambrygen_heading ) : ?>
+							<<?php echo tag_escape( $ambrygen_heading_tag ); ?>
+								class="heading-2 block-title mb-0 js-gsap-fade"
+								id="<?php echo esc_attr( $block_id ); ?>">
+								<?php
+								echo wp_kses(
+									$ambrygen_heading,
+									Helper::allowed_heading_html()
+								);
+								?>
+							</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
+						<?php endif; ?>
+
+						<?php if ( $ambrygen_has_description ) : ?>
+							<div class="is-style-gl-s16" aria-hidden="true"></div>
+							<div class="body1-reg logo-title-section__description js-gsap-fade">
+								<?php echo wp_kses_post( $ambrygen_description ); ?>
+							</div>
+						<?php endif; ?>
+					</div>
+				<?php endif; ?>
+			</div>
+
+		<?php elseif ( 'image-title-description' === $ambrygen_variation ) : ?>
+			<?php if ( $ambrygen_has_intro ) : ?>
+				<div class="cta-tiles__header block__rowflex">
 					<?php if ( $ambrygen_heading ) : ?>
 						<<?php echo tag_escape( $ambrygen_heading_tag ); ?>
-							class="heading-2 block-title mb-0 js-gsap-fade"
+							class="heading-content-section__title heading-3 block-title mb-0
+							block__rowflex--heading-title js-gsap-fade"
 							id="<?php echo esc_attr( $block_id ); ?>">
 							<?php
 							echo wp_kses(
@@ -132,40 +163,16 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 						</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 					<?php endif; ?>
 
-					<?php if ( $ambrygen_description ) : ?>
-						<div class="is-style-gl-s16" aria-hidden="true"></div>
-						<div class="body1-reg logo-title-section__description js-gsap-fade">
-							<?php echo wp_kses_post( $ambrygen_description ); ?>
+					<?php if ( $ambrygen_has_description ) : ?>
+						<div class="heading-content-wrapper">
+							<div class="block__rowflex--block-content subtitle1-reg js-gsap-fade">
+								<?php echo wp_kses_post( $ambrygen_description ); ?>
+							</div>
 						</div>
 					<?php endif; ?>
+
 				</div>
-			</div>
-
-		<?php elseif ( 'image-title-description' === $ambrygen_variation ) : ?>
-			<div class="cta-tiles__header block__rowflex">
-				<?php if ( $ambrygen_heading ) : ?>
-					<<?php echo tag_escape( $ambrygen_heading_tag ); ?>
-						class="heading-content-section__title heading-3 block-title mb-0
-						block__rowflex--heading-title js-gsap-fade"
-						id="<?php echo esc_attr( $block_id ); ?>">
-						<?php
-						echo wp_kses(
-							$ambrygen_heading,
-							Helper::allowed_heading_html()
-						);
-						?>
-					</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
-				<?php endif; ?>
-
-				<?php if ( $ambrygen_description ) : ?>
-					<div class="heading-content-wrapper">
-						<div class="block__rowflex--block-content subtitle1-reg js-gsap-fade">
-							<?php echo wp_kses_post( $ambrygen_description ); ?>
-						</div>
-					</div>
-				<?php endif; ?>
-
-			</div>
+			<?php endif; ?>
 
 
 

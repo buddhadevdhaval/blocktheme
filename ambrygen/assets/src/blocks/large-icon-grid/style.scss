@@ -1,0 +1,102 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+@use "../../css/partials/variables/fluid_mixins" as *;
+
+.icon-grid-block {
+	position: relative;
+}
+
+.block-layout {
+	&:has(.icon-grid-block) {
+		.block-bg-image {
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100vw;
+			height: 100%;
+			margin-left: calc(-50vw + 50%);
+			opacity: 0.2;
+		}
+	}
+}
+
+.info-list {
+	position: relative;
+
+	&__row {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		width: 100%;
+		gap: fluid(18, 24);
+		position: relative;
+
+		@include bp.between(md, xl) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		@include bp.max(md) {
+			grid-template-columns: 1fr;
+			border-radius: 16px;
+		}
+	}
+}
+
+// Ensure the item cards have correct styles when inside this block
+.info-list {
+	&__card {
+		background: var(--theme_primary_white);
+		border: 1px solid var(--theme_gray_201);
+		border-radius: 16px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: fluid(8, 18);
+		padding: fluid(14, 24);
+		height: 100%;
+	}
+
+	&__image {
+		display: flex;
+		flex: fluid(54, 120) 0 0;
+		justify-content: center;
+
+		@include bp.max(xl-large) {
+			justify-content: inherit;
+		}
+
+		img {
+			width: fluid(54, 100);
+			height: fluid(54, 100);
+			object-fit: contain;
+		}
+	}
+
+	&__content {
+		flex: 1 0 0;
+	}
+
+	&__title {
+		color: var(--theme_gray_900);
+		overflow-wrap: anywhere;
+	}
+
+	&__link-col {
+		margin-bottom: 8px;
+		color: var(--theme_link_color);
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	&__link {
+		text-decoration: none;
+		padding: 0;
+		border: 0;
+		overflow-wrap: anywhere;
+	}
+}
+
+.variation-grid-post {
+	.info-list-block__header {
+		text-align: center;
+	}
+}

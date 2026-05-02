@@ -27,7 +27,7 @@ $ambrygen_collaborator_ids      = isset( $ambrygen_attributes['collaboratorIds']
 $ambrygen_resources_card_title  = $ambrygen_attributes['resourcesCardTitle'] ?? '';
 $ambrygen_enable_custom         = isset( $ambrygen_attributes['enableCustomCollaborators'] ) ? (bool) $ambrygen_attributes['enableCustomCollaborators'] : false;
 $ambrygen_custom_collaborators  = isset( $ambrygen_attributes['customCollaborators'] ) && is_array( $ambrygen_attributes['customCollaborators'] ) ? $ambrygen_attributes['customCollaborators'] : array();
-$ambrygen_is_admin_render       = is_admin();
+$ambrygen_is_admin_render       = is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST && ! empty( $block->context['postId'] ?? null ) );
 $ambrygen_has_heading           = '' !== trim( wp_strip_all_tags( $ambrygen_title ) );
 $ambrygen_has_subtitle          = '' !== trim( wp_strip_all_tags( $ambrygen_subtitle ) );
 $ambrygen_has_resources_title   = '' !== trim( wp_strip_all_tags( $ambrygen_resources_card_title ) );
@@ -200,12 +200,12 @@ $wrapper_attributes = get_block_wrapper_attributes(
 												<?php if ( $ambrygen_is_admin_render ) : ?>
 													<div class="resources__link">
 														<?php echo esc_html( $ambrygen_link_label ); ?>
-														<img src="<?php echo esc_url( $ambrygen_download_icon_src ); ?>" alt="" aria-hidden="true">
+														<img src="<?php echo esc_url( $ambrygen_download_icon_src ); ?>" alt="" aria-hidden="true" loading="lazy" decoding="async">
 													</div>
 												<?php else : ?>
 													<a href="<?php echo esc_url( $ambrygen_link_url ); ?>" class="resources__link" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr( $ambrygen_link_aria_label ); ?>">
 														<?php echo esc_html( $ambrygen_link_label ); ?>
-														<img src="<?php echo esc_url( $ambrygen_download_icon_src ); ?>" alt="" aria-hidden="true">
+														<img src="<?php echo esc_url( $ambrygen_download_icon_src ); ?>" alt="" aria-hidden="true" loading="lazy" decoding="async">
 													</a>
 												<?php endif; ?>
 											<?php endforeach; ?>

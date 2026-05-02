@@ -1,4 +1,88 @@
 .careers-highlight {
+	&__job-count,
+	&__job-help {
+		margin: 0 0 12px;
+	}
+
+	&__job-help {
+		color: #757575;
+	}
+
+	&__job-picker {
+		display: grid;
+		gap: 10px;
+
+		.components-base-control__help {
+			margin-bottom: 0;
+		}
+	}
+
+	&__job-options {
+		display: grid;
+		gap: 4px;
+		max-height: 220px;
+		margin-top: 8px;
+		overflow-y: auto;
+		border: 1px solid #ddd;
+		background: #fff;
+	}
+
+	&__selected-jobs {
+		display: grid;
+		gap: 8px;
+	}
+
+	&__job-picker-label {
+		font-weight: 600;
+	}
+
+	&__selected-job-list {
+		display: grid;
+		gap: 4px;
+		max-height: 220px;
+		overflow-y: auto;
+		border: 1px solid #ddd;
+		background: #fff;
+	}
+
+	&__selected-job,
+	&__job-option {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+		padding: 8px 10px;
+		border-bottom: 1px solid #eee;
+
+		&:last-child {
+			border-bottom: 0;
+		}
+
+		> span {
+			min-width: 0;
+			overflow-wrap: anywhere;
+		}
+
+		.components-button {
+			flex: 0 0 auto;
+		}
+	}
+
+	&__job-picker-field {
+		min-width: 0;
+
+		.components-base-control {
+			margin-bottom: 0;
+		}
+
+		.components-base-control__field {
+			margin-bottom: 0;
+		}
+
+		.components-base-control__label {
+			margin-bottom: 8px;
+		}
+	}
 
 	&__media {
 		height: inherit;

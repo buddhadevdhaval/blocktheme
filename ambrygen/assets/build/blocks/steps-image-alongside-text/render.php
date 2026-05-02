@@ -74,7 +74,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 		<div class="is-style-gl-s50" aria-hidden="true"></div>
 	<?php endif; ?>
 
-	<div class="vertical-tabs js-gsap-fade">
+	<div class="vertical-tabs js-gsap-fade" role="tablist" aria-orientation="vertical">
 		<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- InnerBlocks content is escaped by WordPress core. ?>
 	</div>
 

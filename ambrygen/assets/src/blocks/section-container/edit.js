@@ -92,9 +92,9 @@ function ContainerWidthControl( { value, onChange } ) {
 function BackgroundStyleControl( { value, onChange } ) {
 	return (
 		<SelectControl
-			label={ __( 'Background Style', 'ambrygen-web' ) }
+			label={ __( 'Container Background Color', 'ambrygen-web' ) }
 			help={ __(
-				'Select a background style for this section.',
+				'Select a background color for this section.',
 				'ambrygen-web'
 			) }
 			value={ value }
@@ -102,14 +102,6 @@ function BackgroundStyleControl( { value, onChange } ) {
 				{
 					label: __( 'None (Transparent)', 'ambrygen-web' ),
 					value: '',
-				},
-				{
-					label: __( 'Primary Background', 'ambrygen-web' ),
-					value: 'bg-primary',
-				},
-				{
-					label: __( 'Secondary Background', 'ambrygen-web' ),
-					value: 'bg-secondary',
 				},
 				{
 					label: __( 'Primary 25 Background', 'ambrygen-web' ),
@@ -122,10 +114,6 @@ function BackgroundStyleControl( { value, onChange } ) {
 				{
 					label: __( 'Primary 800 Background', 'ambrygen-web' ),
 					value: 'bg-primary_800',
-				},
-				{
-					label: __( 'Gray 50 Background', 'ambrygen-web' ),
-					value: 'bg-gray-50',
 				},
 				{
 					label: __(
@@ -164,12 +152,11 @@ function BackgroundStyleControl( { value, onChange } ) {
  * @param {Function} props.setAttributes Function to update attributes.
  * @return {JSX.Element} Block editor interface element.
  */
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit( { attributes, setAttributes, className = '' } ) {
 	const {
 		containerWidth = 'container-1340',
 		backgroundStyle = '',
 		isFixedBackground = false,
-		className = '',
 	} = attributes;
 	const hasInsideBackground = isFixedBackground === true;
 

@@ -1,17 +1,15 @@
 import { useBlockProps } from '@wordpress/block-editor';
-import { SelectControl, Button } from '@wordpress/components';
+import { Button } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { getThemeAssetUrl } from '../../utils/assets';
 import { useMemo } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
 
-export default function Edit( {
-	attributes,
-	setAttributes,
-	clientId,
-	context,
-} ) {
+const getTermLabel = ( terms ) =>
+	terms?.map( ( term ) => term.name ).join( ', ' ) || '';
+
+export default function Edit( { attributes, clientId, context } ) {
 	const { postId } = attributes;
 	const { removeBlock } = useDispatch( 'core/block-editor' );
 
@@ -22,17 +20,6 @@ export default function Edit( {
 	const jobLocationIcon =
 		context?.[ 'ambrygen/joblocationicon' ]?.url ||
 		getThemeAssetUrl( '/assets/src/images/marker-pin-icon.svg' );
-
-	// Fetch all jobs
-	const jobs = useSelect(
-		( select ) =>
-			select( 'core' ).getEntityRecords( 'postType', 'jobs', {
-				per_page: -1,
-				post_status: 'publish',
-				order: 'asc',
-			} ),
-		[]
-	);
 
 	// Fetch the selected post
 	const selectedPost = useSelect(
@@ -90,50 +77,19 @@ export default function Edit( {
 		[ jobLocationTermIds ]
 	);
 
-	// Get post IDs already used in other blocks
-	const selectedIds = useSelect(
-		( select ) => {
-			const rootClientId =
-				select( 'core/block-editor' ).getBlockRootClientId( clientId );
-			const siblingBlocks =
-				select( 'core/block-editor' ).getBlocks( rootClientId );
+	const jobTypeLabel = useMemo( () => getTermLabel( jobTypeTerms ), [
+		jobTypeTerms,
+	] );
 
-			return siblingBlocks
-				.map( ( b ) => b.attributes?.postId )
-				.filter( ( id ) => id && id !== postId );
-		},
-		[ clientId, postId ]
+	const jobLocationLabel = useMemo(
+		() => getTermLabel( jobLocationTerms ),
+		[ jobLocationTerms ]
 	);
-
-	// Job options for SelectControl
-	const options = jobs
-		? jobs
-				.filter( ( j ) => ! selectedIds.includes( j.id ) )
-				.map( ( j ) => ( {
-					label: decodeEntities( j.title.rendered ),
-					value: j.id,
-				} ) )
-		: [];
 
 	return (
 		<div { ...useBlockProps( { className: 'careers-highlight__job' } ) }>
 			{ ! postId && (
-				<SelectControl
-					label={ __( 'Select Job', 'ambrygen-web' ) }
-					value=""
-					options={ [
-						{
-							label: __( 'Select a Job', 'ambrygen-web' ),
-							value: '',
-						},
-						...options,
-					] }
-					onChange={ ( value ) =>
-						setAttributes( {
-							postId: value ? Number( value ) : null,
-						} )
-					}
-				/>
+				<p>{ __( 'Select jobs from the Careers block settings.', 'ambrygen-web' ) }</p>
 			) }
 
 			{ postId && selectedPost && (
@@ -142,51 +98,44 @@ export default function Edit( {
 						<div className="careers-highlight__job-title subtitle2-sbold">
 							{ decodeEntities( selectedPost.title.rendered ) }
 						</div>
-						<div className="careers-highlight__job-tag text-small-medium">
-							{ jobTypeTerms
-								?.map( ( t ) => t.name )
-								.join( ', ' ) || __( 'Job Type', 'ambrygen-web' ) }
-						</div>
+						{ jobTypeLabel && (
+							<div className="careers-highlight__job-tag text-small-medium">
+								{ jobTypeLabel }
+							</div>
+						) }
 					</div>
-					<div className="careers-highlight__job-meta">
-						<div className="ccareers-highlight__job-location text-md-medium">
-							{ jobLocationIcon && (
-								<img
-									src={ jobLocationIcon }
-									alt={ __( 'Job Location', 'ambrygen-web' ) }
-									style={ { maxWidth: '50px' } }
-								/>
+					{ ( jobLocationLabel || jobTypeLabel ) && (
+						<div className="careers-highlight__job-meta">
+							{ jobLocationLabel && (
+								<div className="careers-highlight__job-location text-md-medium">
+									{ jobLocationIcon && (
+										<img
+											src={ jobLocationIcon }
+											alt=""
+											aria-hidden="true"
+											style={ { maxWidth: '50px' } }
+										/>
+									) }
+									<span>{ jobLocationLabel }</span>
+								</div>
 							) }
-							<span>
-								{ jobLocationTerms
-									?.map( ( t ) => t.name )
-									.join( ', ' ) ||
-									__( 'Job location', 'ambrygen-web' ) }
-							</span>
-						</div>
-						<div className="careers-highlight__job-type text-md-medium">
-							{ jobTypeIcon && (
-								<img
-									src={ jobTypeIcon }
-									alt={ __( 'Job Type Icon', 'ambrygen-web' ) }
-									style={ { maxWidth: '50px' } }
-								/>
+							{ jobTypeLabel && (
+								<div className="careers-highlight__job-type text-md-medium">
+									{ jobTypeIcon && (
+										<img
+											src={ jobTypeIcon }
+											alt=""
+											aria-hidden="true"
+											style={ { maxWidth: '50px' } }
+										/>
+									) }
+									<span>{ jobTypeLabel }</span>
+								</div>
 							) }
-							<span>
-								{ jobTypeTerms
-									?.map( ( t ) => t.name )
-									.join( ', ' ) || __( 'Job Type', 'ambrygen-web' ) }
-							</span>
 						</div>
-					</div>
+					) }
 					<div className="is-style-gl-s20"></div>
 					<div className="careers-highlight__actions actions-button">
-						<Button
-							variant="secondary"
-							onClick={ () => setAttributes( { postId: null } ) }
-						>
-							{ __( 'Change Job', 'ambrygen-web' ) }
-						</Button>
 						<Button
 							isDestructive
 							onClick={ () => removeBlock( clientId ) }

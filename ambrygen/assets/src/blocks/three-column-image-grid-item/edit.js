@@ -97,6 +97,19 @@ export default function Edit( { attributes, setAttributes, context } ) {
 		}
 	}, [ files, normalizedFiles, setAttributes ] );
 
+	useEffect( () => {
+		if ( isVariationTwo || ! cta?.isPopup ) {
+			return;
+		}
+
+		setAttributes( {
+			cta: {
+				...cta,
+				isPopup: false,
+			},
+		} );
+	}, [ cta, isVariationTwo, setAttributes ] );
+
 	const blockProps = useBlockProps( {
 		className: 'three-column-card',
 	} );
@@ -192,20 +205,22 @@ export default function Edit( { attributes, setAttributes, context } ) {
 					></div>
 
 					<BaseControl className="ordering-options-editor__cta-control">
-						<ToggleControl
-							label={ __( 'Enable Popup?', 'ambrygen-web' ) }
-							checked={ !! cta.isPopup }
-							onChange={ ( value ) =>
-								setAttributes( {
-									cta: {
-										...cta,
-										isPopup: value,
-									},
-								} )
-							}
-						/>
+						{ isVariationTwo && (
+							<ToggleControl
+								label={ __( 'Enable Popup?', 'ambrygen-web' ) }
+								checked={ !! cta.isPopup }
+								onChange={ ( value ) =>
+									setAttributes( {
+										cta: {
+											...cta,
+											isPopup: value,
+										},
+									} )
+								}
+							/>
+						) }
 
-						{ !! cta.isPopup && (
+						{ isVariationTwo && !! cta.isPopup && (
 							<SelectControl
 								label={ __( 'Popup Type', 'ambrygen-web' ) }
 								value={ cta.popupType || 'video' }
@@ -230,7 +245,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 							/>
 						) }
 
-						{ ! cta.isPopup && (
+						{ ( ! isVariationTwo || ! cta.isPopup ) && (
 							<CtaButtonField
 								label={ __(
 									'CTA Link Settings',
@@ -244,7 +259,9 @@ export default function Edit( { attributes, setAttributes, context } ) {
 							/>
 						) }
 
-						{ !! cta.isPopup && cta.popupType === 'video' && (
+						{ isVariationTwo &&
+							!! cta.isPopup &&
+							cta.popupType === 'video' && (
 							<div
 								style={ {
 									marginTop: '16px',
@@ -371,7 +388,9 @@ export default function Edit( { attributes, setAttributes, context } ) {
 							</div>
 						) }
 
-						{ !! cta.isPopup && cta.popupType === 'form' && (
+						{ isVariationTwo &&
+							!! cta.isPopup &&
+							cta.popupType === 'form' && (
 							<div
 								style={ {
 									marginTop: '16px',
@@ -654,7 +673,8 @@ export default function Edit( { attributes, setAttributes, context } ) {
 						</div>
 					) }
 
-					{ !! cta.isPopup &&
+					{ isVariationTwo &&
+						!! cta.isPopup &&
 						cta.popupType === 'video' &&
 						( cta.videoUrl || cta.iframeUrl ) && (
 							<div
@@ -766,7 +786,8 @@ export default function Edit( { attributes, setAttributes, context } ) {
 								</div>
 							</div>
 						) }
-					{ !! cta.isPopup &&
+					{ isVariationTwo &&
+						!! cta.isPopup &&
 						cta.popupType === 'form' &&
 						( formTitle || formContent ) && (
 							<div

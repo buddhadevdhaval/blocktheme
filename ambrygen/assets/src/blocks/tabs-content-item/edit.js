@@ -1,48 +1,88 @@
 import {
 	InnerBlocks,
+	InspectorControls,
 	RichText,
 	useBlockProps,
-	InspectorControls,
 } from '@wordpress/block-editor';
 import { PanelBody, ToggleControl } from '@wordpress/components';
-import { useSelect } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
 const CONTENT_TEMPLATE = [ [ 'core/paragraph', { content: '' } ] ];
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { heading, isDefaultActive } = attributes;
+	const { updateBlockAttributes } = useDispatch( 'core/block-editor' );
 
-	const { isFirstItem, hasAnyDefaultActive } = useSelect(
-		( select ) => {
-			const editorSelect = select( 'core/block-editor' );
-			if ( ! editorSelect?.getBlockRootClientId || ! editorSelect?.getBlockOrder ) {
-				return { isFirstItem: false, hasAnyDefaultActive: false };
-			}
+	const { isFirstItem, hasAnyDefaultActive, rootClientId, activeTabId } =
+		useSelect(
+			( select ) => {
+				const editorSelect = select( 'core/block-editor' );
 
-			const rootClientId = editorSelect.getBlockRootClientId( clientId );
-			if ( ! rootClientId ) {
-				return { isFirstItem: false, hasAnyDefaultActive: false };
-			}
+				if (
+					! editorSelect?.getBlockRootClientId ||
+					! editorSelect?.getBlockOrder
+				) {
+					return {
+						isFirstItem: false,
+						hasAnyDefaultActive: false,
+						rootClientId: null,
+						activeTabId: '',
+					};
+				}
 
-			const order = editorSelect.getBlockOrder( rootClientId );
-			if ( ! Array.isArray( order ) || order.length === 0 ) {
-				return { isFirstItem: false, hasAnyDefaultActive: false };
-			}
+				const rootId = editorSelect.getBlockRootClientId( clientId );
 
-			const hasAnyDefault = order.some( ( id ) => {
-				const block = editorSelect.getBlock?.( id );
-				return !! block?.attributes?.isDefaultActive;
-			} );
+				if ( ! rootId ) {
+					return {
+						isFirstItem: false,
+						hasAnyDefaultActive: false,
+						rootClientId: null,
+						activeTabId: '',
+					};
+				}
 
-			return { isFirstItem: order[ 0 ] === clientId, hasAnyDefaultActive: hasAnyDefault };
-		},
-		[ clientId ]
-	);
+				const order = editorSelect.getBlockOrder( rootId );
+				const rootBlock = editorSelect.getBlock( rootId );
+				const currentActiveTabId = rootBlock?.attributes?.activeTabId || '';
+
+				if ( ! Array.isArray( order ) || order.length === 0 ) {
+					return {
+						isFirstItem: false,
+						hasAnyDefaultActive: false,
+						rootClientId: rootId,
+						activeTabId: currentActiveTabId,
+					};
+				}
+
+				const hasAnyDefault = order.some( ( id ) => {
+					const block = editorSelect.getBlock?.( id );
+					return !! block?.attributes?.isDefaultActive;
+				} );
+
+				return {
+					isFirstItem: order[ 0 ] === clientId,
+					hasAnyDefaultActive: hasAnyDefault,
+					rootClientId: rootId,
+					activeTabId: currentActiveTabId,
+				};
+			},
+			[ clientId ]
+		);
 
 	const shouldShowActive = Boolean(
-		isDefaultActive || ( isFirstItem && ! hasAnyDefaultActive )
+		( activeTabId && activeTabId === clientId ) ||
+			( ! activeTabId &&
+				( isDefaultActive || ( isFirstItem && ! hasAnyDefaultActive ) ) )
 	);
+
+	const handleHeaderClick = () => {
+		if ( rootClientId ) {
+			updateBlockAttributes( rootClientId, {
+				activeTabId: clientId,
+			} );
+		}
+	};
 
 	const blockProps = useBlockProps( {
 		className: `tabs-table-content__item${
@@ -65,15 +105,24 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			</InspectorControls>
 
 			<div { ...blockProps }>
-				<div className="tabs-table-content__header">
+				<div
+					className="tabs-table-content__header"
+					onClick={ handleHeaderClick }
+					onKeyDown={ ( event ) => {
+						if ( event.key === 'Enter' || event.key === ' ' ) {
+							event.preventDefault();
+							handleHeaderClick();
+						}
+					} }
+					role="button"
+					tabIndex={ 0 }
+				>
 					<RichText
 						tagName="div"
 						className="subtitle1-sbold tabs-table-content__title"
 						value={ heading }
-						onChange={ ( value ) =>
-							setAttributes( { heading: value } )
-						}
-						placeholder={ __( 'Tab heading…', 'ambrygen-web' ) }
+						onChange={ ( value ) => setAttributes( { heading: value } ) }
+						placeholder={ __( 'Tab heading...', 'ambrygen-web' ) }
 						withoutInteractiveFormatting={ true }
 					/>
 				</div>

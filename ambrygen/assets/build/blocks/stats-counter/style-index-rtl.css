@@ -1,0 +1,27 @@
+/*!*******************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./assets/src/blocks/stats-counter/style.scss ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************/
+.stats-counter {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 230px));
+  gap: clamp(32px, 11.4285714286px + 2.6785714286vw, 50px);
+  justify-content: center;
+}
+.stats-counter__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+.stats-counter .stats-counter__number {
+  transition: color 0.3s ease;
+  color: var(--theme_cg_blue);
+}
+.stats-counter__label {
+  text-transform: capitalize;
+  color: var(--theme_cg_blue);
+}
+.stats-counter__description {
+  color: var(--theme_gray_900);
+}

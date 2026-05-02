@@ -7,7 +7,6 @@ import {
 import {
 	PanelBody,
 	TextControl,
-	ToggleControl,
 } from '@wordpress/components';
 import {
 	ImageUploader,
@@ -43,9 +42,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		imageAlt,
 		overlayTopImage,
 		overlayBottomImage,
-		backgroundImage,
-		backgroundImageAlt,
-		isTopAligned,
 	} = attributes;
 
 	const phoneIconUrl = getThemeAssetUrl( '/assets/src/images/phone-icon.svg' );
@@ -177,6 +173,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						) ) }
 					</div>
 				</PanelBody>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
+					<TagSelector
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
+						value={ headingTag || 'h2' }
+						type="heading"
+						onChange={ ( value ) =>
+							setAttributes( { headingTag: value } )
+						}
+					/>
+				</PanelBody>
 				<PanelBody title={ __( 'Content Settings', 'ambrygen-web' ) }>
 					<ImageUploader
 						url={ image }
@@ -194,15 +200,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								imageAlt: '',
 							} )
 						}
-						label={ __( 'Contact Image', 'ambrygen-web' ) }
-					/>
-					<TagSelector
-						label={ __( 'Heading Tag', 'ambrygen-web' ) }
-						value={ headingTag || 'h2' }
-						type="heading"
-						onChange={ ( value ) =>
-							setAttributes( { headingTag: value } )
-						}
+						label={ __( 'Image', 'ambrygen-web' ) }
 					/>
 					{ isInfoView && (
 						<>
@@ -226,7 +224,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								}
 							/>
 							<CtaButtonField
-								label={ __( 'CTA Link', 'ambrygen-web' ) }
+								label={ __( '', 'ambrygen-web' ) }
 								value={ ctaValue }
 								showVariant={ false }
 								onChange={ ( value ) =>
@@ -273,47 +271,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 						label={ __( 'Bottom Overlay Image', 'ambrygen-web' ) }
 					/>
-					<ImageUploader
-						url={ backgroundImage }
-						onSelect={ ( img ) =>
-							setAttributes( {
-								backgroundImage: img.url,
-								backgroundImageId: img.id,
-								backgroundImageAlt: img.alt || '',
-							} )
-						}
-						onRemove={ () =>
-							setAttributes( {
-								backgroundImage: '',
-								backgroundImageId: 0,
-								backgroundImageAlt: '',
-							} )
-						}
-						label={ __( 'Background Image', 'ambrygen-web' ) }
-					/>
-					<ToggleControl
-						label={ __( 'Top Align Content', 'ambrygen-web' ) }
-						checked={ isTopAligned }
-						onChange={ ( value ) =>
-							setAttributes( { isTopAligned: value } )
-						}
-					/>
 				</PanelBody>
 			</InspectorControls>
 
-			<div
-				className={ `newsletter newsletter-signup ${
-					isTopAligned ? 'has-top-align' : ''
-				}` }
-			>
-				{ backgroundImage && (
-					<div className="block-bg-image">
-						<img
-							src={ backgroundImage }
-							alt={ backgroundImageAlt }
-						/>
-					</div>
-				) }
+			<div className="newsletter newsletter-signup">
 				<div className="newsletter__image-block">
 					{ displayImage && (
 						<img
@@ -504,3 +465,4 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</div>
 	);
 }
+

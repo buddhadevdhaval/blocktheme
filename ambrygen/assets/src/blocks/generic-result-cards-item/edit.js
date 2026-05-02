@@ -9,6 +9,8 @@ import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { ImageUploader, TagSelector } from '../_shared/components';
 
+const ALLOWED_INNER_BLOCKS = [ 'core/paragraph', 'core/buttons', 'core/button' ];
+
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
 		title,
@@ -28,10 +30,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		( select ) => {
 			const innerBlocks = select( 'core/block-editor' ).getBlocks( clientId );
 
+			if ( ! innerBlocks || innerBlocks.length === 0 ) {
+				return false;
+			}
+
 			return innerBlocks.some( ( innerBlock ) => {
 				const content = innerBlock?.attributes?.content || '';
+				const textContent = content.replace( /<[^>]+>/g, '' ).trim();
 
-				return '' !== content.replace( /<[^>]*>/g, '' ).trim();
+				return textContent.length > 0;
 			} );
 		},
 		[ clientId ]
@@ -45,13 +52,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			: 'generic-result-cards-item-placeholder',
 	} );
 
-	const allowedBlocks = [ 'core/paragraph', 'core/buttons', 'core/button' ];
-
 	return (
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Card Settings', 'ambrygen-web' ) }
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
 					initialOpen={ true }
 				>
 					<TagSelector
@@ -62,6 +67,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 						type="heading"
 					/>
+				</PanelBody>
+				<PanelBody
+					title={ __( 'Card Settings', 'ambrygen-web' ) }
+					initialOpen={ true }
+				>
 					<SelectControl
 						label={ __( 'Card Background Color', 'ambrygen-web' ) }
 						value={ cardVariant }
@@ -145,7 +155,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					) }
 					<div className="principles-steps__card-description">
 						<InnerBlocks
-							allowedBlocks={ allowedBlocks }
+							allowedBlocks={ ALLOWED_INNER_BLOCKS }
 							templateLock={ false }
 						/>
 					</div>
@@ -154,3 +164,4 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
+

@@ -47,7 +47,7 @@ const LAYOUT_VARIANTS = [
 
 const TEAM_MEMBERS_PER_PAGE = 20;
 const WP_REST_MAX_PER_PAGE = 100;
-const MAX_TEAM_MEMBER_TYPE_PAGES = 5;
+const MAX_TEAM_MEMBER_TYPE_PAGES = 2; // Reduced to 2 (200 members) to prevent Gutenberg from crashing when rendering InnerBlocks.
 const MAX_SWIPER_INIT_RETRIES = 20;
 const SWIPER_SPACE_BETWEEN = 20;
 const AUTOPLAY_DELAY = 3000;
@@ -76,6 +76,15 @@ const getPostTitle = ( post ) => {
 	return post?.title?.rendered || post?.title?.raw || '';
 };
 
+/**
+ * Edit component for the Our Team block.
+ *
+ * @param {Object}   props               The block properties.
+ * @param {Object}   props.attributes    The block attributes.
+ * @param {Function} props.setAttributes Function to update block attributes.
+ * @param {string}   props.clientId      The block client ID.
+ * @return {JSX.Element} The edit component rendering.
+ */
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const sliderRef = useRef( null );
 	const swiperInstance = useRef( null );
@@ -112,6 +121,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			select( 'core' ).getEntityRecords( 'taxonomy', 'member_type', {
 				per_page: WP_REST_MAX_PER_PAGE,
 				hide_empty: false,
+				_fields: 'id,name',
 			} ),
 		[]
 	);
@@ -127,6 +137,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				status: 'publish',
 				orderby: 'title',
 				order: 'asc',
+				_fields: 'id,title',
 			};
 
 			if ( debouncedMemberSearchInput ) {
@@ -135,7 +146,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 			return select( 'core' ).getEntityRecords(
 				'postType',
-				'our_team',
+				'author',
 				query
 			);
 		},
@@ -157,12 +168,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			for ( let page = 1; page <= MAX_TEAM_MEMBER_TYPE_PAGES; page++ ) {
 				const pagePosts = select( 'core' ).getEntityRecords(
 					'postType',
-					'our_team',
+					'author',
 					{
 						per_page: WP_REST_MAX_PER_PAGE,
 						page,
 						status: 'publish',
 						member_type: memberTypes,
+						_fields: 'id',
 					}
 				);
 
@@ -182,6 +194,29 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		[ isSliderView, selectionMode, memberTypes ]
 	);
 
+	const isResolvingTaxonomyPosts = useSelect(
+		( select ) => {
+			if ( ! isSliderView || selectionMode !== 'taxonomy' || ! memberTypes.length ) {
+				return false;
+			}
+			const { isResolving } = select( 'core/data' );
+			for ( let page = 1; page <= MAX_TEAM_MEMBER_TYPE_PAGES; page++ ) {
+				const query = {
+					per_page: WP_REST_MAX_PER_PAGE,
+					page,
+					status: 'publish',
+					member_type: memberTypes,
+					_fields: 'id',
+				};
+				if ( isResolving( 'core', 'getEntityRecords', [ 'postType', 'author', query ] ) ) {
+					return true;
+				}
+			}
+			return false;
+		},
+		[ isSliderView, selectionMode, memberTypes ]
+	);
+
 	const innerBlocks = useSelect(
 		( select ) => select( 'core/block-editor' ).getBlocks( clientId ),
 		[ clientId ]
@@ -197,28 +232,32 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		Array.isArray( taxonomyTeamPosts ) &&
 		taxonomyTeamPosts.length >=
 			MAX_TEAM_MEMBER_TYPE_PAGES * WP_REST_MAX_PER_PAGE;
+	const resolvedPostsCache = useRef( {} );
+
 	const selectedTeamPostsById = useSelect(
 		( select ) => {
 			if ( ! selectedPostIds.length ) {
 				return {};
 			}
 
-			return chunkIds( selectedPostIds ).reduce(
+			const currentBatch = chunkIds( selectedPostIds ).reduce(
 				( postsById, postIds ) => {
 					const posts = select( 'core' ).getEntityRecords(
 						'postType',
-						'our_team',
+						'author',
 						{
 							include: postIds,
 							per_page: postIds.length,
 							orderby: 'include',
 							context: 'edit',
+							_fields: 'id,title',
 						}
 					);
 
 					if ( Array.isArray( posts ) ) {
 						posts.forEach( ( post ) => {
 							postsById[ post.id ] = post;
+							resolvedPostsCache.current[ post.id ] = post; // Save to persistent cache
 						} );
 					}
 
@@ -226,6 +265,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				},
 				{}
 			);
+
+			// Merge current results with previously resolved posts to prevent flashing!
+			return {
+				...resolvedPostsCache.current,
+				...currentBatch,
+			};
 		},
 		[ selectedPostIds ]
 	);
@@ -375,15 +420,26 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			! isSliderView ||
 			selectionMode !== 'taxonomy' ||
 			! memberTypes.length ||
-			! taxonomyTeamPosts
+			! taxonomyTeamPosts ||
+			isResolvingTaxonomyPosts
 		) {
 			return;
 		}
 
-		const newBlocks = taxonomyTeamPosts.map( ( post ) =>
-			createBlock( ITEM_BLOCK_NAME, {
-				postId: post.id,
-			} )
+		const currentPostIds = innerBlocks
+			.map( ( block ) => Number( block.attributes?.postId ) || 0 )
+			.filter( Boolean );
+		const newPostIds = taxonomyTeamPosts.map( ( post ) => post.id );
+
+		if (
+			currentPostIds.length === newPostIds.length &&
+			currentPostIds.every( ( id, index ) => id === newPostIds[ index ] )
+		) {
+			return; // No change needed, prevent destructive unmount!
+		}
+
+		const newBlocks = newPostIds.map( ( postId ) =>
+			createBlock( ITEM_BLOCK_NAME, { postId } )
 		);
 
 		replaceInnerBlocks( clientId, newBlocks, false );
@@ -392,7 +448,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		selectionMode,
 		memberTypes,
 		taxonomyTeamPosts,
+		isResolvingTaxonomyPosts,
 		clientId,
+		innerBlocks,
 		replaceInnerBlocks,
 	] );
 
@@ -570,7 +628,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					initialOpen={ false }
 				>
 					<TagSelector
-						label={ __( 'Heading Level', 'ambrygen-web' ) }
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingLevel }
 						type="heading"
 						onChange={ ( value ) =>
@@ -943,3 +1001,4 @@ function MemberPicker( {
 		</div>
 	);
 }
+

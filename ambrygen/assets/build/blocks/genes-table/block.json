@@ -18,9 +18,13 @@
       "type": "string",
       "default": "Exome & Microarray"
     },
+    "eyebrowText": {
+      "type": "string",
+      "default": "Search by genes, Test name, or Code"
+    },
     "placeholder": {
       "type": "string",
-      "default": "Search genes…"
+      "default": "Search genes..."
     },
     "defaultSymbols": {
       "type": "string",

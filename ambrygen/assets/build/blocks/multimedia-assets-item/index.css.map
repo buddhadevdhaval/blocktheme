@@ -1,0 +1,1 @@
+{"version":3,"file":"multimedia-assets-item/index.css","mappings":";;;AAIE;EACC;AAHH,C","sources":["webpack://ambrygen/./assets/src/blocks/multimedia-assets-item/editor.scss"],"sourcesContent":[".block-editor__container {\n\n\t.approach-card__image {\n\n\t\timg {\n\t\t\theight: 100%;\n\t\t}\n\t}\n}"],"names":[],"ignoreList":[],"sourceRoot":""}

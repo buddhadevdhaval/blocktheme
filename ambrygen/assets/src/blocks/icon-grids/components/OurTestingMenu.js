@@ -17,7 +17,7 @@ export default function OurTestingMenu( {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Content Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag || 'h2' }
@@ -25,7 +25,8 @@ export default function OurTestingMenu( {
 							setAttributes( { headingTag: value } )
 						}
 					/>
-
+				</PanelBody>
+				<PanelBody title={ __( 'Link Settings', 'ambrygen-web' ) }>
 					<CtaButtonField
 						label={ __( 'Link setting', 'ambrygen-web' ) }
 						textLabel={ __( 'Link Text', 'ambrygen-web' ) }
@@ -94,3 +95,4 @@ export default function OurTestingMenu( {
 		</>
 	);
 }
+

@@ -1,7 +1,8 @@
 import { InnerBlocks, RichText } from '@wordpress/block-editor';
 
 export default function Variation4( { attributes, setAttributes, template } ) {
-	const { heading, headingTag, description } = attributes;
+	const { heading, headingTag, description, link = {} } = attributes;
+	const hasCta = !! ( link.url && link.text );
 
 	return (
 		<>
@@ -26,6 +27,17 @@ export default function Variation4( { attributes, setAttributes, template } ) {
 						placeholder="Add Description..."
 					/>
 				</div>
+				{ hasCta && (
+					<a
+						href={ link.url }
+						className="site-btn is-style-site-text-btn has-right-arrow text-14"
+						target={ link.target || undefined }
+						rel={ link.rel || undefined }
+						onClick={ ( event ) => event.preventDefault() }
+					>
+						{ link.text }
+					</a>
+				) }
 			</div>
 
 			<div className="is-style-gl-s64" aria-hidden="true"></div>

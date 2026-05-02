@@ -1,1 +1,51 @@
-.genes-table__search form{max-width:640px;position:relative}@media(max-width:767px){.genes-table__search form{max-width:100%}}.genes-table__search form .genes-table__search-button{background-color:transparent;background-image:url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0xNy41IDE3LjVMMTMuODc1IDEzLjg3NU0xNS44MzMzIDkuMTY2NjdDMTUuODMzMyAxMi44NDg2IDEyLjg0ODYgMTUuODMzMyA5LjE2NjY3IDE1LjgzMzNDNS40ODQ3NyAxNS44MzMzIDIuNSAxMi44NDg2IDIuNSA5LjE2NjY3QzIuNSA1LjQ4NDc3IDUuNDg0NzcgMi41IDkuMTY2NjcgMi41QzEyLjg0ODYgMi41IDE1LjgzMzMgNS40ODQ3NyAxNS44MzMzIDkuMTY2NjdaIiBzdHJva2U9IiM2NjcwODUiIHN0cm9rZS13aWR0aD0iMS42NjY2NyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+DQo8L3N2Zz4NCg==);background-repeat:no-repeat;background-size:20px;border:none;font-size:0;height:20px;margin:0;padding:0;position:absolute;left:16px;top:14px;width:20px}.genes-table .gl-data-table{margin:24px 0 0}
+/*!*****************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./assets/src/blocks/genes-table/style.scss ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************/
+.genes-table__search {
+  background-color: var(--theme_primary_25);
+  border-radius: 24px;
+  padding: clamp(16px, -22.8571428571px + 5.0595238095vw, 50px);
+}
+.genes-table__search .kicker-text {
+  text-align: center;
+  color: var(--theme_cg_blue);
+}
+.genes-table__search form {
+  position: relative;
+  max-width: 640px;
+  margin: 0 auto;
+}
+@media (max-width: 767px) {
+  .genes-table__search form {
+    max-width: 100%;
+  }
+}
+.genes-table__search form .genes-table__search-button {
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0xNy41IDE3LjVMMTMuODc1IDEzLjg3NU0xNS44MzMzIDkuMTY2NjdDMTUuODMzMyAxMi44NDg2IDEyLjg0ODYgMTUuODMzMyA5LjE2NjY3IDE1LjgzMzNDNS40ODQ3NyAxNS44MzMzIDIuNSAxMi44NDg2IDIuNSA5LjE2NjY3QzIuNSA1LjQ4NDc3IDUuNDg0NzcgMi41IDkuMTY2NjcgMi41QzEyLjg0ODYgMi41IDE1LjgzMzMgNS40ODQ3NyAxNS44MzMzIDkuMTY2NjdaIiBzdHJva2U9IiM2NjcwODUiIHN0cm9rZS13aWR0aD0iMS42NjY2NyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+DQo8L3N2Zz4NCg==);
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-size: 20px;
+  border: none;
+  font-size: 0;
+  height: 20px;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  left: 16px;
+  top: 14px;
+  width: 20px;
+}
+.genes-table__instruction {
+  text-align: center;
+}
+.genes-table .gl-data-table-body {
+  background-color: var(--theme_gray_25);
+  border-radius: clamp(16px, -2.2857142857px + 2.380952381vw, 32px);
+  border: 1px solid var(--theme_gray_200);
+  padding: clamp(16px, -22.8571428571px + 5.0595238095vw, 50px);
+}
+.genes-table .gl-data-table {
+  border-radius: 32px;
+  border: 1px solid var(--theme_gray_200);
+  background: var(--theme_gray_25);
+}

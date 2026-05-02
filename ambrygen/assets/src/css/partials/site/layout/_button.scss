@@ -482,7 +482,7 @@ button[disabled] {
 	.wp-block-button {
 		.wp-element-button {
 			@include bp.max(sm) {
-				justify-content: center;
+				// justify-content: center;
 			}
 		}
 	}

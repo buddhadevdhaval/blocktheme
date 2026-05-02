@@ -9,7 +9,7 @@ import OurTestingMenu from './components/OurTestingMenu';
 import Variation3 from './components/Variation3';
 import Variation4 from './components/Variation4';
 import Variation5 from './components/Variation5';
-import { ImageUploader } from '../_shared/components';
+import { CtaButtonField, ImageUploader } from '../_shared/components';
 
 const TEMPLATE = [
 	[
@@ -180,6 +180,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							})
 						}
 						onRemove={() => setAttributes({ backgroundImage: {} })}
+					/>
+					<CtaButtonField
+						label={__('CTA Button', 'ambrygen-web')}
+						value={attributes.link || {}}
+						onChange={(value) => setAttributes({ link: value })}
 					/>
 				</PanelBody>
 			</InspectorControls>

@@ -426,14 +426,19 @@ export default function Edit( { attributes, setAttributes } ) {
 								}
 							/>
 
-							<TagSelector
-								label={ __( 'Heading Tag', 'ambrygen-web' ) }
-								value={ slideItem.headingTag || 'h2' }
-								onChange={ ( value ) =>
-									updateSlide( index, 'headingTag', value )
-								}
-								type="heading"
-							/>
+							<PanelBody
+								title={ __( 'Heading Settings', 'ambrygen-web' ) }
+								initialOpen={ false }
+							>
+								<TagSelector
+									label={ __( 'Heading Tag', 'ambrygen-web' ) }
+									value={ slideItem.headingTag || 'h2' }
+									onChange={ ( value ) =>
+										updateSlide( index, 'headingTag', value )
+									}
+									type="heading"
+								/>
+							</PanelBody>
 
 							<CtaButtonField
 								label={ __( 'Primary Button', 'ambrygen-web' ) }

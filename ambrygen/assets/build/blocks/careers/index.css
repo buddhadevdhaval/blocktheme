@@ -1,1 +1,84 @@
-.careers-highlight__media{height:inherit}.careers-highlight .wp-block.block-editor-block-list__block,.careers-highlight__job{margin-bottom:0}.careers-highlight__jobs{height:auto;max-height:inherit;overflow-y:inherit}
+/*!**************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./assets/src/blocks/careers/editor.scss ***!
+  \**************************************************************************************************************************************************************************************************************************************************************/
+.careers-highlight__job-count, .careers-highlight__job-help {
+  margin: 0 0 12px;
+}
+.careers-highlight__job-help {
+  color: #757575;
+}
+.careers-highlight__job-picker {
+  display: grid;
+  gap: 10px;
+}
+.careers-highlight__job-picker .components-base-control__help {
+  margin-bottom: 0;
+}
+.careers-highlight__job-options {
+  display: grid;
+  gap: 4px;
+  max-height: 220px;
+  margin-top: 8px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  background: #fff;
+}
+.careers-highlight__selected-jobs {
+  display: grid;
+  gap: 8px;
+}
+.careers-highlight__job-picker-label {
+  font-weight: 600;
+}
+.careers-highlight__selected-job-list {
+  display: grid;
+  gap: 4px;
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  background: #fff;
+}
+.careers-highlight__selected-job, .careers-highlight__job-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #eee;
+}
+.careers-highlight__selected-job:last-child, .careers-highlight__job-option:last-child {
+  border-bottom: 0;
+}
+.careers-highlight__selected-job > span, .careers-highlight__job-option > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.careers-highlight__selected-job .components-button, .careers-highlight__job-option .components-button {
+  flex: 0 0 auto;
+}
+.careers-highlight__job-picker-field {
+  min-width: 0;
+}
+.careers-highlight__job-picker-field .components-base-control {
+  margin-bottom: 0;
+}
+.careers-highlight__job-picker-field .components-base-control__field {
+  margin-bottom: 0;
+}
+.careers-highlight__job-picker-field .components-base-control__label {
+  margin-bottom: 8px;
+}
+.careers-highlight__media {
+  height: inherit;
+}
+.careers-highlight__job,
+.careers-highlight .wp-block.block-editor-block-list__block {
+  margin-bottom: 0;
+}
+.careers-highlight__jobs {
+  height: auto;
+  max-height: inherit;
+  overflow-y: inherit;
+}
+
+/*# sourceMappingURL=index.css.map*/

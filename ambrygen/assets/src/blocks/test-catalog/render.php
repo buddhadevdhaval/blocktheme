@@ -138,39 +138,50 @@ $ambrygen_test_catalog_page_context = array(
 								<?php endif; ?>
 
 								<?php
-								$ambrygen_genetic_testing_link = array( 'post_id' => 0, 'url' => '' );
-								if (
-									class_exists( Helper::class )
-									&& is_callable( array( Helper::class, 'get_genetic_testing_link_by_product_version' ) )
-								) {
-									$ambrygen_genetic_testing_link = Helper::get_genetic_testing_link_by_product_version( (int) $ambrygen_post_id );
-								} else {
-									$ambrygen_query = new WP_Query(
-										array(
-											'post_type'      => 'genetic-testing',
-											'post_status'    => 'publish',
-											'posts_per_page' => 1,
-											'fields'         => 'ids',
-											'no_found_rows'  => true,
-											'meta_query'     => array(
-												array(
-													'key'     => 'linked_posts_genetic',
-													'value'   => 'i:' . absint( $ambrygen_post_id ) . ';',
-													'compare' => 'LIKE',
+								$ambrygen_link_cache_key = 'genetic_testing_link_' . $ambrygen_post_id;
+								$ambrygen_genetic_testing_link = wp_cache_get( $ambrygen_link_cache_key, 'ambrygen_catalog' );
+
+								if ( false === $ambrygen_genetic_testing_link ) {
+									$ambrygen_genetic_testing_link = array( 'post_id' => 0, 'url' => '' );
+									if (
+										class_exists( Helper::class )
+										&& is_callable( array( Helper::class, 'get_genetic_testing_link_by_product_version' ) )
+									) {
+										$ambrygen_genetic_testing_link = Helper::get_genetic_testing_link_by_product_version( (int) $ambrygen_post_id );
+									} else {
+										$ambrygen_query = new WP_Query(
+											array(
+												'post_type'      => 'genetic-testing',
+												'post_status'    => 'publish',
+												'posts_per_page' => 1,
+												'fields'         => 'ids',
+												'no_found_rows'  => true,
+												'meta_query'     => array(
+													array(
+														'key'     => 'linked_posts_genetic',
+														'value'   => 'i:' . absint( $ambrygen_post_id ) . ';',
+														'compare' => 'LIKE',
+													),
 												),
-											),
-										)
-									);
-
-									if ( ! empty( $ambrygen_query->posts[0] ) ) {
-										$ambrygen_linked_id  = absint( $ambrygen_query->posts[0] );
-										$ambrygen_linked_url = $ambrygen_linked_id ? get_permalink( $ambrygen_linked_id ) : '';
-
-										$ambrygen_genetic_testing_link = array(
-											'post_id' => $ambrygen_linked_id,
-											'url'     => is_string( $ambrygen_linked_url ) ? $ambrygen_linked_url : '',
+											)
 										);
+
+										if ( ! empty( $ambrygen_query->posts[0] ) ) {
+											$ambrygen_linked_id  = absint( $ambrygen_query->posts[0] );
+											$ambrygen_linked_url = $ambrygen_linked_id ? get_permalink( $ambrygen_linked_id ) : '';
+
+											$ambrygen_genetic_testing_link = array(
+												'post_id' => $ambrygen_linked_id,
+												'url'     => is_string( $ambrygen_linked_url ) ? $ambrygen_linked_url : '',
+											);
+										}
 									}
+
+									if ( ! is_array( $ambrygen_genetic_testing_link ) ) {
+										$ambrygen_genetic_testing_link = array( 'post_id' => 0, 'url' => '' );
+									}
+
+									wp_cache_set( $ambrygen_link_cache_key, $ambrygen_genetic_testing_link, 'ambrygen_catalog', 12 * HOUR_IN_SECONDS );
 								}
 								?>
 
@@ -326,39 +337,50 @@ $ambrygen_test_catalog_page_context = array(
 													<?php endif; ?>
 
 													<?php
-													$ambrygen_genetic_testing_link = array( 'post_id' => 0, 'url' => '' );
-													if (
-														class_exists( Helper::class )
-														&& is_callable( array( Helper::class, 'get_genetic_testing_link_by_product_version' ) )
-													) {
-														$ambrygen_genetic_testing_link = Helper::get_genetic_testing_link_by_product_version( (int) $ambrygen_post_id );
-													} else {
-														$ambrygen_query = new WP_Query(
-															array(
-																'post_type'      => 'genetic-testing',
-																'post_status'    => 'publish',
-																'posts_per_page' => 1,
-																'fields'         => 'ids',
-																'no_found_rows'  => true,
-																'meta_query'     => array(
-																	array(
-																		'key'     => 'linked_posts_genetic',
-																		'value'   => 'i:' . absint( $ambrygen_post_id ) . ';',
-																		'compare' => 'LIKE',
+													$ambrygen_link_cache_key = 'genetic_testing_link_' . $ambrygen_post_id;
+													$ambrygen_genetic_testing_link = wp_cache_get( $ambrygen_link_cache_key, 'ambrygen_catalog' );
+
+													if ( false === $ambrygen_genetic_testing_link ) {
+														$ambrygen_genetic_testing_link = array( 'post_id' => 0, 'url' => '' );
+														if (
+															class_exists( Helper::class )
+															&& is_callable( array( Helper::class, 'get_genetic_testing_link_by_product_version' ) )
+														) {
+															$ambrygen_genetic_testing_link = Helper::get_genetic_testing_link_by_product_version( (int) $ambrygen_post_id );
+														} else {
+															$ambrygen_query = new WP_Query(
+																array(
+																	'post_type'      => 'genetic-testing',
+																	'post_status'    => 'publish',
+																	'posts_per_page' => 1,
+																	'fields'         => 'ids',
+																	'no_found_rows'  => true,
+																	'meta_query'     => array(
+																		array(
+																			'key'     => 'linked_posts_genetic',
+																			'value'   => 'i:' . absint( $ambrygen_post_id ) . ';',
+																			'compare' => 'LIKE',
+																		),
 																	),
-																),
-															)
-														);
-
-														if ( ! empty( $ambrygen_query->posts[0] ) ) {
-															$ambrygen_linked_id  = absint( $ambrygen_query->posts[0] );
-															$ambrygen_linked_url = $ambrygen_linked_id ? get_permalink( $ambrygen_linked_id ) : '';
-
-															$ambrygen_genetic_testing_link = array(
-																'post_id' => $ambrygen_linked_id,
-																'url'     => is_string( $ambrygen_linked_url ) ? $ambrygen_linked_url : '',
+																)
 															);
+
+															if ( ! empty( $ambrygen_query->posts[0] ) ) {
+																$ambrygen_linked_id  = absint( $ambrygen_query->posts[0] );
+																$ambrygen_linked_url = $ambrygen_linked_id ? get_permalink( $ambrygen_linked_id ) : '';
+
+																$ambrygen_genetic_testing_link = array(
+																	'post_id' => $ambrygen_linked_id,
+																	'url'     => is_string( $ambrygen_linked_url ) ? $ambrygen_linked_url : '',
+																);
+															}
 														}
+
+														if ( ! is_array( $ambrygen_genetic_testing_link ) ) {
+															$ambrygen_genetic_testing_link = array( 'post_id' => 0, 'url' => '' );
+														}
+
+														wp_cache_set( $ambrygen_link_cache_key, $ambrygen_genetic_testing_link, 'ambrygen_catalog', 12 * HOUR_IN_SECONDS );
 													}
 													?>
 

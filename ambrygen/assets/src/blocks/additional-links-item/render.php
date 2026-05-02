@@ -47,25 +47,23 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	<?php echo $ambrygen_target ? ' target="' . esc_attr( $ambrygen_target ) . '"' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Target is allowlisted above. ?>
 	<?php echo $ambrygen_rel ? ' rel="' . esc_attr( $ambrygen_rel ) . '"' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rel parts are sanitized above. ?>
 >
-	<?php if ( $ambrygen_icon_id || $ambrygen_icon_url ) : ?>
-		<div class="additional-link__card-image">
-			<?php
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper returns escaped image markup from a sanitized attachment ID or URL.
-			echo Helper::image_from_source(
-				$ambrygen_icon_id,
-				$ambrygen_icon_url,
-				'full',
-				array(
-					'class'    => 'additional-link__logo',
-					'alt'      => $ambrygen_icon_alt,
-					'loading'  => 'lazy',
-					'decoding' => 'async',
-				),
-				true
-			);
-			?>
-		</div>
-	<?php endif; ?>
+	<div class="additional-link__card-image">
+		<?php
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper returns escaped image markup from a sanitized attachment ID, URL, or placeholder image.
+		echo Helper::image_from_source(
+			$ambrygen_icon_id,
+			$ambrygen_icon_url,
+			'full',
+			array(
+				'class'    => 'additional-link__logo' . ( $ambrygen_icon_id || $ambrygen_icon_url ? '' : ' is-placeholder' ),
+				'alt'      => $ambrygen_icon_alt,
+				'loading'  => 'lazy',
+				'decoding' => 'async',
+			),
+			true
+		);
+		?>
+	</div>
 
 	<?php if ( $ambrygen_title ) : ?>
 		<div class="additional-link__card-content">

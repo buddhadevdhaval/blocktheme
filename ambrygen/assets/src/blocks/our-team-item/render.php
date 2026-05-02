@@ -22,20 +22,42 @@ if ( ! $ambrygen_post_id ) {
 	return;
 }
 
-$ambrygen_post = get_post( $ambrygen_post_id );
+$ambrygen_cache_key   = 'team_member_' . $ambrygen_post_id;
+$ambrygen_cached_data = wp_cache_get( $ambrygen_cache_key, 'ambrygen_team' );
 
-if ( ! $ambrygen_post || 'publish' !== $ambrygen_post->post_status ) {
-	return;
+if ( false === $ambrygen_cached_data ) {
+	$ambrygen_display_post = get_post( $ambrygen_post_id );
+
+	if ( ! $ambrygen_display_post || 'publish' !== $ambrygen_display_post->post_status ) {
+		return;
+	}
+
+	$ambrygen_all_meta    = get_post_meta( $ambrygen_post_id );
+	$ambrygen_designation = ! empty( $ambrygen_all_meta['user_designation'][0] )
+		? $ambrygen_all_meta['user_designation'][0]
+		: ( ! empty( $ambrygen_all_meta['designation'][0] ) ? $ambrygen_all_meta['designation'][0] : '' );
+
+	$ambrygen_cached_data = array(
+		'name'        => get_the_title( $ambrygen_display_post ),
+		'designation' => $ambrygen_designation,
+		'image_id'    => get_post_thumbnail_id( $ambrygen_post_id ),
+		'bio'         => apply_filters( 'the_content', $ambrygen_display_post->post_content ),
+	);
+
+	wp_cache_set( $ambrygen_cache_key, $ambrygen_cached_data, 'ambrygen_team', 12 * HOUR_IN_SECONDS );
+} else {
+	// Validate cached post still exists and is published
+	$ambrygen_display_post = get_post( $ambrygen_post_id );
+	if ( ! $ambrygen_display_post || 'publish' !== $ambrygen_display_post->post_status ) {
+		wp_cache_delete( $ambrygen_cache_key, 'ambrygen_team' );
+		return;
+	}
 }
 
-$ambrygen_name        = get_the_title( $ambrygen_post_id );
-$ambrygen_designation = get_post_meta( $ambrygen_post_id, 'user_designation', true );
-
-if ( '' === $ambrygen_designation ) {
-	$ambrygen_designation = get_post_meta( $ambrygen_post_id, 'designation', true );
-}
-$ambrygen_image_id    = get_post_thumbnail_id( $ambrygen_post_id );
-$ambrygen_bio         = apply_filters( 'the_content', $ambrygen_post->post_content );
+$ambrygen_name        = isset( $ambrygen_cached_data['name'] ) ? (string) $ambrygen_cached_data['name'] : '';
+$ambrygen_designation = isset( $ambrygen_cached_data['designation'] ) ? (string) $ambrygen_cached_data['designation'] : '';
+$ambrygen_image_id    = isset( $ambrygen_cached_data['image_id'] ) ? absint( $ambrygen_cached_data['image_id'] ) : 0;
+$ambrygen_bio         = isset( $ambrygen_cached_data['bio'] ) ? (string) $ambrygen_cached_data['bio'] : '';
 $ambrygen_display_id  = $ambrygen_image_id
 	? $ambrygen_image_id
 	: Theme_Options::get_placeholder_image_id();

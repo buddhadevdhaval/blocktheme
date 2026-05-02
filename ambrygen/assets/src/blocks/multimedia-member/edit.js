@@ -12,11 +12,25 @@ import {
 	CheckboxControl,
 	Spinner,
 	Button,
+	SearchControl,
 } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { useEffect, useRef } from '@wordpress/element';
+import { decodeEntities } from '@wordpress/html-entities';
+import { useEffect, useMemo, useRef, useState } from '@wordpress/element';
+import { sprintf } from '@wordpress/i18n';
 import Swiper from 'swiper/bundle';
 import { BlockExamplePreview, TagSelector } from '../_shared/components';
+
+const TEAM_MEMBERS_PER_PAGE = 20;
+const ITEM_BLOCK_NAME = 'ambrygen/multimedia-member-item';
+
+const getPostTitle = ( post ) => {
+	if ( typeof post?.title === 'string' ) {
+		return post.title;
+	}
+
+	return post?.title?.rendered || post?.title?.raw || '';
+};
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
@@ -26,10 +40,20 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		memberTypes = [],
 		selectionMode = 'manual',
 	} = attributes;
+	const [ memberSearchInput, setMemberSearchInput ] = useState( '' );
 
-	const { replaceInnerBlocks, insertBlock } =
+	const { replaceInnerBlocks, insertBlocks, removeBlocks } =
 		useDispatch( 'core/block-editor' );
 
+		if ( blockId === 'multimedia-member-example' ) {
+		return (
+			<BlockExamplePreview
+				className="multimedia-member-example-preview"
+				imagePath="/assets/src/images/multimedia-member/preview.png"
+			/>
+		);
+	}
+	
 	useEffect( () => {
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
@@ -57,6 +81,31 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				_fields: 'id,member_type',
 			} ),
 		[]
+	);
+	const manualMemberPosts = useSelect(
+		( select ) => {
+			if ( selectionMode !== 'manual' ) {
+				return [];
+			}
+
+			const query = {
+				per_page: TEAM_MEMBERS_PER_PAGE,
+				status: 'publish',
+				orderby: 'title',
+				order: 'asc',
+			};
+
+			if ( memberSearchInput.trim() ) {
+				query.search = memberSearchInput.trim();
+			}
+
+			return select( 'core' ).getEntityRecords(
+				'postType',
+				'our_team',
+				query
+			);
+		},
+		[ selectionMode, memberSearchInput ]
 	);
 
 	useEffect( () => {
@@ -90,11 +139,116 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const containerRef = useRef( null );
 	const swiperInstances = useRef( [] );
 	const blockProps = useBlockProps();
-	const innerBlocksCount = useSelect(
-		( select ) =>
-			select( 'core/block-editor' ).getBlocks( clientId ).length,
+	const innerBlocks = useSelect(
+		( select ) => select( 'core/block-editor' ).getBlocks( clientId ),
 		[ clientId ]
 	);
+	const innerBlocksCount = innerBlocks.length;
+	const selectedPostIds = useMemo(
+		() =>
+			innerBlocks
+				.map( ( block ) => Number( block.attributes?.postId ) || 0 )
+				.filter( Boolean ),
+		[ innerBlocks ]
+	);
+	const selectedMemberPostsById = useSelect(
+		( select ) => {
+			if ( ! selectedPostIds.length ) {
+				return {};
+			}
+
+			const posts = select( 'core' ).getEntityRecords(
+				'postType',
+				'our_team',
+				{
+					include: selectedPostIds,
+					per_page: selectedPostIds.length,
+					orderby: 'include',
+					context: 'edit',
+				}
+			);
+
+			if ( ! Array.isArray( posts ) ) {
+				return {};
+			}
+
+			return posts.reduce( ( postsById, post ) => {
+				postsById[ post.id ] = post;
+				return postsById;
+			}, {} );
+		},
+		[ selectedPostIds ]
+	);
+	const memberOptions = useMemo( () => {
+		if ( ! Array.isArray( manualMemberPosts ) ) {
+			return [];
+		}
+
+		return manualMemberPosts
+			.filter( ( post ) => ! selectedPostIds.includes( post.id ) )
+			.map( ( post ) => {
+				const title = decodeEntities( getPostTitle( post ) ).trim();
+
+				return {
+					label:
+						title ||
+						sprintf(
+							/* translators: %d: team member post ID. */
+							__( 'Team Member #%d', 'ambrygen-web' ),
+							post.id
+						),
+					value: String( post.id ),
+				};
+			} );
+	}, [ manualMemberPosts, selectedPostIds ] );
+	const selectedMemberOptions = useMemo(
+		() =>
+			selectedPostIds.map( ( postId ) => {
+				const post = selectedMemberPostsById[ postId ];
+				const title = decodeEntities( getPostTitle( post ) ).trim();
+
+				return {
+					label:
+						title ||
+						sprintf(
+							/* translators: %d: team member post ID. */
+							__( 'Team Member #%d', 'ambrygen-web' ),
+							postId
+						),
+					value: postId,
+					isLoading: ! post,
+				};
+			} ),
+		[ selectedPostIds, selectedMemberPostsById ]
+	);
+	const hasMemberOptions = memberOptions.length > 0;
+
+	const toggleMemberBlock = ( postId, isSelected ) => {
+		if ( isSelected ) {
+			if ( selectedPostIds.includes( postId ) ) {
+				return;
+			}
+
+			insertBlocks(
+				createBlock( ITEM_BLOCK_NAME, { postId } ),
+				innerBlocksCount,
+				clientId,
+				false
+			);
+			return;
+		}
+
+		const blocksToRemove = innerBlocks
+			.filter(
+				( block ) =>
+					( Number( block.attributes?.postId ) || 0 ) === postId
+			)
+			.map( ( block ) => block.clientId );
+
+		if ( blocksToRemove.length ) {
+			removeBlocks( blocksToRemove, false );
+		}
+	};
 
 	useEffect( () => {
 		if ( ! containerRef.current ) {
@@ -163,15 +317,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		};
 	}, [ innerBlocksCount ] );
 
-	if ( blockId === 'multimedia-member-example' ) {
-		return (
-			<BlockExamplePreview
-				className="multimedia-member-example-preview"
-				imagePath="/assets/src/images/multimedia-member/preview.png"
-			/>
-		);
-	}
-
 	return (
 		<>
 			<InspectorControls>
@@ -184,6 +329,43 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							setAttributes( { headingTag: value } )
 						}
 					/>
+				</PanelBody>
+
+				<PanelBody
+					title={ __( 'Team Members', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
+					<p
+						className="multimedia-member__member-count"
+						role="status"
+						aria-live="polite"
+						aria-atomic="true"
+					>
+						{ sprintf(
+							/* translators: %d: number of selected team members. */
+							__( '%d member(s) selected', 'ambrygen-web' ),
+							selectedPostIds.length
+						) }
+					</p>
+
+					{ selectionMode === 'taxonomy' ? (
+						<p className="multimedia-member__member-help">
+							{ __(
+								'Members are managed by the selected member types.',
+								'ambrygen-web'
+							) }
+						</p>
+					) : (
+						<MemberPicker
+							isLoading={ ! manualMemberPosts }
+							options={ memberOptions }
+							selectedMembers={ selectedMemberOptions }
+							searchValue={ memberSearchInput }
+							onSearchChange={ setMemberSearchInput }
+							onToggle={ toggleMemberBlock }
+							hasOptions={ hasMemberOptions }
+						/>
+					) }
 				</PanelBody>
 
 				<PanelBody
@@ -232,6 +414,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							tagName={ headingTag }
 							className="block-title block__rowflex--heading-title heading-2 mb-0"
 							value={ title }
+							allowedFormats={ [
+								'core/bold',
+								'core/italic',
+								'core/highlight',
+								'core/text-color',
+							] }
 							onChange={ ( value ) =>
 								setAttributes( { title: value } )
 							}
@@ -239,48 +427,144 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						/>
 					</div>
 
-					{ title && (
-						<div
-							className="is-style-gl-s32"
-							aria-hidden="true"
-						></div>
-					) }
+					<div className="is-style-gl-s32" aria-hidden="true"></div>
 
 					<div className="multimedia-member__items">
 						<InnerBlocks
-							allowedBlocks={ [
-								'ambrygen/multimedia-member-item',
-							] }
+							allowedBlocks={ [ ITEM_BLOCK_NAME ] }
 							orientation="horizontal"
 							renderAppender={ () => false }
 						/>
 					</div>
 
-					{ selectionMode !== 'taxonomy' && (
-						<div
-							className="multimedia-member__add-item"
-							style={ { marginTop: '20px', textAlign: 'center' } }
-						>
-							<Button
-								variant="primary"
-								onClick={ () => {
-									const newBlock = createBlock(
-										'ambrygen/multimedia-member-item',
-										{}
-									);
-									insertBlock(
-										newBlock,
-										undefined,
-										clientId
-									);
-								} }
-							>
-								{ __( 'Add Multimedia Member', 'ambrygen-web' ) }
-							</Button>
-						</div>
-					) }
 				</div>
 			</div>
 		</>
+	);
+}
+
+function MemberPicker( {
+	isLoading,
+	options,
+	selectedMembers,
+	searchValue,
+	onSearchChange,
+	onToggle,
+	hasOptions,
+} ) {
+	return (
+		<div className="multimedia-member__member-picker">
+			{ isLoading ? (
+				<Spinner />
+			) : (
+				<>
+					{ selectedMembers.length > 0 && (
+						<div className="multimedia-member__selected-members">
+							<div className="multimedia-member__member-picker-label">
+								{ __( 'Selected Members', 'ambrygen-web' ) }
+							</div>
+							<div
+								className="multimedia-member__selected-member-list"
+								role="list"
+								aria-label={ __(
+									'Selected team members',
+									'ambrygen-web'
+								) }
+							>
+								{ selectedMembers.map( ( member ) => (
+									<div
+										key={ member.value }
+										className="multimedia-member__selected-member"
+										role="listitem"
+									>
+										<span>
+											{ member.label }
+											{ member.isLoading && (
+												<span className="screen-reader-text">
+													{ __(
+														' loading',
+														'ambrygen-web'
+													) }
+												</span>
+											) }
+										</span>
+										<Button
+											isDestructive
+											variant="tertiary"
+											size="small"
+											onClick={ () =>
+												onToggle(
+													member.value,
+													false
+												)
+											}
+										>
+											{ __( 'Remove', 'ambrygen-web' ) }
+										</Button>
+									</div>
+								) ) }
+							</div>
+						</div>
+					) }
+					<div className="multimedia-member__member-picker-field">
+						<SearchControl
+							label={ __( 'Add Team Member', 'ambrygen-web' ) }
+							value={ searchValue }
+							onChange={ onSearchChange }
+							placeholder={ __(
+								'Search team members',
+								'ambrygen-web'
+							) }
+						/>
+						<p className="multimedia-member__member-help">
+							{ hasOptions
+								? __(
+										'Search and add members without loading the full team list.',
+										'ambrygen-web'
+								  )
+								: __(
+										'No matching team members are available to add.',
+										'ambrygen-web'
+								  ) }
+						</p>
+						{ hasOptions && (
+							<div
+								className="multimedia-member__member-options"
+								role="list"
+								aria-label={ __(
+									'Available team members to add',
+									'ambrygen-web'
+								) }
+							>
+								{ options.map( ( option ) => (
+									<div
+										key={ option.value }
+										className="multimedia-member__member-option"
+										role="listitem"
+									>
+										<span>{ option.label }</span>
+										<Button
+											variant="secondary"
+											size="small"
+											onClick={ () =>
+												onToggle(
+													parseInt(
+														option.value,
+														10
+													),
+													true
+												)
+											}
+										>
+											{ __( 'Add', 'ambrygen-web' ) }
+										</Button>
+									</div>
+								) ) }
+							</div>
+						) }
+					</div>
+				</>
+			) }
+		</div>
 	);
 }

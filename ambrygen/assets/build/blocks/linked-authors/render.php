@@ -11,36 +11,64 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$authors_data = array();
 $post_id = get_the_ID();
 if ( ! $post_id ) {
 	return;
 }
 
-$linked_posts = get_post_meta( $post_id, 'linked_author', true );
-if ( empty( $linked_posts ) ) {
-	$linked_posts = get_post_meta( $post_id, 'linked_authors', true );
-}
-if ( empty( $linked_posts ) ) {
-	$linked_posts = get_post_meta( $post_id, 'linked_posts_genetic', true );
-}
-
-if ( empty( $linked_posts ) ) {
-	return;
-}
-
-// Convert string to array if necessary (depending on how ACF/Relationship stores it)
-if ( is_string( $linked_posts ) ) {
-	$linked_posts = json_decode( $linked_posts, true ) ?: array( $linked_posts );
-}
-
-if ( ! is_array( $linked_posts ) ) {
-	return;
+$blog_renderer = \Ambrygen\Theme\Core\Blog\BlogRenderer::instance();
+if ( method_exists( $blog_renderer, 'get_post_authors_data' ) ) {
+	$authors_data = $blog_renderer->get_post_authors_data( $post_id );
 }
 
 $authors = array();
-foreach ( $linked_posts as $linked_id ) {
-	if ( 'author' === get_post_type( $linked_id ) ) {
-		$authors[] = $linked_id;
+if ( ! empty( $authors_data ) ) {
+	foreach ( $authors_data as $author_data ) {
+		$author_id = absint( $author_data['author_id'] ?? 0 );
+		$authors[] = array(
+			'id'          => $author_id,
+			'name'        => $author_data['name'] ?? '',
+			'designation' => $author_data['designation'] ?? '',
+			'avatar_id'   => $author_data['avatar_id'] ?? 0,
+			'excerpt'     => $author_id > 0 ? get_the_excerpt( $author_id ) : '',
+		);
+	}
+} else {
+	$linked_posts = get_post_meta( $post_id, 'linked_author', true );
+	if ( empty( $linked_posts ) ) {
+		$linked_posts = get_post_meta( $post_id, 'linked_authors', true );
+	}
+	if ( empty( $linked_posts ) ) {
+		$linked_posts = get_post_meta( $post_id, 'linked_posts_genetic', true );
+	}
+
+	if ( empty( $linked_posts ) ) {
+		return;
+	}
+
+	// Convert string to array if necessary (depending on how ACF/Relationship stores it)
+	if ( is_string( $linked_posts ) ) {
+		$linked_posts = json_decode( $linked_posts, true ) ?: array( $linked_posts );
+	}
+
+	if ( ! is_array( $linked_posts ) ) {
+		return;
+	}
+
+	foreach ( $linked_posts as $linked_id ) {
+		$linked_id = absint( $linked_id );
+		if ( $linked_id <= 0 || 'author' !== get_post_type( $linked_id ) ) {
+			continue;
+		}
+
+		$authors[] = array(
+			'id'          => $linked_id,
+			'name'        => get_the_title( $linked_id ),
+			'designation' => get_post_meta( $linked_id, 'user_designation', true ),
+			'avatar_id'   => get_post_thumbnail_id( $linked_id ),
+			'excerpt'     => get_the_excerpt( $linked_id ),
+		);
 	}
 }
 
@@ -58,11 +86,11 @@ $wrapper_attributes = get_block_wrapper_attributes( array( 'class' => 'genetic-l
 	<?php endif; ?>
 
 	<div class="genetic-linked-authors__list">
-		<?php foreach ( $authors as $author_id ) : ?>
+		<?php foreach ( $authors as $author ) : ?>
 			<?php
-			$name        = get_the_title( $author_id );
-			$designation = get_post_meta( $author_id, 'designation', true );
-			$image_id    = get_post_thumbnail_id( $author_id );
+			$name        = $author['name'] ?? '';
+			$designation = $author['designation'] ?? '';
+			$image_id    = absint( $author['avatar_id'] ?? 0 );
 			?>
 			<div class="author-card mb-4" style="display: flex; gap: 16px; align-items: center;">
 				<?php if ( $image_id ) : ?>
@@ -77,7 +105,7 @@ $wrapper_attributes = get_block_wrapper_attributes( array( 'class' => 'genetic-l
 					<?php endif; ?>
 					<?php if ( ! empty( $attributes['showExcerpt'] ) ) : ?>
 						<?php 
-							$excerpt = get_the_excerpt( $author_id );
+							$excerpt = $author['excerpt'] ?? '';
 							if ( $excerpt ) : 
 						?>
 							<div class="author-card__excerpt body2 mt-2 text-gray-400">

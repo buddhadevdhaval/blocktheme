@@ -1,0 +1,1 @@
+{"version":3,"file":"counter-block/index.css","mappings":";;;AAEC;EACC;AADF,C","sources":["webpack://ambrygen/./assets/src/blocks/counter-block/editor.scss"],"sourcesContent":[".wp-block-ambrygen-counter-block {\n\n\t.counter-block__item {\n\t\tmin-height: 100%;\n\t}\n}\n"],"names":[],"ignoreList":[],"sourceRoot":""}

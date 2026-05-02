@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ambrygen/sidebar-related-tags",
+	"title": "Sidebar Related Tags",
+	"category": "ambrygen",
+	"description": "Displays related tags in the blog sidebar.",
+	"textdomain": "ambrygen-web",
+	"attributes": {
+		"title": {
+			"type": "string",
+			"default": "Find Articles by Tags"
+		}
+	},
+	"supports": {
+		"html": false,
+		"anchor": true
+	},
+	"usesContext": [
+		"postId",
+		"postType"
+	],
+	"example": {},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

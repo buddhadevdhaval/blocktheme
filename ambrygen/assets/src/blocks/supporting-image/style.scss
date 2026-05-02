@@ -1,0 +1,42 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+@use "../../css/partials/variables/fluid_mixins" as *;
+
+.supporting-image {
+	display: grid;
+	align-items: center;
+	justify-content: space-between;
+	grid-template-columns: 1fr 1fr;
+	gap: fluid(32, 50);
+
+	@include bp.max(md) {
+		grid-template-columns: 1fr;
+	}
+
+	&__chart-card {
+		background-color: var(--theme_white);
+		border-radius: 16px;
+		padding: 16px;
+
+		@include bp.max(md) {
+			order: 2;
+		}
+	}
+
+	&__chart-image {
+		width: 100%;
+		aspect-ratio: 1340 / 590;
+		overflow: hidden;
+		border-radius: 8px;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+		}
+	}
+
+	&__content {
+		// color: var(--theme_white);
+	}
+}

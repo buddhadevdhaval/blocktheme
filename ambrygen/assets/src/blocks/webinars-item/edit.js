@@ -1,113 +1,277 @@
 import { useBlockProps } from '@wordpress/block-editor';
-import { Spinner, Button, Placeholder, TextControl } from '@wordpress/components';
+import {
+	Button,
+	Notice,
+	Placeholder,
+	Spinner,
+} from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { useState, useMemo } from '@wordpress/element';
 
-export default function Edit( { attributes, setAttributes, clientId } ) {
-	const { postId } = attributes;
-	const [ searchTerm, setSearchTerm ] = useState( '' );
-	const { removeBlock } = useDispatch( 'core/block-editor' );
+const formatDuration = ( minutes ) => {
+	const totalMins = parseInt( minutes, 10 );
+	if ( isNaN( totalMins ) || totalMins <= 0 ) {
+		return '';
+	}
 
-	const webinars = useSelect( ( select ) => {
-		return select( 'core' ).getEntityRecords( 'postType', 'webinar', {
-			per_page: -1,
-			orderby: 'title',
-			post_status: 'publish',
-			_embed: true,
+	const hours = Math.floor( totalMins / 60 );
+	const mins = totalMins % 60;
+	let display = '';
+
+	if ( hours > 0 ) {
+		display = `${ hours } ${
+			hours === 1
+				? __( 'hour', 'ambrygen-web' )
+				: __( 'hours', 'ambrygen-web' )
+		}`;
+	}
+
+	if ( mins > 0 ) {
+		if ( hours > 0 ) {
+			display += ` ${ __( 'and', 'ambrygen-web' ) } `;
+		}
+		display += `${ mins } ${
+			mins === 1
+				? __( 'minute', 'ambrygen-web' )
+				: __( 'minutes', 'ambrygen-web' )
+		}`;
+	}
+
+	return display;
+};
+
+const formatWebinarDate = ( dateString ) => {
+	if ( ! dateString ) {
+		return '';
+	}
+
+	try {
+		const date = new Date( dateString );
+		if ( Number.isNaN( date.getTime() ) ) {
+			return '';
+		}
+
+		return date.toLocaleDateString( 'en-US', {
+			weekday: 'long',
+			month: 'long',
+			day: 'numeric',
+			year: 'numeric',
+			timeZone: 'UTC',
 		} );
-	}, [] );
+	} catch {
+		return '';
+	}
+};
 
-	// Filter webinars based on search term
-	const filteredWebinars = useMemo( () => {
-		if ( ! webinars ) return [];
-		if ( ! searchTerm ) return webinars.slice( 0, 10 ); // Show first 10 by default
-		return webinars.filter( ( post ) =>
-			post.title.rendered.toLowerCase().includes( searchTerm.toLowerCase() )
-		).slice( 0, 10 ); // Limit results for performance
-	}, [ webinars, searchTerm ] );
+const formatWebinarTime = ( dateString ) => {
+	if ( ! dateString ) {
+		return '';
+	}
 
-	// Get selected webinar details
+	try {
+		const date = new Date( dateString );
+		if ( Number.isNaN( date.getTime() ) ) {
+			return '';
+		}
+
+		return date.toLocaleTimeString( 'en-US', {
+			hour: 'numeric',
+			minute: '2-digit',
+			hour12: true,
+			timeZone: 'America/Los_Angeles',
+			timeZoneName: 'short',
+		} ).toLowerCase();
+	} catch {
+		return '';
+	}
+};
+
+/**
+ * Webinar Item Gutenberg editor component.
+ *
+ * Renders a lightweight search picker backed by server-side queries.
+ * On mount it fetches the first 10 webinars by title. When the user
+ * types at least 2 characters the component fires a debounced REST search.
+ *
+ * @param {Object}   props               Component props.
+ * @param {Object}   props.attributes    Block attributes.
+ * @param {Function} props.setAttributes Attribute setter.
+ * @param {string}   props.clientId      Block client ID.
+ * @return {JSX.Element} Editor UI.
+ */
+export default function Edit({ attributes, setAttributes, clientId }) {
+	const { postId } = attributes;
+	const { removeBlock } = useDispatch('core/block-editor');
+
+	const selectedQuery = { _fields: 'id,title,featured_media,meta' };
+
 	const selectedWebinar = useSelect(
-		( select ) => {
-			if ( ! postId ) return null;
-			return select( 'core' ).getEntityRecord( 'postType', 'webinar', postId, { _embed: true } );
+		(select) => {
+			if (!postId) {
+				return null;
+			}
+			return select('core').getEntityRecord(
+				'postType',
+				'webinar',
+				postId,
+				selectedQuery
+			);
 		},
-		[ postId ]
+		[postId]
 	);
 
-	const blockProps = useBlockProps( { className: 'webinars-item' } );
-	const featuredImage = selectedWebinar?._embedded?.[ 'wp:featuredmedia' ]?.[ 0 ]?.source_url;
+	const featuredImage = useSelect(
+		(select) => {
+			const mediaId = selectedWebinar?.featured_media;
+			if (!mediaId) {
+				return null;
+			}
+			const media = select('core').getMedia(mediaId, {
+				_fields: 'id,source_url',
+			});
+			return media?.source_url ?? null;
+		},
+		[selectedWebinar?.featured_media]
+	);
 
-	return (
-		<div { ...blockProps }>
-			{ ! webinars && <Spinner /> }
+	const subtitle = selectedWebinar?.meta?.subtitle || '';
+	const startAt = selectedWebinar?.meta?.start_at || '';
+	const duration = selectedWebinar?.meta?.duration || '';
+	const hasCeu =
+		selectedWebinar?.meta?.ceu === true ||
+		selectedWebinar?.meta?.ceu === '1' ||
+		selectedWebinar?.meta?.ceu === 1;
+	const hasPace =
+		selectedWebinar?.meta?.pace === true ||
+		selectedWebinar?.meta?.pace === '1' ||
+		selectedWebinar?.meta?.pace === 1;
+	const dateDisplay = formatWebinarDate( startAt );
+	const timeDisplay = formatWebinarTime( startAt );
+	const durationDisplay = formatDuration( duration );
 
-			{ webinars && ! postId && (
+	const blockProps = useBlockProps({ className: 'webinars-item' });
+
+	if (!postId) {
+		return (
+			<div {...blockProps}>
 				<Placeholder
 					icon="video-alt"
-					label={ __( 'Webinar Search', 'ambrygen-web' ) }
-					instructions={ __( 'Type to find a webinar and click to select.', 'ambrygen-web' ) }
+					label={__('Webinar Item', 'ambrygen-web')}
+					instructions={__(
+						'Choose a webinar from the parent block sidebar panel.',
+						'ambrygen-web'
+					)}
 				>
-					<div className="webinars-search-container" style={{ width: '100%', minWidth: '300px' }}>
-						<TextControl
-							label={ __( 'Search Webinar Title', 'ambrygen-web' ) }
-							value={ searchTerm }
-							onChange={ setSearchTerm }
-							placeholder={ __( 'e.g. Genetics...', 'ambrygen-web' ) }
-							autoComplete="off"
-						/>
-						<div className="webinars-search-results" style={{ 
-							maxHeight: '150px', 
-							overflowY: 'auto', 
-							border: '1px solid #ccc', 
-							borderRadius: '4px',
-							marginTop: '8px'
-						}}>
-							{ filteredWebinars.length === 0 && (
-								<div style={{ padding: '8px', color: '#666' }}>{ __( 'No results found.', 'ambrygen-web' ) }</div>
-							) }
-							{ filteredWebinars.map( ( post ) => (
-								<Button
-									key={ post.id }
-									isTertiary
-									style={{ width: '100%', justifyContent: 'flex-start', textAlign: 'left', padding: '8px', height: 'auto', borderBottom: '1px solid #eee' }}
-									onClick={ () => setAttributes( { postId: post.id } ) }
-								>
-									{ post.title.rendered }
-								</Button>
-							) ) }
-						</div>
-					</div>
+					<Notice status="info" isDismissible={false}>
+						{__(
+							'Use the Webinar Items panel to search and add webinars.',
+							'ambrygen-web'
+						)}
+					</Notice>
 				</Placeholder>
-			) }
+			</div>
+		);
+	}
 
-			{ postId && selectedWebinar && (
-				<div className="webinars-item__preview-card event-carousel__card" style={{ cursor: 'default' }}>
+	return (
+		<div {...blockProps}>
+			{!selectedWebinar ? (
+				<Spinner />
+			) : (
+				<div
+					className="webinars-item__preview-card event-carousel__card"
+					style={{ cursor: 'default' }}
+				>
 					<div className="event-carousel__content">
-						{ featuredImage && (
+						{featuredImage && (
 							<div className="event-carousel__image-wrap mb-16">
-								<img src={ featuredImage } alt="" style={{ width: '100%', height: 'auto', borderRadius: '8px' }} />
+								<img
+									src={featuredImage}
+									alt=""
+									style={{
+										width: '100%',
+										height: 'auto',
+										borderRadius: '8px',
+									}}
+								/>
+							</div>
+						)}
+
+						<div className="event-carousel__title-row">
+							<div className="text-lg-semibold event-carousel__card-title mb-0">
+								{selectedWebinar.title.rendered}
+							</div>
+						</div>
+
+						<div className="is-style-gl-s16" aria-hidden="true"></div>
+
+						{ !!subtitle && (
+							<div className="event-carousel__description text-md-medium">
+								{ subtitle }
 							</div>
 						) }
-						<div className="event-carousel__title-row">
-							<h3 className="text-lg-semibold event-carousel__card-title mb-0">
-								{ selectedWebinar.title.rendered }
-							</h3>
+
+						<div className="is-style-gl-s16" aria-hidden="true"></div>
+
+						<div className="event-carousel__details flag-details">
+							{ !!dateDisplay && (
+								<div className="text-md-medium event-carousel__date-info flag-info flag-date-info">
+									<span className="event-carousel__meta-list-icon flag-icon"></span>
+									{ dateDisplay }
+								</div>
+							) }
+							{ !!timeDisplay && (
+								<div className="text-md-medium event-carousel__time-info flag-info flag-time-info">
+									<span className="event-carousel__meta-list-icon flag-icon"></span>
+									{ timeDisplay }
+								</div>
+							) }
+							{ !!durationDisplay && (
+								<div className="text-md-medium event-carousel__duration flag-info flag-duration-info">
+									<span className="event-carousel__meta-list-icon flag-icon"></span>
+									{ durationDisplay }
+								</div>
+							) }
+							{ hasCeu && (
+								<div className="text-md-medium event-carousel__ceu-row flag-info flag-book-info">
+									<span className="event-carousel__meta-list-icon flag-icon"></span>
+									<span className="event-carousel__meta-label">
+										{ __( 'C.E.U.:', 'ambrygen-web' ) }
+									</span>
+								</div>
+							) }
+							{ hasPace && (
+								<div className="text-md-medium event-carousel__pace-row flag-info flag-flask-info">
+									<span className="event-carousel__meta-list-icon flag-icon"></span>
+									<span className="event-carousel__meta-label">
+										{ __( 'P.A.C.E.:', 'ambrygen-web' ) }
+									</span>
+								</div>
+							) }
 						</div>
-						<div style={{ marginTop: '20px', display: 'flex', gap: '8px' }}>
-							<Button isSmall variant="secondary" onClick={ () => { setAttributes( { postId: null } ); setSearchTerm(''); } }>
-								{ __( 'Change', 'ambrygen-web' ) }
+
+						<div className="is-style-gl-s24" aria-hidden="true"></div>
+
+						<div className="event-carousel__actions actions-button">
+							<Button
+								isSecondary
+								onClick={() => {
+									setAttributes({ postId: null });
+								}}
+							>
+								Change
 							</Button>
-							<Button isSmall variant="tertiary" onClick={ () => removeBlock( clientId ) }>
-								{ __( 'Remove', 'ambrygen-web' ) }
+
+							<Button
+								isDestructive
+								onClick={() => removeBlock(clientId)}
+							>
+								{__('Remove', 'ambrygen-web')}
 							</Button>
 						</div>
 					</div>
 				</div>
-			) }
-
-			{ postId && ! selectedWebinar && <Spinner /> }
+			)}
 		</div>
 	);
 }

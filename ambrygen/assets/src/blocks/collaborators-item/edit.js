@@ -1,42 +1,33 @@
-import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
-import { Fragment } from '@wordpress/element';
+import { useBlockProps } from '@wordpress/block-editor';
+import { TextControl } from '@wordpress/components';
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { text, url, linkTarget } = attributes;
+	const { text, url, linkTarget, isNameLocked } = attributes;
+	const blockProps = useBlockProps( {
+		className: 'download-list__item',
+	} );
 
 	return (
-		<Fragment>
-			<InspectorControls>
-				<PanelBody title="Link Settings">
-					<TextControl
-						label="Link URL"
-						value={ url }
-						onChange={ ( val ) => setAttributes( { url: val } ) }
-						placeholder="https://example.com"
-					/>
-					<ToggleControl
-						label="Open in new tab"
-						checked={ linkTarget === '_blank' }
-						onChange={ ( val ) =>
-							setAttributes( { linkTarget: val ? '_blank' : '' } )
-						}
-					/>
-				</PanelBody>
-			</InspectorControls>
-
-			<div
-				{ ...useBlockProps( {
-					className: 'collaborators-item__edit',
-				} ) }
-			>
+		<div { ...blockProps }>
+			{ isNameLocked ? (
+				<a
+					href={ url || '#' }
+					target={ linkTarget || undefined }
+					rel={ linkTarget === '_blank' ? 'noopener noreferrer' : undefined }
+					onClick={ ( event ) => event.preventDefault() }
+				>
+					<span className="download-list__item-text">
+						{ text || '' }
+					</span>
+				</a>
+			) : (
 				<TextControl
 					value={ text }
 					onChange={ ( val ) => setAttributes( { text: val } ) }
-					placeholder="Enter collaborator name or title..."
+					placeholder=""
 					className="collaborators-item__text-input"
 				/>
-			</div>
-		</Fragment>
+			) }
+		</div>
 	);
 }

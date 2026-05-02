@@ -11,6 +11,9 @@
     "html": false,
     "anchor": true
   },
+  "providesContext": {
+    "ambrygen/faqAccordionVariant": "variant"
+  },
   "attributes": {
     "blockId": {
       "type": "string",
@@ -90,16 +93,16 @@
       },
       "default": [
         {
-          "id": "1",
-          "question": "WHAT IS GENETIC TESTING?",
+          "id": "",
+          "question": "",
           "subHeading": "",
-          "answer": "Genetic testing involves examining your DNA, the chemical database that carries instructions for your body's functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
+          "answer": ""
         },
         {
-          "id": "2",
-          "question": "IS GENETIC TESTING FOR EVERYONE?",
+          "id": "",
+          "question": "",
           "subHeading": "",
-          "answer": "Genetic testing involves examining your DNA, the chemical database that carries instructions for your body's functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
+          "answer": ""
         }
       ]
     }
@@ -111,25 +114,7 @@
   "render": "file:./render.php",
   "example": {
     "attributes": {
-      "title": "Sample Title",
-      "description": "Sample description below the title.",
-      "headingTag": "h5",
-      "variant": "default",
-      "imageId": 0,
-      "faqs": [
-        {
-          "id": "1",
-          "question": "WHAT IS GENETIC TESTING?",
-          "subHeading": "",
-          "answer": "Genetic testing involves examining your DNA, the chemical database that carries instructions for your body's functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
-        },
-        {
-          "id": "2",
-          "question": "IS GENETIC TESTING FOR EVERYONE?",
-          "subHeading": "",
-          "answer": "Genetic testing involves examining your DNA, the chemical database that carries instructions for your body's functions. Genetic testing can reveal changes or alterations, called mutations, in your genes that may lead to illness or disease. (Source: Mayo Clinic)"
-        }
-      ]
+      "blockId": "faq-accordion-example"
     }
   }
 }

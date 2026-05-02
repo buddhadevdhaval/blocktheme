@@ -19,27 +19,26 @@
   },
   "attributes": {
     "blockId": {
-      "type": "string",
-      "default": ""
+      "type": "string"
     },
     "title": {
-      "type": "string",
-      "default": "Words from the Team"
+      "type": "string"
     },
-    "headingLevel": {
+    "headingTag": {
       "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
       "default": "h2"
     },
     "testimonials": {
       "type": "array",
-      "default": [
-        {
-          "content": "",
-          "imageId": 0,
-          "imageUrl": "",
-          "imageAlt": ""
-        }
-      ]
+      "default": []
     },
     "autoplay": {
       "type": "boolean",
@@ -52,10 +51,6 @@
     "showPagination": {
       "type": "boolean",
       "default": true
-    },
-    "slidesPerView": {
-      "type": "number",
-      "default": 1
     },
     "graphicLeftId": {
       "type": "number",
@@ -87,5 +82,10 @@
   "style": "file:./style-index.css",
   "viewScript": "file:./view.js",
   "render": "file:./render.php",
-  "textdomain": "ambrygen-web"
+  "textdomain": "ambrygen-web",
+  "example": {
+    "attributes": {
+      "blockId": "testimonials-slider-example"
+    }
+  }
 }

@@ -22,25 +22,62 @@ if ( ! $ambrygen_post_id ) {
 	return;
 }
 
-$ambrygen_post = get_post( $ambrygen_post_id );
+$ambrygen_cache_key   = 'team_member_' . $ambrygen_post_id;
+$ambrygen_cached_data = wp_cache_get( $ambrygen_cache_key, 'ambrygen_team' );
 
-if ( ! $ambrygen_post || 'publish' !== $ambrygen_post->post_status ) {
-	return;
+if ( false === $ambrygen_cached_data ) {
+	$ambrygen_display_post = get_post( $ambrygen_post_id );
+
+	if ( ! $ambrygen_display_post || 'publish' !== $ambrygen_display_post->post_status ) {
+		return;
+	}
+
+	$ambrygen_all_meta    = get_post_meta( $ambrygen_post_id );
+	$ambrygen_designation = ! empty( $ambrygen_all_meta['user_designation'][0] )
+		? $ambrygen_all_meta['user_designation'][0]
+		: ( ! empty( $ambrygen_all_meta['designation'][0] ) ? $ambrygen_all_meta['designation'][0] : '' );
+
+	$ambrygen_cached_data = array(
+		'name'        => get_the_title( $ambrygen_display_post ),
+		'designation' => $ambrygen_designation,
+		'image_id'    => get_post_thumbnail_id( $ambrygen_post_id ),
+		'bio'         => apply_filters( 'the_content', $ambrygen_display_post->post_content ),
+	);
+
+	wp_cache_set( $ambrygen_cache_key, $ambrygen_cached_data, 'ambrygen_team', 12 * HOUR_IN_SECONDS );
+} else {
+	// Validate cached post still exists and is published
+	$ambrygen_display_post = get_post( $ambrygen_post_id );
+	if ( ! $ambrygen_display_post || 'publish' !== $ambrygen_display_post->post_status ) {
+		wp_cache_delete( $ambrygen_cache_key, 'ambrygen_team' );
+		return;
+	}
 }
 
-$ambrygen_name        = get_the_title( $ambrygen_post_id );
-$ambrygen_designation = get_post_meta( $ambrygen_post_id, 'user_designation', true );
-$ambrygen_image_id    = get_post_thumbnail_id( $ambrygen_post_id );
-$ambrygen_bio         = apply_filters( 'the_content', $ambrygen_post->post_content );
+$ambrygen_name        = isset( $ambrygen_cached_data['name'] ) ? (string) $ambrygen_cached_data['name'] : '';
+$ambrygen_designation = isset( $ambrygen_cached_data['designation'] ) ? (string) $ambrygen_cached_data['designation'] : '';
+$ambrygen_image_id    = isset( $ambrygen_cached_data['image_id'] ) ? absint( $ambrygen_cached_data['image_id'] ) : 0;
+$ambrygen_bio         = isset( $ambrygen_cached_data['bio'] ) ? (string) $ambrygen_cached_data['bio'] : '';
 $ambrygen_display_id  = $ambrygen_image_id
 	? $ambrygen_image_id
 	: Theme_Options::get_placeholder_image_id();
 $ambrygen_image_url   = wp_get_attachment_image_url( $ambrygen_display_id, 'medium' );
 $ambrygen_image_url   = $ambrygen_image_url ? $ambrygen_image_url : '';
+$ambrygen_is_slider   = isset( $block->context['ambrygen/ourTeamVariation'] )
+	&& 'slider-view' === $block->context['ambrygen/ourTeamVariation'];
+$ambrygen_class_prefix = $ambrygen_is_slider ? 'our-leadership' : 'our-team';
+$ambrygen_parent_id    = isset( $block->context['ambrygen/ourTeamBlockId'] )
+	? sanitize_html_class( $block->context['ambrygen/ourTeamBlockId'] )
+	: '';
+$ambrygen_offcanvas_id = $ambrygen_parent_id ? $ambrygen_parent_id . '-team-offcanvas' : '';
 ?>
 
+<?php if ( $ambrygen_is_slider ) : ?>
+	<div class="swiper-slide">
+<?php endif; ?>
+
 <div
-	class="our-team__card js-gsap-fade"
+	class="<?php echo esc_attr( $ambrygen_class_prefix ); ?>__card js-gsap-fade"
 	data-team-name="<?php echo esc_attr( $ambrygen_name ); ?>"
 	data-team-designation="<?php echo esc_attr( $ambrygen_designation ); ?>"
 	<?php if ( $ambrygen_image_url ) : ?>
@@ -49,37 +86,41 @@ $ambrygen_image_url   = $ambrygen_image_url ? $ambrygen_image_url : '';
 	role="button"
 	tabindex="0"
 	aria-haspopup="dialog"
+	aria-expanded="false"
+	<?php if ( $ambrygen_offcanvas_id ) : ?>
+		aria-controls="<?php echo esc_attr( $ambrygen_offcanvas_id ); ?>"
+	<?php endif; ?>
 	aria-label="<?php /* translators: %s: Team member name. */ echo esc_attr( sprintf( __( 'View details for %s', 'ambrygen-web' ), $ambrygen_name ) ); ?>"
 >
 
-	<div class="our-team__image-wrapper">
+	<div class="<?php echo esc_attr( $ambrygen_class_prefix ); ?>__image-wrapper">
 		<?php
 		echo Helper::image_from_source( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper escapes attributes and returns sanitized image HTML.
-			$ambrygen_image_id,
+			$ambrygen_display_id,
 			'',
 			'medium',
 			array(
 				'loading' => 'lazy',
-				'class'   => 'our-team__image',
-				'alt'     => esc_attr( $ambrygen_name ),
+				'class'   => $ambrygen_class_prefix . '__image',
+				'alt'     => $ambrygen_name,
 			),
 			true
 		);
 		?>
 	</div>
 
-	<div class="our-team__info">
+	<div class="<?php echo esc_attr( $ambrygen_class_prefix ); ?>__info">
 
-		<div class="our-team__name subtitle1-sbold">
+		<div class="<?php echo esc_attr( $ambrygen_class_prefix ); ?>__name subtitle1-sbold">
 			<?php echo esc_html( $ambrygen_name ); ?>
 			<span
-				class="our-team__link"
+				class="<?php echo esc_attr( $ambrygen_class_prefix ); ?>__link"
 				aria-hidden="true"
 			></span>
 		</div>
 
 		<?php if ( ! empty( $ambrygen_designation ) ) : ?>
-			<div class="our-team__role body1">
+			<div class="<?php echo esc_attr( $ambrygen_class_prefix ); ?>__role <?php echo esc_attr( $ambrygen_is_slider ? 'subtitle2' : 'body1' ); ?>">
 				<?php echo esc_html( $ambrygen_designation ); ?>
 			</div>
 		<?php endif; ?>
@@ -91,3 +132,7 @@ $ambrygen_image_url   = $ambrygen_image_url ? $ambrygen_image_url : '';
 	</template>
 
 </div>
+
+<?php if ( $ambrygen_is_slider ) : ?>
+	</div>
+<?php endif; ?>

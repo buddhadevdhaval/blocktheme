@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "ambrygen/two-column-solution-card",
-  "title": "Two Card Column",
+  "title": "Two column solution card",
   "category": "ambrygen",
   "icon": "columns",
   "description": "A layout with two stacked cards on the left and one large featured card on the right.",
@@ -35,6 +35,14 @@
     "description": {
       "type": "string",
       "default": ""
+    },
+    "variation": {
+      "type": "string",
+      "enum": [
+        "two-column-solution-card",
+        "ordering-options"
+      ],
+      "default": "two-column-solution-card"
     },
     "blockId": {
       "type": "string"

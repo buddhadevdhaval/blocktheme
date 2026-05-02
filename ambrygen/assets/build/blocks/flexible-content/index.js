@@ -1,1 +1,1506 @@
-(()=>{"use strict";var e,t={2702(){const e=window.wp.blocks,t=window.wp.blockEditor,a=window.wp.i18n,n=window.wp.element,l=window.wp.components,r=window.wp.primitives,i=window.ReactJSXRuntime;var o=(0,i.jsx)(r.SVG,{xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24",children:(0,i.jsx)(r.Path,{d:"M18.5 15v3.5H13V6.7l4.5 4.1 1-1.1-6.2-5.8-5.8 5.8 1 1.1 4-4v11.7h-6V15H4v5h16v-5z"})});const s={maxWidth:"100%",height:"auto",marginBottom:"8px",borderRadius:"4px"};function g({url:e,onSelect:n,onRemove:r,label:g}){return(0,i.jsxs)("div",{style:{marginBottom:"8px"},children:[g&&(0,i.jsx)("p",{style:{marginBottom:"4px",fontWeight:"500"},children:g}),e?(0,i.jsxs)(i.Fragment,{children:[(0,i.jsx)("img",{src:e,alt:"",style:s}),(0,i.jsxs)("div",{style:{display:"flex",gap:"8px"},children:[(0,i.jsx)(t.MediaUploadCheck,{children:(0,i.jsx)(t.MediaUpload,{onSelect:n,allowedTypes:["image"],render:({open:e})=>(0,i.jsx)(l.Button,{variant:"secondary",size:"small",onClick:e,children:(0,a.__)("Replace","ambrygen-web")})})}),(0,i.jsx)(l.Button,{variant:"secondary",size:"small",isDestructive:!0,onClick:r,children:(0,a.__)("Remove","ambrygen-web")})]})]}):(0,i.jsx)(t.MediaUploadCheck,{children:(0,i.jsx)(t.MediaUpload,{onSelect:n,allowedTypes:["image"],render:({open:e})=>(0,i.jsx)(l.Button,{variant:"secondary",icon:o,onClick:e,children:(0,a.__)("Upload Image","ambrygen-web")})})})]})}function d({label:e=(0,a.__)("HTML Tag","ambrygen-web"),value:t="h2",onChange:n,type:r="all"}){let o=[];const s=[{label:"H1",value:"h1"},{label:"H2",value:"h2"},{label:"H3",value:"h3"},{label:"H4",value:"h4"},{label:"H5",value:"h5"},{label:"H6",value:"h6"}],g=[{label:(0,a.__)("Paragraph","ambrygen-web"),value:"p"},{label:(0,a.__)("Div","ambrygen-web"),value:"div"}];return o="heading"===r?s:"text"===r?g:[...s,...g],(0,i.jsx)(l.SelectControl,{label:e,value:t,options:o,onChange:n})}const c=["core/paragraph","core/list","core/buttons","core/spacer"],b=[["core/paragraph"]],u=JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"ambrygen/flexible-content","title":"Image Alongside Text","category":"ambrygen","icon":"align-wide","description":"A flexible block with heading, content, image, and multiple layout options (standard, overlap, stacked).","textdomain":"ambrygen-web","supports":{"html":false,"align":["wide","full"],"spacing":{"margin":true,"padding":true}},"editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render.php","attributes":{"blockId":{"type":"string","default":""},"heading":{"type":"string","default":""},"subheading":{"type":"string","default":""},"eyebrowText":{"type":"string","default":""},"headingTag":{"type":"string","enum":["h1","h2","h3","h4","h5","h6"],"default":"h2"},"imageUrl":{"type":"string","default":""},"imageId":{"type":"number","default":0},"imageAlt":{"type":"string","default":""},"backgroundImageUrl":{"type":"string","default":""},"backgroundImageId":{"type":"number","default":0},"backgroundImageAlt":{"type":"string","default":""},"topIconUrl":{"type":"string","default":""},"topIconId":{"type":"number","default":0},"topIconAlt":{"type":"string","default":""},"imagePosition":{"type":"string","default":"right"},"layoutStyle":{"type":"string","default":"standard","enum":["standard","overlap","stacked"]},"contentAlignment":{"type":"string","default":"left"},"contentTopAlign":{"type":"boolean","default":false},"variation":{"type":"string","default":"default","enum":["default","variation-process","variation-iot-author"]},"content":{"type":"string","default":""},"buttons":{"type":"array","items":{"type":"object","properties":{"text":{"type":"string","default":""},"url":{"type":"string","default":""},"variant":{"type":"string","default":""},"target":{"type":"string","default":""},"rel":{"type":"string","default":""}}},"default":[{"text":"","url":"","variant":"site-btn","target":"","rel":""},{"text":"","url":"","variant":"site-btn is-style-site-tertiary-btn","target":"","rel":""}]},"borderRequired":{"type":"boolean","default":false},"isOriginalImage":{"type":"boolean","default":false}},"example":{"attributes":{"heading":"Transforming Healthcare with Genetic Insight","subheading":"","headingTag":"h2","imageUrl":"/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png","imageId":0,"imageAlt":"Ambry default preview image","backgroundImageUrl":"","backgroundImageId":0,"backgroundImageAlt":"","topIconUrl":"","topIconId":0,"topIconAlt":"","imagePosition":"left","layoutStyle":"standard","contentAlignment":"left","contentTopAlign":false,"variation":"default","content":"","buttons":[{"text":"","url":"","variant":"site-btn","target":"","rel":""},{"text":"","url":"","variant":"site-btn is-style-site-tertiary-btn","target":"","rel":""}]}}}');(0,e.registerBlockType)(u.name,{...u,edit:function({attributes:e,setAttributes:r,clientId:o}){const{blockId:s,heading:u,subheading:m,eyebrowText:h,headingTag:p,content:y,imageUrl:x,imageAlt:v,backgroundImageUrl:w,topIconUrl:_,imagePosition:f,layoutStyle:j,contentAlignment:k,contentTopAlign:I,variation:T,buttons:C,borderRequired:A,isOriginalImage:N}=e,S=f||"right";(0,n.useEffect)(()=>{const e=`section-${o.slice(0,8)}`;s||r({blockId:e})},[o,s,r]);const B="right"===S||"iot-block__rtl"===S,U=B?"iot-block__rtl":"",R=(0,n.useMemo)(()=>({id:window?.ambrygenAssets?.defaultImageId?parseInt(window.ambrygenAssets.defaultImageId,10):0,url:window?.ambrygenAssets?.defaultImageUrl||"",alt:"Default image"}),[]),O=x||R?.url||"",P=A?"iot-block--border":"",H=I?"has-top-align":"",$=T&&"default"!==T?T:"",D="variation-iot-author"===T?"heading-4":"heading-2",M=N?"orignal-image":"",F=(0,t.useBlockProps)({className:`iot-block ${j} ${U} ${P} ${H} ${$} ${M}`,style:{"--content-alignment":k}}),L=(e,t,a)=>{const n=Array.isArray(C)?[...C]:[];n[e]={...n[e],[t]:a},r({buttons:n})},V=(e,t)=>{const a=Array.isArray(C)?[...C]:[];a[e]={...a[e],...t},r({buttons:a})},q=C?.[0]||{},z=C?.[1]||{},E=Array.isArray(C)&&C.some(e=>e.text&&e.url);return(0,i.jsxs)(n.Fragment,{children:[(0,i.jsxs)(t.InspectorControls,{children:[(0,i.jsxs)(l.PanelBody,{title:(0,a.__)("Content Settings","ambrygen-web"),children:[(0,i.jsx)(d,{label:(0,a.__)("Heading Tag","ambrygen-web"),value:p,onChange:e=>r({headingTag:e}),type:"heading"}),(0,i.jsx)(l.ToggleControl,{label:(0,a.__)("Show Image on right","ambrygen-web"),checked:B,onChange:e=>r({imagePosition:e?"right":"left"})}),(0,i.jsx)(l.ToggleControl,{label:(0,a.__)("Image on Border","ambrygen-web"),checked:A||!1,onChange:e=>r({borderRequired:e})}),(0,i.jsx)(l.ToggleControl,{label:(0,a.__)("Top Align Content","ambrygen-web"),checked:!!I,onChange:e=>r({contentTopAlign:e})}),(0,i.jsx)(l.SelectControl,{label:(0,a.__)("Variation","ambrygen-web"),value:T||"default",options:[{label:(0,a.__)("Default","ambrygen-web"),value:"default"},{label:(0,a.__)("Ordering Process","ambrygen-web"),value:"variation-process"},{label:(0,a.__)("IOT Author","ambrygen-web"),value:"variation-iot-author"}],onChange:e=>r({variation:e})}),(0,i.jsx)(l.ToggleControl,{label:(0,a.__)("Show original image","ambrygen-web"),checked:N,onChange:e=>r({isOriginalImage:e})}),(0,i.jsx)(g,{url:x,onSelect:e=>r({imageUrl:e.url,imageId:e.id,imageAlt:e.alt||""}),onRemove:()=>r({imageUrl:"",imageId:0,imageAlt:""}),label:(0,a.__)("Block Image","ambrygen-web")})]}),(0,i.jsxs)(l.PanelBody,{title:(0,a.__)("Asset Settings","ambrygen-web"),initialOpen:!1,children:[(0,i.jsx)(g,{url:w,onSelect:e=>r({backgroundImageUrl:e.url,backgroundImageId:e.id,backgroundImageAlt:e.alt||""}),onRemove:()=>r({backgroundImageUrl:"",backgroundImageId:0,backgroundImageAlt:""}),label:(0,a.__)("Background Image","ambrygen-web")}),(0,i.jsx)(g,{url:_,onSelect:e=>r({topIconUrl:e.url,topIconId:e.id,topIconAlt:e.alt||""}),onRemove:()=>r({topIconUrl:"",topIconId:0,topIconAlt:""}),label:(0,a.__)("Content top icon","ambrygen-web")}),(0,i.jsx)("div",{className:"is-style-gl-s16","aria-hidden":"true"}),(0,i.jsx)(l.PanelRow,{children:(0,i.jsxs)("div",{style:{width:"100%"},children:[(0,i.jsx)("strong",{children:(0,a.__)("Primary Button","ambrygen-web")}),(0,i.jsx)(l.TextControl,{label:(0,a.__)("Text","ambrygen-web"),value:q.text||"",onChange:e=>L(0,"text",e)}),(0,i.jsx)(t.LinkControl,{value:{url:q.url||"",opensInNewTab:"_blank"===q.target},onChange:e=>V(0,{url:e.url,target:e.opensInNewTab?"_blank":"",rel:e.opensInNewTab?"noopener noreferrer":""})}),(0,i.jsx)(l.SelectControl,{label:(0,a.__)("Button Style","ambrygen-web"),value:q.variant||"site-btn",options:[{label:"Light",value:"site-btn is-style-site-tertiary-btn"},{label:"Text Button",value:"site-btn is-style-site-text-btn has-right-arrow"},{label:"Dark",value:"site-btn"}],onChange:e=>L(0,"variant",e)})]})}),(0,i.jsx)("div",{className:"is-style-gl-s16","aria-hidden":"true"}),(0,i.jsx)(l.PanelRow,{children:(0,i.jsxs)("div",{style:{width:"100%"},children:[(0,i.jsx)("strong",{children:(0,a.__)("Secondary Button","ambrygen-web")}),(0,i.jsx)(l.TextControl,{label:(0,a.__)("Text","ambrygen-web"),value:z.text||"",onChange:e=>L(1,"text",e)}),(0,i.jsx)(t.LinkControl,{value:{url:z.url||"",opensInNewTab:"_blank"===z.target},onChange:e=>V(1,{url:e.url,target:e.opensInNewTab?"_blank":"",rel:e.opensInNewTab?"noopener noreferrer":""})}),(0,i.jsx)(l.SelectControl,{label:(0,a.__)("Variant","ambrygen-web"),value:z.variant||"site-btn is-style-site-tertiary-btn",options:[{label:"Light",value:"site-btn is-style-site-tertiary-btn"},{label:"Text Button",value:"site-btn is-style-site-text-btn has-right-arrow"},{label:"Dark",value:"site-btn"}],onChange:e=>L(1,"variant",e)})]})})]})]}),(0,i.jsxs)("div",{...F,children:[O&&(0,i.jsx)("div",{className:"iot-block__image",children:(0,i.jsx)("img",{src:O,alt:v||""})}),!x&&!R?.url&&(0,i.jsx)(l.Placeholder,{icon:"format-image",label:(0,a.__)("No image selected","ambrygen-web"),instructions:(0,a.__)("Upload an image from the sidebar settings.","ambrygen-web")}),(0,i.jsxs)("div",{className:"iot-block__content",children:[(0,i.jsxs)("div",{className:"iot-block__text",style:{textAlign:k},children:[_&&(0,i.jsxs)(i.Fragment,{children:[(0,i.jsx)("div",{className:"iot-block__top-icon",children:(0,i.jsx)("img",{src:_,alt:""})}),(0,i.jsx)("div",{className:"is-style-gl-s16","aria-hidden":"true"})]}),"variation-iot-author"===T&&(0,i.jsxs)(i.Fragment,{children:[(0,i.jsx)(t.RichText,{tagName:"div",className:"iot-block__tagline",value:h,onChange:e=>r({eyebrowText:e}),placeholder:(0,a.__)("Add eyebrow text","ambrygen-web"),allowedFormats:["core/text-color"]}),(0,i.jsx)("div",{className:"is-style-gl-s8","aria-hidden":"true"})]}),(0,i.jsx)(t.RichText,{tagName:p||"h2",value:u,placeholder:(0,a.__)("Add Heading…","ambrygen-web"),onChange:e=>r({heading:e}),className:`${D} block-title mb-0`}),(0,i.jsx)("div",{className:"is-style-gl-s4","aria-hidden":"true"}),(0,i.jsx)(t.RichText,{tagName:"div",className:"block-sub-heading iot-block__sub-heading subtitle2-sbold js-gsap-fade",value:m,onChange:e=>r({subheading:e}),placeholder:(0,a.__)("Add subheading","ambrygen-web")}),(0,i.jsx)("div",{className:"is-style-gl-s20","aria-hidden":"true"}),(0,i.jsx)(t.RichText,{tagName:"div",className:"block-description body1 iot-block__description",value:y,onChange:e=>r({content:e}),placeholder:(0,a.__)("Add Description…","ambrygen-web")}),(0,i.jsx)("div",{className:"iot-block__extra-content",children:(0,i.jsx)(t.InnerBlocks,{allowedBlocks:c,template:b,templateLock:!1})})]}),E&&(0,i.jsxs)(i.Fragment,{children:[(0,i.jsx)("div",{className:"is-style-gl-s24","aria-hidden":"true"}),(0,i.jsx)("div",{className:"iot-block__button  two-btn-row",children:C.map((e,t)=>e.text&&e.url&&(0,i.jsx)("a",{href:e.url,target:e.target||void 0,rel:e.rel||void 0,className:` site-btn has-right-arrow ${e.variant}`,children:e.text},t))})]})]})]})]})},save:()=>(0,i.jsx)(t.InnerBlocks.Content,{})})}},a={};function n(e){var l=a[e];if(void 0!==l)return l.exports;var r=a[e]={exports:{}};return t[e](r,r.exports,n),r.exports}n.m=t,e=[],n.O=(t,a,l,r)=>{if(!a){var i=1/0;for(d=0;d<e.length;d++){for(var[a,l,r]=e[d],o=!0,s=0;s<a.length;s++)(!1&r||i>=r)&&Object.keys(n.O).every(e=>n.O[e](a[s]))?a.splice(s--,1):(o=!1,r<i&&(i=r));if(o){e.splice(d--,1);var g=l();void 0!==g&&(t=g)}}return t}r=r||0;for(var d=e.length;d>0&&e[d-1][2]>r;d--)e[d]=e[d-1];e[d]=[a,l,r]},n.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t),(()=>{var e={1195:0,5139:0};n.O.j=t=>0===e[t];var t=(t,a)=>{var l,r,[i,o,s]=a,g=0;if(i.some(t=>0!==e[t])){for(l in o)n.o(o,l)&&(n.m[l]=o[l]);if(s)var d=s(n)}for(t&&t(a);g<i.length;g++)r=i[g],n.o(e,r)&&e[r]&&e[r][0](),e[r]=0;return n.O(d)},a=globalThis.webpackChunkambrygen=globalThis.webpackChunkambrygen||[];a.forEach(t.bind(null,0)),a.push=t.bind(null,a.push.bind(a))})();var l=n.O(void 0,[5139],()=>n(2702));l=n.O(l)})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./assets/src/blocks/_shared/components.js"
+/*!*************************************************!*\
+  !*** ./assets/src/blocks/_shared/components.js ***!
+  \*************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   BlockExamplePreview: () => (/* binding */ BlockExamplePreview),
+/* harmony export */   BlockVariationsExamplePreview: () => (/* binding */ BlockVariationsExamplePreview),
+/* harmony export */   CtaButtonField: () => (/* binding */ CtaButtonField),
+/* harmony export */   DEFAULT_IMAGES: () => (/* binding */ DEFAULT_IMAGES),
+/* harmony export */   Field: () => (/* binding */ Field),
+/* harmony export */   IconPicker: () => (/* binding */ IconPicker),
+/* harmony export */   ImagePlaceholder: () => (/* binding */ ImagePlaceholder),
+/* harmony export */   ImageUploader: () => (/* binding */ ImageUploader),
+/* harmony export */   ItemControls: () => (/* binding */ ItemControls),
+/* harmony export */   ItemHeader: () => (/* binding */ ItemHeader),
+/* harmony export */   PanelItem: () => (/* binding */ PanelItem),
+/* harmony export */   TagSelector: () => (/* binding */ TagSelector),
+/* harmony export */   Toggle: () => (/* binding */ Toggle)
+/* harmony export */ });
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/chevron-down.mjs");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/chevron-up.mjs");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/trash.mjs");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/upload.mjs");
+/* harmony import */ var _utils_assets__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utils/assets */ "./assets/src/utils/assets.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__);
+/**
+ * Shared UI Components for Block Editors
+ *
+ * Reusable components to reduce boilerplate in block editors.
+ * Import from: '../_shared/components'
+ *
+ * @package
+ */
+
+
+
+
+
+
+
+/**
+ * Shared global configuration
+ *
+ * @package
+ */
+
+const DEFAULT_IMAGES = () => ({
+  placeholder: {
+    id: window?.ambrygenAssets?.defaultImageId ? parseInt(window.ambrygenAssets.defaultImageId, 10) : 0,
+    url: window?.ambrygenAssets?.defaultImageUrl || '',
+    alt: 'Default image'
+  }
+});
+
+/* ─────────────────────────────────────────────────────────────
+   Item Controls
+───────────────────────────────────────────────────────────── */
+
+/**
+ * Standard item control buttons.
+ *
+ * @param {Object}   props              - Component props.
+ * @param {number}   props.index        - Current item index.
+ * @param {number}   props.total        - Total number of items.
+ * @param {Function} props.onMove       - Move handler.
+ * @param {Function} props.onRemove     - Remove handler.
+ * @param {number}   [props.minCount=1] - Minimum allowed items.
+ */
+function ItemControls({
+  index,
+  total,
+  onMove,
+  onRemove,
+  minCount = 1
+}) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
+    style: {
+      display: 'flex',
+      gap: '4px'
+    },
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+      icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__["default"],
+      size: "small",
+      disabled: index === 0,
+      onClick: () => onMove(index, -1),
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Move Up', 'ambrygen-web')
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+      icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__["default"],
+      size: "small",
+      disabled: index >= total - 1,
+      onClick: () => onMove(index, 1),
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Move Down', 'ambrygen-web')
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+      icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_6__["default"],
+      size: "small",
+      isDestructive: true,
+      disabled: total <= minCount,
+      onClick: () => onRemove(index),
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Remove', 'ambrygen-web')
+    })]
+  });
+}
+
+/**
+ * Panel item header with title and controls.
+ *
+ * @param {Object}   props          - Component props.
+ * @param {number}   props.index    - Current index.
+ * @param {string}   props.label    - Item label.
+ * @param {number}   props.total    - Total items.
+ * @param {Function} props.onMove   - Move handler.
+ * @param {Function} props.onRemove - Remove handler.
+ * @param {number}   props.minCount - Minimum item count.
+ */
+function ItemHeader({
+  index,
+  label,
+  total,
+  onMove,
+  onRemove,
+  minCount,
+  prefix = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Item', 'ambrygen-web')
+}) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
+    className: "reorder-controls",
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: '8px',
+      gap: '8px'
+    },
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("strong", {
+      style: {
+        flex: '1 1 auto',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap'
+      },
+      children: [prefix, " ", index + 1, ":", ' ', label || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Untitled', 'ambrygen-web')]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("div", {
+      style: {
+        flex: '0 0 auto'
+      },
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(ItemControls, {
+        index: index,
+        total: total,
+        onMove: onMove,
+        onRemove: onRemove,
+        minCount: minCount
+      })
+    })]
+  });
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Image Components
+───────────────────────────────────────────────────────────── */
+
+const imgPreviewStyle = {
+  maxWidth: '100%',
+  height: 'auto',
+  marginBottom: '8px',
+  borderRadius: '4px'
+};
+
+/**
+ * Image upload with preview.
+ *
+ * @param {Object}   props          - Component props.
+ * @param {string}   props.url      - Image URL.
+ * @param {Function} props.onSelect - Select handler.
+ * @param {Function} props.onRemove - Remove handler.
+ * @param {string}   [props.label]  - Optional label.
+ */
+function ImageUploader({
+  url,
+  onSelect,
+  onRemove,
+  label
+}) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
+    style: {
+      marginBottom: '8px'
+    },
+    children: [label && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("p", {
+      style: {
+        marginBottom: '4px',
+        fontWeight: '500'
+      },
+      children: label
+    }), url ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.Fragment, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("img", {
+        src: url,
+        alt: "",
+        style: imgPreviewStyle
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
+        style: {
+          display: 'flex',
+          gap: '8px'
+        },
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.MediaUploadCheck, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.MediaUpload, {
+            onSelect: onSelect,
+            allowedTypes: ['image'],
+            render: ({
+              open
+            }) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+              variant: "secondary",
+              size: "small",
+              onClick: open,
+              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Replace', 'ambrygen-web')
+            })
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+          variant: "secondary",
+          size: "small",
+          isDestructive: true,
+          onClick: onRemove,
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Remove', 'ambrygen-web')
+        })]
+      })]
+    }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.MediaUploadCheck, {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.MediaUpload, {
+        onSelect: onSelect,
+        allowedTypes: ['image'],
+        render: ({
+          open
+        }) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+          variant: "secondary",
+          icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_7__["default"],
+          onClick: open,
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Upload Image', 'ambrygen-web')
+        })
+      })
+    })]
+  });
+}
+
+/**
+ * Small clickable icon picker.
+ *
+ * @param {Object}   props          - Component props.
+ * @param {string}   props.url      - Icon URL.
+ * @param {Function} props.onSelect - Select handler.
+ */
+function IconPicker({
+  url,
+  onSelect
+}) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.MediaUploadCheck, {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.MediaUpload, {
+      onSelect: media => onSelect(media.url),
+      allowedTypes: ['image'],
+      render: ({
+        open
+      }) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("button", {
+        type: "button",
+        onClick: open,
+        style: {
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          width: '24px',
+          height: '24px',
+          background: url ? 'transparent' : '#eee',
+          border: 'none',
+          padding: 0
+        },
+        children: url && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("img", {
+          src: url,
+          alt: "",
+          style: {
+            width: '100%',
+            height: '100%'
+          }
+        })
+      })
+    })
+  });
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Panel Components
+───────────────────────────────────────────────────────────── */
+
+const panelItemStyle = {
+  marginBottom: '16px',
+  padding: '12px',
+  background: '#f0f0f0',
+  borderRadius: '4px'
+};
+
+/**
+ * Styled panel item container.
+ *
+ * @param {Object}   props          - Component props.
+ * @param {boolean}  props.active   - Active state.
+ * @param {Function} props.onClick  - Click handler.
+ * @param {Object}   props.children - Child content.
+ */
+function PanelItem({
+  active,
+  onClick,
+  children
+}) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("button", {
+    type: "button",
+    style: {
+      ...panelItemStyle,
+      background: active ? '#e0e7ff' : '#f0f0f0',
+      border: 'none',
+      width: '100%',
+      textAlign: 'left'
+    },
+    onClick: onClick,
+    children: children
+  });
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Form Fields
+───────────────────────────────────────────────────────────── */
+
+/**
+ * Standard TextControl wrapper.
+ *
+ * @param {Object}   props               - Component props.
+ * @param {string}   props.label         - Field label.
+ * @param {string}   props.value         - Field value.
+ * @param {Function} props.onChange      - Change handler.
+ * @param {string}   [props.placeholder] - Placeholder text.
+ * @param {string}   [props.help]        - Help text.
+ */
+
+function Field({
+  label,
+  value,
+  onChange,
+  placeholder,
+  help,
+  ...props
+}) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+    label: label,
+    value: value,
+    onChange: onChange,
+    placeholder: placeholder,
+    help: help,
+    ...props
+  });
+}
+
+/**
+ * ToggleControl wrapper.
+ *
+ * @param {Object}   props          - Component props.
+ * @param {string}   props.label    - Toggle label.
+ * @param {boolean}  props.checked  - Toggle state.
+ * @param {Function} props.onChange - Change handler.
+ */
+function Toggle({
+  label,
+  checked,
+  onChange
+}) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.ToggleControl, {
+    label: label,
+    checked: checked,
+    onChange: onChange
+  });
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Placeholder States
+───────────────────────────────────────────────────────────── */
+function ImagePlaceholder({
+  text = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('No image set', 'ambrygen-web'),
+  minHeight = '100px'
+}) {
+  const placeholderStyle = {
+    color: '#999',
+    fontSize: '12px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight,
+    background: '#f0f0f0'
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("span", {
+    style: placeholderStyle,
+    children: text
+  });
+}
+
+/**
+ * Shared single-image preview for inserter examples.
+ *
+ * @param {Object} props            Component props.
+ * @param {string} props.imagePath  Theme-relative image path.
+ * @param {string} props.className  Preview wrapper class.
+ * @param {number} props.width      Preview image width.
+ */
+function BlockExamplePreview({
+  imagePath,
+  className = 'block-example-preview',
+  width = 620
+}) {
+  const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)({
+    className
+  });
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("div", {
+    ...blockProps,
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("img", {
+      src: (0,_utils_assets__WEBPACK_IMPORTED_MODULE_8__.getThemeAssetUrl)(imagePath),
+      alt: "",
+      width: width
+    })
+  });
+}
+
+/**
+ * Shared multi-variation preview for inserter examples.
+ *
+ * @param {Object}  props           Component props.
+ * @param {Array}   props.variants  Variation items with image and value.
+ * @param {string}  props.className Preview wrapper class.
+ * @param {string}  props.itemClass Preview item class.
+ */
+function BlockVariationsExamplePreview({
+  variants = [],
+  className = 'block-example-preview',
+  itemClass = 'block-example-preview__item'
+}) {
+  const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)({
+    className
+  });
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("div", {
+    ...blockProps,
+    children: variants.map(variant => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("div", {
+      className: itemClass,
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("img", {
+        src: variant.imagePath ? (0,_utils_assets__WEBPACK_IMPORTED_MODULE_8__.getThemeAssetUrl)(variant.imagePath) : variant.image,
+        alt: ""
+      })
+    }, variant.value || variant.imagePath || variant.image))
+  });
+}
+/**
+ * HTML tag selector.
+ *
+ * @param {Object}   props          - Component props.
+ * @param {string}   [props.label]  - Label text.
+ * @param {string}   props.value    - Selected tag.
+ * @param {Function} props.onChange - Change handler.
+ * @param {string}   [props.type]   - Tag type (heading | text | all).
+ */
+function TagSelector({
+  label = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('HTML Tag', 'ambrygen-web'),
+  value = 'h2',
+  onChange,
+  type = 'all'
+}) {
+  let options = [];
+  const headingTags = [{
+    label: 'H1',
+    value: 'h1'
+  }, {
+    label: 'H2',
+    value: 'h2'
+  }, {
+    label: 'H3',
+    value: 'h3'
+  }, {
+    label: 'H4',
+    value: 'h4'
+  }, {
+    label: 'H5',
+    value: 'h5'
+  }, {
+    label: 'H6',
+    value: 'h6'
+  }];
+  const textTags = [{
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Paragraph', 'ambrygen-web'),
+    value: 'p'
+  }, {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Div', 'ambrygen-web'),
+    value: 'div'
+  }];
+  if (type === 'heading') {
+    options = headingTags;
+  } else if (type === 'text') {
+    options = textTags;
+  } else {
+    options = [...headingTags, ...textTags];
+  }
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.SelectControl, {
+    label: label,
+    value: value,
+    options: options,
+    onChange: onChange
+  });
+}
+
+/**
+ * CTA Button field wrapper.
+ *
+ * @param {Object}   props                    - Component props.
+ * @param {string}   [props.label]            - Field label.
+ * @param {Object}   props.value              - Link value object.
+ * @param {Function} props.onChange           - Change handler.
+ * @param {string}   [props.help]             - Help text.
+ * @param {boolean}  [props.showText=true]    - Show text field.
+ * @param {string}   [props.textLabel]        - Text label.
+ * @param {string}   [props.textPlaceholder]  - Text field placeholder.
+ * @param {boolean}  [props.showVariant=true] - Show variant selector.
+ * @param {string}   [props.variantLabel]     - Variant label.
+ */
+
+function CtaButtonField({
+  label = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Link', 'ambrygen-web'),
+  value = {},
+  onChange,
+  help,
+  showText = true,
+  textLabel = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Link Text', 'ambrygen-web'),
+  textPlaceholder = '',
+  showVariant = true,
+  variantLabel = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Button Style', 'ambrygen-web'),
+  showNewTab = true
+}) {
+  const updateValue = updates => {
+    onChange({
+      ...value,
+      ...updates
+    });
+  };
+  const clearLink = () => {
+    updateValue({
+      url: '',
+      target: '',
+      rel: ''
+    });
+  };
+  const linkValue = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useMemo)(() => ({
+    url: value?.url || '',
+    title: value?.text || '',
+    opensInNewTab: value?.target === '_blank'
+  }), [value?.url, value?.text, value?.target]);
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
+    style: {
+      marginBottom: '16px'
+    },
+    children: [label && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("p", {
+      style: {
+        marginBottom: '6px',
+        fontWeight: '500'
+      },
+      children: label
+    }), showText && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+      label: textLabel,
+      value: value?.text || '',
+      placeholder: textPlaceholder,
+      onChange: text => updateValue({
+        text
+      })
+    }), showVariant && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.SelectControl, {
+      label: variantLabel,
+      value: value?.variant || 'dark',
+      options: [{
+        label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Light', 'ambrygen-web'),
+        value: 'is-style-site-tertiary-btn'
+      }, {
+        label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Dark', 'ambrygen-web'),
+        value: 'dark'
+      }],
+      onChange: variant => updateValue({
+        variant
+      })
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.LinkControl, {
+      value: linkValue,
+      settings: [],
+      onChange: newLink => {
+        updateValue({
+          url: newLink?.url || '',
+          target: newLink.opensInNewTab ? '_blank' : '',
+          rel: newLink.opensInNewTab ? 'noopener noreferrer' : ''
+        });
+      }
+    }, `${label}-${value?.url || 'empty'}-${value?.target || 'same-tab'}`), value?.url && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+      variant: "link",
+      isDestructive: true,
+      onClick: clearLink,
+      style: {
+        marginTop: '8px'
+      },
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Remove Link', 'ambrygen-web')
+    }), showNewTab && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.ToggleControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Open in new tab', 'ambrygen-web'),
+      checked: value?.target === '_blank',
+      onChange: opensInNewTab => updateValue({
+        target: opensInNewTab ? '_blank' : '',
+        rel: opensInNewTab ? 'noopener noreferrer' : ''
+      })
+    }), help && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("p", {
+      style: {
+        fontSize: '12px',
+        color: '#666'
+      },
+      children: help
+    })]
+  });
+}
+
+/***/ },
+
+/***/ "./assets/src/blocks/flexible-content/block.json"
+/*!*******************************************************!*\
+  !*** ./assets/src/blocks/flexible-content/block.json ***!
+  \*******************************************************/
+(module) {
+
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"ambrygen/flexible-content","title":"Image Alongside Text","category":"ambrygen","icon":"align-wide","description":"A flexible block with heading, content, image, and multiple layout options (standard, overlap, stacked).","textdomain":"ambrygen-web","supports":{"html":false,"align":["wide","full"],"spacing":{"margin":true,"padding":true}},"editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render.php","attributes":{"blockId":{"type":"string","default":""},"heading":{"type":"string","default":""},"subheading":{"type":"string","default":""},"eyebrowText":{"type":"string","default":""},"headingTag":{"type":"string","enum":["h1","h2","h3","h4","h5","h6"],"default":"h2"},"imageUrl":{"type":"string","default":""},"imageId":{"type":"number","default":0},"imageAlt":{"type":"string","default":""},"backgroundImageUrl":{"type":"string","default":""},"backgroundImageId":{"type":"number","default":0},"backgroundImageAlt":{"type":"string","default":""},"topIconUrl":{"type":"string","default":""},"topIconId":{"type":"number","default":0},"topIconAlt":{"type":"string","default":""},"imagePosition":{"type":"string","default":"right"},"layoutStyle":{"type":"string","default":"standard","enum":["standard","overlap","stacked"]},"contentAlignment":{"type":"string","default":"left"},"contentTopAlign":{"type":"boolean","default":false},"variation":{"type":"string","default":"simple-content-with-image","enum":["simple-content-with-image","title-content-with-image","profile-content-with-image"]},"content":{"type":"string","default":""},"buttons":{"type":"array","items":{"type":"object","properties":{"text":{"type":"string","default":""},"url":{"type":"string","default":""},"variant":{"type":"string","default":""},"target":{"type":"string","default":""},"rel":{"type":"string","default":""}}},"default":[{"text":"","url":"","variant":"site-btn","target":"","rel":""},{"text":"","url":"","variant":"site-btn is-style-site-tertiary-btn","target":"","rel":""}]},"borderRequired":{"type":"boolean","default":false},"isOriginalImage":{"type":"boolean","default":false}},"example":{"attributes":{"blockId":"flexible-content-example"}}}');
+
+/***/ },
+
+/***/ "./assets/src/blocks/flexible-content/edit.js"
+/*!****************************************************!*\
+  !*** ./assets/src/blocks/flexible-content/edit.js ***!
+  \****************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Edit)
+/* harmony export */ });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _shared_components__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../_shared/components */ "./assets/src/blocks/_shared/components.js");
+/* harmony import */ var _utils_assets__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../utils/assets */ "./assets/src/utils/assets.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__);
+
+
+
+
+
+
+
+const ALLOWED_CONTENT_BLOCKS = ['core/paragraph', 'core/list', 'core/buttons', 'core/spacer'];
+const CONTENT_TEMPLATE = [['core/paragraph']];
+function Edit({
+  attributes,
+  setAttributes,
+  clientId
+}) {
+  const {
+    blockId,
+    heading,
+    subheading,
+    eyebrowText,
+    headingTag,
+    content,
+    imageUrl,
+    imageAlt,
+    backgroundImageUrl,
+    topIconUrl,
+    imagePosition,
+    layoutStyle,
+    contentAlignment,
+    contentTopAlign,
+    variation = 'simple-content-with-image',
+    buttons,
+    borderRequired,
+    isOriginalImage
+  } = attributes;
+  const currentImagePosition = imagePosition || 'right';
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    const expectedId = `section-${clientId.slice(0, 8)}`;
+    if (!blockId || !blockId.endsWith(clientId.slice(0, 8))) {
+      setAttributes({
+        blockId: expectedId
+      });
+    }
+  }, [clientId, blockId, setAttributes]);
+  const isImageRight = currentImagePosition === 'right' || currentImagePosition === 'iot-block__rtl';
+  const imagePositionClass = variation === 'simple-content-with-image' && isImageRight || variation === 'title-content-with-image' ? 'iot-block__rtl' : '';
+  const defaultPlaceholder = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useMemo)(() => (0,_shared_components__WEBPACK_IMPORTED_MODULE_4__.DEFAULT_IMAGES)().placeholder, []);
+  const resolvedImageUrl = imageUrl || defaultPlaceholder?.url || '';
+  const borderClass = variation === 'title-content-with-image' && borderRequired ? 'iot-block--border' : '';
+  const topAlignClass = contentTopAlign ? 'has-top-align' : '';
+  let imageSizeClass = '';
+  let headingClass = 'heading-2';
+  if (variation === 'title-content-with-image') {
+    imageSizeClass = 'size-578x564';
+  } else if (variation === 'profile-content-with-image') {
+    imageSizeClass = 'size-311x311';
+    headingClass = 'heading-4';
+  }
+  const originalImageClass = isOriginalImage ? 'orignal-image' : '';
+  const VARIANTS = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useMemo)(() => [{
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Simple Content with Image', 'ambrygen-web'),
+    value: 'simple-content-with-image',
+    image: (0,_utils_assets__WEBPACK_IMPORTED_MODULE_5__.getThemeAssetUrl)('/assets/src/images/flexible-content/simple-content-with-image.png')
+  }, {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Title Content with Image', 'ambrygen-web'),
+    value: 'title-content-with-image',
+    image: (0,_utils_assets__WEBPACK_IMPORTED_MODULE_5__.getThemeAssetUrl)('/assets/src/images/flexible-content/title-content-with-image.png')
+  }, {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Profile Content with Image', 'ambrygen-web'),
+    value: 'profile-content-with-image',
+    image: (0,_utils_assets__WEBPACK_IMPORTED_MODULE_5__.getThemeAssetUrl)('/assets/src/images/flexible-content/profile-content-with-image.png')
+  }], []);
+  const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)({
+    className: `iot-block ${layoutStyle} ${imagePositionClass} ${borderClass} ${topAlignClass} ${imageSizeClass} ${originalImageClass}`,
+    style: {
+      '--content-alignment': contentAlignment
+    }
+  });
+  const updateButton = (index, field, value) => {
+    const newButtons = Array.isArray(buttons) ? [...buttons] : [];
+    newButtons[index] = {
+      ...newButtons[index],
+      [field]: value
+    };
+    setAttributes({
+      buttons: newButtons
+    });
+  };
+  const updateButtonFields = (index, values) => {
+    const newButtons = Array.isArray(buttons) ? [...buttons] : [];
+    newButtons[index] = {
+      ...newButtons[index],
+      ...values
+    };
+    setAttributes({
+      buttons: newButtons
+    });
+  };
+  const primaryButton = buttons?.[0] || {};
+  const secondaryButton = buttons?.[1] || {};
+  const hasButtons = Array.isArray(buttons) && buttons.some(button => button.text && button.url);
+  if (blockId === 'flexible-content-example') {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_shared_components__WEBPACK_IMPORTED_MODULE_4__.BlockVariationsExamplePreview, {
+      variants: VARIANTS,
+      className: "flexible-content-example-preview",
+      itemClass: "flexible-content-example-preview__item"
+    });
+  }
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InspectorControls, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {
+        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Select Variation', 'ambrygen-web'),
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+          className: "layout-variant-selector",
+          children: VARIANTS.map(variant => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("button", {
+            type: "button",
+            className: `variant-button ${variation === variant.value ? 'is-selected' : ''}`,
+            onClick: () => {
+              setAttributes({
+                variation: variant.value
+              });
+            },
+            children: [variant.image && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("img", {
+              src: variant.image,
+              alt: variant.label
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("span", {
+              children: variant.label
+            })]
+          }, variant.value))
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {
+        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Heading Settings', 'ambrygen-web'),
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_shared_components__WEBPACK_IMPORTED_MODULE_4__.TagSelector, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Heading Tag', 'ambrygen-web'),
+          value: headingTag,
+          onChange: value => setAttributes({
+            headingTag: value
+          }),
+          type: "heading"
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {
+        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Content Settings', 'ambrygen-web'),
+        children: [variation === 'simple-content-with-image' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Show Image on right', 'ambrygen-web'),
+          checked: isImageRight,
+          onChange: value => setAttributes({
+            imagePosition: value ? 'right' : 'left'
+          })
+        }), variation === 'title-content-with-image' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Image on Border', 'ambrygen-web'),
+          checked: borderRequired || false,
+          onChange: value => setAttributes({
+            borderRequired: value
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Top Align Content', 'ambrygen-web'),
+          checked: !!contentTopAlign,
+          onChange: value => setAttributes({
+            contentTopAlign: value
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Show original image', 'ambrygen-web'),
+          checked: isOriginalImage,
+          onChange: value => setAttributes({
+            isOriginalImage: value
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_shared_components__WEBPACK_IMPORTED_MODULE_4__.ImageUploader, {
+          url: imageUrl,
+          onSelect: media => setAttributes({
+            imageUrl: media.url,
+            imageId: media.id,
+            imageAlt: media.alt || ''
+          }),
+          onRemove: () => setAttributes({
+            imageUrl: '',
+            imageId: 0,
+            imageAlt: ''
+          }),
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Block Image', 'ambrygen-web')
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {
+        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Asset Settings', 'ambrygen-web'),
+        initialOpen: false,
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_shared_components__WEBPACK_IMPORTED_MODULE_4__.ImageUploader, {
+          url: backgroundImageUrl,
+          onSelect: media => setAttributes({
+            backgroundImageUrl: media.url,
+            backgroundImageId: media.id,
+            backgroundImageAlt: media.alt || ''
+          }),
+          onRemove: () => setAttributes({
+            backgroundImageUrl: '',
+            backgroundImageId: 0,
+            backgroundImageAlt: ''
+          }),
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Background Image', 'ambrygen-web')
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_shared_components__WEBPACK_IMPORTED_MODULE_4__.ImageUploader, {
+          url: topIconUrl,
+          onSelect: media => setAttributes({
+            topIconUrl: media.url,
+            topIconId: media.id,
+            topIconAlt: media.alt || ''
+          }),
+          onRemove: () => setAttributes({
+            topIconUrl: '',
+            topIconId: 0,
+            topIconAlt: ''
+          }),
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Content top icon', 'ambrygen-web')
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+          className: "is-style-gl-s16",
+          "aria-hidden": "true"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelRow, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+            style: {
+              width: '100%'
+            },
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("strong", {
+              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Primary Button', 'ambrygen-web')
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.TextControl, {
+              label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Text', 'ambrygen-web'),
+              value: primaryButton.text || '',
+              onChange: value => updateButton(0, 'text', value)
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.LinkControl, {
+              value: {
+                url: primaryButton.url || '',
+                opensInNewTab: primaryButton.target === '_blank'
+              },
+              onChange: value => updateButtonFields(0, {
+                url: value.url,
+                target: value.opensInNewTab ? '_blank' : '',
+                rel: value.opensInNewTab ? 'noopener noreferrer' : ''
+              })
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.SelectControl, {
+              label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Button Style', 'ambrygen-web'),
+              value: primaryButton.variant || 'site-btn',
+              options: [{
+                label: 'Light',
+                value: 'site-btn is-style-site-tertiary-btn'
+              }, {
+                label: 'Text Button',
+                value: 'site-btn is-style-site-text-btn has-right-arrow'
+              }, {
+                label: 'Dark',
+                value: 'site-btn'
+              }],
+              onChange: value => updateButton(0, 'variant', value)
+            })]
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+          className: "is-style-gl-s16",
+          "aria-hidden": "true"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelRow, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+            style: {
+              width: '100%'
+            },
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("strong", {
+              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Secondary Button', 'ambrygen-web')
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.TextControl, {
+              label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Text', 'ambrygen-web'),
+              value: secondaryButton.text || '',
+              onChange: value => updateButton(1, 'text', value)
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.LinkControl, {
+              value: {
+                url: secondaryButton.url || '',
+                opensInNewTab: secondaryButton.target === '_blank'
+              },
+              onChange: value => updateButtonFields(1, {
+                url: value.url,
+                target: value.opensInNewTab ? '_blank' : '',
+                rel: value.opensInNewTab ? 'noopener noreferrer' : ''
+              })
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.SelectControl, {
+              label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Variant', 'ambrygen-web'),
+              value: secondaryButton.variant || 'site-btn is-style-site-tertiary-btn',
+              options: [{
+                label: 'Light',
+                value: 'site-btn is-style-site-tertiary-btn'
+              }, {
+                label: 'Text Button',
+                value: 'site-btn is-style-site-text-btn has-right-arrow'
+              }, {
+                label: 'Dark',
+                value: 'site-btn'
+              }],
+              onChange: value => updateButton(1, 'variant', value)
+            })]
+          })
+        })]
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+      ...blockProps,
+      children: [resolvedImageUrl && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+        className: "iot-block__image",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("img", {
+          src: resolvedImageUrl,
+          alt: imageAlt || ''
+        })
+      }), !imageUrl && !defaultPlaceholder?.url && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Placeholder, {
+        icon: "format-image",
+        label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('No image selected', 'ambrygen-web'),
+        instructions: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Upload an image from the sidebar settings.', 'ambrygen-web')
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+        className: "iot-block__content",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+          className: "iot-block__text",
+          style: {
+            textAlign: contentAlignment
+          },
+          children: [topIconUrl && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+              className: "iot-block__top-icon",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("img", {
+                src: topIconUrl,
+                alt: ""
+              })
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+              className: "is-style-gl-s16",
+              "aria-hidden": "true"
+            })]
+          }), variation === 'profile-content-with-image' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText, {
+              tagName: "div",
+              className: "iot-block__tagline",
+              value: eyebrowText,
+              onChange: value => setAttributes({
+                eyebrowText: value
+              }),
+              placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Add eyebrow text', 'ambrygen-web'),
+              allowedFormats: ['core/text-color']
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+              className: "is-style-gl-s8",
+              "aria-hidden": "true"
+            })]
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText, {
+            tagName: headingTag || 'h2',
+            value: heading,
+            placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Add Heading…', 'ambrygen-web'),
+            onChange: value => setAttributes({
+              heading: value
+            }),
+            className: `${headingClass} block-title mb-0`
+          }), variation === 'title-content-with-image' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+              className: "is-style-gl-s4",
+              "aria-hidden": "true"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText, {
+              tagName: "div",
+              className: "block-sub-heading iot-block__sub-heading subtitle2-sbold js-gsap-fade",
+              value: subheading,
+              onChange: value => setAttributes({
+                subheading: value
+              }),
+              placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Add subheading', 'ambrygen-web')
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+              className: "is-style-gl-s20",
+              "aria-hidden": "true"
+            })]
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText, {
+            tagName: "div",
+            className: "block-description body1 iot-block__description",
+            value: content,
+            onChange: value => setAttributes({
+              content: value
+            }),
+            placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Add Description…', 'ambrygen-web')
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+            className: "iot-block__extra-content",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InnerBlocks, {
+              allowedBlocks: ALLOWED_CONTENT_BLOCKS,
+              template: CONTENT_TEMPLATE,
+              templateLock: false
+            })
+          })]
+        }), hasButtons && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+            className: "is-style-gl-s24",
+            "aria-hidden": "true"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+            className: "iot-block__button  two-btn-row",
+            children: buttons.map((button, index) => button.text && button.url && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("a", {
+              href: button.url,
+              target: button.target || undefined,
+              rel: button.rel || undefined,
+              className: ` site-btn has-right-arrow ${button.variant}`,
+              children: button.text
+            }, index))
+          })]
+        })]
+      })]
+    })]
+  });
+}
+
+/***/ },
+
+/***/ "./assets/src/blocks/flexible-content/editor.scss"
+/*!********************************************************!*\
+  !*** ./assets/src/blocks/flexible-content/editor.scss ***!
+  \********************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ },
+
+/***/ "./assets/src/blocks/flexible-content/index.js"
+/*!*****************************************************!*\
+  !*** ./assets/src/blocks/flexible-content/index.js ***!
+  \*****************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style.scss */ "./assets/src/blocks/flexible-content/style.scss");
+/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./editor.scss */ "./assets/src/blocks/flexible-content/editor.scss");
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./edit */ "./assets/src/blocks/flexible-content/edit.js");
+/* harmony import */ var _block_json__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./block.json */ "./assets/src/blocks/flexible-content/block.json");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__);
+/**
+ * Registers a new block provided a unique name and an object defining its behavior.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
+ */
+
+
+
+/**
+ * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
+ * All files containing `style` keyword are bundled together. The code used
+ * gets applied both to the front of your site and to the editor.
+ *
+ * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
+ */
+
+
+
+/**
+ * Internal dependencies
+ */
+
+
+
+/**
+ * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
+ */
+
+(0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__.registerBlockType)(_block_json__WEBPACK_IMPORTED_MODULE_5__.name, {
+  ..._block_json__WEBPACK_IMPORTED_MODULE_5__,
+  edit: _edit__WEBPACK_IMPORTED_MODULE_4__["default"],
+  save: () => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InnerBlocks.Content, {})
+});
+
+/***/ },
+
+/***/ "./assets/src/blocks/flexible-content/style.scss"
+/*!*******************************************************!*\
+  !*** ./assets/src/blocks/flexible-content/style.scss ***!
+  \*******************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ },
+
+/***/ "./assets/src/utils/assets.js"
+/*!************************************!*\
+  !*** ./assets/src/utils/assets.js ***!
+  \************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getThemeAssetUrl: () => (/* binding */ getThemeAssetUrl)
+/* harmony export */ });
+const getThemeAssetUrl = (path = '') => {
+  if (!path || /^https?:\/\//.test(path)) {
+    return path;
+  }
+  if (typeof window !== 'undefined' && window.ambrygenAssets && window.ambrygenAssets.themeUrl) {
+    return `${window.ambrygenAssets.themeUrl}${path}`;
+  }
+  if (typeof document !== 'undefined') {
+    const themeScript = [...document.scripts].find(script => script.src.includes('/assets/build/'));
+    if (themeScript) {
+      const themeUrl = themeScript.src.split('/assets/build/')[0];
+      return `${themeUrl}${path}`;
+    }
+  }
+  return path;
+};
+
+/***/ },
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/chevron-down.mjs"
+/*!*****************************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/chevron-down.mjs ***!
+  \*****************************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ chevron_down_default)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+// packages/icons/src/library/chevron-down.tsx
+
+
+var chevron_down_default = /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, { viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, { d: "M17.5 11.6L12 16l-5.5-4.4.9-1.2L12 14l4.5-3.6 1 1.2z" }) });
+
+//# sourceMappingURL=chevron-down.mjs.map
+
+
+/***/ },
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/chevron-up.mjs"
+/*!***************************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/chevron-up.mjs ***!
+  \***************************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ chevron_up_default)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+// packages/icons/src/library/chevron-up.tsx
+
+
+var chevron_up_default = /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, { viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, { d: "M6.5 12.4L12 8l5.5 4.4-.9 1.2L12 10l-4.5 3.6-1-1.2z" }) });
+
+//# sourceMappingURL=chevron-up.mjs.map
+
+
+/***/ },
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/trash.mjs"
+/*!**********************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/trash.mjs ***!
+  \**********************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ trash_default)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+// packages/icons/src/library/trash.tsx
+
+
+var trash_default = /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", children: /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(
+  _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path,
+  {
+    fillRule: "evenodd",
+    clipRule: "evenodd",
+    d: "M12 5.5A2.25 2.25 0 0 0 9.878 7h4.244A2.251 2.251 0 0 0 12 5.5ZM12 4a3.751 3.751 0 0 0-3.675 3H5v1.5h1.27l.818 8.997a2.75 2.75 0 0 0 2.739 2.501h4.347a2.75 2.75 0 0 0 2.738-2.5L17.73 8.5H19V7h-3.325A3.751 3.751 0 0 0 12 4Zm4.224 4.5H7.776l.806 8.861a1.25 1.25 0 0 0 1.245 1.137h4.347a1.25 1.25 0 0 0 1.245-1.137l.805-8.861Z"
+  }
+) });
+
+//# sourceMappingURL=trash.mjs.map
+
+
+/***/ },
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/upload.mjs"
+/*!***********************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/upload.mjs ***!
+  \***********************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ upload_default)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+// packages/icons/src/library/upload.tsx
+
+
+var upload_default = /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", children: /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, { d: "M18.5 15v3.5H13V6.7l4.5 4.1 1-1.1-6.2-5.8-5.8 5.8 1 1.1 4-4v11.7h-6V15H4v5h16v-5z" }) });
+
+//# sourceMappingURL=upload.mjs.map
+
+
+/***/ },
+
+/***/ "@wordpress/block-editor"
+/*!*************************************!*\
+  !*** external ["wp","blockEditor"] ***!
+  \*************************************/
+(module) {
+
+module.exports = window["wp"]["blockEditor"];
+
+/***/ },
+
+/***/ "@wordpress/blocks"
+/*!********************************!*\
+  !*** external ["wp","blocks"] ***!
+  \********************************/
+(module) {
+
+module.exports = window["wp"]["blocks"];
+
+/***/ },
+
+/***/ "@wordpress/components"
+/*!************************************!*\
+  !*** external ["wp","components"] ***!
+  \************************************/
+(module) {
+
+module.exports = window["wp"]["components"];
+
+/***/ },
+
+/***/ "@wordpress/element"
+/*!*********************************!*\
+  !*** external ["wp","element"] ***!
+  \*********************************/
+(module) {
+
+module.exports = window["wp"]["element"];
+
+/***/ },
+
+/***/ "@wordpress/i18n"
+/*!******************************!*\
+  !*** external ["wp","i18n"] ***!
+  \******************************/
+(module) {
+
+module.exports = window["wp"]["i18n"];
+
+/***/ },
+
+/***/ "@wordpress/primitives"
+/*!************************************!*\
+  !*** external ["wp","primitives"] ***!
+  \************************************/
+(module) {
+
+module.exports = window["wp"]["primitives"];
+
+/***/ },
+
+/***/ "react/jsx-runtime"
+/*!**********************************!*\
+  !*** external "ReactJSXRuntime" ***!
+  \**********************************/
+(module) {
+
+module.exports = window["ReactJSXRuntime"];
+
+/***/ }
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/chunk loaded */
+/******/ 	(() => {
+/******/ 		var deferred = [];
+/******/ 		__webpack_require__.O = (result, chunkIds, fn, priority) => {
+/******/ 			if(chunkIds) {
+/******/ 				priority = priority || 0;
+/******/ 				for(var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--) deferred[i] = deferred[i - 1];
+/******/ 				deferred[i] = [chunkIds, fn, priority];
+/******/ 				return;
+/******/ 			}
+/******/ 			var notFulfilled = Infinity;
+/******/ 			for (var i = 0; i < deferred.length; i++) {
+/******/ 				var [chunkIds, fn, priority] = deferred[i];
+/******/ 				var fulfilled = true;
+/******/ 				for (var j = 0; j < chunkIds.length; j++) {
+/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
+/******/ 						chunkIds.splice(j--, 1);
+/******/ 					} else {
+/******/ 						fulfilled = false;
+/******/ 						if(priority < notFulfilled) notFulfilled = priority;
+/******/ 					}
+/******/ 				}
+/******/ 				if(fulfilled) {
+/******/ 					deferred.splice(i--, 1)
+/******/ 					var r = fn();
+/******/ 					if (r !== undefined) result = r;
+/******/ 				}
+/******/ 			}
+/******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"flexible-content/index": 0,
+/******/ 			"flexible-content/style-index": 0
+/******/ 		};
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
+/******/ 		
+/******/ 		// install a JSONP callback for chunk loading
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
+/******/ 			// add "moreModules" to the modules object,
+/******/ 			// then flag all "chunkIds" as loaded and fire callback
+/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
+/******/ 				for(moduleId in moreModules) {
+/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 					}
+/******/ 				}
+/******/ 				if(runtime) var result = runtime(__webpack_require__);
+/******/ 			}
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+/******/ 			for(;i < chunkIds.length; i++) {
+/******/ 				chunkId = chunkIds[i];
+/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 					installedChunks[chunkId][0]();
+/******/ 				}
+/******/ 				installedChunks[chunkId] = 0;
+/******/ 			}
+/******/ 			return __webpack_require__.O(result);
+/******/ 		}
+/******/ 		
+/******/ 		var chunkLoadingGlobal = globalThis["webpackChunkambrygen"] = globalThis["webpackChunkambrygen"] || [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["flexible-content/style-index"], () => (__webpack_require__("./assets/src/blocks/flexible-content/index.js")))
+/******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
+/******/ 	
+/******/ })()
+;
+//# sourceMappingURL=index.js.map

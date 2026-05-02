@@ -27,8 +27,9 @@
 	$ambrygen_content = $content ?? '';
 
 	// Text content.
-	$ambrygen_block_id      = $ambrygen_attributes['blockId'] ?? '';
+	$ambrygen_block_id      = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( (string) $ambrygen_attributes['blockId'] ) : '';
 	$ambrygen_is_top_aligned = ! empty( $ambrygen_attributes['isTopAligned'] );
+	$ambrygen_variation     = isset( $ambrygen_attributes['variation'] ) ? sanitize_text_field( (string) $ambrygen_attributes['variation'] ) : '';
 	$ambrygen_eyebrow       = $ambrygen_attributes['eyebrow'] ?? '';
 	$ambrygen_heading       = $ambrygen_attributes['heading'] ?? '';
 	$ambrygen_heading_tag   = Helper::get_heading_tag( $ambrygen_attributes['headingTag'] ?? 'h2', 'h2' );
@@ -50,6 +51,15 @@
 	if ( '_blank' === $ambrygen_button_target ) {
 		$ambrygen_button_rel = trim( $ambrygen_button_rel . ' noopener noreferrer' );
 	}
+	$ambrygen_has_info_content = ! empty( $ambrygen_phone ) || ! empty( $ambrygen_email ) || ! empty( $ambrygen_button_text );
+	$ambrygen_has_form_content = '' !== trim( wp_strip_all_tags( $ambrygen_content ) );
+
+	if ( ! in_array( $ambrygen_variation, array( 'info-view', 'form-view' ), true ) ) {
+		$ambrygen_variation = $ambrygen_has_form_content && ! $ambrygen_has_info_content ? 'form-view' : 'info-view';
+	}
+
+	$ambrygen_is_info_view = 'info-view' === $ambrygen_variation;
+	$ambrygen_is_form_view = 'form-view' === $ambrygen_variation;
 
 	// Main image handling.
 	$ambrygen_image_id  = absint( $ambrygen_attributes['imageId'] ?? 0 );
@@ -191,7 +201,7 @@
 			</div>
 		<?php endif; ?>
 
-		<?php if ( $ambrygen_phone || $ambrygen_email ) : ?>
+		<?php if ( $ambrygen_is_info_view && ( $ambrygen_phone || $ambrygen_email ) ) : ?>
 			<div class="is-style-gl-s36" aria-hidden="true"></div>
 			<div class="newsletter__info-listing">
 				<?php if ( ! empty( $ambrygen_phone ) && ! empty( $ambrygen_phone_href ) ) : ?>
@@ -217,7 +227,7 @@
 			</div>
 		<?php endif; ?>
 
-		<?php if ( ! empty( $ambrygen_button_text ) ) : ?>
+		<?php if ( $ambrygen_is_info_view && ! empty( $ambrygen_button_text ) ) : ?>
 			<div class="is-style-gl-s36" aria-hidden="true"></div>
 			<div class="newsletter__block__button-wrapper">
 				<a
@@ -238,7 +248,7 @@
 		<?php endif; ?>
 
 
-		<?php if ( $ambrygen_content ) : ?>
+		<?php if ( $ambrygen_is_form_view && $ambrygen_content ) : ?>
 		<div class="newsletter-form-placeholder">
 			<?php echo $ambrygen_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</div>

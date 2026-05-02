@@ -8,6 +8,7 @@ import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
 import { ImageUploader } from '../_shared/components';
+import { getThemeAssetUrl } from '../../utils/assets';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const {
@@ -19,6 +20,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps( {
 		className: 'icon-card-grid__card',
 	} );
+	const placeholderIconUrl = getThemeAssetUrl( '/assets/src/images/logo.png' );
 
 	const iconPreviewUrl = useSelect(
 		( select ) => {
@@ -78,11 +80,11 @@ export default function Edit( { attributes, setAttributes } ) {
 						<div className="icon-card-grid__icon" aria-hidden="true"></div>
 					</div>
 				) }
-				{ iconPreviewUrl && (
+				{ ( iconPreviewUrl || placeholderIconUrl ) && (
 					<div className="icon-card-grid__icon-wrap">
 						<img
-							src={ iconPreviewUrl }
-							alt={ iconAlt || '' }
+							src={ iconPreviewUrl || placeholderIconUrl }
+							alt={ iconPreviewUrl ? iconAlt || '' : '' }
 							className="icon-card-grid__icon"
 							width="70"
 							height="70"

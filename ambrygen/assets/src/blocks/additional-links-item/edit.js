@@ -65,7 +65,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					initialOpen={ true }
 				>
 					<CtaButtonField
-						label={ __( 'Link', 'ambrygen-web' ) }
+						label={ __( '', 'ambrygen-web' ) }
 						value={ cta }
 						onChange={ ( newValue ) =>
 							setAttributes( {

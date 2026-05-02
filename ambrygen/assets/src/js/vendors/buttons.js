@@ -18,9 +18,14 @@ buttonStyles.forEach(style => {
 	wp.blocks.registerBlockStyle('core/button', style);
 });
 
-wp.domReady(() => {
+const removeDefaultButtonStyles = () => {
 	wp.blocks.unregisterBlockStyle('core/button', 'outline');
 	wp.blocks.unregisterBlockStyle('core/button', 'fill');
+};
+
+wp.domReady(() => {
+	removeDefaultButtonStyles();
+	window.setTimeout(removeDefaultButtonStyles, 0);
 });
 
 /**

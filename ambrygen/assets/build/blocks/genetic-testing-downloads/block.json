@@ -6,10 +6,19 @@
   "title": "Genetic Testing Downloads",
   "category": "ambrygen",
   "description": "Displays linked marketing materials as a list of downloads.",
+  "attributes": {
+    "previewPostId": {
+      "type": "number",
+      "default": 0
+    }
+  },
   "supports": {
     "html": false
   },
   "textdomain": "ambrygen-web",
   "editorScript": "file:./index.js",
-  "render": "file:./render.php"
+  "render": "file:./render.php",
+  "usesContext": [
+    "postId"
+  ]
 }

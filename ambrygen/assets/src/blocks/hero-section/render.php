@@ -80,9 +80,31 @@ if ( ! $ambrygen_slide_count ) {
 		class="hero-section__slider swiper container-1340"
 		data-swiper-config="<?php echo esc_attr( wp_json_encode( $ambrygen_swiper_config ) ); ?>"
 		role="region"
-		aria-roledescription="carousel"
-		aria-label="<?php esc_attr_e( 'Hero', 'ambrygen-web' ); ?>"
+		aria-roledescription="<?php esc_attr_e( 'carousel', 'ambrygen-web' ); ?>"
+		aria-label="<?php esc_attr_e( 'Hero Section', 'ambrygen-web' ); ?>"
+		<?php if ( $ambrygen_autoplay ) : ?>
+			aria-live="polite"
+		<?php endif; ?>
 	>
+		<?php if ( $ambrygen_autoplay ) : ?>
+			<div
+				class="hero-section__autoplay-controls"
+				role="group"
+				aria-label="<?php esc_attr_e( 'Carousel autoplay controls', 'ambrygen-web' ); ?>"
+			>
+				<button
+					type="button"
+					class="hero-section__pause-button"
+					aria-label="<?php esc_attr_e( 'Pause autoplay', 'ambrygen-web' ); ?>"
+					aria-pressed="false"
+					data-hero-autoplay-toggle
+				>
+					<span class="hero-section__pause-label" aria-hidden="true"><?php esc_html_e( 'Pause', 'ambrygen-web' ); ?></span>
+					<span class="hero-section__play-label" aria-hidden="true"><?php esc_html_e( 'Play', 'ambrygen-web' ); ?></span>
+				</button>
+			</div>
+		<?php endif; ?>
+
 		<div
 			class="swiper-wrapper"
 			id="<?php echo esc_attr( $ambrygen_slides_region_id ); ?>"

@@ -1,1 +1,160 @@
-.download-list__inner{align-items:start;display:grid;gap:40px;grid-template-columns:1fr 1fr}@media(max-width:991px){.download-list__inner{grid-template-columns:1fr}}.download-list__items{display:flex;flex-direction:column;gap:16px}.download-list__item{align-items:center;border-bottom:1px solid var(--theme_gray_400);display:flex;gap:12px;padding-bottom:12px;text-decoration:none}.download-list__item a{border:none;color:var(--theme_gray_600);display:block;display:flex;font-size:var(--theme_font_size_10);font-weight:500;gap:20px;justify-content:space-between;padding:0;position:relative;width:100%}.download-list__item a:after{align-items:center;background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIiBmaWxsPSJub25lIj4KICA8cGF0aCBkPSJNNC4xNjY1IDEwLjAwMDNIMTUuODMzMk0xNS44MzMyIDEwLjAwMDNMOS45OTk4NCA0LjE2Njk5TTE1LjgzMzIgMTAuMDAwM0w5Ljk5OTg0IDE1LjgzMzciIHN0cm9rZT0iIzk4QTJCMyIgc3Ryb2tlLXdpZHRoPSIxLjY2NjY3IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+);background-position:50%;background-repeat:no-repeat;background-size:24px;border:1px solid var(--theme_gray_400);border-radius:50%;content:"";display:block;display:flex;flex:36px 0 0;height:36px;justify-content:center;width:36px}@media(max-width:991px){.download-list__item a:after{background-size:20px;flex:28px 0 0;height:28px;width:28px}}.download-list__item a:hover{color:var(--theme_cg_blue)}.download-list__item a:hover:after{background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIiBmaWxsPSJub25lIj4KICA8cGF0aCBkPSJNNC4xNjY1IDEwLjAwMDNIMTUuODMzMk0xNS44MzMyIDEwLjAwMDNMOS45OTk4NCA0LjE2Njk5TTE1LjgzMzIgMTAuMDAwM0w5Ljk5OTg0IDE1LjgzMzciIHN0cm9rZT0iIzAwNzlBNCIgc3Ryb2tlLXdpZHRoPSIxLjY2NjY3IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+);border-color:var(--theme_cg_blue)}
+/*!***************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./assets/src/blocks/link-list/style.scss ***!
+  \***************************************************************************************************************************************************************************************************************************************************************/
+/* ------------------------------------------------------------------
+> Downloads Links Block
+------------------------------------------------------------------ */
+.download-list.collaborators-list .download-list__header-area {
+  max-width: 960px;
+  margin: 0 auto;
+  text-align: center;
+}
+.download-list.collaborators-list .download-list__inner {
+  grid-template-columns: 1fr;
+}
+.download-list.collaborators-list .download-list__items {
+  gap: 20px 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+@media (max-width: 767px) {
+  .download-list.collaborators-list .download-list__items {
+    grid-template-columns: 1fr;
+  }
+}
+.download-list__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+@media (max-width: 991px) {
+  .download-list__inner {
+    grid-template-columns: 1fr;
+  }
+}
+.download-list__items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.download-list.variation-grid-view .download-list__inner {
+  grid-template-columns: 1fr;
+}
+.download-list.variation-grid-view .download-list__items {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px 24px;
+}
+@media (max-width: 991px) {
+  .download-list.variation-grid-view .download-list__items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 767px) {
+  .download-list.variation-grid-view .download-list__items {
+    grid-template-columns: 1fr;
+  }
+}
+.download-list__grid-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 52px;
+  padding-bottom: 12px;
+  color: var(--theme_gray_600);
+  font-weight: 500;
+  font-size: var(--theme_font_size_10);
+  text-decoration: none;
+  border: none;
+  border-bottom: 1px solid var(--theme_gray_400);
+}
+.download-list__grid-link::after {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 36px;
+  flex: 36px 0 0;
+  border-radius: 50%;
+  border: 1px solid var(--theme_gray_400);
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIiBmaWxsPSJub25lIj4KICA8cGF0aCBkPSJNNC4xNjY1IDEwLjAwMDNIMTUuODMzMk0xNS44MzMyIDEwLjAwMDNMOS45OTk4NCA0LjE2Njk5TTE1LjgzMzIgMTAuMDAwM0w5Ljk5OTg0IDE1LjgzMzciIHN0cm9rZT0iIzk4QTJCMyIgc3Ryb2tlLXdpZHRoPSIxLjY2NjY3IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+);
+  background-repeat: no-repeat;
+  background-size: 24px;
+  background-position: center;
+}
+@media (max-width: 991px) {
+  .download-list__grid-link::after {
+    width: 28px;
+    height: 28px;
+    flex: 28px 0 0;
+    background-size: 20px;
+  }
+}
+.download-list__grid-link:hover {
+  color: var(--theme_cg_blue);
+}
+.download-list__grid-link:hover::after {
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIiBmaWxsPSJub25lIj4KICA8cGF0aCBkPSJNNC4xNjY1IDEwLjAwMDNIMTUuODMzMk0xNS44MzMyIDEwLjAwMDNMOS45OTk4NCA0LjE2Njk5TTE1LjgzMzIgMTAuMDAwM0w5Ljk5OTg0IDE1LjgzMzciIHN0cm9rZT0iIzAwNzlBNCIgc3Ryb2tlLXdpZHRoPSIxLjY2NjY3IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+);
+  border-color: var(--theme_cg_blue);
+}
+.download-list__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  text-decoration: none;
+  border-bottom: 1px solid var(--theme_gray_400);
+}
+.download-list__item .download-list__item-link {
+  border: none;
+  padding: 0;
+  color: var(--theme_gray_600);
+  font-weight: 500;
+  font-size: var(--theme_font_size_10);
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.bg-primary_700 .download-list__item .download-list__item-link, .bg-primary_800 .download-list__item .download-list__item-link, .bg-blue-gradient .download-list__item .download-list__item-link {
+  color: var(--theme_white);
+}
+.download-list__item .download-list__item-link::after {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 36px;
+  flex: 36px 0 0;
+  display: flex;
+  border-radius: 50%;
+  border: 1px solid var(--theme_gray_400);
+  align-items: center;
+  justify-content: center;
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIiBmaWxsPSJub25lIj4KICA8cGF0aCBkPSJNNC4xNjY1IDEwLjAwMDNIMTUuODMzMk0xNS44MzMyIDEwLjAwMDNMOS45OTk4NCA0LjE2Njk5TTE1LjgzMzIgMTAuMDAwM0w5Ljk5OTg0IDE1LjgzMzciIHN0cm9rZT0iIzk4QTJCMyIgc3Ryb2tlLXdpZHRoPSIxLjY2NjY3IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+);
+  background-repeat: no-repeat;
+  background-size: 24px;
+  background-position: center;
+}
+.bg-primary_700 .download-list__item .download-list__item-link::after, .bg-primary_800 .download-list__item .download-list__item-link::after, .bg-blue-gradient .download-list__item .download-list__item-link::after {
+  filter: brightness(0) saturate(100%) invert(97%) sepia(100%) saturate(1%) hue-rotate(55deg) brightness(108%) contrast(102%);
+}
+@media (max-width: 991px) {
+  .download-list__item .download-list__item-link::after {
+    width: 28px;
+    height: 28px;
+    flex: 28px 0 0;
+    background-size: 20px;
+  }
+}
+.download-list__item .download-list__item-link:hover {
+  color: var(--theme_cg_blue);
+}
+.bg-primary_700 .download-list__item .download-list__item-link:hover, .bg-primary_800 .download-list__item .download-list__item-link:hover, .bg-blue-gradient .download-list__item .download-list__item-link:hover {
+  color: var(--theme_lightblue);
+}
+.download-list__item .download-list__item-link:hover:after {
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIiBmaWxsPSJub25lIj4KICA8cGF0aCBkPSJNNC4xNjY1IDEwLjAwMDNIMTUuODMzMk0xNS44MzMyIDEwLjAwMDNMOS45OTk4NCA0LjE2Njk5TTE1LjgzMzIgMTAuMDAwM0w5Ljk5OTg0IDE1LjgzMzciIHN0cm9rZT0iIzAwNzlBNCIgc3Ryb2tlLXdpZHRoPSIxLjY2NjY3IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+);
+  border-color: var(--theme_cg_blue);
+}

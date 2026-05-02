@@ -1,124 +1,294 @@
 import { __ } from '@wordpress/i18n';
 import {
+	useBlockProps,
 	InspectorControls,
+	RichText,
 	MediaUpload,
 	MediaUploadCheck,
-	RichText,
-	useBlockProps,
+	InnerBlocks,
 } from '@wordpress/block-editor';
-import { Button, PanelBody } from '@wordpress/components';
-import { useEffect } from '@wordpress/element';
-import { ImageUploader, TagSelector } from '../_shared/components';
+import { PanelBody, Button, TextControl } from '@wordpress/components';
+import { useMemo, useEffect } from '@wordpress/element';
+import {
+	BlockExamplePreview,
+	ImageUploader,
+	ImagePlaceholder,
+	DEFAULT_IMAGES,
+	ItemHeader,
+	PanelItem,
+	Field,
+	TagSelector,
+} from '../_shared/components';
 
-const DEFAULT_GROUP_ITEM = {
-	groupName: '',
-	linkName: '',
-	fileUrl: '',
-	fileId: 0,
-};
+function createDownloadId() {
+	return `download-${ Date.now() }-${ Math.random()
+		.toString( 36 )
+		.slice( 2, 10 ) }`;
+}
 
-const updateArrayItem = ( items = [], index, updates ) =>
-	items.map( ( item, itemIndex ) =>
-		itemIndex === index ? { ...item, ...updates } : item
-	);
+function createDefaultDownload( group ) {
+	return {
+		id: createDownloadId(),
+		group,
+		groupName: '',
+		label: '',
+		fileUrl: '',
+		fileId: 0,
+	};
+}
 
-export default function Edit( { attributes, setAttributes, clientId } ) {
+function normalizeDownloadsWithIds( downloads = [] ) {
+	let hasChanges = false;
+
+	const normalizedDownloads = downloads.map( ( item ) => {
+		if ( item?.id ) {
+			return item;
+		}
+
+		hasChanges = true;
+
+		return {
+			...item,
+			id: createDownloadId(),
+		};
+	} );
+
+	return {
+		hasChanges,
+		normalizedDownloads,
+	};
+}
+
+export default function Edit( { attributes, setAttributes } ) {
 	const {
-		blockId,
-		heading,
-		headingTag = 'h2',
-		image1Url,
-		image1Id,
-		image1Alt,
-		webGroups = [],
-		printGroups = [],
-		image2Url,
-		image2Id,
-		image2Alt,
-		description,
+		sectionTitle,
+		headingTag,
+		logoImageUrl,
+		logoImageAlt,
+		downloads = [],
+		secondaryImageUrl,
+		secondaryImageAlt,
+		secondaryImageId,
 	} = attributes;
+	const HeadingTag = headingTag || 'h2';
+
+	const allowedDescriptionBlocks = [
+		'core/paragraph',
+		'core/buttons',
+		'core/button',
+		'core/spacer',
+		'core/list',
+	];
+
+	const descriptionTemplate = [
+		[
+			'core/paragraph',
+			{
+				placeholder: __( 'Description', 'ambrygen-web' ),
+			},
+		],
+	];
 
 	useEffect( () => {
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+		const { hasChanges, normalizedDownloads } =
+			normalizeDownloadsWithIds( downloads );
 
-		if ( ! blockId ) {
-			setAttributes( { blockId: expectedId } );
+		if ( hasChanges ) {
+			setAttributes( { downloads: normalizedDownloads } );
 		}
-	}, [ clientId, blockId, setAttributes ] );
+	}, [ downloads, setAttributes ] );
 
 	const blockProps = useBlockProps( {
 		className: 'logo-section',
 	} );
+	const defaultImages = useMemo( () => DEFAULT_IMAGES(), [] );
+	const displayLogo = logoImageUrl || defaultImages.placeholder.url;
+	const hasSecondaryImage = Boolean( secondaryImageId || secondaryImageUrl );
+	const hasHeading = '' !== sectionTitle.trim();
 
-	const addWebGroup = () => {
-		setAttributes( {
-			webGroups: [ ...webGroups, DEFAULT_GROUP_ITEM ],
-		} );
-	};
+	if ( sectionTitle === 'multimedia-logo-example' ) {
+		return (
+			<BlockExamplePreview
+				className="multimedia-logo-example-preview"
+				imagePath="/assets/src/images/cta-tiles-with-3-card/default-image.png"
+			/>
+		);
+	}
 
-	const addPrintGroup = () => {
+	const updateDownload = ( downloadId, key, value ) => {
 		setAttributes( {
-			printGroups: [ ...printGroups, DEFAULT_GROUP_ITEM ],
-		} );
-	};
-
-	const updateWebGroup = ( index, updates ) => {
-		setAttributes( {
-			webGroups: updateArrayItem( webGroups, index, updates ),
-		} );
-	};
-
-	const updatePrintGroup = ( index, updates ) => {
-		setAttributes( {
-			printGroups: updateArrayItem( printGroups, index, updates ),
-		} );
-	};
-
-	const removeWebGroup = ( index ) => {
-		setAttributes( {
-			webGroups: webGroups.filter( ( _, itemIndex ) => itemIndex !== index ),
-		} );
-	};
-
-	const removePrintGroup = ( index ) => {
-		setAttributes( {
-			printGroups: printGroups.filter(
-				( _, itemIndex ) => itemIndex !== index
+			downloads: downloads.map( ( item ) =>
+				item.id === downloadId ? { ...item, [ key ]: value } : item
 			),
 		} );
 	};
 
-	const renderFileControl = ( item, onSelect, onRemove ) => (
-		<div style={ { marginBottom: '16px' } }>
-			<MediaUploadCheck>
-				<MediaUpload
-					onSelect={ onSelect }
-					render={ ( { open } ) => (
-						<Button variant="secondary" onClick={ open }>
-							{ item.fileUrl
-								? __( 'Replace File', 'ambrygen-web' )
-								: __( 'Select File', 'ambrygen-web' ) }
-						</Button>
-					) }
-				/>
-			</MediaUploadCheck>
-			{ item.fileUrl && (
+	const addDownload = ( group ) => {
+		setAttributes( {
+			downloads: [ ...downloads, createDefaultDownload( group ) ],
+		} );
+	};
+
+	const removeDownload = ( downloadId ) => {
+		setAttributes( {
+			downloads: downloads.filter( ( item ) => item.id !== downloadId ),
+		} );
+	};
+
+	const moveDownload = ( index, direction ) => {
+		const newIndex = index + direction;
+
+		if ( newIndex < 0 || newIndex >= downloads.length ) {
+			return;
+		}
+
+		const nextDownloads = [ ...downloads ];
+		[ nextDownloads[ index ], nextDownloads[ newIndex ] ] = [
+			nextDownloads[ newIndex ],
+			nextDownloads[ index ],
+		];
+
+		setAttributes( { downloads: nextDownloads } );
+	};
+
+	const updateDownloadMedia = ( downloadId, media ) => {
+		setAttributes( {
+			downloads: downloads.map( ( item ) =>
+				item.id === downloadId
+					? {
+							...item,
+							fileUrl: media?.url || '',
+							fileId: media?.id || 0,
+					  }
+					: item
+			),
+		} );
+	};
+
+	const clearDownloadMedia = ( downloadId ) => {
+		setAttributes( {
+			downloads: downloads.map( ( item ) =>
+				item.id === downloadId
+					? {
+							...item,
+							fileUrl: '',
+							fileId: 0,
+					  }
+					: item
+			),
+		} );
+	};
+
+	const webDownloads = downloads.filter( ( item ) => item.group === 'web' );
+	const printDownloads = downloads.filter( ( item ) => item.group === 'print' );
+
+	const renderDownloadPanel = ( group ) => {
+		const groupDownloads = downloads
+			.map( ( item, index ) => ( { item, index } ) )
+			.filter( ( entry ) => entry.item.group === group );
+
+		return (
+			<>
+				{ groupDownloads.length === 0 && (
+					<p className="components-base-control__help">
+						{ __( 'No items added yet.', 'ambrygen-web' ) }
+					</p>
+				) }
+
+				{ groupDownloads.map( ( { item, index } ) => (
+					<PanelItem key={ item.id }>
+						<ItemHeader
+							index={ index }
+							label={ item.groupName || item.label || item.fileUrl }
+							total={ downloads.length }
+							onMove={ ( i, dir ) => moveDownload( i, dir ) }
+							onRemove={ () => removeDownload( item.id ) }
+							minCount={ 0 }
+						/>
+
+						<TextControl
+							label={ __( 'Group Name', 'ambrygen-web' ) }
+							value={ item.groupName || '' }
+							onChange={ ( value ) =>
+								updateDownload( item.id, 'groupName', value )
+							}
+						/>
+
+						<TextControl
+							label={ __( 'Link Name', 'ambrygen-web' ) }
+							value={ item.label || '' }
+							onChange={ ( value ) =>
+								updateDownload( item.id, 'label', value )
+							}
+						/>
+
+						<div style={ { marginBottom: '8px' } }>
+							<MediaUploadCheck>
+								<MediaUpload
+									allowedTypes={ [
+										'application/pdf',
+										'application/zip',
+										'application/x-zip-compressed',
+										'application/octet-stream',
+										'image/svg+xml',
+										'image/png',
+										'image/jpeg',
+									] }
+									onSelect={ ( media ) =>
+										updateDownloadMedia( item.id, media )
+									}
+									render={ ( { open } ) => (
+										<Button
+											variant="secondary"
+											onClick={ ( e ) => {
+												e.stopPropagation();
+												open();
+											} }
+										>
+											{ item.fileUrl
+												? __( 'Replace File', 'ambrygen-web' )
+												: __( 'Select File', 'ambrygen-web' ) }
+										</Button>
+									) }
+								/>
+							</MediaUploadCheck>
+							{ item.fileUrl && (
+								<Button
+									variant="secondary"
+									isDestructive
+									onClick={ ( e ) => {
+										e.stopPropagation();
+										clearDownloadMedia( item.id );
+									} }
+									style={ { marginLeft: '8px' } }
+								>
+									{ __( 'Remove File', 'ambrygen-web' ) }
+								</Button>
+							) }
+						</div>
+					</PanelItem>
+				) ) }
+
 				<Button
-					variant="secondary"
-					isDestructive
-					onClick={ onRemove }
-					style={ { marginLeft: '8px' } }
+					variant="primary"
+					onClick={ () => addDownload( group ) }
+					style={ { width: '100%', justifyContent: 'center' } }
 				>
-					{ __( 'Remove File', 'ambrygen-web' ) }
+					{ group === 'web'
+						? __( 'Add Web Item', 'ambrygen-web' )
+						: __( 'Add Print Item', 'ambrygen-web' ) }
 				</Button>
-			) }
-		</div>
-	);
+			</>
+		);
+	};
 
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Heading', 'ambrygen-web' ) } initialOpen>
+				<PanelBody
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen
+				>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						type="heading"
@@ -128,184 +298,94 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 					/>
 				</PanelBody>
-
-				<PanelBody title={ __( 'Image-1', 'ambrygen-web' ) } initialOpen={ false }>
+				<PanelBody
+					title={ __( 'Content Settings', 'ambrygen-web' ) }
+					initialOpen
+				>
+					<Field
+						label={ __( 'Heading', 'ambrygen-web' ) }
+						value={ sectionTitle }
+						onChange={ ( value ) =>
+							setAttributes( { sectionTitle: value } )
+						}
+					/>
 					<ImageUploader
 						label={ __( 'Image-1', 'ambrygen-web' ) }
-						url={ image1Url }
-						id={ image1Id }
+						url={ logoImageUrl }
 						onSelect={ ( media ) =>
 							setAttributes( {
-								image1Url: media.url,
-								image1Id: media.id,
-								image1Alt: media.alt || '',
+								logoImageUrl: media.url,
+								logoImageId: media.id,
+								logoImageAlt: media.alt || '',
 							} )
 						}
 						onRemove={ () =>
 							setAttributes( {
-								image1Url: '',
-								image1Id: 0,
-								image1Alt: '',
+								logoImageUrl: '',
+								logoImageId: 0,
+								logoImageAlt: '',
 							} )
 						}
 					/>
-				</PanelBody>
-
-				<PanelBody title={ __( 'Group For Web', 'ambrygen-web' ) } initialOpen={ false }>
-					{ webGroups.map( ( item, index ) => (
-						<div key={ index } style={ { marginBottom: '20px' } }>
-							<p><strong>{ __( 'Repeater Item', 'ambrygen-web' ) } { index + 1 }</strong></p>
-							<input
-								type="text"
-								className="components-text-control__input"
-								value={ item.groupName || '' }
-								placeholder={ __( 'Group Name', 'ambrygen-web' ) }
-								onChange={ ( event ) =>
-									updateWebGroup( index, {
-										groupName: event.target.value,
-									} )
-								}
-							/>
-							<div style={ { height: '12px' } }></div>
-							<input
-								type="text"
-								className="components-text-control__input"
-								value={ item.linkName || '' }
-								placeholder={ __( 'Link Name', 'ambrygen-web' ) }
-								onChange={ ( event ) =>
-									updateWebGroup( index, {
-										linkName: event.target.value,
-									} )
-								}
-							/>
-							<div style={ { height: '12px' } }></div>
-							{ renderFileControl(
-								item,
-								( media ) =>
-									updateWebGroup( index, {
-										fileUrl: media?.url || '',
-										fileId: media?.id || 0,
-										linkName:
-											item.linkName || media?.title || media?.filename || '',
-									} ),
-								() =>
-									updateWebGroup( index, {
-										fileUrl: '',
-										fileId: 0,
-									} )
-							) }
-							<Button
-								variant="secondary"
-								isDestructive
-								onClick={ () => removeWebGroup( index ) }
-							>
-								{ __( 'Remove Item', 'ambrygen-web' ) }
-							</Button>
-						</div>
-					) ) }
-					<Button variant="primary" onClick={ addWebGroup }>
-						{ __( 'Add item', 'ambrygen-web' ) }
-					</Button>
-				</PanelBody>
-
-				<PanelBody title={ __( 'Group For Print', 'ambrygen-web' ) } initialOpen={ false }>
-					{ printGroups.map( ( item, index ) => (
-						<div key={ index } style={ { marginBottom: '20px' } }>
-							<p><strong>{ __( 'Repeater Item', 'ambrygen-web' ) } { index + 1 }</strong></p>
-							<input
-								type="text"
-								className="components-text-control__input"
-								value={ item.groupName || '' }
-								placeholder={ __( 'Group Name', 'ambrygen-web' ) }
-								onChange={ ( event ) =>
-									updatePrintGroup( index, {
-										groupName: event.target.value,
-									} )
-								}
-							/>
-							<div style={ { height: '12px' } }></div>
-							<input
-								type="text"
-								className="components-text-control__input"
-								value={ item.linkName || '' }
-								placeholder={ __( 'Link Name', 'ambrygen-web' ) }
-								onChange={ ( event ) =>
-									updatePrintGroup( index, {
-										linkName: event.target.value,
-									} )
-								}
-							/>
-							<div style={ { height: '12px' } }></div>
-							{ renderFileControl(
-								item,
-								( media ) =>
-									updatePrintGroup( index, {
-										fileUrl: media?.url || '',
-										fileId: media?.id || 0,
-										linkName:
-											item.linkName || media?.title || media?.filename || '',
-									} ),
-								() =>
-									updatePrintGroup( index, {
-										fileUrl: '',
-										fileId: 0,
-									} )
-							) }
-							<Button
-								variant="secondary"
-								isDestructive
-								onClick={ () => removePrintGroup( index ) }
-							>
-								{ __( 'Remove Item', 'ambrygen-web' ) }
-							</Button>
-						</div>
-					) ) }
-					<Button variant="primary" onClick={ addPrintGroup }>
-						{ __( 'Add item', 'ambrygen-web' ) }
-					</Button>
-				</PanelBody>
-
-				<PanelBody title={ __( 'Image-2', 'ambrygen-web' ) } initialOpen={ false }>
 					<ImageUploader
 						label={ __( 'Image-2', 'ambrygen-web' ) }
-						url={ image2Url }
-						id={ image2Id }
+						url={ secondaryImageUrl }
 						onSelect={ ( media ) =>
 							setAttributes( {
-								image2Url: media.url,
-								image2Id: media.id,
-								image2Alt: media.alt || '',
+								secondaryImageUrl: media.url,
+								secondaryImageId: media.id,
+								secondaryImageAlt: media.alt || '',
 							} )
 						}
 						onRemove={ () =>
 							setAttributes( {
-								image2Url: '',
-								image2Id: 0,
-								image2Alt: '',
+								secondaryImageUrl: '',
+								secondaryImageId: 0,
+								secondaryImageAlt: '',
 							} )
 						}
 					/>
+				</PanelBody>
+
+				<PanelBody
+					title={ __( 'Group For Web', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
+					{ renderDownloadPanel( 'web' ) }
+				</PanelBody>
+				<PanelBody
+					title={ __( 'Group For Print', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
+					{ renderDownloadPanel( 'print' ) }
 				</PanelBody>
 			</InspectorControls>
 
 			<div { ...blockProps }>
 				<div className="logo-section__header">
 					<RichText
-						tagName={ headingTag || 'h2' }
+						tagName={ HeadingTag }
 						className="logo-section__title heading-3 mb-0"
-						value={ heading }
-						onChange={ ( value ) => setAttributes( { heading: value } ) }
+						value={ sectionTitle }
+						onChange={ ( value ) =>
+							setAttributes( { sectionTitle: value } )
+						}
 						placeholder={ __( 'Heading', 'ambrygen-web' ) }
 					/>
 				</div>
-
-				<div className="is-style-gl-s50" aria-hidden="true"></div>
+				{ hasHeading && (
+					<div className="is-style-gl-s50" aria-hidden="true"></div>
+				) }
 
 				<div className="logo-section__top">
 					<div className="logo-section__logo">
-						{ image1Url ? (
-							<img src={ image1Url } alt={ image1Alt || '' } />
-						) : null }
+						{ displayLogo ? (
+							<img src={ displayLogo } alt={ logoImageAlt } />
+						) : (
+							<ImagePlaceholder
+								text={ __( 'Image-1', 'ambrygen-web' ) }
+							/>
+						) }
 					</div>
 
 					<div className="logo-section__downloads">
@@ -313,17 +393,36 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							<div className="logo-section__downloads-title subtitle2-sbold">
 								{ __( 'Group For Web', 'ambrygen-web' ) }
 							</div>
-							<div className="logo-section__downloads-list">
-								{ webGroups.map( ( item, index ) => (
-									<div key={ `${ index }-web` } className="logo-section__downloads-item">
-										{ item.groupName && (
-											<div className="subtitle2-sbold">{ item.groupName }</div>
+							<div className="logo-section__downloads-stack">
+								{ webDownloads.length === 0 && (
+									<div className="logo-section__downloads-empty">
+										{ __(
+											'Add web items from the sidebar.',
+											'ambrygen-web'
 										) }
-										{ item.linkName && (
+									</div>
+								) }
+								{ webDownloads.map( ( item ) => (
+									<div
+										key={ item.id }
+										className="logo-section__downloads-block"
+									>
+										<div className="logo-section__downloads-group-name">
+											{ item.groupName ||
+												__(
+													'Group Name',
+													'ambrygen-web'
+												) }
+										</div>
+										<div className="logo-section__downloads-list">
 											<span className="logo-section__downloads-link">
-												{ item.linkName }
+												{ item.label ||
+													__(
+														'Download file',
+														'ambrygen-web'
+													) }
 											</span>
-										) }
+										</div>
 									</div>
 								) ) }
 							</div>
@@ -333,17 +432,36 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							<div className="logo-section__downloads-title subtitle2-sbold">
 								{ __( 'Group For Print', 'ambrygen-web' ) }
 							</div>
-							<div className="logo-section__downloads-list">
-								{ printGroups.map( ( item, index ) => (
-									<div key={ `${ index }-print` } className="logo-section__downloads-item">
-										{ item.groupName && (
-											<div className="subtitle2-sbold">{ item.groupName }</div>
+							<div className="logo-section__downloads-stack">
+								{ printDownloads.length === 0 && (
+									<div className="logo-section__downloads-empty">
+										{ __(
+											'Add print items from the sidebar.',
+											'ambrygen-web'
 										) }
-										{ item.linkName && (
+									</div>
+								) }
+								{ printDownloads.map( ( item ) => (
+									<div
+										key={ item.id }
+										className="logo-section__downloads-block"
+									>
+										<div className="logo-section__downloads-group-name">
+											{ item.groupName ||
+												__(
+													'Group Name',
+													'ambrygen-web'
+												) }
+										</div>
+										<div className="logo-section__downloads-list">
 											<span className="logo-section__downloads-link">
-												{ item.linkName }
+												{ item.label ||
+													__(
+														'Download file',
+														'ambrygen-web'
+													) }
 											</span>
-										) }
+										</div>
 									</div>
 								) ) }
 							</div>
@@ -351,22 +469,29 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					</div>
 				</div>
 
-				<div className="logo-section__divider" aria-hidden="true"></div>
+				<div className="logo-section__divider" aria-hidden="true" />
 
 				<div className="logo-section__bottom">
-					<div className="logo-section__left">
-						{ image2Url ? <img src={ image2Url } alt={ image2Alt || '' } /> : null }
-					</div>
-					<div className="logo-section__right">
-						<RichText
-							tagName="div"
-							className="logo-section__right-content"
-							value={ description }
-							onChange={ ( value ) =>
-								setAttributes( { description: value } )
-							}
-							placeholder={ __( 'Description', 'ambrygen-web' ) }
-						/>
+					{ hasSecondaryImage && (
+						<div className="logo-section__left">
+							<div className="logo-section__guideline-item">
+								<div className="logo-section__guideline-images">
+									<img
+										src={ secondaryImageUrl }
+										alt={ secondaryImageAlt }
+									/>
+								</div>
+							</div>
+						</div>
+					) }
+					<div className="logo-section__description">
+						<div className="logo-section__right-content">
+							<InnerBlocks
+								allowedBlocks={ allowedDescriptionBlocks }
+								template={ descriptionTemplate }
+								templateInsertUpdatesSelection={ true }
+							/>
+						</div>
 					</div>
 				</div>
 			</div>

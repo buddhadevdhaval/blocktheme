@@ -38,9 +38,16 @@
         background-color: var(--theme_white);
         border: 1px solid var(--theme_gray_200);
         border-radius: 16px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
         @include bp.min(lg) {
             align-items: center;
+        }
+
+        &:focus-within {
+            outline: 2px solid var(--theme_cg_blue, #0066cc);
+            outline-offset: 2px;
+            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
         }
     }
 

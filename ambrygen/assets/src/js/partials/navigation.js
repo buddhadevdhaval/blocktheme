@@ -1,20 +1,20 @@
 // document.addEventListener('DOMContentLoaded', () => {
 // 	if (window.innerWidth < 1023) return;
-
+//
 // 	document.querySelectorAll('.nav__item--mega-menu').forEach(megaMenu => {
 // 		const catItems = megaMenu.querySelectorAll('.submenu-inner-link');
 // 		const submenus = megaMenu.querySelectorAll('.category-submenu-lists');
-
+//
 // 		if (!catItems.length || !submenus.length) return;
-
+//
 // 		catItems[0]?.classList.add('hover-active');
 // 		submenus[0]?.classList.add('submenu-active');
-
+//
 // 		catItems.forEach((item, index) => {
 // 			item.addEventListener('mouseenter', () => {
 // 				catItems.forEach(i => i.classList.remove('hover-active'));
 // 				submenus.forEach(s => s.classList.remove('submenu-active'));
-
+//
 // 				item.classList.add('hover-active');
 // 				submenus[index]?.classList.add('submenu-active');
 // 			});
@@ -99,43 +99,37 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	const navOverlay = document.querySelector( '.nav__overlay' );
 	const body = document.body;
 
-	if ( ! menuBtn || ! navOverlay ) {
-		return;
+	if ( menuBtn && navOverlay ) {
+		menuBtn.addEventListener( 'click', () => {
+			const isOpen = navOverlay.classList.contains( 'open' );
+
+			if ( isOpen ) {
+				navOverlay.classList.remove( 'open' );
+				body.classList.remove( 'no-overflow' );
+				document
+					.querySelectorAll( '.nav__list .active' )
+					.forEach( ( el ) => {
+						el.classList.remove( 'active' );
+					} );
+			} else {
+				navOverlay.classList.add( 'open' );
+				body.classList.add( 'no-overflow' );
+			}
+		} );
+
+		navOverlay.addEventListener( 'click', ( e ) => {
+			if ( e.target.closest( '.nav__menu-btn-close' ) ) {
+				navOverlay.classList.remove( 'open' );
+				body.classList.remove( 'no-overflow' );
+
+				document
+					.querySelectorAll( '.nav__list .active' )
+					.forEach( ( el ) => {
+						el.classList.remove( 'active' );
+					} );
+			}
+		} );
 	}
-
-	// EXISTING CODE (UNCHANGED)
-	menuBtn.addEventListener( 'click', () => {
-		const isOpen = navOverlay.classList.contains( 'open' );
-
-		if ( isOpen ) {
-			// Close menu
-			navOverlay.classList.remove( 'open' );
-			body.classList.remove( 'no-overflow' );
-			document
-				.querySelectorAll( '.nav__list .active' )
-				.forEach( ( el ) => {
-					el.classList.remove( 'active' );
-				} );
-		} else {
-			// Open menu
-			navOverlay.classList.add( 'open' );
-			body.classList.add( 'no-overflow' );
-		}
-	} );
-
-	// ✅ NEW: Close button (event delegation - SAFE)
-	navOverlay.addEventListener( 'click', ( e ) => {
-		if ( e.target.closest( '.nav__menu-btn-close' ) ) {
-			navOverlay.classList.remove( 'open' );
-			body.classList.remove( 'no-overflow' );
-
-			document
-				.querySelectorAll( '.nav__list .active' )
-				.forEach( ( el ) => {
-					el.classList.remove( 'active' );
-				} );
-		}
-	} );
 
 	/* =====================================================
 	 * MODULE 4: Mobile Parent Menu Activate (Click Only)
@@ -156,20 +150,20 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 				trigger.addEventListener( 'click', ( e ) => {
 					e.preventDefault();
-
-					// Only ADD active (no toggle, no remove)
 					navItem.classList.add( 'active' );
 				} );
 			} );
 	}
 
 	/* =====================================================
-	 * MODULE 5: Mobile Drawer Close – Reset Active States
+	 * MODULE 5: Mobile Drawer Close - Reset Active States
 	 * ===================================================== */
 	if ( ! isDesktop ) {
 		document.addEventListener( 'click', ( e ) => {
-			const closeBtn = e.target.closest( '.main-drawer-close-button' );
-			if ( ! closeBtn ) {
+			const closeDrawerBtn = e.target.closest(
+				'.main-drawer-close-button'
+			);
+			if ( ! closeDrawerBtn ) {
 				return;
 			}
 
@@ -186,74 +180,54 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	/* =====================================================
 	 * MODULE 6: Responsive Nav Overlay Height (Top Bar Aware)
 	 * ===================================================== */
-
 	const topBar = document.getElementById( 'top-bar-ajax' );
 	const header = document.querySelector( '.header' );
-	const closeBtn = topBar?.querySelector( '.top-bar__close' );
+	const topBarCloseBtn = topBar?.querySelector( '.top-bar__close' );
 
-	// if ( ! topBar || ! closeBtn ) {
-	// 	return;
-	// }
-
-	/**
-	 * Mobile-only overlay height calculation
-	 */
 	const updateOverlayHeightMobile = () => {
 		if ( ! navOverlay ) {
 			return;
 		}
+
 		const topBarHeight =
 			topBar && getComputedStyle( topBar ).display !== 'none'
 				? topBar.offsetHeight
 				: 0;
-
 		const headerHeight = header ? header.offsetHeight : 0;
 		const totalHeight = topBarHeight + headerHeight;
-		const totalHeightM = topBarHeight;
 
-		// Mobile only
 		if ( window.innerWidth < 1023 ) {
-			// navOverlay.style.height = `calc(100vh - ${ totalHeightM }px)`;
-			navOverlay.style.top = `-${ totalHeightM }px`;
+			navOverlay.style.top = `-${ topBarHeight }px`;
 			body.style.paddingTop = `${ totalHeight }px`;
 		} else {
-			// Reset on desktop
 			navOverlay.style.removeProperty( 'height' );
 			body.style.removeProperty( 'padding-top' );
 		}
 	};
 
-	/* =====================================================
-	 * Initial mobile calculation
-	 * ===================================================== */
 	updateOverlayHeightMobile();
 
-	/* =====================================================
-	 * Top Bar Close (Desktop + Mobile)
-	 * ===================================================== */
-	closeBtn.addEventListener( 'click', () => {
-		topBar.style.display = 'none';
+	topBarCloseBtn?.addEventListener( 'click', () => {
+		if ( topBar ) {
+			topBar.style.display = 'none';
+		}
 
-		// Recalculate ONLY on mobile
 		updateOverlayHeightMobile();
 	} );
 
-	/* =====================================================
-	 * Recalculate on Resize (Mobile Only)
-	 * ===================================================== */
 	window.addEventListener( 'resize', () => {
 		updateOverlayHeightMobile();
 	} );
 
 	if ( ! isDesktop ) {
 		/* =====================================================
-		 * MODULE 7: Mega Menu Item Click – Add Active Class
+		 * MODULE 7: Mega Menu Item Click - Add Active Class
 		 * ===================================================== */
 		document
 			.querySelectorAll( '.nav__item--mega-menu__col' )
 			.forEach( ( link ) => {
 				link.addEventListener( 'click', ( e ) => {
-					e.preventDefault(); // Optional, if you don't want the link to navigate
+					e.preventDefault();
 
 					const parentItem = link.closest(
 						'.nav__item--mega-menu__item'
@@ -262,7 +236,6 @@ document.addEventListener( 'DOMContentLoaded', () => {
 						return;
 					}
 
-					// Remove active from other mega menu items
 					parentItem.parentElement
 						.querySelectorAll(
 							'.nav__item--mega-menu__item.active'
@@ -271,13 +244,12 @@ document.addEventListener( 'DOMContentLoaded', () => {
 							item.classList.remove( 'active' )
 						);
 
-					// Add active to the clicked item's parent
 					parentItem.classList.add( 'active' );
 				} );
 			} );
 
 		/* =====================================================
-		 * MODULE 8: Mega Menu Submenu Close – Remove Active Class
+		 * MODULE 8: Mega Menu Submenu Close - Remove Active Class
 		 * ===================================================== */
 		document
 			.querySelectorAll( '.submenu__close-button' )
@@ -292,7 +264,6 @@ document.addEventListener( 'DOMContentLoaded', () => {
 						return;
 					}
 
-					// Remove active class
 					parentItem.classList.remove( 'active' );
 				} );
 			} );
@@ -330,21 +301,16 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			e.preventDefault();
 			e.stopPropagation();
 
-			const isOpen = userModal.classList.contains( 'is-active' );
-			if ( isOpen ) {
+			if ( userModal.classList.contains( 'is-active' ) ) {
 				closeModal();
 			} else {
 				openModal();
 			}
 		} );
 
-		// Close on backdrop click.
 		modalOverlay?.addEventListener( 'click', closeModal );
-
-		// Close on close button click.
 		modalCloseBtn?.addEventListener( 'click', closeModal );
 
-		// Close on Escape key.
 		document.addEventListener( 'keydown', ( e ) => {
 			if (
 				e.key === 'Escape' &&
@@ -355,7 +321,6 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			}
 		} );
 
-		// Focus trapping
 		userModal.addEventListener( 'keydown', ( e ) => {
 			if ( e.key !== 'Tab' ) {
 				return;
@@ -372,17 +337,14 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			const firstFocusable = focusableElements[ 0 ];
 			const lastFocusable =
 				focusableElements[ focusableElements.length - 1 ];
-
 			const activeElement = userModal.ownerDocument.activeElement;
 
 			if ( e.shiftKey ) {
-				// Shift + Tab
 				if ( activeElement === firstFocusable ) {
 					e.preventDefault();
 					lastFocusable.focus();
 				}
 			} else if ( activeElement === lastFocusable ) {
-				// Tab
 				e.preventDefault();
 				firstFocusable.focus();
 			}
@@ -392,9 +354,9 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	/* =====================================================
 	 * MODULE 9: Shrink Header on Scroll (Sticky)
 	 * ===================================================== */
-	const headersection = document.querySelector( '.header-section' ); // Adjust selector if needed
+	const headersection = document.querySelector( '.header-section' );
 	const shrinkClass = 'shrink';
-	const scrollThreshold = 50; // px scrolled before shrinking
+	const scrollThreshold = 50;
 
 	if ( headersection ) {
 		window.addEventListener( 'scroll', () => {
@@ -413,28 +375,26 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	const searchToggle = headerSearch?.querySelector( '.search-toggle' );
 	const headerSearchForm = document.getElementById( 'header-search-form' );
 
-	if ( ! headerSearch || ! searchToggle || ! headerSearchForm ) {
-		return;
+	if ( headerSearch && searchToggle && headerSearchForm ) {
+		searchToggle.addEventListener( 'click', ( e ) => {
+			e.preventDefault();
+			e.stopPropagation();
+
+			headerSearch.classList.toggle( 'open' );
+
+			if ( headerSearch.classList.contains( 'open' ) ) {
+				headerSearchForm.querySelector( 'input[name="s"]' )?.focus();
+			}
+		} );
+
+		document.addEventListener( 'click', ( e ) => {
+			if ( ! headerSearch.contains( e.target ) ) {
+				headerSearch.classList.remove( 'open' );
+			}
+		} );
+
+		headerSearchForm.addEventListener( 'click', ( e ) => {
+			e.stopPropagation();
+		} );
 	}
-
-	searchToggle.addEventListener( 'click', ( e ) => {
-		e.preventDefault();
-		e.stopPropagation();
-
-		headerSearch.classList.toggle( 'open' );
-
-		if ( headerSearch.classList.contains( 'open' ) ) {
-			headerSearchForm.querySelector( 'input[name="s"]' )?.focus();
-		}
-	} );
-
-	document.addEventListener( 'click', ( e ) => {
-		if ( ! headerSearch.contains( e.target ) ) {
-			headerSearch.classList.remove( 'open' );
-		}
-	} );
-
-	headerSearchForm.addEventListener( 'click', ( e ) => {
-		e.stopPropagation();
-	} );
 } );

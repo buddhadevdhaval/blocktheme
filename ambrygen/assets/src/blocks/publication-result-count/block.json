@@ -6,6 +6,16 @@
   "title": "Publication Result Count",
   "category": "ambrygen",
   "description": "Renders publication result count.",
+  "attributes": {
+    "previewPostId": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "usesContext": [
+    "postId",
+    "postType"
+  ],
   "supports": {
     "html": false,
     "reusable": false

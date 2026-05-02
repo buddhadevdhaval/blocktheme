@@ -9,70 +9,70 @@ function initTooltips() {
 		'(hover: none), (pointer: coarse)'
 	).matches;
 
-	function decodeHtmlEntities( value ) {
-		if ( ! value ) {
+	function decodeHtmlEntities(value) {
+		if (!value) {
 			return '';
 		}
-		const textarea = document.createElement( 'textarea' );
-		textarea.innerHTML = String( value );
+		const textarea = document.createElement('textarea');
+		textarea.innerHTML = String(value);
 		return textarea.value;
 	}
 
-	function decodeBase64Unicode( value ) {
-		if ( ! value ) {
+	function decodeBase64Unicode(value) {
+		if (!value) {
 			return '';
 		}
 
 		try {
-			const binary = window.atob( String( value ) );
-			const bytes = Array.from( binary, ( c ) =>
-				'%' + c.charCodeAt( 0 ).toString( 16 ).padStart( 2, '0' )
-			).join( '' );
-			return decodeURIComponent( bytes );
-		} catch ( e ) {
+			const binary = window.atob(String(value));
+			const bytes = Array.from(binary, (c) =>
+				'%' + c.charCodeAt(0).toString(16).padStart(2, '0')
+			).join('');
+			return decodeURIComponent(bytes);
+		} catch (e) {
 			return '';
 		}
 	}
 
-	function encodeBase64Unicode( value ) {
-		if ( ! value ) {
+	function encodeBase64Unicode(value) {
+		if (!value) {
 			return '';
 		}
 
-		const utf8 = encodeURIComponent( String( value ) ).replace(
+		const utf8 = encodeURIComponent(String(value)).replace(
 			/%([0-9A-F]{2})/g,
-			( match, hex ) => String.fromCharCode( parseInt( hex, 16 ) )
+			(match, hex) => String.fromCharCode(parseInt(hex, 16))
 		);
-		return window.btoa( utf8 );
+		return window.btoa(utf8);
 	}
 
-	function stripHtmlText( html ) {
-		if ( ! html ) {
+	function stripHtmlText(html) {
+		if (!html) {
 			return '';
 		}
-		return String( html )
-			.replace( /<[^>]*>/g, '' )
-			.replace( /&nbsp;/g, ' ' )
+		return String(html)
+			.replace(/<[^>]*>/g, '')
+			.replace(/&nbsp;/g, ' ')
 			.trim();
 	}
 
-	function normalizeTooltipId( value ) {
-		return String( value || '' )
+	function normalizeTooltipId(value) {
+		return String(value || '')
 			.trim()
 			.toLowerCase()
-			.replace( /['"]/g, '' )
-			.replace( /[^a-z0-9_-]+/g, '-' )
-			.replace( /_+/g, '-' )
-			.replace( /-+/g, '-' )
-			.replace( /^-+|-+$/g, '' );
+			.replace(/['"]/g, '')
+			.replace(/[^a-z0-9_-]+/g, '-')
+			.replace(/_+/g, '-')
+			.replace(/-+/g, '-')
+			.replace(/^-+|-+$/g, '');
 	}
 
-	function sanitizeInlineTooltipMarkup( html ) {
-		if ( ! html ) {
+	function sanitizeInlineTooltipMarkup(html) {
+		if (!html) {
 			return '';
 		}
 
-		const allowedTags = new Set( [
+		const allowedTags = new Set([
 			'A',
 			'B',
 			'BR',
@@ -83,8 +83,8 @@ function initTooltips() {
 			'SPAN',
 			'STRONG',
 			'SUP',
-		] );
-		const allowedAttrs = new Set( [
+		]);
+		const allowedAttrs = new Set([
 			'class',
 			'title',
 			'data-tooltip',
@@ -92,37 +92,37 @@ function initTooltips() {
 			'href',
 			'target',
 			'rel',
-		] );
+		]);
 
-		const template = document.createElement( 'template' );
+		const template = document.createElement('template');
 		template.innerHTML = html;
 
-		const walk = ( node ) => {
-			if ( node.nodeType === Node.ELEMENT_NODE ) {
-				const el = /** @type {Element} */ ( node );
+		const walk = (node) => {
+			if (node.nodeType === Node.ELEMENT_NODE) {
+				const el = /** @type {Element} */ (node);
 
-				if ( ! allowedTags.has( el.tagName ) ) {
+				if (!allowedTags.has(el.tagName)) {
 					const parent = el.parentNode;
-					if ( parent ) {
-						while ( el.firstChild ) {
-							parent.insertBefore( el.firstChild, el );
+					if (parent) {
+						while (el.firstChild) {
+							parent.insertBefore(el.firstChild, el);
 						}
-						parent.removeChild( el );
+						parent.removeChild(el);
 					}
 					return;
 				}
 
-				[ ...el.attributes ].forEach( ( attr ) => {
-					if ( ! allowedAttrs.has( attr.name.toLowerCase() ) ) {
-						el.removeAttribute( attr.name );
+				[...el.attributes].forEach((attr) => {
+					if (!allowedAttrs.has(attr.name.toLowerCase())) {
+						el.removeAttribute(attr.name);
 					}
-				} );
+				});
 			}
 
-			[ ...node.childNodes ].forEach( walk );
+			[...node.childNodes].forEach(walk);
 		};
 
-		walk( template.content );
+		walk(template.content);
 		return template.innerHTML;
 	}
 
@@ -131,7 +131,7 @@ function initTooltips() {
 			'.block-description, .entry-content, .wp-block-post-content, .wp-block-post-content__content'
 		);
 
-		roots.forEach( ( root ) => {
+		roots.forEach((root) => {
 			const walker = document.createTreeWalker(
 				root,
 				NodeFilter.SHOW_TEXT,
@@ -139,47 +139,47 @@ function initTooltips() {
 			);
 
 			const textNodes = [];
-			while ( walker.nextNode() ) {
+			while (walker.nextNode()) {
 				const node = walker.currentNode;
 				const text = node && node.nodeValue ? node.nodeValue : '';
 				if (
 					text &&
-					text.includes( '&lt;' ) &&
-					text.includes( 'ambrygen-tooltip' )
+					text.includes('&lt;') &&
+					text.includes('ambrygen-tooltip')
 				) {
-					textNodes.push( node );
+					textNodes.push(node);
 				}
 			}
 
-			textNodes.forEach( ( node ) => {
+			textNodes.forEach((node) => {
 				const raw = node.nodeValue || '';
-				const decoded = decodeHtmlEntities( raw );
-				if ( ! decoded.includes( 'ambrygen-tooltip' ) ) {
+				const decoded = decodeHtmlEntities(raw);
+				if (!decoded.includes('ambrygen-tooltip')) {
 					return;
 				}
 
-				const safeHtml = sanitizeInlineTooltipMarkup( decoded );
-				if ( ! safeHtml ) {
+				const safeHtml = sanitizeInlineTooltipMarkup(decoded);
+				if (!safeHtml) {
 					return;
 				}
 
-				const template = document.createElement( 'template' );
+				const template = document.createElement('template');
 				template.innerHTML = safeHtml;
-				node.parentNode.replaceChild( template.content, node );
-			} );
-		} );
+				node.parentNode.replaceChild(template.content, node);
+			});
+		});
 	}
 
-	function sanitizeTooltipHtml( html ) {
-		if ( ! html ) {
+	function sanitizeTooltipHtml(html) {
+		if (!html) {
 			return '';
 		}
 
 		// Tooltips are stored inside an HTML attribute, so editors often encode tags (e.g. &lt;em&gt;).
 		// Decode once here so allowed tags can actually render.
-		html = decodeHtmlEntities( html );
+		html = decodeHtmlEntities(html);
 
-		const allowedTags = new Set( [
+		const allowedTags = new Set([
 			'A',
 			'B',
 			'BR',
@@ -194,70 +194,70 @@ function initTooltips() {
 			'STRONG',
 			'SUP',
 			'UL',
-		] );
-		const allowedAttrs = new Set( [ 'href', 'target', 'rel' ] );
+		]);
+		const allowedAttrs = new Set(['href', 'target', 'rel']);
 
-		const template = document.createElement( 'template' );
+		const template = document.createElement('template');
 		template.innerHTML = html;
 
-		const walk = ( node ) => {
-			if ( node.nodeType === Node.ELEMENT_NODE ) {
-				const el = /** @type {Element} */ ( node );
+		const walk = (node) => {
+			if (node.nodeType === Node.ELEMENT_NODE) {
+				const el = /** @type {Element} */ (node);
 
-				if ( el.classList.contains( 'ambrygen-tooltip' ) ) {
+				if (el.classList.contains('ambrygen-tooltip')) {
 					const parent = el.parentNode;
-					if ( parent ) {
-						while ( el.firstChild ) {
-							parent.insertBefore( el.firstChild, el );
+					if (parent) {
+						while (el.firstChild) {
+							parent.insertBefore(el.firstChild, el);
 						}
-						parent.removeChild( el );
+						parent.removeChild(el);
 					}
 					return;
 				}
 
-				if ( ! allowedTags.has( el.tagName ) ) {
+				if (!allowedTags.has(el.tagName)) {
 					const parent = el.parentNode;
-					if ( parent ) {
-						while ( el.firstChild ) {
-							parent.insertBefore( el.firstChild, el );
+					if (parent) {
+						while (el.firstChild) {
+							parent.insertBefore(el.firstChild, el);
 						}
-						parent.removeChild( el );
+						parent.removeChild(el);
 					}
 					return;
 				}
 
-				[ ...el.attributes ].forEach( ( attr ) => {
+				[...el.attributes].forEach((attr) => {
 					const name = attr.name.toLowerCase();
-					if ( ! allowedAttrs.has( name ) ) {
-						el.removeAttribute( attr.name );
+					if (!allowedAttrs.has(name)) {
+						el.removeAttribute(attr.name);
 					}
-				} );
+				});
 
-				if ( el.tagName === 'A' ) {
-					const href = el.getAttribute( 'href' ) || '';
+				if (el.tagName === 'A') {
+					const href = el.getAttribute('href') || '';
 					const isSafe =
-						href.startsWith( 'https://' ) ||
-						href.startsWith( 'http://' ) ||
-						href.startsWith( '/' ) ||
-						href.startsWith( '#' ) ||
-						href.startsWith( 'mailto:' ) ||
-						href.startsWith( 'tel:' );
+						href.startsWith('https://') ||
+						href.startsWith('http://') ||
+						href.startsWith('/') ||
+						href.startsWith('#') ||
+						href.startsWith('mailto:') ||
+						href.startsWith('tel:');
 
-					if ( ! isSafe ) {
-						el.removeAttribute( 'href' );
+					if (!isSafe) {
+						el.removeAttribute('href');
 					}
 
-					const target = el.getAttribute( 'target' );
-					if ( target === '_blank' ) {
-						el.setAttribute( 'rel', 'noopener noreferrer' );
+					const target = el.getAttribute('target');
+					if (target === '_blank') {
+						el.setAttribute('rel', 'noopener noreferrer');
 					}
 				}
 			}
 
-			[ ...node.childNodes ].forEach( walk );
+			[...node.childNodes].forEach(walk);
 		};
 
-		walk( template.content );
+		walk(template.content);
 		return template.innerHTML;
 	}
 
@@ -272,31 +272,31 @@ function initTooltips() {
 			// Create tooltip content div if tooltip content exists
 			let tooltipB64 = node.getAttribute('data-tooltip-b64');
 			const tooltipIdRaw = node.getAttribute('data-tooltip-id');
-			const tooltipId = normalizeTooltipId( tooltipIdRaw );
+			const tooltipId = normalizeTooltipId(tooltipIdRaw);
 			const rawTooltipAttr = node.getAttribute('data-tooltip') || '';
 
 			// Auto-repair legacy markup that stored HTML directly in `data-tooltip`.
 			// If HTML is detected and no b64 exists, migrate it to b64 and keep `data-tooltip` as plain text.
-			if ( rawTooltipAttr.includes( '<' ) && rawTooltipAttr.includes( '>' ) ) {
-				if ( ! tooltipB64 ) {
-					tooltipB64 = encodeBase64Unicode( rawTooltipAttr );
-					node.setAttribute( 'data-tooltip-b64', tooltipB64 );
+			if (rawTooltipAttr.includes('<') && rawTooltipAttr.includes('>')) {
+				if (!tooltipB64) {
+					tooltipB64 = encodeBase64Unicode(rawTooltipAttr);
+					node.setAttribute('data-tooltip-b64', tooltipB64);
 				}
-				node.setAttribute( 'data-tooltip', stripHtmlText( rawTooltipAttr ) );
+				node.setAttribute('data-tooltip', stripHtmlText(rawTooltipAttr));
 			}
 
 			const tooltipText =
-				( tooltipB64 ? decodeBase64Unicode( tooltipB64 ) : '' ) || '';
+				(tooltipB64 ? decodeBase64Unicode(tooltipB64) : '') || '';
 
 			let htmlFromId = '';
 			let titleFromId = '';
-			if ( tooltipId ) {
+			if (tooltipId) {
 				const source = document.getElementById(
-					`ambrygen-tooltip-${ tooltipId }`
+					`ambrygen-tooltip-${tooltipId}`
 				);
-				if ( source ) {
+				if (source) {
 					htmlFromId = source.innerHTML || '';
-					titleFromId = source.getAttribute( 'data-tooltip-title' ) || '';
+					titleFromId = source.getAttribute('data-tooltip-title') || '';
 				}
 			}
 
@@ -318,7 +318,7 @@ function initTooltips() {
 
 				const descElement = document.createElement('div');
 				descElement.className = 'ambrygen-tooltip__description';
-				descElement.innerHTML = sanitizeTooltipHtml( resolvedHtml );
+				descElement.innerHTML = sanitizeTooltipHtml(resolvedHtml);
 				tooltipDiv.appendChild(descElement);
 
 				node.appendChild(tooltipDiv);
@@ -480,11 +480,11 @@ function initTooltips() {
 				);
 				if (content) {
 					if (args.load_more) {
-						const grid = content.querySelector('.event-carousel__grid');
+						const grid = content.querySelector('.event-carousel__grid, .blog-listing');
 						if (grid) {
 							const temp = document.createElement('div');
 							temp.innerHTML = result.data.html;
-							const newGrid = temp.querySelector('.event-carousel__grid');
+							const newGrid = temp.querySelector('.event-carousel__grid, .blog-listing');
 							if (newGrid) {
 								grid.insertAdjacentHTML('beforeend', newGrid.innerHTML);
 							}
@@ -528,16 +528,23 @@ function initTooltips() {
 					}
 
 					// Update Load More button visibility
-					const loadMoreBtn = container.querySelector('.load-more-btn');
-					if (loadMoreBtn) {
+					const loadMoreWrap = container.querySelector('.load-more-btn, .load-more-btn-wrap, .load-more-wrap');
+					if (loadMoreWrap) {
 						const current = parseInt(result.data.current || paged, 10);
 						const total = parseInt(result.data.total_pages, 10);
-						const wrapper = loadMoreBtn.parentElement;
+
 						if (current >= total) {
-							wrapper.classList.add('is-hidden');
+							loadMoreWrap.classList.add('is-hidden');
+							loadMoreWrap.style.display = 'none';
 						} else {
-							wrapper.classList.remove('is-hidden');
-							loadMoreBtn.setAttribute('data-total-pages', total);
+							loadMoreWrap.classList.remove('is-hidden');
+							loadMoreWrap.style.display = 'flex';
+							// Update data attribute on either the wrapper or the button inside it
+							loadMoreWrap.setAttribute('data-total-pages', total);
+							const btn = loadMoreWrap.querySelector('button');
+							if (btn) {
+								btn.setAttribute('data-total-pages', total);
+							}
 						}
 					}
 				}
@@ -684,7 +691,7 @@ function initTooltips() {
 
 			// If container not found (e.g. Year dropdown is outside results), look in parent wrapper
 			if (!container) {
-				const wrapper = dropdownLink.closest('.event-carousel');
+				const wrapper = dropdownLink.closest('.event-carousel, .latest-blogs');
 				container = wrapper
 					? wrapper.querySelector('.ambrygen-ajax-pagination')
 					: null;
@@ -765,7 +772,7 @@ function initTooltips() {
 		const tabBtn = event.target.closest('.tab-button');
 		if (tabBtn) {
 			const container = tabBtn
-				.closest('.event-carousel')
+				.closest('.event-carousel, .latest-blogs')
 				?.querySelector('.ambrygen-ajax-pagination');
 			if (container) {
 				event.preventDefault();
@@ -804,7 +811,7 @@ function initTooltips() {
 		}
 
 		// 5. Load More Button Click
-		const loadMoreBtn = event.target.closest('.load-more-btn');
+		const loadMoreBtn = event.target.closest('.load-more-btn, .load-more-btn-wrap, .load-more-wrap');
 		if (loadMoreBtn) {
 			const container = loadMoreBtn.closest('.ambrygen-ajax-pagination');
 			if (container) {
@@ -838,8 +845,8 @@ function initTooltips() {
 
 		// Find the relevant container (Upcoming vs Past)
 		// Usually the form is inside or adjacent to the content.
-		// In our template, the form is outside .ambrygen-ajax-pagination but inside the same .event-carousel block.
-		const wrapper = form.closest('.event-carousel');
+		// In our template, the form is outside .ambrygen-ajax-pagination but inside the same .event-carousel or .latest-blogs block.
+		const wrapper = form.closest('.event-carousel, .latest-blogs');
 		const container = wrapper
 			? wrapper.querySelector('.ambrygen-ajax-pagination')
 			: null;
@@ -1057,14 +1064,143 @@ function initTooltips() {
 	document.addEventListener('click', handleConferenceActions);
 	document.addEventListener('submit', handleSearch);
 
+	document.addEventListener('change', (event) => {
+		const select = event.target.closest('#blog-tags-select');
+		if (select) {
+			const container = select
+				.closest('.latest-blogs')
+				?.querySelector('.ambrygen-ajax-pagination');
+			if (container) {
+				const tagId = parseInt(select.value || '0', 10);
+				const selectedOption = select.options[select.selectedIndex];
+				const tagUrl = selectedOption.getAttribute('data-url');
+				const blockWrapper = select.closest('.latest-blogs');
+				const isTagArchive = blockWrapper && blockWrapper.getAttribute('data-is-tag-archive') === 'true';
+
+				if (isTagArchive && tagUrl) {
+					window.history.pushState({ path: tagUrl }, '', tagUrl);
+				}
+
+				updateConferenceResults(container, { tag: tagId, paged: 1 });
+			}
+		}
+	});
+
+	window.addEventListener('popstate', (event) => {
+		// If we're on a page with the blog block, reload to sync with URL change
+		if (document.querySelector('.latest-blogs')) {
+			window.location.reload();
+		}
+	});
+
 	initEventTabs();
 })();
+
+/**
+ * Sync heights for blog listing bodies based on category height
+ */
+function syncBlogListingHeights() {
+	const blogCards = document.querySelectorAll('[data-sync-height="category"]');
+
+	if (blogCards.length === 0) {
+		return;
+	}
+
+	// Reset heights first to get natural heights
+	blogCards.forEach((card) => {
+		card.style.minHeight = '';
+	});
+
+	// Get max height from all category elements
+	let maxHeight = 0;
+	document.querySelectorAll('.blog-listing__category').forEach((category) => {
+		const height = category.offsetHeight;
+		if (height > maxHeight) {
+			maxHeight = height;
+		}
+	});
+
+	// Apply max height to all blog-listing__body elements if category height exists
+	if (maxHeight > 0) {
+		blogCards.forEach((card) => {
+			card.style.minHeight = maxHeight + 'px';
+		});
+	}
+}
 
 /**
  * Theme UI initialization
  */
 document.addEventListener('DOMContentLoaded', () => {
 	initTooltips();
+	syncBlogListingHeights();
+
+	// Re-sync heights on window resize
+	let resizeTimeout;
+	window.addEventListener('resize', () => {
+		clearTimeout(resizeTimeout);
+		resizeTimeout = setTimeout(() => {
+			syncBlogListingHeights();
+		}, 250);
+	});
+
+	function syncTestCatalogItem(item, isOpen) {
+		if (!item) {
+			return;
+		}
+
+		const toggle = item.querySelector('.test-catlouge__item-toggle');
+		const content = item.querySelector('.test-catlouge__item-content');
+
+		if (!toggle || !content) {
+			return;
+		}
+
+		item.classList.toggle('is-open', isOpen);
+		toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+		if (isOpen) {
+			content.style.maxHeight = 'none';
+			const fullHeight = content.scrollHeight;
+			content.style.maxHeight = `${fullHeight}px`;
+			return;
+		}
+
+		content.style.maxHeight = '0px';
+	}
+
+	function refreshOpenTestCatalogItems(scope = document) {
+		scope.querySelectorAll('.test-catlouge__item.is-open').forEach((item) => {
+			syncTestCatalogItem(item, true);
+		});
+	}
+
+	document.querySelectorAll('.test-catlouge__item').forEach((item) => {
+		syncTestCatalogItem(item, item.classList.contains('is-open'));
+	});
+
+	if (typeof ResizeObserver !== 'undefined') {
+		const observedTestCatalogContents = new WeakSet();
+		const testCatalogResizeObserver = new ResizeObserver((entries) => {
+			entries.forEach((entry) => {
+				const item = entry.target.closest('.test-catlouge__item.is-open');
+				if (item) {
+					syncTestCatalogItem(item, true);
+				}
+			});
+		});
+
+		document
+			.querySelectorAll('.test-catlouge__item-content')
+			.forEach((content) => {
+				if (observedTestCatalogContents.has(content)) {
+					return;
+				}
+
+				observedTestCatalogContents.add(content);
+				testCatalogResizeObserver.observe(content);
+			});
+	}
 
 	function syncSpeakerCard(card, isOpen) {
 		const bio = card.querySelector('.speaker-card__bio');
@@ -1117,6 +1253,20 @@ document.addEventListener('DOMContentLoaded', () => {
 	 * Clicking a speaker card opens or closes that card independently.
 	 */
 	document.addEventListener('click', (event) => {
+		const testCatalogToggle = event.target.closest(
+			'.test-catlouge__item-toggle'
+		);
+		if (testCatalogToggle) {
+			const item = testCatalogToggle.closest('.test-catlouge__item');
+			if (!item) {
+				return;
+			}
+
+			event.preventDefault();
+			syncTestCatalogItem(item, !item.classList.contains('is-open'));
+			return;
+		}
+
 		const action = event.target.closest('.speaker-card__actions');
 		if (!action) {
 			return;
@@ -1137,6 +1287,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 
 	window.addEventListener('resize', () => {
+		refreshOpenTestCatalogItems();
+
 		document
 			.querySelectorAll('.speaker-card.open .speaker-card__bio')
 			.forEach((bio) => {
@@ -1381,6 +1533,29 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	/**
+	 * Featured Blogs Slider
+	 */
+	const blogFeaturedSwiperEl = document.querySelector('.blog-featured-swiper');
+	if (blogFeaturedSwiperEl && typeof Swiper !== 'undefined') {
+		const slideEls = blogFeaturedSwiperEl.querySelectorAll('.swiper-slide');
+		const slideCount = slideEls.length;
+
+		new Swiper(blogFeaturedSwiperEl, {
+			slidesPerView: 1,
+			loop: slideCount > 1,
+			effect: 'fade',
+			fadeEffect: {
+				crossFade: true,
+			},
+			speed: 600,
+			navigation: {
+				prevEl: '.blog-featured__nav .custom-prev',
+				nextEl: '.blog-featured__nav .custom-next',
+			},
+		});
+	}
+
+	/**
 	 * Author Slider (Webinar Pages)
 	 */
 	const authorSliderEl = document.querySelector('.author-slider');
@@ -1519,54 +1694,54 @@ document.addEventListener('DOMContentLoaded', () => {
  * Handles dynamic field toggling and Select2 initialization
  * within the WordPress post editor.
  */
-( function ( $ ) {
+(function ($) {
 	'use strict';
 
-	if ( ! $ ) {
+	if (!$) {
 		return;
 	}
 
-	$( document ).ready( function () {
-		const $videoTypeSelect = $( 'select[name="video_type"]' );
+	$(document).ready(function () {
+		const $videoTypeSelect = $('select[name="video_type"]');
 
 		const toggleVideoFields = function () {
 			const val = $videoTypeSelect.val();
-			const $mp4Field = $( '.field-video_url' );
-			const $embedField = $( '.field-iframe_url' );
-			const $posterField = $( '.field-poster_image_id' );
+			const $mp4Field = $('.field-video_url');
+			const $embedField = $('.field-iframe_url');
+			const $posterField = $('.field-poster_image_id');
 
-			if ( ! val ) {
+			if (!val) {
 				$mp4Field.hide();
 				$embedField.hide();
 				$posterField.hide();
-			} else if ( val === 'mp4' ) {
+			} else if (val === 'mp4') {
 				$mp4Field.show();
 				$embedField.hide();
 				$posterField.show();
-			} else if ( val === 'embed' ) {
+			} else if (val === 'embed') {
 				$mp4Field.hide();
 				$embedField.show();
 				$posterField.show();
 			}
 		};
 
-		if ( $videoTypeSelect.length ) {
-			$videoTypeSelect.on( 'change', toggleVideoFields );
+		if ($videoTypeSelect.length) {
+			$videoTypeSelect.on('change', toggleVideoFields);
 			toggleVideoFields();
 		}
 
-		if ( $.fn.select2 ) {
-			$( '.ambrygen-select2' ).each( function () {
-				const $select = $( this );
+		if ($.fn.select2) {
+			$('.ambrygen-select2').each(function () {
+				const $select = $(this);
 
-				if ( ! $select.hasClass( 'select2-hidden-accessible' ) ) {
-					$select.select2( {
+				if (!$select.hasClass('select2-hidden-accessible')) {
+					$select.select2({
 						width: '100%',
 						placeholder: 'Search...',
 						allowClear: true,
-					} );
+					});
 				}
-			} );
+			});
 		}
-	} );
-} )( window.jQuery );
+	});
+})(window.jQuery);

@@ -46,9 +46,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	} = attributes;
 
 	useEffect(() => {
-		if (!blockId) {
+		const expectedId = `section-${clientId.slice(0, 8)}`;
+
+		if (!blockId || !blockId.endsWith(clientId.slice(0, 8))) {
 			setAttributes({
-				blockId: `section-${clientId.slice(0, 8)}`,
+				blockId: expectedId,
 			});
 		}
 	}, [blockId, clientId, setAttributes]);
@@ -122,7 +124,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={__('Supporting Graph Settings', 'ambrygen-web')}
+					title={__('Layout Variation', 'ambrygen-web')}
 					initialOpen={true}
 				>
 					<div className="layout-variant-selector">
@@ -148,6 +150,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							</button>
 						))}
 					</div>
+				</PanelBody>
+				<PanelBody title={__('Heading Settings', 'ambrygen-web')}>
 					<TagSelector
 						label={__('Heading Tag', 'ambrygen-web')}
 						value={headingTag || 'h2'}
@@ -156,6 +160,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						}
 						type="heading"
 					/>
+				</PanelBody>
+				<PanelBody
+					title={__('Supporting Graph Settings', 'ambrygen-web')}
+				>
 					{!isStepsVariation && (
 						<>
 							<ImageUploader
@@ -457,3 +465,4 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		</>
 	);
 }
+

@@ -1,0 +1,72 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/genetic-testing-grid",
+  "title": "Genetic Testing Grid",
+  "category": "ambrygen",
+  "icon": "grid-view",
+  "description": "Tabbed grid for genetic testing posts",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
+      "default": "h2"
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "variation": {
+      "type": "string",
+      "default": "variation-3"
+    },
+    "blockId": {
+      "type": "string"
+    },
+    "selectedTabs": {
+      "type": "array",
+      "default": [
+        {
+          "text": "All Tests",
+          "termSlug": "all"
+        }
+      ]
+    },
+    "backgroundImage": {
+      "type": "object",
+      "default": {
+        "url": "",
+        "id": 0,
+        "alt": ""
+      }
+    }
+  },
+  "providesContext": {
+    "ambrygen/variation": "variation"
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "viewScript": "file:./view.js",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "blockId": "genetic-testing-grid-example"
+    }
+  }
+}

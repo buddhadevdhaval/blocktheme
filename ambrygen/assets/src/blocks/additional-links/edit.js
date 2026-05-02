@@ -4,13 +4,15 @@ import {
 	RichText,
 	InspectorControls,
 } from '@wordpress/block-editor';
-import { PanelBody } from '@wordpress/components';
+import { PanelBody, Button } from '@wordpress/components';
+import { createBlock } from '@wordpress/blocks';
+import { useDispatch } from '@wordpress/data';
 import { useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { TagSelector } from '../_shared/components';
+import { BlockExamplePreview, TagSelector } from '../_shared/components';
 
-const createDefaultCta = ( text ) => ( {
-	text,
+const createDefaultCta = () => ( {
+	text: '',
 	url: '',
 	target: '',
 	rel: '',
@@ -21,7 +23,7 @@ const TEMPLATE = [
 	[
 		'ambrygen/additional-links-item',
 		{
-			cta: createDefaultCta( 'Link 1' ),
+			cta: createDefaultCta(),
 			icon: {
 				id: 0,
 				url: '',
@@ -32,7 +34,7 @@ const TEMPLATE = [
 	[
 		'ambrygen/additional-links-item',
 		{
-			cta: createDefaultCta( 'Link 2' ),
+			cta: createDefaultCta(),
 			icon: {
 				id: 0,
 				url: '',
@@ -43,7 +45,7 @@ const TEMPLATE = [
 	[
 		'ambrygen/additional-links-item',
 		{
-			cta: createDefaultCta( 'Link 3' ),
+			cta: createDefaultCta(),
 			icon: {
 				id: 0,
 				url: '',
@@ -55,11 +57,17 @@ const TEMPLATE = [
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { blockId, heading, headingTag, description } = attributes;
+	const { insertBlock } = useDispatch( 'core/block-editor' );
+	const isExample = blockId === 'additional-links-example';
 	const blockProps = useBlockProps( {
-		className: 'additional-links-wrapper',
+		className: 'additional-links',
 	} );
 
 	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
+
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
 		// Re-seed when the stored ID was copied from another block instance.
@@ -68,7 +76,32 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				blockId: expectedId,
 			} );
 		}
-	}, [ clientId, blockId, setAttributes ] );
+	}, [ clientId, blockId, isExample, setAttributes ] );
+
+	if ( isExample ) {
+		return (
+			<BlockExamplePreview
+				className="additional-links-example-preview"
+				imagePath="/assets/src/images/additional-links/preview.png"
+			/>
+		);
+	}
+
+
+	const handleAddItem = () => {
+		insertBlock(
+			createBlock( 'ambrygen/additional-links-item', {
+				cta: createDefaultCta(),
+				icon: {
+					id: 0,
+					url: '',
+					alt: '',
+				},
+			} ),
+			undefined,
+			clientId
+		);
+	};
 
 	return (
 		<div { ...blockProps }>
@@ -93,19 +126,24 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					tagName={ headingTag }
 					className="careers-highlight__title block__rowflex--heading-title heading-4 mb-0"
 					value={ heading }
-					placeholder={ __( 'Add heading...', 'ambrygen-web' ) }
-					allowedFormats={ [ 'core/bold', 'core/italic' ] }
+					placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+					allowedFormats={ [
+						'core/bold',
+						'core/italic',
+						'core/text-color',
+					] }
 					onChange={ ( val ) => setAttributes( { heading: val } ) }
 				/>
 				<RichText
 					tagName="div"
 					className="careers-highlight__intro block__rowflex--block-content subtitle1-reg"
 					value={ description }
-					placeholder={ __( 'Add description...', 'ambrygen-web' ) }
+					placeholder={ __( 'Add Description...', 'ambrygen-web' ) }
 					allowedFormats={ [
 						'core/bold',
 						'core/italic',
 						'core/link',
+						'core/text-color',
 					] }
 					onChange={ ( val ) =>
 						setAttributes( { description: val } )
@@ -118,7 +156,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					allowedBlocks={ [ 'ambrygen/additional-links-item' ] }
 					template={ TEMPLATE }
 					templateLock={ false }
+					renderAppender={ false }
 				/>
+
+				<div className="is-style-gl-s24" aria-hidden="true"></div>
+
+				<Button variant="primary" onClick={ handleAddItem }>
+					{ __( 'Add Link', 'ambrygen-web' ) }
+				</Button>
 			</div>
 		</div>
 	);

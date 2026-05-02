@@ -1,0 +1,89 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/midpage-cta",
+  "title": "Midpage CTA",
+  "category": "ambrygen",
+  "icon": "megaphone",
+  "description": "Mid-page Call to Action with title and two buttons",
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ]
+    },
+    "buttons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "variant": {
+            "type": "string"
+          }
+        }
+      },
+      "default": [
+        {
+          "id": "",
+          "text": "",
+          "url": "",
+          "variant": "site-btn has-right-arrow"
+        },
+        {
+          "id": "",
+          "text": "",
+          "url": "",
+          "variant": "site-btn is-style-site-tertiary-btn has-right-arrow"
+        }
+      ]
+    }
+  },
+  "example": {
+    "attributes": {
+      "title": "Learn More About Gene-Disease Validity Assessments in Hereditary Cancer Testing",
+      "headingTag": "h2",
+      "buttons": [
+        {
+          "id": "button-1",
+          "text": "Primary CTA",
+          "url": "https://example.com/primary",
+          "variant": "site-btn has-right-arrow"
+        },
+        {
+          "id": "button-2",
+          "text": "Secondary CTA",
+          "url": "https://example.com/secondary",
+          "variant": "site-btn is-style-site-tertiary-btn has-right-arrow"
+        }
+      ]
+    }
+  },
+  "editorScript": "file:./index.js",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php"
+}

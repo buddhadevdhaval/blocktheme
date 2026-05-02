@@ -21,12 +21,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		description,
 		imageUrl,
 		imageAlt,
-		stepLabel,
 		cta = {},
 		showFullImage,
 	} = attributes;
 	const resolvedStepTitle = stepTitle || sectiontitle || '';
-	const resolvedStepLabel = stepLabel || attributes.customStepLabel || '';
 
 	const stepNumber = useSelect(
 		( select ) => {
@@ -91,7 +89,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 					<ImageUploader
 						label={ __( 'Card Image', 'ambrygen-web' ) }
-						url={ imageUrl || defaultPlaceholder.url }
+						url={ imageUrl || "" }
 						onSelect={ handleImageSelect }
 						onRemove={ () =>
 							setAttributes( {
@@ -119,27 +117,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 			<div { ...blockProps }>
 				<div className="vertical-tabs__header">
-					<RichText
-						tagName="div"
-						className="caption-semi-bold vertical-tabs__step-label"
-						value={
-							resolvedStepLabel
-								? resolvedStepLabel
-								: `${ __( 'Step', 'ambrygen-web' ) } ${
-										stepNumber + 1
-								  }`
-						}
-						onChange={ ( value ) =>
-							setAttributes( {
-								stepLabel: value,
-								customStepLabel: '',
-							} )
-						}
-						placeholder={ `${ __( 'Step', 'ambrygen-web' ) } ${
-							stepNumber + 1
-						}` }
-						allowedFormats={ [] }
-					/>
+					<div className="caption-semi-bold vertical-tabs__step-label">
+						{ `${ __( 'Step', 'ambrygen-web' ) } ${ stepNumber + 1 }` }
+					</div>
 
 					<RichText
 						tagName="div"

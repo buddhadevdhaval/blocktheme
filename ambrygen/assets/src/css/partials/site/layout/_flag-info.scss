@@ -1,3 +1,6 @@
+@use "../../variables/breakpoints" as bp;
+@use "../../variables/fluid_mixins" as *;
+
 .cs-wp-post-date {
 	time {
 		position: relative;
@@ -22,6 +25,22 @@
 	display: grid;
 	gap: 10px;
 
+	.single-webinar & {
+		display: flex;
+		flex-direction: row;
+
+		@include bp.max(lg) {
+			gap: 12px;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			flex-direction: column;
+		}
+
+		@include bp.max(sm) {
+			grid-template-columns: 1fr;
+		}
+	}
+
 	.single & {
 		gap: 20px;
 	}
@@ -31,6 +50,7 @@
 			position: relative;
 			display: flex;
 			gap: 8px;
+
 			&:before {
 				content: "";
 				display: block;
@@ -46,18 +66,12 @@
 
 	.flag-info {
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
 		gap: 10px;
 		font-size: var(--theme_font_size_8);
 
-		a {
-			// color: var(--theme_gray_600);
-			// padding-bottom: 0;
-			// border: none;
-
-			&:hover {
-				// color: var(--theme_link_color);
-			}
+		@include bp.max(md) {
+			align-items: flex-start;
 		}
 
 		.single & {
@@ -131,10 +145,6 @@
 			background-size: 20px 20px;
 			background-repeat: no-repeat;
 			background-position: center;
-		}
-
-		.label-text {
-			/* Style will add here */
 		}
 	}
 }

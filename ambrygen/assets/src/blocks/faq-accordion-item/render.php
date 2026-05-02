@@ -35,16 +35,22 @@ if ( ! $ambrygen_has_question && ! $ambrygen_answer_text && '' === trim( wp_stri
 
 if ( $ambrygen_answer_text ) {
 	$ambrygen_answer_processor = new WP_HTML_Tag_Processor( $ambrygen_answer_html );
+	$ambrygen_has_answer_list  = false;
 
 	while ( $ambrygen_answer_processor->next_tag() ) {
 		$ambrygen_tag_name = $ambrygen_answer_processor->get_tag();
 
 		if ( 'UL' === $ambrygen_tag_name || 'OL' === $ambrygen_tag_name ) {
 			$ambrygen_answer_processor->add_class( 'faq__answer-list' );
-			$ambrygen_answer_html = $ambrygen_answer_processor->get_updated_html();
+			$ambrygen_has_answer_list = true;
 		}
 	}
+
+	if ( $ambrygen_has_answer_list ) {
+		$ambrygen_answer_html = $ambrygen_answer_processor->get_updated_html();
+	}
 }
+
 ?>
 
 <details <?php echo get_block_wrapper_attributes( array( 'class' => 'faq__item js-gsap-fade' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>

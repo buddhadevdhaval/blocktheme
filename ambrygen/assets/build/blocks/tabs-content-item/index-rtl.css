@@ -1,1 +1,16 @@
-
+/*!************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./assets/src/blocks/tabs-content-item/editor.scss ***!
+  \************************************************************************************************************************************************************************************************************************************************************************/
+.tabs-table-content {
+  position: relative;
+  width: 100%;
+  display: block;
+}
+@media (min-width: 992px) {
+  .tabs-table-content > .block-editor-inner-blocks > .block-editor-block-list__layout {
+    display: block;
+    display: grid;
+    gap: 0 clamp(24px, 1.5rem + (1vw - 9.92px) * 10.0559, 60px);
+    grid-template-columns: 380px 1fr;
+  }
+}

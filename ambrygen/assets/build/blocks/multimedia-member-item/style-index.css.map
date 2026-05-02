@@ -1,0 +1,1 @@
+{"version":3,"file":"multimedia-member-item/style-index.css","mappings":";;;AAAA;EACC;AACD,C","sources":["webpack://ambrygen/./assets/src/blocks/multimedia-member-item/style.scss"],"sourcesContent":[".multimedia-member__item {\n\tmin-width: 0;\n}\n"],"names":[],"ignoreList":[],"sourceRoot":""}

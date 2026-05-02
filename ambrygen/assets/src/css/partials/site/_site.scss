@@ -13,7 +13,7 @@
 
 // events
 @use "events/event";
-@use "event-details/event-details";
+@use "events/webinar-grid";
 
 
 /* Listings */
@@ -26,9 +26,12 @@
 
 /* Detail Pages */
 @use "detail-pages/archive-single";
+@use "detail-pages/event-details.scss";
 
-/* Hereditary Neurology */
-// @use "our-test-cancer/icon-card-grid";
-// @use "our-test-cancer/catalog-conditions";
 
 @use "cardio-detail";
+
+@use "cardiology";
+
+@use "sidebar-common";
+

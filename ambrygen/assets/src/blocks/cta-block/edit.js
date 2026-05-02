@@ -30,7 +30,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Content Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag || 'h2' }
@@ -60,3 +60,4 @@ export default function Edit( { attributes, setAttributes } ) {
 		</>
 	);
 }
+

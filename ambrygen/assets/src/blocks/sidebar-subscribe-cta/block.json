@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ambrygen/sidebar-subscribe-cta",
+	"title": "Sidebar Subscribe CTA",
+	"category": "ambrygen",
+	"description": "Displays a subscription CTA in the blog sidebar.",
+	"textdomain": "ambrygen-web",
+	"attributes": {
+		"title": {
+			"type": "string",
+			"default": "Love this article?"
+		},
+		"subtitle": {
+			"type": "string",
+			"default": "Get stories just like it, delivered right to you."
+		}
+	},
+	"supports": {
+		"html": false,
+		"anchor": true
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

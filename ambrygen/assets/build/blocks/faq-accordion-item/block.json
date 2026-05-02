@@ -8,6 +8,9 @@
   "parent": [
     "ambrygen/faq-accordion"
   ],
+  "usesContext": [
+    "ambrygen/faqAccordionVariant"
+  ],
   "description": "Item block for the FAQ Accordion block.",
   "supports": {
     "html": false,

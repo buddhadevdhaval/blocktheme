@@ -17,13 +17,15 @@ use Ambrygen\Theme\Core\Helper;
 
 $ambrygen_attributes = $attributes ?? array();
 
-$ambrygen_block_id    = $ambrygen_attributes['blockId'] ?? '';
+$ambrygen_block_id    = isset( $ambrygen_attributes['blockId'] )
+	? sanitize_html_class( $ambrygen_attributes['blockId'] )
+	: '';
 $ambrygen_heading     = $ambrygen_attributes['heading'] ?? '';
-$ambrygen_heading_tag = $ambrygen_attributes['headingTag'] ?? 'h2';
+$ambrygen_heading_tag = Helper::get_heading_tag( $ambrygen_attributes['headingTag'] ?? 'h2', 'h2' );
 $ambrygen_description = $ambrygen_attributes['description'] ?? '';
 $ambrygen_image_id    = isset( $ambrygen_attributes['imageId'] ) ? absint( $ambrygen_attributes['imageId'] ) : 0;
-$ambrygen_image_url   = $ambrygen_attributes['imageUrl'] ?? '';
-$ambrygen_image_alt   = $ambrygen_attributes['imageAlt'] ?? '';
+$ambrygen_image_url   = isset( $ambrygen_attributes['imageUrl'] ) ? esc_url_raw( $ambrygen_attributes['imageUrl'] ) : '';
+$ambrygen_image_alt   = isset( $ambrygen_attributes['imageAlt'] ) ? sanitize_text_field( $ambrygen_attributes['imageAlt'] ) : '';
 $ambrygen_variation   = $ambrygen_attributes['variation'] ?? 'default';
 
 $ambrygen_steps            = ! empty( $ambrygen_attributes['steps'] ) && is_array( $ambrygen_attributes['steps'] ) ? $ambrygen_attributes['steps'] : array();
@@ -33,8 +35,7 @@ $ambrygen_steps_desc       = $ambrygen_attributes['turnaroundDescription'] ?? ''
 $ambrygen_social_cards     = ! empty( $ambrygen_attributes['socialCards'] ) && is_array( $ambrygen_attributes['socialCards'] ) ? $ambrygen_attributes['socialCards'] : array();
 $ambrygen_is_steps         = 'variation-style-steps' === $ambrygen_variation;
 
-$ambrygen_allowed_tags = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
-$ambrygen_heading_tag  = in_array( $ambrygen_heading_tag, $ambrygen_allowed_tags, true ) ? $ambrygen_heading_tag : 'h2';
+// Heading tag already validated via Helper::get_heading_tag() above.
 $ambrygen_has_image    = $ambrygen_image_id || $ambrygen_image_url;
 $ambrygen_has_content  = $ambrygen_heading || $ambrygen_description;
 
@@ -164,20 +165,19 @@ if ( $ambrygen_block_id ) {
 		<?php if ( $ambrygen_has_image ) : ?>
 			<div class="supporting-graphs__chart-card">
 				<div class="supporting-graphs__chart-image">
-					<?php if ( $ambrygen_image_id ) : ?>
-						<?php
-						echo Helper::image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-							$ambrygen_image_id,
-							'full',
-							array(
-								'alt'     => esc_attr( $ambrygen_image_alt ),
-								'loading' => 'lazy',
-							)
-						);
-						?>
-					<?php else : ?>
-						<img src="<?php echo esc_url( $ambrygen_image_url ); ?>" alt="<?php echo esc_attr( $ambrygen_image_alt ); ?>" loading="lazy" />
-					<?php endif; ?>
+					<?php
+					// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() escapes attributes and returns wp_kses_post()-sanitized image markup.
+					echo Helper::image_from_source(
+						$ambrygen_image_id,
+						$ambrygen_image_url,
+						'full',
+						array(
+							'alt'     => $ambrygen_image_alt,
+							'loading' => 'lazy',
+						)
+					);
+					// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
+					?>
 				</div>
 			</div>
 		<?php endif; ?>

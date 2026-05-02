@@ -2,35 +2,34 @@ import {
 	useBlockProps,
 	InnerBlocks,
 	InspectorControls,
+	RichText,
 } from '@wordpress/block-editor';
 import {
 	PanelBody,
-	TextControl,
 	ToggleControl,
 	SelectControl,
 	Spinner,
 	Notice,
-	Button,
+	FormTokenField,
 } from '@wordpress/components';
-import { Fragment, useState, useEffect, useRef, useMemo } from '@wordpress/element';
+import { Fragment, useEffect, useRef, useMemo } from '@wordpress/element';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { createBlock } from '@wordpress/blocks';
-import apiFetch from '@wordpress/api-fetch';
 
 const ALLOWED_BLOCKS = [ 'ambrygen/collaborators-item' ];
 const TEMPLATE = [ [ 'ambrygen/collaborators-item', {} ] ];
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const { title, isOpen, selectionMode } = attributes;
+	const { title, subtitle, isOpen, selectionMode } = attributes;
 	const previousSelectionMode = useRef( selectionMode );
-	const { insertBlock, replaceInnerBlocks } = useDispatch( 'core/block-editor' );
+	const { replaceInnerBlocks } = useDispatch( 'core/block-editor' );
 
 	const { collaboratorTerms, hasResolved, isResolving } = useSelect(
 		( select ) => {
 			const { getEntityRecords, isResolving, hasFinishedResolution } =
 				select( 'core' );
 			const query = {
-				per_page: 100,
+				per_page: -1,
 				orderby: 'name',
 				order: 'asc',
 				context: 'edit',
@@ -72,31 +71,44 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		[ clientId ]
 	);
 
+	const collaboratorOptions = terms || [];
+	const collaboratorSuggestions = collaboratorOptions.map(
+		( term ) => term.name
+	);
+	const selectedCollaboratorNames = innerBlocks
+		.filter( ( block ) => block.attributes?.isNameLocked )
+		.map( ( block ) => block.attributes?.text )
+		.filter( Boolean );
+
 	const manualTemplateBlocks = TEMPLATE.map( ( [ name, blockAttributes ] ) =>
 		createBlock( name, blockAttributes )
 	);
 
-	const loadLinkedCollaborators = () => {
-		if ( ! Array.isArray( terms ) || terms.length === 0 ) {
-			return;
-		}
-
-		const blocks = terms.map( ( term ) =>
-			createBlock( 'ambrygen/collaborators-item', {
-				text: term.name || '',
-				url: term.meta?.link || '',
-				linkTarget: '_blank',
-			} )
+	const onCollaboratorsChange = ( names ) => {
+		const manualBlocks = innerBlocks.filter(
+			( block ) => ! block.attributes?.isNameLocked
 		);
 
-		replaceInnerBlocks( clientId, blocks, false );
-	};
+		const collaboratorBlocks = names
+			.map( ( name ) =>
+				collaboratorOptions.find( ( item ) => item.name === name )
+			)
+			.filter( Boolean )
+			.map( ( term ) =>
+				createBlock( 'ambrygen/collaborators-item', {
+					text: term.name || '',
+					url: term.meta?.link || '',
+					linkTarget: '_blank',
+					isNameLocked: true,
+				} )
+			);
 
-	useEffect( () => {
-		if ( selectionMode === 'link-all' && termsLoaded ) {
-			loadLinkedCollaborators();
-		}
-	}, [ selectionMode, terms, termsLoaded ] );
+		replaceInnerBlocks(
+			clientId,
+			[ ...manualBlocks, ...collaboratorBlocks ],
+			false
+		);
+	};
 
 	useEffect( () => {
 		if (
@@ -113,11 +125,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		<Fragment>
 			<InspectorControls>
 				<PanelBody title="Settings">
-					<ToggleControl
-						label="Open by default"
-						checked={ isOpen }
-						onChange={ ( val ) => setAttributes( { isOpen: val } ) }
-					/>
 					<SelectControl
 						label="Selection Mode"
 						value={ selectionMode }
@@ -128,24 +135,56 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( val ) =>
 							setAttributes( { selectionMode: val } )
 						}
+						help="Choose whether to add and remove selected collaborators manually or load all collaborator terms automatically."
+					/>
+					<ToggleControl
+						label="Open by default"
+						checked={ isOpen }
+						onChange={ ( val ) => setAttributes( { isOpen: val } ) }
 					/>
 				</PanelBody>
+				{ selectionMode === 'manual' && (
+					<PanelBody title="Collaborators">
+						<FormTokenField
+							label="Fetch from taxonomy"
+							value={ selectedCollaboratorNames }
+							suggestions={ collaboratorSuggestions }
+							onChange={ onCollaboratorsChange }
+							placeholder="Type to search collaborator terms"
+						/>
+					</PanelBody>
+				) }
 			</InspectorControls>
-
 			<div
 				{ ...useBlockProps( {
-					className: 'collaborators-list__container',
+					className: 'download-list collaborators-list',
 				} ) }
 			>
-				<div className="collaborators-list__header">
-					<TextControl
-						value={ title }
-						onChange={ ( val ) => setAttributes( { title: val } ) }
-						placeholder="Title"
-						className="collaborators-list__title-input"
-					/>
-				</div>
-				<div className="collaborators-list__content">
+				<div className="download-list__inner">
+					<div className="download-list__header-area mb-24">
+						<RichText
+							tagName="div"
+							className="download-list__kicker hero-kicker"
+							value={ subtitle }
+							onChange={ ( value ) =>
+								setAttributes( { subtitle: value } )
+							}
+							placeholder="Description"
+						/>
+						<div className="is-style-gl-s12" aria-hidden="true"></div>
+						<div className="download-list__content">
+							<RichText
+								tagName="h2"
+								className="download-list__title heading-3 block-title mb-0"
+								value={ title }
+								onChange={ ( value ) =>
+									setAttributes( { title: value } )
+								}
+								placeholder="Heading"
+							/>
+						</div>
+					</div>
+					<div className="download-list__items">
 					{ isLoadingTerms && <Spinner /> }
 					{ termsLoaded && Array.isArray( terms ) && terms.length === 0 && (
 						<Notice status="warning" isDismissible={ false }>
@@ -157,36 +196,53 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							Unable to load collaborator terms with link meta.
 						</Notice>
 					) }
-					<InnerBlocks
-						allowedBlocks={ ALLOWED_BLOCKS }
-						template={ TEMPLATE }
-						orientation="vertical"
-						renderAppender={ false }
-					/>
-					{ selectionMode === 'manual' && (
-						<div className="collaborators-list__actions actions-button">
-							<Button
-								variant="secondary"
-								onClick={ () => {
-									insertBlock(
-										createBlock(
-											'ambrygen/collaborators-item',
-											{}
-										),
-										innerBlocks.length,
-										clientId
-									);
-								} }
-							>
-								Add Collaborator Link Item
-							</Button>
+					{ selectionMode === 'manual' ? (
+						<>
+							<Notice status="info" isDismissible={ false }>
+								Search collaborator terms below to add linked collaboration items. You can also keep manual items in this list.
+							</Notice>
+							<InnerBlocks
+								allowedBlocks={ ALLOWED_BLOCKS }
+								template={ TEMPLATE }
+								orientation="vertical"
+								renderAppender={ false }
+							/>
+						</>
+					) : (
+						<div className="collaborators-list__linked-preview">
+							{ termsLoaded && Array.isArray( terms ) && terms.length > 0 && (
+								<Notice status="info" isDismissible={ false }>
+									Collaborator items are loaded from collaborator terms and shown automatically.
+								</Notice>
+							) }
+							<div className="download-list__items">
+								{ Array.isArray( terms ) &&
+									terms.map( ( term ) => (
+										<div
+											key={ term.id }
+											className="download-list__item wp-block-ambrygen-collaborators-item"
+										>
+											<a
+												href={ term?.meta?.link || '#' }
+												onClick={ ( event ) =>
+													event.preventDefault()
+												}
+											>
+												<span className="download-list__item-text">
+													{ term.name || '' }
+												</span>
+											</a>
+										</div>
+									) ) }
+							</div>
 						</div>
 					) }
 					{ selectionMode === 'link-all' && innerBlocks.length > 0 && (
 						<Notice status="info" isDismissible={ false }>
-							Linked collaborator items can still be updated or removed manually.
+							Existing manual child blocks are ignored while Link All is active. Switch back to Manual to edit them again.
 						</Notice>
 					) }
+					</div>
 				</div>
 			</div>
 		</Fragment>

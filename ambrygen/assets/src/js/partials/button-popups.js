@@ -97,9 +97,9 @@
 							display: none;
 						}
 					</style>
-					<div class="modal-popup modal-popup--video user-modal" id="ambry-global-video-modal" data-video-modal style="display:none;" aria-hidden="true">
+					<div class="modal-popup modal-popup--video user-modal" id="ambry-global-video-modal" data-video-modal style="display:none;" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="ambry-modal-title">
 						<div class="modal-popup__overlay"></div>
-						<div class="modal-popup__panel user-modal__panel" role="dialog" aria-modal="true" aria-labelledby="ambry-modal-title">
+						<div class="modal-popup__panel user-modal__panel">
 							<div class="modal-popup__header">
 								<button type="button" class="modal-popup__close" aria-label="Close modal">
 									<img decoding="async" src="/wp-content/themes/ambrygen/assets/src/images/close-icon.svg" alt="Close" />

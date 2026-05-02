@@ -98,22 +98,6 @@
     "overlayBottomImage": {
       "type": "string",
       "default": ""
-    },
-    "backgroundImage": {
-      "type": "string",
-      "default": ""
-    },
-    "backgroundImageId": {
-      "type": "number",
-      "default": 0
-    },
-    "backgroundImageAlt": {
-      "type": "string",
-      "default": ""
-    },
-    "isTopAligned": {
-      "type": "boolean",
-      "default": false
     }
   },
   "variations": [

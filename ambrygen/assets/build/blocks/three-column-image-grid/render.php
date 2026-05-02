@@ -19,19 +19,31 @@ $ambrygen_heading            = $ambrygen_attributes['heading'] ?? '';
 $ambrygen_description        = $ambrygen_attributes['description'] ?? '';
 $ambrygen_variation          = $ambrygen_attributes['variation'] ?? 'variation-1';
 $ambrygen_block_id           = isset( $ambrygen_attributes['blockId'] )
-	? sanitize_html_class( $ambrygen_attributes['blockId'] )
-	: sanitize_html_class( wp_unique_id( 'three-column-grid-' ) );
+	&& '' !== trim( (string) $ambrygen_attributes['blockId'] )
+	? sanitize_html_class( (string) $ambrygen_attributes['blockId'] )
+	: sanitize_html_class(
+		'three-column-grid-' . substr(
+			md5( (string) wp_json_encode( $ambrygen_attributes ) . '|' . $content ),
+			0,
+			12
+		)
+	);
 $ambrygen_heading_tag        = Helper::get_heading_tag( $ambrygen_attributes['headingTag'] ?? 'h2', 'h2' );
 $ambrygen_allowed_variations = array( 'variation-1', 'variation-2' );
 $ambrygen_variation          = in_array( $ambrygen_variation, $ambrygen_allowed_variations, true ) ? $ambrygen_variation : 'variation-1';
-$ambrygen_variation_class    = 'variation-2' === $ambrygen_variation ? 'variation-three' : '';
-$ambrygen_show_eyebrow       = 'variation-2' !== $ambrygen_variation;
-$ambrygen_is_header_vertical = 'variation-2' !== $ambrygen_variation;
+$ambrygen_variation_class_map = array(
+	'variation-1' => '',
+	'variation-2' => 'is-variation-2',
+);
+$ambrygen_variation_class    = $ambrygen_variation_class_map[ $ambrygen_variation ] ?? '';
+$ambrygen_is_variation_one   = 'variation-2' !== $ambrygen_variation;
+$ambrygen_show_eyebrow       = $ambrygen_is_variation_one;
+$ambrygen_is_header_vertical = $ambrygen_is_variation_one;
 
 $ambrygen_has_heading        = '' !== trim( wp_strip_all_tags( $ambrygen_heading ) );
 $ambrygen_has_description    = '' !== trim( wp_strip_all_tags( $ambrygen_description ) );
 $ambrygen_has_eyebrow        = '' !== trim( wp_strip_all_tags( $ambrygen_eyebrow ) );
-$ambrygen_heading_id         = $ambrygen_has_heading ? wp_unique_id( 'three-column-grid-heading-' ) : '';
+$ambrygen_heading_id         = $ambrygen_has_heading ? $ambrygen_block_id . '-heading' : '';
 
 $wrapper_args = array(
 	'class' => trim( 'block-layout three-column-image-grid ' . $ambrygen_variation_class ),

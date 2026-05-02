@@ -1,0 +1,61 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ambrygen/stats-counter",
+	"title": "Stats Counter",
+	"category": "ambrygen",
+	"icon": "chart-bar",
+	"description": "Displays a grid of counters with titles and descriptions.",
+	"supports": {
+		"html": false
+	},
+	"keywords": [
+		"counter",
+		"statistics",
+		"numbers"
+	],
+	"attributes": {
+		"blockId": {
+			"type": "string",
+			"default": ""
+		},
+		"counters": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"prefix": {
+						"type": "string"
+					},
+					"number": {
+						"type": "string"
+					},
+					"postfix": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	},
+	"example": {
+		"attributes": {
+			"blockId": "stats-counter-example"
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js",
+	"render": "file:./render.php",
+	"textdomain": "ambrygen-web"
+}

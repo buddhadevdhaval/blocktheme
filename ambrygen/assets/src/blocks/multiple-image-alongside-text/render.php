@@ -61,43 +61,38 @@ if ( $ambrygen_has_heading ) {
  * Stats
  * ---------------------------------
  */
-$ambrygen_stats = isset( $ambrygen_attributes['stats'] ) && is_array( $ambrygen_attributes['stats'] )
+$ambrygen_raw_stats_input = isset( $ambrygen_attributes['stats'] ) && is_array( $ambrygen_attributes['stats'] )
 	? $ambrygen_attributes['stats']
 	: array();
+$ambrygen_stats           = array();
 
-$ambrygen_stats = array_values(
-	array_filter(
-		array_map(
-			static function ( $ambrygen_stat ) {
-				$ambrygen_prefix      = isset( $ambrygen_stat['prefix'] ) ? (string) $ambrygen_stat['prefix'] : '';
-				$ambrygen_number      = isset( $ambrygen_stat['number'] ) ? (string) $ambrygen_stat['number'] : '';
-				$ambrygen_postfix     = isset( $ambrygen_stat['postfix'] )
-					? (string) $ambrygen_stat['postfix']
-					: ( isset( $ambrygen_stat['suffix'] ) ? (string) $ambrygen_stat['suffix'] : '' );
-				$ambrygen_label       = isset( $ambrygen_stat['label'] )
-					? (string) $ambrygen_stat['label']
-					: ( isset( $ambrygen_stat['title'] ) ? (string) $ambrygen_stat['title'] : '' );
-				$ambrygen_description = isset( $ambrygen_stat['description'] ) ? (string) $ambrygen_stat['description'] : '';
+foreach ( $ambrygen_raw_stats_input as $ambrygen_stat ) {
+	if ( ! is_array( $ambrygen_stat ) ) {
+		continue;
+	}
 
-				return array(
-					'prefix'      => $ambrygen_prefix,
-					'number'      => $ambrygen_number,
-					'postfix'     => $ambrygen_postfix,
-					'label'       => $ambrygen_label,
-					'description' => $ambrygen_description,
-				);
-			},
-			$ambrygen_stats
-		),
-		static function ( $ambrygen_stat ) {
-			return '' !== trim( wp_strip_all_tags( $ambrygen_stat['prefix'] ) )
-				|| '' !== trim( wp_strip_all_tags( $ambrygen_stat['number'] ) )
-				|| '' !== trim( wp_strip_all_tags( $ambrygen_stat['postfix'] ) )
-				|| '' !== trim( wp_strip_all_tags( $ambrygen_stat['label'] ) )
-				|| '' !== trim( wp_strip_all_tags( $ambrygen_stat['description'] ) );
-		}
-	)
-);
+	$ambrygen_normalized_stat = array(
+		'prefix'      => isset( $ambrygen_stat['prefix'] ) ? (string) $ambrygen_stat['prefix'] : '',
+		'number'      => isset( $ambrygen_stat['number'] ) ? (string) $ambrygen_stat['number'] : '',
+		'postfix'     => isset( $ambrygen_stat['postfix'] )
+			? (string) $ambrygen_stat['postfix']
+			: ( isset( $ambrygen_stat['suffix'] ) ? (string) $ambrygen_stat['suffix'] : '' ),
+		'label'       => isset( $ambrygen_stat['label'] )
+			? (string) $ambrygen_stat['label']
+			: ( isset( $ambrygen_stat['title'] ) ? (string) $ambrygen_stat['title'] : '' ),
+		'description' => isset( $ambrygen_stat['description'] ) ? (string) $ambrygen_stat['description'] : '',
+	);
+
+	$ambrygen_has_stat_content = '' !== trim( wp_strip_all_tags( $ambrygen_normalized_stat['prefix'] ) )
+		|| '' !== trim( wp_strip_all_tags( $ambrygen_normalized_stat['number'] ) )
+		|| '' !== trim( wp_strip_all_tags( $ambrygen_normalized_stat['postfix'] ) )
+		|| '' !== trim( wp_strip_all_tags( $ambrygen_normalized_stat['label'] ) )
+		|| '' !== trim( wp_strip_all_tags( $ambrygen_normalized_stat['description'] ) );
+
+	if ( $ambrygen_has_stat_content ) {
+		$ambrygen_stats[] = $ambrygen_normalized_stat;
+	}
+}
 
 $ambrygen_visible_stats = array_slice( $ambrygen_stats, 0, 4 );
 

@@ -61,7 +61,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	useEffect( () => {
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId ) {
+		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
@@ -214,6 +214,19 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen
+				>
+					<TagSelector
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
+						type="heading"
+						value={ sectionTitleTag || 'h2' }
+						onChange={ ( value ) =>
+							setAttributes( { sectionTitleTag: value } )
+						}
+					/>
+				</PanelBody>
+				<PanelBody
 					title={ __( 'Logo Settings', 'ambrygen-web' ) }
 					initialOpen
 				>
@@ -222,14 +235,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						value={ sectionTitle }
 						onChange={ ( value ) =>
 							setAttributes( { sectionTitle: value } )
-						}
-					/>
-					<TagSelector
-						label={ __( 'Title Tag', 'ambrygen-web' ) }
-						type="heading"
-						value={ sectionTitleTag || 'h2' }
-						onChange={ ( value ) =>
-							setAttributes( { sectionTitleTag: value } )
 						}
 					/>
 					<ImageUploader
@@ -767,3 +772,5 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
+
+

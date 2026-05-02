@@ -15,38 +15,44 @@
 
 	$ambrygen_attributes = is_array( $attributes ?? null ) ? $attributes : array();
 
-	$ambrygen_block_id    = $ambrygen_attributes['blockId'] ?? '';
+	$ambrygen_block_id    = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
+	$ambrygen_anchor      = isset( $ambrygen_attributes['anchor'] ) ? sanitize_title( $ambrygen_attributes['anchor'] ) : '';
 	$ambrygen_image_id    = absint( $ambrygen_attributes['imageId'] ?? 0 );
+	$ambrygen_image_url   = isset( $ambrygen_attributes['imageUrl'] ) ? (string) $ambrygen_attributes['imageUrl'] : '';
+	$ambrygen_image_alt   = isset( $ambrygen_attributes['imageAlt'] ) ? sanitize_text_field( $ambrygen_attributes['imageAlt'] ) : '';
 	$ambrygen_faqs        = is_array( $ambrygen_attributes['faqs'] ?? null ) ? $ambrygen_attributes['faqs'] : array();
 	$ambrygen_title       = $ambrygen_attributes['title'] ?? '';
 	$ambrygen_description = $ambrygen_attributes['description'] ?? '';
 	$ambrygen_variant     = $ambrygen_attributes['variant'] ?? 'default';
+	$ambrygen_section_id  = $ambrygen_anchor ? $ambrygen_anchor : $ambrygen_block_id;
 
 	$ambrygen_allowed_variants = array( 'default', 'without-image' );
-if ( ! in_array( $ambrygen_variant, $ambrygen_allowed_variants, true ) ) {
-	$ambrygen_variant = 'default';
-}
+	if ( ! in_array( $ambrygen_variant, $ambrygen_allowed_variants, true ) ) {
+		$ambrygen_variant = 'default';
+	}
 
 	$ambrygen_variant_class = 'variation-' . $ambrygen_variant;
-if ( 'without-image' === $ambrygen_variant ) {
-	$ambrygen_variant_class .= ' variation-boxed';
-}
+	if ( 'without-image' === $ambrygen_variant ) {
+		$ambrygen_variant_class .= ' variation-boxed';
+	}
 
 	$ambrygen_right_col_class = 'alongside-faq__col alongside-faq__col--right';
-if ( 'without-image' === $ambrygen_variant ) {
-	$ambrygen_right_col_class .= ' full-width';
-}
+	if ( 'without-image' === $ambrygen_variant ) {
+		$ambrygen_right_col_class .= ' full-width';
+	}
+
+	$ambrygen_hide_sub_heading = 'without-image' !== $ambrygen_variant;
 
 	$ambrygen_heading = Helper::get_heading_tag( $ambrygen_attributes['headingTag'] ?? 'h5', 'h5' );
 
-	$ambrygen_heading_id    = wp_unique_id( 'faq-heading-' );
+	$ambrygen_heading_id    = $ambrygen_section_id ? $ambrygen_section_id . '-heading' : wp_unique_id( 'faq-heading-' );
 	$ambrygen_inner_content = trim( $content );
 
 	$ambrygen_wrapper_attributes = get_block_wrapper_attributes(
-		$ambrygen_block_id
+		$ambrygen_section_id
 		? array(
 			'class' => 'block-layout alongside-faq ' . $ambrygen_variant_class,
-			'id'    => $ambrygen_block_id,
+			'id'    => $ambrygen_section_id,
 		)
 		: array(
 			'class' => 'block-layout alongside-faq ' . $ambrygen_variant_class,
@@ -61,14 +67,18 @@ if ( 'without-image' === $ambrygen_variant ) {
 		<div class="alongside-faq__col alongside-faq__col--left">
 			<div class="alongside-faq__media js-gsap-fade">
 				<?php
-					echo Helper::image_with_placeholder( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() escapes attributes and returns wp_kses_post()-sanitized image markup.
+					echo Helper::image_from_source(
 						$ambrygen_image_id,
+						$ambrygen_image_url,
 						'full',
 						array(
-							'alt'     => esc_attr( $ambrygen_attributes['imageAlt'] ?? '' ),
+							'alt'     => $ambrygen_image_alt,
 							'loading' => 'lazy',
-						)
+						),
+						true
 					);
+					// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 				?>
 			</div>
 		</div>
@@ -114,7 +124,7 @@ if ( 'without-image' === $ambrygen_variant ) {
 								<?php
 								$ambrygen_faq_answer_id = wp_unique_id( 'faq-answer-' );
 								$ambrygen_items         = is_array( $ambrygen_faq['items'] ?? null ) ? $ambrygen_faq['items'] : array();
-								$ambrygen_sub_heading   = $ambrygen_faq['subHeading'] ?? '';
+								$ambrygen_sub_heading   = $ambrygen_hide_sub_heading ? '' : ( $ambrygen_faq['subHeading'] ?? '' );
 								?>
 							<details class="faq__item js-gsap-fade">
 								<summary class="faq__header text-lg-medium" aria-expanded="false" aria-controls="<?php echo esc_attr( $ambrygen_faq_answer_id ); ?>">

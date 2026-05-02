@@ -118,11 +118,22 @@ if ( $ambrygen_term_id > 0 ) {
 							class_exists( Helper::class )
 							&& is_callable( array( Helper::class, 'get_marketing_material_posts_for_category' ) )
 						) {
-							$ambrygen_category_posts = Helper::get_marketing_material_posts_for_category(
-								$ambrygen_category_id,
-								$ambrygen_category_post_ids,
-								$ambrygen_row_material_type_id > 0 ? $ambrygen_row_material_type_id : $ambrygen_material_type_id
-							);
+							$ambrygen_cache_key = 'marketing_material_posts_' . $ambrygen_category_id . '_' . $ambrygen_row_material_type_id . '_' . $ambrygen_material_type_id . '_' . md5( wp_json_encode( $ambrygen_category_post_ids ) );
+							$ambrygen_category_posts = wp_cache_get( $ambrygen_cache_key, 'ambrygen_marketing' );
+
+							if ( false === $ambrygen_category_posts ) {
+								$ambrygen_category_posts = Helper::get_marketing_material_posts_for_category(
+									$ambrygen_category_id,
+									$ambrygen_category_post_ids,
+									$ambrygen_row_material_type_id > 0 ? $ambrygen_row_material_type_id : $ambrygen_material_type_id
+								);
+
+								if ( ! is_array( $ambrygen_category_posts ) ) {
+									$ambrygen_category_posts = array();
+								}
+
+								wp_cache_set( $ambrygen_cache_key, $ambrygen_category_posts, 'ambrygen_marketing', 12 * HOUR_IN_SECONDS );
+							}
 						}
 						?>
 
@@ -146,10 +157,23 @@ if ( $ambrygen_term_id > 0 ) {
 													class_exists( Helper::class )
 													&& is_callable( array( Helper::class, 'render_marketing_material_item' ) )
 												) {
-													echo Helper::render_marketing_material_item( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-														$ambrygen_post->ID,
-														get_the_title( $ambrygen_post->ID )
-													);
+													$ambrygen_item_cache_key = 'marketing_material_html_' . $ambrygen_post->ID;
+													$ambrygen_item_html      = wp_cache_get( $ambrygen_item_cache_key, 'ambrygen_marketing' );
+
+													if ( false === $ambrygen_item_html ) {
+														$ambrygen_item_html = Helper::render_marketing_material_item(
+															$ambrygen_post->ID,
+															get_the_title( $ambrygen_post->ID )
+														);
+
+														if ( ! is_string( $ambrygen_item_html ) ) {
+															$ambrygen_item_html = '';
+														}
+
+														wp_cache_set( $ambrygen_item_cache_key, $ambrygen_item_html, 'ambrygen_marketing', 12 * HOUR_IN_SECONDS );
+													}
+
+													echo $ambrygen_item_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 												}
 												?>
 											<?php endforeach; ?>
@@ -195,10 +219,24 @@ if ( $ambrygen_term_id > 0 ) {
 										class_exists( Helper::class )
 										&& is_callable( array( Helper::class, 'render_marketing_material_item' ) )
 									) {
-										echo Helper::render_marketing_material_item( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-											get_the_ID(),
-											get_the_title()
-										);
+										$ambrygen_post_id        = get_the_ID();
+										$ambrygen_item_cache_key = 'marketing_material_html_' . $ambrygen_post_id;
+										$ambrygen_item_html      = wp_cache_get( $ambrygen_item_cache_key, 'ambrygen_marketing' );
+
+										if ( false === $ambrygen_item_html ) {
+											$ambrygen_item_html = Helper::render_marketing_material_item(
+												$ambrygen_post_id,
+												get_the_title()
+											);
+
+											if ( ! is_string( $ambrygen_item_html ) ) {
+												$ambrygen_item_html = '';
+											}
+
+											wp_cache_set( $ambrygen_item_cache_key, $ambrygen_item_html, 'ambrygen_marketing', 12 * HOUR_IN_SECONDS );
+										}
+
+										echo $ambrygen_item_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 									}
 								endwhile;
 								?>

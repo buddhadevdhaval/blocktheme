@@ -1,0 +1,90 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+
+// Approach Card Component
+.approach-card {
+	background: linear-gradient(0deg, var(--theme_white) 0%, var(--theme_white) 100%), var(--theme_primary_25);
+	border-radius: 16px;
+	overflow: hidden;
+
+	&__inner {
+		backdrop-filter: blur(20px);
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		justify-content: space-between;
+		padding: var(--theme_space_9);
+	}
+
+	&__image-wrapper {
+		position: relative;
+		width: 100%;
+	}
+
+	&__text-content {
+		display: flex;
+		flex-direction: column;
+		gap: var(--theme_space_6);
+		width: 100%;
+	}
+
+	&__title {
+		color: var(--theme_gray_900);
+
+		a {
+			color: var(--theme_gray_900);
+			padding: 0;
+			border: none;
+			text-decoration: none;
+
+			&:hover {
+				color: var(--theme_cg_blue);
+				text-decoration: underline;
+			}
+
+			&:focus-visible {
+				outline: 2px solid var(--theme_cg_blue);
+				outline-offset: 2px;
+				color: var(--theme_cg_blue);
+				text-decoration: underline;
+			}
+		}
+	}
+
+	&__description {
+		color: var(--theme_gray_600);
+
+		p {
+			margin-bottom: 14px;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	&__image {
+		border-radius: 16px;
+		height: 300px;
+		overflow: hidden;
+		width: 100%;
+
+		@include bp.between(lg, xl) {
+			height: clamp(220px, calc(13.75rem + ((1vw - 9.92px) * 19.3237)), 260px);
+		}
+
+		@include bp.max(xs) {
+			height: 220px;
+		}
+
+		img {
+			border-radius: 16px;
+			height: 100%;
+			object-fit: cover;
+			width: 100%;
+		}
+	}
+
+	&__cta {
+		width: 100%;
+	}
+}

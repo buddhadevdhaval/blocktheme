@@ -21,7 +21,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	useEffect( () => {
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId ) {
+		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
 			setAttributes( { blockId: expectedId } );
 		}
 	}, [ blockId, clientId, setAttributes ] );
@@ -30,7 +30,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Timeline Settings', 'ambrygen-web' ) }
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
 					initialOpen
 				>
 					<TagSelector
@@ -86,3 +86,4 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
+

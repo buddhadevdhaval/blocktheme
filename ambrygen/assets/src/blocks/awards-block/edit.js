@@ -9,7 +9,6 @@ import {
 	Button,
 	PanelBody,
 	ToggleControl,
-	RangeControl,
 } from '@wordpress/components';
 
 import { ImageUploader, ItemHeader } from '../_shared/components';
@@ -41,10 +40,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		title,
 		description,
 		awards = [],
-		autoplay,
-		showNavigation,
-		showPagination,
-		slidesPerView,
 		isHeaderVertical,
 	} = attributes;
 	const awardsWithImages = awards.filter( ( award ) =>
@@ -53,11 +48,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const hasAwards = awardsWithImages.length > 0;
 
 	useEffect( () => {
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+		const clientIdSuffix = clientId.slice( 0, 8 );
+		const expectedId = `section-${ clientIdSuffix }`;
 		const hasMissingIds = awards.some( ( award ) => ! award?.id );
 		const nextAttributes = {};
 
-		if ( ! blockId ) {
+		if ( ! blockId || ! blockId.endsWith( clientIdSuffix ) ) {
 			nextAttributes.blockId = expectedId;
 		}
 
@@ -77,7 +73,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		setAttributes( nextAttributes );
 	}, [ awards, blockId, clientId, setAttributes ] );
 
-	const blockProps = useBlockProps();
+	const blockProps = useBlockProps( {
+		id: blockId || undefined,
+	} );
 
 	const updateAward = ( awardId, updates ) => {
 		setAttributes( {
@@ -196,47 +194,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 					/>
 				</PanelBody>
-				<PanelBody
-					title={ __( 'Slider Settings', 'ambrygen-web' ) }
-					initialOpen={ false }
-				>
-					<ToggleControl
-						label={ __( 'Autoplay', 'ambrygen-web' ) }
-						checked={ !! autoplay }
-						onChange={ ( value ) =>
-							setAttributes( { autoplay: value } )
-						}
-					/>
-					<ToggleControl
-						label={ __(
-							'Show Navigation Buttons',
-							'ambrygen-web'
-						) }
-						checked={ !! showNavigation }
-						onChange={ ( value ) =>
-							setAttributes( { showNavigation: value } )
-						}
-					/>
-					<ToggleControl
-						label={ __( 'Show Pagination Dots', 'ambrygen-web' ) }
-						checked={ !! showPagination }
-						onChange={ ( value ) =>
-							setAttributes( { showPagination: value } )
-						}
-					/>
-					<RangeControl
-						label={ __(
-							'Slides Per View (Desktop)',
-							'ambrygen-web'
-						) }
-						value={ slidesPerView }
-						onChange={ ( value ) =>
-							setAttributes( { slidesPerView: value } )
-						}
-						min={ 1 }
-						max={ 8 }
-					/>
-				</PanelBody>
 			</InspectorControls>
 
 			<div { ...blockProps }>
@@ -253,7 +210,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							onChange={ ( value ) =>
 								setAttributes( { title: value } )
 							}
-							placeholder={ __( 'Add title…', 'ambrygen-web' ) }
+							placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 						/>
 						<RichText
 							tagName="div"
@@ -263,7 +220,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								setAttributes( { description: value } )
 							}
 							placeholder={ __(
-								'Add description…',
+								'Add Description...',
 								'ambrygen-web'
 							) }
 						/>
@@ -277,18 +234,24 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							aria-hidden="true"
 						></div>
 
-						<div className="awards-block_listing">
-							{ awardsWithImages.map( ( award ) => (
-								<div
-									key={ award.id }
-									className="awards-block_listing__item"
-								>
-									<img
-										src={ award.imageUrl }
-										alt={ award.imageAlt || '' }
-									/>
+						<div className="marquee-slide">
+							<div className="marquee-slide__track">
+								<div className="marquee-slide__slider">
+									<div className="marquee-slide__wrapper">
+										{ awardsWithImages.map( ( award ) => (
+											<div
+												key={ award.id }
+												className="marquee-slide__item is-visible"
+											>
+												<img
+													src={ award.imageUrl }
+													alt={ award.imageAlt || '' }
+												/>
+											</div>
+										) ) }
+									</div>
 								</div>
-							) ) }
+							</div>
 						</div>
 					</>
 				) }

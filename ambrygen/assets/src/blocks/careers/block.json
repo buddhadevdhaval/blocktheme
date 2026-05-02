@@ -39,9 +39,17 @@
       "default": ""
     },
     "videoObj": {
-    "type": "object",
-    "default": null
-  },
+      "type": "object",
+      "default": null,
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
     "videoType": {
       "type": "string",
       "enum": [
@@ -52,10 +60,38 @@
     },
     "videoPoster": {
       "type": "object",
-      "default": null
+      "default": null,
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "url": {
+          "type": "string"
+        },
+        "alt": {
+          "type": "string"
+        }
+      }
     },
     "link": {
       "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "rel": {
+          "type": "string"
+        },
+        "variant": {
+          "type": "string"
+        }
+      },
       "default": {
         "url": "",
         "text": "",
@@ -66,6 +102,23 @@
     },
     "careerslink": {
       "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "rel": {
+          "type": "string"
+        },
+        "variant": {
+          "type": "string"
+        }
+      },
       "default": {
         "url": "",
         "text": "",
@@ -76,11 +129,33 @@
     },
     "joblocationicon": {
       "type": "object",
-      "default": null
+      "default": null,
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "url": {
+          "type": "string"
+        },
+        "alt": {
+          "type": "string"
+        }
+      }
     },
     "jobtypeicon": {
       "type": "object",
-      "default": null
+      "default": null,
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "url": {
+          "type": "string"
+        },
+        "alt": {
+          "type": "string"
+        }
+      }
     }
   },
   "editorScript": "file:./index.js",

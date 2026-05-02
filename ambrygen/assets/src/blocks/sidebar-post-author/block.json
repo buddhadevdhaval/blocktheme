@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ambrygen/sidebar-post-author",
+	"title": "Sidebar Post Author",
+	"category": "ambrygen",
+	"description": "Displays the post author in the blog sidebar.",
+	"textdomain": "ambrygen-web",
+	"attributes": {
+		"title": {
+			"type": "string",
+			"default": "Author"
+		}
+	},
+	"supports": {
+		"html": false,
+		"anchor": true
+	},
+	"usesContext": [
+		"postId",
+		"postType"
+	],
+	"example": {},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

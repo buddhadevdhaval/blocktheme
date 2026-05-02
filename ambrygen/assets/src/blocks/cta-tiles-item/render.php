@@ -15,13 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Ambrygen\Theme\Core\Helper;
 
-$ambrygen_image_id            = isset( $attributes['imageID'] ) ? absint( $attributes['imageID'] ) : 0;
-$ambrygen_image_url           = $attributes['imageUrl'] ?? '';
-$ambrygen_image_alt           = isset( $attributes['imageAlt'] ) ? sanitize_text_field( $attributes['imageAlt'] ) : '';
-$ambrygen_title               = $attributes['title'] ?? '';
-$ambrygen_heading_tag_default = isset( $block->block_type->attributes['headingTag']['default'] ) ? $block->block_type->attributes['headingTag']['default'] : 'h5';
-$ambrygen_heading_tag         = $attributes['headingTag'] ?? $ambrygen_heading_tag_default;
-$ambrygen_desc                = $attributes['description'] ?? '';
+$ambrygen_image_id  = isset( $attributes['imageID'] ) ? absint( $attributes['imageID'] ) : 0;
+$ambrygen_image_url = $attributes['imageUrl'] ?? '';
+$ambrygen_image_alt = isset( $attributes['imageAlt'] ) ? sanitize_text_field( $attributes['imageAlt'] ) : '';
+$ambrygen_title     = $attributes['title'] ?? '';
+$ambrygen_desc      = $attributes['description'] ?? '';
 
 $ambrygen_link_array   = isset( $attributes['link'] ) && is_array( $attributes['link'] ) ? $attributes['link'] : array();
 $ambrygen_link         = $ambrygen_link_array['url'] ?? '';
@@ -47,8 +45,6 @@ $ambrygen_cta_tiles_variation_map = array(
 	'variation-features' => 'image-title-description',
 );
 $ambrygen_cta_tiles_variation     = $ambrygen_cta_tiles_variation_map[ $ambrygen_cta_tiles_variation ] ?? $ambrygen_cta_tiles_variation;
-
-$ambrygen_heading_tag = Helper::get_heading_tag( $ambrygen_heading_tag, $ambrygen_heading_tag_default );
 
 /**
  * WCAG: Prevent empty headings
@@ -136,14 +132,14 @@ if ( 'a' === $ambrygen_wrapper_tag ) {
 	<?php if ( $ambrygen_has_card_info ) : ?>
 		<div class="card-info">
 			<?php if ( $ambrygen_title ) : ?>
-				<<?php echo tag_escape( $ambrygen_heading_tag ); ?> class="link-btn mb-0  heading-5">
+				<div class="link-btn mb-0 heading-5">
 					<?php
 							echo wp_kses(
 								$ambrygen_title,
 								Helper::allowed_heading_html()
 							);
 					?>
-				</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
+				</div>
 			<?php endif; ?>
 
 			<?php if ( $ambrygen_has_description ) : ?>
@@ -155,9 +151,6 @@ if ( 'a' === $ambrygen_wrapper_tag ) {
 			<?php
 			if ( ( 'image-title-description' === $ambrygen_cta_tiles_variation && $ambrygen_link ) || ( 'image-title-description-icon' === $ambrygen_cta_tiles_variation && $ambrygen_link ) ) :
 				?>
-				<?php if ( $ambrygen_has_description ) : ?>
-					<div class="is-style-gl-s12" aria-hidden="true"></div>
-				<?php endif; ?>
 				<div class="card-cta-wrapper">
 					<a
 						href="<?php echo esc_url( $ambrygen_link ); ?>"

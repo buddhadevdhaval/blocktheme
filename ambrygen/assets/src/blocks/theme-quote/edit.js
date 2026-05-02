@@ -52,7 +52,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Theme Quote Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						type="heading"
@@ -86,9 +86,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							) }
 						/>
 
-						{ heading && quoteAttribution && (
-							<div className="is-style-gl-s16" aria-hidden="true"></div>
-						) }
+						<div className="is-style-gl-s16" aria-hidden="true"></div>
 
 						<RichText
 							tagName="div"
@@ -129,3 +127,4 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
+

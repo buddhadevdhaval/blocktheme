@@ -1,18 +1,19 @@
-import { __ } from '@wordpress/i18n';
 import { useBlockProps } from '@wordpress/block-editor';
+import ServerSideRender from '@wordpress/server-side-render';
 
-export default function Edit() {
-    return (
-        <div {...useBlockProps()}>
-            <div className="genetic-testing-block-placeholder" style={{
-                padding: '20px',
-                border: '1px dashed #ccc',
-                backgroundColor: '#f9f9f9',
-                textAlign: 'center'
-            }}>
-                <strong>{__('Genetic Testing Quick Reference', 'ambrygen-web')}</strong>
-                <p style={{ margin: '5px 0 0' }}>{__('Dynamic reference card will appear on the frontend.', 'ambrygen-web')}</p>
-            </div>
-        </div>
-    );
+export default function Edit( { attributes, context, name } ) {
+	const blockProps = useBlockProps();
+	const previewPostId = Number( context?.postId || 0 );
+
+	return (
+		<div { ...blockProps }>
+			<ServerSideRender
+				block={ name }
+				attributes={ {
+					...attributes,
+					previewPostId,
+				} }
+			/>
+		</div>
+	);
 }

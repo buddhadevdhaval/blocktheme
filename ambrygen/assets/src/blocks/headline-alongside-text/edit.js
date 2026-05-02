@@ -5,7 +5,7 @@ import {
 	InspectorControls,
 } from '@wordpress/block-editor';
 import { useSelect } from '@wordpress/data';
-import { PanelBody, ToggleControl } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
 
@@ -33,13 +33,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		backgroundImage,
 		backgroundImageAlt,
 		isMediumText,
-		isHeaderVertical,
 	} = attributes;
 
 	const displayHeadline = headline || title;
 	const displayHeadlineTag = headlineTag || titleTag || 'h2';
+	const isExample = blockId === 'headline-alongside-text-example';
 
-	if ( blockId === 'headline-alongside-text-example' ) {
+	if ( isExample ) {
 		return (
 			<BlockExamplePreview
 				className="headline-alongside-text-example-preview"
@@ -48,15 +48,19 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		);
 	}
 
-	useEffect(() => {
-		const expectedId = `headline-alongside-text-${clientId.slice(0, 8)}`;
-
-		if (!blockId) {
-			setAttributes({
-				blockId: expectedId,
-			});
+	useEffect( () => {
+		if ( isExample ) {
+			return;
 		}
-	}, [clientId, blockId, setAttributes]);
+
+		const expectedId = `headline-alongside-text-${ clientId.slice( 0, 8 ) }`;
+
+		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
+			setAttributes( {
+				blockId: expectedId,
+			} );
+		}
+	}, [ clientId, blockId, isExample, setAttributes ] );
 
 	const hasInnerBlocks = useSelect(
 		( select ) => {
@@ -76,11 +80,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={__('Headline Alongside Text Settings', 'ambrygen-web')}
+					title={__('Heading Settings', 'ambrygen-web')}
 					initialOpen
 				>
 					<TagSelector
-						label={__('Headline Tag', 'ambrygen-web')}
+						label={__('Heading Tag', 'ambrygen-web')}
 						type="heading"
 						value={displayHeadlineTag}
 						onChange={(value) =>
@@ -90,7 +94,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							})
 						}
 					/>
-
+				</PanelBody>
+				<PanelBody
+					title={__('Background Settings', 'ambrygen-web')}
+				>
 					<ImageUploader
 						label={__('Background Image', 'ambrygen-web')}
 						url={backgroundImage}
@@ -109,14 +116,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							})
 						}
 					/>
-
-					<ToggleControl
-						label={__('Vertical Header Layout', 'ambrygen-web')}
-						checked={isHeaderVertical}
-						onChange={(value) =>
-							setAttributes({ isHeaderVertical: value })
-						}
-					/>
 				</PanelBody>
 			</InspectorControls>
 
@@ -130,9 +129,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					</div>
 				)}
 				<div
-					className={ `heading-content-section__inner block__rowflex is-${
-						isHeaderVertical ? 'vertical' : 'horizontal'
-					}` }
+					className="heading-content-section__inner block__rowflex is-horizontal"
 				>
 					<RichText
 						tagName={displayHeadlineTag}
@@ -150,7 +147,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							'core/text-color',
 							'ambrygen/tooltip',
 						]}
-						placeholder={__('Add Heading', 'ambrygen-web')}
+						placeholder={__('Add Heading...', 'ambrygen-web')}
 					/>
 					<div className='heading-content-wrapper'>
 						<div className="heading-content-section__description block__rowflex--block-content block-description">
@@ -167,7 +164,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									'ambrygen/tooltip',
 								]}
 								placeholder={__(
-									'Add Description',
+									'Add Description...',
 									'ambrygen-web'
 								)}
 							/>
@@ -195,3 +192,5 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		</>
 	);
 }
+
+

@@ -176,6 +176,13 @@ tfoot {
 	flex-direction: column;
 	width: 100%;
 
+	&.variation-gray25 {
+		border-radius: 8px;
+		border: 1px solid #EAECF0;
+		background: #FFF;
+		overflow: hidden;
+	}
+
 	&__card-header {
 		padding: 20px 24px;
 		background-color: var(--theme_white);
@@ -199,7 +206,6 @@ tfoot {
 
 	&__row {
 		display: grid;
-		// Fallback for 4-col tables; overridden by .gl-data-table--cols-* modifiers below
 		grid-template-columns: 280px 240px 1fr 160px;
 		align-items: stretch;
 		border-bottom: 1px solid var(--theme_gray_200);
@@ -230,15 +236,7 @@ tfoot {
 			}
 		}
 
-		// @include bp.max(xl) {
-		// 	grid-template-columns: 240px 200px 1fr 140px;
-		// }
-
-		// @include bp.max(lg) {
-		// 	grid-template-columns: 200px 180px 1fr 120px;
-		// }
-
-		@include bp.max(md) {
+		@include bp.max(lg) {
 			display: flex;
 			flex-direction: column;
 			padding: 20px;
@@ -265,12 +263,20 @@ tfoot {
 			color: var(--theme_gray_900);
 		}
 
+		&--highlight {
+			color: var(--theme_primary_800);
+			font-size: var(--theme_font_size_8);
+			font-weight: 600;
+			line-height: 1.2;
+			letter-spacing: -0.21px;
+		}
+
 		&--turnaround {
 			color: var(--theme_primary_800);
 			font-weight: 600;
 		}
 
-		@include bp.max(md) {
+		@include bp.max(lg) {
 			padding: 0;
 			display: block;
 
@@ -290,7 +296,7 @@ tfoot {
 				margin-bottom: 4px;
 
 				&::before {
-					display: none;
+					// display: none;
 				}
 			}
 		}

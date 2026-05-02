@@ -12,7 +12,6 @@ import {
 	ImageUploader,
 	CtaButtonField,
 	DEFAULT_IMAGES,
-	TagSelector,
 } from '../_shared/components';
 
 export default function Edit( { attributes, setAttributes, context } ) {
@@ -22,7 +21,6 @@ export default function Edit( { attributes, setAttributes, context } ) {
 		imageSrcSet,
 		imageSizes,
 		title,
-		headingTag,
 		description,
 		link,
 	} = attributes;
@@ -34,10 +32,8 @@ export default function Edit( { attributes, setAttributes, context } ) {
 
 	const blockProps = useBlockProps( { className: 'card-col' } );
 
-	const HeadingTag = headingTag || 'h5';
 	const ctaTilesVariation = context?.[ 'ambrygen/ctaTilesVariation' ];
 	const hasLink = Boolean( link?.url );
-	const hasDescription = Boolean( description );
 	const showLearnMore =
 		hasLink &&
 		( ctaTilesVariation === 'image-title-description-icon' ||
@@ -82,7 +78,6 @@ export default function Edit( { attributes, setAttributes, context } ) {
 			<InspectorControls>
 				<PanelBody
 					title={ __( 'Tiles Item Settings', 'ambrygen-web' ) }
-					initialOpen
 				>
 					<div className="cta-tiles-item-sidebar">
 						<ImageUploader
@@ -92,16 +87,8 @@ export default function Edit( { attributes, setAttributes, context } ) {
 							onRemove={ onRemoveImage }
 						/>
 
-						<TagSelector
-							label={ __( 'Heading Tag', 'ambrygen-web' ) }
-							value={ headingTag || 'h5' }
-							onChange={ ( value ) =>
-								setAttributes( { headingTag: value } )
-							}
-							type="heading"
-						/>
 						<CtaButtonField
-							label={ __( 'Link setting', 'ambrygen-web' ) }
+							label={ __( '', 'ambrygen-web' ) }
 							textLabel={ __( 'Link Text', 'ambrygen-web' ) }
 							defaultVariant="primary"
 							value={ link }
@@ -126,7 +113,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 				</div>
 
 				<div className="card-info">
-					<HeadingTag className="link-btn mb-0 heading-5">
+					<div className="link-btn mb-0 heading-5">
 						<RichText
 							value={ title }
 							onChange={ ( value ) =>
@@ -134,7 +121,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 							}
 							placeholder={ __( 'Add Title…', 'ambrygen-web' ) }
 						/>
-					</HeadingTag>
+					</div>
 
 					<div
 						className={ `card-description  ${
@@ -158,13 +145,6 @@ export default function Edit( { attributes, setAttributes, context } ) {
 
 					{ showLearnMore && (
 						<>
-							{ hasDescription &&
-								ctaTilesVariation !== 'image-only-title' && (
-									<div
-										className="is-style-gl-s12"
-										aria-hidden="true"
-									></div>
-								) }
 							<div
 								className={ `${
 									ctaTilesVariation === 'image-only-title'
@@ -189,3 +169,4 @@ export default function Edit( { attributes, setAttributes, context } ) {
 		</>
 	);
 }
+

@@ -25,7 +25,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			<InspectorControls>
 				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
 					<SelectControl
-						label={ __( 'Heading Level', 'ambrygen-web' ) }
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingLevel }
 						options={ [
 							{ label: 'H1', value: 'h1' },
@@ -53,7 +53,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									setAttributes( { title: value } )
 								}
 								placeholder={ __(
-									'Add Title…',
+									'Add Heading…',
 									'ambrygen-web'
 								) }
 							/>
@@ -88,3 +88,4 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
+

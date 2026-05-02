@@ -1,74 +1,74 @@
-@use "../../css/partials/variables/breakpoints" as bp;
+// @use "../../css/partials/variables/breakpoints" as bp;
 
-.collaborator-card {
-	border-top: 1px solid var(--theme_gray_201);
-	padding-top: 2rem;
+// .collaborator-card {
+// 	border-top: 1px solid var(--theme_gray_201);
+// 	padding-top: 2rem;
 
-	&:first-child {
-		border-top: 0;
-		padding-top: 0;
-	}
+// 	&:first-child {
+// 		border-top: 0;
+// 		padding-top: 0;
+// 	}
 
-	&__layout {
-		display: grid;
-		grid-template-columns: 140px minmax(0, 1fr);
-		gap: 2rem;
+// 	&__layout {
+// 		display: grid;
+// 		grid-template-columns: 140px minmax(0, 1fr);
+// 		gap: 2rem;
 
-		@include bp.max(md) {
-			grid-template-columns: 1fr;
-		}
-	}
+// 		@include bp.max(md) {
+// 			grid-template-columns: 1fr;
+// 		}
+// 	}
 
-	&__media {
-		align-items: flex-start;
-		display: flex;
-		justify-content: center;
-	}
+// 	&__media {
+// 		align-items: flex-start;
+// 		display: flex;
+// 		justify-content: center;
+// 	}
 
-	&__image {
-		height: auto;
-		max-width: 140px;
-		width: 100%;
-	}
+// 	&__image {
+// 		height: auto;
+// 		max-width: 140px;
+// 		width: 100%;
+// 	}
 
-	&__content {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
+// 	&__content {
+// 		display: flex;
+// 		flex-direction: column;
+// 		gap: 1rem;
+// 	}
 
-	&__title {
-		color: var(--theme_color_primary);
-	}
+// 	&__title {
+// 		color: var(--theme_color_primary);
+// 	}
 
-	&__description {
-		color: var(--theme_gray_900);
-		line-height: 1.7;
-	}
+// 	&__description {
+// 		color: var(--theme_gray_900);
+// 		line-height: 1.7;
+// 	}
 
-	&__links {
-		margin: 0;
-		padding-left: 1.25rem;
-	}
+// 	&__links {
+// 		margin: 0;
+// 		padding-left: 1.25rem;
+// 	}
 
-	&__links li + li {
-		margin-top: 0.5rem;
-	}
+// 	&__links li + li {
+// 		margin-top: 0.5rem;
+// 	}
 
-	&__links a,
-	&__website a {
-		color: var(--theme_cg_blue);
-		text-decoration: none;
-	}
+// 	&__links a,
+// 	&__website a {
+// 		color: var(--theme_cg_blue);
+// 		text-decoration: none;
+// 	}
 
-	&__links a:hover,
-	&__website a:hover {
-		text-decoration: underline;
-	}
+// 	&__links a:hover,
+// 	&__website a:hover {
+// 		text-decoration: underline;
+// 	}
 
-	&__actions {
-		display: flex;
-		gap: 0.75rem;
-		margin-top: 1.5rem;
-	}
-}
+// 	&__actions {
+// 		display: flex;
+// 		gap: 0.75rem;
+// 		margin-top: 1.5rem;
+// 	}
+// }

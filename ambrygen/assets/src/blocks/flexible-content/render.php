@@ -36,7 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	$ambrygen_image_position       = $attributes['imagePosition'] ?? 'right';
 	$ambrygen_content_alignment    = $attributes['contentAlignment'] ?? 'left';
 	$ambrygen_content_top_align    = ! empty( $attributes['contentTopAlign'] );
-	$ambrygen_variation            = $attributes['variation'] ?? 'default';
+	$ambrygen_variation            = $attributes['variation'] ?? 'simple-content-with-image';
 	$ambrygen_border_required      = $attributes['borderRequired'] ?? false;
 	$ambrygen_heading_tag          = Helper::get_heading_tag( $ambrygen_heading_tag, 'h2' );
 	$ambrygen_is_original_image    = $attributes['isOriginalImage'] ?? false;
@@ -53,17 +53,25 @@ if ( ! empty( $attributes['buttons'] ) && is_array( $attributes['buttons'] ) ) {
 
 	$ambrygen_original_class       = $ambrygen_is_original_image ? ' orignal-image' : '';
 	$ambrygen_image_position_class =
-	( 'right' === $ambrygen_image_position || 'iot-block__rtl' === $ambrygen_image_position )
+	( 'simple-content-with-image' === $ambrygen_variation && ( 'right' === $ambrygen_image_position || 'iot-block__rtl' === $ambrygen_image_position ) ) || 'title-content-with-image' === $ambrygen_variation
 	? 'iot-block__rtl'
 	: '';
 
 	/*
 	* Wrapper attributes.
 	*/
-	$ambrygen_border_class       = $ambrygen_border_required ? 'iot-block--border' : '';
+	$ambrygen_border_class       = ( 'title-content-with-image' === $ambrygen_variation && $ambrygen_border_required ) ? 'iot-block--border' : '';
 	$ambrygen_top_align_class    = $ambrygen_content_top_align ? 'has-top-align' : '';
-	$ambrygen_variation_class    = 'default' !== $ambrygen_variation ? sanitize_html_class( $ambrygen_variation ) : '';
-	$ambrygen_heading_class      = 'variation-iot-author' === $ambrygen_variation ? 'heading-4' : 'heading-2';
+	
+	$ambrygen_image_size_class = '';
+	$ambrygen_heading_class    = 'heading-2';
+	if ( 'title-content-with-image' === $ambrygen_variation ) {
+		$ambrygen_image_size_class = 'size-578x564';
+	} elseif ( 'profile-content-with-image' === $ambrygen_variation ) {
+		$ambrygen_image_size_class = 'size-311x311';
+		$ambrygen_heading_class    = 'heading-4';
+	}
+	$ambrygen_image_size_class   = $ambrygen_image_size_class ? sanitize_html_class( $ambrygen_image_size_class ) : '';
 	$ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 		$ambrygen_block_id
 		? array(
@@ -72,7 +80,7 @@ if ( ! empty( $attributes['buttons'] ) && is_array( $attributes['buttons'] ) ) {
 				$ambrygen_image_position_class . ' ' .
 				$ambrygen_border_class . ' ' .
 				$ambrygen_top_align_class . ' ' .
-				$ambrygen_variation_class .
+				$ambrygen_image_size_class . ' ' .
 				$ambrygen_original_class
 			),
 			'id'    => $ambrygen_block_id,
@@ -83,7 +91,7 @@ if ( ! empty( $attributes['buttons'] ) && is_array( $attributes['buttons'] ) ) {
 				$ambrygen_image_position_class . ' ' .
 				$ambrygen_border_class . ' ' .
 				$ambrygen_top_align_class . ' ' .
-				$ambrygen_variation_class .
+				$ambrygen_image_size_class . ' ' .
 				$ambrygen_original_class
 			),
 		)
@@ -149,7 +157,7 @@ if ( ! empty( $attributes['buttons'] ) && is_array( $attributes['buttons'] ) ) {
 				</div>
 				<div class="is-style-gl-s16" aria-hidden="true"></div>
 			<?php endif; ?>
-			<?php if ( 'variation-iot-author' === $ambrygen_variation && ! empty( $ambrygen_eyebrow_text ) ) : ?>
+			<?php if ( 'profile-content-with-image' === $ambrygen_variation && ! empty( $ambrygen_eyebrow_text ) ) : ?>
 				<div class="iot-block__tagline js-gsap-fade">
 					<?php echo wp_kses_post( $ambrygen_eyebrow_text ); ?>
 				</div>
@@ -160,7 +168,7 @@ if ( ! empty( $attributes['buttons'] ) && is_array( $attributes['buttons'] ) ) {
 					<?php echo wp_kses_post( $ambrygen_heading ); ?>
 				</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 			<?php endif; ?>
-			<?php if ( $ambrygen_subheading ) : ?>
+			<?php if ( 'title-content-with-image' === $ambrygen_variation && $ambrygen_subheading ) : ?>
 				<div class="is-style-gl-s4" aria-hidden="true"></div>
 				<div class="block-sub-heading iot-block__sub-heading subtitle2-sbold js-gsap-fade">
 					<?php echo wp_kses_post( $ambrygen_subheading ); ?>
@@ -168,7 +176,7 @@ if ( ! empty( $attributes['buttons'] ) && is_array( $attributes['buttons'] ) ) {
 				<div class="is-style-gl-s20" aria-hidden="true"></div>
 			<?php endif; ?>
 			<?php if ( $ambrygen_content ) : ?>
-				<?php if ( ! $ambrygen_subheading ) : ?>
+				<?php if ( ! ( 'title-content-with-image' === $ambrygen_variation && $ambrygen_subheading ) ) : ?>
 					<div class="is-style-gl-s24" aria-hidden="true"></div>
 				<?php endif; ?>
 				<div class="block-description body1 iot-block__description js-gsap-fade">

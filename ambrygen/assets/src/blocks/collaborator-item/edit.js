@@ -252,15 +252,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									<ul className="collaborator-card__links">
 										{ postTypeArchives.map( ( link ) => (
 											<li key={ link.label }>
-												<a
-													href={ link.url }
-													className="site-btn is-style-site-text-btn has-right-arrow"
+												<div
+													
+													className=""
 													onClick={ ( event ) =>
 														event.preventDefault()
 													}
 												>
 													{ link.label }
-												</a>
+												</div>
 											</li>
 										) ) }
 									</ul>
@@ -274,15 +274,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 										aria-hidden="true"
 									></div>
 									<div className="collaborator-card__website">
-										<a
-											href={ collaboratorWebsite }
-											className="site-btn is-style-site-text-btn has-right-arrow"
+										<div
+											className="site-btn has-right-arrow btn-small"
 											onClick={ ( event ) =>
 												event.preventDefault()
 											}
 										>
-											{ collaboratorWebsite }
-										</a>
+											Learn more
+										</div>
 									</div>
 								</>
 							) }

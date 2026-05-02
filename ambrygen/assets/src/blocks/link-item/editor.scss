@@ -1,22 +1,22 @@
-.download-list__item {
-	padding: 12px;
-	border: 1px dashed var(--theme_gray_300);
-	background: var(--theme_white);
-	margin-bottom: 8px;
-	border-radius: 4px;
+// .download-list__item {
+// 	padding: 12px;
+// 	border: 1px dashed var(--theme_gray_300);
+// 	background: var(--theme_white);
+// 	margin-bottom: 8px;
+// 	border-radius: 4px;
 
-	.download-list__item-text {
-		display: block;
-		font-weight: 600;
-		color: var(--theme_gray_700);
-		margin-bottom: 4px;
-	}
+// 	.download-list__item-text {
+// 		display: block;
+// 		font-weight: 600;
+// 		color: var(--theme_gray_700);
+// 		margin-bottom: 4px;
+// 	}
 
-	&::after {
-		content: 'Link Preview';
-		font-size: 10px;
-		color: var(--theme_gray_400);
-		text-transform: uppercase;
-		display: block;
-	}
-}
+// 	&::after {
+// 		content: 'Link Preview';
+// 		font-size: 10px;
+// 		color: var(--theme_gray_400);
+// 		text-transform: uppercase;
+// 		display: block;
+// 	}
+// }

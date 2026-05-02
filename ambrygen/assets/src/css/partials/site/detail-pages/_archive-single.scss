@@ -20,28 +20,14 @@
 	}
 }
 
+
+
+
+/* Author Slider - Used on Webinar Detail Page */
+
 #main-content:has(.author-slider) {
 	overflow: hidden;
 	position: relative;
-}
-
-.single-webinar {
-	.flag-details {
-		display: flex;
-		gap: 24px;
-		flex-direction: row;
-
-		@include bp.max(lg) {
-			gap: 12px;
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			flex-direction: column;
-		}
-
-		@include bp.max(sm) {
-			grid-template-columns: 1fr;
-		}
-	}
 }
 
 .author-slider-block {
@@ -162,19 +148,6 @@
 
 	&__name {
 		margin-bottom: 0;
-		/* Style place here */
-	}
-
-	&__job-title {
-		/* Style place here */
-	}
-
-	&__disambiguation {
-		/* Style place here */
-	}
-
-	&__description {
-		/* Style place here */
 	}
 
 	&__controls {
@@ -202,46 +175,4 @@
 	}
 }
 
-// Share Post Styles
-.share-post {
-	display: flex;
-	align-items: center;
-	margin-top: 40px;
-	padding-top: 24px;
-	border-top: 1px solid var(--theme_gray_200);
-
-	&__wrapper {
-		display: flex;
-		align-items: center;
-		gap: 16px;
-	}
-
-	&__label {
-		color: var(--theme_primary_700);
-		font-weight: 600;
-		white-space: nowrap;
-	}
-
-	&__icons {
-		display: flex;
-		gap: 12px;
-		align-items: center;
-	}
-
-	&__icon {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		border: none;
-		width: 24px;
-		height: 24px;
-		cursor: pointer;
-
-
-		img {
-			width: 100%;
-			height: 100%;
-			display: block;
-		}
-	}
-}
+/* Author Slider END - Used on Webinar Detail Page */

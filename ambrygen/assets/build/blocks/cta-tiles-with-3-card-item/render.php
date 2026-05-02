@@ -23,7 +23,7 @@ $ambrygen_link_array = $ambrygen_attributes['link'] ?? array();
 $ambrygen_link_array = is_array( $ambrygen_link_array ) ? $ambrygen_link_array : array();
 
 $ambrygen_link_text   = ! empty( $ambrygen_link_array['text'] ) ? sanitize_text_field( $ambrygen_link_array['text'] ) : __( 'Learn more', 'ambrygen-web' );
-$ambrygen_link_url    = isset( $ambrygen_link_array['url'] ) ? esc_url_raw( $ambrygen_link_array['url'] ) : '';
+$ambrygen_link_url    = $ambrygen_link_array['url'] ?? '';
 $ambrygen_link_target = isset( $ambrygen_link_array['target'] ) ? sanitize_text_field( $ambrygen_link_array['target'] ) : '';
 
 $ambrygen_type = $ambrygen_attributes['type'] ?? 'small';
@@ -40,6 +40,17 @@ $ambrygen_rel_parts = $ambrygen_link_rel
 	: array();
 
 $ambrygen_new_tab_text = '';
+
+$ambrygen_plain_title = $ambrygen_title
+	? html_entity_decode( wp_strip_all_tags( $ambrygen_title ), ENT_QUOTES, 'UTF-8' )
+	: '';
+$ambrygen_plain_desc  = $ambrygen_description
+	? html_entity_decode( wp_trim_words( wp_strip_all_tags( $ambrygen_description ), 10, '' ), ENT_QUOTES, 'UTF-8' )
+	: '';
+$ambrygen_aria_context = $ambrygen_plain_title ? $ambrygen_plain_title : $ambrygen_plain_desc;
+$ambrygen_aria_label   = $ambrygen_aria_context
+	? $ambrygen_link_text . ' - ' . $ambrygen_aria_context
+	: $ambrygen_link_text;
 
 if ( '_blank' === $ambrygen_link_target ) {
 	// noopener + noreferrer are only meaningful for new-tab links.
@@ -61,13 +72,14 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	)
 );
 $ambrygen_image_id           = absint( $ambrygen_attributes['imageId'] ?? 0 );
-$ambrygen_image_url          = isset( $ambrygen_attributes['image'] ) ? esc_url_raw( $ambrygen_attributes['image'] ) : '';
+$ambrygen_image_url          = $ambrygen_attributes['image'] ?? '';
 $ambrygen_image_alt          = isset( $ambrygen_attributes['imageAlt'] ) ? sanitize_text_field( $ambrygen_attributes['imageAlt'] ) : '';
 $ambrygen_image_attrs        = array(
 	'alt'      => $ambrygen_image_alt,
 	'loading'  => 'lazy',
 	'decoding' => 'async',
 );
+$ambrygen_desc_id            = $ambrygen_description ? wp_unique_id( 'cta-3card-desc-' ) : '';
 
 ?>
 
@@ -105,7 +117,10 @@ $ambrygen_image_attrs        = array(
 
 		<?php if ( $ambrygen_description ) : ?>
 			<div class="is-style-gl-s8" aria-hidden="true"></div>
-			<div class="cta-tiles-with-3-card__description body1">
+			<div
+				class="cta-tiles-with-3-card__description body1"
+				id="<?php echo esc_attr( $ambrygen_desc_id ); ?>"
+			>
 				<?php echo wp_kses_post( $ambrygen_description ); ?>
 			</div>
 		<?php endif; ?>
@@ -116,8 +131,9 @@ $ambrygen_image_attrs        = array(
 				<a
 					href="<?php echo esc_url( $ambrygen_link_url ); ?>"
 					class="site-btn is-style-site-text-btn has-right-arrow"
-					<?php if ( $ambrygen_title ) : ?>
-						aria-label="<?php echo esc_attr( $ambrygen_link_text . ' - ' . wp_strip_all_tags( html_entity_decode( $ambrygen_title, ENT_QUOTES, 'UTF-8' ) ) ); ?>"
+					aria-label="<?php echo esc_attr( $ambrygen_aria_label ); ?>"
+					<?php if ( $ambrygen_desc_id ) : ?>
+						aria-describedby="<?php echo esc_attr( $ambrygen_desc_id ); ?>"
 					<?php endif; ?>
 					<?php if ( $ambrygen_link_target ) : ?>
 						target="<?php echo esc_attr( $ambrygen_link_target ); ?>"

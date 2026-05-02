@@ -33,6 +33,19 @@
         "h6"
       ],
       "default": "h2"
+    },
+    "formMode": {
+      "type": "string",
+      "enum": [
+        "shortcode",
+        "iframe",
+        "html"
+      ],
+      "default": "shortcode"
+    },
+    "formUrl": {
+      "type": "string",
+      "default": "https://forms.ambrygenetics.com/261105646833052"
     }
   },
   "textdomain": "ambrygen-web",
@@ -40,6 +53,7 @@
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
   "render": "file:./render.php",
+  "viewScript": "file:./view.js",
   "example": {
     "attributes": {
       "blockId": "theme-form-example"

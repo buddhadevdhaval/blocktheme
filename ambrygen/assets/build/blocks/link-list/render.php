@@ -13,11 +13,15 @@ use Ambrygen\Theme\Core\Helper;
 
 defined( 'ABSPATH' ) || exit;
 
-$ambrygen_block_id     = $attributes['blockId'] ?? '';
-$ambrygen_kicker      = $attributes['kicker'] ?? '';
-$ambrygen_title       = $attributes['title'] ?? '';
-$ambrygen_heading_tag = Helper::get_heading_tag( $attributes['headingTag'] ?? 'h2', 'h2' );
-$ambrygen_inner_content = trim( (string) $content );
+$ambrygen_anchor           = isset( $attributes['anchor'] ) ? sanitize_html_class( $attributes['anchor'] ) : '';
+$ambrygen_block_id         = isset( $attributes['blockId'] ) ? sanitize_html_class( $attributes['blockId'] ) : '';
+$ambrygen_variation        = isset( $attributes['variation'] ) ? sanitize_text_field( (string) $attributes['variation'] ) : 'split-view';
+$ambrygen_variation        = in_array( $ambrygen_variation, array( 'split-view', 'grid-view' ), true ) ? $ambrygen_variation : 'split-view';
+$ambrygen_select_all       = isset( $attributes['selectAllCollaborators'] ) ? (bool) $attributes['selectAllCollaborators'] : true;
+$ambrygen_collaborator_ids = isset( $attributes['collaboratorIds'] ) && is_array( $attributes['collaboratorIds'] ) ? array_map( 'absint', $attributes['collaboratorIds'] ) : array();
+$ambrygen_title            = $attributes['title'] ?? '';
+$ambrygen_heading_tag      = Helper::get_heading_tag( $attributes['headingTag'] ?? 'h2', 'h2' );
+$ambrygen_inner_content    = trim( (string) $content );
 
 $ambrygen_slot_blocks = array(
 	'content' => array(),
@@ -71,54 +75,93 @@ $ambrygen_render_blocks = static function ( array $blocks ): string {
 };
 
 $wrapper_attributes = get_block_wrapper_attributes(
-	$ambrygen_block_id
+	( $ambrygen_anchor || $ambrygen_block_id )
 	? array(
-		'class' => 'download-list',
-		'id'    => $ambrygen_block_id,
+		'class' => 'download-list' . ( 'grid-view' === $ambrygen_variation ? ' variation-grid-view' : '' ),
+		'id'    => $ambrygen_anchor ?: $ambrygen_block_id,
 	)
 	: array(
-		'class' => 'download-list',
+		'class' => 'download-list' . ( 'grid-view' === $ambrygen_variation ? ' variation-grid-view' : '' ),
 	)
 );
+
+$ambrygen_collaborator_terms = array();
+
+if ( 'grid-view' === $ambrygen_variation ) {
+	if ( $ambrygen_select_all || ! empty( $ambrygen_collaborator_ids ) ) {
+		$ambrygen_term_query = array(
+			'taxonomy'   => 'collaborator',
+			'hide_empty' => false,
+			'orderby'    => 'name',
+			'order'      => 'ASC',
+		);
+
+		if ( $ambrygen_select_all ) {
+			if ( ! empty( $ambrygen_collaborator_ids ) ) {
+				$ambrygen_term_query['exclude'] = $ambrygen_collaborator_ids;
+			}
+		} else {
+			$ambrygen_term_query['include'] = $ambrygen_collaborator_ids;
+		}
+
+		$ambrygen_terms = get_terms( $ambrygen_term_query );
+
+		if ( ! is_wp_error( $ambrygen_terms ) ) {
+			$ambrygen_collaborator_terms = $ambrygen_terms;
+		}
+	}
+}
 ?>
 
 <div <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-<div class="download-list__inner">	
-<div class="download-list__header-area mb-24">
-		<?php if ( $ambrygen_kicker ) : ?>
-			<div class="download-list__kicker hero-kicker">
-				<?php echo wp_kses_post( $ambrygen_kicker ); ?>
-			</div>
-		<?php endif; ?>
-		
-		<div class="is-style-gl-s12" aria-hidden="true"></div>
-		<div class="download-list__content">
-		<?php if ( $ambrygen_title ) : ?>
-			<<?php echo tag_escape( $ambrygen_heading_tag ); ?> class="download-list__title heading-3 block-title mb-0">
-				<?php echo wp_kses_post( $ambrygen_title ); ?>
-			</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
-		<?php endif; ?>
+	<div class="download-list__inner">
+		<div class="download-list__header-area mb-24">
+			<div class="download-list__content">
+				<?php if ( $ambrygen_title ) : ?>
+					<<?php echo tag_escape( $ambrygen_heading_tag ); ?> class="download-list__title heading-3 block-title mb-0">
+						<?php echo wp_kses_post( $ambrygen_title ); ?>
+					</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
+				<?php endif; ?>
 
-		<?php
-		$ambrygen_content_html = $ambrygen_has_slots ? $ambrygen_render_blocks( $ambrygen_slot_blocks['content'] ) : '';
-		if ( $ambrygen_content_html ) {
-			echo $ambrygen_content_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		}
-		?>
+				<?php
+				$ambrygen_content_html = $ambrygen_has_slots ? $ambrygen_render_blocks( $ambrygen_slot_blocks['content'] ) : '';
+				if ( $ambrygen_content_html ) {
+					echo $ambrygen_content_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				}
+				?>
+			</div>
+		</div>
+		<div class="download-list__items">
+			<?php
+			if ( 'grid-view' === $ambrygen_variation ) {
+				if ( ! empty( $ambrygen_collaborator_terms ) ) {
+					foreach ( $ambrygen_collaborator_terms as $ambrygen_term ) {
+						$ambrygen_term_link = (string) get_term_meta( $ambrygen_term->term_id, 'link', true );
+
+						if ( empty( $ambrygen_term_link ) ) {
+							continue;
+						}
+						?>
+						<div class="download-list__grid-item">
+							<a href="<?php echo esc_url( $ambrygen_term_link ); ?>" class="download-list__grid-link" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr( sprintf( __( '%s (opens in a new tab)', 'ambrygen-web' ), $ambrygen_term->name ) ); ?>">
+								<span class="download-list__item-text">
+									<?php echo esc_html( $ambrygen_term->name ); ?>
+								</span>
+							</a>
+						</div>
+						<?php
+					}
+				}
+			} elseif ( $ambrygen_has_slots ) {
+				$ambrygen_items_html = $ambrygen_render_blocks( $ambrygen_slot_blocks['items'] );
+				if ( $ambrygen_items_html ) {
+					echo $ambrygen_items_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				}
+			} elseif ( $ambrygen_inner_content ) {
+				// Back-compat: before slots existed, everything rendered as items.
+				echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			}
+			?>
 		</div>
 	</div>
-<div class='download-list__items'>
-	<?php
-	if ( $ambrygen_has_slots ) {
-		$ambrygen_items_html = $ambrygen_render_blocks( $ambrygen_slot_blocks['items'] );
-		if ( $ambrygen_items_html ) {
-			echo $ambrygen_items_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		}
-	} elseif ( $ambrygen_inner_content ) {
-		// Back-compat: before slots existed, everything rendered as items.
-		echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	}
-	?>
-	</div>
-</div>
 </div>

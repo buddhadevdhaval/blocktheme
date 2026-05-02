@@ -9,6 +9,14 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			return;
 		}
 
+		vItems.forEach( ( item, index ) => {
+			const stepLabel = item.querySelector( '.vertical-tabs__step-label' );
+
+			if ( stepLabel ) {
+				stepLabel.textContent = `Step ${ index + 1 }`;
+			}
+		} );
+
 		const setActiveTab = ( nextIndex, shouldFocus = false ) => {
 			vItems.forEach( ( item, index ) => {
 				const tab = item.querySelector( '.vertical-tabs__header[role="tab"]' );

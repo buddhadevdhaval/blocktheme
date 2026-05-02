@@ -1,4 +1,5 @@
 import { __, sprintf } from '@wordpress/i18n';
+import { createBlock } from '@wordpress/blocks';
 import {
 	useBlockProps,
 	InspectorControls,
@@ -48,8 +49,6 @@ const GRID_COLUMNS_BY_ITEM_COUNT = {
 	2: '2',
 	3: '3',
 };
-
-const MAX_BLOCKS = 3;
 
 const normalizeCtaTilesVariation = ( variation ) =>
 	LEGACY_VARIATION_MAP[ variation ] ||
@@ -129,14 +128,19 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const VARIANTS = getVariants();
 	const variation = normalizeCtaTilesVariation( variationAttribute );
 	const hasTopImage = Boolean( topImageID && topImageURL );
+	const isExample = blockId === 'cta-tiles-example';
 
 	// Initialize block ID
 	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
+
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
 			setAttributes( { blockId: expectedId } );
 		}
-	}, [ clientId, blockId, setAttributes ] );
+	}, [ clientId, blockId, isExample, setAttributes ] );
 
 	// Normalize variation on mount
 	useEffect( () => {
@@ -150,24 +154,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		( select ) => select( 'core/block-editor' ).getBlocks( clientId ),
 		[ clientId ]
 	);
-	const { removeBlocks } = useDispatch( 'core/block-editor' );
+	const { insertBlock } = useDispatch( 'core/block-editor' );
 
 	// Calculate grid columns
 	const effectiveGridColumns =
 		GRID_COLUMNS_BY_ITEM_COUNT[ innerBlocks.length ] || '3';
-	const canAddMore = innerBlocks.length < MAX_BLOCKS;
-
-	useEffect( () => {
-		if ( innerBlocks.length <= MAX_BLOCKS ) {
-			return;
-		}
-
-		removeBlocks(
-			innerBlocks
-				.slice( MAX_BLOCKS )
-				.map( ( innerBlock ) => innerBlock.clientId )
-		);
-	}, [ innerBlocks, removeBlocks ] );
 
 	// Get variation-specific classes
 	const ambClass = VARIATION_AMB_CLASSES[ variation ] || '';
@@ -206,7 +197,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	}, [ setAttributes ] );
 
 	// Example preview
-	if ( blockId === 'cta-tiles-example' ) {
+	if ( isExample ) {
 		return (
 			<BlockVariationsExamplePreview
 				variants={ VARIANTS }
@@ -376,12 +367,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 										] }
 									/>
 								</HeadingTag>
-								{ description && (
 									<div
 										className="is-style-gl-s16"
 										aria-hidden="true"
 									/>
-								) }
 								<div className="body1-reg logo-title-section__description">
 									<RichText
 										tagName="div"
@@ -499,13 +488,22 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								allowedBlocks={ ALLOWED_BLOCKS }
 								template={ DEFAULT_TEMPLATE }
 								templateLock={ false }
-								renderAppender={
-									canAddMore
-										? InnerBlocks.ButtonBlockAppender
-										: false
-								}
+								renderAppender={ false }
 							/>
 						</BlockContextProvider>
+
+							<Button
+								variant="primary"
+								onClick={ () => {
+									insertBlock(
+										createBlock( 'ambrygen/cta-tiles-item' ),
+										undefined,
+										clientId
+									);
+								} }
+							>
+								{ __( 'Add New Record', 'ambrygen-web' ) }
+							</Button>
 					</div>
 				</div>
 			</div>

@@ -1,0 +1,27 @@
+@use "./style.scss";
+
+.wp-block-ambrygen-genetic-testing-grid {
+	.features-tabs__grid {
+		display: grid !important;
+		grid-template-columns: repeat(4, 1fr) !important;
+		gap: 24px !important;
+
+		@media (max-width: 1400px) {
+			grid-template-columns: repeat(3, 1fr) !important;
+		}
+
+		@media (max-width: 991px) {
+			grid-template-columns: repeat(2, 1fr) !important;
+		}
+
+		@media (max-width: 767px) {
+			grid-template-columns: 1fr !important;
+		}
+	}
+
+	.badge {
+		display: inline-flex !important;
+		align-items: center;
+		vertical-align: middle;
+	}
+}

@@ -5,7 +5,7 @@ import {
 	InnerBlocks,
 } from '@wordpress/block-editor';
 
-import { PanelBody } from '@wordpress/components';
+import { PanelBody, SelectControl, TextControl } from '@wordpress/components';
 import { BlockExamplePreview, TagSelector } from '../_shared/components';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
@@ -17,7 +17,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		className: 'theme-form-block',
 	} );
 
-	const { blockId, title = '', content, headingTag = 'h2' } = attributes;
+	const {
+		blockId,
+		title = '',
+		content,
+		headingTag = 'h2',
+		formMode = 'shortcode',
+		formUrl = '',
+	} = attributes;
 
 	useEffect( () => {
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
@@ -46,13 +53,45 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					initialOpen
 				>
 					<TagSelector
-						label={ __( 'Heading Level', 'ambrygen-web' ) }
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						type="heading"
 						value={ headingTag }
 						onChange={ ( value ) =>
 							setAttributes( { headingTag: value } )
 						}
 					/>
+				</PanelBody>
+				<PanelBody title={ __( 'Form Settings', 'ambrygen-web' ) }>
+					<SelectControl
+						label={ __( 'Form Mode', 'ambrygen-web' ) }
+						value={ formMode }
+						options={ [
+							{
+								label: __( 'Shortcode', 'ambrygen-web' ),
+								value: 'shortcode',
+							},
+							{
+								label: __( 'Hosted Iframe', 'ambrygen-web' ),
+								value: 'iframe',
+							},
+							{
+								label: __( 'HTML Contact Form', 'ambrygen-web' ),
+								value: 'html',
+							},
+						] }
+						onChange={ ( value ) =>
+							setAttributes( { formMode: value } )
+						}
+					/>
+					{ formMode === 'iframe' && (
+						<TextControl
+							label={ __( 'Form URL', 'ambrygen-web' ) }
+							value={ formUrl || '' }
+							onChange={ ( value ) =>
+								setAttributes( { formUrl: value } )
+							}
+						/>
+					) }
 				</PanelBody>
 			</InspectorControls>
 
@@ -84,11 +123,25 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			</div>
 
 			<div className="theme-form-block__form">
-				<InnerBlocks
-					allowedBlocks={ ALLOWED_BLOCKS }
-					template={ [ [ 'core/shortcode' ] ] }
-					templateLock="all"
-				/>
+				{ formMode === 'shortcode' ? (
+					<InnerBlocks
+						allowedBlocks={ ALLOWED_BLOCKS }
+						template={ [ [ 'core/shortcode' ] ] }
+						templateLock="all"
+					/>
+				) : (
+					<p className="mb-0">
+						{ formMode === 'html'
+							? __(
+									'The embedded HTML contact form will render on the frontend.',
+									'ambrygen-web'
+							  )
+							: __(
+									'The hosted iframe form will render on the frontend.',
+									'ambrygen-web'
+							  ) }
+					</p>
+				) }
 			</div>
 		</div>
 	);

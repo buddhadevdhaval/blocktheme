@@ -1,1 +1,11 @@
-document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll(".marketing-files").forEach(e=>{Array.from(e.querySelectorAll(".test-catlouge__item")).forEach(e=>{const t=e.querySelector(".test-catlouge__item-toggle"),o=e.querySelector(".test-catlouge__item-content");t&&o&&t.addEventListener("click",()=>{const l=e.classList.contains("is-open");e.classList.toggle("is-open",!l),t.setAttribute("aria-expanded",l?"false":"true"),o.style.maxHeight=l?"0px":`${o.scrollHeight}px`})})})});
+/******/ (() => { // webpackBootstrap
+/*!***************************************************!*\
+  !*** ./assets/src/blocks/marketing-files/view.js ***!
+  \***************************************************/
+document.addEventListener('DOMContentLoaded', () => {
+  const blocks = document.querySelectorAll('.marketing-files');
+  blocks.forEach(block => {});
+});
+/******/ })()
+;
+//# sourceMappingURL=view.js.map

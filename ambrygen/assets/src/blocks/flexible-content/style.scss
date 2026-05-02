@@ -51,9 +51,7 @@ section:has(.iot-block__bg-image) {
 		align-items: flex-start;
 	}
 
-	&.variation-iot-author {
-		align-items: flex-start;
-
+	&.size-311x311 {
 		.iot-block__image {
 			width: fluid(311, 311);
 			height: fluid(311, 311);
@@ -67,7 +65,7 @@ section:has(.iot-block__bg-image) {
 		}
 	}
 
-	&.variation-process {
+	&.size-578x564 {
 		// padding: fluid(32, 50);
 		// border-radius: fluid(24, 32);
 

@@ -15,7 +15,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( val ) => setAttributes( { title: val } ) }
 					/>
 					<SelectControl
-						label={ __( 'Heading Level', 'ambrygen-web' ) }
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingLevel }
 						options={ [
 							{ label: 'H1', value: 'h1' },

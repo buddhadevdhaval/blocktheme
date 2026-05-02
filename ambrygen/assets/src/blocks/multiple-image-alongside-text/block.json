@@ -116,64 +116,7 @@
   ],
   "example": {
     "attributes": {
-      "headingLevel": "h2",
-      "variation": "stats-view",
-      "heading": "Transforming Healthcare with AI Innovation",
-      "content": "Leveraging artificial intelligence to revolutionize patient care, diagnostics, and medical research.",
-      "stats": [
-        {
-          "prefix": "",
-          "number": "",
-          "postfix": "",
-          "label": "",
-          "description": ""
-        },
-        {
-          "prefix": "",
-          "number": "",
-          "postfix": "",
-          "label": "",
-          "description": ""
-        },
-        {
-          "prefix": "",
-          "number": "",
-          "postfix": "",
-          "label": "",
-          "description": ""
-        },
-        {
-          "prefix": "",
-          "number": "",
-          "postfix": "",
-          "label": "",
-          "description": ""
-        }
-      ],
-      "images": [
-        {
-          "url": "",
-          "id": 0,
-          "alt": "Ambry default preview image"
-        },
-        {
-          "url": "",
-          "id": 0,
-          "alt": "Ambry default preview image"
-        },
-        {
-          "url": "",
-          "id": 0,
-          "alt": "Ambry default preview image"
-        },
-        {
-          "url": "",
-          "id": 0,
-          "alt": "Ambry default preview image"
-        }
-      ],
-      "contentTopAlign": false,
-      "imagePosition": "left"
+      "blockId": "multiple-image-alongside-text-example"
     }
   },
   "editorScript": "file:./index.js",

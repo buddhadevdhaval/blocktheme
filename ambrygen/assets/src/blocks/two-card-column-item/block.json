@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/two-card-column-item",
+  "title": "Two card column item",
+  "category": "ambrygen",
+  "parent": [
+    "ambrygen/two-card-column"
+  ],
+  "usesContext": [
+    "ambrygen/twoCardColumnVariation"
+  ],
+  "icon": "format-image",
+  "description": "Single image card for three column grid.",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "sectiontitle": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "imageUrl": {
+      "type": "string"
+    },
+    "imageAlt": {
+      "type": "string"
+    },
+    "imageId": {
+      "type": "number"
+    }
+  },
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

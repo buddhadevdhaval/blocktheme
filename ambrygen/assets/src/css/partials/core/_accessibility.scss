@@ -5,34 +5,49 @@
 ------------------------------------------------- */
 
 .screen-reader-text {
-	margin: 0;
-	overflow: hidden;
+	// margin: 0;
+	// overflow: hidden;
+	// width: 1px;
+	// position: absolute !important;
+	// overflow-wrap: normal !important;
+	// color: var(--theme_acc_btn_color);
+	// background-color: var(--theme_acc_btn_bgcolor);
+	// clip: auto !important;
+	// border: unset !important;
+	// border-radius: 0;
+	// left: -100%;
+	// font-size: var(--theme_font_size_8);
+	// clip-path: none;
+	// font-weight: 700;
+	// height: auto;
+	// line-height: normal;
+	// padding: 8px 12px;
+	// text-decoration: none;
+	// top: 8px;
+	position: absolute;
 	width: 1px;
-	position: absolute !important;
-	overflow-wrap: normal !important;
-	color: var(--theme_acc_btn_color);
-	background-color: var(--theme_acc_btn_bgcolor);
-	clip: auto !important;
-	border: unset !important;
-	border-radius: 0;
-	left: -100%;
-	font-size: var(--theme_font_size_8);
-	clip-path: none;
-	font-weight: 700;
-	height: auto;
-	line-height: normal;
-	padding: 8px 12px;
-	text-decoration: none;
-	top: 8px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
 
 	&:hover,
 	&:active,
 	&:focus {
-		display: block;
+		position: static;
 		width: auto;
-		z-index: 100000;
-		left: 8px;
-
+		height: auto;
+		margin: 0;
+		overflow: visible;
+		clip: auto;
+		white-space: normal;
+		padding: 8px 12px;
+		background: #000;
+		color: #fff;
+		z-index: 1000;
 	}
 }
 

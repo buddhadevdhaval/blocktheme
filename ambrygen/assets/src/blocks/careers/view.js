@@ -15,14 +15,18 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		return `${ src }${ src.includes( '?' ) ? '&' : '?' }autoplay=1`;
 	};
 
-	const createModal = () => {
+	const createModal = ( id ) => {
 		const modal = document.createElement( 'div' );
 		modal.className = 'modal-popup modal-popup--video';
+		modal.hidden = true;
+		if ( id ) {
+			modal.id = id;
+		}
 		modal.innerHTML = `
 			<div class="modal-popup__overlay"></div>
 			<div class="modal-popup__panel" role="dialog" aria-modal="true" aria-label="Video dialog">
 				<button type="button" class="modal-popup__close" aria-label="Close modal">
-					<img decoding="async" src="${ closeIcon }" alt="Close" />
+					<img decoding="async" src="${ closeIcon }" alt="" aria-hidden="true" />
 				</button>
 				<div class="modal-content">
 					<div class="modal-content__video-wrapper"></div>
@@ -52,6 +56,37 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		media.style.width = '100%';
 	};
 
+	const trapFocus = ( event, panel ) => {
+		if ( event.key !== 'Tab' ) {
+			return;
+		}
+
+		const focusable = Array.from(
+			panel.querySelectorAll(
+				'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), video[controls], [tabindex]:not([tabindex="-1"])'
+			)
+		).filter(
+			( element ) =>
+				! element.hasAttribute( 'hidden' ) &&
+				element.getAttribute( 'aria-hidden' ) !== 'true'
+		);
+
+		if ( ! focusable.length ) {
+			return;
+		}
+
+		const first = focusable[ 0 ];
+		const last = focusable[ focusable.length - 1 ];
+
+		if ( event.shiftKey && document.activeElement === first ) {
+			event.preventDefault();
+			last.focus();
+		} else if ( ! event.shiftKey && document.activeElement === last ) {
+			event.preventDefault();
+			first.focus();
+		}
+	};
+
 	blocks.forEach( ( block ) => {
 		const toggleWrap = block.querySelector( '.play-icon-video' );
 		const playIcon = toggleWrap?.querySelector( '.play-icon' );
@@ -78,14 +113,17 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			}
 
 			modal.classList.remove( 'is-active' );
+			modal.hidden = true;
+			toggleWrap.setAttribute( 'aria-expanded', 'false' );
 			modal
 				.querySelector( '.modal-content__video-wrapper' )
 				?.replaceChildren();
+			toggleWrap.focus();
 		};
 
 		const openModal = () => {
 			if ( ! modal ) {
-				modal = createModal();
+				modal = createModal( toggleWrap.getAttribute( 'aria-controls' ) );
 				block.appendChild( modal );
 				modal
 					.querySelector( '.modal-popup__overlay' )
@@ -93,6 +131,16 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				modal
 					.querySelector( '.modal-popup__close' )
 					?.addEventListener( 'click', closeModal );
+				modal
+					.querySelector( '.modal-popup__panel' )
+					?.addEventListener( 'keydown', ( event ) => {
+						if ( event.key === 'Escape' ) {
+							closeModal();
+							return;
+						}
+
+						trapFocus( event, event.currentTarget );
+					} );
 			}
 
 			const videoWrapper = modal.querySelector(
@@ -141,7 +189,10 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			setVideoSize( videoWrapper );
 			setMediaSize( modalMedia );
 			videoWrapper.replaceChildren( modalMedia );
+			modal.hidden = false;
 			modal.classList.add( 'is-active' );
+			toggleWrap.setAttribute( 'aria-expanded', 'true' );
+			modal.querySelector( '.modal-popup__close' )?.focus();
 
 			if ( video ) {
 				modalMedia.play().catch( () => {} );
@@ -153,22 +204,15 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			openModal();
 		} );
 
-		toggleWrap.addEventListener( 'keydown', ( event ) => {
-			if ( event.key !== 'Enter' && event.key !== ' ' ) {
-				return;
-			}
+		if ( 'BUTTON' !== toggleWrap.tagName ) {
+			toggleWrap.addEventListener( 'keydown', ( event ) => {
+				if ( event.key !== 'Enter' && event.key !== ' ' ) {
+					return;
+				}
 
-			event.preventDefault();
-			openModal();
-		} );
-
-		document.addEventListener( 'keydown', ( event ) => {
-			if (
-				event.key === 'Escape' &&
-				modal?.classList.contains( 'is-active' )
-			) {
-				closeModal();
-			}
-		} );
+				event.preventDefault();
+				openModal();
+			} );
+		}
 	} );
 } );

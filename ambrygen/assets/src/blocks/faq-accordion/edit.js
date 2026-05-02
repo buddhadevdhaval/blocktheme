@@ -5,7 +5,7 @@ import {
 	RichText,
 	useBlockProps,
 } from '@wordpress/block-editor';
-import { PanelBody } from '@wordpress/components';
+import { Button, PanelBody } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useEffect, useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
@@ -84,12 +84,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		variant === 'without-image'
 			? `variation-${ variant } variation-boxed`
 			: `variation-${ variant }`;
-	const { replaceInnerBlocks } = useDispatch( 'core/block-editor' );
-	const innerBlocks = useSelect(
-		( select ) => select( 'core/block-editor' ).getBlocks( clientId ),
-		[ clientId ]
+	const { insertBlock, replaceInnerBlocks } = useDispatch(
+		'core/block-editor'
 	);
-	const hasInnerBlocks = innerBlocks.length > 0;
+	const hasInnerBlocks = useSelect(
+		(select) => select('core/block-editor').getBlockCount(clientId) > 0,
+		[clientId]
+	);
 	const hasDescription = Boolean( description );
 	const hasFaqContent = hasInnerBlocks || faqs.length > 0;
 	const blockProps = useBlockProps( {
@@ -139,7 +140,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 
 		replaceInnerBlocks( clientId, faqs.map( createFaqItemBlock ), false );
-	}, [ clientId, faqs, hasInnerBlocks, replaceInnerBlocks ] );
+		setAttributes({ faqs: [] });
+	}, [ clientId, faqs, hasInnerBlocks, replaceInnerBlocks, setAttributes]);
 
 	if ( blockId === 'faq-accordion-example' ) {
 		return (
@@ -155,7 +157,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'FAQ Settings', 'ambrygen-web' ) }
+					title={ __( 'Layout Settings', 'ambrygen-web' ) }
 					initialOpen
 				>
 					<div className="layout-variant-selector">
@@ -185,14 +187,18 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						) ) }
 					</div>
 
+				</PanelBody>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag }
 						onChange={ ( value ) =>
 							setAttributes( { headingTag: value } )
 						}
+						type='heading'
 					/>
-
+				</PanelBody>
+				<PanelBody title={ __( 'FAQ Settings', 'ambrygen-web' ) }>
 					{ showImage && (
 						<ImageUploader
 							label={ __( 'FAQ Image', 'ambrygen-web' ) }
@@ -282,10 +288,25 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									] }
 									template={ TEMPLATE }
 									templateLock={ false }
-									renderAppender={
-										InnerBlocks.ButtonBlockAppender
-									}
+									renderAppender={ false }
 								/>
+								<Button
+									variant="primary"
+									onClick={ () => {
+										insertBlock(
+											createBlock(
+												'ambrygen/faq-accordion-item'
+											),
+											undefined,
+											clientId
+										);
+									} }
+								>
+									{ __(
+										'Add FAQ Accordion Item',
+										'ambrygen-web'
+									) }
+								</Button>
 							</div>
 						</div>
 					</div>
@@ -294,3 +315,4 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
+

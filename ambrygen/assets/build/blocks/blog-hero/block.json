@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/blog-hero",
+  "title": "Blog Hero",
+  "category": "ambrygen",
+  "description": "Dynamic hero section for single blog posts with media toggle and author metadata.",
+  "textdomain": "ambrygen-web",
+  "attributes": {
+    "className": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "editorScript": "file:./index.js",
+  "viewScript": "file:./view.js",
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "render": "file:./render.php"
+}

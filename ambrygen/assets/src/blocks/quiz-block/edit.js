@@ -159,7 +159,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Quiz Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag || 'h2' }
@@ -168,6 +168,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 						type="heading"
 					/>
+				</PanelBody>
+				<PanelBody title={ __( 'Button Settings', 'ambrygen-web' ) }>
 					<div className="is-style-gl-s16" aria-hidden="true"></div>
 					<CtaButtonField
 						label={ __( 'Primary Button', 'ambrygen-web' ) }
@@ -403,3 +405,4 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
+

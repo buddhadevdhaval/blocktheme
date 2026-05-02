@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Hero Section Slider Functionality
  *
  * Handles slider navigation, autoplay, and touch gestures using Swiper.js.
@@ -28,6 +28,9 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		const prevEl = sliderElement.querySelector( '.custom-prev' );
 		const paginationEl =
 			sliderElement.querySelector( '.swiper-pagination' );
+		const autoplayToggle = sliderElement.querySelector(
+			'[data-hero-autoplay-toggle]'
+		);
 		const slideCount =
 			sliderElement.querySelectorAll( '.swiper-slide' ).length;
 		const announcerElement =
@@ -48,6 +51,20 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		const focusableSelector =
 			'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
 		let swiperInstance = null;
+		const updateAutoplayToggle = ( isPaused ) => {
+			if ( ! autoplayToggle ) {
+				return;
+			}
+
+			autoplayToggle.classList.toggle( 'is-paused', isPaused );
+			autoplayToggle.setAttribute( 'aria-pressed', String( isPaused ) );
+			autoplayToggle.setAttribute(
+				'aria-label',
+				isPaused
+					? __( 'Start autoplay', 'ambrygen-web' )
+					: __( 'Pause autoplay', 'ambrygen-web' )
+			);
+		};
 		const manageSlideFocus = ( swiperInstance ) => {
 			if ( ! shouldManageFocus || ! swiperInstance ) {
 				return;
@@ -111,6 +128,23 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			}
 		} );
 
+		if ( autoplayToggle ) {
+			autoplayToggle.addEventListener( 'click', () => {
+				if ( ! swiperInstance?.autoplay ) {
+					return;
+				}
+
+				if ( swiperInstance.autoplay.running ) {
+					swiperInstance.autoplay.stop();
+					updateAutoplayToggle( true );
+					return;
+				}
+
+				swiperInstance.autoplay.start();
+				updateAutoplayToggle( false );
+			} );
+		}
+
 		const swiperOptions = {
 			effect: 'fade',
 			fadeEffect: {
@@ -156,6 +190,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					swiperInstance = instance;
 					sliderElement.classList.add( 'is-initialized' );
 					updateSlideAnnouncer( instance );
+					updateAutoplayToggle( ! instance.autoplay?.running );
 				},
 				slideChange( instance ) {
 					updateSlideAnnouncer( instance );

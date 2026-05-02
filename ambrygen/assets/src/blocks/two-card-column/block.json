@@ -1,0 +1,69 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/two-card-column",
+  "title": "Two card column",
+  "category": "ambrygen",
+  "icon": "columns",
+  "description": "A layout with two stacked cards on the left and one large featured card on the right.",
+  "supports": {
+    "html": false
+  },
+  "providesContext": {
+    "ambrygen/twoCardColumnVariation": "variation"
+  },
+  "keywords": [
+    "cards",
+    "genetic",
+    "layout",
+    "grid"
+  ],
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
+      "default": "h2"
+    },
+    "eyebrow": {
+      "type": "string",
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "variation": {
+      "type": "string",
+      "enum": [
+        "two-column-solution-card",
+        "ordering-options"
+      ],
+      "default": "two-column-solution-card"
+    },
+    "blockId": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web",
+  "example": {
+    "attributes": {
+      "blockId": "two-column-solution-card-example"
+    }
+  }
+}

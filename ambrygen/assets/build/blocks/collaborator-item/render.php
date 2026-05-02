@@ -159,7 +159,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 				<ul class="collaborator-card__links">
 					<?php foreach ( $ambrygen_related_links as $ambrygen_related_link ) : ?>
 						<li>
-							<a href="<?php echo esc_url( $ambrygen_related_link['url'] ); ?>" class="site-btn is-style-site-text-btn has-right-arrow">
+							<a href="<?php echo esc_url( $ambrygen_related_link['url'] ); ?>">
 								<?php echo esc_html( $ambrygen_related_link['label'] ); ?>
 							</a>
 						</li>
@@ -170,8 +170,8 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 			<?php if ( ! empty( $ambrygen_website_url ) ) : ?>
 				<div class="is-style-gl-s12" aria-hidden="true"></div>
 				<div class="collaborator-card__website">
-					<a href="<?php echo esc_url( $ambrygen_website_url ); ?>" target="_blank" rel="noopener noreferrer" class="site-btn is-style-site-text-btn has-right-arrow">
-						<?php echo esc_html( $ambrygen_website_label ); ?>
+					<a href="<?php echo esc_url( $ambrygen_website_url ); ?>" target="_blank" rel="noopener noreferrer" class="site-btn has-right-arrow btn-small">
+						Learn more
 					</a>
 				</div>
 			<?php endif; ?>

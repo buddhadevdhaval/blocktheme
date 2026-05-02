@@ -19,12 +19,10 @@ $ambrygen_description       = isset( $ambrygen_attributes['description'] ) ? $am
 $ambrygen_image_id          = isset( $ambrygen_attributes['imageId'] ) ? absint( $ambrygen_attributes['imageId'] ) : 0;
 $ambrygen_image_url         = isset( $ambrygen_attributes['imageUrl'] ) ? esc_url_raw( $ambrygen_attributes['imageUrl'] ) : '';
 $ambrygen_image_alt         = isset( $ambrygen_attributes['imageAlt'] ) ? sanitize_text_field( $ambrygen_attributes['imageAlt'] ) : '';
-$ambrygen_step_label        = isset( $ambrygen_attributes['stepLabel'] ) && '' !== $ambrygen_attributes['stepLabel'] ? $ambrygen_attributes['stepLabel'] : ( $ambrygen_attributes['customStepLabel'] ?? '' );
 $ambrygen_cta               = isset( $ambrygen_attributes['cta'] ) && is_array( $ambrygen_attributes['cta'] ) ? $ambrygen_attributes['cta'] : array();
 $ambrygen_cta_text          = isset( $ambrygen_cta['text'] ) ? sanitize_text_field( $ambrygen_cta['text'] ) : '';
 $ambrygen_cta_url           = isset( $ambrygen_cta['url'] ) ? esc_url_raw( $ambrygen_cta['url'] ) : '';
 $ambrygen_show_full_image   = isset( $ambrygen_attributes['showFullImage'] ) ? (bool) $ambrygen_attributes['showFullImage'] : false;
-$ambrygen_has_step_label    = '' !== trim( wp_strip_all_tags( $ambrygen_step_label ) );
 $ambrygen_has_step_title    = '' !== trim( wp_strip_all_tags( $ambrygen_step_title ) );
 $ambrygen_has_description   = '' !== trim( wp_strip_all_tags( $ambrygen_description ) );
 $ambrygen_step_title_plain  = trim( wp_strip_all_tags( $ambrygen_step_title ) );
@@ -65,11 +63,9 @@ list( $ambrygen_cta_target, $ambrygen_cta_rel ) = $ambrygen_normalize_link_attri
 		tabindex="-1"
 	>
 
-		<?php if ( $ambrygen_has_step_label ) : ?>
 		<div class="caption-semi-bold vertical-tabs__step-label js-gsap-fade">
-			<?php echo esc_html( $ambrygen_step_label ); ?>
+			<?php esc_html_e( 'Step', 'ambrygen-web' ); ?>
 		</div>
-		<?php endif; ?>
 
 		<?php if ( $ambrygen_has_step_title ) : ?>
 			<div class="subtitle1-sbold vertical-tabs__title js-gsap-fade">

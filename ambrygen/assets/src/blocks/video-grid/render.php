@@ -93,6 +93,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 			role="dialog"
 			aria-modal="true"
 			aria-labelledby="<?php echo esc_attr( $ambrygen_title_id ); ?>"
+			aria-describedby="<?php echo esc_attr( $ambrygen_desc_id ); ?>"
 		>
 			<button type="button" class="modal-popup__close" aria-label="<?php esc_attr_e( 'Close modal', 'ambrygen-web' ); ?>">
 				<img decoding="async" src="<?php echo esc_url( get_theme_file_uri( 'assets/src/images/close-icon.svg' ) ); ?>" alt="" />

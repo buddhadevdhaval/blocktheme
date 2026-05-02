@@ -7,6 +7,29 @@
 
 .download-list {
 
+	&.collaborators-list {
+
+		.download-list__header-area {
+			max-width: 960px;
+			margin: 0 auto;
+			text-align: center;
+		}
+
+		.download-list__inner {
+			grid-template-columns: 1fr;
+		}
+
+		.download-list__items {
+			gap: 20px 40px;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+
+			@include bp.max(md) {
+				grid-template-columns: 1fr;
+			}
+		}
+	}
+
 	&__inner {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
@@ -24,6 +47,71 @@
 		gap: 16px;
 	}
 
+	&.variation-grid-view {
+		.download-list__inner {
+			grid-template-columns: 1fr;
+		}
+
+		.download-list__items {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 16px 24px;
+
+			@include bp.max(lg) {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+
+			@include bp.max(md) {
+				grid-template-columns: 1fr;
+			}
+		}
+	}
+
+	&__grid-link {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 20px;
+		min-height: 52px;
+		padding-bottom: 12px;
+		color: var(--theme_gray_600);
+		font-weight: 500;
+		font-size: var(--theme_font_size_10);
+		text-decoration: none;
+		border: none;
+		border-bottom: 1px solid var(--theme_gray_400);
+
+		&::after {
+			content: "";
+			display: block;
+			width: 36px;
+			height: 36px;
+			flex: 36px 0 0;
+			border-radius: 50%;
+			border: 1px solid var(--theme_gray_400);
+			background-image: url(../../images/gray-400-icons/right-arrow.svg);
+			background-repeat: no-repeat;
+			background-size: 24px;
+			background-position: center;
+
+			@include bp.max(lg) {
+				width: 28px;
+				height: 28px;
+				flex: 28px 0 0;
+				background-size: 20px;
+			}
+		}
+
+		&:hover {
+			color: var(--theme_cg_blue);
+
+			&::after {
+				background-image: url(../../images/primary700-icons/right-arrow.svg);
+				border-color: var(--theme_cg_blue);
+			}
+		}
+	}
+
 	&__item {
 		display: flex;
 		align-items: center;
@@ -32,18 +120,23 @@
 		text-decoration: none;
 		border-bottom: 1px solid var(--theme_gray_400);
 
-		a {
+		.download-list__item-link {
 			border: none;
 			padding: 0;
 			color: var(--theme_gray_600);
 			font-weight: 500;
 			font-size: var(--theme_font_size_10);
 			width: 100%;
-			display: block;
 			position: relative;
 			display: flex;
 			justify-content: space-between;
 			gap: 20px;
+
+			.bg-primary_700 &,
+			.bg-primary_800 &,
+			.bg-blue-gradient & {
+				color: var(--theme_white);
+			}
 
 			&::after {
 				content: "";
@@ -61,6 +154,12 @@
 				background-size: 24px;
 				background-position: center;
 
+				.bg-primary_700 &,
+				.bg-primary_800 &,
+				.bg-blue-gradient & {
+					filter: brightness(0) saturate(100%) invert(97%) sepia(100%) saturate(1%) hue-rotate(55deg) brightness(108%) contrast(102%);
+				}
+
 				@include bp.max(lg) {
 					width: 28px;
 					height: 28px;
@@ -71,6 +170,12 @@
 
 			&:hover {
 				color: var(--theme_cg_blue);
+
+				.bg-primary_700 &,
+				.bg-primary_800 &,
+				.bg-blue-gradient & {
+					color: var(--theme_lightblue);
+				}
 
 				&:after {
 					background-image: url(../../images/primary700-icons/right-arrow.svg);

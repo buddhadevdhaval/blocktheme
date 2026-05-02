@@ -1,0 +1,110 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/supporting-steps",
+  "title": "Supporting Steps",
+  "category": "ambrygen",
+  "icon": "editor-ol",
+  "description": "Displays step cards with content. Supports Text View and Stats View variations.",
+  "textdomain": "ambrygen-web",
+  "supports": {
+    "html": false,
+    "anchor": true,
+    "align": [
+      "wide",
+      "full"
+    ]
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "variation": {
+      "type": "string",
+      "enum": [
+        "text-view",
+        "stats-view"
+      ],
+      "default": "text-view"
+    },
+    "heading": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
+      "default": "h2"
+    },
+    "heading2": {
+      "type": "string",
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "iconId": {
+            "type": "number"
+          },
+          "iconUrl": {
+            "type": "string"
+          },
+          "iconAlt": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "stats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "stats": {
+            "type": "string"
+          },
+          "postfix": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    }
+  },
+  "example": {
+    "attributes": {
+      "blockId": "supporting-steps-example"
+    }
+  }
+}

@@ -1,1 +1,65 @@
-(()=>{function e(e){const t=()=>function(e){const t=e.querySelectorAll(".card-grid-block .card-col .card-info");if(!t.length)return;t.forEach(e=>{e.style.height="auto"});let o=0;t.forEach(e=>{const t=e.offsetHeight;t>o&&(o=t)}),t.forEach(e=>{e.style.height=`${o}px`})}(e);t(),e.querySelectorAll("img").forEach(e=>{e.complete||e.addEventListener("load",t,{once:!0})}),"ResizeObserver"in window?new window.ResizeObserver(t).observe(e):window.addEventListener("resize",function(e,t=200){let o;return()=>{window.clearTimeout(o),o=window.setTimeout(e,t)}}(t))}function t(){document.querySelectorAll(".cta-tiles").forEach(e)}"loading"===document.readyState?document.addEventListener("DOMContentLoaded",t):t()})();
+/******/ (() => { // webpackBootstrap
+/*!*********************************************!*\
+  !*** ./assets/src/blocks/cta-tiles/view.js ***!
+  \*********************************************/
+function equalizeCardInfoHeight(ctaTiles) {
+  const cards = ctaTiles.querySelectorAll('.card-grid-block .card-col .card-info');
+  if (!cards.length) {
+    return;
+  }
+
+  // Reset height first
+  cards.forEach(card => {
+    card.style.height = 'auto';
+  });
+
+  // Find tallest height
+  let maxHeight = 0;
+  cards.forEach(card => {
+    const height = card.offsetHeight;
+    if (height > maxHeight) {
+      maxHeight = height;
+    }
+  });
+
+  // Apply tallest height
+  cards.forEach(card => {
+    card.style.height = `${maxHeight}px`;
+  });
+}
+function initCtaTiles(ctaTiles) {
+  const equalize = () => equalizeCardInfoHeight(ctaTiles);
+  equalize();
+  ctaTiles.querySelectorAll('img').forEach(image => {
+    if (image.complete) {
+      return;
+    }
+    image.addEventListener('load', equalize, {
+      once: true
+    });
+  });
+  if ('ResizeObserver' in window) {
+    const observer = new window.ResizeObserver(equalize);
+    observer.observe(ctaTiles);
+    return;
+  }
+  window.addEventListener('resize', debounce(equalize));
+}
+function debounce(callback, delay = 200) {
+  let timeoutId;
+  return () => {
+    window.clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(callback, delay);
+  };
+}
+function initAllCtaTiles() {
+  document.querySelectorAll('.cta-tiles').forEach(initCtaTiles);
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAllCtaTiles);
+} else {
+  initAllCtaTiles();
+}
+/******/ })()
+;
+//# sourceMappingURL=view.js.map

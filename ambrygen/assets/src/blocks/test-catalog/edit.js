@@ -1,4 +1,5 @@
 import apiFetch from '@wordpress/api-fetch';
+import { useSelect } from '@wordpress/data';
 import {
 	InspectorControls,
 	RichText,
@@ -14,9 +15,10 @@ import {
 } from '@wordpress/components';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useState, useMemo } from '@wordpress/element';
 import { ServerSideRender } from '@wordpress/server-side-render';
 import SingleVersionSettings from './edit-variant-single';
+import { ItemHeader } from '../_shared/components';
 
 const HEADING_OPTIONS = [
 	{ label: 'H1', value: 'h1' },
@@ -63,186 +65,91 @@ const EDIT_VARIANT_OPTIONS = [
 	{ label: __('Single Product Version', 'ambrygen-web'), value: 'single' },
 ];
 
-function TabSettings({ index, tab, updateTab, removeTab }) {
+function TabSettings({ index, tab, updateTab, removeTab, moveTab, totalTabs }) {
+	const [searchInput, setSearchInput] = useState(tab.text || '');
 	const [search, setSearch] = useState(tab.text || '');
-	const [termOptions, setTermOptions] = useState([]);
-	const [isLoadingTerms, setIsLoadingTerms] = useState(false);
-	const [isLoadingPosts, setIsLoadingPosts] = useState(false);
-	const [availablePosts, setAvailablePosts] = useState([]);
-	const [termsError, setTermsError] = useState(false);
-	const [postsError, setPostsError] = useState(false);
 
 	useEffect(() => {
-		if (!tab?.termId && !search) {
-			setTermOptions([]);
-		}
-	}, [search, tab?.termId]);
+		const timeoutId = setTimeout(() => setSearch(searchInput), SEARCH_DEBOUNCE_MS);
+		return () => clearTimeout(timeoutId);
+	}, [searchInput]);
 
-	useEffect(() => {
-		let isMounted = true;
-		const timeoutId = setTimeout(async () => {
-			if (tab?.termId && !search) {
-				return;
-			}
-
-			setIsLoadingTerms(true);
-			setTermsError(false);
-
-			try {
-				const query = new URLSearchParams({
-					per_page: '20',
-					hide_empty: 'false',
-					orderby: 'name',
-					order: 'asc',
-					_fields: 'id,name,slug,parent',
-				});
-
-				if (search) {
-					query.set('search', search);
-				}
-
-				const results = await apiFetch({
-					path: `/wp/v2/poster_category?${query.toString()}`,
-				});
-
-				if (isMounted) {
-					const terms = Array.isArray(results) ? results : [];
-					setTermOptions(terms);
-
-					// Fetch missing parents to ensure "Parent - Child" labels work
-					const parentIdsToFetch = terms
-						.filter(t => t.parent > 0 && !terms.some(pt => pt.id === t.parent))
-						.map(t => t.parent);
-
-					if (parentIdsToFetch.length > 0) {
-						apiFetch({
-							path: `/wp/v2/poster_category?include=${[...new Set(parentIdsToFetch)].join(',')}&_fields=id,name,slug,parent`,
-						}).then(parentTerms => {
-							if (isMounted && Array.isArray(parentTerms)) {
-								setTermOptions(current => {
-									const existingIds = current.map(c => c.id);
-									const uniqueNew = parentTerms.filter(p => !existingIds.includes(p.id));
-									return [...current, ...uniqueNew];
-								});
-							}
-						}).catch(() => { });
-					}
-				}
-			} catch (error) {
-				if (isMounted) {
-					setTermOptions([]);
-					setTermsError(true);
-				}
-			} finally {
-				if (isMounted) {
-					setIsLoadingTerms(false);
-				}
-			}
-		}, SEARCH_DEBOUNCE_MS);
-
-		return () => {
-			isMounted = false;
-			clearTimeout(timeoutId);
+	const { terms, parentTerms, selectedTerm, isLoadingTerms } = useSelect( ( select ) => {
+		const query = {
+			per_page: 20,
+			hide_empty: false,
+			orderby: 'name',
+			order: 'asc',
+			_fields: 'id,name,slug,parent',
 		};
-	}, [search, tab?.termId]);
 
-	useEffect(() => {
-		let isMounted = true;
-
-		if (!tab?.termId) {
-			setAvailablePosts([]);
-			return () => {
-				isMounted = false;
-			};
+		if ( search ) {
+			query.search = search;
 		}
 
-		const loadSelectedTerm = async () => {
-			const exists = termOptions.some(
-				(term) => Number(term.id) === Number(tab.termId)
-			);
-
-			if (exists) {
-				return;
+		const fetchedTerms = select( 'core' ).getEntityRecords( 'taxonomy', 'poster_category', query );
+		const isResolving = select( 'core' ).isResolving( 'getEntityRecords', [ 'taxonomy', 'poster_category', query ] );
+		
+		let fetchedParentTerms = [];
+		if ( Array.isArray( fetchedTerms ) && fetchedTerms.length > 0 ) {
+			const parentIds = [...new Set(fetchedTerms.map(t => t.parent).filter(p => p > 0))];
+			if ( parentIds.length > 0 ) {
+				fetchedParentTerms = select( 'core' ).getEntityRecords( 'taxonomy', 'poster_category', { include: parentIds, _fields: 'id,name,slug,parent' } );
 			}
-
-			try {
-				const term = await apiFetch({
-					path: `/wp/v2/poster_category/${tab.termId}?_fields=id,name,slug,parent`,
-				});
-
-				if (isMounted && term?.id) {
-					setTermOptions((currentTerms) => {
-						if (
-							currentTerms.some(
-								(item) =>
-									Number(item.id) === Number(term.id)
-							)
-						) {
-							return currentTerms;
-						}
-
-						return [term, ...currentTerms];
-					});
-				}
-			} catch (error) { }
-		};
-
-		loadSelectedTerm();
-
-		return () => {
-			isMounted = false;
-		};
-	}, [tab?.termId, termOptions]);
-
-	useEffect(() => {
-		let isMounted = true;
-
-		if (!tab?.termId) {
-			setAvailablePosts([]);
-			return () => {
-				isMounted = false;
-			};
+		}
+		
+		let sTerm = null;
+		if ( tab?.termId ) {
+			sTerm = select( 'core' ).getEntityRecord( 'taxonomy', 'poster_category', tab.termId );
 		}
 
-		const loadPosts = async () => {
-			setIsLoadingPosts(true);
-			setPostsError(false);
+		return {
+			terms: fetchedTerms,
+			parentTerms: fetchedParentTerms,
+			selectedTerm: sTerm,
+			isLoadingTerms: isResolving
+		};
+	}, [ search, tab?.termId ] );
 
-			try {
-				const query = new URLSearchParams({
-					poster_category: String(tab.termId),
-					per_page: '100',
-					status: 'publish',
-					orderby: 'title',
-					order: 'asc',
-					_fields: 'id,title,poster_category',
-				});
-
-				const posts = await apiFetch({
-					path: `/wp/v2/product_version?${query.toString()}`,
-				});
-
-				if (isMounted) {
-					setAvailablePosts(Array.isArray(posts) ? posts : []);
-				}
-			} catch (error) {
-				if (isMounted) {
-					setAvailablePosts([]);
-					setPostsError(true);
-				}
-			} finally {
-				if (isMounted) {
-					setIsLoadingPosts(false);
-				}
+	const termOptions = useMemo(() => {
+		const combined = [];
+		if ( Array.isArray( terms ) ) combined.push( ...terms );
+		if ( Array.isArray( parentTerms ) ) combined.push( ...parentTerms );
+		if ( selectedTerm ) combined.push( selectedTerm );
+		
+		const unique = [];
+		const seen = new Set();
+		combined.forEach(t => {
+			if ( t && !seen.has(t.id) ) {
+				seen.add(t.id);
+				unique.push(t);
 			}
-		};
+		});
+		return unique;
+	}, [ terms, parentTerms, selectedTerm ]);
 
-		loadPosts();
-
-		return () => {
-			isMounted = false;
+	const { availablePosts, isLoadingPosts } = useSelect( ( select ) => {
+		if ( ! tab?.termId ) {
+			return { availablePosts: [], isLoadingPosts: false };
+		}
+		
+		const query = {
+			poster_category: tab.termId,
+			per_page: 100,
+			status: 'publish',
+			orderby: 'title',
+			order: 'asc',
+			_fields: 'id,title,poster_category',
 		};
-	}, [tab?.termId]);
+		
+		const posts = select( 'core' ).getEntityRecords( 'postType', 'product_version', query );
+		const isResolving = select( 'core' ).isResolving( 'getEntityRecords', [ 'postType', 'product_version', query ] );
+		
+		return {
+			availablePosts: Array.isArray( posts ) ? posts : [],
+			isLoadingPosts: isResolving
+		};
+	}, [ tab?.termId ] );
 
 	const selectedOption = termOptions.find(
 		(term) => String(term.id) === String(tab.termId || '')
@@ -260,11 +167,22 @@ function TabSettings({ index, tab, updateTab, removeTab }) {
 				marginBottom: '12px',
 			}}
 		>
+			<ItemHeader
+				index={ index }
+				label={ tab.text || `Tab ${ index + 1 }` }
+				total={ totalTabs }
+				onMove={ ( itemIndex, direction ) =>
+					moveTab( index, direction )
+				}
+				onRemove={ () => removeTab( index ) }
+				minCount={ 1 }
+			/>
+
 			<ComboboxControl
 				label={__('Category', 'ambrygen-web')}
 				value={String(tab.termId || '')}
 				options={categoryOptions}
-				onFilterValueChange={setSearch}
+				onFilterValueChange={setSearchInput}
 				onChange={(value) => {
 					const term = termOptions.find(
 						(item) => String(item.id) === value
@@ -273,29 +191,24 @@ function TabSettings({ index, tab, updateTab, removeTab }) {
 					updateTab(index, {
 						termId: term?.id || 0,
 						termSlug: term?.slug || '',
-						text: term ? getTermLabel(term) : '',
+						text: term ? getTermLabel(term, termOptions) : '',
 						excludedPostIds: [],
 					});
 				}}
 				help={
-					termsError
-						? __(
-							'Unable to load categories right now.',
-							'ambrygen-web'
-						)
-						: __(
-							'Search categories instead of loading the full list.',
-							'ambrygen-web'
-						)
+					__(
+						'Search categories instead of loading the full list.',
+						'ambrygen-web'
+					)
 				}
 			/>
 
 			{isLoadingTerms && <Spinner />}
 
-			{selectedOption && !search && (
+			{selectedOption && !searchInput && (
 				<p style={{ marginTop: '8px', marginBottom: 0 }}>
 					{__('Selected:', 'ambrygen-web')}{' '}
-					<strong>{getTermLabel(selectedOption)}</strong>
+					<strong>{getTermLabel(selectedOption, termOptions)}</strong>
 				</p>
 			)}
 
@@ -308,16 +221,7 @@ function TabSettings({ index, tab, updateTab, removeTab }) {
 			<div style={{ marginTop: '12px' }}>
 				<strong>{__('Posts to show', 'ambrygen-web')}</strong>
 				{isLoadingPosts && <Spinner />}
-				{postsError && (
-					<div>
-						{__(
-							'Unable to load product versions for this category.',
-							'ambrygen-web'
-						)}
-					</div>
-				)}
 				{!isLoadingPosts &&
-					!postsError &&
 					tab?.termId &&
 					availablePosts.length === 0 && (
 						<div>
@@ -351,10 +255,6 @@ function TabSettings({ index, tab, updateTab, removeTab }) {
 					);
 				})}
 			</div>
-
-			<Button isDestructive onClick={() => removeTab(index)}>
-				{__('Remove Tab', 'ambrygen-web')}
-			</Button>
 		</div>
 	);
 }
@@ -393,12 +293,14 @@ export default function Edit({ attributes, setAttributes, clientId, name }) {
 	}, []);
 
 	useEffect(() => {
-		if (!blockId && clientId) {
+		const expectedId = `test-catalog-${clientId.slice(0, 8)}`;
+
+		if ((!blockId || !blockId.endsWith(clientId.slice(0, 8))) && clientId) {
 			setAttributes({
-				blockId: `test-catalog-${clientId.slice(0, 8)}`,
+				blockId: expectedId,
 			});
 		}
-	}, []); // run only once
+	}, [blockId, clientId, setAttributes]);
 
 	const addTab = () => {
 		setAttributes({
@@ -425,6 +327,24 @@ export default function Edit({ attributes, setAttributes, clientId, name }) {
 		setAttributes({
 			selectedTabs: selectedTabs.filter((_, i) => i !== index),
 		});
+	};
+
+	const moveTab = ( index, direction ) => {
+		const newIndex = index + direction;
+		if (
+			newIndex < 0 ||
+			newIndex >= selectedTabs.length ||
+			index === newIndex
+		) {
+			return;
+		}
+
+		const nextTabs = [ ...selectedTabs ];
+		[ nextTabs[ index ], nextTabs[ newIndex ] ] = [
+			nextTabs[ newIndex ],
+			nextTabs[ index ],
+		];
+		setAttributes( { selectedTabs: nextTabs } );
 	};
 
 	return (
@@ -473,7 +393,7 @@ export default function Edit({ attributes, setAttributes, clientId, name }) {
 
 				<PanelBody title={__('Heading Settings', 'ambrygen-web')}>
 					<ComboboxControl
-						label={__('Heading Level', 'ambrygen-web')}
+						label={__('Heading Tag', 'ambrygen-web')}
 						value={headingLevel}
 						options={HEADING_OPTIONS}
 						onChange={(value) =>
@@ -516,6 +436,8 @@ export default function Edit({ attributes, setAttributes, clientId, name }) {
 								tab={tab}
 								updateTab={updateTab}
 								removeTab={removeTab}
+								moveTab={moveTab}
+								totalTabs={selectedTabs.length}
 							/>
 						))}
 
@@ -570,6 +492,7 @@ export default function Edit({ attributes, setAttributes, clientId, name }) {
 						block={name}
 						attributes={{
 							...attributes,
+							selectedTabs: selectedTabs.filter( ( tab ) => tab.termId > 0 ),
 							eyebrow: '',
 							title: '',
 							subtitle: '',

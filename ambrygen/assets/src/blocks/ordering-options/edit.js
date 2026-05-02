@@ -99,11 +99,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={__('Section Settings', 'ambrygen-web')}
+					title={__('Heading Settings', 'ambrygen-web')}
 					initialOpen={true}
 				>
 					<TagSelector
-						label={__('Heading Level', 'ambrygen-web')}
+						label={__('Heading Tag', 'ambrygen-web')}
 						value={headingTag}
 						onChange={(value) =>
 							setAttributes({ headingLevel: value })
@@ -183,3 +183,5 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		</>
 	);
 }
+
+

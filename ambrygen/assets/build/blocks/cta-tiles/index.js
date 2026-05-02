@@ -1,2 +1,1490 @@
-(()=>{"use strict";var e,a={6216(){const e=window.wp.blocks,a=window.wp.blockEditor,i=window.wp.i18n,t=window.wp.components,l=window.wp.element,n=window.wp.data,s=(e="")=>"undefined"!=typeof window&&window.ambrygenAssets&&window.ambrygenAssets.themeUrl?`${window.ambrygenAssets.themeUrl}${e}`:e,r=window.ReactJSXRuntime;function o({variants:e=[],className:i="block-example-preview",itemClass:t="block-example-preview__item"}){const l=(0,a.useBlockProps)({className:i});return(0,r.jsx)("div",{...l,children:e.map(e=>(0,r.jsx)("div",{className:t,children:(0,r.jsx)("img",{src:e.imagePath?s(e.imagePath):e.image,alt:""})},e.value||e.imagePath||e.image))})}function c({label:e=(0,i.__)("HTML Tag","ambrygen-web"),value:a="h2",onChange:l,type:n="all"}){let s=[];const o=[{label:"H1",value:"h1"},{label:"H2",value:"h2"},{label:"H3",value:"h3"},{label:"H4",value:"h4"},{label:"H5",value:"h5"},{label:"H6",value:"h6"}],c=[{label:(0,i.__)("Paragraph","ambrygen-web"),value:"p"},{label:(0,i.__)("Div","ambrygen-web"),value:"div"}];return s="heading"===n?o:"text"===n?c:[...o,...c],(0,r.jsx)(t.SelectControl,{label:e,value:a,options:s,onChange:l})}const d=["ambrygen/cta-tiles-item"],g={IMAGE_ONLY_TITLE:"image-only-title",IMAGE_TITLE_DESCRIPTION_ICON:"image-title-description-icon",IMAGE_TITLE_DESCRIPTION:"image-title-description"},m={default:g.IMAGE_ONLY_TITLE,"image-content-grid":g.IMAGE_TITLE_DESCRIPTION_ICON,"variation-features":g.IMAGE_TITLE_DESCRIPTION},b={[g.IMAGE_ONLY_TITLE]:"default",[g.IMAGE_TITLE_DESCRIPTION_ICON]:"image-content-grid",[g.IMAGE_TITLE_DESCRIPTION]:"variation-features"},p={[g.IMAGE_TITLE_DESCRIPTION]:"variation-team",[g.IMAGE_TITLE_DESCRIPTION_ICON]:"variation-team"},_={1:"1",2:"2",3:"3"},h=[["ambrygen/cta-tiles-item",{title:"",description:"",link:{url:"",text:"",target:"",rel:"",variant:"dark"}}],["ambrygen/cta-tiles-item",{title:"",description:"",link:{url:"",text:"",target:"",rel:"",variant:"dark"}}]],I=JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"ambrygen/cta-tiles","title":"CTA Tiles","category":"ambrygen","icon":"grid-view","description":"Responsive CTA tiles with design variants.","textdomain":"ambrygen-web","supports":{"html":false,"align":true,"color":{"background":true}},"editorScript":"file:./index.js","render":"file:./render.php","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"heading":{"type":"string","default":""},"headingTag":{"type":"string","enum":["h1","h2","h3","h4","h5","h6"],"default":"h2"},"description":{"type":"string","default":""},"variation":{"type":"string","default":"image-only-title","enum":["image-only-title","image-title-description-icon","image-title-description"]},"topImageID":{"type":"number","default":null},"topImageURL":{"type":"string","default":""},"topImageAlt":{"type":"string","default":""},"blockId":{"type":"string"}},"providesContext":{"ambrygen/ctaTilesVariation":"variation"},"example":{"attributes":{"blockId":"cta-tiles-example"}}}');(0,e.registerBlockType)(I.name,{...I,edit:function({attributes:e,setAttributes:I,clientId:u}){const{blockId:v,variation:T=g.IMAGE_ONLY_TITLE,heading:w,description:x,headingTag:y="h2",topImageID:E=0,topImageURL:N,topImageAlt:j}=e,k=[{label:(0,i.__)("Image with Only Title","ambrygen-web"),value:g.IMAGE_ONLY_TITLE,image:s("/assets/src/images/cta-tiles/v-1.png")},{label:(0,i.__)("Image with Title & Description & Icon","ambrygen-web"),value:g.IMAGE_TITLE_DESCRIPTION_ICON,image:s("/assets/src/images/cta-tiles/v-2.png")},{label:(0,i.__)("Image with Title & Description","ambrygen-web"),value:g.IMAGE_TITLE_DESCRIPTION,image:s("/assets/src/images/cta-tiles/v-3.png")}],C=(e=>m[e]||e||g.IMAGE_ONLY_TITLE)(T),f=Boolean(E&&N);(0,l.useEffect)(()=>{const e=`section-${u.slice(0,8)}`;v||I({blockId:e})},[u,v,I]),(0,l.useEffect)(()=>{C!==T&&I({variation:C})},[T,C,I]);const A=(0,n.useSelect)(e=>e("core/block-editor").getBlocks(u),[u]),{removeBlocks:O}=(0,n.useDispatch)("core/block-editor"),L=_[A.length]||"3",R=A.length<3;(0,l.useEffect)(()=>{A.length<=3||O(A.slice(3).map(e=>e.clientId))},[A,O]);const D=p[C]||"",S=b[C]||b[g.IMAGE_ONLY_TITLE],M=(0,a.useBlockProps)({className:`cta-tiles block-${S} ${D} grid-column${L}`}),P=y||"h2",G=(0,l.useCallback)(e=>{e&&e.id&&e.url&&I({topImageID:e.id,topImageURL:e.url,topImageAlt:e.alt||""})},[I]),B=(0,l.useCallback)(()=>{I({topImageID:null,topImageURL:"",topImageAlt:""})},[I]);return"cta-tiles-example"===v?(0,r.jsx)(o,{variants:k,className:"cta-tiles-example-preview",itemClass:"cta-tiles-example-preview__item"}):(0,r.jsxs)(r.Fragment,{children:[(0,r.jsxs)(a.InspectorControls,{children:[(0,r.jsx)(t.PanelBody,{title:(0,i.__)("Select Variation","ambrygen-web"),initialOpen:!0,children:(0,r.jsx)("div",{className:"layout-variant-selector",role:"radiogroup","aria-label":(0,i.__)("CTA Tiles Variation","ambrygen-web"),children:k.map(e=>(0,r.jsxs)("button",{type:"button",role:"radio",className:"variant-button "+(C===e.value?"is-selected":""),"aria-checked":C===e.value,"aria-label":(0,i.sprintf)(/* translators: %s: variant label */ /* translators: %s: variant label */
-(0,i.__)("Select %s","ambrygen-web"),e.label),onClick:()=>I({variation:e.value}),children:[(0,r.jsx)("img",{src:e.image,alt:e.label,"aria-hidden":"true",role:"presentation"}),(0,r.jsx)("span",{children:e.label})]},e.value))})}),(0,r.jsx)(t.PanelBody,{title:(0,i.__)("Heading Settings","ambrygen-web"),initialOpen:!1,children:(0,r.jsx)(c,{label:(0,i.__)("Heading Tag","ambrygen-web"),value:y,onChange:e=>I({headingTag:e}),type:"heading"})}),C===g.IMAGE_TITLE_DESCRIPTION_ICON&&(0,r.jsx)(t.PanelBody,{title:(0,i.__)("Top Image","ambrygen-web"),initialOpen:!1,children:(0,r.jsxs)(a.MediaUploadCheck,{children:[f&&(0,r.jsx)("div",{className:"cta-tiles__image-preview",children:(0,r.jsx)("img",{src:N,alt:j||""})}),(0,r.jsx)(a.MediaUpload,{onSelect:G,allowedTypes:["image"],value:E,render:({open:e})=>(0,r.jsx)(t.Button,{onClick:e,variant:"primary",children:f?(0,i.__)("Replace Image","ambrygen-web"):(0,i.__)("Select Image","ambrygen-web")})}),f&&(0,r.jsx)(t.Button,{variant:"link",isDestructive:!0,onClick:B,style:{marginTop:"8px"},children:(0,i.__)("Remove Image","ambrygen-web")})]})})]}),(0,r.jsx)("div",{...M,children:(0,r.jsxs)("div",{className:"cta-tiles__content",children:[C===g.IMAGE_TITLE_DESCRIPTION_ICON&&(0,r.jsxs)("div",{className:"cta-tiles__header logo-title-section",children:[f&&(0,r.jsxs)(r.Fragment,{children:[(0,r.jsxs)("div",{className:"logo-title-section__icon",children:[(0,r.jsx)("img",{src:N,alt:j||"",className:"logo-title-section__logo"}),(0,r.jsx)("div",{className:"is-style-gl-s50","aria-hidden":"true"})]}),(0,r.jsx)("div",{className:"is-style-gl-s50","aria-hidden":"true"})]}),(0,r.jsxs)("div",{className:"logo-title-section__content",children:[(0,r.jsx)(P,{className:"heading-2 block-title mb-0",children:(0,r.jsx)(a.RichText,{tagName:"span",value:w,onChange:e=>I({heading:e}),placeholder:(0,i.__)("Add Heading…","ambrygen-web"),"aria-label":(0,i.__)("CTA Tiles Heading","ambrygen-web"),allowedFormats:["core/bold","core/italic","core/text-color"]})}),x&&(0,r.jsx)("div",{className:"is-style-gl-s16","aria-hidden":"true"}),(0,r.jsx)("div",{className:"body1-reg logo-title-section__description",children:(0,r.jsx)(a.RichText,{tagName:"div",value:x,onChange:e=>I({description:e}),placeholder:(0,i.__)("Add Description…","ambrygen-web"),"aria-label":(0,i.__)("CTA Tiles Description","ambrygen-web"),allowedFormats:["core/bold","core/italic"]})})]})]}),C===g.IMAGE_ONLY_TITLE&&(0,r.jsx)(P,{className:"block-title heading-3 mb-0",children:(0,r.jsx)(a.RichText,{tagName:"span",value:w,onChange:e=>I({heading:e}),placeholder:(0,i.__)("Add Heading…","ambrygen-web"),"aria-label":(0,i.__)("CTA Tiles Heading","ambrygen-web"),allowedFormats:["core/bold","core/italic","core/text-color"]})}),C===g.IMAGE_TITLE_DESCRIPTION&&(0,r.jsxs)("div",{className:"cta-tiles__header block__rowflex",children:[(0,r.jsx)(P,{className:"heading-content-section__title heading-3 block-title mb-0 block__rowflex--heading-title",children:(0,r.jsx)(a.RichText,{tagName:"span",value:w,onChange:e=>I({heading:e}),placeholder:(0,i.__)("Add Heading…","ambrygen-web"),"aria-label":(0,i.__)("CTA Tiles Heading","ambrygen-web"),allowedFormats:["core/bold","core/italic","core/text-color"]})}),(0,r.jsx)("div",{className:"heading-content-wrapper",children:(0,r.jsx)("div",{className:"block__rowflex--block-content subtitle1-reg",children:(0,r.jsx)(a.RichText,{tagName:"div",value:x,onChange:e=>I({description:e}),placeholder:(0,i.__)("Add Description…","ambrygen-web"),"aria-label":(0,i.__)("CTA Tiles Description","ambrygen-web"),allowedFormats:["core/bold","core/italic"]})})})]}),(0,r.jsx)("div",{className:"card-grid-block",children:(0,r.jsx)(a.BlockContextProvider,{value:{"ambrygen/ctaTilesVariation":C},children:(0,r.jsx)(a.InnerBlocks,{allowedBlocks:d,template:h,templateLock:!1,renderAppender:!!R&&a.InnerBlocks.ButtonBlockAppender})})})]})})]})},save:()=>(0,r.jsx)(a.InnerBlocks.Content,{})})}},i={};function t(e){var l=i[e];if(void 0!==l)return l.exports;var n=i[e]={exports:{}};return a[e](n,n.exports,t),n.exports}t.m=a,e=[],t.O=(a,i,l,n)=>{if(!i){var s=1/0;for(d=0;d<e.length;d++){for(var[i,l,n]=e[d],r=!0,o=0;o<i.length;o++)(!1&n||s>=n)&&Object.keys(t.O).every(e=>t.O[e](i[o]))?i.splice(o--,1):(r=!1,n<s&&(s=n));if(r){e.splice(d--,1);var c=l();void 0!==c&&(a=c)}}return a}n=n||0;for(var d=e.length;d>0&&e[d-1][2]>n;d--)e[d]=e[d-1];e[d]=[i,l,n]},t.o=(e,a)=>Object.prototype.hasOwnProperty.call(e,a),(()=>{var e={9706:0,7550:0};t.O.j=a=>0===e[a];var a=(a,i)=>{var l,n,[s,r,o]=i,c=0;if(s.some(a=>0!==e[a])){for(l in r)t.o(r,l)&&(t.m[l]=r[l]);if(o)var d=o(t)}for(a&&a(i);c<s.length;c++)n=s[c],t.o(e,n)&&e[n]&&e[n][0](),e[n]=0;return t.O(d)},i=globalThis.webpackChunkambrygen=globalThis.webpackChunkambrygen||[];i.forEach(a.bind(null,0)),i.push=a.bind(null,i.push.bind(i))})();var l=t.O(void 0,[7550],()=>t(6216));l=t.O(l)})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./assets/src/blocks/_shared/components.js"
+/*!*************************************************!*\
+  !*** ./assets/src/blocks/_shared/components.js ***!
+  \*************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   BlockExamplePreview: () => (/* binding */ BlockExamplePreview),
+/* harmony export */   BlockVariationsExamplePreview: () => (/* binding */ BlockVariationsExamplePreview),
+/* harmony export */   CtaButtonField: () => (/* binding */ CtaButtonField),
+/* harmony export */   DEFAULT_IMAGES: () => (/* binding */ DEFAULT_IMAGES),
+/* harmony export */   Field: () => (/* binding */ Field),
+/* harmony export */   IconPicker: () => (/* binding */ IconPicker),
+/* harmony export */   ImagePlaceholder: () => (/* binding */ ImagePlaceholder),
+/* harmony export */   ImageUploader: () => (/* binding */ ImageUploader),
+/* harmony export */   ItemControls: () => (/* binding */ ItemControls),
+/* harmony export */   ItemHeader: () => (/* binding */ ItemHeader),
+/* harmony export */   PanelItem: () => (/* binding */ PanelItem),
+/* harmony export */   TagSelector: () => (/* binding */ TagSelector),
+/* harmony export */   Toggle: () => (/* binding */ Toggle)
+/* harmony export */ });
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/chevron-down.mjs");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/chevron-up.mjs");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/trash.mjs");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/upload.mjs");
+/* harmony import */ var _utils_assets__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utils/assets */ "./assets/src/utils/assets.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__);
+/**
+ * Shared UI Components for Block Editors
+ *
+ * Reusable components to reduce boilerplate in block editors.
+ * Import from: '../_shared/components'
+ *
+ * @package
+ */
+
+
+
+
+
+
+
+/**
+ * Shared global configuration
+ *
+ * @package
+ */
+
+const DEFAULT_IMAGES = () => ({
+  placeholder: {
+    id: window?.ambrygenAssets?.defaultImageId ? parseInt(window.ambrygenAssets.defaultImageId, 10) : 0,
+    url: window?.ambrygenAssets?.defaultImageUrl || '',
+    alt: 'Default image'
+  }
+});
+
+/* ─────────────────────────────────────────────────────────────
+   Item Controls
+───────────────────────────────────────────────────────────── */
+
+/**
+ * Standard item control buttons.
+ *
+ * @param {Object}   props              - Component props.
+ * @param {number}   props.index        - Current item index.
+ * @param {number}   props.total        - Total number of items.
+ * @param {Function} props.onMove       - Move handler.
+ * @param {Function} props.onRemove     - Remove handler.
+ * @param {number}   [props.minCount=1] - Minimum allowed items.
+ */
+function ItemControls({
+  index,
+  total,
+  onMove,
+  onRemove,
+  minCount = 1
+}) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
+    style: {
+      display: 'flex',
+      gap: '4px'
+    },
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+      icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__["default"],
+      size: "small",
+      disabled: index === 0,
+      onClick: () => onMove(index, -1),
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Move Up', 'ambrygen-web')
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+      icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__["default"],
+      size: "small",
+      disabled: index >= total - 1,
+      onClick: () => onMove(index, 1),
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Move Down', 'ambrygen-web')
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+      icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_6__["default"],
+      size: "small",
+      isDestructive: true,
+      disabled: total <= minCount,
+      onClick: () => onRemove(index),
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Remove', 'ambrygen-web')
+    })]
+  });
+}
+
+/**
+ * Panel item header with title and controls.
+ *
+ * @param {Object}   props          - Component props.
+ * @param {number}   props.index    - Current index.
+ * @param {string}   props.label    - Item label.
+ * @param {number}   props.total    - Total items.
+ * @param {Function} props.onMove   - Move handler.
+ * @param {Function} props.onRemove - Remove handler.
+ * @param {number}   props.minCount - Minimum item count.
+ */
+function ItemHeader({
+  index,
+  label,
+  total,
+  onMove,
+  onRemove,
+  minCount,
+  prefix = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Item', 'ambrygen-web')
+}) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
+    className: "reorder-controls",
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: '8px',
+      gap: '8px'
+    },
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("strong", {
+      style: {
+        flex: '1 1 auto',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap'
+      },
+      children: [prefix, " ", index + 1, ":", ' ', label || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Untitled', 'ambrygen-web')]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("div", {
+      style: {
+        flex: '0 0 auto'
+      },
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(ItemControls, {
+        index: index,
+        total: total,
+        onMove: onMove,
+        onRemove: onRemove,
+        minCount: minCount
+      })
+    })]
+  });
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Image Components
+───────────────────────────────────────────────────────────── */
+
+const imgPreviewStyle = {
+  maxWidth: '100%',
+  height: 'auto',
+  marginBottom: '8px',
+  borderRadius: '4px'
+};
+
+/**
+ * Image upload with preview.
+ *
+ * @param {Object}   props          - Component props.
+ * @param {string}   props.url      - Image URL.
+ * @param {Function} props.onSelect - Select handler.
+ * @param {Function} props.onRemove - Remove handler.
+ * @param {string}   [props.label]  - Optional label.
+ */
+function ImageUploader({
+  url,
+  onSelect,
+  onRemove,
+  label
+}) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
+    style: {
+      marginBottom: '8px'
+    },
+    children: [label && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("p", {
+      style: {
+        marginBottom: '4px',
+        fontWeight: '500'
+      },
+      children: label
+    }), url ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.Fragment, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("img", {
+        src: url,
+        alt: "",
+        style: imgPreviewStyle
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
+        style: {
+          display: 'flex',
+          gap: '8px'
+        },
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.MediaUploadCheck, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.MediaUpload, {
+            onSelect: onSelect,
+            allowedTypes: ['image'],
+            render: ({
+              open
+            }) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+              variant: "secondary",
+              size: "small",
+              onClick: open,
+              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Replace', 'ambrygen-web')
+            })
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+          variant: "secondary",
+          size: "small",
+          isDestructive: true,
+          onClick: onRemove,
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Remove', 'ambrygen-web')
+        })]
+      })]
+    }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.MediaUploadCheck, {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.MediaUpload, {
+        onSelect: onSelect,
+        allowedTypes: ['image'],
+        render: ({
+          open
+        }) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+          variant: "secondary",
+          icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_7__["default"],
+          onClick: open,
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Upload Image', 'ambrygen-web')
+        })
+      })
+    })]
+  });
+}
+
+/**
+ * Small clickable icon picker.
+ *
+ * @param {Object}   props          - Component props.
+ * @param {string}   props.url      - Icon URL.
+ * @param {Function} props.onSelect - Select handler.
+ */
+function IconPicker({
+  url,
+  onSelect
+}) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.MediaUploadCheck, {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.MediaUpload, {
+      onSelect: media => onSelect(media.url),
+      allowedTypes: ['image'],
+      render: ({
+        open
+      }) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("button", {
+        type: "button",
+        onClick: open,
+        style: {
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          width: '24px',
+          height: '24px',
+          background: url ? 'transparent' : '#eee',
+          border: 'none',
+          padding: 0
+        },
+        children: url && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("img", {
+          src: url,
+          alt: "",
+          style: {
+            width: '100%',
+            height: '100%'
+          }
+        })
+      })
+    })
+  });
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Panel Components
+───────────────────────────────────────────────────────────── */
+
+const panelItemStyle = {
+  marginBottom: '16px',
+  padding: '12px',
+  background: '#f0f0f0',
+  borderRadius: '4px'
+};
+
+/**
+ * Styled panel item container.
+ *
+ * @param {Object}   props          - Component props.
+ * @param {boolean}  props.active   - Active state.
+ * @param {Function} props.onClick  - Click handler.
+ * @param {Object}   props.children - Child content.
+ */
+function PanelItem({
+  active,
+  onClick,
+  children
+}) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("button", {
+    type: "button",
+    style: {
+      ...panelItemStyle,
+      background: active ? '#e0e7ff' : '#f0f0f0',
+      border: 'none',
+      width: '100%',
+      textAlign: 'left'
+    },
+    onClick: onClick,
+    children: children
+  });
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Form Fields
+───────────────────────────────────────────────────────────── */
+
+/**
+ * Standard TextControl wrapper.
+ *
+ * @param {Object}   props               - Component props.
+ * @param {string}   props.label         - Field label.
+ * @param {string}   props.value         - Field value.
+ * @param {Function} props.onChange      - Change handler.
+ * @param {string}   [props.placeholder] - Placeholder text.
+ * @param {string}   [props.help]        - Help text.
+ */
+
+function Field({
+  label,
+  value,
+  onChange,
+  placeholder,
+  help,
+  ...props
+}) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+    label: label,
+    value: value,
+    onChange: onChange,
+    placeholder: placeholder,
+    help: help,
+    ...props
+  });
+}
+
+/**
+ * ToggleControl wrapper.
+ *
+ * @param {Object}   props          - Component props.
+ * @param {string}   props.label    - Toggle label.
+ * @param {boolean}  props.checked  - Toggle state.
+ * @param {Function} props.onChange - Change handler.
+ */
+function Toggle({
+  label,
+  checked,
+  onChange
+}) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.ToggleControl, {
+    label: label,
+    checked: checked,
+    onChange: onChange
+  });
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Placeholder States
+───────────────────────────────────────────────────────────── */
+function ImagePlaceholder({
+  text = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('No image set', 'ambrygen-web'),
+  minHeight = '100px'
+}) {
+  const placeholderStyle = {
+    color: '#999',
+    fontSize: '12px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight,
+    background: '#f0f0f0'
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("span", {
+    style: placeholderStyle,
+    children: text
+  });
+}
+
+/**
+ * Shared single-image preview for inserter examples.
+ *
+ * @param {Object} props            Component props.
+ * @param {string} props.imagePath  Theme-relative image path.
+ * @param {string} props.className  Preview wrapper class.
+ * @param {number} props.width      Preview image width.
+ */
+function BlockExamplePreview({
+  imagePath,
+  className = 'block-example-preview',
+  width = 620
+}) {
+  const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)({
+    className
+  });
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("div", {
+    ...blockProps,
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("img", {
+      src: (0,_utils_assets__WEBPACK_IMPORTED_MODULE_8__.getThemeAssetUrl)(imagePath),
+      alt: "",
+      width: width
+    })
+  });
+}
+
+/**
+ * Shared multi-variation preview for inserter examples.
+ *
+ * @param {Object}  props           Component props.
+ * @param {Array}   props.variants  Variation items with image and value.
+ * @param {string}  props.className Preview wrapper class.
+ * @param {string}  props.itemClass Preview item class.
+ */
+function BlockVariationsExamplePreview({
+  variants = [],
+  className = 'block-example-preview',
+  itemClass = 'block-example-preview__item'
+}) {
+  const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)({
+    className
+  });
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("div", {
+    ...blockProps,
+    children: variants.map(variant => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("div", {
+      className: itemClass,
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("img", {
+        src: variant.imagePath ? (0,_utils_assets__WEBPACK_IMPORTED_MODULE_8__.getThemeAssetUrl)(variant.imagePath) : variant.image,
+        alt: ""
+      })
+    }, variant.value || variant.imagePath || variant.image))
+  });
+}
+/**
+ * HTML tag selector.
+ *
+ * @param {Object}   props          - Component props.
+ * @param {string}   [props.label]  - Label text.
+ * @param {string}   props.value    - Selected tag.
+ * @param {Function} props.onChange - Change handler.
+ * @param {string}   [props.type]   - Tag type (heading | text | all).
+ */
+function TagSelector({
+  label = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('HTML Tag', 'ambrygen-web'),
+  value = 'h2',
+  onChange,
+  type = 'all'
+}) {
+  let options = [];
+  const headingTags = [{
+    label: 'H1',
+    value: 'h1'
+  }, {
+    label: 'H2',
+    value: 'h2'
+  }, {
+    label: 'H3',
+    value: 'h3'
+  }, {
+    label: 'H4',
+    value: 'h4'
+  }, {
+    label: 'H5',
+    value: 'h5'
+  }, {
+    label: 'H6',
+    value: 'h6'
+  }];
+  const textTags = [{
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Paragraph', 'ambrygen-web'),
+    value: 'p'
+  }, {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Div', 'ambrygen-web'),
+    value: 'div'
+  }];
+  if (type === 'heading') {
+    options = headingTags;
+  } else if (type === 'text') {
+    options = textTags;
+  } else {
+    options = [...headingTags, ...textTags];
+  }
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.SelectControl, {
+    label: label,
+    value: value,
+    options: options,
+    onChange: onChange
+  });
+}
+
+/**
+ * CTA Button field wrapper.
+ *
+ * @param {Object}   props                    - Component props.
+ * @param {string}   [props.label]            - Field label.
+ * @param {Object}   props.value              - Link value object.
+ * @param {Function} props.onChange           - Change handler.
+ * @param {string}   [props.help]             - Help text.
+ * @param {boolean}  [props.showText=true]    - Show text field.
+ * @param {string}   [props.textLabel]        - Text label.
+ * @param {string}   [props.textPlaceholder]  - Text field placeholder.
+ * @param {boolean}  [props.showVariant=true] - Show variant selector.
+ * @param {string}   [props.variantLabel]     - Variant label.
+ */
+
+function CtaButtonField({
+  label = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Link', 'ambrygen-web'),
+  value = {},
+  onChange,
+  help,
+  showText = true,
+  textLabel = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Link Text', 'ambrygen-web'),
+  textPlaceholder = '',
+  showVariant = true,
+  variantLabel = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Button Style', 'ambrygen-web'),
+  showNewTab = true
+}) {
+  const updateValue = updates => {
+    onChange({
+      ...value,
+      ...updates
+    });
+  };
+  const clearLink = () => {
+    updateValue({
+      url: '',
+      target: '',
+      rel: ''
+    });
+  };
+  const linkValue = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useMemo)(() => ({
+    url: value?.url || '',
+    title: value?.text || '',
+    opensInNewTab: value?.target === '_blank'
+  }), [value?.url, value?.text, value?.target]);
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
+    style: {
+      marginBottom: '16px'
+    },
+    children: [label && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("p", {
+      style: {
+        marginBottom: '6px',
+        fontWeight: '500'
+      },
+      children: label
+    }), showText && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+      label: textLabel,
+      value: value?.text || '',
+      placeholder: textPlaceholder,
+      onChange: text => updateValue({
+        text
+      })
+    }), showVariant && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.SelectControl, {
+      label: variantLabel,
+      value: value?.variant || 'dark',
+      options: [{
+        label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Light', 'ambrygen-web'),
+        value: 'is-style-site-tertiary-btn'
+      }, {
+        label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Dark', 'ambrygen-web'),
+        value: 'dark'
+      }],
+      onChange: variant => updateValue({
+        variant
+      })
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.LinkControl, {
+      value: linkValue,
+      settings: [],
+      onChange: newLink => {
+        updateValue({
+          url: newLink?.url || '',
+          target: newLink.opensInNewTab ? '_blank' : '',
+          rel: newLink.opensInNewTab ? 'noopener noreferrer' : ''
+        });
+      }
+    }, `${label}-${value?.url || 'empty'}-${value?.target || 'same-tab'}`), value?.url && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+      variant: "link",
+      isDestructive: true,
+      onClick: clearLink,
+      style: {
+        marginTop: '8px'
+      },
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Remove Link', 'ambrygen-web')
+    }), showNewTab && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.ToggleControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Open in new tab', 'ambrygen-web'),
+      checked: value?.target === '_blank',
+      onChange: opensInNewTab => updateValue({
+        target: opensInNewTab ? '_blank' : '',
+        rel: opensInNewTab ? 'noopener noreferrer' : ''
+      })
+    }), help && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("p", {
+      style: {
+        fontSize: '12px',
+        color: '#666'
+      },
+      children: help
+    })]
+  });
+}
+
+/***/ },
+
+/***/ "./assets/src/blocks/cta-tiles/block.json"
+/*!************************************************!*\
+  !*** ./assets/src/blocks/cta-tiles/block.json ***!
+  \************************************************/
+(module) {
+
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"ambrygen/cta-tiles","title":"CTA Tiles","category":"ambrygen","icon":"grid-view","description":"Responsive CTA tiles with design variants.","textdomain":"ambrygen-web","supports":{"html":false,"align":true,"color":{"background":true}},"editorScript":"file:./index.js","render":"file:./render.php","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"heading":{"type":"string","default":""},"headingTag":{"type":"string","enum":["h1","h2","h3","h4","h5","h6"],"default":"h2"},"description":{"type":"string","default":""},"variation":{"type":"string","default":"image-only-title","enum":["image-only-title","image-title-description-icon","image-title-description"]},"topImageID":{"type":"number","default":null},"topImageURL":{"type":"string","default":""},"topImageAlt":{"type":"string","default":""},"blockId":{"type":"string"}},"providesContext":{"ambrygen/ctaTilesVariation":"variation"},"example":{"attributes":{"blockId":"cta-tiles-example"}}}');
+
+/***/ },
+
+/***/ "./assets/src/blocks/cta-tiles/edit.js"
+/*!*********************************************!*\
+  !*** ./assets/src/blocks/cta-tiles/edit.js ***!
+  \*********************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Edit)
+/* harmony export */ });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _shared_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../_shared/components */ "./assets/src/blocks/_shared/components.js");
+/* harmony import */ var _utils_assets__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utils/assets */ "./assets/src/utils/assets.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__);
+
+
+
+
+
+
+
+
+
+// Constants
+
+const ALLOWED_BLOCKS = ['ambrygen/cta-tiles-item'];
+const CTA_TILES_VARIATIONS = {
+  IMAGE_ONLY_TITLE: 'image-only-title',
+  IMAGE_TITLE_DESCRIPTION_ICON: 'image-title-description-icon',
+  IMAGE_TITLE_DESCRIPTION: 'image-title-description'
+};
+const LEGACY_VARIATION_MAP = {
+  default: CTA_TILES_VARIATIONS.IMAGE_ONLY_TITLE,
+  'image-content-grid': CTA_TILES_VARIATIONS.IMAGE_TITLE_DESCRIPTION_ICON,
+  'variation-features': CTA_TILES_VARIATIONS.IMAGE_TITLE_DESCRIPTION
+};
+const VARIATION_CLASS_NAMES = {
+  [CTA_TILES_VARIATIONS.IMAGE_ONLY_TITLE]: 'default',
+  [CTA_TILES_VARIATIONS.IMAGE_TITLE_DESCRIPTION_ICON]: 'image-content-grid',
+  [CTA_TILES_VARIATIONS.IMAGE_TITLE_DESCRIPTION]: 'variation-features'
+};
+const VARIATION_AMB_CLASSES = {
+  [CTA_TILES_VARIATIONS.IMAGE_TITLE_DESCRIPTION]: 'variation-team',
+  [CTA_TILES_VARIATIONS.IMAGE_TITLE_DESCRIPTION_ICON]: 'variation-team'
+};
+const GRID_COLUMNS_BY_ITEM_COUNT = {
+  1: '1',
+  2: '2',
+  3: '3'
+};
+const normalizeCtaTilesVariation = variation => LEGACY_VARIATION_MAP[variation] || variation || CTA_TILES_VARIATIONS.IMAGE_ONLY_TITLE;
+const getVariants = () => [{
+  label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Image with Only Title', 'ambrygen-web'),
+  value: CTA_TILES_VARIATIONS.IMAGE_ONLY_TITLE,
+  image: (0,_utils_assets__WEBPACK_IMPORTED_MODULE_7__.getThemeAssetUrl)('/assets/src/images/cta-tiles/v-1.png')
+}, {
+  label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Image with Title & Description & Icon', 'ambrygen-web'),
+  value: CTA_TILES_VARIATIONS.IMAGE_TITLE_DESCRIPTION_ICON,
+  image: (0,_utils_assets__WEBPACK_IMPORTED_MODULE_7__.getThemeAssetUrl)('/assets/src/images/cta-tiles/v-2.png')
+}, {
+  label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Image with Title & Description', 'ambrygen-web'),
+  value: CTA_TILES_VARIATIONS.IMAGE_TITLE_DESCRIPTION,
+  image: (0,_utils_assets__WEBPACK_IMPORTED_MODULE_7__.getThemeAssetUrl)('/assets/src/images/cta-tiles/v-3.png')
+}];
+const DEFAULT_TEMPLATE = [['ambrygen/cta-tiles-item', {
+  title: '',
+  description: '',
+  link: {
+    url: '',
+    text: '',
+    target: '',
+    rel: '',
+    variant: 'dark'
+  }
+}], ['ambrygen/cta-tiles-item', {
+  title: '',
+  description: '',
+  link: {
+    url: '',
+    text: '',
+    target: '',
+    rel: '',
+    variant: 'dark'
+  }
+}]];
+
+/**
+ * CTA Tiles Block Edit Component
+ *
+ * @param {Object}   props               - Component props
+ * @param {Object}   props.attributes    - Block attributes
+ * @param {Function} props.setAttributes - Function to update attributes
+ * @param {string}   props.clientId      - Block client ID
+ * @return {JSX.Element} Edit component
+ */
+function Edit({
+  attributes,
+  setAttributes,
+  clientId
+}) {
+  const {
+    blockId,
+    variation: variationAttribute = CTA_TILES_VARIATIONS.IMAGE_ONLY_TITLE,
+    heading,
+    description,
+    headingTag = 'h2',
+    topImageID = 0,
+    topImageURL,
+    topImageAlt
+  } = attributes;
+  const VARIANTS = getVariants();
+  const variation = normalizeCtaTilesVariation(variationAttribute);
+  const hasTopImage = Boolean(topImageID && topImageURL);
+  const isExample = blockId === 'cta-tiles-example';
+
+  // Initialize block ID
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useEffect)(() => {
+    if (isExample) {
+      return;
+    }
+    const expectedId = `section-${clientId.slice(0, 8)}`;
+    if (!blockId || !blockId.endsWith(clientId.slice(0, 8))) {
+      setAttributes({
+        blockId: expectedId
+      });
+    }
+  }, [clientId, blockId, isExample, setAttributes]);
+
+  // Normalize variation on mount
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useEffect)(() => {
+    if (variation !== variationAttribute) {
+      setAttributes({
+        variation
+      });
+    }
+  }, [variationAttribute, variation, setAttributes]);
+
+  // Get inner blocks
+  const innerBlocks = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_5__.useSelect)(select => select('core/block-editor').getBlocks(clientId), [clientId]);
+  const {
+    insertBlock
+  } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_5__.useDispatch)('core/block-editor');
+
+  // Calculate grid columns
+  const effectiveGridColumns = GRID_COLUMNS_BY_ITEM_COUNT[innerBlocks.length] || '3';
+
+  // Get variation-specific classes
+  const ambClass = VARIATION_AMB_CLASSES[variation] || '';
+  const variationClassName = VARIATION_CLASS_NAMES[variation] || VARIATION_CLASS_NAMES[CTA_TILES_VARIATIONS.IMAGE_ONLY_TITLE];
+  const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)({
+    className: `cta-tiles block-${variationClassName} ${ambClass} grid-column${effectiveGridColumns}`
+  });
+  const HeadingTag = headingTag || 'h2';
+
+  // Handle media upload
+  const handleMediaSelect = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useCallback)(media => {
+    if (!media || !media.id || !media.url) {
+      return;
+    }
+    setAttributes({
+      topImageID: media.id,
+      topImageURL: media.url,
+      topImageAlt: media.alt || ''
+    });
+  }, [setAttributes]);
+
+  // Handle media removal
+  const handleMediaRemove = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useCallback)(() => {
+    setAttributes({
+      topImageID: null,
+      topImageURL: '',
+      topImageAlt: ''
+    });
+  }, [setAttributes]);
+
+  // Example preview
+  if (isExample) {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_shared_components__WEBPACK_IMPORTED_MODULE_6__.BlockVariationsExamplePreview, {
+      variants: VARIANTS,
+      className: "cta-tiles-example-preview",
+      itemClass: "cta-tiles-example-preview__item"
+    });
+  }
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.Fragment, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InspectorControls, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {
+        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Select Variation', 'ambrygen-web'),
+        initialOpen: true,
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("div", {
+          className: "layout-variant-selector",
+          role: "radiogroup",
+          "aria-label": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('CTA Tiles Variation', 'ambrygen-web'),
+          children: VARIANTS.map(variant => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("button", {
+            type: "button",
+            role: "radio",
+            className: `variant-button ${variation === variant.value ? 'is-selected' : ''}`,
+            "aria-checked": variation === variant.value,
+            "aria-label": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)(/* translators: %s: variant label */
+            (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Select %s', 'ambrygen-web'), variant.label),
+            onClick: () => setAttributes({
+              variation: variant.value
+            }),
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("img", {
+              src: variant.image,
+              alt: variant.label,
+              "aria-hidden": "true",
+              role: "presentation"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("span", {
+              children: variant.label
+            })]
+          }, variant.value))
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {
+        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Heading Settings', 'ambrygen-web'),
+        initialOpen: false,
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_shared_components__WEBPACK_IMPORTED_MODULE_6__.TagSelector, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Heading Tag', 'ambrygen-web'),
+          value: headingTag,
+          onChange: value => setAttributes({
+            headingTag: value
+          }),
+          type: "heading"
+        })
+      }), variation === CTA_TILES_VARIATIONS.IMAGE_TITLE_DESCRIPTION_ICON && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {
+        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Icon', 'ambrygen-web'),
+        initialOpen: false,
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.MediaUploadCheck, {
+          children: [hasTopImage && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("div", {
+            className: "cta-tiles__image-preview",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("img", {
+              src: topImageURL,
+              alt: topImageAlt || ''
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.MediaUpload, {
+            onSelect: handleMediaSelect,
+            allowedTypes: ['image'],
+            value: topImageID,
+            render: ({
+              open
+            }) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
+              onClick: open,
+              variant: "primary",
+              children: hasTopImage ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Replace Image', 'ambrygen-web') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Select Image', 'ambrygen-web')
+            })
+          }), hasTopImage && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
+            variant: "link",
+            isDestructive: true,
+            onClick: handleMediaRemove,
+            style: {
+              marginTop: '8px'
+            },
+            children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Remove Image', 'ambrygen-web')
+          })]
+        })
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("div", {
+      ...blockProps,
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
+        className: "cta-tiles__content",
+        children: [variation === CTA_TILES_VARIATIONS.IMAGE_TITLE_DESCRIPTION_ICON && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
+          className: "cta-tiles__header logo-title-section",
+          children: [hasTopImage && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.Fragment, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
+              className: "logo-title-section__icon",
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("img", {
+                src: topImageURL,
+                alt: topImageAlt || '',
+                className: "logo-title-section__logo"
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("div", {
+                className: "is-style-gl-s50",
+                "aria-hidden": "true"
+              })]
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("div", {
+              className: "is-style-gl-s50",
+              "aria-hidden": "true"
+            })]
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
+            className: "logo-title-section__content",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(HeadingTag, {
+              className: "heading-2 block-title mb-0",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.RichText, {
+                tagName: "span",
+                value: heading,
+                onChange: value => setAttributes({
+                  heading: value
+                }),
+                placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Add Heading…', 'ambrygen-web'),
+                "aria-label": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('CTA Tiles Heading', 'ambrygen-web'),
+                allowedFormats: ['core/bold', 'core/italic', 'core/text-color']
+              })
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("div", {
+              className: "is-style-gl-s16",
+              "aria-hidden": "true"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("div", {
+              className: "body1-reg logo-title-section__description",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.RichText, {
+                tagName: "div",
+                value: description,
+                onChange: value => setAttributes({
+                  description: value
+                }),
+                placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Add Description…', 'ambrygen-web'),
+                "aria-label": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('CTA Tiles Description', 'ambrygen-web'),
+                allowedFormats: ['core/bold', 'core/italic']
+              })
+            })]
+          })]
+        }), variation === CTA_TILES_VARIATIONS.IMAGE_ONLY_TITLE && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(HeadingTag, {
+          className: "block-title heading-3 mb-0",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.RichText, {
+            tagName: "span",
+            value: heading,
+            onChange: value => setAttributes({
+              heading: value
+            }),
+            placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Add Heading…', 'ambrygen-web'),
+            "aria-label": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('CTA Tiles Heading', 'ambrygen-web'),
+            allowedFormats: ['core/bold', 'core/italic', 'core/text-color']
+          })
+        }), variation === CTA_TILES_VARIATIONS.IMAGE_TITLE_DESCRIPTION && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
+          className: "cta-tiles__header block__rowflex",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(HeadingTag, {
+            className: "heading-content-section__title heading-3 block-title mb-0 block__rowflex--heading-title",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.RichText, {
+              tagName: "span",
+              value: heading,
+              onChange: value => setAttributes({
+                heading: value
+              }),
+              placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Add Heading…', 'ambrygen-web'),
+              "aria-label": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('CTA Tiles Heading', 'ambrygen-web'),
+              allowedFormats: ['core/bold', 'core/italic', 'core/text-color']
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("div", {
+            className: "heading-content-wrapper",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("div", {
+              className: "block__rowflex--block-content subtitle1-reg",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.RichText, {
+                tagName: "div",
+                value: description,
+                onChange: value => setAttributes({
+                  description: value
+                }),
+                placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Add Description…', 'ambrygen-web'),
+                "aria-label": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('CTA Tiles Description', 'ambrygen-web'),
+                allowedFormats: ['core/bold', 'core/italic']
+              })
+            })
+          })]
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
+          className: "card-grid-block",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.BlockContextProvider, {
+            value: {
+              'ambrygen/ctaTilesVariation': variation
+            },
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InnerBlocks, {
+              allowedBlocks: ALLOWED_BLOCKS,
+              template: DEFAULT_TEMPLATE,
+              templateLock: false,
+              renderAppender: false
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
+            variant: "primary",
+            onClick: () => {
+              insertBlock((0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__.createBlock)('ambrygen/cta-tiles-item'), undefined, clientId);
+            },
+            children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Add New Record', 'ambrygen-web')
+          })]
+        })]
+      })
+    })]
+  });
+}
+
+/***/ },
+
+/***/ "./assets/src/blocks/cta-tiles/editor.scss"
+/*!*************************************************!*\
+  !*** ./assets/src/blocks/cta-tiles/editor.scss ***!
+  \*************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ },
+
+/***/ "./assets/src/blocks/cta-tiles/index.js"
+/*!**********************************************!*\
+  !*** ./assets/src/blocks/cta-tiles/index.js ***!
+  \**********************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style.scss */ "./assets/src/blocks/cta-tiles/style.scss");
+/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./editor.scss */ "./assets/src/blocks/cta-tiles/editor.scss");
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./edit */ "./assets/src/blocks/cta-tiles/edit.js");
+/* harmony import */ var _block_json__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./block.json */ "./assets/src/blocks/cta-tiles/block.json");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__);
+/**
+ * Registers a new block provided a unique name and an object defining its behavior.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
+ */
+
+
+/**
+ * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
+ * The style.scss file is bundled and loaded on both frontend and editor.
+ *
+ * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
+ */
+
+
+
+/**
+ * Internal dependencies
+ */
+
+
+
+/**
+ * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
+ */
+
+(0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__.registerBlockType)(_block_json__WEBPACK_IMPORTED_MODULE_5__.name, {
+  ..._block_json__WEBPACK_IMPORTED_MODULE_5__,
+  /**
+   * @see ./edit.js
+   */
+  edit: _edit__WEBPACK_IMPORTED_MODULE_4__["default"],
+  /**
+   * @see ./save.js
+   */
+  save: () => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InnerBlocks.Content, {})
+});
+
+/***/ },
+
+/***/ "./assets/src/blocks/cta-tiles/style.scss"
+/*!************************************************!*\
+  !*** ./assets/src/blocks/cta-tiles/style.scss ***!
+  \************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ },
+
+/***/ "./assets/src/utils/assets.js"
+/*!************************************!*\
+  !*** ./assets/src/utils/assets.js ***!
+  \************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getThemeAssetUrl: () => (/* binding */ getThemeAssetUrl)
+/* harmony export */ });
+const getThemeAssetUrl = (path = '') => {
+  if (!path || /^https?:\/\//.test(path)) {
+    return path;
+  }
+  if (typeof window !== 'undefined' && window.ambrygenAssets && window.ambrygenAssets.themeUrl) {
+    return `${window.ambrygenAssets.themeUrl}${path}`;
+  }
+  if (typeof document !== 'undefined') {
+    const themeScript = [...document.scripts].find(script => script.src.includes('/assets/build/'));
+    if (themeScript) {
+      const themeUrl = themeScript.src.split('/assets/build/')[0];
+      return `${themeUrl}${path}`;
+    }
+  }
+  return path;
+};
+
+/***/ },
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/chevron-down.mjs"
+/*!*****************************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/chevron-down.mjs ***!
+  \*****************************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ chevron_down_default)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+// packages/icons/src/library/chevron-down.tsx
+
+
+var chevron_down_default = /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, { viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, { d: "M17.5 11.6L12 16l-5.5-4.4.9-1.2L12 14l4.5-3.6 1 1.2z" }) });
+
+//# sourceMappingURL=chevron-down.mjs.map
+
+
+/***/ },
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/chevron-up.mjs"
+/*!***************************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/chevron-up.mjs ***!
+  \***************************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ chevron_up_default)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+// packages/icons/src/library/chevron-up.tsx
+
+
+var chevron_up_default = /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, { viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, { d: "M6.5 12.4L12 8l5.5 4.4-.9 1.2L12 10l-4.5 3.6-1-1.2z" }) });
+
+//# sourceMappingURL=chevron-up.mjs.map
+
+
+/***/ },
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/trash.mjs"
+/*!**********************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/trash.mjs ***!
+  \**********************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ trash_default)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+// packages/icons/src/library/trash.tsx
+
+
+var trash_default = /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", children: /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(
+  _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path,
+  {
+    fillRule: "evenodd",
+    clipRule: "evenodd",
+    d: "M12 5.5A2.25 2.25 0 0 0 9.878 7h4.244A2.251 2.251 0 0 0 12 5.5ZM12 4a3.751 3.751 0 0 0-3.675 3H5v1.5h1.27l.818 8.997a2.75 2.75 0 0 0 2.739 2.501h4.347a2.75 2.75 0 0 0 2.738-2.5L17.73 8.5H19V7h-3.325A3.751 3.751 0 0 0 12 4Zm4.224 4.5H7.776l.806 8.861a1.25 1.25 0 0 0 1.245 1.137h4.347a1.25 1.25 0 0 0 1.245-1.137l.805-8.861Z"
+  }
+) });
+
+//# sourceMappingURL=trash.mjs.map
+
+
+/***/ },
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/upload.mjs"
+/*!***********************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/upload.mjs ***!
+  \***********************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ upload_default)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+// packages/icons/src/library/upload.tsx
+
+
+var upload_default = /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", children: /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, { d: "M18.5 15v3.5H13V6.7l4.5 4.1 1-1.1-6.2-5.8-5.8 5.8 1 1.1 4-4v11.7h-6V15H4v5h16v-5z" }) });
+
+//# sourceMappingURL=upload.mjs.map
+
+
+/***/ },
+
+/***/ "@wordpress/block-editor"
+/*!*************************************!*\
+  !*** external ["wp","blockEditor"] ***!
+  \*************************************/
+(module) {
+
+module.exports = window["wp"]["blockEditor"];
+
+/***/ },
+
+/***/ "@wordpress/blocks"
+/*!********************************!*\
+  !*** external ["wp","blocks"] ***!
+  \********************************/
+(module) {
+
+module.exports = window["wp"]["blocks"];
+
+/***/ },
+
+/***/ "@wordpress/components"
+/*!************************************!*\
+  !*** external ["wp","components"] ***!
+  \************************************/
+(module) {
+
+module.exports = window["wp"]["components"];
+
+/***/ },
+
+/***/ "@wordpress/data"
+/*!******************************!*\
+  !*** external ["wp","data"] ***!
+  \******************************/
+(module) {
+
+module.exports = window["wp"]["data"];
+
+/***/ },
+
+/***/ "@wordpress/element"
+/*!*********************************!*\
+  !*** external ["wp","element"] ***!
+  \*********************************/
+(module) {
+
+module.exports = window["wp"]["element"];
+
+/***/ },
+
+/***/ "@wordpress/i18n"
+/*!******************************!*\
+  !*** external ["wp","i18n"] ***!
+  \******************************/
+(module) {
+
+module.exports = window["wp"]["i18n"];
+
+/***/ },
+
+/***/ "@wordpress/primitives"
+/*!************************************!*\
+  !*** external ["wp","primitives"] ***!
+  \************************************/
+(module) {
+
+module.exports = window["wp"]["primitives"];
+
+/***/ },
+
+/***/ "react/jsx-runtime"
+/*!**********************************!*\
+  !*** external "ReactJSXRuntime" ***!
+  \**********************************/
+(module) {
+
+module.exports = window["ReactJSXRuntime"];
+
+/***/ }
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/chunk loaded */
+/******/ 	(() => {
+/******/ 		var deferred = [];
+/******/ 		__webpack_require__.O = (result, chunkIds, fn, priority) => {
+/******/ 			if(chunkIds) {
+/******/ 				priority = priority || 0;
+/******/ 				for(var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--) deferred[i] = deferred[i - 1];
+/******/ 				deferred[i] = [chunkIds, fn, priority];
+/******/ 				return;
+/******/ 			}
+/******/ 			var notFulfilled = Infinity;
+/******/ 			for (var i = 0; i < deferred.length; i++) {
+/******/ 				var [chunkIds, fn, priority] = deferred[i];
+/******/ 				var fulfilled = true;
+/******/ 				for (var j = 0; j < chunkIds.length; j++) {
+/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
+/******/ 						chunkIds.splice(j--, 1);
+/******/ 					} else {
+/******/ 						fulfilled = false;
+/******/ 						if(priority < notFulfilled) notFulfilled = priority;
+/******/ 					}
+/******/ 				}
+/******/ 				if(fulfilled) {
+/******/ 					deferred.splice(i--, 1)
+/******/ 					var r = fn();
+/******/ 					if (r !== undefined) result = r;
+/******/ 				}
+/******/ 			}
+/******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"cta-tiles/index": 0,
+/******/ 			"cta-tiles/style-index": 0
+/******/ 		};
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
+/******/ 		
+/******/ 		// install a JSONP callback for chunk loading
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
+/******/ 			// add "moreModules" to the modules object,
+/******/ 			// then flag all "chunkIds" as loaded and fire callback
+/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
+/******/ 				for(moduleId in moreModules) {
+/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 					}
+/******/ 				}
+/******/ 				if(runtime) var result = runtime(__webpack_require__);
+/******/ 			}
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+/******/ 			for(;i < chunkIds.length; i++) {
+/******/ 				chunkId = chunkIds[i];
+/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 					installedChunks[chunkId][0]();
+/******/ 				}
+/******/ 				installedChunks[chunkId] = 0;
+/******/ 			}
+/******/ 			return __webpack_require__.O(result);
+/******/ 		}
+/******/ 		
+/******/ 		var chunkLoadingGlobal = globalThis["webpackChunkambrygen"] = globalThis["webpackChunkambrygen"] || [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["cta-tiles/style-index"], () => (__webpack_require__("./assets/src/blocks/cta-tiles/index.js")))
+/******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
+/******/ 	
+/******/ })()
+;
+//# sourceMappingURL=index.js.map

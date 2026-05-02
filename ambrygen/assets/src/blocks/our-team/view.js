@@ -129,7 +129,15 @@ function initOffcanvas( block ) {
         const bioTemplate = card.querySelector( '.our-team__bio-template' );
 
         nameEl.textContent = name;
-        roleEl.textContent = designation;
+        if ( designation && designation.trim() !== '' ) {
+            roleEl.textContent = designation;
+            roleEl.removeAttribute( 'hidden' );
+            roleEl.setAttribute( 'aria-hidden', 'false' );
+        } else {
+            roleEl.textContent = '';
+            roleEl.setAttribute( 'hidden', '' );
+            roleEl.setAttribute( 'aria-hidden', 'true' );
+        }
 
         if ( isValidImageUrl( imageSrc ) ) {
             imageEl.src = imageSrc;

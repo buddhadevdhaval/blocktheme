@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/genetic-testing-related-tests",
+  "version": "0.1.0",
+  "title": "Genetic Testing Related Tests",
+  "category": "ambrygen",
+  "description": "Displays related genetic testing posts from the same category.",
+  "attributes": {
+    "previewPostId": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "supports": {
+    "html": false
+  },
+  "textdomain": "ambrygen",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "usesContext": [
+    "postId"
+  ]
+}

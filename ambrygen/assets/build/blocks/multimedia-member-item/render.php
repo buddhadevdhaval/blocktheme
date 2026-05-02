@@ -52,7 +52,7 @@
 			if ( is_numeric( $ambrygen_item ) ) {
 				$ambrygen_image_id = (int) $ambrygen_item;
 			} elseif ( is_string( $ambrygen_item ) && filter_var( $ambrygen_item, FILTER_VALIDATE_URL ) ) {
-				$ambrygen_image_url = $ambrygen_item;
+				$ambrygen_image_url = esc_url_raw( $ambrygen_item );
 			} elseif ( is_array( $ambrygen_item ) ) {
 				if ( isset( $ambrygen_item['id'] ) ) {
 					$ambrygen_image_id = (int) $ambrygen_item['id'];
@@ -170,29 +170,40 @@
 			} else {
 				$ambrygen_member_featured_alt = get_the_title( $ambrygen_member_featured_id );
 			}
+			$ambrygen_member_media_items[] = array(
+				'id'  => (int) $ambrygen_member_featured_id,
+				'url' => '',
+				'alt' => $ambrygen_member_featured_alt,
+			);
+		} else {
+			$ambrygen_member_media_items[] = array(
+				'id'  => 0,
+				'url' => '',
+				'alt' => $ambrygen_member_title,
+			);
 		}
-
-		$ambrygen_member_media_items[] = array(
-			'id'  => $ambrygen_member_featured_id ? (int) $ambrygen_member_featured_id : 0,
-			'url' => '',
-			'alt' => $ambrygen_member_featured_alt,
-		);
 	}
 
 	$ambrygen_has_multiple_member_media = count( $ambrygen_member_media_items ) > 1;
+	$ambrygen_slide_count               = count( $ambrygen_member_media_items );
 	$ambrygen_should_show_nav           = $ambrygen_has_multiple_member_media;
 	$ambrygen_member_download_files     = array();
+	$ambrygen_member_gallery_label      = sprintf(
+		/* translators: %s: member name */
+		esc_attr__( 'Photo gallery for %s', 'ambrygen-web' ),
+		$ambrygen_member_title
+	);
 
 	if ( ! empty( $ambrygen_member_large_file['url'] ) ) {
 		$ambrygen_member_download_files[] = array(
-			'label' => 'large',
+			'label' => esc_html__( 'Download Large', 'ambrygen-web' ),
 			'url'   => $ambrygen_member_large_file['url'],
 		);
 	}
 
 	if ( ! empty( $ambrygen_member_small_file['url'] ) ) {
 		$ambrygen_member_download_files[] = array(
-			'label' => 'small',
+			'label' => esc_html__( 'Download Small', 'ambrygen-web' ),
 			'url'   => $ambrygen_member_small_file['url'],
 		);
 	}
@@ -200,13 +211,24 @@
 
 <div class="multimedia-member__item js-gsap-fade">
 	<div class="multimedia-member__card">
-		<div class="multimedia-member-item__media-slider swiper">
-			<div class="swiper-wrapper">
+		<div
+			class="multimedia-member-item__media-slider swiper"
+			role="region"
+			aria-roledescription="<?php echo esc_attr__( 'carousel', 'ambrygen-web' ); ?>"
+			aria-label="<?php echo esc_attr( $ambrygen_member_gallery_label ); ?>"
+		>
+			<div class="swiper-wrapper" aria-live="polite">
 				<?php
+				$ambrygen_slide_index = 0;
 				foreach ( $ambrygen_member_media_items as $ambrygen_member_media_item ) :
-
+					++$ambrygen_slide_index;
 					?>
-					<div class="swiper-slide multimedia-member__image">
+					<div
+						class="swiper-slide multimedia-member__image"
+						role="group"
+						aria-roledescription="<?php echo esc_attr__( 'slide', 'ambrygen-web' ); ?>"
+						aria-label="<?php echo esc_attr( sprintf( esc_attr__( '%1$d of %2$d', 'ambrygen-web' ), $ambrygen_slide_index, $ambrygen_slide_count ) ); ?>"
+					>
 						<?php
 							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper returns escaped image markup from a sanitized attachment ID or URL.
 							echo Helper::image_from_source(
@@ -217,7 +239,8 @@
 									'loading'  => 'lazy',
 									'decoding' => 'async',
 									'alt'      => sanitize_text_field( $ambrygen_member_media_item['alt'] ?? '' ),
-								)
+								),
+								true
 							);
 						?>
 					</div>
@@ -237,25 +260,33 @@
 			<div class="multimedia-member__title heading-5 mb-0">
 				<?php echo esc_html( $ambrygen_member_title ); ?>
 			</div>
-			<?php if ( ! empty( $ambrygen_member_designation ) || ! empty( $ambrygen_member_download_files ) ) : ?>
-				<div class="is-style-gl-s12" aria-hidden="true"></div>
-			<?php endif; ?>
-
+				
 			<?php if ( ! empty( $ambrygen_member_designation ) ) : ?>
+				<div class="is-style-gl-s12" aria-hidden="true"></div>
 				<div class="multimedia-member__role text-small">
 					<?php echo esc_html( $ambrygen_member_designation ); ?>
 				</div>
 			<?php endif; ?>
+
 			<?php if ( ! empty( $ambrygen_member_download_files ) ) : ?>
 				<div class="is-style-gl-s12" aria-hidden="true"></div>
 				<div class="download-link has-downloads">
 					<div class="download-link__files-list">
 						<?php foreach ( $ambrygen_member_download_files as $ambrygen_member_download_file ) : ?>
 							<div class="download-link__files-item">
+								<?php
+								$ambrygen_download_label = sprintf(
+									/* translators: 1: size label, 2: member name */
+									esc_attr__( 'Download %1$s image of %2$s', 'ambrygen-web' ),
+									$ambrygen_member_download_file['label'],
+									$ambrygen_member_title
+								);
+								?>
 								<a
 									class="download-link__files-link"
 									href="<?php echo esc_url( $ambrygen_member_download_file['url'] ); ?>"
 									download
+									aria-label="<?php echo esc_attr( $ambrygen_download_label ); ?>"
 								>
 									<?php echo esc_html( $ambrygen_member_download_file['label'] ); ?>
 								</a>

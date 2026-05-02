@@ -49,15 +49,20 @@ const animateCounter = ( element ) => {
 		const progress = Math.min( ( timestamp - startTime ) / DURATION, 1 );
 		const easedProgress = 1 - Math.pow( 1 - progress, 3 );
 		const currentValue = finalValue * easedProgress;
+		const formattedValue = formatValue( currentValue, originalText );
 
-		element.textContent = formatValue( currentValue, originalText );
+		if ( element.textContent !== formattedValue ) {
+			element.textContent = formattedValue;
+		}
 
 		if ( progress < 1 ) {
 			requestAnimationFrame( update );
 			return;
 		}
 
-		element.textContent = originalText;
+		if ( element.textContent !== originalText ) {
+			element.textContent = originalText;
+		}
 	};
 
 	requestAnimationFrame( update );

@@ -19,6 +19,10 @@
 			"type": "number",
 			"default": 0
 		},
+		"iconAlt": {
+			"type": "string",
+			"default": ""
+		},
 		"title": {
 			"type": "string",
 			"default": ""

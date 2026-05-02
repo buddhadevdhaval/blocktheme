@@ -27,12 +27,11 @@ import { createElement } from '@wordpress/element';
  * @param {Object} props.attributes Block attributes.
  * @return {JSX.Element} Saved block markup.
  */
-export default function Save( { attributes } ) {
+export default function Save( { attributes, className = '' } ) {
 	const {
 		containerWidth = 'container-1340',
 		backgroundStyle = '',
 		isFixedBackground = false,
-		className = '',
 	} = attributes;
 	const hasInsideBackground = isFixedBackground === true;
 

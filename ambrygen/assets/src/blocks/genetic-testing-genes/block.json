@@ -7,10 +7,19 @@
 	"category": "theme-blocks",
 	"icon": "list-view",
 	"description": "Displays the dynamic 'Genes analyzed' accordion for linked products.",
+	"attributes": {
+		"previewPostId": {
+			"type": "number",
+			"default": 0
+		}
+	},
 	"supports": {
 		"html": false
 	},
 	"textdomain": "ambrygen-web",
 	"editorScript": "file:./index.js",
-	"render": "file:./render.php"
+	"render": "file:./render.php",
+	"usesContext": [
+		"postId"
+	]
 }

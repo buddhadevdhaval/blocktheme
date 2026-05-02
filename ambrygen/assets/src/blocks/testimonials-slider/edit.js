@@ -1,4 +1,5 @@
 import {
+	BlockControls,
 	InnerBlocks,
 	InspectorControls,
 	RichText,
@@ -6,12 +7,24 @@ import {
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
 import { createBlock } from '@wordpress/blocks';
-import { PanelBody, RangeControl, ToggleControl } from '@wordpress/components';
+import {
+	PanelBody,
+	ToggleControl,
+	ToolbarButton,
+	ToolbarGroup,
+} from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
-import { ImageUploader, TagSelector } from '../_shared/components';
+import {
+	BlockExamplePreview,
+	ImageUploader,
+	TagSelector,
+} from '../_shared/components';
 
 const ALLOWED_BLOCKS = [ 'ambrygen/testimonials-slider-item' ];
 const TEMPLATE = [ [ 'ambrygen/testimonials-slider-item', {} ] ];
@@ -28,31 +41,37 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
 		blockId,
 		title,
-		headingLevel = 'h2',
+		headingTag = 'h2',
 		testimonials = [],
 		autoplay,
 		showNavigation,
 		showPagination,
-		slidesPerView,
-		graphicLeftId,
 		graphicLeftUrl,
 		graphicLeftAlt,
-		graphicRightId,
 		graphicRightUrl,
 		graphicRightAlt,
 	} = attributes;
+	const swiperRef = useRef( null );
+	const [ activeSlideIndex, setActiveSlideIndex ] = useState( 0 );
 
-	const { replaceInnerBlocks } = useDispatch( 'core/block-editor' );
+	const { insertBlock, replaceInnerBlocks } = useDispatch(
+		'core/block-editor'
+	);
 	const innerBlocks = useSelect(
 		( select ) => select( blockEditorStore ).getBlocks( clientId ),
 		[ clientId ]
 	);
 	const hasInnerBlocks = innerBlocks.length > 0;
+	const hasMultipleSlides = innerBlocks.length > 1;
+	const hasTitle = !! title;
+	const hasLeftGraphic = !! graphicLeftUrl;
+	const hasRightGraphic = !! graphicRightUrl;
+	const hasGraphicImages = hasLeftGraphic || hasRightGraphic;
 
 	useEffect( () => {
 		const expectedId = `testimonials-slider-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId ) {
+		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
 			setAttributes( { blockId: expectedId } );
 		}
 	}, [ blockId, clientId, setAttributes ] );
@@ -76,24 +95,129 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		testimonials,
 	] );
 
+	useEffect( () => {
+		const sliderElement = swiperRef.current;
+		const sliderLayout = sliderElement?.querySelector(
+			'.block-editor-block-list__layout'
+		);
+
+		if ( ! sliderLayout ) {
+			return;
+		}
+
+		[ ...sliderLayout.children ].forEach( ( slideElement, index ) => {
+			slideElement.classList.toggle(
+				'is-editor-active-slide',
+				index === activeSlideIndex
+			);
+			slideElement.classList.toggle(
+				'is-editor-inactive-slide',
+				index !== activeSlideIndex
+			);
+			slideElement.style.display =
+				index === activeSlideIndex ? 'block' : 'none';
+			slideElement.setAttribute(
+				'aria-hidden',
+				index === activeSlideIndex ? 'false' : 'true'
+			);
+		} );
+	}, [ activeSlideIndex, innerBlocks ] );
+
+	useEffect( () => {
+		if ( ! innerBlocks.length ) {
+			if ( activeSlideIndex !== 0 ) {
+				setActiveSlideIndex( 0 );
+			}
+			return;
+		}
+
+		if ( activeSlideIndex > innerBlocks.length - 1 ) {
+			setActiveSlideIndex( innerBlocks.length - 1 );
+		}
+	}, [ activeSlideIndex, innerBlocks ] );
+
+	useEffect( () => {
+		if ( ! autoplay || innerBlocks.length <= 1 ) {
+			return undefined;
+		}
+
+		const autoplayTimer = window.setInterval( () => {
+			setActiveSlideIndex(
+				( currentIndex ) => ( currentIndex + 1 ) % innerBlocks.length
+			);
+		}, 3000 );
+
+		return () => window.clearInterval( autoplayTimer );
+	}, [ autoplay, innerBlocks.length ] );
+
 	const blockProps = useBlockProps( {
 		className: 'testimonial-slider',
 		id: blockId || undefined,
 	} );
 
+	if ( blockId === 'testimonials-slider-example' ) {
+		return (
+			<BlockExamplePreview
+				className="testimonials-example-preview"
+				imagePath="/assets/src/images/testimonial/preview.png"
+			/>
+		);
+	}
+
+	const addSliderItem = () => {
+		const newSlideIndex = innerBlocks.length;
+
+		insertBlock(
+			createSliderItemBlock(),
+			newSlideIndex,
+			clientId,
+			true
+		);
+		setActiveSlideIndex( newSlideIndex );
+	};
+
+	const showPreviousSlide = () => {
+		if ( innerBlocks.length <= 1 ) {
+			return;
+		}
+
+		setActiveSlideIndex( ( currentIndex ) =>
+			currentIndex === 0 ? innerBlocks.length - 1 : currentIndex - 1
+		);
+	};
+
+	const showNextSlide = () => {
+		if ( innerBlocks.length <= 1 ) {
+			return;
+		}
+
+		setActiveSlideIndex( ( currentIndex ) =>
+			currentIndex === innerBlocks.length - 1 ? 0 : currentIndex + 1
+		);
+	};
+
 	return (
 		<>
+			<BlockControls>
+				<ToolbarGroup>
+					<ToolbarButton
+						icon="plus-alt2"
+						label={ __( 'Add item', 'ambrygen-web' ) }
+						onClick={ addSliderItem }
+					/>
+				</ToolbarGroup>
+			</BlockControls>
 			<InspectorControls>
 				<PanelBody
 					title={ __( 'Heading Settings', 'ambrygen-web' ) }
 					initialOpen={ true }
 				>
 					<TagSelector
-						label={ __( 'Heading Level', 'ambrygen-web' ) }
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						type="heading"
-						value={ headingLevel }
+						value={ headingTag || 'h2' }
 						onChange={ ( value ) =>
-							setAttributes( { headingLevel: value } )
+							setAttributes( { headingTag: value } )
 						}
 					/>
 				</PanelBody>
@@ -102,15 +226,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					title={ __( 'Slider Settings', 'ambrygen-web' ) }
 					initialOpen={ true }
 				>
-					<RangeControl
-						label={ __( 'Slides Per View', 'ambrygen-web' ) }
-						value={ slidesPerView }
-						onChange={ ( value ) =>
-							setAttributes( { slidesPerView: value || 1 } )
-						}
-						min={ 1 }
-						max={ 3 }
-					/>
 					<ToggleControl
 						label={ __( 'Show Navigation', 'ambrygen-web' ) }
 						checked={ showNavigation }
@@ -135,7 +250,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 
 				<PanelBody
-					title={ __( 'Graphic Images', 'ambrygen-web' ) }
+					title={ __( 'Graphic Image', 'ambrygen-web' ) }
 					initialOpen={ false }
 				>
 					<ImageUploader
@@ -178,64 +293,85 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			</InspectorControls>
 
 			<div { ...blockProps }>
-				<div className="graphic-images" aria-hidden="true">
-					<div className="graphic-images__overlay-left graphic-images__img-block">
-						{ graphicLeftUrl && (
-							<img
-								src={ graphicLeftUrl }
-								className="overlay__img"
-								alt={ graphicLeftAlt }
-							/>
+				{ hasGraphicImages && (
+					<div className="graphic-images" aria-hidden="true">
+						{ hasLeftGraphic && (
+							<div className="graphic-images__overlay-left graphic-images__img-block">
+								<img
+									src={ graphicLeftUrl }
+									className="overlay__img"
+									alt={ graphicLeftAlt }
+								/>
+							</div>
+						) }
+						{ hasRightGraphic && (
+							<div className="graphic-images__overlay-right graphic-images__img-block">
+								<img
+									src={ graphicRightUrl }
+									className="overlay__img"
+									alt={ graphicRightAlt }
+								/>
+							</div>
 						) }
 					</div>
-					<div className="graphic-images__overlay-right graphic-images__img-block">
-						{ graphicRightUrl && (
-							<img
-								src={ graphicRightUrl }
-								className="overlay__img"
-								alt={ graphicRightAlt }
-							/>
-						) }
-					</div>
-				</div>
+				) }
 
 				<div className="testimonial-slider__inner">
 					<div className="testimonial-slider__header">
 						<RichText
-							tagName={ headingLevel }
+							tagName={ headingTag || 'h2' }
 							className="heading-3 block-title mb-0"
 							value={ title }
 							onChange={ ( value ) =>
 								setAttributes( { title: value } )
 							}
-							placeholder={ __( 'Add title...', 'ambrygen-web' ) }
+							placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 						/>
 					</div>
 
-					<div className="is-style-gl-s50"></div>
+					{ hasTitle && (
+						<div className="is-style-gl-s50" aria-hidden="true"></div>
+					) }
 
 					<div className="testimonial-slider__swiper">
-						<div className="testimonial-slider-wrapper swiper testimonial-swiper">
-							<div className="swiper-wrapper">
-								<InnerBlocks
-									allowedBlocks={ ALLOWED_BLOCKS }
-									template={ ! hasInnerBlocks ? TEMPLATE : undefined }
-									renderAppender={
-										InnerBlocks.ButtonBlockAppender
-									}
-								/>
-							</div>
+						<div ref={ swiperRef }>
+							<InnerBlocks
+								allowedBlocks={ ALLOWED_BLOCKS }
+								template={ ! hasInnerBlocks ? TEMPLATE : undefined }
+								renderAppender={ false }
+							/>
 						</div>
 
-						{ showNavigation && (
+						{ showNavigation && hasMultipleSlides && (
 							<div className="swiper-buttons">
-								<button type="button" className="custom-prev" />
-								<button type="button" className="custom-next" />
+								<button
+									type="button"
+									className="custom-prev"
+									onClick={ showPreviousSlide }
+								/>
+								<button
+									type="button"
+									className="custom-next"
+									onClick={ showNextSlide }
+								/>
 							</div>
 						) }
 
 						{ showPagination && (
-							<div className="swiper-pagination testimonial-swiper-pagination"></div>
+							<div className="swiper-pagination testimonial-swiper-pagination">
+								{ hasMultipleSlides &&
+									innerBlocks.map( ( block, index ) => (
+										<span
+											key={ block.clientId || index }
+											className={ `swiper-pagination-bullet${
+												index === activeSlideIndex
+													? ' swiper-pagination-bullet-active'
+													: ''
+											}` }
+											onClick={ () => setActiveSlideIndex( index ) }
+										></span>
+									) ) }
+							</div>
 						) }
 					</div>
 				</div>

@@ -5,6 +5,8 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	let resizeHandler;
 	let swiperInstance = null;
 	let cleanupObserver = null;
+	const focusableSelector =
+		'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 	const debounce = ( func, wait = 250 ) => {
 		let timeout;
@@ -22,6 +24,26 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			activeSwiper.destroy( true, true );
 			swiperInstance = null;
 		}
+	};
+
+	const restoreFocus = ( element ) => {
+		if ( ! element ) {
+			return;
+		}
+
+		const focusTarget =
+			element.matches( focusableSelector )
+				? element
+				: element.querySelector( focusableSelector );
+
+		if ( focusTarget ) {
+			focusTarget.focus();
+			return;
+		}
+
+		element.setAttribute( 'tabindex', '-1' );
+		element.focus();
+		element.removeAttribute( 'tabindex' );
 	};
 
 	const cleanup = () => {
@@ -118,11 +140,9 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 	const initMobileSwiper = () => {
 		const container = document.querySelector( '.testimonial_slider' );
-		if ( ! container ) {
-			return;
-		}
-
-		const parentGrid = container.closest( '.ambry-testimonials__grid' );
+		const parentGrid = container
+			? container.closest( '.ambry-testimonials__grid' )
+			: document.querySelector( '.ambry-testimonials__grid' );
 		if ( ! parentGrid ) {
 			return;
 		}
@@ -135,6 +155,17 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		 * DESKTOP
 		 * ========================= */
 		if ( window.innerWidth > 767 ) {
+			if ( ! container ) {
+				return;
+			}
+
+			const activeElement = document.activeElement;
+			const wasFocusInSlider =
+				activeElement && container.contains( activeElement );
+			const focusedSlide = wasFocusInSlider
+				? activeElement.closest( '.ambry-testimonials__grid__item' )
+				: null;
+
 			destroySwiper( container );
 
 			// Get all testimonial items
@@ -155,6 +186,14 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					slide.style.marginRight = '';
 					parentGrid.appendChild( slide );
 				} );
+
+				if ( wasFocusInSlider ) {
+					restoreFocus(
+						focusedSlide && focusedSlide.isConnected
+							? focusedSlide
+							: slides[ 0 ]
+					);
+				}
 
 				// Remove the container and wrapper divs
 				container.remove();

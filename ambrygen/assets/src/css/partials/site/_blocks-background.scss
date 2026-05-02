@@ -93,6 +93,13 @@
 	/* Inside Classes SCSS will goes here */
 }
 
+
+@include bg-scope("gray50", --theme_gray_50) {
+
+	/* Inside Classes SCSS will goes here */
+}
+
+
 @include bg-scope("primary_700", --theme_cg_blue) {
 
 	h1,
@@ -247,6 +254,11 @@
 			}
 		}
 	}
+
+
+	p {
+		color: var(--theme_white);
+	}
 }
 
 @include bg-scope("primary_800", --theme_primary_800) {
@@ -307,7 +319,10 @@
 		color: var(--theme_white);
 	}
 
-	ul {
+	// .editor-styles-wrapper .bg-primary_800 .block-editor-block-list__layout ul {}
+
+	ul,
+	.block-editor-block-list__layout ul {
 
 		>li {
 
@@ -319,7 +334,8 @@
 		}
 	}
 
-	ol {
+	ol,
+	.editor-styles-wrapper .block-editor-block-list__layout ul {
 
 		>li {
 
@@ -899,7 +915,7 @@
 		}
 	}
 
-	a:not(.site-btn):not(.wp-block-button__link) {
+	a:not(.site-btn):not(.wp-block-button__link):not(.event-carousel__content a) {
 		color: var(--theme_white);
 		border-color: var(--theme_white);
 
@@ -941,6 +957,34 @@
 			color: #000;
 			font-weight: 600;
 		}
+	}
+
+	h1,
+	.heading-1,
+	h2,
+	.heading-2,
+	h3,
+	.heading-3,
+	h4,
+	.heading-4,
+	h5,
+	.heading-5,
+	h6,
+	.heading-6,
+	.text-medium {
+		color: var(--theme_white);
+	}
+
+	.block-description {
+		color: var(--theme_white);
+	}
+
+	.hero-kicker {
+		color: var(--theme_white);
+	}
+
+	p {
+		color: var(--theme_white);
 	}
 
 	ul {

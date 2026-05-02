@@ -1,4 +1,4 @@
-﻿import { __ } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import {
 	useBlockProps,
 	InspectorControls,
@@ -72,7 +72,7 @@ export default function Edit( {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Video Grid Settings', 'ambrygen-web' ) }
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
 				>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
@@ -147,3 +147,4 @@ export default function Edit( {
 		</>
 	);
 }
+

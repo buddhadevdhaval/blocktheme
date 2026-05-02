@@ -6,7 +6,11 @@
   "category": "ambrygen",
   "icon": "format-image",
   "parent": [
-    "ambrygen/icon-grids"
+    "ambrygen/icon-grids",
+    "ambrygen/icon-grid-with-count",
+    "ambrygen/genetic-testing-grid",
+    "ambrygen/small-icon-grid",
+    "ambrygen/large-icon-grid"
   ],
   "description": "Individual icon card item for icon grids",
   "supports": {

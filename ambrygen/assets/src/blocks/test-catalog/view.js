@@ -11,7 +11,6 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		const select = block.querySelector( '.tabs__select' );
 		const buttons = Array.from( block.querySelectorAll( '.tabs__tab' ) );
 		const panels = Array.from( block.querySelectorAll( '.tabs__panel' ) );
-		const items = Array.from( block.querySelectorAll( '.test-catlouge__item' ) );
 		const trackingLinks = Array.from(
 			block.querySelectorAll(
 				'.test-catlouge__link[data-material-id][data-file-id]'
@@ -60,30 +59,6 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				activateTab( event.target.value );
 			} );
 		}
-
-		items.forEach( ( item ) => {
-			const toggle = item.querySelector( '.test-catlouge__item-toggle' );
-			const content = item.querySelector( '.test-catlouge__item-content' );
-
-			if ( ! toggle || ! content ) {
-				return;
-			}
-
-			toggle.addEventListener( 'click', () => {
-				const isOpen = item.classList.contains( 'is-open' );
-				item.classList.toggle( 'is-open', ! isOpen );
-				toggle.setAttribute(
-					'aria-expanded',
-					isOpen ? 'false' : 'true'
-				);
-
-				if ( isOpen ) {
-					content.style.maxHeight = '0px';
-				} else {
-					content.style.maxHeight = `${ content.scrollHeight }px`;
-				}
-			} );
-		} );
 
 		if ( endpoint && typeof fetch === 'function' && trackingLinks.length ) {
 			const storagePrefix = 'ambrygen:mm:view:';

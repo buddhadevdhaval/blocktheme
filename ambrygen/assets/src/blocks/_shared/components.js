@@ -106,26 +106,32 @@ export function ItemHeader( {
 	onMove,
 	onRemove,
 	minCount,
+	prefix = __( 'Item', 'ambrygen-web' ),
 } ) {
 	return (
 		<div
 			className="reorder-controls"
 			style={ {
+				display: 'flex',
 				justifyContent: 'space-between',
+				alignItems: 'center',
 				marginBottom: '8px',
+				gap: '8px',
 			} }
 		>
-			<strong>
-				{ __( 'Item', 'ambrygen-web' ) } { index + 1 }:{ ' ' }
+			<strong style={ { flex: '1 1 auto', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }>
+				{ prefix } { index + 1 }:{ ' ' }
 				{ label || __( 'Untitled', 'ambrygen-web' ) }
 			</strong>
-			<ItemControls
-				index={ index }
-				total={ total }
-				onMove={ onMove }
-				onRemove={ onRemove }
-				minCount={ minCount }
-			/>
+			<div style={ { flex: '0 0 auto' } }>
+				<ItemControls
+					index={ index }
+					total={ total }
+					onMove={ onMove }
+					onRemove={ onRemove }
+					minCount={ minCount }
+				/>
+			</div>
 		</div>
 	);
 }
@@ -487,101 +493,114 @@ export function TagSelector( {
  */
 
 export function CtaButtonField( {
-    label = __( 'Link', 'ambrygen-web' ),
-    value = {},
-    onChange,
-    help,
-    showText = true,
-    textLabel = __( 'Link Text', 'ambrygen-web' ),
-    textPlaceholder = '',
-    showVariant = true,
-    variantLabel = __( 'Button Style', 'ambrygen-web' ),
+	label = __( 'Link', 'ambrygen-web' ),
+	value = {},
+	onChange,
+	help,
+	showText = true,
+	textLabel = __( 'Link Text', 'ambrygen-web' ),
+	textPlaceholder = '',
+	showVariant = true,
+	variantLabel = __( 'Button Style', 'ambrygen-web' ),
+	showNewTab = true,
 } ) {
- 
-    const updateValue = ( updates ) => {
-        onChange( {
-            ...value,
-            ...updates,
-        } );
-    };
- 
-    const clearLink = () => {
-        updateValue( {
-            url: '',
-            target: '',
-            rel: '',
-        } );
-    };
- 
-    const linkValue = useMemo(
-        () => ( {
-            url: value?.url || '',
-            title: value?.text || '',
-            opensInNewTab: value?.target === '_blank',
-        } ),
-        [ value?.url, value?.text, value?.target ]
-    );
- 
-    return (
-        <div style={ { marginBottom: '16px' } }>
-            { label && (
-                <p style={ { marginBottom: '6px', fontWeight: '500' } }>
-                    { label }
-                </p>
-            ) }
- 
-            { showText && (
-                <TextControl
-                    label={ textLabel }
-                    value={ value?.text || '' }
-                    placeholder={ textPlaceholder }
-                    onChange={ ( text ) => updateValue( { text } ) }
-                />
-            ) }
- 
-            { showVariant && (
-                <SelectControl
-                    label={ variantLabel }
-                    value={ value?.variant || 'dark' }
-                    options={ [
-                        {
-                            label: __( 'Light', 'ambrygen-web' ),
-                            value: 'is-style-site-tertiary-btn',
-                        },
-                        { label: __( 'Dark', 'ambrygen-web' ), value: 'dark' },
-                    ] }
-                    onChange={ ( variant ) => updateValue( { variant } ) }
-                />
-            ) }
- 
-            <LinkControl
-                key={ `${ label }-${ value?.url || 'empty' }-${ value?.target || 'same-tab' }` }
-                value={ linkValue }
-                settings={ [] }
-                onRemove={ value?.url ? clearLink : undefined }
-                onChange={ ( newLink ) => {
-                    updateValue( {
-                        url: newLink?.url || '',
-                        target: newLink.opensInNewTab ? '_blank' : '',
-                        rel: newLink.opensInNewTab ? 'noopener noreferrer' : '',
-                    } );
-                } }
-            />
- 
-            <ToggleControl
-                label={ __( 'Open in new tab', 'ambrygen-web' ) }
-                checked={ value?.target === '_blank' }
-                onChange={ ( opensInNewTab ) =>
-                    updateValue( {
-                        target: opensInNewTab ? '_blank' : '',
-                        rel: opensInNewTab ? 'noopener noreferrer' : '',
-                    } )
-                }
-            />
- 
-            { help && (
-                <p style={ { fontSize: '12px', color: '#666' } }>{ help }</p>
-            ) }
-        </div>
-    );
+
+	const updateValue = ( updates ) => {
+		onChange( {
+			...value,
+			...updates,
+		} );
+	};
+
+	const clearLink = () => {
+		updateValue( {
+			url: '',
+			target: '',
+			rel: '',
+		} );
+	};
+
+	const linkValue = useMemo(
+		() => ( {
+			url: value?.url || '',
+			title: value?.text || '',
+			opensInNewTab: value?.target === '_blank',
+		} ),
+		[ value?.url, value?.text, value?.target ]
+	);
+
+	return (
+		<div style={ { marginBottom: '16px' } }>
+			{ label && (
+				<p style={ { marginBottom: '6px', fontWeight: '500' } }>
+					{ label }
+				</p>
+			) }
+
+			{ showText && (
+				<TextControl
+					label={ textLabel }
+					value={ value?.text || '' }
+					placeholder={ textPlaceholder }
+					onChange={ ( text ) => updateValue( { text } ) }
+				/>
+			) }
+
+			{ showVariant && (
+				<SelectControl
+					label={ variantLabel }
+					value={ value?.variant || 'dark' }
+					options={ [
+						{
+							label: __( 'Light', 'ambrygen-web' ),
+							value: 'is-style-site-tertiary-btn',
+						},
+						{ label: __( 'Dark', 'ambrygen-web' ), value: 'dark' },
+					] }
+					onChange={ ( variant ) => updateValue( { variant } ) }
+				/>
+			) }
+
+			<LinkControl
+				key={ `${ label }-${ value?.url || 'empty' }-${ value?.target || 'same-tab' }` }
+				value={ linkValue }
+				settings={ [] }
+				onChange={ ( newLink ) => {
+					updateValue( {
+						url: newLink?.url || '',
+						target: newLink.opensInNewTab ? '_blank' : '',
+						rel: newLink.opensInNewTab ? 'noopener noreferrer' : '',
+					} );
+				} }
+			/>
+
+			{ value?.url && (
+				<Button
+					variant="link"
+					isDestructive
+					onClick={ clearLink }
+					style={ { marginTop: '8px' } }
+				>
+					{ __( 'Remove Link', 'ambrygen-web' ) }
+				</Button>
+			) }
+
+			{ showNewTab && (
+				<ToggleControl
+					label={ __( 'Open in new tab', 'ambrygen-web' ) }
+					checked={ value?.target === '_blank' }
+					onChange={ ( opensInNewTab ) =>
+						updateValue( {
+							target: opensInNewTab ? '_blank' : '',
+							rel: opensInNewTab ? 'noopener noreferrer' : '',
+						} )
+					}
+				/>
+			) }
+
+			{ help && (
+				<p style={ { fontSize: '12px', color: '#666' } }>{ help }</p>
+			) }
+		</div>
+	);
 }

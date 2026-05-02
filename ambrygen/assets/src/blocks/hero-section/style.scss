@@ -317,6 +317,42 @@
 	}
 
 	&__slider {
+		position: relative;
+
+		.hero-section__autoplay-controls {
+			position: absolute;
+			right: 24px;
+			top: 24px;
+			z-index: 2;
+		}
+
+		.hero-section__pause-button {
+			align-items: center;
+			background: rgba(255, 255, 255, 0.80);
+			border: 1px solid var(--theme_color_primary);
+			border-radius: 28px;
+			color: var(--theme_color_secondary);
+			cursor: pointer;
+			display: inline-flex;
+			font: inherit;
+			min-height: 40px;
+			padding: 8px 16px;
+		}
+
+		.hero-section__play-label {
+			display: none;
+		}
+
+		.hero-section__pause-button.is-paused {
+
+			.hero-section__pause-label {
+				display: none;
+			}
+
+			.hero-section__play-label {
+				display: inline;
+			}
+		}
 
 		.swiper-button-next {
 			right: 20px;

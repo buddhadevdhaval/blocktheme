@@ -1,1 +1,6 @@
-.wp-block-ambrygen-faq-accordion-item .block-editor-inner-blocks{width:100%}
+/*!*************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./assets/src/blocks/faq-accordion-item/editor.scss ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************/
+.wp-block-ambrygen-faq-accordion-item .block-editor-inner-blocks {
+  width: 100%;
+}

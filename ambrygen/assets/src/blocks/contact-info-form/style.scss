@@ -87,6 +87,8 @@
 		display: flex;
 		flex-direction: column;
 		gap: fluid(14, 16);
+		font-style: normal;
+		margin: 0;
 
 		&__item {
 			display: flex;

@@ -15,10 +15,6 @@
       "type": "string",
       "default": ""
     },
-    "heading": {
-      "type": "string",
-      "default": ""
-    },
     "description": {
       "type": "string",
       "default": ""
@@ -27,17 +23,8 @@
       "type": "string",
       "default": ""
     },
-    "subDescription": {
-      "type": "string",
-      "default": ""
-    },
-    "quoteAttribution": {
-      "type": "string",
-      "default": ""
-    },
     "headingTag": {
       "type": "string",
-      "default": "h2",
       "enum": [
         "h1",
         "h2",
@@ -45,14 +32,18 @@
         "h4",
         "h5",
         "h6"
-      ]
+      ],
+      "default": "h2"
+    },
+    "subDescription": {
+      "type": "string",
+      "default": ""
     },
     "variation": {
       "type": "string",
       "default": "variation-features",
       "enum": [
-        "variation-features",
-        "variation-3"
+        "variation-features"
       ]
     },
     "topImageId": {
@@ -78,13 +69,11 @@
   "render": "file:./render.php",
   "example": {
     "attributes": {
-      "heading": "Transforming Healthcare with Genetic Insight",
       "description": "This is a sample preview content for this block in the inserter.",
       "subheading": "How to Videos",
-      "subDescription": "Optional supporting text beneath the subheading.",
-      "quoteAttribution": "- Example Name, Title",
       "headingTag": "h2",
-      "variation": "variation-3",
+      "subDescription": "Optional supporting text beneath the subheading.",
+      "variation": "variation-features",
       "topImageId": 0,
       "topImageUrl": "",
       "topImageAlt": ""

@@ -1,9 +1,24 @@
 @use "../../css/partials/variables/breakpoints" as bp;
+@use "../../css/partials/variables/fluid_mixins" as *;
+
+
 
 .genes-table__search {
+	background-color: var(--theme_primary_25);
+	border-radius: 24px;
+	padding: fluid(16, 50);
+
+	.kicker-text {
+		text-align: center;
+		color: var(--theme_cg_blue);
+	}
+
+
+
 	form {
 		position: relative;
 		max-width: 640px;
+		margin: 0 auto;
 
 		@include bp.max(md) {
 			max-width: 100%;
@@ -29,7 +44,21 @@
 
 
 .genes-table {
-	.gl-data-table  {
-		margin: 24px 0 0 0;
+	&__instruction {
+		text-align: center;
+	}
+
+	.gl-data-table-body {
+		background-color: var(--theme_gray_25);
+		border-radius: fluid(16, 32);
+		border: 1px solid var(--theme_gray_200);
+		padding: fluid(16, 50);
+	}
+
+	.gl-data-table {
+		border-radius: 32px;
+		border: 1px solid var(--theme_gray_200);
+		background: var(--theme_gray_25);
+		// margin: 24px 0 0 0;
 	}
 }

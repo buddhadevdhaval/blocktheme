@@ -19,14 +19,16 @@ $ambrygen_description       = isset( $ambrygen_attributes['description'] ) ? $am
 $ambrygen_image_id          = isset( $ambrygen_attributes['imageId'] ) ? absint( $ambrygen_attributes['imageId'] ) : 0;
 $ambrygen_image_url         = isset( $ambrygen_attributes['imageUrl'] ) ? esc_url_raw( $ambrygen_attributes['imageUrl'] ) : '';
 $ambrygen_image_alt         = isset( $ambrygen_attributes['imageAlt'] ) ? sanitize_text_field( $ambrygen_attributes['imageAlt'] ) : '';
-$ambrygen_step_label        = isset( $ambrygen_attributes['stepLabel'] ) && '' !== $ambrygen_attributes['stepLabel'] ? $ambrygen_attributes['stepLabel'] : ( $ambrygen_attributes['customStepLabel'] ?? '' );
 $ambrygen_cta               = isset( $ambrygen_attributes['cta'] ) && is_array( $ambrygen_attributes['cta'] ) ? $ambrygen_attributes['cta'] : array();
 $ambrygen_cta_text          = isset( $ambrygen_cta['text'] ) ? sanitize_text_field( $ambrygen_cta['text'] ) : '';
 $ambrygen_cta_url           = isset( $ambrygen_cta['url'] ) ? esc_url_raw( $ambrygen_cta['url'] ) : '';
 $ambrygen_show_full_image   = isset( $ambrygen_attributes['showFullImage'] ) ? (bool) $ambrygen_attributes['showFullImage'] : false;
-$ambrygen_has_step_label    = '' !== trim( wp_strip_all_tags( $ambrygen_step_label ) );
 $ambrygen_has_step_title    = '' !== trim( wp_strip_all_tags( $ambrygen_step_title ) );
 $ambrygen_has_description   = '' !== trim( wp_strip_all_tags( $ambrygen_description ) );
+$ambrygen_step_title_plain  = trim( wp_strip_all_tags( $ambrygen_step_title ) );
+$ambrygen_tab_uid           = wp_unique_id( 'steps-image-alongside-text-' );
+$ambrygen_tab_id            = $ambrygen_tab_uid . '-tab';
+$ambrygen_panel_id          = $ambrygen_tab_uid . '-panel';
 
 $ambrygen_normalize_link_attributes = static function ( $ambrygen_link ) {
 	$ambrygen_target = isset( $ambrygen_link['target'] ) && '_blank' === $ambrygen_link['target'] ? '_blank' : '';
@@ -52,13 +54,18 @@ list( $ambrygen_cta_target, $ambrygen_cta_rel ) = $ambrygen_normalize_link_attri
 
 <div class="vertical-tabs__item<?php echo $ambrygen_show_full_image ? ' show-full-image' : ''; ?>">
 
-	<div class="vertical-tabs__header">
+	<div
+		class="vertical-tabs__header"
+		role="tab"
+		id="<?php echo esc_attr( $ambrygen_tab_id ); ?>"
+		aria-controls="<?php echo esc_attr( $ambrygen_panel_id ); ?>"
+		aria-selected="false"
+		tabindex="-1"
+	>
 
-		<?php if ( $ambrygen_has_step_label ) : ?>
 		<div class="caption-semi-bold vertical-tabs__step-label js-gsap-fade">
-			<?php echo esc_html( $ambrygen_step_label ); ?>
+			<?php esc_html_e( 'Step', 'ambrygen-web' ); ?>
 		</div>
-		<?php endif; ?>
 
 		<?php if ( $ambrygen_has_step_title ) : ?>
 			<div class="subtitle1-sbold vertical-tabs__title js-gsap-fade">
@@ -80,7 +87,22 @@ list( $ambrygen_cta_target, $ambrygen_cta_rel ) = $ambrygen_normalize_link_attri
 				<?php echo ! empty( $ambrygen_cta_target ) ? 'target="' . esc_attr( $ambrygen_cta_target ) . '"' : ''; ?>
 				<?php echo ! empty( $ambrygen_cta_rel ) ? 'rel="' . esc_attr( $ambrygen_cta_rel ) . '"' : ''; ?>
 			>
-				<?php echo esc_html( ! empty( $ambrygen_cta_text ) ? $ambrygen_cta_text : $ambrygen_cta_url ); ?>
+				<?php if ( ! empty( $ambrygen_cta_text ) ) : ?>
+					<?php echo esc_html( $ambrygen_cta_text ); ?>
+				<?php else : ?>
+					<?php esc_html_e( 'Learn more', 'ambrygen-web' ); ?>
+					<?php if ( ! empty( $ambrygen_step_title_plain ) ) : ?>
+						<span class="screen-reader-text">
+							<?php
+							printf(
+								/* translators: %s is the step title for context. */
+								esc_html__( ' about %s', 'ambrygen-web' ),
+								esc_html( $ambrygen_step_title_plain )
+							);
+							?>
+						</span>
+					<?php endif; ?>
+				<?php endif; ?>
 				<?php if ( '_blank' === $ambrygen_cta_target ) : ?>
 					<span class="screen-reader-text">
 						<?php esc_html_e( '(opens in new tab)', 'ambrygen-web' ); ?>
@@ -91,7 +113,13 @@ list( $ambrygen_cta_target, $ambrygen_cta_rel ) = $ambrygen_normalize_link_attri
 
 	</div>
 
-	<div class="vertical-tabs__content">
+	<div
+		class="vertical-tabs__content"
+		role="tabpanel"
+		id="<?php echo esc_attr( $ambrygen_panel_id ); ?>"
+		aria-labelledby="<?php echo esc_attr( $ambrygen_tab_id ); ?>"
+		hidden
+	>
 		<div class="vertical-tabs__image-wrapper js-gsap-fade">
 			<?php
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper returns escaped image markup from a sanitized attachment ID or URL.

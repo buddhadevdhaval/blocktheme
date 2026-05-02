@@ -268,7 +268,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	return (
 		<Fragment>
 			<InspectorControls>
-				<PanelBody title={ __( 'Content Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingLevel }
@@ -725,3 +725,4 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</Fragment>
 	);
 }
+

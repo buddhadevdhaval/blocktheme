@@ -13,6 +13,7 @@
     exit;
     }
     use Ambrygen\Theme\Core\Helper;
+    use Ambrygen\Theme\Core\Theme_Options;
     /**
  * Normalize attributes.
  */
@@ -37,6 +38,23 @@
 
     $ambrygen_mobile_cta_url = isset($ambrygen_attributes['mobileCtaUrl']) ? $ambrygen_attributes['mobileCtaUrl'] : '#';
     $ambrygen_modal_position = isset($ambrygen_attributes['modalPosition']) ? $ambrygen_attributes['modalPosition'] : 'center';
+    $ambrygen_header_popup_settings = Theme_Options::get_header_popup_settings();
+    $ambrygen_header_popup_title    = $ambrygen_header_popup_settings['title'] ?? '';
+    $ambrygen_header_popup_items    = isset($ambrygen_header_popup_settings['items']) && is_array($ambrygen_header_popup_settings['items'])
+        ? $ambrygen_header_popup_settings['items']
+        : [];
+    $ambrygen_default_popup_icon    = get_theme_file_uri('assets/src/images/icn_user_profile.svg');
+    $ambrygen_valid_popup_items     = [];
+
+    foreach ($ambrygen_header_popup_items as $ambrygen_popup_item) {
+        $ambrygen_popup_item_title = isset($ambrygen_popup_item['title']) ? trim((string) $ambrygen_popup_item['title']) : '';
+
+        if ('' === $ambrygen_popup_item_title) {
+            continue;
+        }
+
+        $ambrygen_valid_popup_items[] = $ambrygen_popup_item;
+    }
 
     /**
  * Parse InnerBlocks by menuId.
@@ -219,7 +237,7 @@
 
 					<div class="header__login">
 						<div class="user-icon">
-							<button class="user-icon-click" aria-expanded="false" aria-controls="user-popup">
+							<button class="user-icon-click" aria-expanded="false" aria-controls="modal-popup" aria-haspopup="dialog">
 								<img
 									src="<?php echo esc_url(get_theme_file_uri('assets/src/images/icn_user_profile.svg')); ?>"
 									alt="User profile"
@@ -236,37 +254,32 @@
                         ?>
 						<div class="<?php echo esc_attr($ambrygen_modal_classes); ?>" id="modal-popup" aria-hidden="true">
 							<div class="modal-popup__overlay"></div>
-							<div class="modal-popup__panel" role="dialog" aria-modal="true" aria-labelledby="user-modal-title">
+							<div class="modal-popup__panel user-modal__panel" role="dialog" aria-modal="true" aria-labelledby="modal-popup-title">
 								<button type="button" class="modal-popup__close" aria-label="Close modal">
 									<img src="<?php echo esc_url(get_theme_file_uri('assets/src/images/close-icon.svg')); ?>" alt="Close" />
 								</button>
-								<div class="modal-popup__title heading-5" id="modal-popup-title">Quick Access</div>
+								<?php if ('' !== trim((string) $ambrygen_header_popup_title)) : ?>
+									<div class="modal-popup__title heading-5" id="modal-popup-title"><?php echo esc_html($ambrygen_header_popup_title); ?></div>
+								<?php endif; ?>
+								<?php if (! empty($ambrygen_valid_popup_items)) : ?>
 								<div class="user-modal__grid">
-									<a href="#" class="user-modal__box">
-										<div class="user-modal__box-icon">
-											<img src="<?php echo esc_url(get_theme_file_uri('assets/src/images/icn_user_profile.svg')); ?>" alt="" />
-										</div>
-										<div class="user-modal__box-title subtitle2-sbold">My Account</div>
-									</a>
-									<a href="#" class="user-modal__box">
-										<div class="user-modal__box-icon">
-											<img src="<?php echo esc_url(get_theme_file_uri('assets/src/images/icn_user_profile.svg')); ?>" alt="" />
-										</div>
-										<div class="user-modal__box-title subtitle2-sbold">My Orders</div>
-									</a>
-									<a href="#" class="user-modal__box">
-										<div class="user-modal__box-icon">
-											<img src="<?php echo esc_url(get_theme_file_uri('assets/src/images/icn_user_profile.svg')); ?>" alt="" />
-										</div>
-										<div class="user-modal__box-title subtitle2-sbold">My Results</div>
-									</a>
-									<a href="#" class="user-modal__box">
-										<div class="user-modal__box-icon">
-											<img src="<?php echo esc_url(get_theme_file_uri('assets/src/images/icn_user_profile.svg')); ?>" alt="" />
-										</div>
-										<div class="user-modal__box-title subtitle2-sbold">Support</div>
-									</a>
+									<?php foreach ($ambrygen_valid_popup_items as $ambrygen_popup_item) : ?>
+										<?php
+                                            $ambrygen_popup_item_title = isset($ambrygen_popup_item['title']) ? $ambrygen_popup_item['title'] : '';
+                                            $ambrygen_popup_item_link  = isset($ambrygen_popup_item['link']) && '' !== $ambrygen_popup_item['link'] ? $ambrygen_popup_item['link'] : '';
+                                            $ambrygen_popup_item_icon  = ! empty($ambrygen_popup_item['image_id'])
+                                                ? wp_get_attachment_image_url((int) $ambrygen_popup_item['image_id'], 'thumbnail')
+                                                : $ambrygen_default_popup_icon;
+                                        ?>
+										<a href="<?php echo esc_url('' !== $ambrygen_popup_item_link ? $ambrygen_popup_item_link : '#'); ?>" class="user-modal__box">
+											<div class="user-modal__box-icon">
+												<img src="<?php echo esc_url($ambrygen_popup_item_icon ?: $ambrygen_default_popup_icon); ?>" alt="" />
+											</div>
+											<div class="user-modal__box-title subtitle2-sbold"><?php echo esc_html($ambrygen_popup_item_title); ?></div>
+										</a>
+									<?php endforeach; ?>
 								</div>
+								<?php endif; ?>
 							</div>
 						</div>
 					</div>

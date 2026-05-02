@@ -17,14 +17,6 @@
     "title": {
       "type": "string",
       "default": "Webinars"
-    },
-    "scope": {
-      "type": "string",
-      "default": "upcoming"
-    },
-    "perPage": {
-      "type": "number",
-      "default": 8
     }
   },
   "editorScript": "file:./index.js",

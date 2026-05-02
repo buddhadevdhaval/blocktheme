@@ -7,11 +7,7 @@
   "icon": "grid-view",
   "description": "Grid layout for icon cards with contact information",
   "supports": {
-    "html": false,
-    "layout": {
-      "allowSwitching": true,
-      "allowInheriting": true
-    }
+    "html": false
   },
   "attributes": {
     "blockId": {
@@ -46,9 +42,7 @@
   "render": "file:./render.php",
   "example": {
     "attributes": {
-      "heading": "Additional Links",
-      "headingTag": "h2",
-      "description": ""
+      "blockId": "additional-links-example"
     }
   }
 }

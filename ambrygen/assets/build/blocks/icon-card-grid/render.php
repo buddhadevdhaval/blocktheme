@@ -21,11 +21,7 @@ $ambrygen_heading          = $attributes['heading'] ?? '';
 $ambrygen_heading_level    = $attributes['headingLevel'] ?? 'h2';
 $ambrygen_description      = $attributes['description'] ?? '';
 $ambrygen_cards_content    = trim( $content );
-$ambrygen_allowed_headings = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
-$ambrygen_heading_tag      = in_array( $ambrygen_heading_level, $ambrygen_allowed_headings, true )
-	? $ambrygen_heading_level
-	: 'h2';
-$ambrygen_heading_tag      = tag_escape( $ambrygen_heading_tag );
+$ambrygen_heading_tag      = Helper::get_heading_tag( $ambrygen_heading_level, 'h2' );
 
 $ambrygen_has_tagline     = '' !== trim( wp_strip_all_tags( $ambrygen_tagline ) );
 $ambrygen_has_heading     = '' !== trim( wp_strip_all_tags( $ambrygen_heading ) );

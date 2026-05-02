@@ -21,6 +21,7 @@
 @use "partials/site/layout/card-meta";
 @use "partials/site/swiper-custom";
 @use "partials/site/layout/tooltip";
+@use "partials/site/layout/pagination";
 
 /* Partials */
 @use "partials/typography/typography";
@@ -34,8 +35,9 @@
 
 
 // events
-@use "partials/site/events/event";
-@use "partials/site/event-details/event-details";
+// @use "partials/site/events/event";
+@use "partials/site/events/webinar-grid";
+// @use "partials/site/detail-pages/event-details.scss";
 
 /* Listings */
 @use "partials/site/listings/listings";

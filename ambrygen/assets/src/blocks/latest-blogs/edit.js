@@ -33,24 +33,34 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	useEffect( () => {
 		const expectedId = `latest-blogs-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId ) {
+		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
 		}
 	}, [ blockId, clientId, setAttributes ] );
 
-	const { posts, categories, isFetching } = useSelect( ( select ) => {
+	const { posts, categories, isFetching, defaultCatId } = useSelect( ( select ) => {
 		const { getEntityRecords, isResolving } = select( 'core' );
+
+		// Fetch categories to find the default one
+		const allCategories = getEntityRecords( 'taxonomy', 'category', { per_page: 20, hide_empty: true } ) || [];
+		const defaultCat = allCategories.find( cat => cat.name === 'Ambry News' || cat.name === 'Ambry' ) || allCategories[0];
+
 		const queryArgs = {
-			per_page: postsPerPage || 9,
+			per_page: postsPerPage || 6,
 			_embed: true,
 		};
 
+		if ( defaultCat ) {
+			queryArgs.categories = [ defaultCat.id ];
+		}
+
 		return {
 			posts: getEntityRecords( 'postType', 'post', queryArgs ),
-			categories: getEntityRecords( 'taxonomy', 'category', { per_page: 5, hide_empty: true } ),
+			categories: allCategories,
 			isFetching: isResolving( 'core', 'getEntityRecords', [ 'postType', 'post', queryArgs ] ),
+			defaultCatId: defaultCat ? defaultCat.id : null,
 		};
 	}, [ postsPerPage ] );
 
@@ -68,7 +78,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					initialOpen={ true }
 				>
 					<ComboboxControl
-						label={ __( 'Heading Level', 'ambrygen-web' ) }
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingLevel }
 						options={ HEADING_OPTIONS }
 						onChange={ ( value ) =>
@@ -86,135 +96,128 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			</InspectorControls>
 
 			<div { ...blockProps }>
-				<div className="container-1280 wrapper">
-					<div className="latest-blogs__header">
-						<RichText
-							tagName={ TagName }
-							className="heading-3 block-title mb-0"
-							value={ title }
-							onChange={ ( value ) => setAttributes( { title: value } ) }
-							placeholder={ __( 'Add Title...', 'ambrygen-web' ) }
-						/>
-					</div>
+				{ /* SECTION 2 — Filter Bar */ }
 
-					<div className="is-style-gl-s50" aria-hidden="true"></div>
 
-					{ /* Filter Section */ }
-					<div className="category-filter-search category-filter-search--blog">
-						<div className="category-filter-search__dropdown">
-							<div className="filter-label text-small-semibold mb-2">{ __( 'FILTER BY TAG', 'ambrygen-web' ) }</div>
-							<div className="tab-dropdown">
-								<button className="dropdown-toggle" type="button">
-									{ __( 'All Tags', 'ambrygen-web' ) }
-								</button>
-							</div>
-						</div>
-
-						<div className="category-filter-search__tabs">
-							<div className="horizontal-tabs tabs__nav">
-								<button className="tab-button active is-active tabs__tab text-md-Semibold">{ __( 'Ambry News', 'ambrygen-web' ) }</button>
-								{ categories && categories.map( cat => (
-									<button key={ cat.id } className="tab-button tabs__tab text-md-Semibold">{ cat.name }</button>
-								) ) }
-							</div>
-						</div>
-
-						<div className="category-filter-search__search">
-							<div className="search-field-container">
-								<input type="text" placeholder={ __( 'Search', 'ambrygen-web' ) } readOnly />
-								<button className="search-submit" type="button"></button>
-							</div>
-						</div>
-					</div>
-
-					<div className="is-style-gl-s50" aria-hidden="true"></div>
-
-					<div className="ambrygen-ajax-pagination__content">
-						<div className="event-carousel__grid">
-							{ isFetching && <Spinner /> }
-							{ ! isFetching && posts && posts.map( ( post ) => {
-								const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
-								const author = post._embedded?.['author']?.[0];
-								const date = new Date( post.date ).toLocaleDateString( 'en-US', {
-									month: 'long',
-									day: 'numeric',
-									year: 'numeric'
-								} );
-
-								return (
-									<div key={ post.id } className="event-carousel__card">
-										<div className="event-carousel__image-wrap">
-											<div className="event-carousel__image-link">
-												{ featuredImage ? (
-													<img src={ featuredImage } className="event-carousel__image" alt="" />
-												) : (
-													<div className="event-carousel__image placeholder"></div>
-												) }
-											</div>
-											<div className="event-carousel__month-info">
-												<span className="event-carousel__month">{ date }</span>
-											</div>
-										</div>
-
-										<div className="event-carousel__body">
-											<div className="is-style-gl-s16" aria-hidden="true"></div>
-											<div className="event-carousel__static-content">
-												<h3 className="event-carousel__card-title text-lg-semibold mb-0">
-													<a href="#link" onClick={ ( e ) => e.preventDefault() }>
-														{ post?.title?.rendered || __( '(No Title)', 'ambrygen-web' ) }
-													</a>
-												</h3>
-												<div className="is-style-gl-s8" aria-hidden="true"></div>
-												
-												{ author && (
-													<div className="event-carousel__author-block">
-														{ author?.avatar_urls?.['96'] && (
-															<div className="event-carousel__author-avatar">
-																<img src={ author.avatar_urls['96'] } alt="" />
-															</div>
-														) }
-														<div className="event-carousel__author-name text-small-semibold">
-															{ author?.name }
-														</div>
-													</div>
-												) }
-											</div>
-
-											<div className="is-style-gl-s16" aria-hidden="true"></div>
-
-											<div className="event-carousel__content-wrap">
-												<div className="event-carousel__details">
-													<div className="body-s" dangerouslySetInnerHTML={ { __html: post?.excerpt?.rendered || '' } } />
-												</div>
-												<div className="event-carousel__description">
-													<div className="event-carousel__tags" aria-hidden="true">
-														<div className="event-carousel__tags lists-item-category">
-															<div className="category-item">
-																<span className="event-carousel__tag event-carousel__tag--success">
-																	<div className="event-carousel__tag-dot"></div> { __( 'Sample Tag', 'ambrygen-web' ) }
-																</span>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
+						<div className="blog-listing-header">
+							<RichText
+								tagName={ TagName }
+								className="heading-4 block-title mb-0"
+								value={ title }
+								onChange={ ( value ) => setAttributes( { title: value } ) }
+								placeholder={ __( 'Add Title...', 'ambrygen-web' ) }
+							/>
+							<div className="is-style-gl-s32" aria-hidden="true"></div>
+							<div className="blog-filters">
+								<div className="blog-filters__dropdown">
+									<label className="blog-filters__label text-small-semibold">{ __( 'Filter by Tag', 'ambrygen-web' ) }</label>
+									<div className="is-style-gl-s8" aria-hidden="true"></div>
+									<select className="blog-filters__select text-md-medium" disabled>
+										<option>{ __( 'All Tags', 'ambrygen-web' ) }</option>
+									</select>
+								</div>
+								<div className="blog-filters__tabs-wrap">
+									<div className="horizontal-tabs tabs__nav">
+										{ categories && categories.map( cat => (
+											<button
+												key={ cat.id }
+												type="button"
+												className={ `tabs__tab text-md-Semibold ${ cat.id === defaultCatId ? 'active is-active' : '' }` }
+											>
+												{ cat.name }
+											</button>
+										) ) }
 									</div>
-								);
-							} ) }
+								</div>
+								<div className="blog-filters__search search-bar-block">
+									<div className="search-form">
+										<input type="text" placeholder={ __( 'Search', 'ambrygen-web' ) } readOnly />
+										<button className="button" type="button">{ __( 'Search', 'ambrygen-web' ) }</button>
+									</div>
+								</div>
+							</div>
 						</div>
 
-						{ posts && posts.length >= postsPerPage && (
-							<div className="load-more-wrap text-center mt-5">
-								<button type="button" className="load-more-btn text-small-semibold">
-									{ __( 'LOAD MORE', 'ambrygen-web' ) }
-									<span className="load-more-icon"></span>
-								</button>
-							</div>
-						) }
-					</div>
-				</div>
+
+
+				<div className="is-style-gl-s40" aria-hidden="true"></div>
+
+				{ /* SECTION 3 — Blog Listing Grid */ }
+
+						<div className="ambrygen-ajax-pagination__content">
+							{ isFetching && <Spinner /> }
+							{ ! isFetching && posts && (
+								<div className="blog-listing">
+									{ posts.map( ( post ) => {
+										const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+										const tags = post._embedded?.['wp:term']?.[1] || [];
+										const author = post._embedded?.['author']?.[0];
+										const date = new Date( post.date ).toLocaleDateString( 'en-US', {
+											month: 'long',
+											day: 'numeric',
+											year: 'numeric'
+										} );
+
+										return (
+											<div key={ post.id } className="blog-listing__card">
+												<div className="blog-listing__image-wrap">
+													{ featuredImage ? (
+														<img src={ featuredImage } className="blog-listing__image" alt="" />
+													) : (
+														<div className="blog-listing__image placeholder"></div>
+													) }
+													<div className="blog-listing__date flag-details">
+														<span>{ date }</span>
+													</div>
+												</div>
+
+												<div className="blog-listing__content">
+													<h3 className="text-lg-semibold blog-listing__title mb-0">
+														{ post?.title?.rendered || __( '(No Title)', 'ambrygen-web' ) }
+													</h3>
+													<div className="is-style-gl-s12" aria-hidden="true"></div>
+
+													{ author && (
+														<div className="blog-listing__author-block">
+															<img className="blog-listing__author-avatar" src={ author?.avatar_urls?.['96'] || 'https://i.pravatar.cc/40?img=47' } alt="" width="36" height="36" />
+															<div className="blog-listing__author-info">
+																<span className="blog-listing__author-name text-small-semibold">{ author?.name }</span>
+															</div>
+														</div>
+													) }
+
+													<div className="is-style-gl-s8" aria-hidden="true"></div>
+													<div className="blog-listing__body">
+														<div className="body-s blog-listing__description" dangerouslySetInnerHTML={ { __html: post?.excerpt?.rendered || '' } } />
+														<div className="body-s blog-listing__category">
+															{ tags.length > 0 ? tags.map( tag => (
+																<div key={ tag.id } className="blog-listing__category__item">{ tag.name }</div>
+															) ) : (
+																<div className="blog-listing__category__item">{ __( 'Sample Tag', 'ambrygen-web' ) }</div>
+															) }
+														</div>
+													</div>
+												</div>
+											</div>
+										);
+									} ) }
+								</div>
+							) }
+
+							{ posts && posts.length >= postsPerPage && (
+								<>
+									<div className="is-style-gl-s50" aria-hidden="true"></div>
+									<div className="load-more-btn">
+										<button type="button" className="site-btn is-style-site-text-btn has-right-arrow">
+											{ __( 'Load More', 'ambrygen-web' ) }
+										</button>
+									</div>
+								</>
+							) }
+						</div>
+
 			</div>
 		</Fragment>
 	);
 }
+

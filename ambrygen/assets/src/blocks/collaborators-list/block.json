@@ -16,6 +16,14 @@
       "type": "string",
       "default": "Additional Collaborations"
     },
+    "subtitle": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2"
+    },
     "isOpen": {
       "type": "boolean",
       "default": true

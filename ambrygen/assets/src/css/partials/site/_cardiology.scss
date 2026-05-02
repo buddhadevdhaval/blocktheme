@@ -1,0 +1,127 @@
+@use "../variables/breakpoints" as bp;
+@use "../variables/fluid_mixins" as *;
+
+.cardiology-filter {
+    &__grid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 50px 0;
+    }
+
+    &__header {
+        text-align: center;
+        max-width: 800px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__subtitle {
+        color: var(--theme_cg_blue);
+    }
+
+    &__title {
+        // color: var(--theme_gray_900);
+    }
+
+    &__desc {
+        // color: var(--theme_gray_900);
+    }
+
+    &__items-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        width: 100%;
+
+        @include bp.max(md) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__card {
+        background: #fff;
+        border-radius: 12px;
+        padding: fluid(16, 32);
+        box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__card-category {
+        color: var(--theme_cg_blue);
+    }
+
+    &__card-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        @include bp.max(md) {
+            flex-wrap: wrap;
+        }
+    }
+
+    &__card-name {
+        color: var(--theme_gray_900);
+
+        @include bp.max(md) {
+            width: 100%;
+        }
+    }
+
+    &__card-badge {
+        background: var(--theme_gray_50);
+        border: 1px solid var(--theme_gray_200);
+        border-radius: 16px;
+        padding: 2px 10px;
+        color: var(--theme_gray_700);
+    }
+
+    &__card-text {
+        color: var(--theme_gray_600);
+        flex-grow: 1;
+    }
+
+    &__card-actions {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+}
+
+
+
+.catlouge-table-result {
+    background-color: var(--theme_gray_25);
+    border: 1px solid var(--theme_gray_200);
+    border-radius: fluid(16, 32);
+    padding: fluid(16, 50);
+
+    &__header {
+        text-align: center;
+        max-width: 960px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 auto;
+    }
+
+    &__subtitle {
+        color: var(--theme_cg_blue);
+    }
+
+    .gl-data-table-body {
+        .gl-data-table {
+            .gl-data-table__row {
+                grid-template-columns: 84px 210px 91px 1fr 125px 150px;
+
+                @include bp.max(xl) {
+                    grid-template-columns: 84px 160px 80px 1fr 125px 150px;
+                }
+            }
+        }
+    }
+}

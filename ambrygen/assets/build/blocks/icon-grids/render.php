@@ -109,6 +109,22 @@ $ambrygen_content = $content ?? '';
 						<p><?php echo wp_kses_post($attributes['description']); ?></p>
 					</div>
 				<?php endif; ?>
+
+				<?php
+				if (
+					is_array($ambrygen_link) &&
+					!empty($ambrygen_link['url']) &&
+					!empty($ambrygen_link['text'])
+				):
+					$ambrygen_target = !empty($ambrygen_link['target']) ? $ambrygen_link['target'] : '';
+					$ambrygen_rel = !empty($ambrygen_link['rel']) ? $ambrygen_link['rel'] : '';
+					?>
+					<div class="is-style-gl-s20" aria-hidden="true"></div>
+					<a class="site-btn is-style-site-text-btn has-right-arrow text-14"
+						href="<?php echo esc_url($ambrygen_link['url']); ?>" <?php echo $ambrygen_target ? ' target="' . esc_attr($ambrygen_target) . '"' : ''; ?> <?php echo $ambrygen_rel ? ' rel="' . esc_attr($ambrygen_rel) . '"' : ''; ?>>
+						<?php echo esc_html($ambrygen_link['text']); ?>
+					</a>
+				<?php endif; ?>
 			</div>
 
 			<div class="is-style-gl-s64" aria-hidden="true"></div>
@@ -322,10 +338,11 @@ $ambrygen_content = $content ?? '';
 			<div class="info-list-block__intro subtitle-1-regular js-gsap-fade">
 				<p><?php echo wp_kses_post($attributes['description']); ?></p>
 			</div>
+			<div class="is-style-gl-s64" aria-hidden="true"></div>
+
 		<?php endif; ?>
 	</div>
 
-	<div class="is-style-gl-s64" aria-hidden="true"></div>
 
 	<div class="info-list__list info-list__row">
 		<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-escaped inner blocks content ?>

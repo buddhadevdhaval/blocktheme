@@ -1,1 +1,422 @@
-(()=>{"use strict";const e=window.wp.blocks,t=window.wp.blockEditor,i=window.wp.components,r=window.wp.data,s=window.wp.i18n,n=window.wp.element,a=window.ReactJSXRuntime,l=JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"ambrygen/webinars-item","title":"Webinar Item","category":"ambrygen","icon":"video-alt","parent":["ambrygen/webinars"],"attributes":{"postId":{"type":"number"}},"editorScript":"file:./index.js","textdomain":"ambrygen-web","render":"file:./render.php"}');(0,e.registerBlockType)(l.name,{...l,edit:function({attributes:e,setAttributes:l,clientId:o}){const{postId:d}=e,[c,p]=(0,n.useState)(""),{removeBlock:b}=(0,r.useDispatch)("core/block-editor"),m=(0,r.useSelect)(e=>e("core").getEntityRecords("postType","webinar",{per_page:-1,orderby:"title",post_status:"publish",_embed:!0}),[]),w=(0,n.useMemo)(()=>m?c?m.filter(e=>e.title.rendered.toLowerCase().includes(c.toLowerCase())).slice(0,10):m.slice(0,10):[],[m,c]),u=(0,r.useSelect)(e=>d?e("core").getEntityRecord("postType","webinar",d,{_embed:!0}):null,[d]),h=(0,t.useBlockProps)({className:"webinars-item"}),x=u?._embedded?.["wp:featuredmedia"]?.[0]?.source_url;return(0,a.jsxs)("div",{...h,children:[!m&&(0,a.jsx)(i.Spinner,{}),m&&!d&&(0,a.jsx)(i.Placeholder,{icon:"video-alt",label:(0,s.__)("Webinar Search","ambrygen-web"),instructions:(0,s.__)("Type to find a webinar and click to select.","ambrygen-web"),children:(0,a.jsxs)("div",{className:"webinars-search-container",style:{width:"100%",minWidth:"300px"},children:[(0,a.jsx)(i.TextControl,{label:(0,s.__)("Search Webinar Title","ambrygen-web"),value:c,onChange:p,placeholder:(0,s.__)("e.g. Genetics...","ambrygen-web"),autoComplete:"off"}),(0,a.jsxs)("div",{className:"webinars-search-results",style:{maxHeight:"150px",overflowY:"auto",border:"1px solid #ccc",borderRadius:"4px",marginTop:"8px"},children:[0===w.length&&(0,a.jsx)("div",{style:{padding:"8px",color:"#666"},children:(0,s.__)("No results found.","ambrygen-web")}),w.map(e=>(0,a.jsx)(i.Button,{isTertiary:!0,style:{width:"100%",justifyContent:"flex-start",textAlign:"left",padding:"8px",height:"auto",borderBottom:"1px solid #eee"},onClick:()=>l({postId:e.id}),children:e.title.rendered},e.id))]})]})}),d&&u&&(0,a.jsx)("div",{className:"webinars-item__preview-card event-carousel__card",style:{cursor:"default"},children:(0,a.jsxs)("div",{className:"event-carousel__content",children:[x&&(0,a.jsx)("div",{className:"event-carousel__image-wrap mb-16",children:(0,a.jsx)("img",{src:x,alt:"",style:{width:"100%",height:"auto",borderRadius:"8px"}})}),(0,a.jsx)("div",{className:"event-carousel__title-row",children:(0,a.jsx)("h3",{className:"text-lg-semibold event-carousel__card-title mb-0",children:u.title.rendered})}),(0,a.jsxs)("div",{style:{marginTop:"20px",display:"flex",gap:"8px"},children:[(0,a.jsx)(i.Button,{isSmall:!0,variant:"secondary",onClick:()=>{l({postId:null}),p("")},children:(0,s.__)("Change","ambrygen-web")}),(0,a.jsx)(i.Button,{isSmall:!0,variant:"tertiary",onClick:()=>b(o),children:(0,s.__)("Remove","ambrygen-web")})]})]})}),d&&!u&&(0,a.jsx)(i.Spinner,{})]})},save:()=>null})})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./assets/src/blocks/webinars-item/block.json"
+/*!****************************************************!*\
+  !*** ./assets/src/blocks/webinars-item/block.json ***!
+  \****************************************************/
+(module) {
+
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"ambrygen/webinars-item","title":"Webinar Item","category":"ambrygen","icon":"video-alt","parent":["ambrygen/webinars"],"attributes":{"postId":{"type":"number"}},"editorScript":"file:./index.js","textdomain":"ambrygen-web","render":"file:./render.php"}');
+
+/***/ },
+
+/***/ "./assets/src/blocks/webinars-item/edit.js"
+/*!*************************************************!*\
+  !*** ./assets/src/blocks/webinars-item/edit.js ***!
+  \*************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Edit)
+/* harmony export */ });
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
+
+
+
+
+
+const formatDuration = minutes => {
+  const totalMins = parseInt(minutes, 10);
+  if (isNaN(totalMins) || totalMins <= 0) {
+    return '';
+  }
+  const hours = Math.floor(totalMins / 60);
+  const mins = totalMins % 60;
+  let display = '';
+  if (hours > 0) {
+    display = `${hours} ${hours === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('hour', 'ambrygen-web') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('hours', 'ambrygen-web')}`;
+  }
+  if (mins > 0) {
+    if (hours > 0) {
+      display += ` ${(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('and', 'ambrygen-web')} `;
+    }
+    display += `${mins} ${mins === 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('minute', 'ambrygen-web') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('minutes', 'ambrygen-web')}`;
+  }
+  return display;
+};
+const formatWebinarDate = dateString => {
+  if (!dateString) {
+    return '';
+  }
+  try {
+    const date = new Date(dateString);
+    if (Number.isNaN(date.getTime())) {
+      return '';
+    }
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+      timeZone: 'UTC'
+    });
+  } catch {
+    return '';
+  }
+};
+const formatWebinarTime = dateString => {
+  if (!dateString) {
+    return '';
+  }
+  try {
+    const date = new Date(dateString);
+    if (Number.isNaN(date.getTime())) {
+      return '';
+    }
+    return date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+      timeZone: 'America/Los_Angeles',
+      timeZoneName: 'short'
+    }).toLowerCase();
+  } catch {
+    return '';
+  }
+};
+
+/**
+ * Webinar Item Gutenberg editor component.
+ *
+ * Renders a lightweight search picker backed by server-side queries.
+ * On mount it fetches the first 10 webinars by title. When the user
+ * types at least 2 characters the component fires a debounced REST search.
+ *
+ * @param {Object}   props               Component props.
+ * @param {Object}   props.attributes    Block attributes.
+ * @param {Function} props.setAttributes Attribute setter.
+ * @param {string}   props.clientId      Block client ID.
+ * @return {JSX.Element} Editor UI.
+ */
+function Edit({
+  attributes,
+  setAttributes,
+  clientId
+}) {
+  const {
+    postId
+  } = attributes;
+  const {
+    removeBlock
+  } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useDispatch)('core/block-editor');
+  const selectedQuery = {
+    _fields: 'id,title,featured_media,meta'
+  };
+  const selectedWebinar = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useSelect)(select => {
+    if (!postId) {
+      return null;
+    }
+    return select('core').getEntityRecord('postType', 'webinar', postId, selectedQuery);
+  }, [postId]);
+  const featuredImage = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useSelect)(select => {
+    var _media$source_url;
+    const mediaId = selectedWebinar?.featured_media;
+    if (!mediaId) {
+      return null;
+    }
+    const media = select('core').getMedia(mediaId, {
+      _fields: 'id,source_url'
+    });
+    return (_media$source_url = media?.source_url) !== null && _media$source_url !== void 0 ? _media$source_url : null;
+  }, [selectedWebinar?.featured_media]);
+  const subtitle = selectedWebinar?.meta?.subtitle || '';
+  const startAt = selectedWebinar?.meta?.start_at || '';
+  const duration = selectedWebinar?.meta?.duration || '';
+  const hasCeu = selectedWebinar?.meta?.ceu === true || selectedWebinar?.meta?.ceu === '1' || selectedWebinar?.meta?.ceu === 1;
+  const hasPace = selectedWebinar?.meta?.pace === true || selectedWebinar?.meta?.pace === '1' || selectedWebinar?.meta?.pace === 1;
+  const dateDisplay = formatWebinarDate(startAt);
+  const timeDisplay = formatWebinarTime(startAt);
+  const durationDisplay = formatDuration(duration);
+  const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps)({
+    className: 'webinars-item'
+  });
+  if (!postId) {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+      ...blockProps,
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Placeholder, {
+        icon: "video-alt",
+        label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Webinar Item', 'ambrygen-web'),
+        instructions: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Choose a webinar from the parent block sidebar panel.', 'ambrygen-web'),
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+          status: "info",
+          isDismissible: false,
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Use the Webinar Items panel to search and add webinars.', 'ambrygen-web')
+        })
+      })
+    });
+  }
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+    ...blockProps,
+    children: !selectedWebinar ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, {}) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+      className: "webinars-item__preview-card event-carousel__card",
+      style: {
+        cursor: 'default'
+      },
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+        className: "event-carousel__content",
+        children: [featuredImage && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+          className: "event-carousel__image-wrap mb-16",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("img", {
+            src: featuredImage,
+            alt: "",
+            style: {
+              width: '100%',
+              height: 'auto',
+              borderRadius: '8px'
+            }
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+          className: "event-carousel__title-row",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+            className: "text-lg-semibold event-carousel__card-title mb-0",
+            children: selectedWebinar.title.rendered
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+          className: "is-style-gl-s16",
+          "aria-hidden": "true"
+        }), !!subtitle && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+          className: "event-carousel__description text-md-medium",
+          children: subtitle
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+          className: "is-style-gl-s16",
+          "aria-hidden": "true"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+          className: "event-carousel__details flag-details",
+          children: [!!dateDisplay && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+            className: "text-md-medium event-carousel__date-info flag-info flag-date-info",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
+              className: "event-carousel__meta-list-icon flag-icon"
+            }), dateDisplay]
+          }), !!timeDisplay && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+            className: "text-md-medium event-carousel__time-info flag-info flag-time-info",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
+              className: "event-carousel__meta-list-icon flag-icon"
+            }), timeDisplay]
+          }), !!durationDisplay && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+            className: "text-md-medium event-carousel__duration flag-info flag-duration-info",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
+              className: "event-carousel__meta-list-icon flag-icon"
+            }), durationDisplay]
+          }), hasCeu && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+            className: "text-md-medium event-carousel__ceu-row flag-info flag-book-info",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
+              className: "event-carousel__meta-list-icon flag-icon"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
+              className: "event-carousel__meta-label",
+              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('C.E.U.:', 'ambrygen-web')
+            })]
+          }), hasPace && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+            className: "text-md-medium event-carousel__pace-row flag-info flag-flask-info",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
+              className: "event-carousel__meta-list-icon flag-icon"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
+              className: "event-carousel__meta-label",
+              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('P.A.C.E.:', 'ambrygen-web')
+            })]
+          })]
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+          className: "is-style-gl-s24",
+          "aria-hidden": "true"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+          className: "event-carousel__actions actions-button",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+            isSecondary: true,
+            onClick: () => {
+              setAttributes({
+                postId: null
+              });
+            },
+            children: "Change"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+            isDestructive: true,
+            onClick: () => removeBlock(clientId),
+            children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Remove', 'ambrygen-web')
+          })]
+        })]
+      })
+    })
+  });
+}
+
+/***/ },
+
+/***/ "@wordpress/block-editor"
+/*!*************************************!*\
+  !*** external ["wp","blockEditor"] ***!
+  \*************************************/
+(module) {
+
+module.exports = window["wp"]["blockEditor"];
+
+/***/ },
+
+/***/ "@wordpress/blocks"
+/*!********************************!*\
+  !*** external ["wp","blocks"] ***!
+  \********************************/
+(module) {
+
+module.exports = window["wp"]["blocks"];
+
+/***/ },
+
+/***/ "@wordpress/components"
+/*!************************************!*\
+  !*** external ["wp","components"] ***!
+  \************************************/
+(module) {
+
+module.exports = window["wp"]["components"];
+
+/***/ },
+
+/***/ "@wordpress/data"
+/*!******************************!*\
+  !*** external ["wp","data"] ***!
+  \******************************/
+(module) {
+
+module.exports = window["wp"]["data"];
+
+/***/ },
+
+/***/ "@wordpress/i18n"
+/*!******************************!*\
+  !*** external ["wp","i18n"] ***!
+  \******************************/
+(module) {
+
+module.exports = window["wp"]["i18n"];
+
+/***/ },
+
+/***/ "react/jsx-runtime"
+/*!**********************************!*\
+  !*** external "ReactJSXRuntime" ***!
+  \**********************************/
+(module) {
+
+module.exports = window["ReactJSXRuntime"];
+
+/***/ }
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
+(() => {
+/*!**************************************************!*\
+  !*** ./assets/src/blocks/webinars-item/index.js ***!
+  \**************************************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./edit */ "./assets/src/blocks/webinars-item/edit.js");
+/* harmony import */ var _block_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./block.json */ "./assets/src/blocks/webinars-item/block.json");
+
+
+
+(0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__.registerBlockType)(_block_json__WEBPACK_IMPORTED_MODULE_2__.name, {
+  ..._block_json__WEBPACK_IMPORTED_MODULE_2__,
+  edit: _edit__WEBPACK_IMPORTED_MODULE_1__["default"],
+  save: () => null
+});
+})();
+
+/******/ })()
+;
+//# sourceMappingURL=index.js.map

@@ -11,6 +11,15 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
 import { DEFAULT_IMAGES } from '../_shared/components';
 
+/**
+ * Edit component for the Our Team Item block.
+ *
+ * @param {Object}   props               The block properties.
+ * @param {Object}   props.attributes    The block attributes.
+ * @param {Function} props.setAttributes Function to update block attributes.
+ * @param {string}   props.clientId      The block client ID.
+ * @return {JSX.Element} The edit component rendering.
+ */
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { postId = 0 } = attributes;
 	const selectedPostId = Number( postId ) || 0;
@@ -40,6 +49,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			orderby: 'title',
 			status: 'publish',
 			order: 'asc',
+			_fields: 'id,title',
 		};
 
 		if ( searchInput ) {
@@ -48,7 +58,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 		return select( 'core' ).getEntityRecords(
 			'postType',
-			'our_team',
+			'author',
 			query
 		);
 	}, [ searchInput ] );
@@ -62,12 +72,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 			const teamPost = select( 'core' ).getEntityRecord(
 				'postType',
-				'our_team',
-				selectedPostId,
-				{
-					_embed: true,
-					context: 'edit',
-				}
+				'author',
+				selectedPostId
 			);
 
 			if ( teamPost ) {
@@ -79,18 +85,20 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		[ selectedPostId ]
 	);
 
-	// Get sibling selected IDs.
-	const selectedIds = useSelect(
+	// Get the featured media for the selected post.
+	const featuredMediaId = selectedPost?.featured_media;
+	const media = useSelect(
 		( select ) => {
-			const blockEditor = select( 'core/block-editor' );
-			const parentId = blockEditor.getBlockRootClientId( clientId );
-			const siblings = blockEditor.getBlocks( parentId );
-
-			return siblings
-				.map( ( block ) => Number( block.attributes?.postId ) || 0 )
-				.filter( ( id ) => id && id !== selectedPostId );
+			if ( ! featuredMediaId ) {
+				return null;
+			}
+			return select( 'core' ).getEntityRecord(
+				'postType',
+				'attachment',
+				featuredMediaId
+			);
 		},
-		[ clientId, selectedPostId ]
+		[ featuredMediaId ]
 	);
 
 	// Searchable options mapped from REST results.
@@ -100,14 +108,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 
 		return teamMembers
-			.filter( ( post ) => ! selectedIds.includes( post.id ) )
 			.map( ( post ) => ( {
 				label: decodeEntities(
 					post?.title?.rendered || post?.title?.raw || ''
 				),
 				value: post.id,
 			} ) );
-	}, [ teamMembers, selectedIds ] );
+	}, [ teamMembers ] );
 
 	const blockProps = useBlockProps( {
 		className: isSliderView ? 'swiper-slide' : 'our-team__card',
@@ -176,9 +183,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			{ hasSelectedPost &&
 				selectedPost &&
 				( () => {
-					const imageUrl =
-						selectedPost?._embedded?.[ 'wp:featuredmedia' ]?.[ 0 ]
-							?.source_url || defaults?.placeholder?.url;
+					const imageUrl = media?.source_url || defaults?.placeholder?.url;
 					const designation =
 						selectedPost.meta?.user_designation ||
 						selectedPost.meta?.designation ||

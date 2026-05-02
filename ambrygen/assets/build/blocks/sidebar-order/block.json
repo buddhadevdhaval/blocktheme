@@ -1,0 +1,108 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/sidebar-order",
+  "title": "Sidebar Order",
+  "category": "ambrygen",
+  "description": "Displays an order widget card in the sidebar.",
+  "textdomain": "ambrygen-web",
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Order TAADNext"
+    },
+    "taglineLineOne": {
+      "type": "string",
+      "default": "14-21 day turnaround."
+    },
+    "taglineLineTwo": {
+      "type": "string",
+      "default": "Code 8789 or 8783 for FBN1 reflex."
+    },
+    "boxTitle": {
+      "type": "string",
+      "default": "Order via AmbryPort"
+    },
+    "boxSubtitle": {
+      "type": "string",
+      "default": "Our Secure Online Portal"
+    },
+    "backgroundImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "backgroundImageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "primaryCta": {
+      "type": "object",
+      "default": {
+        "text": "Login / Register",
+        "url": "",
+        "target": "",
+        "rel": "",
+        "variant": "site-btn has-right-arrow"
+      }
+    },
+    "actionLinks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "rel": {
+            "type": "string"
+          }
+        }
+      },
+      "default": [
+        {
+          "id": "order-a-sample-kit",
+          "text": "Order A Sample Kit",
+          "url": "",
+          "target": "",
+          "rel": ""
+        },
+        {
+          "id": "specimen-requirements",
+          "text": "Specimen Requirements",
+          "url": "",
+          "target": "",
+          "rel": ""
+        },
+        {
+          "id": "download-test-forms",
+          "text": "Download Test Forms",
+          "url": "",
+          "target": "",
+          "rel": ""
+        },
+        {
+          "id": "verify-insurance-coverage",
+          "text": "Verify Insurance Coverage",
+          "url": "",
+          "target": "",
+          "rel": ""
+        }
+      ]
+    }
+  },
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

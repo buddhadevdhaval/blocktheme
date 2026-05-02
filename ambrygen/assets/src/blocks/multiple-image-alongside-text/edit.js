@@ -6,6 +6,8 @@ import {
 	TagSelector,
 	DEFAULT_IMAGES,
 	ImageUploader,
+	ItemHeader,
+	BlockVariationsExamplePreview,
 } from '../_shared/components';
 import { getThemeAssetUrl } from '../../utils/assets';
 
@@ -36,13 +38,26 @@ import {
 	PanelBody,
 	TextareaControl,
 	TextControl,
-	ToggleControl,
 } from '@wordpress/components';
 
 const VALID_HEADING_LEVELS = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ];
 const MAX_STATS = 4;
 const MAX_IMAGES = 4;
 const EMPTY_STAT_PLACEHOLDER = '0';
+
+const createStatId = () =>
+	`stat-${ Date.now().toString( 36 ) }-${ Math.random()
+		.toString( 36 )
+		.slice( 2, 8 ) }`;
+
+const createStat = () => ( {
+	id: createStatId(),
+	prefix: '',
+	number: '',
+	postfix: '',
+	label: '',
+	description: '',
+} );
 
 const normalizeHeadingLevel = ( value ) =>
 	VALID_HEADING_LEVELS.includes( value ) ? value : 'h2';
@@ -57,6 +72,7 @@ const normalizeImage = ( image = {} ) => ( {
 } );
 
 const normalizeStat = ( stat = {} ) => ( {
+	id: stat.id || createStatId(),
 	prefix: stat.prefix || '',
 	number: stat.number || '',
 	postfix: stat.postfix ?? stat.suffix ?? '',
@@ -64,7 +80,10 @@ const normalizeStat = ( stat = {} ) => ( {
 	description: stat.description || '',
 } );
 
-const getStatKey = ( _stat, index ) => `stat-slot-${ index + 1 }`;
+const normalizeStats = ( stats = [] ) =>
+	stats.map( ( stat ) => normalizeStat( stat ) );
+
+const getStatKey = ( stat, index ) => stat.id || `stat-slot-${ index + 1 }`;
 
 const hasStatContent = ( stat ) =>
 	Boolean(
@@ -75,44 +94,36 @@ const hasStatContent = ( stat ) =>
 			stat.description
 	);
 
-function StatControls( { stat, index, updateStat, removeStat } ) {
+function StatControls( { stat, updateStat } ) {
 	return (
 		<div className="multiple-image-alongside-text__stat-controls">
 			<TextControl
 				label={ __( 'Prefix', 'ambrygen-web' ) }
 				value={ stat.prefix }
-				onChange={ ( value ) => updateStat( index, 'prefix', value ) }
+				onChange={ ( value ) => updateStat( stat.id, 'prefix', value ) }
 			/>
 			<TextControl
 				label={ __( 'Number', 'ambrygen-web' ) }
 				value={ stat.number }
-				onChange={ ( value ) => updateStat( index, 'number', value ) }
+				onChange={ ( value ) => updateStat( stat.id, 'number', value ) }
 			/>
 			<TextControl
 				label={ __( 'Postfix', 'ambrygen-web' ) }
 				value={ stat.postfix }
-				onChange={ ( value ) => updateStat( index, 'postfix', value ) }
+				onChange={ ( value ) => updateStat( stat.id, 'postfix', value ) }
 			/>
 			<TextControl
 				label={ __( 'Label', 'ambrygen-web' ) }
 				value={ stat.label }
-				onChange={ ( value ) => updateStat( index, 'label', value ) }
+				onChange={ ( value ) => updateStat( stat.id, 'label', value ) }
 			/>
 			<TextareaControl
 				label={ __( 'Description', 'ambrygen-web' ) }
 				value={ stat.description }
 				onChange={ ( value ) =>
-					updateStat( index, 'description', value )
+					updateStat( stat.id, 'description', value )
 				}
 			/>
-			<Button
-				isDestructive
-				size="small"
-				variant="tertiary"
-				onClick={ () => removeStat( index ) }
-			>
-				{ __( 'Remove Stat', 'ambrygen-web' ) }
-			</Button>
 		</div>
 	);
 }
@@ -142,72 +153,106 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		stats = [],
 		images = [],
 		headingLevel,
-		contentTopAlign,
 		imagePosition = 'left',
 	} = attributes;
 	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
 	const placeholderImage = defaults?.placeholder || {};
-	const isImageRight = imagePosition === 'right';
 	const normalizedVariation =
 		variation === 'normal-view' ? 'normal-view' : 'stats-view';
+	const isExample = blockId === 'multiple-image-alongside-text-example';
 	const isNormalView = 'normal-view' === normalizedVariation;
 	const isStatsView = ! isNormalView;
-	const normalizedStats = useMemo(
-		() => ( Array.isArray( stats ) ? stats : [] ).map( normalizeStat ),
-		[ stats ]
-	);
-	const visibleStats = normalizedStats.slice( 0, MAX_STATS );
+	const isImageRight = isNormalView || imagePosition === 'right';
+	const sourceStats = Array.isArray( stats ) ? stats : [];
+	const statsLength = sourceStats.length;
+	const hasMissingStatIds = sourceStats.some( ( stat ) => ! stat?.id );
+	const visibleStats = sourceStats.slice( 0, MAX_STATS );
 	const sourceImages = Array.isArray( images ) ? images : [];
+	const sourceImagesKey = JSON.stringify( sourceImages );
 	const normalizedImages = useMemo(
-		() =>
-			Array.from( { length: MAX_IMAGES }, ( _value, index ) =>
-				normalizeImage( sourceImages[ index ] )
-			),
-		[ sourceImages ]
+		() => {
+			const parsedImages = JSON.parse( sourceImagesKey || '[]' );
+
+			return Array.from( { length: MAX_IMAGES }, ( _value, index ) => {
+				const sourceImage = parsedImages[ index ];
+
+				if ( ! sourceImage ) {
+					return normalizeImage();
+				}
+
+				return normalizeImage( sourceImage );
+			} );
+		},
+		[ sourceImagesKey ]
 	);
 	const visibleImageCount = isNormalView ? MAX_IMAGES : 3;
 	const visibleImages = normalizedImages.slice( 0, visibleImageCount );
 
 	const updateStat = useCallback(
-		( index, field, value ) => {
-			const newStats = [ ...normalizedStats ];
-			newStats[ index ] = {
-				...newStats[ index ],
-				[ field ]: value,
-			};
-			setAttributes( { stats: newStats } );
+		( statId, field, value ) => {
+			setAttributes( {
+				stats: sourceStats.map( ( stat ) =>
+					stat.id === statId ? { ...stat, [ field ]: value } : stat
+				),
+			} );
 		},
-		[ normalizedStats, setAttributes ]
+		[ setAttributes, sourceStats ]
 	);
 
 	const addStat = useCallback( () => {
-		if ( normalizedStats.length >= MAX_STATS ) {
+		if ( sourceStats.length >= MAX_STATS ) {
 			return;
 		}
 
 		setAttributes( {
-			stats: [
-				...normalizedStats,
-				{
-					prefix: '',
-					number: '',
-					postfix: '',
-					label: '',
-					description: '',
-				},
-			],
+			stats: normalizeStats( [ ...sourceStats, createStat() ] ).slice(
+				0,
+				MAX_STATS
+			),
 		} );
-	}, [ normalizedStats, setAttributes ] );
+	}, [ setAttributes, sourceStats ] );
 
 	const removeStat = useCallback(
-		( index ) => {
+		( statId ) => {
+			if ( sourceStats.length <= 1 ) {
+				return;
+			}
+
 			setAttributes( {
-				stats: normalizedStats.filter(
-					( _stat, statIndex ) => statIndex !== index
+				stats: normalizeStats(
+					sourceStats.filter( ( stat ) => stat.id !== statId )
 				),
 			} );
 		},
-		[ normalizedStats, setAttributes ]
+		[ setAttributes, sourceStats ]
+	);
+
+	const moveStat = useCallback(
+		( statId, direction ) => {
+			const currentIndex = sourceStats.findIndex(
+				( stat ) => stat.id === statId
+			);
+			const nextIndex = currentIndex + direction;
+
+			if (
+				currentIndex < 0 ||
+				nextIndex < 0 ||
+				nextIndex >= sourceStats.length
+			) {
+				return;
+			}
+
+			const updatedStats = [ ...sourceStats ];
+			[ updatedStats[ currentIndex ], updatedStats[ nextIndex ] ] = [
+				updatedStats[ nextIndex ],
+				updatedStats[ currentIndex ],
+			];
+
+			setAttributes( {
+				stats: normalizeStats( updatedStats ).slice( 0, MAX_STATS ),
+			} );
+		},
+		[ setAttributes, sourceStats ]
 	);
 
 	const updateImage = useCallback(
@@ -235,8 +280,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const blockProps = useBlockProps();
 	const HeadingTag = normalizeHeadingLevel( headingLevel );
 	const headingClass = getHeadingClass( HeadingTag );
-	const hasHeading = Boolean( heading );
-	const hasContent = Boolean( content );
 	const showStats = isStatsView;
 	const hasVisibleStats = showStats && visibleStats.length > 0;
 	const previewImages = visibleImages
@@ -271,6 +314,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	];
 
 	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
+
 		const clientIdSuffix = clientId.slice( 0, 8 );
 		const expectedId = `section-${ clientIdSuffix }`;
 
@@ -279,7 +326,45 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				blockId: expectedId,
 			} );
 		}
-	}, [ clientId, blockId, setAttributes ] );
+	}, [ clientId, blockId, isExample, setAttributes ] );
+
+	useEffect( () => {
+		if ( ! isStatsView ) {
+			return;
+		}
+
+		if ( statsLength && ( hasMissingStatIds || statsLength > MAX_STATS ) ) {
+			setAttributes( {
+				stats: normalizeStats( sourceStats ).slice( 0, MAX_STATS ),
+			} );
+		}
+	}, [
+		hasMissingStatIds,
+		isStatsView,
+		setAttributes,
+		sourceStats,
+		statsLength,
+	] );
+
+	useEffect( () => {
+		const expectedImagePosition = isNormalView ? 'right' : 'left';
+
+		if ( imagePosition !== expectedImagePosition ) {
+			setAttributes( {
+				imagePosition: expectedImagePosition,
+			} );
+		}
+	}, [ imagePosition, isNormalView, setAttributes ] );
+
+	if ( isExample ) {
+		return (
+			<BlockVariationsExamplePreview
+				variants={ layoutVariants }
+				className="cta-tiles-example-preview"
+				itemClass="cta-tiles-example-preview__item"
+			/>
+		);
+	}
 
 	return (
 		<div { ...blockProps }>
@@ -304,6 +389,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								onClick={ () =>
 									setAttributes( {
 										variation: variant.value,
+										imagePosition:
+											variant.value === 'normal-view'
+												? 'right'
+												: 'left',
 									} )
 								}
 							>
@@ -319,7 +408,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 
 				<PanelBody
-					title={ __( 'Content Layout', 'ambrygen-web' ) }
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
 					initialOpen={ false }
 				>
 					<TagSelector
@@ -331,25 +420,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							} )
 						}
 						type="heading"
-					/>
-					<ToggleControl
-						label={ __(
-							'Top Align Content Column',
-							'ambrygen-web'
-						) }
-						checked={ !! contentTopAlign }
-						onChange={ ( value ) =>
-							setAttributes( { contentTopAlign: value } )
-						}
-					/>
-					<ToggleControl
-						label={ __( 'Show Image on Right', 'ambrygen-web' ) }
-						checked={ isImageRight }
-						onChange={ ( value ) =>
-							setAttributes( {
-								imagePosition: value ? 'right' : 'left',
-							} )
-						}
 					/>
 				</PanelBody>
 
@@ -378,17 +448,32 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						initialOpen={ false }
 					>
 						{ visibleStats.map( ( stat, index ) => (
-							<StatControls
+							<div
 								key={ getStatKey( stat, index ) }
-								stat={ stat }
-								index={ index }
-								updateStat={ updateStat }
-								removeStat={ removeStat }
-							/>
+								className="multiple-image-alongside-text__inspector-stat"
+							>
+								<ItemHeader
+									index={ index }
+									label={ stat.label }
+									total={ visibleStats.length }
+									prefix="STAT"
+									onMove={ ( itemIndex, dir ) =>
+										moveStat( visibleStats[ itemIndex ].id, dir )
+									}
+									onRemove={ ( itemIndex ) =>
+										removeStat( visibleStats[ itemIndex ].id )
+									}
+									minCount={ 1 }
+								/>
+								<StatControls
+									stat={ stat }
+									updateStat={ updateStat }
+								/>
+							</div>
 						) ) }
 						{ visibleStats.length < MAX_STATS && (
 							<Button variant="secondary" onClick={ addStat }>
-								{ __( 'Add Stat', 'ambrygen-web' ) }
+								{ __( 'Add New Stat', 'ambrygen-web' ) }
 							</Button>
 						) }
 					</PanelBody>
@@ -397,10 +482,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 			<div
 				className={ `multiple-image-alongside-text ${
-					contentTopAlign ? ' has-top-align' : ''
-				}${ isImageRight ? ' block-rtl' : '' }${
-					isNormalView ? ' is-normal-view' : ''
-				}` }
+					isImageRight ? ' block-rtl' : ''
+				}${ isNormalView ? ' is-normal-view' : '' }` }
 			>
 				<div className="is-style-gl-s50" aria-hidden="true" />
 				<div className="multiple-image-alongside-text__grid">
@@ -445,18 +528,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									'Add Heading...',
 									'ambrygen-web'
 								) }
-								aria-label={ __(
-									'Add Heading...',
-									'ambrygen-web'
-								) }
-								aria-label={ __( 'Heading', 'ambrygen-web' ) }
+								aria-label={ __( 'Block heading', 'ambrygen-web' ) }
 							/>
-							{ hasHeading && hasContent && (
-								<div
-									className="is-style-gl-s24"
-									aria-hidden="true"
-								></div>
-							) }
+							<div
+								className="is-style-gl-s24"
+								aria-hidden="true"
+							></div>
 							<div className="multiple-image-alongside-text__description-text body1 block-description">
 								<RichText
 									tagName="div"
@@ -477,14 +554,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 							{ showStats && (
 								<>
-									{ ( hasHeading || hasContent ) &&
-										hasVisibleStats && (
-											<div
-												className="is-style-gl-s24"
-												aria-hidden="true"
-											></div>
-										) }
-					{ hasVisibleStats && (
+									<div
+										className="is-style-gl-s24"
+										aria-hidden="true"
+									></div>
+									{ hasVisibleStats && (
 										<div className="multiple-image-alongside-text__stats">
 											{ visibleStats.map(
 												( stat, index ) => {

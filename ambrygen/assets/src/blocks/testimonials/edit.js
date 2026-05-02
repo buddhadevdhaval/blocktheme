@@ -2,6 +2,7 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
+import { createBlock } from '@wordpress/blocks';
 import {
 	useBlockProps,
 	RichText,
@@ -9,9 +10,9 @@ import {
 	InspectorControls,
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
-import { useSelect } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { useEffect, useMemo } from '@wordpress/element';
-import { PanelBody } from '@wordpress/components';
+import { Button, PanelBody } from '@wordpress/components';
 import {
 	TagSelector,
 	ImageUploader,
@@ -28,6 +29,8 @@ import {
  * @return {JSX.Element} Block editor interface
  */
 export default function Edit( { attributes, setAttributes, clientId } ) {
+	const ITEM_BLOCK_NAME = 'ambrygen/testimonial-item';
+
 	// Destructure attributes for easier usage
 	const {
 		blockId,
@@ -100,11 +103,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		( select ) =>
 			select( blockEditorStore )
 				.getBlocks( clientId )
-				.some(
-					( block ) => block.name === 'ambrygen/testimonial-item'
-				),
+				.some( ( block ) => block.name === ITEM_BLOCK_NAME ),
 		[ clientId ]
 	);
+	const { insertBlock } = useDispatch( blockEditorStore );
 
 	const blockProps = useBlockProps( {
 		className: 'ambry-testimonials',
@@ -227,10 +229,23 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				<div className="ambry-testimonials__grid">
 					<InnerBlocks
 						template={ ! hasInnerBlocks ? TEMPLATE : undefined }
-						allowedBlocks={ [ 'ambrygen/testimonial-item' ] }
+						allowedBlocks={ [ ITEM_BLOCK_NAME ] }
+						renderAppender={ false }
 					/>
-				</div>
+				</div>					
 			</div>
+			<Button
+				variant="primary"
+				onClick={ () => {
+					insertBlock(
+						createBlock( ITEM_BLOCK_NAME ),
+						undefined,
+						clientId
+					);
+				} }
+			>
+				{ __( 'Add Testimonial Item', 'ambrygen-web' ) }
+			</Button>
 		</section>
 	);
 }

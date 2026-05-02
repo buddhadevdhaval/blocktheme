@@ -14,7 +14,11 @@
   "attributes": {
     "text": {
       "type": "string",
-      "default": "Collaborator Name"
+      "default": ""
+    },
+    "isNameLocked": {
+      "type": "boolean",
+      "default": false
     },
     "url": {
       "type": "string",

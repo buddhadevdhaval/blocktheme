@@ -6,10 +6,23 @@
   "title": "Genetic Testing Description",
   "category": "ambrygen",
   "description": "Displays the post content with a conditional heading.",
+  "attributes": {
+    "previewPostId": {
+      "type": "number",
+      "default": 0
+    },
+    "blockId": {
+      "type": "string",
+      "default": ""
+    }
+  },
   "supports": {
     "html": false
   },
   "textdomain": "ambrygen-web",
   "editorScript": "file:./index.js",
-  "render": "file:./render.php"
+  "render": "file:./render.php",
+  "usesContext": [
+    "postId"
+  ]
 }

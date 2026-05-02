@@ -1,7 +1,14 @@
 import { InspectorControls, RichText, useBlockProps } from '@wordpress/block-editor';
+import { PanelBody } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 import { ImageUploader } from '../_shared/components';
+
+const normalizeBreaksForEditor = ( value = '' ) =>
+	value.replace( /<br\s*\/?>/gi, '\n' );
+
+const normalizeBreaksForStorage = ( value = '' ) =>
+	value.replace( /\r?\n/g, '<br>' );
 
 export default function Edit( { attributes, setAttributes } ) {
 	const { content, imageUrl, imageAlt, authorName, authorRole } = attributes;
@@ -14,36 +21,47 @@ export default function Edit( { attributes, setAttributes } ) {
 			} ) }
 		>
 			<InspectorControls>
-				<ImageUploader
-					url={ imageUrl }
-					label={ __( 'Logo', 'ambrygen-web' ) }
-					onSelect={ ( media ) =>
-						setAttributes( {
-							imageId: media?.id || 0,
-							imageUrl: media?.url || '',
-							imageAlt: media?.alt || media?.title || '',
-						} )
-					}
-					onRemove={ () =>
-						setAttributes( {
-							imageId: 0,
-							imageUrl: '',
-							imageAlt: '',
-						} )
-					}
-				/>
+				<PanelBody
+					title={ __( 'Image', 'ambrygen-web' ) }
+					initialOpen={ true }
+				>
+					<ImageUploader
+						url={ imageUrl }
+						label={ __( 'Upload Image', 'ambrygen-web' ) }
+						onSelect={ ( media ) =>
+							setAttributes( {
+								imageId: media?.id || 0,
+								imageUrl: media?.url || '',
+								imageAlt: media?.alt || media?.title || '',
+							} )
+						}
+						onRemove={ () =>
+							setAttributes( {
+								imageId: 0,
+								imageUrl: '',
+								imageAlt: '',
+							} )
+						}
+					/>
+				</PanelBody>
 			</InspectorControls>
 
 			<div className="testimonial-slider__card">
 				<RichText
 					tagName="div"
 					className="testimonial-slider__quote heading-5 mb-0"
-					value={ content }
-					onChange={ ( value ) => setAttributes( { content: value } ) }
-					placeholder={ __( 'Enter testimonial text...', 'ambrygen-web' ) }
+					value={ normalizeBreaksForEditor( content ) }
+					onChange={ ( value ) =>
+						setAttributes( {
+							content: normalizeBreaksForStorage( value ),
+						} )
+					}
+					placeholder={ __( 'Description', 'ambrygen-web' ) }
 				/>
 
-				<div className="is-style-gl-s24"></div>
+				{ imageUrl && (
+					<div className="is-style-gl-s24" aria-hidden="true"></div>
+				) }
 
 				{ ! hasAuthorDetails && imageUrl && (
 					<div className="testimonial-slider__logo">

@@ -89,7 +89,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 		<div class="order-process-steps__steps" role="list">
 			<?php foreach ( $ambrygen_steps as $ambrygen_step_index => $ambrygen_step ) : ?>
 				<?php
-				$ambrygen_step_number = sprintf( esc_html__( 'STEP %d', 'ambrygen' ), (int) $ambrygen_step_index + 1 );
+				$ambrygen_step_number = sprintf( esc_html__( 'STEP %d', 'ambrygen-web' ), (int) $ambrygen_step_index + 1 );
 				$ambrygen_step_title  = isset( $ambrygen_step['title'] ) ? $ambrygen_step['title'] : '';
 				$ambrygen_step_desc   = isset( $ambrygen_step['description'] ) ? $ambrygen_step['description'] : '';
 				$ambrygen_icon_id     = isset( $ambrygen_step['iconId'] ) ? absint( $ambrygen_step['iconId'] ) : 0;

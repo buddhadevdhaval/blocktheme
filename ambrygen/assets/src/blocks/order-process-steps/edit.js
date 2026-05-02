@@ -85,8 +85,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	} );
 	const stepsLength = steps.length;
 	const hasMissingIds = steps.some( ( step ) => ! step?.id );
+	const isExample = blockId === 'order-process-steps-example';
 
 	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
+
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
 		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
@@ -94,7 +99,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				blockId: expectedId,
 			} );
 		}
-	}, [ clientId, blockId, setAttributes ] );
+	}, [ clientId, blockId, isExample, setAttributes ] );
 
 	useEffect( () => {
 		if ( ! stepsLength ) {
@@ -190,7 +195,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const HeadingTag = headingTag || 'h2';
 
-	if ( blockId === 'order-process-steps-example' ) {
+	if ( isExample ) {
 		return (
 			<BlockExamplePreview
 				className="order-process-steps-example-preview"
@@ -203,7 +208,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Section Settings', 'ambrygen-web' ) }
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
 					initialOpen
 				>
 					<TagSelector
@@ -217,14 +222,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 
 				<PanelBody title={ __( 'Steps', 'ambrygen-web' ) } initialOpen>
-					<Button
-						variant="primary"
-						onClick={ addStep }
-						className="order-process-steps__add-step"
-					>
-						{ __( 'Add New Step', 'ambrygen-web' ) }
-					</Button>
-
 					{ steps.map( ( step, index ) => (
 						<div
 							key={ step.id }
@@ -254,6 +251,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							/>
 						</div>
 					) ) }
+					<Button
+						variant="primary"
+						onClick={ addStep }
+						className="order-process-steps__add-step"
+					>
+						{ __( 'Add New Step', 'ambrygen-web' ) }
+					</Button>
 				</PanelBody>
 			</InspectorControls>
 
@@ -268,12 +272,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 					/>
-					{ headingText && (
-						<div
-							className="is-style-gl-s12"
-							aria-hidden="true"
-						></div>
-					) }
+
+					<div
+						className="is-style-gl-s12"
+						aria-hidden="true"
+					></div>
+
 					<RichText
 						tagName="p"
 						className="body1 order-process-steps__subtitle"
@@ -288,9 +292,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 				</div>
 
-				{ ( headingText || subtitle ) && steps.length > 0 && (
-					<div className="is-style-gl-s32" aria-hidden="true"></div>
-				) }
+
+				<div className="is-style-gl-s32" aria-hidden="true"></div>
 
 				<div className="order-process-steps__steps">
 					{ steps.map( ( step, index ) => {
@@ -352,3 +355,4 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
+

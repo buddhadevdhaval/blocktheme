@@ -1,1 +1,55 @@
-.wp-additional-link__cards{display:block}.wp-additional-link__cards .block-editor-block-list__layout{display:grid;gap:var(--theme_space_8);grid-template-columns:repeat(12,1fr);margin-top:clamp(32px,2.25rem + (1vw - 7.67px)*2.4014,46px)}.wp-additional-link__cards .block-editor-block-list__layout .additional-link__card{margin-bottom:0}.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+1),.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+2){grid-column:span 6}.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+3),.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+4),.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+5){grid-column:span 4}.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+6),.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+7){grid-column:span 6}.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+10),.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+8),.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+9){grid-column:span 4}@media(max-width:1024px){.wp-additional-link__cards .wp-block-ambrygen-additional-links-item{grid-column:span 6!important}}@media(max-width:575px){.wp-additional-link__cards .wp-block-ambrygen-additional-links-item{grid-column:span 12!important}}
+/*!***********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./assets/src/blocks/additional-links/editor.scss ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************/
+.wp-additional-link__cards {
+  display: block;
+}
+.wp-additional-link__cards .block-editor-block-list__layout {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--theme_space_8);
+  margin-top: clamp(32px, 2.25rem + (1vw - 7.67px) * 2.4014, 46px);
+}
+.wp-additional-link__cards .block-editor-block-list__layout .additional-link__card {
+  margin-bottom: 0;
+}
+.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+1) {
+  grid-column: span 6;
+}
+.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+2) {
+  grid-column: span 6;
+}
+.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+3) {
+  grid-column: span 4;
+}
+.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+4) {
+  grid-column: span 4;
+}
+.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+5) {
+  grid-column: span 4;
+}
+.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+6) {
+  grid-column: span 6;
+}
+.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+7) {
+  grid-column: span 6;
+}
+.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+8) {
+  grid-column: span 4;
+}
+.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+9) {
+  grid-column: span 4;
+}
+.wp-additional-link__cards .wp-block-ambrygen-additional-links-item:nth-child(10n+10) {
+  grid-column: span 4;
+}
+@media (max-width: 1024px) {
+  .wp-additional-link__cards .wp-block-ambrygen-additional-links-item {
+    grid-column: span 6 !important;
+  }
+}
+@media (max-width: 575px) {
+  .wp-additional-link__cards .wp-block-ambrygen-additional-links-item {
+    grid-column: span 12 !important;
+  }
+}

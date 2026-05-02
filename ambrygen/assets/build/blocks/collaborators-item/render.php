@@ -10,7 +10,7 @@
  */
 defined( 'ABSPATH' ) || exit;
 
-$ambrygen_text   = isset( $attributes['text'] ) ? (string) $attributes['text'] : 'Collaborator Name';
+$ambrygen_text   = isset( $attributes['text'] ) ? (string) $attributes['text'] : '';
 $ambrygen_url    = isset( $attributes['url'] ) ? \esc_url( (string) $attributes['url'] ) : '';
 $ambrygen_target = isset( $attributes['linkTarget'] ) ? (string) $attributes['linkTarget'] : '_blank';
 $ambrygen_rel    = ( '_blank' === $ambrygen_target ) ? 'noopener noreferrer' : '';
@@ -20,14 +20,14 @@ if ( empty( $ambrygen_text ) || empty( $ambrygen_url ) ) {
 }
 ?>
 
-<li class="collaborator-item h-100">
+<div class="download-list__item wp-block-ambrygen-collaborators-item">
 	<?php if ( ! empty( $ambrygen_url ) ) : ?>
-		<a href="<?php echo \esc_url( $ambrygen_url ); ?>" class="collaborator-item__link link1-regular text-primary" <?php echo ! empty( $ambrygen_target ) ? 'target="' . \esc_attr( $ambrygen_target ) . '"' : ''; ?> <?php echo ! empty( $ambrygen_rel ) ? 'rel="' . \esc_attr( $ambrygen_rel ) . '"' : ''; ?>>
-			<?php echo \esc_html( $ambrygen_text ); ?>
+		<a href="<?php echo \esc_url( $ambrygen_url ); ?>" <?php echo ! empty( $ambrygen_target ) ? 'target="' . \esc_attr( $ambrygen_target ) . '"' : ''; ?> <?php echo ! empty( $ambrygen_rel ) ? 'rel="' . \esc_attr( $ambrygen_rel ) . '"' : ''; ?>>
+			<span class="download-list__item-text">
+				<?php echo \esc_html( $ambrygen_text ); ?>
+			</span>
 		</a>
 	<?php else : ?>
-		<span class="collaborator-item__text link1-regular text-primary">
-			<?php echo \esc_html( $ambrygen_text ); ?>
-		</span>
+		<span class="download-list__item-text"><?php echo \esc_html( $ambrygen_text ); ?></span>
 	<?php endif; ?>
-</li>
+</div>

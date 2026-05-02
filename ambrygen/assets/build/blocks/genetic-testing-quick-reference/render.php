@@ -9,12 +9,24 @@
 
 use Ambrygen\Theme\Core\Blocks\BlockRenderService;
 
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
-$post_id = get_the_ID();
+try {
+    $post_id = 0;
 
-if ( ! $post_id ) {
-	return;
+    if (!empty($attributes['previewPostId'])) {
+        $post_id = (int) $attributes['previewPostId'];
+    }
+
+    if (!$post_id && isset($block) && isset($block->context['postId'])) {
+        $post_id = (int) $block->context['postId'];
+    }
+
+    if (!$post_id) {
+        $post_id = get_the_ID();
+    }
+
+    echo BlockRenderService::instance()->render_genetic_testing_quick_reference((int) $post_id);
+} catch (Exception $e) {
+    echo '<!-- Error: ' . $e->getMessage() . ' -->';
 }
-
-echo BlockRenderService::instance()->render_genetic_testing_quick_reference( $post_id );

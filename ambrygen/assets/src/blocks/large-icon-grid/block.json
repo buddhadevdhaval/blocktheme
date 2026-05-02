@@ -1,0 +1,66 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/large-icon-grid",
+  "title": "Large Icon Grid",
+  "category": "ambrygen",
+  "icon": "grid-view",
+  "description": "Grid layout for large icon cards with count badge",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
+      "default": "h2"
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "variation": {
+      "type": "string",
+      "default": "variation-5"
+    },
+    "blockId": {
+      "type": "string"
+    },
+    "backgroundImage": {
+      "type": "object",
+      "default": {
+        "url": "",
+        "id": 0,
+        "alt": ""
+      }
+    },
+    "isLargeIcon": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "providesContext": {
+    "ambrygen/variation": "variation"
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php",
+  "example": {
+    "attributes": {
+      "blockId": "large-icon-grid-example"
+    }
+  }
+}

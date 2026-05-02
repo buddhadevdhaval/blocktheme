@@ -8,6 +8,10 @@
   "parent": [
     "ambrygen/careers"
   ],
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
   "attributes": {
     "postId": {
       "type": "number"

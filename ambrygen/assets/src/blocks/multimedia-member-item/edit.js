@@ -1,5 +1,5 @@
 import { useBlockProps } from '@wordpress/block-editor';
-import { SelectControl, Spinner, Button } from '@wordpress/components';
+import { Spinner, Button } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { DEFAULT_IMAGES } from '../_shared/components';
 import { __ } from '@wordpress/i18n';
@@ -73,22 +73,10 @@ const normalizeMemberMediaMeta = ( metaValue ) => {
 		.filter( ( item ) => item.imageId || item.imageUrl );
 };
 
-export default function Edit( { attributes, setAttributes, clientId } ) {
+export default function Edit( { attributes, clientId } ) {
 	const { postId } = attributes;
 	const { removeBlock } = useDispatch( 'core/block-editor' );
 	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
-
-	const multimediaMembers = useSelect(
-		( select ) =>
-			select( 'core' ).getEntityRecords( 'postType', 'our_team', {
-				per_page: -1,
-				post_status: 'publish',
-				orderby: 'title',
-				order: 'asc',
-				_fields: 'id,title,meta',
-			} ),
-		[]
-	);
 
 	const selectedPost = useSelect(
 		( select ) => {
@@ -107,30 +95,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		},
 		[ postId ]
 	);
-
-	const selectedIds = useSelect(
-		( select ) => {
-			const blockEditor = select( 'core/block-editor' );
-			const parentId = blockEditor.getBlockRootClientId( clientId );
-			if ( ! parentId ) {
-				return [];
-			}
-			const siblings = blockEditor.getBlocks( parentId );
-			return siblings
-				.map( ( block ) => block.attributes?.postId )
-				.filter( ( id ) => id && id !== postId );
-		},
-		[ clientId, postId ]
-	);
-
-	const memberOptions = multimediaMembers
-		? multimediaMembers
-				.filter( ( post ) => ! selectedIds.includes( post.id ) )
-				.map( ( post ) => ( {
-					label: decodeEntities( post.title.rendered ),
-					value: post.id,
-				} ) )
-		: [];
 
 	const memberMediaItems = useMemo(
 		() =>
@@ -224,28 +188,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		<div
 			{ ...useBlockProps( { className: 'multimedia-member__item' } ) }
 		>
-			{ ! multimediaMembers && <Spinner /> }
+			{ postId && ! selectedPost && <Spinner /> }
 
-			{ ! postId && multimediaMembers && (
-				<SelectControl
-					label={ __( 'Select Multimedia Member', 'ambrygen-web' ) }
-					value=""
-					options={ [
-						{
-							label: __(
-								'Select a multimedia member',
-								'ambrygen-web'
-							),
-							value: '',
-						},
-						...memberOptions,
-					] }
-					onChange={ ( value ) =>
-						setAttributes( {
-							postId: parseInt( value, 10 ) || 0,
-						} )
-					}
-				/>
+			{ ! postId && (
+				<p>
+					{ __(
+						'Select members from the Multimedia Member block settings.',
+						'ambrygen-web'
+					) }
+				</p>
 			) }
 
 			{ postId && selectedPost && (
@@ -297,18 +248,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									selectedPost.title.rendered
 								) }
 							</div>
+							<div
+								className="is-style-gl-s10"
+								aria-hidden="true"
+							></div>
 							{ selectedPost.meta?.designation && (
-								<>
-									<div
-										className="is-style-gl-s10"
-										aria-hidden="true"
-									></div>
-									<span className="multimedia-member__role subtitle2">
-										{ decodeEntities(
-											selectedPost.meta?.designation || ''
-										) }
-									</span>
-								</>
+								<span className="multimedia-member__role subtitle2">
+									{ decodeEntities(
+										selectedPost.meta?.designation || ''
+									) }
+								</span>
 							) }
 						</div>
 					</div>
@@ -330,12 +279,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							{ __( 'media items total', 'ambrygen-web' ) } )
 						</div>
 						<div className="actions-button">
-							<Button
-								variant="secondary"
-								onClick={ () => setAttributes( { postId: 0 } ) }
-							>
-								{ __( 'Change Member', 'ambrygen-web' ) }
-							</Button>
 							<Button
 								isDestructive
 								onClick={ () => removeBlock( clientId ) }

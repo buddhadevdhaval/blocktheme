@@ -5,11 +5,15 @@
 
 defined( 'ABSPATH' ) || exit;
 
+$ambrygen_block_id = isset( $attributes['blockId'] ) ? sanitize_html_class( $attributes['blockId'] ) : '';
 $ambrygen_title    = $attributes['title'] ?? '';
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
-	array(
-		'class' => 'webinars-static-list',
+	array_filter(
+		array(
+			'class' => 'webinars webinars-static-list',
+			'id'    => $ambrygen_block_id ?: null,
+		)
 	)
 );
 ?>
@@ -18,7 +22,11 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	<div class="webinars__content event-carousel">
 		
 		<?php if ( $ambrygen_title ) : ?>
-			<h2 class="heading-3 block-title mb-0"><?php echo esc_html( $ambrygen_title ); ?></h2>
+			<div class="webinars__header">
+				<h2 class="webinars__title heading-3">
+					<?php echo wp_kses_post( $ambrygen_title ); ?>
+				</h2>
+			</div>
 			<div class="is-style-gl-s50" aria-hidden="true"></div>
 		<?php endif; ?>
 

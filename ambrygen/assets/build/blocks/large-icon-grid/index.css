@@ -1,0 +1,25 @@
+/*!**********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./assets/src/blocks/large-icon-grid/editor.scss ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************/
+.wp-block.icon-grid.variation-grid-post .info-list__list {
+  display: block;
+}
+.wp-block.icon-grid.variation-grid-post .info-list__list .block-editor-block-list__layout {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  gap: clamp(18px, 1.125rem + (1vw - 7.68px) * 1.0309, 24px);
+}
+@media (min-width: 768px) and (max-width: 1200px) {
+  .wp-block.icon-grid.variation-grid-post .info-list__list .block-editor-block-list__layout {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 767px) {
+  .wp-block.icon-grid.variation-grid-post .info-list__list .block-editor-block-list__layout {
+    grid-template-columns: 1fr;
+    border-radius: 16px;
+  }
+}
+
+/*# sourceMappingURL=index.css.map*/

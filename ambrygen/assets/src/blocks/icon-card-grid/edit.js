@@ -64,7 +64,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	useEffect( () => {
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
+		if ( ! blockId ) {
 			setAttributes( { blockId: expectedId } );
 		}
 	}, [ blockId, clientId, setAttributes ] );

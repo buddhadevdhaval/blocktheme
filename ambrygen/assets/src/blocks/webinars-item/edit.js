@@ -1,11 +1,9 @@
 import { useBlockProps } from '@wordpress/block-editor';
 import {
-	Button,
-	Notice,
 	Placeholder,
 	Spinner,
 } from '@wordpress/components';
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
 const formatDuration = ( minutes ) => {
@@ -93,15 +91,18 @@ const formatWebinarTime = ( dateString ) => {
  * On mount it fetches the first 10 webinars by title. When the user
  * types at least 2 characters the component fires a debounced REST search.
  *
- * @param {Object}   props               Component props.
- * @param {Object}   props.attributes    Block attributes.
- * @param {Function} props.setAttributes Attribute setter.
- * @param {string}   props.clientId      Block client ID.
+ * @param {Object} props            Component props.
+ * @param {Object} props.attributes Block attributes.
  * @return {JSX.Element} Editor UI.
  */
-export default function Edit({ attributes, setAttributes, clientId }) {
+export default function Edit( { attributes, clientId } ) {
 	const { postId } = attributes;
-	const { removeBlock } = useDispatch('core/block-editor');
+	const { selectBlock } = useDispatch( 'core/block-editor' );
+	const parentClientId = useSelect(
+		( select ) =>
+			select( 'core/block-editor' ).getBlockRootClientId( clientId ),
+		[ clientId ]
+	);
 
 	const selectedQuery = { _fields: 'id,title,featured_media,meta' };
 
@@ -149,57 +150,74 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const timeDisplay = formatWebinarTime( startAt );
 	const durationDisplay = formatDuration( duration );
 
-	const blockProps = useBlockProps({ className: 'webinars-item' });
+	const blockProps = useBlockProps( { className: 'webinars-item' } );
 
-	if (!postId) {
+	if ( ! postId ) {
 		return (
-			<div {...blockProps}>
+			<div { ...blockProps }>
 				<Placeholder
 					icon="video-alt"
-					label={__('Webinar Item', 'ambrygen-web')}
-					instructions={__(
+					label={ __( 'Webinar Item', 'ambrygen-web' ) }
+					instructions={ __(
 						'Choose a webinar from the parent block sidebar panel.',
 						'ambrygen-web'
 					)}
-				>
-					<Notice status="info" isDismissible={false}>
-						{__(
-							'Use the Webinar Items panel to search and add webinars.',
-							'ambrygen-web'
-						)}
-					</Notice>
-				</Placeholder>
+				/>
 			</div>
 		);
 	}
 
 	return (
-		<div {...blockProps}>
-			{!selectedWebinar ? (
+		<div { ...blockProps }>
+			{ ! selectedWebinar ? (
 				<Spinner />
 			) : (
 				<div
 					className="webinars-item__preview-card event-carousel__card"
-					style={{ cursor: 'default' }}
+					role="button"
+					tabIndex={ 0 }
+					style={ { cursor: 'pointer' } }
+					onClick={ () => {
+						if ( parentClientId ) {
+							selectBlock( parentClientId );
+						}
+					} }
+					onKeyDown={ ( event ) => {
+						if (
+							( event.key === 'Enter' || event.key === ' ' ) &&
+							parentClientId
+						) {
+							event.preventDefault();
+							selectBlock( parentClientId );
+						}
+					} }
+					aria-label={ __(
+						'Select webinar grid block',
+						'ambrygen-web'
+					) }
+					title={ __(
+						'Click to open the webinar grid settings',
+						'ambrygen-web'
+					) }
 				>
 					<div className="event-carousel__content">
-						{featuredImage && (
+						{ featuredImage && (
 							<div className="event-carousel__image-wrap mb-16">
 								<img
-									src={featuredImage}
+									src={ featuredImage }
 									alt=""
-									style={{
+									style={ {
 										width: '100%',
 										height: 'auto',
 										borderRadius: '8px',
-									}}
+									} }
 								/>
 							</div>
-						)}
+						) }
 
 						<div className="event-carousel__title-row">
 							<div className="text-lg-semibold event-carousel__card-title mb-0">
-								{selectedWebinar.title.rendered}
+								{ selectedWebinar.title.rendered }
 							</div>
 						</div>
 
@@ -248,26 +266,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									</span>
 								</div>
 							) }
-						</div>
-
-						<div className="is-style-gl-s24" aria-hidden="true"></div>
-
-						<div className="event-carousel__actions actions-button">
-							<Button
-								isSecondary
-								onClick={() => {
-									setAttributes({ postId: null });
-								}}
-							>
-								Change
-							</Button>
-
-							<Button
-								isDestructive
-								onClick={() => removeBlock(clientId)}
-							>
-								{__('Remove', 'ambrygen-web')}
-							</Button>
 						</div>
 					</div>
 				</div>

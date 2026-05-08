@@ -159,10 +159,28 @@ header {
 	&__search {
 
 		@include bp.max(md) {
-			display: none;
+			// display: none;
+		}
+
+		.morphing-btn-input,
+		.morphing-btn-submit {
+			@include bp.max(md) {
+				display: none;
+			}
+		}
+
+		.morphing-btn-label {
+			@include bp.max(md) {
+				font-size: 0;
+				margin-bottom: 0;
+				display: flex;
+				align-items: center;
+				// filter: brightness(0) saturate(100%) invert(40%) sepia(92%) saturate(6663%) hue-rotate(180deg) brightness(94%) contrast(101%);
+			}
 		}
 
 		form {
+
 
 			input {
 

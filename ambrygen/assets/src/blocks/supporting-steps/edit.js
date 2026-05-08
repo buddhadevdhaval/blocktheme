@@ -4,7 +4,7 @@ import {
 	useBlockProps,
 } from '@wordpress/block-editor';
 import { Button, PanelBody } from '@wordpress/components';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useRef } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { getThemeAssetUrl } from '../../utils/assets';
 import {
@@ -67,23 +67,41 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	} = attributes;
 
 	const isStatsView = variation === 'stats-view';
+	const isExample = blockId === 'supporting-steps-example';
 	const HeadingTag = headingTag || 'h2';
+	const hasInitializedDefaultStep = useRef( false );
 
 	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
+
 		const clientIdSuffix = clientId.slice( 0, 8 );
 		const expectedId = `supporting-steps-${ clientIdSuffix }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientIdSuffix ) ) {
+		if ( ! blockId ) {
 			setAttributes( { blockId: expectedId } );
 		}
-	}, [ blockId, clientId, setAttributes ] );
+	}, [ blockId, clientId, isExample, setAttributes ] );
+
+	useEffect( () => {
+		if ( isExample || hasInitializedDefaultStep.current ) {
+			return;
+		}
+
+		hasInitializedDefaultStep.current = true;
+
+		if ( steps.length === 0 ) {
+			setAttributes( { steps: [ createStep() ] } );
+		}
+	}, [ isExample, steps.length, setAttributes ] );
 
 	const blockProps = useBlockProps( {
 		className: `supporting-steps${ isStatsView ? ' variation-stats-view' : '' }`,
 		id: anchor || blockId || undefined,
 	} );
 
-	if ( blockId === 'supporting-steps-example' ) {
+	if ( isExample ) {
 		return (
 			<BlockVariationsExamplePreview
 				variants={ VARIANTS }
@@ -141,7 +159,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Layout Settings', 'ambrygen-web' ) }
+					title={ __( 'Layout Variation', 'ambrygen-web' ) }
 					initialOpen={ true }
 				>
 					<div className="layout-variant-selector">
@@ -281,7 +299,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 										)
 									}
 									placeholder={ __(
-										'Add step label',
+										'Add Icon Label...',
 										'ambrygen-web'
 									) }
 								/>
@@ -313,7 +331,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									setAttributes( { heading: value } )
 								}
 								placeholder={ __(
-									'Add heading',
+									'Add Heading...',
 									'ambrygen-web'
 								) }
 							/>
@@ -442,7 +460,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									} )
 								}
 								placeholder={ __(
-									'Add description',
+									'Add Description...',
 									'ambrygen-web'
 								) }
 							/>

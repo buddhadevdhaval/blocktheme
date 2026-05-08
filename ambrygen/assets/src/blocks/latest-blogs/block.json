@@ -6,10 +6,16 @@
   "category": "ambrygen",
   "icon": "welcome-widgets-menus",
   "description": "Displays latest blogs with tag and category filters.",
+  "textdomain": "ambrygen-web",
   "supports": {
     "html": false,
     "anchor": true,
-    "align": ["wide", "full"]
+    "align": ["wide", "full"],
+    "spacing": {
+      "margin": true,
+      "padding": true
+    },
+    "inserter": false
   },
   "attributes": {
     "blockId": {
@@ -31,8 +37,7 @@
     }
   },
   "editorScript": "file:./index.js",
-  "editorStyle": "file:./editor.scss",
-  "style": "file:./style.scss",
-  "render": "file:./render.php",
-  "textdomain": "ambrygen-web"
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php"
 }

@@ -3,6 +3,7 @@ import { InnerBlocks } from '@wordpress/block-editor';
 
 import './style.scss';
 import './editor.scss';
+import '../shared/tooltip-format';
 
 import metadata from './block.json';
 import Edit from './edit';

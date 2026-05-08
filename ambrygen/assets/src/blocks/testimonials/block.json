@@ -6,6 +6,7 @@
   "category": "ambrygen",
   "icon": "format-quote",
   "supports": {
+    "html": false,
     "color": {
       "background": true
     }
@@ -49,7 +50,7 @@
     },
     "secondaryImageId": {
       "type": "number",
-      "default": null
+      "default": 0
     },
     "secondaryImageAlt": {
       "type": "string",
@@ -61,7 +62,7 @@
     },
     "overlayImageId": {
       "type": "number",
-      "default": null
+      "default": 0
     },
     "overlayImageAlt": {
       "type": "string",

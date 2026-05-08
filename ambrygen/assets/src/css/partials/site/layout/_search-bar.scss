@@ -1,4 +1,5 @@
 @use "../../variables/breakpoints" as bp;
+@use "../../variables/fluid_mixins" as *;
 
 
 @include bp.max(md) {
@@ -171,6 +172,7 @@
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         max-width: 20px;
         overflow: hidden;
+		filter: brightness(0) saturate(100%) invert(48%) sepia(12%) saturate(731%) hue-rotate(182deg) brightness(87%) contrast(84%);
     }
 
     .morphing-btn-submit {
@@ -259,3 +261,50 @@
         }
     }
 }
+
+
+
+
+
+/* Genes Tables Search */
+.genes-table__search {
+	background-color: var(--theme_primary_25);
+	border-radius: 24px;
+	padding: fluid(16, 50);
+
+	.kicker-text {
+		text-align: center;
+		color: var(--theme_cg_blue);
+	}
+
+	form {
+		position: relative;
+		max-width: 640px;
+		margin: 0 auto;
+
+		@include bp.max(md) {
+			max-width: 100%;
+		}
+
+		.genes-table__search-button {
+			background-image: url(../images/search-icon.svg);
+			background-color: transparent;
+			background-repeat: no-repeat;
+			background-size: 20px;
+			border: none;
+			font-size: 0;
+			height: 20px;
+			margin: 0;
+			padding: 0;
+			position: absolute;
+			right: 16px;
+			top: 14px;
+			width: 20px;
+		}
+	}
+
+    &__instruction {
+        text-align: center;
+    }
+}
+/* Genes Tables Search END */

@@ -10,7 +10,8 @@
   ],
   "attributes": {
     "postId": {
-      "type": "number"
+      "type": "number",
+      "default": 0
     }
   },
   "editorScript": "file:./index.js",

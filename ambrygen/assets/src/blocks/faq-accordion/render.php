@@ -13,6 +13,31 @@
 
 	use Ambrygen\Theme\Core\Helper;
 
+	$ambrygen_richtext_allowed = array(
+		'span'   => array(
+			'class'              => true,
+			'title'              => true,
+			'data-tooltip'       => true,
+			'data-tooltip-title' => true,
+			'data-tooltip-b64'   => true,
+			'data-tooltip-id'    => true,
+		),
+		'mark'   => array(
+			'class' => true,
+			'style' => true,
+		),
+		'br'     => array(),
+		'strong' => array(),
+		'em'     => array(),
+		'a'      => array(
+			'href'   => true,
+			'title'  => true,
+			'target' => true,
+			'rel'    => true,
+			'class'  => true,
+		),
+	);
+
 	$ambrygen_attributes = is_array( $attributes ?? null ) ? $attributes : array();
 
 	$ambrygen_block_id    = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
@@ -130,7 +155,7 @@
 								<summary class="faq__header text-lg-medium" aria-expanded="false" aria-controls="<?php echo esc_attr( $ambrygen_faq_answer_id ); ?>">
 
 										<span class="faq__question">
-											<?php echo esc_html( wp_strip_all_tags( $ambrygen_faq['question'] ?? '' ) ); ?>
+											<?php echo wp_kses( $ambrygen_faq['question'] ?? '', $ambrygen_richtext_allowed ); ?>
 										</span>
 
 									<span class="faq__icon" aria-hidden="true"></span>

@@ -14,7 +14,8 @@
 		}
 	},
 	"supports": {
-		"html": false
+		"html": false,
+		"inserter": false
 	},
 	"textdomain": "ambrygen-web",
 	"editorScript": "file:./index.js",

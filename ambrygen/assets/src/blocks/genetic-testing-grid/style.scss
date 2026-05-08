@@ -18,6 +18,13 @@ section:has( .icon-grid-block ) {
 			height: 100%;
 			margin-left: calc( -50vw + 50% );
 			opacity: 0.2;
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				object-position: center;
+				display: block;
+			}
 		}
 	}
 }
@@ -37,6 +44,7 @@ section:has( .icon-grid-block ) {
 		display: grid;
 		grid-template-columns: repeat( 4, 1fr );
 		gap: 24px;
+		align-items: stretch;
 
 		@include bp.max( xl-large ) {
 			grid-template-columns: repeat( 3, 1fr );
@@ -67,8 +75,10 @@ section:has( .icon-grid-block ) {
 		border-radius: 16px;
 		padding: 24px 24px 28px;
 		display: flex;
-		flex-wrap: wrap;
+		flex-direction: column;
+		flex-wrap: nowrap;
 		gap: 48px;
+		height: 100%;
 		transition:
 			transform 0.3s ease,
 			box-shadow 0.3s ease;
@@ -84,7 +94,14 @@ section:has( .icon-grid-block ) {
 		}
 	}
 
+	&__card.is-view-all-hidden,
+	&__footer.is-view-all-hidden,
+	&__view-all.is-view-all-hidden {
+		display: none !important;
+	}
+
 	&__content-head {
+		flex: 1 1 auto;
 		width: 100%;
 	}
 
@@ -126,5 +143,6 @@ section:has( .icon-grid-block ) {
 	&__footer {
 		display: flex;
 		justify-content: center;
+		margin-top: 32px;
 	}
 }

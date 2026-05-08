@@ -173,8 +173,13 @@ $blogs_query = new WP_Query( $query_args );
 								<a href="<?php the_permalink(); ?>" class="blog-listing__card">
 									<div class="blog-listing__image-wrap">
 										<?php
+										$img_id = $thumbnail_id;
+										if ( ! $img_id ) {
+											$img_id = \Ambrygen\Theme\Core\Theme_Options::get_blog_default_image_id();
+										}
+
 										echo Helper::image_with_placeholder(
-											(int) $thumbnail_id,
+											(int) $img_id,
 											'large',
 											array( 'class' => 'blog-listing__image' )
 										);
@@ -196,8 +201,6 @@ $blogs_query = new WP_Query( $query_args );
 											<div class="blog-listing__author-block">
 												<?php if ( ! empty( $authors_data[0]['avatar_id'] ) ) : ?>
 													<?php echo Helper::image( $authors_data[0]['avatar_id'], 'thumbnail', array( 'class' => 'blog-listing__author-avatar', 'width' => 36, 'height' => 36 ) ); ?>
-												<?php else: ?>
-													<img class="blog-listing__author-avatar" src="https://i.pravatar.cc/40?img=47" alt="" width="36" height="36" />
 												<?php endif; ?>
 												<div class="blog-listing__author-info">
 													<span class="blog-listing__author-name text-small-semibold">
@@ -247,7 +250,7 @@ $blogs_query = new WP_Query( $query_args );
 							</button>
 						</div>
 					<?php else : ?>
-						<p class="no-results-message text-center text-lg-reg"><?php esc_html_e( 'No blog posts found.', 'ambrygen-web' ); ?></p>
+						<div class="no-results-message text-center no-result-alert"><?php esc_html_e( 'No blog posts found.', 'ambrygen-web' ); ?></div>
 					<?php endif; ?>
 				</div>
 			</div>

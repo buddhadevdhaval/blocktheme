@@ -47,12 +47,16 @@
     &__text {
         color: var(--theme_gray_700);
 
-        .location-list {
-            margin-bottom: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 0.434)), 25px);
+		.location-list {
+			margin-bottom: clamp(20px, calc(1.25rem + ((1vw - 7.68px) * 0.434)), 25px);
 
-            &:last-child {
-                margin-bottom: 0;
-            }
+			&:last-child {
+				margin-bottom: 0;
+			}
+
+			.location-title {
+				margin-bottom: 4px;
+			}
 
 			.location-description {
 				color: var(--theme_gray_600);

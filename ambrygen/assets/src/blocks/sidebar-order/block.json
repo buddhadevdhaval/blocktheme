@@ -101,7 +101,8 @@
 	},
 	"supports": {
 		"html": false,
-		"anchor": true
+		"anchor": true,
+		"inserter": false
 	},
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php"

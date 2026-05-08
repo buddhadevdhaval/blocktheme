@@ -11,6 +11,31 @@
 
 defined( 'ABSPATH' ) || exit;
 
+$ambrygen_richtext_allowed = array(
+	'span'   => array(
+		'class'              => true,
+		'title'              => true,
+		'data-tooltip'       => true,
+		'data-tooltip-title' => true,
+		'data-tooltip-b64'   => true,
+		'data-tooltip-id'    => true,
+	),
+	'mark'   => array(
+		'class' => true,
+		'style' => true,
+	),
+	'br'     => array(),
+	'strong' => array(),
+	'em'     => array(),
+	'a'      => array(
+		'href'   => true,
+		'title'  => true,
+		'target' => true,
+		'rel'    => true,
+		'class'  => true,
+	),
+);
+
 $ambrygen_attributes  = is_array( $attributes ?? null ) ? $attributes : array();
 $ambrygen_question    = $ambrygen_attributes['question'] ?? '';
 $ambrygen_sub_heading = $ambrygen_attributes['subHeading'] ?? '';
@@ -56,8 +81,7 @@ if ( $ambrygen_answer_text ) {
 <details <?php echo get_block_wrapper_attributes( array( 'class' => 'faq__item js-gsap-fade' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<summary class="faq__header text-lg-medium" aria-expanded="false"<?php echo $ambrygen_answer_text ? ' aria-controls="' . esc_attr( $ambrygen_answer_id ) . '"' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 		<span class="faq__question">
-			<?php // Question and subheading are intentionally rendered as plain text. ?>
-			<?php echo esc_html( wp_strip_all_tags( $ambrygen_question ) ); ?>
+			<?php echo wp_kses( $ambrygen_question, $ambrygen_richtext_allowed ); ?>
 		</span>
 
 		<span class="faq__icon" aria-hidden="true"></span>

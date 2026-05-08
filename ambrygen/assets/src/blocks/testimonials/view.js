@@ -2,9 +2,6 @@ import Swiper from 'swiper';
 import { Navigation, EffectFade, Keyboard, A11y } from 'swiper/modules';
 
 document.addEventListener( 'DOMContentLoaded', () => {
-	let resizeHandler;
-	let swiperInstance = null;
-	let cleanupObserver = null;
 	const focusableSelector =
 		'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -17,14 +14,19 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		};
 	};
 
-	const destroySwiper = ( container ) => {
-		const activeSwiper = swiperInstance || container?.swiper;
+	const initTestimonialsBlock = ( rootSection ) => {
+		let resizeHandler;
+		let swiperInstance = null;
+		let cleanupObserver = null;
 
-		if ( activeSwiper ) {
-			activeSwiper.destroy( true, true );
-			swiperInstance = null;
-		}
-	};
+		const destroySwiper = ( container ) => {
+			const activeSwiper = swiperInstance || container?.swiper;
+
+			if ( activeSwiper ) {
+				activeSwiper.destroy( true, true );
+				swiperInstance = null;
+			}
+		};
 
 	const restoreFocus = ( element ) => {
 		if ( ! element ) {
@@ -46,22 +48,22 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		element.removeAttribute( 'tabindex' );
 	};
 
-	const cleanup = () => {
-		const container = document.querySelector( '.testimonial_slider' );
+		const cleanup = () => {
+			const container = rootSection.querySelector( '.testimonial_slider' );
 
-		if ( resizeHandler ) {
-			window.removeEventListener( 'resize', resizeHandler );
-		}
+			if ( resizeHandler ) {
+				window.removeEventListener( 'resize', resizeHandler );
+			}
 
-		if ( cleanupObserver ) {
-			cleanupObserver.disconnect();
-			cleanupObserver = null;
-		}
+			if ( cleanupObserver ) {
+				cleanupObserver.disconnect();
+				cleanupObserver = null;
+			}
 
-		if ( container ) {
-			destroySwiper( container );
-		}
-	};
+			if ( container ) {
+				destroySwiper( container );
+			}
+		};
 
 	const getLiveRegionText = ( current, total, rootSection ) => {
 		const template =
@@ -138,18 +140,14 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		}
 	};
 
-	const initMobileSwiper = () => {
-		const container = document.querySelector( '.testimonial_slider' );
-		const parentGrid = container
-			? container.closest( '.ambry-testimonials__grid' )
-			: document.querySelector( '.ambry-testimonials__grid' );
+		const initMobileSwiper = () => {
+			const container = rootSection.querySelector( '.testimonial_slider' );
+			const parentGrid = container
+				? container.closest( '.ambry-testimonials__grid' )
+				: rootSection.querySelector( '.ambry-testimonials__grid' );
 		if ( ! parentGrid ) {
 			return;
 		}
-
-		const rootSection = parentGrid.closest(
-			'.wp-block-ambrygen-testimonials'
-		);
 
 		/* =========================
 		 * DESKTOP
@@ -207,7 +205,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		 * ========================= */
 		if ( window.innerWidth <= 768 ) {
 			// Check if swiper container already exists
-			let swiperContainer = document.querySelector(
+			let swiperContainer = rootSection.querySelector(
 				'.testimonial_slider'
 			);
 
@@ -266,8 +264,8 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					},
 					speed: 600,
 					navigation: {
-						nextEl: '.custom-next',
-						prevEl: '.custom-prev',
+						nextEl: swiperContainer.querySelector( '.custom-next' ),
+						prevEl: swiperContainer.querySelector( '.custom-prev' ),
 					},
 					keyboard: {
 						enabled: true,
@@ -292,25 +290,30 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				updateLiveRegion( swiperInstance, swiperContainer, rootSection );
 			}
 		}
+		};
+
+		const rootGrid = rootSection.querySelector( '.ambry-testimonials__grid' );
+
+		if ( rootGrid ) {
+			cleanupObserver = new MutationObserver( () => {
+				if ( ! document.body.contains( rootGrid ) ) {
+					cleanup();
+				}
+			} );
+
+			cleanupObserver.observe( document.body, {
+				childList: true,
+				subtree: true,
+			} );
+		}
+
+		resizeHandler = debounce( initMobileSwiper, 250 );
+		initMobileSwiper();
+		window.addEventListener( 'resize', resizeHandler );
+		window.addEventListener( 'beforeunload', cleanup, { once: true } );
 	};
 
-	const rootGrid = document.querySelector( '.ambry-testimonials__grid' );
-
-	if ( rootGrid ) {
-		cleanupObserver = new MutationObserver( () => {
-			if ( ! document.body.contains( rootGrid ) ) {
-				cleanup();
-			}
-		} );
-
-		cleanupObserver.observe( document.body, {
-			childList: true,
-			subtree: true,
-		} );
-	}
-
-	resizeHandler = debounce( initMobileSwiper, 250 );
-	initMobileSwiper();
-	window.addEventListener( 'resize', resizeHandler );
-	window.addEventListener( 'beforeunload', cleanup, { once: true } );
+	document
+		.querySelectorAll( '.wp-block-ambrygen-testimonials' )
+		.forEach( initTestimonialsBlock );
 } );

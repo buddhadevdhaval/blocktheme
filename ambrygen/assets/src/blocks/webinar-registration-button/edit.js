@@ -1,16 +1,12 @@
 import { __ } from '@wordpress/i18n';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, ToggleControl } from '@wordpress/components';
-import { useSelect } from '@wordpress/data';
+import { ServerSideRender } from '@wordpress/server-side-render';
 
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit( { attributes, setAttributes, context, name } ) {
 	const blockProps = useBlockProps();
 	const { newTab } = attributes;
-
-	const registrationLink = useSelect( ( select ) => {
-		const meta = select( 'core/editor' ).getEditedPostAttribute( 'meta' ) || {};
-		return meta.registration_link || '';
-	}, [] );
+	const previewPostId = context?.postId ? Number( context.postId ) : 0;
 
 	return (
 		<>
@@ -24,21 +20,13 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 			</InspectorControls>
 			<div { ...blockProps }>
-				<div className="banner-btn">
-					<a
-						className="site-btn has-right-arrow"
-						href="#"
-						onClick={ ( e ) => e.preventDefault() }
-						title={ __( 'Register Now', 'ambrygen-web' ) }
-					>
-						{ __( 'Register Now', 'ambrygen-web' ) }
-						{ ! registrationLink && (
-							<span style={ { fontSize: '10px', display: 'block', opacity: 0.6 } }>
-								{ __( '(Enter registration link in Post Meta)', 'ambrygen-web' ) }
-							</span>
-						) }
-					</a>
-				</div>
+				<ServerSideRender
+					block={ name }
+					attributes={ {
+						...attributes,
+						previewPostId,
+					} }
+				/>
 			</div>
 		</>
 	);

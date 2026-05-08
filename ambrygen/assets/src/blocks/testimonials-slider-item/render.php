@@ -67,9 +67,9 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 		<?php endif; ?>
 
 		<?php if ( $ambrygen_has_author_details ) : ?>
-			<div class="author">
+			<div class="testimonial-slider__author">
 				<?php if ( $ambrygen_has_image ) : ?>
-					<div class="author__image">
+					<div class="testimonial-slider__author--image">
 						<?php
 						echo Helper::image_from_source( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							$ambrygen_image_id,
@@ -85,12 +85,12 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 					</div>
 				<?php endif; ?>
 
-				<div class="author__content">
+				<div class="testimonial-slider__author--content">
 					<?php if ( '' !== $ambrygen_author_name_text ) : ?>
-						<div class="author__name"><?php echo esc_html( $ambrygen_author_name_text ); ?></div>
+						<div class="testimonial-slider__author--name"><?php echo esc_html( $ambrygen_author_name_text ); ?></div>
 					<?php endif; ?>
 					<?php if ( '' !== $ambrygen_author_role_text ) : ?>
-						<div class="author__role"><?php echo esc_html( $ambrygen_author_role_text ); ?></div>
+						<div class="testimonial-slider__author--role"><?php echo esc_html( $ambrygen_author_role_text ); ?></div>
 					<?php endif; ?>
 				</div>
 			</div>

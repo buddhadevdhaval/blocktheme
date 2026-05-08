@@ -4,65 +4,110 @@ import {
 	useBlockProps,
 	InspectorControls,
 } from '@wordpress/block-editor';
-import { PanelBody, ToggleControl } from '@wordpress/components';
+import { useEffect } from '@wordpress/element';
+import { PanelBody } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { TagSelector, BlockExamplePreview } from '../_shared/components';
+import {
+	TagSelector,
+	BlockExamplePreview,
+	ImageUploader,
+} from '../_shared/components';
 
-export default function Edit( { attributes, setAttributes } ) {
-	const { heading, headingTag, description, isLargeIcon, blockId } = attributes;
+const ALLOWED_BLOCKS = [ 'ambrygen/large-icon-grid-item' ];
+const TEMPLATE = [
+	[ 'ambrygen/large-icon-grid-item', {} ],
+	[ 'ambrygen/large-icon-grid-item', {} ],
+	[ 'ambrygen/large-icon-grid-item', {} ],
+];
 
-	if ( blockId === 'large-icon-grid-example' ) {
+export default function Edit( { attributes, setAttributes, clientId } ) {
+	const { heading, headingTag, description, blockId, backgroundImage } =
+		attributes;
+	const isExample = blockId === 'large-icon-grid-example';
+	const HeadingTag = headingTag || 'h2';
+	const hasBackgroundImage = Boolean( backgroundImage?.url );
+
+	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
+
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+
+		if ( ! blockId ) {
+			setAttributes( { blockId: expectedId } );
+		}
+	}, [ clientId, blockId, isExample, setAttributes ] );
+
+	if ( isExample ) {
 		return (
 			<BlockExamplePreview
-				imagePath="/assets/src/images/icon-grid/variation1.png"
+				imagePath="/assets/src/images/large-icon-grid/preview.png"
 			/>
 		);
 	}
 
 	const blockProps = useBlockProps( {
-		className: `block-layout icon-grid variation-grid-post ${ isLargeIcon ? 'style-large-icons' : '' }`,
-		id: blockId,
+		className: 'block-layout icon-grid variation-grid-post style-large-icons',
+		id: blockId || undefined,
 	} );
-
-	const TEMPLATE = [
-		[ 'ambrygen/icon-grids-item', {} ],
-		[ 'ambrygen/icon-grids-item', {} ],
-		[ 'ambrygen/icon-grids-item', {} ],
-	];
 
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) } initialOpen={ false }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag || 'h2' }
 						onChange={ ( value ) =>
 							setAttributes( { headingTag: value } )
 						}
+						type="heading"
 					/>
 				</PanelBody>
 				<PanelBody title={ __( 'Display Settings', 'ambrygen-web' ) }>
-					<ToggleControl
-						label={ __( 'Large Icons', 'ambrygen-web' ) }
-						checked={ isLargeIcon }
-						onChange={ ( value ) =>
-							setAttributes( { isLargeIcon: value } )
+					<ImageUploader
+						url={ backgroundImage?.url || '' }
+						label={ __( 'Background Image', 'ambrygen-web' ) }
+						onSelect={ ( media ) =>
+							setAttributes( {
+								backgroundImage: {
+									id: media.id,
+									url: media.url,
+									alt: media.alt || '',
+								},
+							} )
+						}
+						onRemove={ () =>
+							setAttributes( {
+								backgroundImage: {
+									url: '',
+									id: 0,
+									alt: '',
+								},
+							} )
 						}
 					/>
 				</PanelBody>
 			</InspectorControls>
-
+			{ hasBackgroundImage && (
+				<div className="block-bg-image">
+					<img
+						src={ backgroundImage.url }
+						alt={ backgroundImage.alt || '' }
+					/>
+				</div>
+			) }
 			<div className="icon-grid-block">
 				<div className="info-list-block__header">
 					<RichText
-						tagName={ headingTag || 'h2' }
+						tagName={ HeadingTag }
 						className="heading-4 block-title mb-0"
 						value={ heading }
 						onChange={ ( value ) =>
 							setAttributes( { heading: value } )
 						}
-						placeholder="Add Title..."
+						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 					/>
 					<div className="is-style-gl-s20" aria-hidden="true"></div>
 					<div className="info-list-block__intro subtitle-1-regular">
@@ -72,7 +117,10 @@ export default function Edit( { attributes, setAttributes } ) {
 							onChange={ ( value ) =>
 								setAttributes( { description: value } )
 							}
-							placeholder="Add Description..."
+							placeholder={ __(
+								'Add Description...',
+								'ambrygen-web'
+							) }
 						/>
 					</div>
 				</div>
@@ -80,7 +128,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				<div className="is-style-gl-s64" aria-hidden="true"></div>
 				<div className="info-list__list info-list__row">
 					<InnerBlocks
-						allowedBlocks={ [ 'ambrygen/icon-grids-item' ] }
+						allowedBlocks={ ALLOWED_BLOCKS }
 						template={ TEMPLATE }
 						templateLock={ false }
 					/>
@@ -89,4 +137,3 @@ export default function Edit( { attributes, setAttributes } ) {
 		</div>
 	);
 }
-

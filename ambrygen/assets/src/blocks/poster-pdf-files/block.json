@@ -18,6 +18,7 @@
   ],
   "supports": {
     "html": false,
+    "inserter": false,
     "reusable": false
   },
   "editorScript": "file:./index.js",

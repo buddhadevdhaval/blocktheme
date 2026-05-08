@@ -22,3 +22,16 @@
 		}
 	}
 }
+
+
+.three-column-image-grid__content {
+	>.block-editor-inner-blocks {
+		.three-column-card__inner {
+			.three-column-card__image {
+				img {
+					height: 100%;
+				}
+			}
+		}
+	}
+}

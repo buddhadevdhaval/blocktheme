@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/icon-grid-with-count-item",
+  "title": "Icon Grid With Count Item",
+  "category": "ambrygen",
+  "icon": "format-image",
+  "parent": [
+    "ambrygen/icon-grid-with-count"
+  ],
+  "description": "Individual item for icon grid with count",
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "selectedTerm": {
+      "type": "number",
+      "default": 0
+    },
+    "termData": {
+      "type": "object",
+      "default": {}
+    },
+    "termlinktext": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php"
+}

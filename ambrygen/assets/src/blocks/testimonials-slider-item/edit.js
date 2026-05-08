@@ -59,9 +59,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					placeholder={ __( 'Description', 'ambrygen-web' ) }
 				/>
 
-				{ imageUrl && (
-					<div className="is-style-gl-s24" aria-hidden="true"></div>
-				) }
+				<div className="is-style-gl-s24" aria-hidden="true"></div>
 
 				{ ! hasAuthorDetails && imageUrl && (
 					<div className="testimonial-slider__logo">
@@ -69,17 +67,17 @@ export default function Edit( { attributes, setAttributes } ) {
 					</div>
 				) }
 
-				<div className="author">
+				<div className="testimonial-slider__author">
 					{ hasAuthorDetails && imageUrl && (
-							<div className="author__image">
+							<div className="testimonial-slider__author--image">
 								<img src={ imageUrl } alt={ imageAlt } />
 							</div>
 					) }
 
-					<div className="author__content">
+					<div className="testimonial-slider__author--content">
 						<RichText
 							tagName="div"
-							className="author__name"
+							className="testimonial-slider__author--name"
 							value={ authorName }
 							onChange={ ( value ) =>
 								setAttributes( { authorName: value } )
@@ -91,7 +89,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						/>
 						<RichText
 							tagName="div"
-							className="author__role"
+							className="testimonial-slider__author--role"
 							value={ authorRole }
 							onChange={ ( value ) =>
 								setAttributes( { authorRole: value } )

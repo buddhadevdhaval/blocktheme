@@ -44,60 +44,28 @@ $ambrygen_show_pagination = isset( $ambrygen_attributes['showPagination'] )
 
 $ambrygen_team_member_count = 0;
 
-if ( isset( $block->inner_blocks ) && is_array( $block->inner_blocks ) ) {
-	$ambrygen_team_member_post_ids = array();
-
-	foreach ( $block->inner_blocks as $ambrygen_inner_block ) {
-		$ambrygen_inner_attrs = isset( $ambrygen_inner_block->attributes ) && is_array( $ambrygen_inner_block->attributes )
-			? $ambrygen_inner_block->attributes
-			: array();
-		$ambrygen_post_id     = isset( $ambrygen_inner_attrs['postId'] )
-			? absint( $ambrygen_inner_attrs['postId'] )
-			: 0;
-
-		if ( $ambrygen_post_id ) {
-			$ambrygen_team_member_post_ids[] = $ambrygen_post_id;
-		}
-	}
-
-	if ( ! empty( $ambrygen_team_member_post_ids ) ) {
-		$ambrygen_published_team_member_ids = get_posts(
-			array(
-				'fields'         => 'ids',
-				'no_found_rows'  => true,
-				'post__in'       => array_values( array_unique( $ambrygen_team_member_post_ids ) ),
-				'post_status'    => 'publish',
-				'post_type'      => 'author',
-				'posts_per_page' => -1,
-			)
-		);
-		$ambrygen_published_team_member_ids = array_flip( array_map( 'absint', $ambrygen_published_team_member_ids ) );
-
-		foreach ( $ambrygen_team_member_post_ids as $ambrygen_post_id ) {
-			if ( isset( $ambrygen_published_team_member_ids[ $ambrygen_post_id ] ) ) {
-				++$ambrygen_team_member_count;
-			}
-		}
-	}
+if ( $ambrygen_is_slider_view && '' !== $content ) {
+	$ambrygen_team_member_count = preg_match_all( '/class=(["\'])(?:(?!\1).)*\bswiper-slide\b(?:(?!\1).)*\1/', $content );
+	$ambrygen_team_member_count = false === $ambrygen_team_member_count ? 0 : $ambrygen_team_member_count;
 }
 
-$ambrygen_has_team_members     = 0 < $ambrygen_team_member_count && '' !== trim( $content );
+if ( 0 === $ambrygen_team_member_count ) {
+	$ambrygen_team_member_count = isset( $block->inner_blocks ) && is_array( $block->inner_blocks )
+		? count( $block->inner_blocks )
+		: 0;
+}
+
+$ambrygen_has_team_members     = 0 < $ambrygen_team_member_count;
 $ambrygen_has_multiple_members = 1 < $ambrygen_team_member_count;
 $ambrygen_show_navigation      = $ambrygen_show_navigation && $ambrygen_has_multiple_members;
 $ambrygen_show_pagination      = $ambrygen_show_pagination && $ambrygen_has_multiple_members;
-$ambrygen_swiper_config_array = array(
-	'autoplay'        => ! empty( $ambrygen_attributes['autoplay'] ),
-	'navigation_show' => $ambrygen_show_navigation,
+$ambrygen_swiper_config       = wp_json_encode(
+	array(
+		'autoplay'        => ! empty( $ambrygen_attributes['autoplay'] ),
+		'navigation_show' => $ambrygen_show_navigation,
+	)
 );
-$ambrygen_swiper_config_seed  = wp_json_encode( $ambrygen_swiper_config_array );
-$ambrygen_swiper_config_hash  = md5( false === $ambrygen_swiper_config_seed ? serialize( $ambrygen_swiper_config_array ) : $ambrygen_swiper_config_seed );
-$ambrygen_swiper_config       = wp_cache_get( 'swiper_config_' . $ambrygen_swiper_config_hash, 'ambrygen_blocks' );
-
-if ( false === $ambrygen_swiper_config ) {
-	$ambrygen_swiper_config = wp_json_encode( $ambrygen_swiper_config_array );
-	$ambrygen_swiper_config = false === $ambrygen_swiper_config ? '{}' : $ambrygen_swiper_config;
-	wp_cache_set( 'swiper_config_' . $ambrygen_swiper_config_hash, $ambrygen_swiper_config, 'ambrygen_blocks', HOUR_IN_SECONDS );
-}
+$ambrygen_swiper_config       = false === $ambrygen_swiper_config ? '{}' : $ambrygen_swiper_config;
 
 $ambrygen_wrapper_args = array(
 	'class' => $ambrygen_block_class,
@@ -182,8 +150,8 @@ $ambrygen_offcanvas_id       = $ambrygen_block_id
 			?>
 		</div>
 	<?php endif; ?>
+    
 
-	<?php if ( $ambrygen_has_team_members ) : ?>
 		<div
 			id="<?php echo esc_attr( $ambrygen_offcanvas_id ); ?>"
 			class="offcanvas-sidebar our-team-offcanvas"
@@ -221,6 +189,7 @@ $ambrygen_offcanvas_id       = $ambrygen_block_id
 				<div class="our-team-offcanvas__bio"></div>
 			</div>
 		</div>
-	<?php endif; ?>
+	<?php // endif; ?>
 
 </div>
+

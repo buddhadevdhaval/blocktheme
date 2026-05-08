@@ -2,7 +2,6 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { createBlock } from '@wordpress/blocks';
 import {
 	useBlockProps,
 	RichText,
@@ -10,9 +9,9 @@ import {
 	InspectorControls,
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useSelect } from '@wordpress/data';
 import { useEffect, useMemo } from '@wordpress/element';
-import { Button, PanelBody } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
 import {
 	TagSelector,
 	ImageUploader,
@@ -85,7 +84,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	useEffect( () => {
 		const expectedId = `testimonials-${ clientId }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientId ) ) {
+		if ( ! blockId ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
@@ -106,10 +105,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				.some( ( block ) => block.name === ITEM_BLOCK_NAME ),
 		[ clientId ]
 	);
-	const { insertBlock } = useDispatch( blockEditorStore );
-
 	const blockProps = useBlockProps( {
 		className: 'ambry-testimonials',
+		id: blockId || undefined,
 	} );
 
 	const updateImage = ( media, fieldPrefix ) => {
@@ -119,7 +117,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 		setAttributes( {
 			[ fieldPrefix ]: media.url,
-			[ `${ fieldPrefix }Id` ]: media.id || null,
+			[ `${ fieldPrefix }Id` ]: media.id || 0,
 			[ `${ fieldPrefix }Alt` ]: media.alt || '',
 		} );
 	};
@@ -136,7 +134,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	return (
 		<section { ...blockProps }>
 			<InspectorControls>
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) } initialOpen={ false }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag || 'h2' }
@@ -148,7 +146,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 				<PanelBody
 					title={ __( 'Image Settings', 'ambrygen-web' ) }
-					initialOpen={ false }
+					initialOpen={ true }
 				>
 					<ImageUploader
 						url={ overlayImage }
@@ -159,7 +157,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onRemove={ () =>
 							setAttributes( {
 								overlayImage: '',
-								overlayImageId: null,
+								overlayImageId: 0,
 								overlayImageAlt: '',
 							} )
 						}
@@ -173,7 +171,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onRemove={ () =>
 							setAttributes( {
 								secondaryImage: '',
-								secondaryImageId: null,
+								secondaryImageId: 0,
 								secondaryImageAlt: '',
 							} )
 						}
@@ -187,7 +185,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onRemove={ () =>
 							setAttributes( {
 								mainImage: '',
-								mainImageId: null,
+								mainImageId: 0,
 								mainImageAlt: '',
 							} )
 						}
@@ -232,20 +230,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						allowedBlocks={ [ ITEM_BLOCK_NAME ] }
 						renderAppender={ false }
 					/>
-				</div>					
+				</div>
 			</div>
-			<Button
-				variant="primary"
-				onClick={ () => {
-					insertBlock(
-						createBlock( ITEM_BLOCK_NAME ),
-						undefined,
-						clientId
-					);
-				} }
-			>
-				{ __( 'Add Testimonial Item', 'ambrygen-web' ) }
-			</Button>
 		</section>
 	);
 }

@@ -21,18 +21,13 @@
     },
     "iframe": {
       "type": "string",
-      "default": ""
+      "default": "https://maps.google.com/maps?q=Washington%20DC%2C%20USA&z=15&output=embed"
     },
     "locations": {
       "type": "array",
       "default": [
         {
-          "id": "",
-          "name": "",
-          "address": ""
-        },
-        {
-          "id": "",
+          "id": "loca-default",
           "name": "",
           "address": ""
         }
@@ -66,7 +61,7 @@
   "example": {
     "attributes": {
       "title": "Our Locations",
-      "iframe": "https://www.google.com/maps/embed?pb=example",
+      "iframe": "https://maps.google.com/maps?q=Washington%20DC%2C%20USA&z=15&output=embed",
       "locations": [
         {
           "id": "loc-headquarters",

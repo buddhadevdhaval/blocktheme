@@ -308,7 +308,7 @@ function MaterialCategoryRow( { value, onChange, index, total, onMove, onRemove 
 						return;
 					}
 
-					const term = materialOptions.find(
+					const term = allMaterialOptions.find(
 						( item ) => String( item.id ) === nextValue
 					);
 
@@ -478,7 +478,10 @@ export default function Edit( { attributes, setAttributes, clientId, name } ) {
 	const normalizedSections = Array.isArray( sections ) ? sections : [];
 	const hasRepeaterSelection = normalizedSections.some(
 		( section ) =>
-			Array.isArray( section?.categories ) && section.categories.length > 0
+			Array.isArray( section?.categories ) &&
+			section.categories.some(
+				( row ) => row?.materialType?.id > 0 && row?.category?.id > 0
+			)
 	);
 
 	const moveSection = ( index, direction ) => {
@@ -497,7 +500,7 @@ export default function Edit( { attributes, setAttributes, clientId, name } ) {
 	useEffect( () => {
 		const expectedId = `marketing-files-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
+		if ( ! blockId ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
@@ -668,4 +671,3 @@ export default function Edit( { attributes, setAttributes, clientId, name } ) {
 		</>
 	);
 }
-

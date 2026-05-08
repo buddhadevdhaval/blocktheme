@@ -3,10 +3,18 @@ use Ambrygen\Theme\Core\Blocks\BlockRenderService;
 
 defined( 'ABSPATH' ) || exit;
 
-$post_id = get_the_ID();
+$post_id = 0;
+
+if ( ! empty( $attributes['previewPostId'] ) ) {
+	$post_id = (int) $attributes['previewPostId'];
+}
+
+if ( ! $post_id && isset( $block ) && isset( $block->context['postId'] ) ) {
+	$post_id = (int) $block->context['postId'];
+}
 
 if ( ! $post_id ) {
-	return;
+	$post_id = get_the_ID();
 }
 
 echo BlockRenderService::instance()->render_webinar_additional_info( $post_id );

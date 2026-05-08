@@ -11,13 +11,13 @@ import { useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { BlockExamplePreview, TagSelector } from '../_shared/components';
 
-const createDefaultCta = () => ( {
+const createDefaultCta = () => ({
 	text: '',
 	url: '',
 	target: '',
 	rel: '',
 	variant: 'dark',
-} );
+});
 
 const TEMPLATE = [
 	[
@@ -55,30 +55,30 @@ const TEMPLATE = [
 	],
 ];
 
-export default function Edit( { attributes, setAttributes, clientId } ) {
+export default function Edit({ attributes, setAttributes, clientId }) {
 	const { blockId, heading, headingTag, description } = attributes;
-	const { insertBlock } = useDispatch( 'core/block-editor' );
+	const { insertBlock } = useDispatch('core/block-editor');
 	const isExample = blockId === 'additional-links-example';
-	const blockProps = useBlockProps( {
+	const blockProps = useBlockProps({
 		className: 'additional-links',
-	} );
+	});
 
-	useEffect( () => {
-		if ( isExample ) {
+	useEffect(() => {
+		if (isExample) {
 			return;
 		}
 
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+		const expectedId = `section-${clientId.slice(0, 8)}`;
 
 		// Re-seed when the stored ID was copied from another block instance.
-		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
-			setAttributes( {
+		if (!blockId ) {
+			setAttributes({
 				blockId: expectedId,
-			} );
+			});
 		}
-	}, [ clientId, blockId, isExample, setAttributes ] );
+	}, [clientId, blockId, isExample, setAttributes]);
 
-	if ( isExample ) {
+	if (isExample) {
 		return (
 			<BlockExamplePreview
 				className="additional-links-example-preview"
@@ -90,79 +90,82 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const handleAddItem = () => {
 		insertBlock(
-			createBlock( 'ambrygen/additional-links-item', {
+			createBlock('ambrygen/additional-links-item', {
 				cta: createDefaultCta(),
 				icon: {
 					id: 0,
 					url: '',
 					alt: '',
 				},
-			} ),
+			}),
 			undefined,
 			clientId
 		);
 	};
 
 	return (
-		<div { ...blockProps }>
+		<div {...blockProps}>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Heading Settings', 'ambrygen-web' ) }
-					initialOpen={ true }
+					title={__('Heading Settings', 'ambrygen-web')}
+					initialOpen={true}
 				>
 					<TagSelector
-						label={ __( 'Heading Tag', 'ambrygen-web' ) }
-						value={ headingTag }
+						label={__('Heading Tag', 'ambrygen-web')}
+						value={headingTag}
 						type="heading"
-						onChange={ ( val ) =>
-							setAttributes( { headingTag: val } )
+						onChange={(val) =>
+							setAttributes({ headingTag: val })
 						}
 					/>
 				</PanelBody>
 			</InspectorControls>
 
 			<div className="careers-highlight__header block__rowflex">
-				<RichText
-					tagName={ headingTag }
-					className="careers-highlight__title block__rowflex--heading-title heading-4 mb-0"
-					value={ heading }
-					placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
-					allowedFormats={ [
-						'core/bold',
-						'core/italic',
-						'core/text-color',
-					] }
-					onChange={ ( val ) => setAttributes( { heading: val } ) }
-				/>
+				<div className='block__rowflex--col-left'>
+					<RichText
+						tagName={headingTag}
+						className="careers-highlight__title block__rowflex--heading-title heading-4 mb-0"
+						value={heading}
+						placeholder={__('Add Heading...', 'ambrygen-web')}
+						allowedFormats={[
+							'core/bold',
+							'core/italic',
+							'core/text-color',
+						]}
+						onChange={(val) => setAttributes({ heading: val })}
+					/>
+				</div>
 				<RichText
 					tagName="div"
 					className="careers-highlight__intro block__rowflex--block-content subtitle1-reg"
-					value={ description }
-					placeholder={ __( 'Add Description...', 'ambrygen-web' ) }
-					allowedFormats={ [
+					value={description}
+					placeholder={__('Add Description...', 'ambrygen-web')}
+					allowedFormats={[
 						'core/bold',
 						'core/italic',
 						'core/link',
 						'core/text-color',
-					] }
-					onChange={ ( val ) =>
-						setAttributes( { description: val } )
+					]}
+					onChange={(val) =>
+						setAttributes({ description: val })
 					}
 				/>
+				<div className="is-style-gl-s50"></div>
 			</div>
 
 			<div className="wp-additional-link__cards">
 				<InnerBlocks
-					allowedBlocks={ [ 'ambrygen/additional-links-item' ] }
-					template={ TEMPLATE }
-					templateLock={ false }
-					renderAppender={ false }
+					allowedBlocks={['ambrygen/additional-links-item']}
+					template={TEMPLATE}
+					templateLock={false}
+					renderAppender={false}
 				/>
 
 				<div className="is-style-gl-s24" aria-hidden="true"></div>
 
-				<Button variant="primary" onClick={ handleAddItem }>
-					{ __( 'Add Link', 'ambrygen-web' ) }
+				<Button variant="primary" onClick={handleAddItem}>
+					{__('Add Link', 'ambrygen-web')}
 				</Button>
 			</div>
 		</div>

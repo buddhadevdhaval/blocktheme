@@ -20,6 +20,35 @@ const DEFAULT_LOCATIONS = [
 	{ id: createLocationMapItemId(), name: '', address: '' },
 	{ id: createLocationMapItemId(), name: '', address: '' },
 ];
+const LOCATION_CONTROL_ICON_SIZE = 16;
+const DEFAULT_MAP_IFRAME_SRC =
+	'https://maps.google.com/maps?q=Washington%20DC%2C%20USA&z=15&output=embed';
+
+const ensureLocationMapItemIds = ( items ) => {
+	const usedIds = new Set();
+	let hasChanged = false;
+
+	const nextItems = items.map( ( item ) => {
+		if ( item.id && ! usedIds.has( item.id ) ) {
+			usedIds.add( item.id );
+			return item;
+		}
+
+		const id = createLocationMapItemId();
+		usedIds.add( id );
+		hasChanged = true;
+
+		return {
+			...item,
+			id,
+		};
+	} );
+
+	return hasChanged ? nextItems : items;
+};
+
+const hasLocationMapItemContent = ( item ) =>
+	Boolean( item.name?.trim() || item.address?.trim() );
 
 const getIframeSrc = ( value ) => {
 	if ( ! value ) {
@@ -47,13 +76,17 @@ const isAllowedMapUrl = ( value ) => {
 	try {
 		const url = new URL( iframeSrc );
 		const host = url.hostname.toLowerCase();
+		const isGoogleMapsEmbedPath = url.pathname.startsWith( '/maps/embed' );
+		const isGoogleMapsOutputEmbed =
+			url.pathname.startsWith( '/maps' ) &&
+			url.searchParams.get( 'output' ) === 'embed';
 
 		return (
 			url.protocol === 'https:' &&
 			[ 'www.google.com', 'google.com', 'maps.google.com' ].includes(
 				host
 			) &&
-			url.pathname.startsWith( '/maps/embed' )
+			( isGoogleMapsEmbedPath || isGoogleMapsOutputEmbed )
 		);
 	} catch ( error ) {
 		return false;
@@ -74,12 +107,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	} = attributes;
 
 	const HeadingTag = headingLevel || 'h2';
-	const iframeSrc = getIframeSrc( iframe );
+	const iframeSrc = getIframeSrc( iframe ) || DEFAULT_MAP_IFRAME_SRC;
 
 	useEffect( () => {
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
+		if ( ! blockId ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
@@ -96,6 +129,20 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		} );
 	}, [ locations, setAttributes ] );
 
+	useEffect( () => {
+		if ( ! locations.length ) {
+			return;
+		}
+
+		const normalizedLocations = ensureLocationMapItemIds( locations );
+
+		if ( normalizedLocations !== locations ) {
+			setAttributes( {
+				locations: normalizedLocations,
+			} );
+		}
+	}, [ locations, setAttributes ] );
+
 	const onChangeLocationMapTitle = ( value ) =>
 		setAttributes( { title: value } );
 
@@ -107,10 +154,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 	};
 
-	const updateLocationMapItem = ( id, key, value ) => {
+	const updateLocationMapItem = ( index, key, value ) => {
 		setAttributes( {
-			locations: locations.map( ( loc ) =>
-				loc.id === id ? { ...loc, [ key ]: value } : loc
+			locations: locations.map( ( loc, itemIndex ) =>
+				itemIndex === index ? { ...loc, [ key ]: value } : loc
 			),
 		} );
 	};
@@ -124,14 +171,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		} );
 	};
 
-	const removeLocationMapItem = ( id ) => {
+	const removeLocationMapItem = ( index ) => {
 		setAttributes( {
-			locations: locations.filter( ( loc ) => loc.id !== id ),
+			locations: locations.filter( ( loc, itemIndex ) => itemIndex !== index ),
 		} );
 	};
 
-	const moveLocationMapItem = ( id, direction ) => {
-		const currentIndex = locations.findIndex( ( loc ) => loc.id === id );
+	const moveLocationMapItem = ( currentIndex, direction ) => {
 		const nextIndex = currentIndex + direction;
 
 		if (
@@ -150,6 +196,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 		setAttributes( { locations: updatedLocations } );
 	};
+
+	const filledLocations = locations.filter( hasLocationMapItemContent );
+	const previewLocations = filledLocations.length ? filledLocations : locations.slice( 0, 2 );
 
 	return (
 		<div { ...blockProps }>
@@ -192,22 +241,21 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								prefix="LOCATION"
 								onMove={ ( itemIndex, dir ) =>
 									moveLocationMapItem(
-										locations[ itemIndex ].id,
+										itemIndex,
 										dir
 									)
 								}
 								onRemove={ ( itemIndex ) =>
-									removeLocationMapItem(
-										locations[ itemIndex ].id
-									)
+									removeLocationMapItem( itemIndex )
 								}
 								minCount={ 1 }
+								iconSize={ LOCATION_CONTROL_ICON_SIZE }
 							/>
 							<TextControl
 								label={ __( 'Title', 'ambrygen-web' ) }
 								value={ loc.name }
 								onChange={ ( value ) =>
-									updateLocationMapItem( loc.id, 'name', value )
+									updateLocationMapItem( index, 'name', value )
 								}
 							/>
 							<TextControl
@@ -215,7 +263,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								value={ loc.address }
 								onChange={ ( value ) =>
 									updateLocationMapItem(
-										loc.id,
+										index,
 										'address',
 										value
 									)
@@ -267,12 +315,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						] }
 						className="location-map__title heading-2 mb-0"
 					/>
-					{ title && (
-						<div className="is-style-gl-s24" aria-hidden="true"></div>
-					) }
+					<div className="is-style-gl-s24" aria-hidden="true"></div>
 
 					<div className="location-map__text">
-						{ locations.map( ( loc ) => (
+						{ previewLocations.map( ( loc ) => (
 							<div className="location-list" key={ loc.id }>
 								<div className="location-title text-xl-semibold">
 									{ loc.name || __(
@@ -286,9 +332,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 										'ambrygen-web'
 									) }
 								</div>
-								{ loc.address && (
-									<div className="is-style-gl-s24" aria-hidden="true"></div>
-								) }
+								<div className="is-style-gl-s24" aria-hidden="true"></div>
 							</div>
 						) ) }
 					</div>
@@ -297,4 +341,3 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</div>
 	);
 }
-

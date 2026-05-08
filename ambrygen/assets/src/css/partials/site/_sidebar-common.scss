@@ -164,6 +164,9 @@
 
 /* Disclaimer Widget */
 .disclaimer-block {
+	small {
+		font-size: 100%;
+	}
 	p {
 		color: var(--theme_gray_600);
 		font-feature-settings: 'liga' off, 'clig' off;

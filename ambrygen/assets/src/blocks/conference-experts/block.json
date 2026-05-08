@@ -9,7 +9,8 @@
   "description": "Dynamic block that renders experts linked to a conference event.",
   "supports": {
     "html": false,
-    "reusable": false
+    "reusable": false,
+    "inserter": false
   },
   "editorScript": "file:./index.js",
   "render": "file:./render.php",

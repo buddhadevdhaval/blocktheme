@@ -543,12 +543,10 @@ export default function Edit( { attributes, setAttributes } ) {
 								/>
 							) }
 						</div>
-						{ hasTextContent && (
-							<div
-								className="is-style-gl-s24"
-								aria-hidden="true"
-							></div>
-						) }
+						<div
+							className="is-style-gl-s24"
+							aria-hidden="true"
+						></div>
 
 						<div className="approach-card__text-content">
 							<RichText
@@ -592,12 +590,10 @@ export default function Edit( { attributes, setAttributes } ) {
 						</div>
 					</div>
 
-					{ cta?.text && hasTextContent && (
-						<div
-							className="is-style-gl-s32"
-							aria-hidden="true"
-						></div>
-					) }
+					<div
+						className="is-style-gl-s32"
+						aria-hidden="true"
+					></div>
 
 					{ /* CTA Preview */ }
 					{ cta?.text && (

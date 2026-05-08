@@ -53,7 +53,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		const hasMissingIds = awards.some( ( award ) => ! award?.id );
 		const nextAttributes = {};
 
-		if ( ! blockId || ! blockId.endsWith( clientIdSuffix ) ) {
+		if ( ! blockId ) {
 			nextAttributes.blockId = expectedId;
 		}
 

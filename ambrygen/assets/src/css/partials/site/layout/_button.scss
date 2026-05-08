@@ -460,6 +460,7 @@ button[disabled] {
 	box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
 	color: var(--theme_gray_400);
 	cursor: not-allowed;
+	opacity: 0.7;
 }
 
 .two-btn-row {

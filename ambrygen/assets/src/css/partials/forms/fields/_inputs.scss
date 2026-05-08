@@ -7,10 +7,16 @@ form {
 	margin: 0;
 }
 
-label {
+label,
+.form-label {
 	display: inline-block;
-	line-height: 1.2;
 	margin: 0 0 6px;
+	color: var(--theme_gray_700);
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: 1.42;
+	letter-spacing: -0.21px;
 }
 
 fieldset {
@@ -73,6 +79,10 @@ textarea {
 		font-size: 16px;
 		height: 44px;
 		padding: 12px 12px 13px;
+	}
+
+	&.form-validation-error {
+		border-color: var(--theme_red);
 	}
 }
 
@@ -192,10 +202,11 @@ select {
 }
 
 textarea {
-	height: 200px;
+	height: 154px;
 	overflow: auto;
 	padding: 14px 16px;
 	resize: none;
+	display: block;
 
 	@media (width <=640px) {
 		padding: 8px 14px 12px;

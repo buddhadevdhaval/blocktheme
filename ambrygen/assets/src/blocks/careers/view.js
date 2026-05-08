@@ -88,13 +88,22 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	};
 
 	blocks.forEach( ( block ) => {
+		if ( block.dataset.careersVideoBound === '1' ) {
+			return;
+		}
+
+		const mediaTrigger = block.querySelector(
+			'.careers-highlight__media.media_video'
+		);
 		const toggleWrap = block.querySelector( '.play-icon-video' );
 		const playIcon = toggleWrap?.querySelector( '.play-icon' );
 		const pauseIcon = toggleWrap?.querySelector( '.pause-icon' );
 
-		if ( ! toggleWrap || ! playIcon || ! pauseIcon ) {
+		if ( ! mediaTrigger || ! toggleWrap || ! playIcon || ! pauseIcon ) {
 			return;
 		}
+
+		block.dataset.careersVideoBound = '1';
 
 		pauseIcon.style.display = 'none';
 
@@ -105,6 +114,26 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			return;
 		}
 
+		mediaTrigger.style.cursor = 'pointer';
+		mediaTrigger.setAttribute( 'role', 'button' );
+		mediaTrigger.setAttribute( 'tabindex', '0' );
+		mediaTrigger.setAttribute( 'aria-haspopup', 'dialog' );
+		mediaTrigger.setAttribute( 'aria-expanded', 'false' );
+
+		if ( toggleWrap.getAttribute( 'aria-controls' ) ) {
+			mediaTrigger.setAttribute(
+				'aria-controls',
+				toggleWrap.getAttribute( 'aria-controls' )
+			);
+		}
+
+		const mediaElements = mediaTrigger.querySelectorAll(
+			'iframe, video, .play-icon-video'
+		);
+		mediaElements.forEach( ( element ) => {
+			element.style.pointerEvents = 'none';
+		} );
+
 		let modal = null;
 
 		const closeModal = () => {
@@ -114,11 +143,12 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 			modal.classList.remove( 'is-active' );
 			modal.hidden = true;
+			mediaTrigger.setAttribute( 'aria-expanded', 'false' );
 			toggleWrap.setAttribute( 'aria-expanded', 'false' );
 			modal
 				.querySelector( '.modal-content__video-wrapper' )
 				?.replaceChildren();
-			toggleWrap.focus();
+			mediaTrigger.focus();
 		};
 
 		const openModal = () => {
@@ -191,6 +221,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			videoWrapper.replaceChildren( modalMedia );
 			modal.hidden = false;
 			modal.classList.add( 'is-active' );
+			mediaTrigger.setAttribute( 'aria-expanded', 'true' );
 			toggleWrap.setAttribute( 'aria-expanded', 'true' );
 			modal.querySelector( '.modal-popup__close' )?.focus();
 
@@ -199,20 +230,18 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			}
 		};
 
-		toggleWrap.addEventListener( 'click', ( event ) => {
+		mediaTrigger.addEventListener( 'click', ( event ) => {
 			event.preventDefault();
 			openModal();
 		} );
 
-		if ( 'BUTTON' !== toggleWrap.tagName ) {
-			toggleWrap.addEventListener( 'keydown', ( event ) => {
-				if ( event.key !== 'Enter' && event.key !== ' ' ) {
-					return;
-				}
+		mediaTrigger.addEventListener( 'keydown', ( event ) => {
+			if ( event.key !== 'Enter' && event.key !== ' ' ) {
+				return;
+			}
 
-				event.preventDefault();
-				openModal();
-			} );
-		}
+			event.preventDefault();
+			openModal();
+		} );
 	} );
 } );

@@ -90,7 +90,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		const clientIdSuffix = clientId.slice( 0, 8 );
 		const expectedId = `section-${ clientIdSuffix }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientIdSuffix ) ) {
+		if ( ! blockId ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
@@ -268,7 +268,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	return (
 		<Fragment>
 			<InspectorControls>
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) } initialOpen={ false }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingLevel }
@@ -279,7 +279,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Manage Items', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Manage Items', 'ambrygen-web' ) } initialOpen={ true }>
 					{ resourceCards.map( ( card, index ) => (
 						<div
 							key={ getCardKey( card ) }
@@ -559,9 +559,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 					/>
 
-					{ hasHeading && hasSubtitle && (
-						<div className="is-style-gl-s12" aria-hidden="true"></div>
-					) }
+					<div className="is-style-gl-s12" aria-hidden="true"></div>
 
 					<RichText
 						tagName="div"
@@ -725,4 +723,3 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</Fragment>
 	);
 }
-

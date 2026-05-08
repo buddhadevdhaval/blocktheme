@@ -23,6 +23,9 @@
 @use "partials/site/layout/tooltip";
 @use "partials/site/layout/pagination";
 
+// @use "partials/forms/forms";
+
+
 /* Partials */
 @use "partials/typography/typography";
 @use "partials/elements/lists";
@@ -42,10 +45,21 @@
 /* Listings */
 @use "partials/site/listings/listings";
 @use "partials/site/listings/filters";
-;
+
+/* Blog */
+@use "partials/site/blog/blog-listing";
+@use "partials/site/blog/blog-detail";
 
 /* Detail Pages */
 @use "partials/site/detail-pages/archive-single";
+@use "partials/site/detail-pages/genetic-detail";
+
+
+@use "partials/site/cardiology";
+
+
+@use "partials/site/sidebar-common";
+
 
 
 * {
@@ -216,6 +230,7 @@ html {
 
 .editor-sidebar {
 
+
 	.block-editor-link-control {
 		min-width: inherit;
 		width: 100%;
@@ -237,6 +252,10 @@ html {
 		.block-editor-link-control__search-item .block-editor-link-control__search-item-title span {
 			line-height: normal;
 		}
+	}
+
+	.components-base-control.components-toggle-control {
+		margin-top: 8px;
 	}
 
 	.layout-variant-selector {
@@ -465,5 +484,79 @@ html {
 .block-editor-block-list__block {
 	.block-list-appender {
 		position: relative;
+	}
+}
+
+
+
+form.genes-table__search-form input {
+	transition: all 0.2s ease-in-out;
+	background: var(--theme_white);
+	border: 1px solid var(--theme_gray_300);
+	border-radius: 10px;
+	box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+	box-sizing: border-box;
+	color: var(--theme_body_color);
+	font-size: var(--theme_font_size_10);
+	font-style: normal;
+	font-weight: 400;
+	height: 50px;
+	line-height: 1.2;
+	margin: 0;
+	max-width: 100%;
+	outline: none;
+	padding: 14px 16px;
+	width: 100%;
+}
+
+
+
+.search-bar-block {
+
+	display: flex;
+	position: relative;
+
+
+	>.search-form {
+		align-items: center;
+		position: relative;
+
+		input {
+			transition: all 0.2s ease-in-out;
+			background: var(--theme_white);
+			border: 1px solid var(--theme_gray_300);
+			border-radius: 10px;
+			box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+			box-sizing: border-box;
+			color: var(--theme_body_color);
+			font-size: var(--theme_font_size_10);
+			font-style: normal;
+			font-weight: 400;
+			height: 50px;
+			line-height: 1.2;
+			margin: 0;
+			max-width: 100%;
+			outline: none;
+			padding: 14px 16px;
+			width: 100%;
+			padding: 12px 44px 12px 16px;
+			width: 280px;
+		}
+
+		button {
+			background-image: url(../images/search-icon.svg);
+			background-color: transparent;
+			background-repeat: no-repeat;
+			background-size: 20px;
+			border: none;
+			font-size: 0;
+			height: 20px;
+			margin: 0;
+			padding: 0;
+			position: absolute;
+			right: 16px;
+			top: 14px;
+			width: 20px;
+		}
 	}
 }

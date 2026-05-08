@@ -13,39 +13,57 @@ import {
 import { useSelect } from '@wordpress/data';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
-import { TagSelector, BlockExamplePreview } from '../_shared/components';
+import { useEffect, useMemo, useState } from '@wordpress/element';
+import {
+	TagSelector,
+	BlockExamplePreview,
+	ImageUploader,
+} from '../_shared/components';
 
-export default function Edit( { attributes, setAttributes } ) {
+const TAXONOMY_QUERY = {
+	per_page: 100,
+	hide_empty: false,
+	orderby: 'name',
+	order: 'asc',
+};
+
+const INITIAL_VISIBLE_TEST_COUNT = 12;
+
+function createTabId( clientId, index ) {
+	return `genetic-tab-${ clientId.slice( 0, 8 ) }-${ index + 1 }`;
+}
+
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
 		heading,
 		headingTag,
 		description,
 		selectedTabs = [],
 		blockId,
+		backgroundImage,
 	} = attributes;
 	const isExample = blockId === 'genetic-testing-grid-example';
+	const HeadingTag = headingTag || 'h2';
+	const hasBackgroundImage = Boolean( backgroundImage?.url );
 
 	const blockProps = useBlockProps( {
 		className: 'block-layout',
-		id: blockId,
+		id: blockId || undefined,
 	} );
 
 	const { terms, hasResolvedTerms } = useSelect( ( select ) => {
 		const { getEntityRecords, hasFinishedResolution } = select( 'core' );
-		const query = {
-			per_page: 100,
-			hide_empty: false,
-			orderby: 'name',
-			order: 'asc',
-		};
 
 		return {
-			terms: getEntityRecords( 'taxonomy', 'poster_category', query ),
+			terms: getEntityRecords(
+				'taxonomy',
+				'poster_category',
+				TAXONOMY_QUERY
+			),
 			hasResolvedTerms: hasFinishedResolution( 'getEntityRecords', [
 				'taxonomy',
 				'poster_category',
-				query,
+				TAXONOMY_QUERY,
 			] ),
 		};
 	}, [] );
@@ -53,6 +71,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	const [ activeTab, setActiveTab ] = useState(
 		selectedTabs.length > 0 ? selectedTabs[ 0 ].termSlug : 'all'
 	);
+	const [ expandedTabs, setExpandedTabs ] = useState( {} );
 
 	const { activePosts, hasResolvedPosts } = useSelect(
 		( select ) => {
@@ -87,21 +106,95 @@ export default function Edit( { attributes, setAttributes } ) {
 		[ activeTab, terms ]
 	);
 
+	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
+
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+
+		if ( ! blockId ) {
+			setAttributes( { blockId: expectedId } );
+		}
+	}, [ clientId, blockId, isExample, setAttributes ] );
+
+	useEffect( () => {
+		if ( isExample || ! selectedTabs.length ) {
+			return;
+		}
+
+		const normalizedTabs = selectedTabs.map( ( tab, index ) => ( {
+			...tab,
+			id: tab?.id || createTabId( clientId, index ),
+		} ) );
+		const needsUpdate = normalizedTabs.some(
+			( tab, index ) => tab.id !== selectedTabs[ index ]?.id
+		);
+
+		if ( needsUpdate ) {
+			setAttributes( { selectedTabs: normalizedTabs } );
+		}
+	}, [ clientId, isExample, selectedTabs, setAttributes ] );
+
+	useEffect( () => {
+		if ( ! selectedTabs.length ) {
+			if ( activeTab !== 'all' ) {
+				setActiveTab( 'all' );
+			}
+			return;
+		}
+
+		const hasActiveTab = selectedTabs.some(
+			( tab ) => tab.termSlug === activeTab
+		);
+
+		if ( ! hasActiveTab ) {
+			setActiveTab( selectedTabs[ 0 ].termSlug || 'all' );
+		}
+	}, [ activeTab, selectedTabs ] );
+
 	const getPostCategory = ( post ) => {
 		if ( ! post?.poster_category?.length || ! terms?.length ) {
-			return 'Category';
+			return __( 'Category', 'ambrygen-web' );
 		}
 
 		const term = terms.find(
 			( item ) => item.id === Number( post.poster_category[ 0 ] )
 		);
 
-		return term ? decodeEntities( term.name ) : 'Category';
+		return term
+			? decodeEntities( term.name )
+			: __( 'Category', 'ambrygen-web' );
+	};
+
+	const activeTabKey = activeTab || 'all';
+	const isActiveTabExpanded = Boolean( expandedTabs[ activeTabKey ] );
+	const visiblePosts = isActiveTabExpanded
+		? activePosts
+		: activePosts?.slice( 0, INITIAL_VISIBLE_TEST_COUNT );
+	const shouldShowViewAll =
+		hasResolvedPosts &&
+		activePosts?.length > INITIAL_VISIBLE_TEST_COUNT &&
+		! isActiveTabExpanded;
+
+	const showAllActiveTabPosts = () => {
+		setExpandedTabs( {
+			...expandedTabs,
+			[ activeTabKey ]: true,
+		} );
 	};
 
 	const addTab = () => {
+		const nextIndex = selectedTabs.length;
 		setAttributes( {
-			selectedTabs: [ ...selectedTabs, { text: '', termSlug: 'all' } ],
+			selectedTabs: [
+				...selectedTabs,
+				{
+					id: createTabId( clientId, nextIndex ),
+					text: '',
+					termSlug: 'all',
+				},
+			],
 		} );
 	};
 
@@ -111,7 +204,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 		if ( key === 'termSlug' ) {
 			if ( value === 'all' ) {
-				newTabs[ index ].text = 'All Test';
+				newTabs[ index ].text = __( 'All Tests', 'ambrygen-web' );
 			} else {
 				const term = terms?.find( ( t ) => t.slug === value );
 				if ( term ) {
@@ -128,28 +221,69 @@ export default function Edit( { attributes, setAttributes } ) {
 		setAttributes( { selectedTabs: newTabs } );
 	};
 
+	const termOptions = useMemo(
+		() => [
+			{
+				label: __( 'All Tests (all)', 'ambrygen-web' ),
+				value: 'all',
+			},
+			...( hasResolvedTerms && terms
+				? terms.map( ( term ) => ( {
+						label: decodeEntities( term.name ),
+						value: term.slug,
+				  } ) )
+				: [] ),
+		],
+		[ hasResolvedTerms, terms ]
+	);
+
 	if ( isExample ) {
 		return (
-			<BlockExamplePreview imagePath="/assets/src/images/icon-grid/variation3.png" />
+			<BlockExamplePreview imagePath="/assets/src/images/genetic-testing-grid/preview.png" />
 		);
 	}
 
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) } initialOpen={ false }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag || 'h2' }
 						onChange={ ( value ) =>
 							setAttributes( { headingTag: value } )
 						}
+						type="heading"
+					/>
+				</PanelBody>
+				<PanelBody title={ __( 'Display Settings', 'ambrygen-web' ) } initialOpen={ true }>
+					<ImageUploader
+						url={ backgroundImage?.url || '' }
+						label={ __( 'Background Image', 'ambrygen-web' ) }
+						onSelect={ ( media ) =>
+							setAttributes( {
+								backgroundImage: {
+									id: media.id,
+									url: media.url,
+									alt: media.alt || '',
+								},
+							} )
+						}
+						onRemove={ () =>
+							setAttributes( {
+								backgroundImage: {
+									url: '',
+									id: 0,
+									alt: '',
+								},
+							} )
+						}
 					/>
 				</PanelBody>
 				<PanelBody title={ __( 'Tabs Navigation', 'ambrygen-web' ) }>
 					{ selectedTabs.map( ( tab, i ) => (
 						<div
-							key={ i }
+							key={ tab.id || createTabId( clientId, i ) }
 							style={ {
 								marginBottom: 16,
 								border: '1px solid #ccc',
@@ -169,18 +303,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									'ambrygen-web'
 								) }
 								value={ tab.termSlug }
-								options={ [
-									{
-										label: 'All Test (all)',
-										value: 'all',
-									},
-									...( hasResolvedTerms && terms
-										? terms.map( ( t ) => ( {
-												label: decodeEntities( t.name ),
-												value: t.slug,
-										  } ) )
-										: [] ),
-								] }
+								options={ termOptions }
 								onChange={ ( val ) =>
 									updateTab( i, 'termSlug', val )
 								}
@@ -209,17 +332,29 @@ export default function Edit( { attributes, setAttributes } ) {
 			</InspectorControls>
 
 			<section { ...blockProps }>
+				{ hasBackgroundImage && (
+					<div className="block-bg-image">
+						<img
+							src={ backgroundImage.url }
+							alt={ backgroundImage.alt || '' }
+						/>
+					</div>
+				) }
+
 				<div className="icon-grid-block">
 					<section className="features-tabs">
 						<div className="features-tabs__header block__rowflex">
 							<RichText
-								tagName={ headingTag || 'h2' }
+								tagName={ HeadingTag }
 								className="block-title block__rowflex--heading-title heading-2 mb-0"
 								value={ heading }
 								onChange={ ( value ) =>
 									setAttributes( { heading: value } )
 								}
-								placeholder="Add Title"
+								placeholder={ __(
+									'Add Title',
+									'ambrygen-web'
+								) }
 							/>
 
 							<div
@@ -236,7 +371,10 @@ export default function Edit( { attributes, setAttributes } ) {
 											description: value,
 										} )
 									}
-									placeholder="Add Description"
+									placeholder={ __(
+										'Add Description',
+										'ambrygen-web'
+									) }
 								/>
 							</div>
 						</div>
@@ -251,18 +389,28 @@ export default function Edit( { attributes, setAttributes } ) {
 								{ selectedTabs.length > 0 ? (
 									selectedTabs.map( ( tab, index ) => (
 										<button
-											key={ index }
+											key={
+												tab.id ||
+												createTabId( clientId, index )
+											}
 											type="button"
 											className={ `tabs__tab text-md-Semibold ${
-												activeTab === tab.termSlug
+												activeTab ===
+												( tab.termSlug || 'all' )
 													? 'is-active'
 													: ''
 											}` }
 											onClick={ () =>
-												setActiveTab( tab.termSlug )
+												setActiveTab(
+													tab.termSlug || 'all'
+												)
 											}
 										>
-											{ tab.text || 'New Tab' }
+											{ tab.text ||
+												__(
+													'New Tab',
+													'ambrygen-web'
+												) }
 										</button>
 									) )
 								) : (
@@ -271,7 +419,7 @@ export default function Edit( { attributes, setAttributes } ) {
 										className="tabs__tab text-md-Semibold is-active"
 										onClick={ () => setActiveTab( 'all' ) }
 									>
-										All Test
+										{ __( 'All Tests', 'ambrygen-web' ) }
 									</button>
 								) }
 							</div>
@@ -285,8 +433,8 @@ export default function Edit( { attributes, setAttributes } ) {
 										{ ! hasResolvedPosts && <Spinner /> }
 
 										{ hasResolvedPosts &&
-											activePosts?.length > 0 &&
-											activePosts.map( ( post ) => (
+											visiblePosts?.length > 0 &&
+											visiblePosts.map( ( post ) => (
 												<div
 													key={ post.id }
 													className="features-tabs__card"
@@ -306,7 +454,10 @@ export default function Edit( { attributes, setAttributes } ) {
 															) }
 															<div className="badge badge--blue">
 																<i className="badge__dot"></i>
-																Product
+																{ __(
+																	'Product',
+																	'ambrygen-web'
+																) }
 															</div>
 														</div>
 													</div>
@@ -316,8 +467,15 @@ export default function Edit( { attributes, setAttributes } ) {
 														href={
 															post.link || '#'
 														}
+														onClick={ ( event ) =>
+															! post.link &&
+															event.preventDefault()
+														}
 													>
-														View Product
+														{ __(
+															'View Test',
+															'ambrygen-web'
+														) }
 													</a>
 												</div>
 											) ) }
@@ -333,6 +491,23 @@ export default function Edit( { attributes, setAttributes } ) {
 												</p>
 											) }
 									</div>
+									{ shouldShowViewAll && (
+										<div className="features-tabs__footer">
+											<button
+												type="button"
+												className="site-btn is-style-site-trailing-icon has-right-arrow features-tabs__view-all"
+												aria-expanded="false"
+												onClick={
+													showAllActiveTabPosts
+												}
+											>
+												{ __(
+													'View All Tests',
+													'ambrygen-web'
+												) }
+											</button>
+										</div>
+									) }
 								</div>
 							</div>
 						</div>
@@ -342,4 +517,3 @@ export default function Edit( { attributes, setAttributes } ) {
 		</>
 	);
 }
-

@@ -3,12 +3,15 @@
  * Handles offcanvas panels and team member sliders
  */
 
+import Swiper from 'swiper/bundle';
+
 // Constants
 const CONSTANTS = {
     AUTOPLAY_DELAY: 3000,
     SLIDE_SPACING: 20,
     SLIDE_SPACING_DESKTOP: 32,
 };
+
 
 const FOCUSABLE_ELEMENTS = [
     'a[href]',
@@ -89,14 +92,19 @@ function isValidImageUrl( url ) {
  * @param {HTMLElement} block - Team block container
  */
 function initOffcanvas( block ) {
-    const cards = block.querySelectorAll(
-        '.our-team__card, .our-leadership__card'
-    );
+    if ( block.dataset.ourTeamOffcanvasInitialized === 'true' ) {
+        return;
+    }
+
+    const cardSelector = '.our-team__card, .our-leadership__card';
+    const cards = block.querySelectorAll( cardSelector );
     const offcanvas = block.querySelector( '.offcanvas-sidebar' );
 
     if ( ! offcanvas || ! cards.length ) {
         return;
     }
+
+    block.dataset.ourTeamOffcanvasInitialized = 'true';
 
     const panel = offcanvas.querySelector( '.offcanvas-sidebar__panel' );
     const closeBtn = offcanvas.querySelector( '.offcanvas-sidebar__close' );
@@ -114,6 +122,7 @@ function initOffcanvas( block ) {
     let lastFocusedElement = null;
     let escapeHandler = null;
     let focusTimeout = null;
+    let activeCard = null;
 
     /**
      * Open offcanvas panel with team member details
@@ -122,6 +131,7 @@ function initOffcanvas( block ) {
      */
     function openOffcanvas( card ) {
         lastFocusedElement = card;
+        activeCard = card;
 
         const name = card.getAttribute( 'data-team-name' ) || '';
         const designation = card.getAttribute( 'data-team-designation' ) || '';
@@ -214,6 +224,8 @@ function initOffcanvas( block ) {
             lastFocusedElement.focus();
             lastFocusedElement = null;
         }
+
+        activeCard = null;
     }
 
     /**
@@ -247,8 +259,7 @@ function initOffcanvas( block ) {
         }
     }
 
-    // Initialize cards
-    cards.forEach( ( card ) => {
+    function prepareCard( card ) {
         // Ensure ARIA attributes
         if ( ! card.hasAttribute( 'role' ) ) {
             card.setAttribute( 'role', 'button' );
@@ -269,16 +280,60 @@ function initOffcanvas( block ) {
             card.setAttribute( 'aria-label', `View details for ${ cardName }` );
         }
 
-        card.addEventListener( 'click', () => {
+        if ( card.dataset.ourTeamCardInitialized === 'true' ) {
+            return;
+        }
+
+        card.dataset.ourTeamCardInitialized = 'true';
+
+        card.addEventListener( 'click', ( event ) => {
+            event.preventDefault();
+            event.stopPropagation();
             openOffcanvas( card );
         } );
 
         card.addEventListener( 'keydown', ( event ) => {
-            if ( event.key === 'Enter' || event.key === ' ' ) {
-                event.preventDefault();
-                openOffcanvas( card );
+            if ( event.key !== 'Enter' && event.key !== ' ' ) {
+                return;
             }
+
+            event.preventDefault();
+            openOffcanvas( card );
         } );
+    }
+
+    // Initialize original cards so Swiper clones inherit the same attributes.
+    cards.forEach( prepareCard );
+
+    block.addEventListener( 'click', ( event ) => {
+        const card = event.target.closest( cardSelector );
+
+        if (
+            ! card ||
+            ! block.contains( card ) ||
+            card === activeCard ||
+            card.dataset.ourTeamCardInitialized === 'true'
+        ) {
+            return;
+        }
+
+        event.preventDefault();
+        openOffcanvas( card );
+    } );
+
+    block.addEventListener( 'keydown', ( event ) => {
+        if ( event.key !== 'Enter' && event.key !== ' ' ) {
+            return;
+        }
+
+        const card = event.target.closest( cardSelector );
+
+        if ( ! card || ! block.contains( card ) ) {
+            return;
+        }
+
+        event.preventDefault();
+        openOffcanvas( card );
     } );
 
     // Close button handler
@@ -295,16 +350,18 @@ function initOffcanvas( block ) {
  * Initialize Swiper sliders
  * 
  * @param {NodeList} sliders - Slider elements
- * @return {Promise<void>}
+ * @return {void}
  */
-async function initSliders( sliders ) {
-    try {
-        const { default: Swiper } = await import( 'swiper/bundle' );
-        const prefersReducedMotion = window.matchMedia( 
-            '(prefers-reduced-motion: reduce)' 
-        ).matches;
+function initSliders( sliders ) {
+    const prefersReducedMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+    ).matches;
 
-        sliders.forEach( ( sliderElement ) => {
+    sliders.forEach( ( sliderElement ) => {
+            if ( sliderElement.classList.contains( 'swiper-initialized' ) ) {
+                return;
+            }
+
             let config = {};
             const configAttr = sliderElement.getAttribute( 'data-swiper-config' );
 
@@ -318,6 +375,11 @@ async function initSliders( sliders ) {
 
             const slideCount =
                 sliderElement.querySelectorAll( '.swiper-slide' ).length;
+
+            if ( ! slideCount ) {
+                return;
+            }
+
             const hasMultipleSlides = slideCount > 1;
             const showNavigation = config.navigation_show !== false;
             const nextEl = showNavigation ? 
@@ -344,6 +406,8 @@ async function initSliders( sliders ) {
                 slidesPerView: 1.4,
                 spaceBetween: CONSTANTS.SLIDE_SPACING,
                 loop: hasMultipleSlides,
+                loopAdditionalSlides: hasMultipleSlides ? slideCount : 0,
+                watchOverflow: true,
                 speed: prefersReducedMotion ? 0 : 300,
                 keyboard: {
                     enabled: true,
@@ -381,14 +445,10 @@ async function initSliders( sliders ) {
                     },
                 },
             } );
-        } );
-    } catch {
-        return;
-    }
+    } );
 }
 
-// Initialize on DOM ready
-document.addEventListener( 'DOMContentLoaded', () => {
+function initOurTeamBlocks() {
     // Initialize sliders
     const sliders = document.querySelectorAll( '.our-leadership-slider' );
     if ( sliders.length ) {
@@ -398,4 +458,10 @@ document.addEventListener( 'DOMContentLoaded', () => {
     // Initialize offcanvas panels
     const teamBlocks = document.querySelectorAll( '.our-team, .our-leadership' );
     teamBlocks.forEach( initOffcanvas );
-} );
+}
+
+if ( document.readyState === 'loading' ) {
+    document.addEventListener( 'DOMContentLoaded', initOurTeamBlocks );
+} else {
+    initOurTeamBlocks();
+}

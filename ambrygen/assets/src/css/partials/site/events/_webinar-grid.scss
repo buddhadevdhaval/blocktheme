@@ -28,6 +28,34 @@
 				}
 			}
 		}
+
+
+	}
+}
+
+.block-editor-block-list__layout {
+	>.wp-block {
+		.event-carousel__card {
+			.event-carousel__details {
+				font-size: inherit;
+				height: auto;
+				opacity: 1;
+				top: auto;
+				visibility: visible;
+			}
+		}
+
+		.event-carousel__cta-wrap {
+			opacity: 1;
+			visibility: visible;
+		}
+
+		.event-carousel__description {
+			position: relative;
+			visibility: visible;
+			opacity: 1;
+			height: auto;
+		}
 	}
 }
 
@@ -557,6 +585,7 @@
 							opacity: 1;
 							visibility: visible;
 						}
+
 						&:hover {
 							.event-carousel__details {
 								height: auto;

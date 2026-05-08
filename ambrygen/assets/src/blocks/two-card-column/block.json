@@ -19,6 +19,10 @@
     "grid"
   ],
   "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": ""
+    },
     "heading": {
       "type": "string",
       "default": ""
@@ -35,10 +39,6 @@
       ],
       "default": "h2"
     },
-    "eyebrow": {
-      "type": "string",
-      "default": ""
-    },
     "description": {
       "type": "string",
       "default": ""
@@ -46,10 +46,10 @@
     "variation": {
       "type": "string",
       "enum": [
-        "two-column-solution-card",
-        "ordering-options"
+        "variation-1",
+        "variation-2"
       ],
-      "default": "two-column-solution-card"
+      "default": "variation-1"
     },
     "blockId": {
       "type": "string",
@@ -63,7 +63,7 @@
   "textdomain": "ambrygen-web",
   "example": {
     "attributes": {
-      "blockId": "two-column-solution-card-example"
+      "blockId": "two-column-card-example"
     }
   }
 }

@@ -16,17 +16,17 @@ import {
 	TagSelector,
 } from '../_shared/components';
 
-const VARIATIONS = {
-	DEFAULT: 'two-column-solution-card',
-	ORDERING_OPTIONS: 'ordering-options',
+const VARIATION_VALUES = {
+	VARIATION_1: 'variation-1',
+	VARIATION_2: 'variation-2',
 };
 
-const TEMPLATE_DEFAULT = [
+const VARIATION_1_TEMPLATE = [
 	[ 'ambrygen/two-card-column-item' ],
 	[ 'ambrygen/two-card-column-item' ],
 ];
 
-const TEMPLATE_ORDERING = [
+const VARIATION_2_TEMPLATE = [
 	[ 'ambrygen/two-card-column-item' ],
 	[ 'ambrygen/two-card-column-item' ],
 ];
@@ -36,28 +36,28 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		blockId,
 		heading,
 		headingTag,
-		eyebrow,
 		description,
-		variation = VARIATIONS.DEFAULT,
+		variation = VARIATION_VALUES.VARIATION_1,
+		eyebrow,
 	} = attributes;
-	const hasHeaderContent = Boolean( eyebrow || heading || description );
 	const HeadingTag = headingTag || 'h2';
 	const { replaceInnerBlocks } = useDispatch( 'core/block-editor' );
+	const isExample = blockId === 'two-column-card-example';
 
 	const VARIANTS = useMemo(
 		() => [
 			{
-				label: __( 'Two Card Column', 'ambrygen-web' ),
-				value: VARIATIONS.DEFAULT,
+				label: __( 'Variation 1', 'ambrygen-web' ),
+				value: VARIATION_VALUES.VARIATION_1,
 				image: getThemeAssetUrl(
-					'/assets/src/images/two-card-column/preview.png'
+					'/assets/src/images/two-card-column/variation-1.png'
 				),
 			},
 			{
-				label: __( 'Ordering Options', 'ambrygen-web' ),
-				value: VARIATIONS.ORDERING_OPTIONS,
+				label: __( 'Variation 2', 'ambrygen-web' ),
+				value: VARIATION_VALUES.VARIATION_2,
 				image: getThemeAssetUrl(
-					'/assets/src/images/two-card-column/ordering-options.png'
+					'/assets/src/images/two-card-column/variation-2.png'
 				),
 			},
 		],
@@ -65,24 +65,28 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	);
 
 	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
+
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
+		if ( ! blockId ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
 		}
-	}, [ clientId, blockId, setAttributes ] );
+	}, [ clientId, blockId, isExample, setAttributes ] );
 
-	const isOrderingOptions = variation === VARIATIONS.ORDERING_OPTIONS;
+	const isVariation2 = variation === VARIATION_VALUES.VARIATION_2;
 
 	const blockProps = useBlockProps( {
-		className: isOrderingOptions
+		className: isVariation2
 			? 'ordering-options'
 			: 'cta-tiles-with-content',
 	} );
 
-	if ( blockId === 'two-column-solution-card-example' ) {
+	if ( isExample ) {
 		return (
 			<BlockVariationsExamplePreview
 				variants={ VARIANTS }
@@ -114,9 +118,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 										const nextTemplate =
 											variant.value ===
-											VARIATIONS.ORDERING_OPTIONS
-												? TEMPLATE_ORDERING
-												: TEMPLATE_DEFAULT;
+											VARIATION_VALUES.VARIATION_2
+												? VARIATION_2_TEMPLATE
+												: VARIATION_1_TEMPLATE;
 
 										replaceInnerBlocks(
 											clientId,
@@ -136,27 +140,37 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						) ) }
 					</div>
 				</PanelBody>
-				{ ! isOrderingOptions && (
-					<PanelBody
-						title={ __( 'Heading Settings', 'ambrygen-web' ) }
-						initialOpen
-					>
-						<TagSelector
-							label={ __( 'Heading Tag', 'ambrygen-web' ) }
-							value={ HeadingTag }
-							type="heading"
-							onChange={ ( value ) =>
-								setAttributes( { headingTag: value } )
-							}
-						/>
-					</PanelBody>
-				) }
+				<PanelBody
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen
+				>
+					<TagSelector
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
+						value={ HeadingTag }
+						type="heading"
+						onChange={ ( value ) =>
+							setAttributes( { headingTag: value } )
+						}
+					/>
+				</PanelBody>
 			</InspectorControls>
 
 			<section { ...blockProps }>
-				{ isOrderingOptions ? (
+				{ isVariation2 ? (
 					<>
 						<div className="ordering-options__header">
+							<RichText
+								tagName="div"
+								className="hero-kicker ordering-options__eyebrow"
+								value={ eyebrow }
+								onChange={ ( value ) =>
+									setAttributes( { eyebrow: value } )
+								}
+								placeholder={ __( 'Add Eyebrow...', 'ambrygen-web' ) }
+								allowedFormats={ [] }
+							/>
+							<div class="is-style-gl-s12" aria-hidden="true"></div>
+
 							<RichText
 								tagName={ HeadingTag }
 								className="heading-4 block-title mb-0"
@@ -171,12 +185,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								) }
 							/>
 
-							{ heading && description && (
-								<div
-									className="is-style-gl-s12"
-									aria-hidden="true"
-								></div>
-							) }
+							<div
+								className="is-style-gl-s12"
+								aria-hidden="true"
+							></div>
 
 							<RichText
 								tagName="div"
@@ -194,12 +206,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							/>
 						</div>
 
-						{ hasHeaderContent && (
-							<div
-								className="is-style-gl-s24"
-								aria-hidden="true"
-							></div>
-						) }
+						<div
+							className="is-style-gl-s24"
+							aria-hidden="true"
+						></div>
 
 						<div className="ordering-options__cards">
 							<BlockContextProvider
@@ -209,8 +219,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							>
 								<InnerBlocks
 									allowedBlocks={ [ 'ambrygen/two-card-column-item' ] }
-									template={ TEMPLATE_ORDERING }
-									templateLock="insert"
+									template={ VARIATION_2_TEMPLATE }
 								/>
 							</BlockContextProvider>
 						</div>
@@ -249,12 +258,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							</div>
 						</div>
 
-						{ hasHeaderContent && (
-							<div
-								className="is-style-gl-s50"
-								aria-hidden="true"
-							></div>
-						) }
+						<div
+							className="is-style-gl-s50"
+							aria-hidden="true"
+						></div>
 
 						<div className="cta-tiles-with-content__grid">
 							<BlockContextProvider
@@ -266,7 +273,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									allowedBlocks={ [
 										'ambrygen/two-card-column-item',
 									] }
-									template={ TEMPLATE_DEFAULT }
+									template={ VARIATION_1_TEMPLATE }
 								/>
 							</BlockContextProvider>
 						</div>

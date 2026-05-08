@@ -1,6 +1,5 @@
 import { useBlockProps } from '@wordpress/block-editor';
-import { Button } from '@wordpress/components';
-import { useSelect, useDispatch } from '@wordpress/data';
+import { useSelect } from '@wordpress/data';
 import { getThemeAssetUrl } from '../../utils/assets';
 import { useMemo } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -9,9 +8,8 @@ import { __ } from '@wordpress/i18n';
 const getTermLabel = ( terms ) =>
 	terms?.map( ( term ) => term.name ).join( ', ' ) || '';
 
-export default function Edit( { attributes, clientId, context } ) {
+export default function Edit( { attributes, context } ) {
 	const { postId } = attributes;
-	const { removeBlock } = useDispatch( 'core/block-editor' );
 
 	const jobTypeIcon =
 		context?.[ 'ambrygen/jobtypeicon' ]?.url ||
@@ -135,14 +133,6 @@ export default function Edit( { attributes, clientId, context } ) {
 						</div>
 					) }
 					<div className="is-style-gl-s20"></div>
-					<div className="careers-highlight__actions actions-button">
-						<Button
-							isDestructive
-							onClick={ () => removeBlock( clientId ) }
-						>
-							{ __( 'Remove Job', 'ambrygen-web' ) }
-						</Button>
-					</div>
 				</>
 			) }
 		</div>

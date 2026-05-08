@@ -12,7 +12,6 @@ import {
 	TextControl,
 	SelectControl,
 	Button,
-	Modal,
 	SearchControl,
 	Spinner,
 } from '@wordpress/components';
@@ -31,13 +30,9 @@ import playIcon from '../../images/play-icon.svg';
 
 const JOBS_PER_PAGE = 20;
 const ITEM_BLOCK_NAME = 'ambrygen/job-list-item';
-const getPlaySrc = ( src ) =>
-	src.includes( 'autoplay=1' )
-		? src
-		: `${ src }${ src.includes( '?' ) ? '&' : '?' }autoplay=1`;
 
-const normalizeImageObject = ( media ) => {
-	if ( ! media?.url ) {
+const normalizeImageObject = (media) => {
+	if (!media?.url) {
 		return null;
 	}
 
@@ -48,8 +43,8 @@ const normalizeImageObject = ( media ) => {
 	};
 };
 
-const normalizeVideoObject = ( media ) => {
-	if ( ! media?.url ) {
+const normalizeVideoObject = (media) => {
+	if (!media?.url) {
 		return null;
 	}
 
@@ -59,15 +54,15 @@ const normalizeVideoObject = ( media ) => {
 	};
 };
 
-const getPostTitle = ( post ) => {
-	if ( typeof post?.title === 'string' ) {
+const getPostTitle = (post) => {
+	if (typeof post?.title === 'string') {
 		return post.title;
 	}
 
 	return post?.title?.rendered || post?.title?.raw || '';
 };
 
-export default function Edit( { attributes, setAttributes, clientId } ) {
+export default function Edit({ attributes, setAttributes, clientId }) {
 	const {
 		blockId,
 		title,
@@ -83,65 +78,64 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		jobtypeicon,
 	} = attributes;
 
-	const [ isVideoModalOpen, setIsVideoModalOpen ] = useState( false );
-	const [ jobSearchInput, setJobSearchInput ] = useState( '' );
-	const { insertBlocks, removeBlocks } = useDispatch( 'core/block-editor' );
-	const iframeSrc = getIframeSrc( videoUrl );
+	const [jobSearchInput, setJobSearchInput] = useState('');
+	const { insertBlocks, removeBlocks } = useDispatch('core/block-editor');
+	const iframeSrc = getIframeSrc(videoUrl);
 	const hasEditorVideo =
-		( videoType === 'mp4' && videoObj?.url ) ||
-		( videoType === 'embed' && iframeSrc );
+		(videoType === 'mp4' && videoObj?.url) ||
+		(videoType === 'embed' && iframeSrc);
 	const hasHeaderContent = Boolean(
-		title || intro || ( link?.text && link?.url )
+		title || intro || (link?.text && link?.url)
 	);
 	const topLinkRel =
 		link?.target === '_blank'
-			? [ link?.rel, 'noopener', 'noreferrer' ]
-					.filter( Boolean )
-					.join( ' ' )
+			? [link?.rel, 'noopener', 'noreferrer']
+				.filter(Boolean)
+				.join(' ')
 			: link?.rel || '';
 	const bottomLinkRel =
 		careerslink?.target === '_blank'
-			? [ careerslink?.rel, 'noopener', 'noreferrer' ]
-					.filter( Boolean )
-					.join( ' ' )
+			? [careerslink?.rel, 'noopener', 'noreferrer']
+				.filter(Boolean)
+				.join(' ')
 			: careerslink?.rel || '';
 	const innerBlocks = useSelect(
-		( select ) => select( 'core/block-editor' ).getBlocks( clientId ),
-		[ clientId ]
+		(select) => select('core/block-editor').getBlocks(clientId),
+		[clientId]
 	);
 	const selectedJobIds = useMemo(
 		() =>
 			innerBlocks
-				.map( ( block ) => Number( block.attributes?.postId ) || 0 )
-				.filter( Boolean ),
-		[ innerBlocks ]
+				.map((block) => Number(block.attributes?.postId) || 0)
+				.filter(Boolean),
+		[innerBlocks]
 	);
 	const selectedJobsById = useSelect(
-		( select ) => {
-			if ( ! selectedJobIds.length ) {
+		(select) => {
+			if (!selectedJobIds.length) {
 				return {};
 			}
 
-			const posts = select( 'core' ).getEntityRecords( 'postType', 'jobs', {
+			const posts = select('core').getEntityRecords('postType', 'jobs', {
 				include: selectedJobIds,
 				per_page: selectedJobIds.length,
 				orderby: 'include',
 				context: 'edit',
-			} );
+			});
 
-			if ( ! Array.isArray( posts ) ) {
+			if (!Array.isArray(posts)) {
 				return {};
 			}
 
-			return posts.reduce( ( postsById, post ) => {
-				postsById[ post.id ] = post;
+			return posts.reduce((postsById, post) => {
+				postsById[post.id] = post;
 				return postsById;
-			}, {} );
+			}, {});
 		},
-		[ selectedJobIds ]
+		[selectedJobIds]
 	);
 	const jobPosts = useSelect(
-		( select ) => {
+		(select) => {
 			const query = {
 				per_page: JOBS_PER_PAGE,
 				status: 'publish',
@@ -149,92 +143,81 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				order: 'asc',
 			};
 
-			if ( jobSearchInput.trim() ) {
+			if (jobSearchInput.trim()) {
 				query.search = jobSearchInput.trim();
 			}
 
-			return select( 'core' ).getEntityRecords( 'postType', 'jobs', query );
+			return select('core').getEntityRecords('postType', 'jobs', query);
 		},
-		[ jobSearchInput ]
+		[jobSearchInput]
 	);
-	const jobOptions = useMemo( () => {
-		if ( ! Array.isArray( jobPosts ) ) {
+	const jobOptions = useMemo(() => {
+		if (!Array.isArray(jobPosts)) {
 			return [];
 		}
 
 		return jobPosts
-			.filter( ( post ) => ! selectedJobIds.includes( post.id ) )
-			.map( ( post ) => {
-				const title = decodeEntities( getPostTitle( post ) ).trim();
+			.filter((post) => !selectedJobIds.includes(post.id))
+			.map((post) => {
+				const title = decodeEntities(getPostTitle(post)).trim();
 
 				return {
 					label:
 						title ||
 						sprintf(
 							/* translators: %d: job post ID. */
-							__( 'Job #%d', 'ambrygen-web' ),
+							__('Job #%d', 'ambrygen-web'),
 							post.id
 						),
-					value: String( post.id ),
+					value: String(post.id),
 				};
-			} );
-	}, [ jobPosts, selectedJobIds ] );
+			});
+	}, [jobPosts, selectedJobIds]);
 	const selectedJobOptions = useMemo(
 		() =>
-			selectedJobIds.map( ( postId ) => {
-				const post = selectedJobsById[ postId ];
-				const title = decodeEntities( getPostTitle( post ) ).trim();
+			selectedJobIds.map((postId) => {
+				const post = selectedJobsById[postId];
+				const title = decodeEntities(getPostTitle(post)).trim();
 
 				return {
 					label:
 						title ||
 						sprintf(
 							/* translators: %d: job post ID. */
-							__( 'Job #%d', 'ambrygen-web' ),
+							__('Job #%d', 'ambrygen-web'),
 							postId
 						),
 					value: postId,
-					isLoading: ! post,
+					isLoading: !post,
 				};
-			} ),
-		[ selectedJobIds, selectedJobsById ]
+			}),
+		[selectedJobIds, selectedJobsById]
 	);
 	const hasJobOptions = jobOptions.length > 0;
 
-	useEffect( () => {
-		const clientIdSuffix = clientId.slice( 0, 8 );
-		const expectedId = `section-${ clientIdSuffix }`;
+	useEffect(() => {
+		const clientIdSuffix = clientId.slice(0, 8);
+		const expectedId = `section-${clientIdSuffix}`;
 
-		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
-			setAttributes( {
+		if ( !blockId ) {
+			setAttributes({
 				blockId: expectedId,
-			} );
+			});
 		}
-	}, [ clientId, blockId, setAttributes ] );
+	}, [clientId, blockId, setAttributes]);
 
-	useEffect( () => {
-		setIsVideoModalOpen( false );
-	}, [ iframeSrc, videoType, videoObj?.url ] );
+	const blockProps = useBlockProps({ className: 'careers-highlight' });
 
-	const blockProps = useBlockProps( { className: 'careers-highlight' } );
-
-	const handlePlayClick = ( event ) => {
-		if ( event ) {
-			event.preventDefault();
-		}
-		setIsVideoModalOpen( true );
-	};
-
-	const toggleJobBlock = ( postId, isSelected ) => {
-		if ( isSelected ) {
-			if ( selectedJobIds.includes( postId ) ) {
+	const toggleJobBlock = (postId, isSelected) => {
+		if (isSelected) {
+			if (selectedJobIds.includes(postId)) {
 				return;
 			}
 
 			insertBlocks(
-				createBlock( ITEM_BLOCK_NAME, {
+				createBlock(ITEM_BLOCK_NAME, {
 					postId,
-				} ),
+				}),
 				innerBlocks.length,
 				clientId,
 				false
@@ -244,17 +227,17 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 		const blocksToRemove = innerBlocks
 			.filter(
-				( block ) =>
-					( Number( block.attributes?.postId ) || 0 ) === postId
+				(block) =>
+					(Number(block.attributes?.postId) || 0) === postId
 			)
-			.map( ( block ) => block.clientId );
+			.map((block) => block.clientId);
 
-		if ( blocksToRemove.length ) {
-			removeBlocks( blocksToRemove, false );
+		if (blocksToRemove.length) {
+			removeBlocks(blocksToRemove, false);
 		}
 	};
 
-	if ( blockId === 'careers-example' ) {
+	if (blockId === 'careers-example') {
 		return (
 			<BlockExamplePreview
 				className="cta-tiles-with-3-card-example-preview"
@@ -266,22 +249,22 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
+				<PanelBody title={__('Heading Settings', 'ambrygen-web')} initialOpen={false}>
 					<TagSelector
-						label={ __( 'Heading Tag', 'ambrygen-web' ) }
-						value={ headingLevel || 'h2' }
-						onChange={ ( value ) =>
-							setAttributes( { headingLevel: value } )
+						label={__('Heading Tag', 'ambrygen-web')}
+						value={headingLevel || 'h2'}
+						onChange={(value) =>
+							setAttributes({ headingLevel: value })
 						}
 						type="heading"
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Video Settings', 'ambrygen-web' ) }>
+				<PanelBody title={__('Video Settings', 'ambrygen-web')} initialOpen={true}>
 					<SelectControl
-						label={ __( 'Video Type', 'ambrygen-web' ) }
-						value={ videoType }
-						options={ [
+						label={__('Video Type', 'ambrygen-web')}
+						value={videoType}
+						options={[
 							{
 								label: __(
 									'Self Hosted (MP4)',
@@ -290,350 +273,321 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								value: 'mp4',
 							},
 							{
-								label: __( 'YouTube / Vimeo', 'ambrygen-web' ),
+								label: __('YouTube / Vimeo', 'ambrygen-web'),
 								value: 'embed',
 							},
-						] }
-						onChange={ ( value ) =>
-							setAttributes( { videoType: value } )
+						]}
+						onChange={(value) =>
+							setAttributes({ videoType: value })
 						}
 					/>
 
-					{ videoType === 'mp4' && (
+					{videoType === 'mp4' && (
 						<>
 							<MediaUploadCheck>
 								<MediaUpload
-									onSelect={ ( media ) =>
-										setAttributes( {
+									onSelect={(media) =>
+										setAttributes({
 											videoObj:
-												normalizeVideoObject( media ),
-										} )
+												normalizeVideoObject(media),
+										})
 									}
-									allowedTypes={ [ 'video' ] }
-									value={ videoObj?.id }
-									render={ ( { open } ) => (
+									allowedTypes={['video']}
+									value={videoObj?.id}
+									render={({ open }) => (
 										<Button
 											variant="secondary"
-											onClick={ open }
+											onClick={open}
 										>
-											{ videoObj?.url
+											{videoObj?.url
 												? __(
-														'Change Video',
-														'ambrygen-web'
-												  )
+													'Change Video',
+													'ambrygen-web'
+												)
 												: __(
-														'Select / Upload Video',
-														'ambrygen-web'
-												  ) }
+													'Select / Upload Video',
+													'ambrygen-web'
+												)}
 										</Button>
-									) }
+									)}
 								/>
 							</MediaUploadCheck>
 
-							{ videoObj?.url && (
-								<p>{ `${ __( 'Selected:', 'ambrygen-web' ) } ${
-									videoObj.url
-								}` }</p>
-							) }
+							{videoObj?.url && (
+								<p>{`${__('Selected:', 'ambrygen-web')} ${videoObj.url
+									}`}</p>
+							)}
 
 							<Button
 								variant="link"
 								isDestructive
-								onClick={ () =>
-									setAttributes( { videoObj: null } )
+								onClick={() =>
+									setAttributes({ videoObj: null })
 								}
 							>
-								{ __( 'Remove Video', 'ambrygen-web' ) }
+								{__('Remove Video', 'ambrygen-web')}
 							</Button>
 
 							<ImageUploader
-								label={ __(
+								label={__(
 									'Video Poster Image',
 									'ambrygen-web'
-								) }
-								url={ videoPoster?.url }
-								onSelect={ ( media ) =>
-									setAttributes( {
+								)}
+								url={videoPoster?.url}
+								onSelect={(media) =>
+									setAttributes({
 										videoPoster:
-											normalizeImageObject( media ),
-									} )
+											normalizeImageObject(media),
+									})
 								}
-								onRemove={ () =>
-									setAttributes( { videoPoster: null } )
+								onRemove={() =>
+									setAttributes({ videoPoster: null })
 								}
 							/>
 						</>
-					) }
+					)}
 
-					{ videoType === 'embed' && (
+					{videoType === 'embed' && (
 						<TextControl
-							label={ __(
+							label={__(
 								'YouTube or Vimeo URL',
 								'ambrygen-web'
-							) }
-							help={ __(
+							)}
+							help={__(
 								'Supports youtube.com, youtu.be, vimeo.com',
 								'ambrygen-web'
-							) }
-							value={ videoUrl || '' }
-							onChange={ ( value ) =>
-								setAttributes( { videoUrl: value } )
+							)}
+							value={videoUrl || ''}
+							onChange={(value) =>
+								setAttributes({ videoUrl: value })
 							}
 						/>
-					) }
+					)}
 				</PanelBody>
 
-				<PanelBody title={ __( 'Link Settings', 'ambrygen-web' ) }>
+				<PanelBody title={__('Link Settings', 'ambrygen-web')} initialOpen={false}>
 					<CtaButtonField
-						label={ __( 'Top Link', 'ambrygen-web' ) }
-						textLabel={ __( 'Link Text', 'ambrygen-web' ) }
+						label={__('Top Link', 'ambrygen-web')}
+						textLabel={__('Link Text', 'ambrygen-web')}
 						defaultVariant="primary"
-						value={ link }
-						showVariant={ false }
-						onChange={ ( value ) =>
-							setAttributes( { link: value } )
+						value={link}
+						showVariant={false}
+						onChange={(value) =>
+							setAttributes({ link: value })
 						}
 					/>
 					<CtaButtonField
-						label={ __( 'Bottom Link', 'ambrygen-web' ) }
-						textLabel={ __( 'Link Text', 'ambrygen-web' ) }
+						label={__('Bottom Link', 'ambrygen-web')}
+						textLabel={__('Link Text', 'ambrygen-web')}
 						defaultVariant="primary"
-						value={ careerslink }
-						showVariant={ false }
-						onChange={ ( value ) =>
-							setAttributes( { careerslink: value } )
+						value={careerslink}
+						showVariant={false}
+						onChange={(value) =>
+							setAttributes({ careerslink: value })
 						}
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Job Icon Settings', 'ambrygen-web' ) }>
+				<PanelBody title={__('Job Icon Settings', 'ambrygen-web')} initialOpen={false}>
 					<ImageUploader
-						label={ __( 'Job Location Icon', 'ambrygen-web' ) }
-						url={ joblocationicon?.url }
-						onSelect={ ( media ) =>
-							setAttributes( {
+						label={__('Job Location Icon', 'ambrygen-web')}
+						url={joblocationicon?.url}
+						onSelect={(media) =>
+							setAttributes({
 								joblocationicon:
-									normalizeImageObject( media ),
-							} )
+									normalizeImageObject(media),
+							})
 						}
-						onRemove={ () =>
-							setAttributes( { joblocationicon: null } )
+						onRemove={() =>
+							setAttributes({ joblocationicon: null })
 						}
 					/>
 					<ImageUploader
-						label={ __( 'Job Type Icon', 'ambrygen-web' ) }
-						url={ jobtypeicon?.url }
-						onSelect={ ( media ) =>
-							setAttributes( {
-								jobtypeicon: normalizeImageObject( media ),
-							} )
+						label={__('Job Type Icon', 'ambrygen-web')}
+						url={jobtypeicon?.url}
+						onSelect={(media) =>
+							setAttributes({
+								jobtypeicon: normalizeImageObject(media),
+							})
 						}
-						onRemove={ () =>
-							setAttributes( { jobtypeicon: null } )
+						onRemove={() =>
+							setAttributes({ jobtypeicon: null })
 						}
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Jobs', 'ambrygen-web' ) } initialOpen={ false }>
+				<PanelBody title={__('Jobs', 'ambrygen-web')} initialOpen={false}>
 					<p
 						className="careers-highlight__job-count"
 						role="status"
 						aria-live="polite"
 						aria-atomic="true"
 					>
-						{ sprintf(
+						{sprintf(
 							/* translators: %d: number of selected jobs. */
-							__( '%d job(s) selected', 'ambrygen-web' ),
+							__('%d job(s) selected', 'ambrygen-web'),
 							selectedJobIds.length
-						) }
+						)}
 					</p>
 					<JobPicker
-						isLoading={ ! jobPosts }
-						options={ jobOptions }
-						selectedJobs={ selectedJobOptions }
-						searchValue={ jobSearchInput }
-						onSearchChange={ setJobSearchInput }
-						onToggle={ toggleJobBlock }
-						hasOptions={ hasJobOptions }
+						isLoading={!jobPosts}
+						options={jobOptions}
+						selectedJobs={selectedJobOptions}
+						searchValue={jobSearchInput}
+						onSearchChange={setJobSearchInput}
+						onToggle={toggleJobBlock}
+						hasOptions={hasJobOptions}
 					/>
 				</PanelBody>
 			</InspectorControls>
 
-			<div { ...blockProps }>
+			<div {...blockProps}>
 				<div className="careers-highlight__header block__rowflex">
-					<RichText
-						tagName={ headingLevel || 'h2' }
-						value={ title }
-						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
-						className="careers-highlight__title block__rowflex--heading-title heading-4 mb-0"
-						onChange={ ( value ) =>
-							setAttributes( { title: value } )
-						}
-						allowedFormats={ [
-							'core/bold',
-							'core/italic',
-							'core/text-color',
-						] }
-					/>
+					<div className='block__rowflex--col-left'>
+						<RichText
+							tagName={headingLevel || 'h2'}
+							value={title}
+							placeholder={__('Add Heading...', 'ambrygen-web')}
+							className="careers-highlight__title block__rowflex--heading-title heading-4 mb-0"
+							onChange={(value) =>
+								setAttributes({ title: value })
+							}
+							allowedFormats={[
+								'core/bold',
+								'core/italic',
+								'core/text-color',
+							]}
+						/>
+					</div>
 					<div className="careers-highlight__intro block__rowflex--block-content subtitle1-reg">
 						<RichText
 							tagName="div"
-							value={ intro }
-							placeholder={ __(
+							value={intro}
+							placeholder={__(
 								'Add Description...',
 								'ambrygen-web'
-							) }
-							onChange={ ( value ) =>
-								setAttributes( { intro: value } )
+							)}
+							onChange={(value) =>
+								setAttributes({ intro: value })
 							}
 						/>
 
-						{ link?.text && link?.url && (
+						{link?.text && link?.url && (
 							<div className="block_rowflex-link">
 								<a
-									href={ link.url }
+									href={link.url}
 									className="site-btn is-style-site-text-btn has-right-arrow"
-									target={ link.target || undefined }
-									rel={ topLinkRel || undefined }
+									target={link.target || undefined}
+									rel={topLinkRel || undefined}
 								>
-									{ link.text }
+									{link.text}
 								</a>
 							</div>
-						) }
+						)}
 					</div>
 				</div>
-				{ hasHeaderContent && <div className="is-style-gl-s50"></div> }
+				{hasHeaderContent && <div className="is-style-gl-s50"></div>}
 
 				<div className="careers-highlight__row">
 					<div className="careers-highlight__left">
 						<div className="custom-scroll-jobs">
 							<div className="careers-highlight__jobs">
 								<InnerBlocks
-									allowedBlocks={ [ ITEM_BLOCK_NAME ] }
-									templateLock={ false }
-									renderAppender={ () => false }
+									allowedBlocks={[ITEM_BLOCK_NAME]}
+									templateLock={false}
+									renderAppender={() => false}
 								/>
 							</div>
 						</div>
 
-						{ careerslink?.text && careerslink?.url && (
+						{careerslink?.text && careerslink?.url && (
 							<div className="block-btn">
 								<div className="is-style-gl-s32"></div>
 								<a
-									href={ careerslink.url }
+									href={careerslink.url}
 									className="site-btn is-style-site-text-btn has-right-arrow"
-									target={ careerslink.target || undefined }
-									rel={ bottomLinkRel || undefined }
+									target={careerslink.target || undefined}
+									rel={bottomLinkRel || undefined}
 								>
-									{ careerslink.text }
+									{careerslink.text}
 								</a>
 							</div>
-						) }
+						)}
 					</div>
 
 					<div className="careers-highlight__right">
-						<div className="careers-highlight__media media_video">
-							{ videoType === 'mp4' && videoObj?.url && (
+						<div className="careers-highlight__media media_video" style={{ pointerEvents: 'none' }}>
+							{videoType === 'mp4' && videoObj?.url && (
 								<video
 									className="videos"
 									playsInline
 									muted
 									preload="metadata"
 									loop
-									poster={ videoPoster?.url || '' }
+									poster={videoPoster?.url || ''}
+									tabIndex="-1"
+									aria-hidden="true"
 								>
 									<source
-										src={ videoObj.url }
+										src={videoObj.url}
 										type="video/mp4"
 									/>
 								</video>
-							) }
-							{ videoType === 'embed' && iframeSrc && (
+							)}
+							{videoType === 'embed' && iframeSrc && (
 								<div className="careers-highlight__media media_video video-embed">
 									<iframe
-										src={ iframeSrc }
-										title={ __(
+										src={iframeSrc}
+										title={__(
 											'Embedded video',
 											'ambrygen-web'
-										) }
+										)}
 										frameBorder="0"
 										allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 										allowFullScreen
+										tabIndex="-1"
+										aria-hidden="true"
 									/>
 								</div>
-							) }
-							{ ! hasEditorVideo && (
+							)}
+							{!hasEditorVideo && (
 								<div className="videos-placeholder">
-									{ __(
+									{__(
 										'Add video URL in block settings',
 										'ambrygen-web'
-									) }
+									)}
 								</div>
-							) }
-							{ hasEditorVideo && (
+							)}
+							{hasEditorVideo && (
 								<button
 									type="button"
 									className="play-icon-video"
-									aria-label={ __(
-										'Open video',
-										'ambrygen-web'
-									) }
-									onClick={ handlePlayClick }
+									aria-hidden="true"
+									tabIndex={-1}
+									style={{ pointerEvents: 'none' }}
 								>
 									<span
 										className="play-icon circle-icon"
 										aria-hidden="true"
 									>
 										<img
-											src={ playIcon }
+											src={playIcon}
 											className="play-icon__img"
 											alt=""
 											aria-hidden="true"
 										/>
 									</span>
 								</button>
-							) }
+							)}
 						</div>
 					</div>
 				</div>
-				{ isVideoModalOpen && (
-					<Modal
-						title={ __( 'Video', 'ambrygen-web' ) }
-						className="modal-popup--video"
-						onRequestClose={ () => setIsVideoModalOpen( false ) }
-					>
-						<div className="modal-content__video-wrapper">
-							{ videoType === 'mp4' && videoObj?.url && (
-								<video
-									className="videos"
-									controls
-									autoPlay
-									playsInline
-									src={ videoObj.url }
-									poster={ videoPoster?.url || '' }
-								/>
-							) }
-							{ videoType === 'embed' && iframeSrc && (
-								<iframe
-									src={ getPlaySrc( iframeSrc ) }
-									title={ __(
-										'Embedded video',
-										'ambrygen-web'
-									) }
-									frameBorder="0"
-									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-									allowFullScreen
-								/>
-							) }
-						</div>
-					</Modal>
-				) }
 			</div>
 		</>
 	);
 }
 
-function JobPicker( {
+function JobPicker({
 	isLoading,
 	options,
 	selectedJobs,
@@ -641,102 +595,102 @@ function JobPicker( {
 	onSearchChange,
 	onToggle,
 	hasOptions,
-} ) {
+}) {
 	return (
 		<div className="careers-highlight__job-picker">
-			{ isLoading ? (
+			{isLoading ? (
 				<Spinner />
 			) : (
 				<>
-					{ selectedJobs.length > 0 && (
+					{selectedJobs.length > 0 && (
 						<div className="careers-highlight__selected-jobs">
 							<div className="careers-highlight__job-picker-label">
-								{ __( 'Selected Jobs', 'ambrygen-web' ) }
+								{__('Selected Jobs', 'ambrygen-web')}
 							</div>
 							<div
 								className="careers-highlight__selected-job-list"
 								role="list"
-								aria-label={ __( 'Selected jobs', 'ambrygen-web' ) }
+								aria-label={__('Selected jobs', 'ambrygen-web')}
 							>
-								{ selectedJobs.map( ( job ) => (
+								{selectedJobs.map((job) => (
 									<div
-										key={ job.value }
+										key={job.value}
 										className="careers-highlight__selected-job"
 										role="listitem"
 									>
 										<span>
-											{ job.label }
-											{ job.isLoading && (
+											{job.label}
+											{job.isLoading && (
 												<span className="screen-reader-text">
-													{ __( ' loading', 'ambrygen-web' ) }
+													{__(' loading', 'ambrygen-web')}
 												</span>
-											) }
+											)}
 										</span>
 										<Button
 											isDestructive
 											variant="tertiary"
 											size="small"
-											onClick={ () =>
-												onToggle( job.value, false )
+											onClick={() =>
+												onToggle(job.value, false)
 											}
 										>
-											{ __( 'Remove', 'ambrygen-web' ) }
+											{__('Remove', 'ambrygen-web')}
 										</Button>
 									</div>
-								) ) }
+								))}
 							</div>
 						</div>
-					) }
+					)}
 					<div className="careers-highlight__job-picker-field">
 						<SearchControl
-							label={ __( 'Add Job', 'ambrygen-web' ) }
-							value={ searchValue }
-							onChange={ onSearchChange }
-							placeholder={ __( 'Search jobs', 'ambrygen-web' ) }
+							label={__('Add Job', 'ambrygen-web')}
+							value={searchValue}
+							onChange={onSearchChange}
+							placeholder={__('Search jobs', 'ambrygen-web')}
 						/>
 						<p className="careers-highlight__job-help">
-							{ hasOptions
+							{hasOptions
 								? __(
-										'Search and add jobs without loading the full job list.',
-										'ambrygen-web'
-								  )
+									'Search and add jobs without loading the full job list.',
+									'ambrygen-web'
+								)
 								: __(
-										'No matching jobs are available to add.',
-										'ambrygen-web'
-								  ) }
+									'No matching jobs are available to add.',
+									'ambrygen-web'
+								)}
 						</p>
-						{ hasOptions && (
+						{hasOptions && (
 							<div
 								className="careers-highlight__job-options"
 								role="list"
-								aria-label={ __( 'Available jobs to add', 'ambrygen-web' ) }
+								aria-label={__('Available jobs to add', 'ambrygen-web')}
 							>
-								{ options.map( ( option ) => (
+								{options.map((option) => (
 									<div
-										key={ option.value }
+										key={option.value}
 										className="careers-highlight__job-option"
 										role="listitem"
 									>
-										<span>{ option.label }</span>
+										<span>{option.label}</span>
 										<Button
 											variant="secondary"
 											size="small"
-											onClick={ () =>
+											onClick={() =>
 												onToggle(
-													parseInt( option.value, 10 ),
+													parseInt(option.value, 10),
 													true
 												)
 											}
 										>
-											{ __( 'Add', 'ambrygen-web' ) }
+											{__('Add', 'ambrygen-web')}
 										</Button>
 									</div>
-								) ) }
+								))}
 							</div>
-						) }
+						)}
 					</div>
 				</>
-			) }
+			)}
 		</div>
 	);
 }

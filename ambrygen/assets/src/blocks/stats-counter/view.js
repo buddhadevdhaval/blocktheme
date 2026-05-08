@@ -40,9 +40,13 @@
 	}
 
 	function initStatsCounterBlock() {
-		const statsCounters = document.querySelectorAll(
-			'.wp-block-ambrygen-stats-counter .stats-counter, .counter-block .stats-counter'
-		);
+		const statsCounters = Array.from(
+			document.querySelectorAll(
+				'.wp-block-ambrygen-stats-counter, .counter-block'
+			)
+		)
+			.map( ( block ) => block.querySelector( '.stats-counter' ) )
+			.filter( Boolean );
 
 		if ( ! statsCounters.length ) {
 			return;

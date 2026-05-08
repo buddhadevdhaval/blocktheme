@@ -71,7 +71,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	useEffect( () => {
 		const expectedId = `testimonials-slider-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
+		if ( ! blockId ) {
 			setAttributes( { blockId: expectedId } );
 		}
 	}, [ blockId, clientId, setAttributes ] );
@@ -329,9 +329,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						/>
 					</div>
 
-					{ hasTitle && (
-						<div className="is-style-gl-s50" aria-hidden="true"></div>
-					) }
+					<div className="is-style-gl-s50" aria-hidden="true"></div>
 
 					<div className="testimonial-slider__swiper">
 						<div ref={ swiperRef }>
@@ -358,7 +356,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						) }
 
 						{ showPagination && (
-							<div className="swiper-pagination testimonial-swiper-pagination">
+							<div className="swiper-pagination testimonial-swiper-pagination swiper-pagination-bullets ">
 								{ hasMultipleSlides &&
 									innerBlocks.map( ( block, index ) => (
 										<span

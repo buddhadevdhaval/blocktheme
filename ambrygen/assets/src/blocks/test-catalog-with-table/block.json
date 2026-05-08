@@ -1,0 +1,77 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/test-catalog-with-table",
+  "title": "Test Catalog With Table",
+  "category": "ambrygen",
+  "icon": "table-col-after",
+  "description": "Catalog block with search, featured cards, and a table of tests.",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "searchLabel": {
+      "type": "string",
+      "default": "Search by genes, Test name, or Code"
+    },
+    "searchPlaceholder": {
+      "type": "string",
+      "default": "Search genes..."
+    },
+    "featuredEyebrow": {
+      "type": "string",
+      "default": "MOST FREQUENTLY ORDERED"
+    },
+    "featuredTitle": {
+      "type": "string",
+      "default": "Highlighted Cardiology Tests"
+    },
+    "featuredDescription": {
+      "type": "string",
+      "default": "These are our most commonly ordered panels - choose based on your patient's clinical presentation."
+    },
+    "tableEyebrow": {
+      "type": "string",
+      "default": "Cardiology Tests"
+    },
+    "tableTitle": {
+      "type": "string",
+      "default": "Featured Cardiology Panels"
+    },
+    "tableDescription": {
+      "type": "string",
+      "default": "These are our most commonly ordered panels - choose based on your patient's clinical presentation."
+    },
+    "headingLevel": {
+      "type": "string",
+      "default": "h2",
+      "enum": ["h1", "h2", "h3", "h4", "h5", "h6"]
+    },
+    "parentCategoryId": {
+      "type": "number",
+      "default": 0
+    },
+    "selectedTabs": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php",
+  "textdomain": "ambrygen-web"
+}

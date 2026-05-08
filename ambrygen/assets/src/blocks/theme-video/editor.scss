@@ -3,6 +3,19 @@
 
 .features-media {
 
+	.features-media__video-wrapper,
+	.features-media__video-wrapper--iframe {
+
+		iframe,
+		video {
+			pointer-events: none;
+		}
+	}
+
+	.play-icon-video {
+		pointer-events: none;
+	}
+
 	&.has-image {
 
 		img {

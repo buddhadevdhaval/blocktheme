@@ -19,6 +19,7 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { __, sprintf } from '@wordpress/i18n';
 import {
 	useCallback,
+	useDeferredValue,
 	useEffect,
 	useMemo,
 	useRef,
@@ -107,6 +108,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const normalizedVariation = normalizeVariation( variation );
 	const isSliderView = normalizedVariation === 'slider-view';
+	const deferredSelectionMode = useDeferredValue( selectionMode );
+	const deferredMemberTypes = useDeferredValue( memberTypes );
 	const TagName = headingLevel || 'h2';
 	const blockProps = useBlockProps( {
 		className: isSliderView ? undefined : 'wrapper',
@@ -157,8 +160,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		( select ) => {
 			if (
 				! isSliderView ||
-				selectionMode !== 'taxonomy' ||
-				! memberTypes.length
+				deferredSelectionMode !== 'taxonomy' ||
+				! deferredMemberTypes.length
 			) {
 				return [];
 			}
@@ -173,7 +176,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						per_page: WP_REST_MAX_PER_PAGE,
 						page,
 						status: 'publish',
-						member_type: memberTypes,
+						member_type: deferredMemberTypes,
 						_fields: 'id',
 					}
 				);
@@ -191,30 +194,44 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 			return posts;
 		},
-		[ isSliderView, selectionMode, memberTypes ]
+		[ isSliderView, deferredSelectionMode, deferredMemberTypes ]
 	);
 
 	const isResolvingTaxonomyPosts = useSelect(
 		( select ) => {
-			if ( ! isSliderView || selectionMode !== 'taxonomy' || ! memberTypes.length ) {
+			if (
+				! isSliderView ||
+				deferredSelectionMode !== 'taxonomy' ||
+				! deferredMemberTypes.length
+			) {
 				return false;
 			}
+
 			const { isResolving } = select( 'core/data' );
+
 			for ( let page = 1; page <= MAX_TEAM_MEMBER_TYPE_PAGES; page++ ) {
 				const query = {
 					per_page: WP_REST_MAX_PER_PAGE,
 					page,
 					status: 'publish',
-					member_type: memberTypes,
+					member_type: deferredMemberTypes,
 					_fields: 'id',
 				};
-				if ( isResolving( 'core', 'getEntityRecords', [ 'postType', 'author', query ] ) ) {
+
+				if (
+					isResolving( 'core', 'getEntityRecords', [
+						'postType',
+						'author',
+						query,
+					] )
+				) {
 					return true;
 				}
 			}
+
 			return false;
 		},
-		[ isSliderView, selectionMode, memberTypes ]
+		[ isSliderView, deferredSelectionMode, deferredMemberTypes ]
 	);
 
 	const innerBlocks = useSelect(
@@ -399,7 +416,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		const clientIdSuffix = clientId.slice( 0, 8 );
 		const expectedId = `section-${ clientIdSuffix }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientIdSuffix ) ) {
+		if ( ! blockId ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
@@ -418,8 +435,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	useEffect( () => {
 		if (
 			! isSliderView ||
-			selectionMode !== 'taxonomy' ||
-			! memberTypes.length ||
+			deferredSelectionMode !== 'taxonomy' ||
+			! deferredMemberTypes.length ||
 			! taxonomyTeamPosts ||
 			isResolvingTaxonomyPosts
 		) {
@@ -445,8 +462,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		replaceInnerBlocks( clientId, newBlocks, false );
 	}, [
 		isSliderView,
-		selectionMode,
-		memberTypes,
+		deferredSelectionMode,
+		deferredMemberTypes,
 		taxonomyTeamPosts,
 		isResolvingTaxonomyPosts,
 		clientId,
@@ -1001,4 +1018,3 @@ function MemberPicker( {
 		</div>
 	);
 }
-

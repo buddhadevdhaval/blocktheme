@@ -1,13 +1,8 @@
 @use "../../css/partials/variables/breakpoints" as bp;
+@use "../../css/partials/variables/fluid_mixins" as *;
+
 
 .theme-form-block {
-
-	iframe {
-		width: 100%;
-		height: 1350px;
-		border: none;
-	}
-
 	.heading-center {
 
 		.heading-content {

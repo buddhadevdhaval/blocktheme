@@ -23,8 +23,8 @@ const createCounter = () => ( {
 	prefix: '',
 	number: '0',
 	postfix: '',
-	label: 'New Stat',
-	description: 'add description here',
+	label: '',
+	description: '',
 } );
 
 const DEFAULT_COUNTERS = [
@@ -44,22 +44,28 @@ const normalizeCounter = ( counter = {} ) => ( {
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { blockId, counters = [] } = attributes;
 	const [ openStatId, setOpenStatId ] = useState( null );
-	
+	const isExample = blockId === 'stats-counter-example';
+
 	const blockProps = useBlockProps( {
 		className: 'counter-block',
+		id: blockId || undefined,
 	} );
 
 	const countersLength = counters.length;
 	const hasMissingIds = counters.some( ( counter ) => ! counter?.id );
 
 	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
+
 		const clientIdSuffix = clientId.slice( 0, 8 );
 		const expectedId = `section-${ clientIdSuffix }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientIdSuffix ) ) {
+		if ( ! blockId ) {
 			setAttributes( { blockId: expectedId } );
 		}
-	}, [ clientId, blockId, setAttributes ] );
+	}, [ clientId, blockId, isExample, setAttributes ] );
 
 	useEffect( () => {
 		if ( ! countersLength ) {
@@ -128,11 +134,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		setOpenStatId( openStatId === id ? null : id );
 	};
 
-	if ( blockId === 'stats-counter-example' ) {
+	if ( isExample ) {
 		return (
 			<BlockExamplePreview
 				className="stats-counter-example-preview"
-				imagePath="/assets/src/images/counter/variation-1.png"
+				imagePath="/assets/src/images/stats-counter/preview.png"
 			/>
 		);
 	}
@@ -209,6 +215,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									<TextControl
 										label={ __( 'Label', 'ambrygen-web' ) }
 										value={ counter.label }
+										placeholder={ __( 'New Stat', 'ambrygen-web' ) }
 										onChange={ ( value ) =>
 											updateCounter( counter.id, 'label', value )
 										}
@@ -216,6 +223,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									<TextareaControl
 										label={ __( 'Description', 'ambrygen-web' ) }
 										value={ counter.description }
+										placeholder={ __(
+											'Add description here',
+											'ambrygen-web'
+										) }
 										onChange={ ( value ) =>
 											updateCounter( counter.id, 'description', value )
 										}
@@ -245,13 +256,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							) }
 
 							<div className="stats-counter__label subtitle1-sbold">
-								{ counter.label || '' }
+								{ counter.label || __( 'New Stat', 'ambrygen-web' ) }
 							</div>
 
-							<div className="is-style-gl-s8" aria-hidden="true"></div>
 
 							<div className="stats-counter__description">
-								{ counter.description || '' }
+								<div className="is-style-gl-s8" aria-hidden="true"></div>
+								{ counter.description ||
+									__( 'Add Description...', 'ambrygen-web' ) }
 							</div>
 						</div>
 					);

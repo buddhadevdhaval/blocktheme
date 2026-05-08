@@ -30,12 +30,9 @@
       "type": "string",
       "default": ""
     },
-    "variation": {
-      "type": "string",
-      "default": "variation-5"
-    },
     "blockId": {
-      "type": "string"
+      "type": "string",
+      "default": ""
     },
     "backgroundImage": {
       "type": "object",
@@ -44,14 +41,7 @@
         "id": 0,
         "alt": ""
       }
-    },
-    "isLargeIcon": {
-      "type": "boolean",
-      "default": false
     }
-  },
-  "providesContext": {
-    "ambrygen/variation": "variation"
   },
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",

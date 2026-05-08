@@ -50,10 +50,13 @@ if ( empty( $ambrygen_valid_counters ) ) {
 	return;
 }
 
-$ambrygen_section_label = $ambrygen_block_id ? $ambrygen_block_id . '-label' : 'counter-block-label';
+$ambrygen_section_label = $ambrygen_block_id
+	? $ambrygen_block_id . '-label'
+	: wp_unique_id( 'counter-block-label-' );
 
 $ambrygen_wrapper_args = array(
 	'class'           => 'counter-block',
+	'role'            => 'region',
 	'aria-labelledby' => $ambrygen_section_label,
 );
 

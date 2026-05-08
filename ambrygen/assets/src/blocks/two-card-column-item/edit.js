@@ -12,14 +12,18 @@ import {
 } from '../_shared/components';
 import OrderingOptionsEdit from './ordering-options-edit';
 
+const VARIATION_VALUES = {
+	VARIATION_2: 'variation-2',
+};
+
 export default function Edit( { attributes, setAttributes, context } ) {
 	const { sectiontitle, description, imageUrl, imageAlt, imageId } =
 		attributes;
 	const variation = context?.[ 'ambrygen/twoCardColumnVariation' ] || '';
-	const isOrderingOptions = variation === 'ordering-options';
+	const isVariation2 = variation === VARIATION_VALUES.VARIATION_2;
 
 	const blockProps = useBlockProps( {
-		className: isOrderingOptions
+		className: isVariation2
 			? 'ordering-options__card'
 			: 'cta-tiles-with-content__item',
 	} );
@@ -62,7 +66,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 			</InspectorControls>
 
 			<div { ...blockProps }>
-				{ isOrderingOptions ? (
+				{ isVariation2 ? (
 					<OrderingOptionsEdit
 						description={ description }
 						displayImageUrl={ displayImageUrl }

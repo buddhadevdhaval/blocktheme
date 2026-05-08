@@ -16,7 +16,8 @@
 	"viewScript": "file:./view.js",
 	"supports": {
 		"html": false,
-		"anchor": true
+		"anchor": true,
+		"inserter": false
 	},
 	"render": "file:./render.php"
 }

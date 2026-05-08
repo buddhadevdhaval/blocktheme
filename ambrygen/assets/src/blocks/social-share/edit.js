@@ -1,27 +1,19 @@
-import { __ } from '@wordpress/i18n';
 import { useBlockProps } from '@wordpress/block-editor';
+import { ServerSideRender } from '@wordpress/server-side-render';
 
-export default function Edit() {
+export default function Edit( { attributes, context, name } ) {
 	const blockProps = useBlockProps();
+	const previewPostId = context?.postId ? Number( context.postId ) : 0;
 
 	return (
 		<div { ...blockProps }>
-			<div className="share-post">
-				<div className="share-post__wrapper">
-					<span className="share-post__label text-md-medium">{ __( 'Share:', 'ambrygen-web' ) }</span>
-					<div className="share-post__icons">
-						<span className="share-post__icon share-post__facebook" style={ { opacity: 0.5 } }>
-							<div style={ { width: 24, height: 24, background: '#eee', borderRadius: '50%' } }></div>
-						</span>
-						<span className="share-post__icon share-post__twitter" style={ { opacity: 0.5 } }>
-							<div style={ { width: 24, height: 24, background: '#eee', borderRadius: '50%' } }></div>
-						</span>
-						<span className="share-post__icon share-post__linkedin" style={ { opacity: 0.5 } }>
-							<div style={ { width: 24, height: 24, background: '#eee', borderRadius: '50%' } }></div>
-						</span>
-					</div>
-				</div>
-			</div>
+			<ServerSideRender
+				block={ name }
+				attributes={ {
+					...attributes,
+					previewPostId,
+				} }
+			/>
 		</div>
 	);
 }

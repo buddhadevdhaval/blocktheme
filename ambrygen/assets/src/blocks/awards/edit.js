@@ -10,7 +10,12 @@ import {
 	PanelBody,
 } from '@wordpress/components';
 
-import { ImageUploader, ItemHeader, TagSelector } from '../_shared/components';
+import {
+	BlockExamplePreview,
+	ImageUploader,
+	ItemHeader,
+	TagSelector,
+} from '../_shared/components';
 
 const DEFAULT_AWARD = {
 	id: 'award-1',
@@ -41,18 +46,24 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		description,
 		awards = [],
 	} = attributes;
+	const isExample = blockId === 'example-block-preview';
 	const awardsWithImages = awards.filter( ( award ) =>
 		Boolean( award.imageUrl )
 	);
 	const hasAwards = awardsWithImages.length > 0;
+	const HeadingTag = headingTag || 'h2';
 
 	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
+
 		const clientIdSuffix = clientId.slice( 0, 8 );
 		const expectedId = `section-${ clientIdSuffix }`;
 		const hasMissingIds = awards.some( ( award ) => ! award?.id );
 		const nextAttributes = {};
 
-		if ( ! blockId || ! blockId.endsWith( clientIdSuffix ) ) {
+		if ( ! blockId ) {
 			nextAttributes.blockId = expectedId;
 		}
 
@@ -70,11 +81,20 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 
 		setAttributes( nextAttributes );
-	}, [ awards, blockId, clientId, setAttributes ] );
+	}, [ awards, blockId, clientId, isExample, setAttributes ] );
 
 	const blockProps = useBlockProps( {
 		id: blockId || undefined,
 	} );
+
+	if ( isExample ) {
+		return (
+			<BlockExamplePreview
+				className="example-block-preview"
+				imagePath="/assets/src/images/awards/preview.png"
+			/>
+		);
+	}
 
 	const updateAward = ( awardId, updates ) => {
 		setAttributes( {
@@ -135,7 +155,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
-						value={ headingTag }
+						value={ HeadingTag }
 						type="heading"
 						onChange={ ( value ) =>
 							setAttributes( { headingTag: value } )
@@ -144,7 +164,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 				<PanelBody
 					title={ __( 'Award Images', 'ambrygen-web' ) }
-					initialOpen={ false }
+					initialOpen={ true }
 				>
 					{ awards.map( ( award, index ) => (
 						<div
@@ -203,7 +223,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				<div className="awards-slider">
 					<div className="awards-slider__header block__rowflex is-vertical">
 						<RichText
-							tagName={ headingTag }
+							tagName={ HeadingTag }
 							className="awards-block__title block__rowflex--heading-title heading-3 mb-0"
 							value={ title }
 							onChange={ ( value ) =>
@@ -226,13 +246,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					</div>
 				</div>
 
+				<div
+					className="is-style-gl-s50"
+					aria-hidden="true"
+				></div>
 				{ hasAwards && (
 					<>
-						<div
-							className="is-style-gl-s50"
-							aria-hidden="true"
-						></div>
-
 						<div className="marquee-slide">
 							<div className="marquee-slide__track">
 								<div className="marquee-slide__slider">

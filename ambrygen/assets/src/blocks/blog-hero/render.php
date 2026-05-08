@@ -12,16 +12,32 @@ use Ambrygen\Theme\Core\Blog\BlogRenderer;
 
 defined( 'ABSPATH' ) || exit;
 
-$post_id         = get_the_ID();
+$post_id   = get_the_ID();
+$is_editor = wp_is_json_request() || (defined('REST_REQUEST') && REST_REQUEST) || is_admin();
+
+// Fallback to sample post in editor if needed
+if ( $is_editor && ( ! $post_id || get_post_type( $post_id ) !== 'post' ) ) {
+    $sample_post = get_posts(
+        array(
+            'post_type'      => 'post',
+            'posts_per_page' => 1,
+            'post_status'    => 'publish',
+        )
+    );
+    if ( ! empty( $sample_post ) ) {
+        $post_id = $sample_post[0]->ID;
+    }
+}
+
+if ( ! $post_id ) {
+	return;
+}
+
 $media_type      = get_post_meta( $post_id, 'media_type', true ) ?: 'image';
 $video_source    = get_post_meta( $post_id, 'video_type', true ) ?: 'embed';
 $video_url       = get_post_meta( $post_id, 'iframe_url', true ) ?: '';
 $video_file_id   = get_post_meta( $post_id, 'video_url', true ) ?: 0;
 $poster_meta_id  = get_post_meta( $post_id, 'poster_image_id', true ) ?: 0;
-
-if ( ! $post_id ) {
-	return;
-}
 
 // Restrict to 'post' post type only.
 if ( get_post_type( $post_id ) !== 'post' ) {
@@ -43,6 +59,16 @@ if ( 'image' === $media_type ) {
     $poster_id = $poster_meta_id ?: $featured_img_id;
 }
 
+// Fallback to Blog Settings Default Image if still empty
+if ( ! $poster_id ) {
+	$poster_id = \Ambrygen\Theme\Core\Theme_Options::get_blog_default_image_id();
+}
+
+// Fallback to Global Placeholder Image if still empty
+if ( ! $poster_id ) {
+	$poster_id = \Ambrygen\Theme\Core\Theme_Options::get_placeholder_image_id();
+}
+
 $poster_url = $poster_id ? wp_get_attachment_image_url( $poster_id, 'full' ) : AMBRYGEN_DEFAULT_IMAGE;
 
 // Author info using BlogRenderer (handles webinar_authors repeater and linked_author fallbacks with overrides)
@@ -59,7 +85,7 @@ $authors_data = BlogRenderer::instance()->get_post_authors_data( $post_id );
 
             <!-- Left: Media Column -->
             <div class="blog-featured__image-col">
-                <?php if ( 'video' === $media_type ) : 
+                <?php if ( 'video' === $media_type && ! $is_editor ) : 
                     $iframe_src      = ( 'embed' === $video_source ) ? Helper::get_iframe_src( $video_url ) : '';
                     $final_video_url = ( 'mp4' === $video_source ) ? wp_get_attachment_url( $video_file_id ) : $iframe_src;
                     $video_type_attr = ( 'mp4' === $video_source ) ? 'mp4' : 'embed';
@@ -224,6 +250,7 @@ $container_id = $modal_id . '-container';
 $title_id     = $modal_id . '-title';
 $desc_id      = $modal_id . '-description';
 ?>
+<?php if ( ! $is_editor ) : ?>
 <div
     class="modal-popup modal-popup--video blog-hero-video-modal"
     id="<?php echo esc_attr( $modal_id ); ?>"
@@ -251,3 +278,4 @@ $desc_id      = $modal_id . '-description';
         </div>
     </div>
 </div>
+<?php endif; ?>

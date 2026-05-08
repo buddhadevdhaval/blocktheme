@@ -25,7 +25,6 @@ export default function Edit( { attributes, setAttributes, context } ) {
 						setAttributes( { question: value } )
 					}
 					placeholder={ __( 'Add Question...', 'ambrygen-web' ) }
-					withoutInteractiveFormatting={ true }
 				/>
 
 				{ showSubHeading && (

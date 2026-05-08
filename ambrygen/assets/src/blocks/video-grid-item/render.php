@@ -18,11 +18,11 @@ use Ambrygen\Theme\Core\Helper;
 $ambrygen_attributes       = is_array( $attributes ?? null ) ? $attributes : array();
 $ambrygen_title            = $ambrygen_attributes['title'] ?? '';
 $ambrygen_description      = $ambrygen_attributes['description'] ?? '';
-$ambrygen_video_type       = $ambrygen_attributes['videoType'] ?? 'embed';
-$ambrygen_iframe_url       = $ambrygen_attributes['iframeUrl'] ?? '';
-$ambrygen_video_url        = isset( $ambrygen_attributes['videoUrl'] ) ? (string) $ambrygen_attributes['videoUrl'] : '';
+$ambrygen_video_type       = isset( $ambrygen_attributes['videoType'] ) && 'mp4' === $ambrygen_attributes['videoType'] ? 'mp4' : 'embed';
+$ambrygen_iframe_url       = isset( $ambrygen_attributes['iframeUrl'] ) ? esc_url_raw( $ambrygen_attributes['iframeUrl'] ) : '';
+$ambrygen_video_url        = isset( $ambrygen_attributes['videoUrl'] ) ? esc_url_raw( $ambrygen_attributes['videoUrl'] ) : '';
 $ambrygen_poster_image_id  = isset( $ambrygen_attributes['posterImageId'] ) ? absint( $ambrygen_attributes['posterImageId'] ) : 0;
-$ambrygen_poster_image_url = isset( $ambrygen_attributes['posterImageUrl'] ) ? (string) $ambrygen_attributes['posterImageUrl'] : '';
+$ambrygen_poster_image_url = isset( $ambrygen_attributes['posterImageUrl'] ) ? esc_url_raw( $ambrygen_attributes['posterImageUrl'] ) : '';
 $ambrygen_poster_image_alt = isset( $ambrygen_attributes['posterImageAlt'] ) ? sanitize_text_field( $ambrygen_attributes['posterImageAlt'] ) : '';
 
 $ambrygen_iframe_src       = Helper::get_iframe_src( $ambrygen_iframe_url );
@@ -120,7 +120,9 @@ if ( ! $ambrygen_has_video ) {
 			</div>
 		<?php endif; ?>
 	</div>
-	<div class="is-style-gl-s16" aria-hidden="true"></div>
+	<?php if ( $ambrygen_title_text || $ambrygen_description_text ) : ?>
+		<div class="is-style-gl-s16" aria-hidden="true"></div>
+	<?php endif; ?>
 	<?php if ( $ambrygen_title_text ) : ?>
 		<div class="subtitle2-sbold videos__cards-item-title">
 			<?php echo wp_kses( $ambrygen_title, Helper::allowed_heading_html() ); ?>

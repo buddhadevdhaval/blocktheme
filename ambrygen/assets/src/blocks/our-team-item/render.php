@@ -22,10 +22,13 @@ if ( ! $ambrygen_post_id ) {
 	return;
 }
 
-$ambrygen_cache_key   = 'team_member_' . $ambrygen_post_id;
-$ambrygen_cached_data = wp_cache_get( $ambrygen_cache_key, 'ambrygen_team' );
+$ambrygen_team_member_cache = isset( $GLOBALS['ambrygen_team_member_cache'] ) && is_array( $GLOBALS['ambrygen_team_member_cache'] )
+	? $GLOBALS['ambrygen_team_member_cache']
+	: array();
 
-if ( false === $ambrygen_cached_data ) {
+if ( isset( $ambrygen_team_member_cache[ $ambrygen_post_id ] ) ) {
+	$ambrygen_cached_data = $ambrygen_team_member_cache[ $ambrygen_post_id ];
+} else {
 	$ambrygen_display_post = get_post( $ambrygen_post_id );
 
 	if ( ! $ambrygen_display_post || 'publish' !== $ambrygen_display_post->post_status ) {
@@ -44,14 +47,8 @@ if ( false === $ambrygen_cached_data ) {
 		'bio'         => apply_filters( 'the_content', $ambrygen_display_post->post_content ),
 	);
 
-	wp_cache_set( $ambrygen_cache_key, $ambrygen_cached_data, 'ambrygen_team', 12 * HOUR_IN_SECONDS );
-} else {
-	// Validate cached post still exists and is published
-	$ambrygen_display_post = get_post( $ambrygen_post_id );
-	if ( ! $ambrygen_display_post || 'publish' !== $ambrygen_display_post->post_status ) {
-		wp_cache_delete( $ambrygen_cache_key, 'ambrygen_team' );
-		return;
-	}
+	$ambrygen_team_member_cache[ $ambrygen_post_id ] = $ambrygen_cached_data;
+	$GLOBALS['ambrygen_team_member_cache']           = $ambrygen_team_member_cache;
 }
 
 $ambrygen_name        = isset( $ambrygen_cached_data['name'] ) ? (string) $ambrygen_cached_data['name'] : '';

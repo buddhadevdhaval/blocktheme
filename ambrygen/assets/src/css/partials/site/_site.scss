@@ -27,11 +27,10 @@
 /* Detail Pages */
 @use "detail-pages/archive-single";
 @use "detail-pages/event-details.scss";
-
-
-@use "cardio-detail";
+@use "detail-pages/genetic-detail";
 
 @use "cardiology";
 
 @use "sidebar-common";
 
+@use "search-modal";

@@ -50,9 +50,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 				/>
 
-				{ title && (
-					<div className="is-style-gl-s32" aria-hidden="true"></div>
-				) }
+				<div className="is-style-gl-s32" aria-hidden="true"></div>
 
 				<InnerBlocks
 					allowedBlocks={ allowedBlocks }
@@ -63,4 +61,3 @@ export default function Edit( { attributes, setAttributes } ) {
 		</>
 	);
 }
-

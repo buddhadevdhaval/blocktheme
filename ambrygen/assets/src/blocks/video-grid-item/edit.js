@@ -95,6 +95,9 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const iframeSrc = getEditorIframeSrc( iframeUrl );
 	const videoTitle = title || __( 'Video player', 'ambrygen-web' );
+	const hasEmbedVideo = videoType === 'embed' && Boolean( iframeSrc );
+	const hasMp4Video = videoType === 'mp4' && Boolean( videoUrl );
+	const hasPosterImage = Boolean( posterImageUrl );
 
 	const blockProps = useBlockProps( {
 		className: 'videos__cards-item',
@@ -116,7 +119,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								value: 'embed',
 							},
 							{
-								label: __( 'Self Hosted (MP4)', 'ambrygen-web' ),
+								label: __( 'Upload video (MP4)', 'ambrygen-web' ),
 								value: 'mp4',
 							},
 						] }
@@ -185,7 +188,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							) }
 
 							<TextControl
-								label={ __( 'Self Hosted URL', 'ambrygen-web' ) }
+								label={ __( 'Video URL', 'ambrygen-web' ) }
 								value={ videoUrl }
 								onChange={ ( value ) =>
 									setAttributes( {
@@ -197,7 +200,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					) }
 
 					<ImageUploader
-						label={ __( 'Thumbnail / Poster Image', 'ambrygen-web' ) }
+						label={ __( 'Thumbnail Image', 'ambrygen-web' ) }
 						url={ posterImageUrl }
 						id={ posterImageId }
 						onSelect={ ( media ) =>
@@ -220,7 +223,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 			<div { ...blockProps }>
 				<div className="media_video js-gsap-fade">
-					{ posterImageUrl && ! iframeSrc && ! videoUrl && (
+					{ hasPosterImage && (
 						<div className="videos__cards-item-thumbnail">
 							<img
 								src={ posterImageUrl }
@@ -233,14 +236,16 @@ export default function Edit( { attributes, setAttributes } ) {
 							/>
 						</div>
 					) }
-					{ videoType === 'embed' && (
+					{ hasEmbedVideo && (
 						<div className="features-media__video-wrapper--iframe">
 							<iframe
-								src={ iframeSrc || '' }
+								src={ iframeSrc }
 								title={ videoTitle }
 								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 								allowFullScreen
 								className="features-media__iframe"
+								tabIndex="-1"
+								aria-hidden="true"
 							/>
 							<div className="play-icon-video">
 								<div className="play-icon circle-icon">
@@ -263,17 +268,37 @@ export default function Edit( { attributes, setAttributes } ) {
 							</div>
 						</div>
 					) }
-					{ videoType === 'mp4' && (
+					{ hasMp4Video && (
 						<div className="features-media__video-wrapper">
 							<video
 								className="videos"
 								playsInline
-								controls
 								preload="metadata"
 								src={ videoUrl }
-								poster={ posterImageUrl || '' }
+								poster={ posterImageUrl || undefined }
 								aria-label={ videoTitle }
+								tabIndex="-1"
+								aria-hidden="true"
 							/>
+							<div className="play-icon-video">
+								<div className="play-icon circle-icon">
+									<img
+										src={ playIcon }
+										className="play-icon__img"
+										alt=""
+									/>
+								</div>
+								<div
+									className="pause-icon circle-icon"
+									style={ { display: 'none' } }
+								>
+									<img
+										src={ pauseIcon }
+										className="pause-icon__img"
+										alt=""
+									/>
+								</div>
+							</div>
 						</div>
 					) }
 				</div>

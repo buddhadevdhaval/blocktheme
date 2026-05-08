@@ -87,26 +87,27 @@ $ambrygen_richtext_allowed = array(
 	<?php endif; ?>
 	<div class="heading-content-section__inner block__rowflex is-horizontal">
 		<?php if (!empty($ambrygen_headline)): ?>
+			<div class="block__rowflex--col-left">
 			<<?php echo esc_attr($ambrygen_headline_tag); ?> id="<?php echo esc_attr( $ambrygen_headline_id ); ?>" class="heading-content-section__title heading-3 block-title mb-0
 				block__rowflex--heading-title js-gsap-fade">
 				<?php
 				echo wp_kses($ambrygen_headline, $ambrygen_richtext_allowed);
 				?>
 			</<?php echo esc_attr($ambrygen_headline_tag); ?>>
+			</div>
 		<?php endif; ?>
 
-		<div class="heading-content-wrapper">
+		<div class="heading-content-wrapper block__rowflex--block-content js-gsap-fade block-description">
 			<?php if (!empty($ambrygen_description)): ?>
 				<div
-					class="heading-content-section__description block__rowflex--block-content block-description js-gsap-fade">
+					class="heading-content-section__description block__rowflex--block-content">
 					<?php echo wp_kses($ambrygen_description, $ambrygen_richtext_allowed); ?>
 				</div>
-
 			<?php endif; ?>
 
 			<?php if (trim($content)): ?>
-				<div class="is-style-gl-s24" aria-hidden="true"></div>
-				<div class="heading-content-section__content js-gsap-fade">
+
+				<div class="heading-content-section__content">
 					<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</div>
 			<?php endif; ?>

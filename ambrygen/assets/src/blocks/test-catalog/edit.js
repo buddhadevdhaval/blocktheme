@@ -295,7 +295,7 @@ export default function Edit({ attributes, setAttributes, clientId, name }) {
 	useEffect(() => {
 		const expectedId = `test-catalog-${clientId.slice(0, 8)}`;
 
-		if ((!blockId || !blockId.endsWith(clientId.slice(0, 8))) && clientId) {
+		if ( !blockId ) {
 			setAttributes({
 				blockId: expectedId,
 			});

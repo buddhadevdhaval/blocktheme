@@ -13,7 +13,8 @@
 		}
 	},
 	"supports": {
-		"html": false
+		"html": false,
+		"inserter": false
 	},
 	"textdomain": "ambrygen",
 	"editorScript": "file:./index.js",

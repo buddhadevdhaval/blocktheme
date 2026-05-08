@@ -72,9 +72,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					</div>
 				</div>
 
-				{ heading && (
-					<div className="is-style-gl-s32" aria-hidden="true"></div>
-				) }
+				<div className="is-style-gl-s32" aria-hidden="true"></div>
 
 				<div className="our-approach__content">
 					<InnerBlocks

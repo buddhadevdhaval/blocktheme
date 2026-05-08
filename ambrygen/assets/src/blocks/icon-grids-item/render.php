@@ -12,6 +12,31 @@ use Ambrygen\Theme\Core\Helper;
 
 defined( 'ABSPATH' ) || exit;
 
+$ambrygen_richtext_allowed = array(
+	'span'   => array(
+		'class'              => true,
+		'title'              => true,
+		'data-tooltip'       => true,
+		'data-tooltip-title' => true,
+		'data-tooltip-b64'   => true,
+		'data-tooltip-id'    => true,
+	),
+	'mark'   => array(
+		'class' => true,
+		'style' => true,
+	),
+	'br'     => array(),
+	'strong' => array(),
+	'em'     => array(),
+	'a'      => array(
+		'href'   => true,
+		'title'  => true,
+		'target' => true,
+		'rel'    => true,
+		'class'  => true,
+	),
+);
+
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
 		'class' => 'info-list__col ',
@@ -78,6 +103,19 @@ if ( 'our-testing-menu' !== $ambrygen_icon_variation ) {
 	$ambrygen_count = $ambrygen_attributes['count'] ?? '';
 }
 
+$ambrygen_has_title       = '' !== trim( wp_strip_all_tags( (string) $ambrygen_title_raw ) );
+$ambrygen_has_description = '' !== trim( wp_strip_all_tags( (string) $ambrygen_description ) );
+$ambrygen_has_count       = '' !== trim( wp_strip_all_tags( (string) $ambrygen_count ) );
+$ambrygen_visible_links   = array_values(
+	array_filter(
+		$ambrygen_links,
+		static function ( $ambrygen_link ) {
+			return ! empty( $ambrygen_link['label'] ) && ! empty( $ambrygen_link['url'] );
+		}
+	)
+);
+$ambrygen_has_links       = ! empty( $ambrygen_visible_links );
+
 // Check if card has any content.
 $ambrygen_has_content = ! empty( $ambrygen_title ) || ! empty( $ambrygen_description ) || ! empty( $ambrygen_count ) || ! empty( $ambrygen_icon_id ) || ! empty( $ambrygen_links ) || ( 'our-testing-menu' !== $ambrygen_icon_variation && ! empty( $ambrygen_icon_url ) );
 
@@ -141,7 +179,7 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 	?>
 	<div class="features-tabs__card">
 		<div class="features-tabs__content-head">
-			<div class="features-tabs__category teste body2-semibold">
+			<div class="features-tabs__category body2-semibold">
 				<?php echo esc_html( $ambrygen_category ); ?>
 			</div>
 			<div class="heading-5 features-tabs__card-title">
@@ -217,7 +255,9 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 					</div>
 					<?php endif; ?>
 
-					<div class="is-style-gl-s8" aria-hidden="true"></div>
+					<?php if ( $ambrygen_title ) : ?>
+						<div class="is-style-gl-s8" aria-hidden="true"></div>
+					<?php endif; ?>
 
 				</div>
 
@@ -256,19 +296,23 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 
 				<?php if ( $ambrygen_title ) : ?>
 		<h3 class="icon-grid__item-title text-xl-semibold mb-0">
-					<?php echo esc_html( $ambrygen_title ); ?>
+					<?php echo wp_kses( $ambrygen_title_raw, $ambrygen_richtext_allowed ); ?>
 		</h3>
 	<?php endif; ?>
 
+				<?php if ( $ambrygen_has_title && $ambrygen_has_description ) : ?>
 	<div class="is-style-gl-s8" aria-hidden="true"></div>
+	<?php endif; ?>
 
-				<?php if ( ! empty( $ambrygen_attributes['description'] ) ) : ?>
+				<?php if ( $ambrygen_has_description ) : ?>
 		<div class="icon-grid__item-description text-md-reg">
-					<?php echo wp_kses_post( $ambrygen_attributes['description'] ); ?>
+					<?php echo wp_kses_post( $ambrygen_description ); ?>
 		</div>
 	<?php endif; ?>
 
+				<?php if ( ( $ambrygen_has_title || $ambrygen_has_description ) && $ambrygen_has_links ) : ?>
 	<div class="is-style-gl-s20" aria-hidden="true"></div>
+	<?php endif; ?>
 
 				<?php
 				if ( ! empty( $ambrygen_links[0]['label'] ) && ! empty( $ambrygen_links[0]['url'] ) ) :
@@ -326,25 +370,30 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 					</div>
 				<?php endif; ?>
 
-				<?php if ( $ambrygen_count ) : ?>
+				<?php if ( $ambrygen_has_count ) : ?>
 					<div class="info-list__count subtitle2-sbold">
 						<?php echo esc_html( $ambrygen_count ); ?> Tests
 					</div>
 				<?php endif; ?>
 
-				<div class="is-style-gl-s8"></div>
+				<?php if ( ( $ambrygen_has_title || $ambrygen_has_count ) && $ambrygen_has_description ) : ?>
+					<div class="is-style-gl-s8" aria-hidden="true"></div>
+				<?php endif; ?>
 
-				<?php if ( ! empty( $ambrygen_attributes['description'] ) ) : ?>
+				<?php if ( $ambrygen_has_description ) : ?>
 					<div class="info-list__description subtitle2-sbold">
-						<?php echo wp_kses_post( $ambrygen_attributes['description'] ); ?>
+						<?php echo wp_kses_post( $ambrygen_description ); ?>
 					</div>
+				<?php endif; ?>
+
+				<?php if ( ( $ambrygen_has_title || $ambrygen_has_count || $ambrygen_has_description ) && $ambrygen_has_links ) : ?>
 					<div class="is-style-gl-s16" aria-hidden="true"></div>
 				<?php endif; ?>
 
-				<?php if ( ! empty( $ambrygen_links ) ) : ?>
+				<?php if ( $ambrygen_has_links ) : ?>
 					<div class="info-list__links">
 						<?php
-						foreach ( $ambrygen_links as $ambrygen_link ) :
+						foreach ( $ambrygen_visible_links as $ambrygen_link ) :
 
 							$ambrygen_link_label  = isset( $ambrygen_link['label'] ) ? sanitize_text_field( $ambrygen_link['label'] ) : '';
 							$ambrygen_link_url    = isset( $ambrygen_link['url'] ) ? esc_url( $ambrygen_link['url'] ) : '';
@@ -388,19 +437,24 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 					</div>
 				<?php endif; ?>
 
-				<div class="is-style-gl-s8"></div>
+				<?php if ( $ambrygen_has_title && $ambrygen_has_description ) : ?>
+					<div class="is-style-gl-s8" aria-hidden="true"></div>
+				<?php endif; ?>
 
-				<?php if ( ! empty( $ambrygen_attributes['description'] ) ) : ?>
+				<?php if ( $ambrygen_has_description ) : ?>
 					<div class="info-list__description text-md-reg">
-						<?php echo wp_kses_post( $ambrygen_attributes['description'] ); ?>
+						<?php echo wp_kses_post( $ambrygen_description ); ?>
 					</div>
+				<?php endif; ?>
+
+				<?php if ( ( $ambrygen_has_title || $ambrygen_has_description ) && $ambrygen_has_links ) : ?>
 					<div class="is-style-gl-s16" aria-hidden="true"></div>
 				<?php endif; ?>
 
-				<?php if ( ! empty( $ambrygen_links ) ) : ?>
+				<?php if ( $ambrygen_has_links ) : ?>
 					<div class="info-list__links">
 						<?php
-						foreach ( $ambrygen_links as $ambrygen_link ) :
+						foreach ( $ambrygen_visible_links as $ambrygen_link ) :
 
 							$ambrygen_link_label  = isset( $ambrygen_link['label'] ) ? sanitize_text_field( $ambrygen_link['label'] ) : '';
 							$ambrygen_link_url    = isset( $ambrygen_link['url'] ) ? esc_url( $ambrygen_link['url'] ) : '';

@@ -48,7 +48,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	useEffect( () => {
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
+		if ( ! blockId ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
@@ -143,12 +143,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								) }
 							/>
 						) }
-						{ showEyebrow && eyebrow && heading && (
-							<div
-								className="is-style-gl-s12"
-								aria-hidden="true"
-							/>
-						) }
+						<div
+							className="is-style-gl-s12"
+							aria-hidden="true"
+						/>
 						<RichText
 							tagName={ HeadingTag }
 							className={ `block-title block__rowflex--heading-title heading-3 mb-0` }
@@ -179,9 +177,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					</div>
 				</div>
 
-				{ ( heading || description ) && (
-					<div className="is-style-gl-s32" aria-hidden="true"></div>
-				) }
+				<div className="is-style-gl-s32" aria-hidden="true"></div>
 
 				<div className="three-column-image-grid__content">
 					<InnerBlocks

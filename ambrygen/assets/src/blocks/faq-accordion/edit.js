@@ -127,7 +127,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		const clientIdSuffix = clientId.slice( 0, 8 );
 		const expectedId = `section-${ clientIdSuffix }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
+		if ( ! blockId ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
@@ -157,7 +157,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Layout Settings', 'ambrygen-web' ) }
+					title={ __( 'Layout Variation', 'ambrygen-web' ) }
 					initialOpen
 				>
 					<div className="layout-variant-selector">
@@ -188,7 +188,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					</div>
 
 				</PanelBody>
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) } initialOpen={ false }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag }
@@ -198,7 +198,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						type='heading'
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'FAQ Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'FAQ Settings', 'ambrygen-web' ) } initialOpen={ true }>
 					{ showImage && (
 						<ImageUploader
 							label={ __( 'FAQ Image', 'ambrygen-web' ) }
@@ -255,12 +255,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									'ambrygen-web'
 								) }
 							/>
-							{ hasDescription && (
-								<div
-									className="is-style-gl-s12"
-									aria-hidden="true"
-								></div>
-							) }
+							<div
+								className="is-style-gl-s12"
+								aria-hidden="true"
+							></div>
 							<RichText
 								tagName="div"
 								className="block-description alongside-faq__description"
@@ -274,12 +272,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								) }
 							/>
 
-							{ hasFaqContent && (
-								<div
-									className="is-style-gl-s24"
-									aria-hidden="true"
-								></div>
-							) }
+							<div
+								className="is-style-gl-s24"
+								aria-hidden="true"
+							></div>
 
 							<div className="faq">
 								<InnerBlocks
@@ -315,4 +311,3 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
-

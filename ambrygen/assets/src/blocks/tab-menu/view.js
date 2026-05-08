@@ -3,6 +3,9 @@ document.addEventListener( 'DOMContentLoaded', function () {
 		.querySelectorAll( '.secondary-sticky-tabs' )
 		.forEach( function ( wrapper ) {
 			const tabs = wrapper.querySelectorAll( '.tab-menu-section__tab' );
+			const mobileSelect = wrapper.querySelector(
+				'.tabs__mobile-nav .tabs__select'
+			);
 			const managedAttr = 'data-tab-menu-managed';
 			const originalHiddenAttr = 'data-tab-menu-original-hidden';
 
@@ -105,6 +108,11 @@ document.addEventListener( 'DOMContentLoaded', function () {
 					);
 				} );
 
+				if ( mobileSelect ) {
+					mobileSelect.value =
+						activeTab.dataset.scrollTarget || '';
+				}
+
 				if ( tabBehavior !== 'tab-mode' ) {
 					return;
 				}
@@ -203,6 +211,20 @@ document.addEventListener( 'DOMContentLoaded', function () {
 					scrollToTarget( clickedPair.target );
 				} );
 			} );
+
+			if ( mobileSelect ) {
+				mobileSelect.addEventListener( 'change', function () {
+					const selectedTab = Array.from( tabs ).find( function ( tab ) {
+						return tab.dataset.scrollTarget === mobileSelect.value;
+					} );
+
+					if ( ! selectedTab ) {
+						return;
+					}
+
+					selectedTab.click();
+				} );
+			}
 
 			const updateActiveTabFromScroll = function () {
 				const offset = getOffset();

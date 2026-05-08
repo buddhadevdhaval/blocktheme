@@ -6,14 +6,13 @@ import {
 	MediaUpload,
 	MediaUploadCheck,
 } from '@wordpress/block-editor';
-import { useEffect, useState, useMemo } from '@wordpress/element';
+import { useEffect, useMemo } from '@wordpress/element';
 import {
 	PanelBody,
 	SelectControl,
 	TextControl,
 	Button,
 	ToggleControl,
-	Modal,
 } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { isValidVideoUrl, getIframeSrc } from '../../utils/validation.js';
@@ -22,8 +21,73 @@ import {
 	TagSelector,
 	DEFAULT_IMAGES,
 	CtaButtonField,
+	BlockExamplePreview,
 } from '../_shared/components';
 import playIcon from '../../images/play-icon.svg';
+
+const getEmbedSourceFromInput = ( url ) => {
+	if ( ! url || typeof url !== 'string' ) {
+		return '';
+	}
+
+	const trimmedUrl = url.trim();
+	const iframeSrcMatch = trimmedUrl.match( /src=["']([^"']+)["']/i );
+
+	return iframeSrcMatch?.[ 1 ] || trimmedUrl;
+};
+
+const isAllowedEmbedUrl = ( url ) => {
+	const embedSource = getEmbedSourceFromInput( url );
+
+	if ( ! embedSource ) {
+		return false;
+	}
+
+	try {
+		const parsedUrl = new URL( embedSource );
+		const hostname = parsedUrl.hostname.replace( /^www\./, '' );
+
+		if ( parsedUrl.protocol !== 'https:' ) {
+			return false;
+		}
+
+		if (
+			[ 'youtube.com', 'youtube-nocookie.com', 'm.youtube.com' ].includes(
+				hostname
+			) &&
+			parsedUrl.pathname.startsWith( '/embed/' )
+		) {
+			const videoId = parsedUrl.pathname.split( '/embed/' )[ 1 ];
+
+			return /^[a-zA-Z0-9_-]{11}$/.test( videoId || '' );
+		}
+
+		if (
+			hostname === 'player.vimeo.com' &&
+			/^\/video\/\d+$/.test( parsedUrl.pathname )
+		) {
+			return true;
+		}
+
+		return false;
+	} catch ( error ) {
+		return false;
+	}
+};
+
+const getEditorIframeSrc = ( url ) => {
+	const embedSource = getEmbedSourceFromInput( url );
+
+	if ( ! embedSource ) {
+		return '';
+	}
+
+	if ( isAllowedEmbedUrl( embedSource ) ) {
+		return embedSource;
+	}
+
+	return getIframeSrc( embedSource ) || '';
+};
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
@@ -39,13 +103,20 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		iframeUrl,
 		imageUrl,
 		imageId = 0,
+		imageAlt = '',
 		showImage = false,
 		isHeaderVertical = false,
 	} = attributes;
 
+	const isExample = blockId === 'example-block-preview';
 	const blockProps = useBlockProps( { className: 'features-media' } );
+	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
 
 	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
+
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
 		if ( ! blockId ) {
@@ -53,59 +124,48 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				blockId: expectedId,
 			} );
 		}
-	}, [ clientId, blockId, setAttributes ] );
+	}, [ clientId, blockId, isExample, setAttributes ] );
 
-	const iframeSrc = iframeUrl || getIframeSrc( videoUrl ) || '';
-	const [ isVideoModalOpen, setIsVideoModalOpen ] = useState( false );
-	const hasEditorVideo =
-		! showImage &&
-		( ( videoType === 'embed' && iframeSrc ) ||
-			( videoType === 'mp4' && videoUrl ) );
+	const iframeSrc = getEditorIframeSrc( iframeUrl );
+	const hasPosterImage = Boolean( posterImage?.url );
 	const imageMedia = useSelect(
 		( select ) => ( imageId ? select( 'core' ).getMedia( imageId ) : null ),
 		[ imageId ]
 	);
 	const imagePreviewUrl = imageMedia?.source_url || imageUrl || '';
+	const displayUrl = imagePreviewUrl || defaults?.placeholder?.url || '';
 
-	const displayUrl = useMemo( () => {
-		return imagePreviewUrl || DEFAULT_IMAGES().placeholder.url;
-	}, [ imagePreviewUrl ] );
-
-	useEffect( () => {
-		setIsVideoModalOpen( false );
-	}, [ iframeSrc, videoType, videoUrl ] );
-
-	// Helper to get URL from image object
 	const getImageUrl = ( imgObj ) => ( imgObj?.url ? imgObj.url : '' );
-	const getPlaySrc = ( src ) =>
-		src.includes( 'autoplay=1' )
-			? src
-			: `${ src }${ src.includes( '?' ) ? '&' : '?' }autoplay=1`;
 
-	const onPlayClick = () => {
-		setIsVideoModalOpen( true );
-	};
+	if ( isExample ) {
+		return (
+			<BlockExamplePreview
+				className="theme-video-example-preview"
+				imagePath="/assets/src/images/theme-video/preview.png"
+			/>
+		);
+	}
 
-	// ------------------------------
-	// Inspector Controls
-	// ------------------------------
 	return (
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Video Settings', 'ambrygen-web' ) }
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
 					initialOpen={ true }
 				>
-					{ /* Heading Tag Selector */ }
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag || 'h2' }
 						onChange={ ( tag ) =>
 							setAttributes( { headingTag: tag } )
 						}
-						type='heading'
+						type="heading"
 					/>
-
+				</PanelBody>
+				<PanelBody
+					title={ __( 'Video Settings', 'ambrygen-web' ) }
+					initialOpen={ true }
+				>
 					<ToggleControl
 						label={ __(
 							'Show image instead of video',
@@ -114,13 +174,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						checked={ showImage }
 						onChange={ ( value ) =>
 							setAttributes( { showImage: value } )
-						}
-					/>
-					<ToggleControl
-						label={ __( 'Show Description', 'ambrygen-web' ) }
-						checked={ showDescription }
-						onChange={ ( value ) =>
-							setAttributes( { showDescription: value } )
 						}
 					/>
 					<ToggleControl
@@ -138,12 +191,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								setAttributes( {
 									imageId: media.id || 0,
 									imageUrl: '',
+									imageAlt: media.alt || '',
 								} )
 							}
 							onRemove={ () =>
 								setAttributes( {
 									imageId: 0,
 									imageUrl: '',
+									imageAlt: '',
 								} )
 							}
 							label={ __( 'Feature Image', 'ambrygen-web' ) }
@@ -158,7 +213,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								options={ [
 									{
 										label: __(
-											'Self Hosted (MP4)',
+											'Upload video (MP4)',
 											'ambrygen-web'
 										),
 										value: 'mp4',
@@ -178,14 +233,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 							{ videoType === 'embed' && (
 								<TextControl
-									label={ __(
-										'Iframe URL (optional)',
-										'ambrygen-web'
-									) }
+									label={ __( 'Video URL', 'ambrygen-web' ) }
 									value={ iframeUrl || '' }
 									onChange={ ( value ) =>
 										setAttributes( { iframeUrl: value } )
 									}
+									help={ __(
+										'Paste YouTube/Vimeo or iframe embed URL.',
+										'ambrygen-web'
+									) }
 								/>
 							) }
 
@@ -202,7 +258,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 											value={ videoUrl }
 											render={ ( { open } ) => (
 												<Button
-													isSecondary
+													variant="secondary"
 													onClick={ open }
 													style={ {
 														marginBottom: '10px',
@@ -245,7 +301,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 									<TextControl
 										label={ __(
-											'Self Hosted Url',
+											'Video URL',
 											'ambrygen-web'
 										) }
 										value={ videoUrl || '' }
@@ -272,6 +328,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 										posterImage: {
 											id: media.id,
 											url: media.url,
+											alt: media.alt || '',
 										},
 									} )
 								}
@@ -279,7 +336,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									setAttributes( { posterImage: null } )
 								}
 								label={ __(
-									'Video Poster Image',
+									'Thumbnail Image',
 									'ambrygen-web'
 								) }
 							/>
@@ -287,7 +344,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					) }
 
 					<CtaButtonField
-						label={ __( 'Link Settings', 'ambrygen-web' ) }
+						label=""
 						textLabel={ __( 'Link Text', 'ambrygen-web' ) }
 						defaultVariant="primary"
 						value={ link }
@@ -299,51 +356,50 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 			</InspectorControls>
 
-			{ /* ------------------------------
-                Block Content
-            ------------------------------ */ }
 			<div { ...blockProps }>
 				<div
 					className={ `features-media__header block__rowflex is-${
 						isHeaderVertical ? 'vertical' : 'horizontal'
 					}` }
 				>
-					<RichText
-						tagName={ headingTag || 'h2' }
-						value={ heading }
-						onChange={ ( value ) =>
-							setAttributes( { heading: value } )
-						}
-						placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
-						className="block-title block__rowflex--heading-title heading-2 mb-0 genetic-heading"
-					/>
-					<div className='block__rowflex--block-content'>
-					{ showDescription && (
+					<div className="block__rowflex--col-left">
 						<RichText
-							tagName="p"
-							value={ description }
+							tagName={ headingTag || 'h2' }
+							value={ heading }
 							onChange={ ( value ) =>
-								setAttributes( { description: value } )
+								setAttributes( { heading: value } )
 							}
-							placeholder={ __(
-								'Add Description…',
-								'ambrygen-web'
-							) }
-							className={ ` subtitle1-reg genetic-description${
-								showDescription ? '' : ' is-hidden'
-							}` }
+							placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
+							className="block-title block__rowflex--heading-title heading-2 mb-0 genetic-heading"
 						/>
-					) }
-					{ link?.text && (
-						<div className="block_rowflex-link">
-							<a
-								href={ link.url || '#' }
-								className="site-btn is-style-site-text-btn has-right-arrow"
-							>
-								{ link.text }
-							</a>
-						</div>
-					) }
+					</div>
+					<div className="block__rowflex--block-content">
+						{ showDescription && (
+							<RichText
+								tagName="p"
+								value={ description }
+								onChange={ ( value ) =>
+									setAttributes( { description: value } )
+								}
+								placeholder={ __(
+									'Add Description…',
+									'ambrygen-web'
+								) }
+								className={ ` subtitle1-reg genetic-description${
+									showDescription ? '' : ' is-hidden'
+								}` }
+							/>
+						) }
+						{ link?.text && link?.url && (
+							<div className="block_rowflex-link">
+								<a
+									href={ link.url }
+									className="site-btn is-style-site-text-btn has-right-arrow"
+								>
+									{ link.text }
+								</a>
+							</div>
+						) }
 					</div>
 				</div>
 
@@ -354,124 +410,75 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						<img
 							src={ displayUrl }
 							className="features-media__image"
-							alt={
-								imagePreviewUrl
-									? __(
-											'Theme video image',
-											'ambrygen-web'
-									  )
-									: __(
-											'Default placeholder image',
-											'ambrygen-web'
-									  )
-							}
+							alt={ imagePreviewUrl ? imageAlt || '' : '' }
 						/>
 					</div>
 				) }
 
-				<>
-					{ /* Video Embed */ }
-					{ ! showImage && (
-						<div className="features-media__video media_video">
-							{ ! showImage &&
-								videoType === 'embed' &&
-								iframeSrc && (
-									<>
-										<div className="features-media__video-wrapper features-media__video-wrapper--iframe">
-											<iframe
-												src={ iframeSrc }
-												title={ __(
-													'Theme video',
-													'ambrygen-web'
-												) }
-												allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-												allowFullScreen
-												className="features-media__iframe"
-											/>
-										</div>
+				{ ! showImage && (
+					<div className="features-media__video media_video">
+						{ hasPosterImage && (
+							<div className="videos__cards-item-thumbnail">
+								<img
+									src={ posterImage.url }
+									alt={ posterImage?.alt || '' }
+									className="videos__cards-item-thumbnail-img"
+								/>
+							</div>
+						) }
+						{ videoType === 'embed' && iframeSrc && (
+							<>
+								<div className="features-media__video-wrapper features-media__video-wrapper--iframe">
+									<iframe
+										src={ iframeSrc }
+										title={ __(
+											'Theme video',
+											'ambrygen-web'
+										) }
+										allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+										allowFullScreen
+										className="features-media__iframe"
+										tabIndex="-1"
+										aria-hidden="true"
+									/>
+								</div>
 
-										<div className="play-icon-video">
-											<button
-												type="button"
-												className="play-icon circle-icon"
-												onClick={ onPlayClick }
-											>
-												<img
-													src={ playIcon }
-													alt={ __(
-														'Play Icon',
-														'ambrygen-web'
-													) }
-													className="play-icon__img"
-												/>
-											</button>
-										</div>
-									</>
-								) }
-
-							{ /* MP4 Video */ }
-							{ ! showImage &&
-								videoType === 'mp4' &&
-								videoUrl && (
-									<div className="features-media__video-wrapper">
-										<video
-											controls
-											src={ videoUrl }
-											poster={ posterImage?.url || '' }
-											className="videos"
+								<div className="play-icon-video">
+									<div className="play-icon circle-icon">
+										<img
+											src={ playIcon }
+											alt=""
+											aria-hidden="true"
+											className="play-icon__img"
 										/>
-										<div className="play-icon-video">
-											<button
-												type="button"
-												className="play-icon circle-icon"
-												onClick={ onPlayClick }
-											>
-												<img
-													src={ playIcon }
-													alt={ __(
-														'Play Icon',
-														'ambrygen-web'
-													) }
-													className="play-icon__img"
-												/>
-											</button>
-										</div>
 									</div>
-								) }
-						</div>
-					) }
-				</>
-				{ isVideoModalOpen && hasEditorVideo && (
-					<Modal
-						title={ __( 'Video', 'ambrygen-web' ) }
-						className="modal-popup--video"
-						onRequestClose={ () => setIsVideoModalOpen( false ) }
-					>
-						<div className="modal-content__video-wrapper">
-							{ videoType === 'mp4' && videoUrl && (
+								</div>
+							</>
+						) }
+
+						{ videoType === 'mp4' && videoUrl && (
+							<div className="features-media__video-wrapper">
 								<video
-									className="videos"
-									controls
-									autoPlay
-									playsInline
 									src={ videoUrl }
 									poster={ posterImage?.url || '' }
+									className="videos"
+									preload="metadata"
+									tabIndex="-1"
+									aria-hidden="true"
 								/>
-							) }
-							{ videoType === 'embed' && iframeSrc && (
-								<iframe
-									src={ getPlaySrc( iframeSrc ) }
-									title={ __(
-										'Theme video',
-										'ambrygen-web'
-									) }
-									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-									allowFullScreen
-									className="features-media__iframe"
-								/>
-							) }
-						</div>
-					</Modal>
+								<div className="play-icon-video">
+									<div className="play-icon circle-icon">
+										<img
+											src={ playIcon }
+											alt=""
+											aria-hidden="true"
+											className="play-icon__img"
+										/>
+									</div>
+								</div>
+							</div>
+						) }
+					</div>
 				) }
 			</div>
 		</>

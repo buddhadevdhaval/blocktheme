@@ -103,14 +103,14 @@ $ambrygen_primary_cta_rel = isset( $ambrygen_primary_cta['rel'] ) ? (string) $am
 			<?php if ( '' !== $ambrygen_primary_cta_url ) : ?>
 				<a
 					href="<?php echo esc_url( $ambrygen_primary_cta_url ); ?>"
-					class="site-btn has-right-arrow order-widget__btn"
+					class="site-btn has-right-arrow order-widget__btn user-icon-click"
 					<?php echo '_blank' === $ambrygen_primary_cta_target ? ' target="_blank"' : ''; ?>
 					<?php echo '_blank' === $ambrygen_primary_cta_target && '' !== $ambrygen_primary_cta_rel ? ' rel="' . esc_attr( $ambrygen_primary_cta_rel ) . '"' : ''; ?>
 				>
 					<?php echo esc_html( wp_strip_all_tags( $ambrygen_primary_cta_text ) ); ?>
 				</a>
 			<?php else : ?>
-				<div class="site-btn has-right-arrow order-widget__btn">
+				<div class="site-btn has-right-arrow order-widget__btn user-icon-click">
 					<?php echo esc_html( wp_strip_all_tags( $ambrygen_primary_cta_text ) ); ?>
 				</div>
 			<?php endif; ?>

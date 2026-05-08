@@ -142,15 +142,20 @@
 	   ======================================== */
 
 	&__bottom {
-		display: flex;
+		// display: flex;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
 		gap: var(--theme_space_11);
+		// display: grid;
+		// grid-template-columns: 1fr 1fr;
 
 		@include bp.max(lg) {
 			gap: var(--theme_space_9);
 		}
 
 		@include bp.max(md) {
-			flex-direction: column;
+			// flex-direction: column;
+			grid-template-columns: 1fr;
 		}
 	}
 
@@ -158,11 +163,20 @@
 	   ======================================== */
 
 	&__left {
-		flex: 1 1 0%;
+		// flex: 1 1 0%;
+		// flex: 50% 0 0;
 		display: flex;
 		flex-direction: column;
 		gap: var(--theme_space_9);
 		overflow: hidden;
+
+		@include bp.max(lg) {
+			// flex: 45% 0 0;
+		}
+
+		@include bp.max(md) {
+			// width: 100%;
+		}
 	}
 
 	&__guideline-item {
@@ -201,10 +215,19 @@
 	   ======================================== */
 
 	&__right {
-		flex: 1 1 0%;
+		// flex: 1 1 0%;
+		// flex: 50% 0 0;
 		display: flex;
 		flex-direction: column;
 		gap: var(--theme_space_8);
+
+		@include bp.max(lg) {
+			// flex: 1 0 0%;
+		}
+
+		@include bp.max(md) {
+			// width: 100%;
+		}
 	}
 
 	&__right-title {

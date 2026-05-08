@@ -4,191 +4,155 @@ import {
 	RichText,
 	useBlockProps,
 } from '@wordpress/block-editor';
+import { Button, PanelBody } from '@wordpress/components';
+import { useEffect } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import {
-	FormTokenField,
-	Notice,
-	PanelBody,
-	Spinner,
-	ToggleControl,
-} from '@wordpress/components';
-import { useEffect, useMemo } from '@wordpress/element';
-import { useSelect } from '@wordpress/data';
-import { __, sprintf } from '@wordpress/i18n';
-import { TagSelector } from '../_shared/components';
+	BlockExamplePreview,
+	CtaButtonField,
+	ItemHeader,
+	TagSelector,
+} from '../_shared/components';
+
+const createLinkId = () =>
+	`link-${ Date.now().toString( 36 ) }-${ Math.random()
+		.toString( 36 )
+		.slice( 2, 8 ) }`;
+
+const createLink = () => ( {
+	id: createLinkId(),
+	text: '',
+	url: '',
+	target: '',
+	rel: '',
+} );
+
+const normalizeLinks = ( links = [] ) =>
+	links.map( ( link ) => ( {
+		id: link?.id || createLinkId(),
+		text: link?.text || '',
+		url: link?.url || '',
+		target: link?.target || '',
+		rel: link?.rel || '',
+	} ) );
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const {
-		blockId,
-		anchor,
-		title,
-		headingTag,
-		variation = 'split-view',
-		selectAllCollaborators = true,
-		collaboratorIds = [],
-	} = attributes;
+	const { blockId, anchor, title, headingTag, links = [] } = attributes;
+	const isExample = blockId === 'link-list-example';
 
 	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
+
 		const clientIdSuffix = clientId.slice( 0, 8 );
 		const expectedId = `link-list-${ clientIdSuffix }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientIdSuffix ) ) {
+		if ( ! blockId ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
 		}
-	}, [ clientId, blockId, setAttributes ] );
+	}, [ clientId, blockId, isExample, setAttributes ] );
 
-	const collaboratorQuery = useMemo(
-		() => ( {
-			per_page: 100,
-			hide_empty: false,
-			orderby: 'name',
-			order: 'asc',
-			_fields: 'id,name,meta',
-		} ),
-		[]
-	);
+	const linkItemsLength = links.length;
+	const hasMissingLinkIds = links.some( ( link ) => ! link?.id );
 
-	const { collaboratorTerms, isResolvingTerms, hasResolvedTerms } = useSelect(
-		( select ) => {
-			if ( variation !== 'grid-view' ) {
-				return {
-					collaboratorTerms: [],
-					isResolvingTerms: false,
-					hasResolvedTerms: true,
-				};
-			}
+	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
 
-			const core = select( 'core' );
+		if ( ! linkItemsLength ) {
+			setAttributes( { links: [ createLink() ] } );
+			return;
+		}
 
-			return {
-				collaboratorTerms:
-					core.getEntityRecords(
-						'taxonomy',
-						'collaborator',
-						collaboratorQuery
-					) || [],
-				isResolvingTerms: core.isResolving( 'getEntityRecords', [
-					'taxonomy',
-					'collaborator',
-					collaboratorQuery,
-				] ),
-				hasResolvedTerms: core.hasFinishedResolution(
-					'getEntityRecords',
-					[ 'taxonomy', 'collaborator', collaboratorQuery ]
-				),
-			};
-		},
-		[ variation, collaboratorQuery ]
-	);
+		if ( hasMissingLinkIds ) {
+			setAttributes( {
+				links: normalizeLinks( links ),
+			} );
+		}
+	}, [
+		hasMissingLinkIds,
+		isExample,
+		linkItemsLength,
+		links,
+		setAttributes,
+	] );
 
-	const variantPreviewItems = useMemo(
-		() => [
-			{
-				label: __( 'Split View', 'ambrygen-web' ),
-				value: 'split-view',
-				image: `data:image/svg+xml;utf8,${ encodeURIComponent(
-					'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 180"><rect width="280" height="180" rx="16" fill="#f4f7f8"/><rect x="20" y="24" width="90" height="12" rx="6" fill="#8aa6b8"/><rect x="20" y="46" width="104" height="26" rx="8" fill="#0e5f7f"/><rect x="20" y="90" width="92" height="10" rx="5" fill="#b7c8d3"/><rect x="20" y="108" width="98" height="10" rx="5" fill="#b7c8d3"/><rect x="150" y="28" width="110" height="22" rx="10" fill="#ffffff"/><rect x="150" y="60" width="110" height="22" rx="10" fill="#ffffff"/><rect x="150" y="92" width="110" height="22" rx="10" fill="#ffffff"/><rect x="150" y="124" width="110" height="22" rx="10" fill="#ffffff"/></svg>'
-				) }`,
-			},
-			{
-				label: __( 'Grid View', 'ambrygen-web' ),
-				value: 'grid-view',
-				image: `data:image/svg+xml;utf8,${ encodeURIComponent(
-					'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 180"><rect width="280" height="180" rx="16" fill="#f4f7f8"/><rect x="20" y="24" width="90" height="12" rx="6" fill="#8aa6b8"/><rect x="20" y="46" width="104" height="26" rx="8" fill="#0e5f7f"/><rect x="20" y="90" width="112" height="26" rx="10" fill="#ffffff"/><rect x="148" y="90" width="112" height="26" rx="10" fill="#ffffff"/><rect x="20" y="124" width="112" height="26" rx="10" fill="#ffffff"/><rect x="148" y="124" width="112" height="26" rx="10" fill="#ffffff"/></svg>'
-				) }`,
-			},
-		],
-		[]
-	);
+	const updateLinkItem = ( linkId, value ) => {
+		setAttributes( {
+			links: normalizeLinks(
+				links.map( ( link ) =>
+					link.id === linkId ? { ...link, ...value } : link
+				)
+			),
+		} );
+	};
 
-	const collaboratorOptions = collaboratorTerms || [];
-	const linkedCollaboratorTerms = collaboratorOptions.filter(
-		( term ) => typeof term?.meta?.link === 'string' && term.meta.link.trim()
-	);
-	const visibleCollaboratorTerms =
-		variation === 'grid-view' && selectAllCollaborators
-			? linkedCollaboratorTerms.filter(
-					( term ) => ! collaboratorIds.includes( term.id )
-			  )
-			: variation === 'grid-view' && collaboratorIds.length
-			? linkedCollaboratorTerms.filter( ( term ) =>
-					collaboratorIds.includes( term.id )
-			  )
-			: [];
-	const suggestions = linkedCollaboratorTerms.map( ( term ) => term.name );
-	const selectedCollaboratorNames = collaboratorIds
-		.map( ( id ) => {
-			const term = linkedCollaboratorTerms.find(
-				( item ) => item.id === id
-			);
-			return term ? term.name : null;
-		} )
-		.filter( Boolean );
+	const addLinkItem = () => {
+		setAttributes( {
+			links: normalizeLinks( [ ...links, createLink() ] ),
+		} );
+	};
 
-	const onCollaboratorsChange = ( names ) => {
-		const newIds = names
-			.map( ( name ) => {
-				const term = linkedCollaboratorTerms.find(
-					( item ) => item.name === name
-				);
-				return term ? term.id : null;
-			} )
-			.filter( Boolean );
+	const removeLinkItem = ( linkId ) => {
+		if ( links.length <= 1 ) {
+			return;
+		}
 
-		setAttributes( { collaboratorIds: newIds } );
+		setAttributes( {
+			links: normalizeLinks(
+				links.filter( ( link ) => link.id !== linkId )
+			),
+		} );
+	};
+
+	const moveLinkItem = ( index, direction ) => {
+		const nextIndex = index + direction;
+
+		if ( nextIndex < 0 || nextIndex >= links.length ) {
+			return;
+		}
+
+		const reorderedItems = [ ...links ];
+		[ reorderedItems[ index ], reorderedItems[ nextIndex ] ] = [
+			reorderedItems[ nextIndex ],
+			reorderedItems[ index ],
+		];
+
+		setAttributes( { links: normalizeLinks( reorderedItems ) } );
 	};
 
 	const blockProps = useBlockProps( {
-		className: [
-			'download-list',
-			variation === 'grid-view' ? 'variation-grid-view' : '',
-		]
-			.filter( Boolean )
-			.join( ' ' ),
+		className: 'download-list',
 		id: anchor || blockId,
 	} );
 
-	const ITEMS_ALLOWED_BLOCKS = [
-		'ambrygen/link-item',
+	const itemsAllowedBlocks = [
 		'core/paragraph',
 		'core/buttons',
 		'core/button',
 		'core/spacer',
 	];
 
-	const ITEMS_TEMPLATE = [
-		[ 'core/paragraph', { placeholder: __( 'Add content...', 'ambrygen-web' ) } ],
-		[ 'ambrygen/link-item', { cta: { text: 'Download Brochure' } } ],
+	const itemsTemplate = [
+		[
+			'core/paragraph',
+			{ placeholder: __( 'Add content…', 'ambrygen-web' ) },
+		],
 	];
+
+	if ( isExample ) {
+		return (
+			<BlockExamplePreview imagePath="/assets/src/images/cta-tiles-with-3-card/default-image.png" />
+		);
+	}
 
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
-				<PanelBody
-					title={ __( 'Layout Settings', 'ambrygen-web' ) }
-					initialOpen={ true }
-				>
-					<div className="layout-variant-selector">
-						{ variantPreviewItems.map( ( item ) => (
-							<button
-								key={ item.value }
-								type="button"
-								className={ `variant-button ${
-									variation === item.value ? 'is-selected' : ''
-								}` }
-								aria-pressed={ variation === item.value }
-								onClick={ () =>
-									setAttributes( { variation: item.value } )
-								}
-							>
-								<img src={ item.image } alt="" />
-								<span>{ item.label }</span>
-							</button>
-						) ) }
-					</div>
-				</PanelBody>
-
 				<PanelBody
 					title={ __( 'Heading Settings', 'ambrygen-web' ) }
 					initialOpen={ false }
@@ -197,109 +161,86 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag }
 						type="heading"
-						onChange={ ( val ) => setAttributes( { headingTag: val } ) }
+						onChange={ ( val ) =>
+							setAttributes( { headingTag: val } )
+						}
 					/>
 				</PanelBody>
 
-				{ variation === 'grid-view' && (
-					<PanelBody
-						title={ __( 'Collaborators', 'ambrygen-web' ) }
-						initialOpen={ true }
-					>
-						<ToggleControl
-							label={ __( 'Select all collaborators', 'ambrygen-web' ) }
-							checked={ selectAllCollaborators }
-							onChange={ ( value ) =>
-								setAttributes( {
-									selectAllCollaborators: value,
-									collaboratorIds: [],
-								} )
-							}
-						/>
-						{ selectAllCollaborators ? (
-							<FormTokenField
-								label={ __( 'Remove collaborators', 'ambrygen-web' ) }
-								value={ selectedCollaboratorNames }
-								suggestions={ suggestions }
-								onChange={ onCollaboratorsChange }
-								placeholder={ __(
-									'Remove collaborators...',
-									'ambrygen-web'
-								) }
+				<PanelBody
+					title={ __( 'Links', 'ambrygen-web' ) }
+					initialOpen={ true }
+				>
+					{ links.map( ( link, index ) => (
+						<div
+							key={ link.id }
+							className="link-list__inspector-link"
+						>
+							<ItemHeader
+								index={ index }
+								label={ link.text }
+								total={ links.length }
+								prefix={ __( 'LINK', 'ambrygen-web' ) }
+								onMove={ ( itemIndex, direction ) =>
+									moveLinkItem( itemIndex, direction )
+								}
+								onRemove={ ( itemIndex ) =>
+									removeLinkItem( links[ itemIndex ].id )
+								}
+								minCount={ 1 }
 							/>
-						) : (
-							<FormTokenField
-								label={ __( 'Collaborators', 'ambrygen-web' ) }
-								value={ selectedCollaboratorNames }
-								suggestions={ suggestions }
-								onChange={ onCollaboratorsChange }
-								placeholder={ __(
-									'Select collaborators...',
-									'ambrygen-web'
-								) }
-							/>
-						) }
-					</PanelBody>
-				) }
 
+							<CtaButtonField
+								label=""
+								value={ link }
+								onChange={ ( newValue ) =>
+									updateLinkItem( link.id, newValue )
+								}
+								showVariant={ false }
+								textLabel={ __( 'Link Text', 'ambrygen-web' ) }
+							/>
+						</div>
+					) ) }
+
+					<Button variant="primary" onClick={ addLinkItem }>
+						{ __( 'Add New Link', 'ambrygen-web' ) }
+					</Button>
+				</PanelBody>
 			</InspectorControls>
 
 			<div className="download-list__inner">
 				<div className="download-list__header-area mb-24">
-					<RichText
-						tagName={ headingTag }
-						className="download-list__title heading-3 block-title mb-0"
-						value={ title }
-						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
-						onChange={ ( val ) => setAttributes( { title: val } ) }
-						allowedFormats={ [ 'core/bold', 'core/italic' ] }
-					/>
+					<div className="download-list__content">
+						<RichText
+							tagName={ headingTag }
+							className="download-list__title heading-3 block-title mb-0"
+							value={ title }
+							placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
+							onChange={ ( val ) =>
+								setAttributes( { title: val } )
+							}
+							allowedFormats={ [ 'core/bold', 'core/italic' ] }
+						/>
+
+						<InnerBlocks
+							allowedBlocks={ itemsAllowedBlocks }
+							template={ itemsTemplate }
+							templateLock={ false }
+						/>
+					</div>
 				</div>
 
 				<div className="download-list__items">
-					{ variation === 'grid-view' ? (
-						isResolvingTerms ? (
-							<Spinner />
-						) : visibleCollaboratorTerms.length ? (
-							visibleCollaboratorTerms.map( ( term ) => (
-								<div
-									key={ term.id }
-									className="download-list__grid-item"
-								>
-									<a
-										href={ term.meta.link }
-										className="download-list__grid-link"
-										target="_blank"
-										rel="noopener noreferrer"
-										aria-label={ sprintf(
-											/* translators: %s: collaborator name. */
-											__(
-												'%s (opens in a new tab)',
-												'ambrygen-web'
-											),
-											term.name
-										) }
-										onClick={ ( event ) => event.preventDefault() }
-									>
-										{ term.name }
-									</a>
-								</div>
-							) )
-						) : hasResolvedTerms ? (
-							<Notice status="warning" isDismissible={ false }>
-								{ __( 'No collaborator terms found.', 'ambrygen-web' ) }
-							</Notice>
-						) : (
-							<Spinner />
-						)
-					) : (
-						<InnerBlocks
-							allowedBlocks={ ITEMS_ALLOWED_BLOCKS }
-							template={ ITEMS_TEMPLATE }
-							templateLock={ false }
-							renderAppender={ false }
-						/>
-					) }
+					{ links.map( ( link ) => (
+						<div key={ link.id } className="download-list__item">
+							<div className="download-list__item-link">
+								<span className="download-list__item-text">
+									{ link.text ||
+										__( 'Add Link Text…', 'ambrygen-web' ) }
+								</span>
+							</div>
+						</div>
+					) ) }
 				</div>
 			</div>
 		</div>

@@ -26,7 +26,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		const clientIdSuffix = clientId.slice( 0, 8 );
 		const expectedId = `section-${ clientIdSuffix }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
+		if ( ! blockId ) {
 			setAttributes( { blockId: expectedId } );
 		}
 	}, [ clientId, blockId, setAttributes ] );
@@ -103,9 +103,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							}
 							placeholder={ __( 'Add Eyebrow Text...', 'ambrygen-web' ) }
 						/>
-						{ hasEyebrow && hasHeading && (
-							<div className="is-style-gl-s12" aria-hidden="true"></div>
-						) }
+						<div className="is-style-gl-s12" aria-hidden="true"></div>
 						<RichText
 							tagName={ HeadingTag }
 							className="heading-4 block-title mb-0 principles-steps__title"
@@ -115,9 +113,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							}
 							placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 						/>
-						{ ( ( hasEyebrow || hasHeading ) && hasDescription ) && (
-							<div className="is-style-gl-s12" aria-hidden="true"></div>
-						) }
+						<div className="is-style-gl-s12" aria-hidden="true"></div>
 						<RichText
 							tagName="div"
 							className="block-description body1 principles-steps__subtitle"
@@ -129,9 +125,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						/>
 					</div>
 
-					{ hasHeaderContent && (
-						<div className="is-style-gl-s50" aria-hidden="true"></div>
-					) }
+					<div className="is-style-gl-s50" aria-hidden="true"></div>
 
 					<div className={ gridClassName }>
 						<InnerBlocks
@@ -145,9 +139,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							renderAppender={ false }
 						/>
 					</div>
-					{ innerBlockCount > 0 && (
-						<div className="is-style-gl-s24" aria-hidden="true"></div>
-					) }
+					<div className="is-style-gl-s24" aria-hidden="true"></div>
 					<div className="action-button">
 						<button
 							type="button"
@@ -159,9 +151,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						</button>
 					</div>
 
-					{ hasBottomDescription && (
-						<div className="is-style-gl-s50" aria-hidden="true"></div>
-					) }
+					<div className="is-style-gl-s50" aria-hidden="true"></div>
 
 					<RichText
 						tagName="p"
@@ -177,4 +167,3 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
-

@@ -115,7 +115,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		const clientIdSuffix = clientId.slice( 0, 8 );
 		const expectedId = `section-${ clientIdSuffix }`;
 
-		if (!blockId || !blockId.endsWith(clientId.slice(0, 8))) {
+		if ( !blockId ) {
 			setAttributes({
 				blockId: expectedId,
 			} );
@@ -143,7 +143,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
-				<PanelBody title={ __( 'Layout Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Layout Variation', 'ambrygen-web' ) }>
 					<div className="layout-variant-selector">
 						{ variants.map( ( item ) => (
 							<button
@@ -173,7 +173,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						) ) }
 					</div>
 				</PanelBody>
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) } initialOpen={ false }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag || 'h2' }
@@ -183,7 +183,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'Content Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Content Settings', 'ambrygen-web' ) } initialOpen={ true }>
 					<ImageUploader
 						url={ image }
 						onSelect={ ( img ) =>
@@ -330,12 +330,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						) }
 					/>
 
-					{ hasEyebrow && ( hasHeading || hasDescription ) && (
-						<div
-							className="is-style-gl-s12"
-							aria-hidden="true"
-						/>
-					) }
+					<div
+						className="is-style-gl-s12"
+						aria-hidden="true"
+					/>
 
 					<RichText
 						tagName={ headingTag }
@@ -348,12 +346,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 					/>
 
-					{ hasHeading && hasDescription && (
-						<div
-							className="is-style-gl-s12"
-							aria-hidden="true"
-						/>
-					) }
+					<div
+						className="is-style-gl-s12"
+						aria-hidden="true"
+					/>
 
 					<RichText
 						tagName="div"
@@ -367,12 +363,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 					{ hasInfoListing && (
 						<>
-							{ hasTextContent && (
-								<div
-									className="is-style-gl-s36"
-									aria-hidden="true"
-								/>
-							) }
+							<div
+								className="is-style-gl-s36"
+								aria-hidden="true"
+							/>
 							<div className="newsletter__info-listing">
 								{ phoneNumber && phoneHref && (
 									<div className="newsletter__info-listing__item">
@@ -418,12 +412,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 					{ hasCta && (
 						<>
-							{ ( hasTextContent || hasInfoListing ) && (
-								<div
-									className="is-style-gl-s36"
-									aria-hidden="true"
-								/>
-							) }
+							<div
+								className="is-style-gl-s36"
+								aria-hidden="true"
+							/>
 							<div className="newsletter__block__button-wrapper">
 								<a
 									className="site-btn is-style-site-secondary-btn  has-right-arrow"
@@ -439,12 +431,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 					{ isFormView && (
 						<>
-							{ hasTextContent && (
-								<div
-									className="is-style-gl-s12"
-									aria-hidden="true"
-								/>
-							) }
+							<div
+								className="is-style-gl-s12"
+								aria-hidden="true"
+							/>
 							<div
 								className="newsletter-form-placeholder"
 								role="group"
@@ -465,4 +455,3 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</div>
 	);
 }
-

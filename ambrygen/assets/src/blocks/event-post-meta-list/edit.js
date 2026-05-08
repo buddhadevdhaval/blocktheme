@@ -3,7 +3,7 @@ import SsrPreview from '../shared/ssr-preview';
 
 export default function Edit( props ) {
 	const { attributes, context } = props;
-	const previewPostId = Number( context?.postId || 0 );
+	const previewPostId = context?.postId ? Number( context.postId ) : 0;
 
 	return (
 		<SsrPreview

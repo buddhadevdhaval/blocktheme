@@ -9,7 +9,10 @@ import {
 import { PanelBody } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { useEffect } from '@wordpress/element';
-import { TagSelector } from '../_shared/components';
+import {
+	BlockExamplePreview,
+	TagSelector,
+} from '../_shared/components';
 
 const ALLOWED_BLOCKS = [ 'ambrygen/video-grid-item' ];
 const TEMPLATE = [
@@ -33,6 +36,7 @@ export default function Edit( {
 
 	const hasContent = ( value ) =>
 		value?.replace( /<[^>]+>/g, '' ).trim().length > 0;
+	const isExample = blockId === 'video-grid-example';
 
 	const innerBlocksCount = useSelect(
 		( select ) =>
@@ -41,6 +45,10 @@ export default function Edit( {
 	);
 
 	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
+
 		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
 		if ( blockId !== expectedId ) {
@@ -48,7 +56,7 @@ export default function Edit( {
 				blockId: expectedId,
 			} );
 		}
-	}, [ clientId, blockId, setAttributes ] );
+	}, [ clientId, blockId, isExample, setAttributes ] );
 
 	useEffect( () => {
 		if ( variation !== 'variation-features' ) {
@@ -59,8 +67,15 @@ export default function Edit( {
 	}, [ variation, setAttributes ] );
 
 	const layoutClass = 'variation-team';
-	const hasSubheading = hasContent( subheading );
-	const hasSubDescription = hasContent( subDescription );
+
+	if ( isExample ) {
+		return (
+			<BlockExamplePreview
+				className="video-grid-example-preview"
+				imagePath="/assets/src/images/video-grid/preview.png"
+			/>
+		);
+	}
 
 	const blockProps = useBlockProps( {
 		className: `image-grid-block video-grid wp-block-ambrygen-gallery block-${ variation } ${ layoutClass } grid-column${
@@ -102,12 +117,10 @@ export default function Edit( {
 								'ambrygen-web'
 							) }
 						/>
-						{ hasSubheading && hasSubDescription && (
-							<div
-								className="is-style-gl-s16"
-								aria-hidden="true"
-							></div>
-						) }
+						<div
+							className="is-style-gl-s16"
+							aria-hidden="true"
+						></div>
 						<RichText
 							tagName="div"
 							className="body1-reg two-column-videos__subheading-description"
@@ -124,9 +137,10 @@ export default function Edit( {
 						/>
 					</div>
 
-					{ ( hasSubheading || hasSubDescription ) && (
-						<div className="is-style-gl-s50" aria-hidden="true"></div>
-					) }
+					<div
+						className="is-style-gl-s50"
+						aria-hidden="true"
+					></div>
 
 					<div className="videos__cards">
 						<BlockContextProvider
@@ -147,4 +161,3 @@ export default function Edit( {
 		</>
 	);
 }
-

@@ -24,7 +24,6 @@
     $ambrygen_top_bar_link_text = isset($ambrygen_attributes['topBarLinkText']) ? $ambrygen_attributes['topBarLinkText'] : '';
     $ambrygen_top_bar_link_url  = isset($ambrygen_attributes['topBarLinkUrl']) ? $ambrygen_attributes['topBarLinkUrl'] : '';
     $ambrygen_top_bar_visible   = isset($ambrygen_attributes['topBarVisible']) ? (bool) $ambrygen_attributes['topBarVisible'] : true;
-
     $ambrygen_nav_items = isset($ambrygen_attributes['navItems']) && is_array($ambrygen_attributes['navItems'])
     ? $ambrygen_attributes['navItems']
     : [];
@@ -72,33 +71,147 @@
         }
     }
     }
+    $ambrygen_top_bar_items = [];
+    $ambrygen_has_published_top_bar_messages = false;
+
+if ($ambrygen_top_bar_visible) {
+    $ambrygen_top_bar_posts = get_posts(
+        [
+            'post_type'      => 'top_bar_message',
+            'post_status'    => 'publish',
+            'posts_per_page' => -1,
+            'orderby'        => [
+                'menu_order' => 'ASC',
+                'date'       => 'ASC',
+            ],
+        ]
+    );
+
+    $ambrygen_has_published_top_bar_messages = ! empty($ambrygen_top_bar_posts);
+
+    foreach ($ambrygen_top_bar_posts as $ambrygen_top_bar_post) {
+        $ambrygen_start_date_raw = (string) get_post_meta($ambrygen_top_bar_post->ID, 'top_bar_message_start_date', true);
+        $ambrygen_start_time_raw = (string) get_post_meta($ambrygen_top_bar_post->ID, 'top_bar_message_start_time', true);
+        $ambrygen_end_date_raw   = (string) get_post_meta($ambrygen_top_bar_post->ID, 'top_bar_message_end_date', true);
+        $ambrygen_end_time_raw   = (string) get_post_meta($ambrygen_top_bar_post->ID, 'top_bar_message_end_time', true);
+        $ambrygen_start_date     = '' !== $ambrygen_start_date_raw ? substr($ambrygen_start_date_raw, 0, 10) : '';
+        $ambrygen_end_date       = '' !== $ambrygen_end_date_raw ? substr($ambrygen_end_date_raw, 0, 10) : '';
+        $ambrygen_start_time     = '' !== $ambrygen_start_time_raw ? substr($ambrygen_start_time_raw, 0, 5) : '';
+        $ambrygen_end_time       = '' !== $ambrygen_end_time_raw ? substr($ambrygen_end_time_raw, 0, 5) : '';
+        $ambrygen_now_ts     = current_time('timestamp');
+        $ambrygen_start_ts   = null;
+        $ambrygen_end_ts     = null;
+
+        if ('' === $ambrygen_start_date || '' === $ambrygen_end_date) {
+            continue;
+        }
+
+        if ('' !== $ambrygen_start_date) {
+            $ambrygen_start_datetime = sprintf(
+                '%s %s',
+                $ambrygen_start_date,
+                '' !== $ambrygen_start_time ? $ambrygen_start_time : '00:00'
+            );
+            $ambrygen_start_ts = strtotime($ambrygen_start_datetime);
+        }
+
+        if ('' !== $ambrygen_end_date) {
+            $ambrygen_end_datetime = sprintf(
+                '%s %s',
+                $ambrygen_end_date,
+                '' !== $ambrygen_end_time ? $ambrygen_end_time : '23:59'
+            );
+            $ambrygen_end_ts = strtotime($ambrygen_end_datetime);
+        }
+
+        if (false === $ambrygen_start_ts || false === $ambrygen_end_ts) {
+            continue;
+        }
+
+        if ($ambrygen_now_ts < $ambrygen_start_ts) {
+            continue;
+        }
+
+        if ($ambrygen_now_ts > $ambrygen_end_ts) {
+            continue;
+        }
+
+        $ambrygen_message_text = (string) get_post_meta($ambrygen_top_bar_post->ID, 'top_bar_message_text', true);
+        $ambrygen_message_text = '' !== trim(wp_strip_all_tags($ambrygen_message_text))
+            ? $ambrygen_message_text
+            : $ambrygen_top_bar_post->post_title;
+
+        if ('' === trim(wp_strip_all_tags($ambrygen_message_text))) {
+            continue;
+        }
+
+        $ambrygen_top_bar_cookie_name = 'ambrygen_top_bar_dismissed_post-' . (string) $ambrygen_top_bar_post->ID;
+        if (! empty($_COOKIE[$ambrygen_top_bar_cookie_name])) {
+            continue;
+        }
+
+        $ambrygen_top_bar_items[] = [
+            'key'         => 'post-' . (string) $ambrygen_top_bar_post->ID,
+            'text'        => $ambrygen_message_text,
+            'link_text'   => (string) get_post_meta($ambrygen_top_bar_post->ID, 'top_bar_message_link_text', true),
+            'link_url'    => (string) get_post_meta($ambrygen_top_bar_post->ID, 'top_bar_message_link_url', true),
+            'color'       => (string) get_post_meta($ambrygen_top_bar_post->ID, 'top_bar_message_color', true),
+            'dismissible' => '1' === (string) get_post_meta($ambrygen_top_bar_post->ID, 'top_bar_message_dismissible', true),
+        ];
+    }
+}
+
+if (
+    empty($ambrygen_top_bar_items)
+    && ! $ambrygen_has_published_top_bar_messages
+    && ! empty($ambrygen_top_bar_text)
+) {
+    if (empty($_COOKIE['ambrygen_top_bar_dismissed_manual'])) {
+        $ambrygen_top_bar_items[] = [
+            'key'         => 'manual',
+            'text'        => $ambrygen_top_bar_text,
+            'link_text'   => $ambrygen_top_bar_link_text,
+            'link_url'    => $ambrygen_top_bar_link_url,
+            'color'       => 'bg-primary_25',
+            'dismissible' => true,
+        ];
+    }
+}
 ?>
 
 <header class="header-section">
 
-	<?php if ($ambrygen_top_bar_visible): ?>
-		<div class="top-bar center-align container-1340" id="top-bar-ajax">
-			<div class="top-bar__wrapper wrapper">
-				<div class="top-bar__row">
-					<div class="top-bar__text">
-						<?php echo wp_kses_post($ambrygen_top_bar_text); ?>
+	<?php if ($ambrygen_top_bar_visible && ! empty($ambrygen_top_bar_items)): ?>
+		<div class="top-bar-stack" id="top-bar-ajax">
+			<?php foreach ($ambrygen_top_bar_items as $ambrygen_top_bar_item) : ?>
+				<?php $ambrygen_top_bar_color = ! empty($ambrygen_top_bar_item['color']) ? sanitize_html_class($ambrygen_top_bar_item['color']) : 'bg-primary_25'; ?>
+				<div class="top-bar <?php echo esc_attr($ambrygen_top_bar_color); ?> center-align container-1340"
+					data-top-bar-key="<?php echo esc_attr($ambrygen_top_bar_item['key'] ?? 'manual'); ?>">
+					<div class="top-bar__wrapper wrapper">
+						<div class="top-bar__row">
+							<div class="top-bar__text">
+								<span class="top-bar__text-content">
+									<?php echo wp_kses_post($ambrygen_top_bar_item['text']); ?>
 
-						<?php if (! empty($ambrygen_top_bar_link_text) && ! empty($ambrygen_top_bar_link_url)): ?>
-							<a href="<?php echo esc_url($ambrygen_top_bar_link_url); ?>"
-								class="top-bar__link  site-btn is-style-site-text-btn has-right-arrow">
-								<?php echo esc_html($ambrygen_top_bar_link_text); ?>
-							</a>
-						<?php endif; ?>
-					</div>
+									<?php if (! empty($ambrygen_top_bar_item['link_text']) && ! empty($ambrygen_top_bar_item['link_url'])): ?>
+										<a href="<?php echo esc_url($ambrygen_top_bar_item['link_url']); ?>"
+											class="top-bar__link  site-btn is-style-site-text-btn has-right-arrow">
+											<?php echo esc_html($ambrygen_top_bar_item['link_text']); ?>
+										</a>
+									<?php endif; ?>
+								</span>
 
-					<div class="top-bar__close">
-						<span class="top-bar__close-icon">
-							<img src="<?php echo esc_url(get_theme_file_uri('assets/src/images/topbar-close-icon.svg')); ?>"
-								width="24" height="24" alt="<?php esc_attr_e('Close top bar', 'ambrygen-web'); ?>" />
-						</span>
+									<div class="top-bar__close">
+										<span class="top-bar__close-icon">
+											<img src="<?php echo esc_url(get_theme_file_uri('assets/src/images/topbar-close-icon.svg')); ?>"
+												width="24" height="24" alt="<?php esc_attr_e('Close top bar', 'ambrygen-web'); ?>" />
+										</span>
+									</div>
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
+			<?php endforeach; ?>
 		</div>
 	<?php endif; ?>
 
@@ -200,19 +313,19 @@
 										<?php endforeach; ?>
 									</ul>
 								</div>
-								<div class="header__search">
-									<form class="morphing-btn-form" id="header-search-form" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
+								<!-- <div class="header__search">
+									<div class="morphing-btn-form" id="header-search-form-mobile" role="search">
 										<div class="morphing-btn-wrapper">
 											<input class="morphing-btn-input" id="header-search1" type="text" name="s" aria-label="<?php esc_attr_e('Search for:', 'ambrygen-web'); ?>" placeholder="<?php esc_attr_e('Search', 'ambrygen-web'); ?>">
 											<label class="morphing-btn-label" for="header-search1">
 												<img alt="Search the Site" class="morphing-btn-icon-bell" src="<?php echo esc_url(get_theme_file_uri('assets/src/images/search-icon.svg')); ?>"/> Search
 											</label>
-											<button type="submit" class="morphing-btn-submit" aria-label="Submit">
+											<button type="button" class="morphing-btn-submit" aria-label="Submit">
 												Search
 											</button>
 										</div>
-									</form>
-								</div>
+									</div>
+								</div> -->
 							</div>
 						</div>
 					</nav>
@@ -222,17 +335,17 @@
 				<!-- Desktop CTA -->
 				<div class="header__right--col header__btns--desktop">
 					<div class="header__search">
-						<form class="morphing-btn-form" id="header-search-form" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
+						<div class="morphing-btn-form" id="header-search-form-desktop" role="search">
 							<div class="morphing-btn-wrapper">
 								<input class="morphing-btn-input" id="header-search" type="text" name="s" aria-label="<?php esc_attr_e('Search for:', 'ambrygen-web'); ?>" placeholder="<?php esc_attr_e('Search', 'ambrygen-web'); ?>">
 								<label class="morphing-btn-label" for="header-search">
 									<img alt="Search the Site" class="morphing-btn-icon-bell" src="<?php echo esc_url(get_theme_file_uri('assets/src/images/search-icon.svg')); ?>"/> Search
 								</label>
-								<button type="submit" class="morphing-btn-submit" aria-label="Submit">
+								<button type="button" class="morphing-btn-submit" aria-label="Submit">
 									Search
 								</button>
 							</div>
-						</form>
+						</div>
 					</div>
 
 					<div class="header__login">

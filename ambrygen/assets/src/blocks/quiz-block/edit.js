@@ -70,10 +70,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		const clientIdSuffix = clientId.slice( 0, 8 );
 		const expectedId = `section-${ clientIdSuffix }`;
 
-		if (
-			blockId !== 'quiz-block-example' &&
-			( ! blockId || ! blockId.endsWith( clientIdSuffix ) )
-		) {
+		if ( !blockId ) {
 			setAttributes( { blockId: expectedId } );
 		}
 	}, [ clientId, blockId, setAttributes ] );
@@ -159,7 +156,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) } initialOpen={ false }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag || 'h2' }
@@ -169,7 +166,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						type="heading"
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'Button Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Button Settings', 'ambrygen-web' ) } initialOpen={ true }>
 					<div className="is-style-gl-s16" aria-hidden="true"></div>
 					<CtaButtonField
 						label={ __( 'Primary Button', 'ambrygen-web' ) }
@@ -215,12 +212,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 						placeholder={ __( 'Add Eyebrow…', 'ambrygen-web' ) }
 					/>
-					{ hasEyebrowText && hasHeading && (
-						<div
-							className="is-style-gl-s12"
-							aria-hidden="true"
-						></div>
-					) }
+					<div
+						className="is-style-gl-s12"
+						aria-hidden="true"
+					></div>
 					<RichText
 						tagName={ headingTag || 'h2' }
 						className="heading-4 block-title mb-0"
@@ -232,9 +227,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 				</div>
 
-				{ ( hasEyebrowText || hasHeading ) && (
-					<div className="is-style-gl-s32" aria-hidden="true"></div>
-				) }
+				<div className="is-style-gl-s32" aria-hidden="true"></div>
 
 				<div className="risk-checklist__card">
 					<div className="risk-checklist__card-header">
@@ -250,12 +243,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								'ambrygen-web'
 							) }
 						/>
-						{ hasCardTitle && hasCardSubtitle && (
-							<div
-								className="is-style-gl-s8"
-								aria-hidden="true"
-							></div>
-						) }
+						<div
+							className="is-style-gl-s8"
+							aria-hidden="true"
+						></div>
 						<RichText
 							tagName="div"
 							className="subtitle2-sbold risk-checklist__card-subtitle"
@@ -341,12 +332,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							) ) }
 						</div>
 
-						{ ( hasNoRiskText || hasAtRiskText ) && (
-							<div
-								className="is-style-gl-s24"
-								aria-hidden="true"
-							></div>
-						) }
+						<div
+							className="is-style-gl-s24"
+							aria-hidden="true"
+						></div>
 
 						<div className="risk-checklist__result risk-checklist__result--no-risk">
 							<RichText
@@ -385,9 +374,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					</div>
 				</div>
 
-				{ hasButtons && (
-					<div className="is-style-gl-s32" aria-hidden="true"></div>
-				) }
+				<div className="is-style-gl-s32" aria-hidden="true"></div>
 
 				<div className="risk-checklist__cta">
 					{ ctaButtons.map( ( { key, button, fallbackText } ) =>
@@ -405,4 +392,3 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
-

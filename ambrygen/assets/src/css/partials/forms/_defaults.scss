@@ -1,3 +1,5 @@
+@use "../../partials/variables/breakpoints" as bp;
+
 /* -------------------------------------------------
 >> Base Styles
 ---------------------------------------------------
@@ -81,5 +83,112 @@ button:-moz-focusring,
 	input[type="button"],
 	input[type="reset"] {
 		margin: 0 0 10px 10px;
+	}
+}
+
+
+.form-error-message {
+	border-radius: 0;
+	color: var(--theme_red);
+	display: inline-block;
+	font-size: 14px;
+	margin-top: 6px;
+	margin-bottom: 0;
+	padding: 0;
+	position: relative;
+	right: 0;
+	text-align: left;
+	top: 0;
+	width: 100%;
+}
+
+.form-sub-label {
+	font-weight: 400;
+	font-size: 14px;
+	margin-top: 4px;
+	margin-bottom: 0;
+}
+
+
+
+
+
+
+
+.theme-form-wrapper {
+	.form-row {
+		.form-body {
+			display: grid;
+			grid-template-columns: repeat(12, 1fr);
+			gap: 24px 32px;
+
+			@include bp.max(md) {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 20px;
+			}
+
+			.form-line {
+				grid-column: span 6;
+
+				@include bp.max(md) {
+					width: 100%;
+				}
+
+				&.form-input-wide {
+					grid-column: span 12;
+
+					@include bp.max(md) {
+						width: 100%;
+					}
+				}
+
+				&[data-type="control_radio"] {
+					.form-label-auto {
+						margin-bottom: 16px;
+					}
+				}
+
+			}
+
+			.form-radio-item {
+				label {
+					color: var(--theme_gray_700);
+					font-size: 14px;
+					font-weight: 400;
+					line-height: 20px;
+					letter-spacing: -0.21px;
+					margin: 0;
+				}
+			}
+
+			.form-radio-group {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 12px 32px;
+
+				.form-radio-item {
+					@include bp.max(md) {
+						flex: 0 0 100%;
+					}
+				}
+			}
+		}
+
+		.feature-control-text {
+			border-radius: 8px;
+			background: var(--theme_primary_25);
+			padding: 16px;
+			color: var(--theme_gray_600);
+			font-feature-settings: 'liga' off, 'clig' off;
+			font-size: 12px;
+			font-weight: 400;
+			line-height: 1.4;
+		}
+
+
+		.form-bottom {
+			margin-top: 20px;
+		}
 	}
 }

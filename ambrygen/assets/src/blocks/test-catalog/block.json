@@ -28,7 +28,8 @@
     },
     "headingLevel": {
       "type": "string",
-      "default": "h2"
+      "default": "h2",
+      "enum": ["h1", "h2", "h3", "h4", "h5", "h6"]
     },
     "selectedTabs": {
       "type": "array",

@@ -6,6 +6,7 @@ import {
 } from '@wordpress/block-editor';
 import { createBlock } from '@wordpress/blocks';
 import {
+	Placeholder,
 	Button,
 	PanelBody,
 	SearchControl,
@@ -15,15 +16,17 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useMemo, useState } from '@wordpress/element';
+import { TagSelector } from '../_shared/components';
 
 const ALLOWED_BLOCKS = [ 'ambrygen/webinars-item' ];
-const TEMPLATE = [ [ 'ambrygen/webinars-item' ] ];
+const TEMPLATE = [];
 const ITEM_BLOCK_NAME = 'ambrygen/webinars-item';
 const SEARCH_DEBOUNCE_MS = 300;
 const WEBINARS_PER_PAGE = 20;
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const { blockId, title } = attributes;
+	const { blockId, title, headingTag = 'h2' } = attributes;
+	const HeadingTag = headingTag || 'h2';
 	const { insertBlocks, removeBlocks } = useDispatch( 'core/block-editor' );
 	const [ webinarSearchInput, setWebinarSearchInput ] = useState( '' );
 	const [ debouncedWebinarSearchInput, setDebouncedWebinarSearchInput ] =
@@ -132,7 +135,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	useEffect( () => {
 		const expectedId = `webinars-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
+		if ( ! blockId ) {
 			setAttributes( { blockId: expectedId } );
 		}
 	}, [ blockId, clientId, setAttributes ] );
@@ -182,8 +185,21 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Webinar Items', 'ambrygen-web' ) }
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
 					initialOpen={ false }
+				>
+					<TagSelector
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
+						type="heading"
+						value={ headingTag }
+						onChange={ ( value ) =>
+							setAttributes( { headingTag: value } )
+						}
+					/>
+				</PanelBody>
+				<PanelBody
+					title={ __( 'Webinar Items', 'ambrygen-web' ) }
+					initialOpen
 				>
 					<p
 						className="our-team__member-count"
@@ -207,11 +223,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						hasOptions={ webinarOptions.length > 0 }
 					/>
 				</PanelBody>
+				
 			</InspectorControls>
 			<div { ...blockProps }>
 				<div className="webinars__content event-carousel">
 					<RichText
-						tagName="h2"
+						tagName={ HeadingTag }
 						className="heading-3 block-title mb-0"
 						value={ title }
 						onChange={ ( value ) => setAttributes( { title: value } ) }
@@ -219,7 +236,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 				</div>
 
-				<div className="is-style-gl-s50" aria-hidden="true"></div>
+				{ title && (
+					<div className="is-style-gl-s50" aria-hidden="true"></div>
+				) }
 
 				<div className="wp-block-query">
 					<div className="event-carousel__grid webinar__grid wp-block-post-template">
@@ -229,9 +248,17 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							renderAppender={ false }
 							orientation="horizontal"
 						/>
+						{ selectedPostIds.length === 0 && (
+							<Placeholder
+								icon="video-alt"
+								label={ __( 'No webinars selected', 'ambrygen-web' ) }
+								instructions={ __(
+									'Use the Webinar Items panel in the block sidebar to search and add webinars.',
+									'ambrygen-web'
+								) }
+							/>
+						) }
 					</div>
-
-					<div className="is-style-gl-s50" aria-hidden="true"></div>
 				</div>
 			</div>
 		</>

@@ -115,9 +115,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						placeholder={ __( 'Add Title…', 'ambrygen-web' ) }
 					/>
 
-					{ description && (
-						<div className="is-style-gl-s8" aria-hidden="true" />
-					) }
+					<div className="is-style-gl-s8" aria-hidden="true" />
 
 					<RichText
 						tagName="div"
@@ -129,9 +127,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
 					/>
 
-					{ link?.url && (
-						<div className="is-style-gl-s20" aria-hidden="true" />
-					) }
+					<div className="is-style-gl-s20" aria-hidden="true" />
 
 					{ link?.url && (
 						<div className="cta-tiles-with-3-card__link">

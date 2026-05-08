@@ -234,11 +234,6 @@ export default function Edit({
 		className: VARIANT_CLASS_MAP[variation] || '',
 	});
 
-	// const blockProps = useBlockProps( {
-	// 	className: `${
-	// 		variation === 'our-testing-menu' ? ' item-card' : 'info-list__col'
-	// 	}`,
-	// } );
 	const selectedTermName = selectedTermData?.name
 		? decodeEntities(selectedTermData.name)
 		: title;
@@ -392,7 +387,7 @@ export default function Edit({
 							onChange={(value) =>
 								setAttributes({ title: value })
 							}
-							placeholder="Add Heading..."
+							placeholder="Add Title..."
 						/>
 
 						<div
@@ -407,7 +402,7 @@ export default function Edit({
 							onChange={(value) =>
 								setAttributes({ description: value })
 							}
-							placeholder="Add Description..."
+							placeholder="Add Short Description..."
 						/>
 
 						<div
@@ -451,7 +446,7 @@ export default function Edit({
 									setAttributes({ title: value })
 								}
 								placeholder={__(
-									'Add Title…',
+									'Add Title...',
 									'ambrygen-web'
 								)}
 							/>
@@ -472,7 +467,7 @@ export default function Edit({
 									setAttributes({ description: value })
 								}
 								placeholder={__(
-									'Add Description…',
+									'Add Description...',
 									'ambrygen-web'
 								)}
 							/>
@@ -718,7 +713,7 @@ export default function Edit({
 										setAttributes({ title: value })
 									}
 									placeholder={__(
-										'Add Title…',
+										'Add Title...',
 										'ambrygen-web'
 									)}
 								/>
@@ -733,7 +728,7 @@ export default function Edit({
 										setAttributes({ description: value })
 									}
 									placeholder={__(
-										'Add Description…',
+										'Add Description...',
 										'ambrygen-web'
 									)}
 								/>

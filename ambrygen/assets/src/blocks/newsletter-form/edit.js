@@ -353,12 +353,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						)}
 					/>
 
-					{eyebrow && (
-						<div
-							className="is-style-gl-s12"
-							aria-hidden="true"
-						/>
-					)}
+					<div
+						className="is-style-gl-s12"
+						aria-hidden="true"
+					/>
 
 					<RichText
 						tagName={headingTag}
@@ -371,12 +369,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						placeholder={__('Add Heading…', 'ambrygen-web')}
 					/>
 
-					{heading && (
-						<div
-							className="is-style-gl-s12"
-							aria-hidden="true"
-						/>
-					)}
+					<div
+						className="is-style-gl-s12"
+						aria-hidden="true"
+					/>
 
 					<RichText
 						tagName="div"
@@ -484,4 +480,3 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		</div>
 	);
 }
-

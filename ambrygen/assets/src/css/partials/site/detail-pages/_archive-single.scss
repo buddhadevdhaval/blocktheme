@@ -10,6 +10,10 @@
 .single {
 	.terms-info-details {
 		border-left: 2px solid var(--theme_cg_blue);
+		border-right: none;
+		border-top: none;
+		border-bottom: none;
+		border-radius: 0;
 		padding: 0 0px 0 fluid(24, 40);
 	}
 

@@ -7,3 +7,10 @@
 		}
 	}
 }
+
+
+.principles-steps {
+    .block-editor-inner-blocks .block-editor-block-list__layout {
+		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	}
+}

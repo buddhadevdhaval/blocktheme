@@ -4,45 +4,89 @@ import {
 	InspectorControls,
 	useBlockProps,
 } from '@wordpress/block-editor';
+import { useEffect } from '@wordpress/element';
 import { PanelBody } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { TagSelector, CtaButtonField, BlockExamplePreview } from '../_shared/components';
+import {
+	TagSelector,
+	CtaButtonField,
+	BlockExamplePreview,
+	ImageUploader,
+} from '../_shared/components';
 
-export default function Edit( { attributes, setAttributes } ) {
-	const { heading, headingTag, description, link, blockId } = attributes;
+const ALLOWED_BLOCKS = [ 'ambrygen/icon-grid-with-count-item' ];
+const TEMPLATE = [ [ 'ambrygen/icon-grid-with-count-item', {} ] ];
 
-	if ( blockId === 'icon-grid-with-count-example' ) {
+export default function Edit( { attributes, setAttributes, clientId } ) {
+	const { heading, headingTag, description, link, blockId, backgroundImage } =
+		attributes;
+	const isExample = blockId === 'icon-grid-with-count-example';
+	const HeadingTag = headingTag || 'h2';
+	const hasBackgroundImage = Boolean( backgroundImage?.url );
+
+	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
+
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+
+		if ( ! blockId ) {
+			setAttributes( { blockId: expectedId } );
+		}
+	}, [ clientId, blockId, isExample, setAttributes ] );
+
+	if ( isExample ) {
 		return (
 			<BlockExamplePreview
-				imagePath="/assets/src/images/icon-grid/variation2.png"
+				imagePath="/assets/src/images/icon-grid-with-count/preview.png"
 			/>
 		);
 	}
 
 	const blockProps = useBlockProps( {
-		className: 'our-testing-menu',
-		id: blockId,
+		className: 'block-layout our-testing-menu',
+		id: blockId || undefined,
 	} );
-
-	const TEMPLATE = [
-		[ 'ambrygen/icon-grids-item', {} ],
-	];
 
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) } initialOpen={ false }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag || 'h2' }
 						onChange={ ( value ) =>
 							setAttributes( { headingTag: value } )
 						}
+						type="heading"
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'Link Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Display Settings', 'ambrygen-web' ) }>
+					<ImageUploader
+						url={ backgroundImage?.url || '' }
+						label={ __( 'Background Image', 'ambrygen-web' ) }
+						onSelect={ ( media ) =>
+							setAttributes( {
+								backgroundImage: {
+									id: media.id,
+									url: media.url,
+									alt: media.alt || '',
+								},
+							} )
+						}
+						onRemove={ () =>
+							setAttributes( {
+								backgroundImage: {
+									url: '',
+									id: 0,
+									alt: '',
+								},
+							} )
+						}
+					/>
 					<CtaButtonField
-						label={ __( 'Link setting', 'ambrygen-web' ) }
+						label={ __( '', 'ambrygen-web' ) }
 						textLabel={ __( 'Link Text', 'ambrygen-web' ) }
 						defaultVariant="primary"
 						value={ link }
@@ -53,15 +97,23 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
+			{ hasBackgroundImage && (
+				<div className="block-bg-image">
+					<img
+						src={ backgroundImage.url }
+						alt={ backgroundImage.alt || '' }
+					/>
+				</div>
+			) }
 			<div className="our-testing-menu__header block__rowflex">
 				<RichText
-					tagName={ headingTag || 'h2' }
+					tagName={ HeadingTag }
 					className="block-title block__rowflex--heading-title heading-3 mb-0"
 					value={ heading }
 					onChange={ ( value ) =>
 						setAttributes( { heading: value } )
 					}
-					placeholder="Add Title..."
+					placeholder={ __( 'Add Title...', 'ambrygen-web' ) }
 				/>
 
 				<div className="block__rowflex--block-content subtitle1-reg">
@@ -71,7 +123,10 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) =>
 							setAttributes( { description: value } )
 						}
-						placeholder="Add Description..."
+						placeholder={ __(
+							'Add Description...',
+							'ambrygen-web'
+						) }
 					/>
 
 					<div className="block_rowflex-link">
@@ -96,12 +151,12 @@ export default function Edit( { attributes, setAttributes } ) {
 						) }
 					</div>
 				</div>
-				<div className="is-style-gl-s50" aria-hidden="true"></div>
 			</div>
+			<div className="is-style-gl-s64" aria-hidden="true"></div>
 
 			<div className="our-testing-menu__grid">
 				<InnerBlocks
-					allowedBlocks={ [ 'ambrygen/icon-grids-item' ] }
+					allowedBlocks={ ALLOWED_BLOCKS }
 					template={ TEMPLATE }
 					templateLock={ false }
 				/>
@@ -109,4 +164,3 @@ export default function Edit( { attributes, setAttributes } ) {
 		</div>
 	);
 }
-

@@ -10,3 +10,16 @@
 		}
 	}
 }
+
+.wp-block {
+	&.icon-grid {
+		&:has(.block-bg-image) {
+			position: static;
+		}
+		.block-bg-image {
+			img {
+				height: 100% !important;
+			}
+		}
+	}
+}

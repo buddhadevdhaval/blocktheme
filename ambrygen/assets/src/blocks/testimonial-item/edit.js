@@ -5,6 +5,7 @@ import {
 } from '@wordpress/block-editor';
 import { __ } from '@wordpress/i18n';
 import { useMemo } from '@wordpress/element';
+import { PanelBody } from '@wordpress/components';
 
 import { DEFAULT_IMAGES, ImageUploader } from '../_shared/components';
 
@@ -37,18 +38,23 @@ export default function Edit( { attributes, setAttributes, context } ) {
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
-				<ImageUploader
-					label={ __( 'ICON', 'ambrygen-web' ) }
-					url={ logo }
-					onSelect={ updateLogo }
-					onRemove={ () =>
-						setAttributes( {
-							logoId: 0,
-							logo: '',
-							logoAlt: '',
-						} )
-					}
-				/>
+				<PanelBody
+					title={ __( 'Logo Settings', 'ambrygen-web' ) }
+					initialOpen={ true }
+				>
+					<ImageUploader
+						label={ __( 'Logo', 'ambrygen-web' ) }
+						url={ logo }
+						onSelect={ updateLogo }
+						onRemove={ () =>
+							setAttributes( {
+								logoId: 0,
+								logo: '',
+								logoAlt: '',
+							} )
+						}
+					/>
+				</PanelBody>
 			</InspectorControls>
 
 			{ displayMainImage && (
@@ -84,7 +90,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 					tagName="blockquote"
 					value={ quote }
 					onChange={ ( value ) => setAttributes( { quote: value } ) }
-					placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
+					placeholder={ __( 'Add Description...', 'ambrygen-web' ) }
 					className="ambry-testimonials__grid__item__quote body2-reg"
 				/>
 
@@ -95,7 +101,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 						onChange={ ( value ) =>
 							setAttributes( { author: value } )
 						}
-						placeholder={ __( 'Add Author name…', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Author name...', 'ambrygen-web' ) }
 						className="ambry-testimonials__layout__author-details__author body2-medium"
 					/>
 
@@ -105,7 +111,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 						onChange={ ( value ) =>
 							setAttributes( { role: value } )
 						}
-						placeholder={ __( 'Add Designation…', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Designation...', 'ambrygen-web' ) }
 						className="ambry-testimonials__layout__author-details__role body2-medium"
 					/>
 				</cite>

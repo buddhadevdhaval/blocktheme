@@ -72,11 +72,10 @@ if ( '_blank' === $ambrygen_link_target ) {
 }
 
 /**
- * Wrapper tag logic (unchanged)
+ * Wrapper tag logic.
  */
-$ambrygen_wrapper_tag = ( 'image-only-title' === $ambrygen_cta_tiles_variation && ! empty( $ambrygen_link ) )
-	? 'a'
-	: 'div';
+$ambrygen_wrapper_tag = ! empty( $ambrygen_link ) ? 'a' : 'div';
+$ambrygen_is_wrapper_link = 'a' === $ambrygen_wrapper_tag;
 
 /**
  * Wrapper attributes
@@ -152,19 +151,25 @@ if ( 'a' === $ambrygen_wrapper_tag ) {
 			if ( ( 'image-title-description' === $ambrygen_cta_tiles_variation && $ambrygen_link ) || ( 'image-title-description-icon' === $ambrygen_cta_tiles_variation && $ambrygen_link ) ) :
 				?>
 				<div class="card-cta-wrapper">
-					<a
-						href="<?php echo esc_url( $ambrygen_link ); ?>"
-						<?php if ( $ambrygen_link_target ) : ?>
-							target="<?php echo esc_attr( $ambrygen_link_target ); ?>"
-						<?php endif; ?>
-						<?php if ( $ambrygen_link_rel ) : ?>
-							rel="<?php echo esc_attr( $ambrygen_link_rel ); ?>"
-						<?php endif; ?>
-						aria-label="<?php echo esc_attr( $cta_accessible_label ); ?>"
-						class="site-btn is-style-site-text-btn has-right-arrow"
-					>
-						<?php echo esc_html( $ambrygen_link_label ); ?>
-					</a>
+					<?php if ( $ambrygen_is_wrapper_link ) : ?>
+						<span class="site-btn is-style-site-text-btn has-right-arrow">
+							<?php echo esc_html( $ambrygen_link_label ); ?>
+						</span>
+					<?php else : ?>
+						<a
+							href="<?php echo esc_url( $ambrygen_link ); ?>"
+							<?php if ( $ambrygen_link_target ) : ?>
+								target="<?php echo esc_attr( $ambrygen_link_target ); ?>"
+							<?php endif; ?>
+							<?php if ( $ambrygen_link_rel ) : ?>
+								rel="<?php echo esc_attr( $ambrygen_link_rel ); ?>"
+							<?php endif; ?>
+							aria-label="<?php echo esc_attr( $cta_accessible_label ); ?>"
+							class="site-btn is-style-site-text-btn has-right-arrow"
+						>
+							<?php echo esc_html( $ambrygen_link_label ); ?>
+						</a>
+					<?php endif; ?>
 				</div>
 
 				<?php

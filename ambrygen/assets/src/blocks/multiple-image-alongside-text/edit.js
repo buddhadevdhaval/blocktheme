@@ -62,9 +62,6 @@ const createStat = () => ( {
 const normalizeHeadingLevel = ( value ) =>
 	VALID_HEADING_LEVELS.includes( value ) ? value : 'h2';
 
-const getHeadingClass = ( headingLevel ) =>
-	`heading-${ normalizeHeadingLevel( headingLevel ).replace( 'h', '' ) }`;
-
 const normalizeImage = ( image = {} ) => ( {
 	url: image.url || '',
 	id: Number( image.id ) || 0,
@@ -279,7 +276,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const blockProps = useBlockProps();
 	const HeadingTag = normalizeHeadingLevel( headingLevel );
-	const headingClass = getHeadingClass( HeadingTag );
+	const headingClass = 'heading-2';
 	const showStats = isStatsView;
 	const hasVisibleStats = showStats && visibleStats.length > 0;
 	const previewImages = visibleImages
@@ -321,7 +318,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		const clientIdSuffix = clientId.slice( 0, 8 );
 		const expectedId = `section-${ clientIdSuffix }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
+		if ( ! blockId ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
@@ -580,20 +577,20 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 															}` }
 														>
 															<div className="multiple-image-alongside-text__stats--stat-number heading-3 mb-0">
-																<span className="multiple-image-alongside-text__stats--stat-prefix">
+																<div className="multiple-image-alongside-text__stats--stat-prefix">
 																	{
 																		stat.prefix
 																	}
-																</span>
-																<span className="multiple-image-alongside-text__stats--count multiple-image-alongside-text__stats--stat-data">
+																</div>
+																<div className="multiple-image-alongside-text__stats--count multiple-image-alongside-text__stats--stat-data">
 																	{ stat.number ||
 																		EMPTY_STAT_PLACEHOLDER }
-																</span>
-																<span className="multiple-image-alongside-text__stats--stat-postfix multiple-image-alongside-text__stats--stat-data">
+																</div>
+																<div className="multiple-image-alongside-text__stats--stat-postfix multiple-image-alongside-text__stats--stat-data">
 																	{
 																		stat.postfix
 																	}
-																</span>
+																</div>
 															</div>
 															{ stat.label && (
 																<div className="multiple-image-alongside-text__stats--stat-title body1">

@@ -104,7 +104,6 @@ export default function Edit( { attributes, setAttributes } ) {
 	const defaultImages = useMemo( () => DEFAULT_IMAGES(), [] );
 	const displayLogo = logoImageUrl || defaultImages.placeholder.url;
 	const hasSecondaryImage = Boolean( secondaryImageId || secondaryImageUrl );
-	const hasHeading = '' !== sectionTitle.trim();
 
 	if ( sectionTitle === 'multimedia-logo-example' ) {
 		return (
@@ -373,9 +372,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						placeholder={ __( 'Heading', 'ambrygen-web' ) }
 					/>
 				</div>
-				{ hasHeading && (
-					<div className="is-style-gl-s50" aria-hidden="true"></div>
-				) }
+				<div className="is-style-gl-s50" aria-hidden="true"></div>
 
 				<div className="logo-section__top">
 					<div className="logo-section__logo">
@@ -483,14 +480,16 @@ export default function Edit( { attributes, setAttributes } ) {
 								</div>
 							</div>
 						</div>
-					) }
-					<div className="logo-section__description">
+					)}
+					<div className="logo-section__right">
 						<div className="logo-section__right-content">
-							<InnerBlocks
-								allowedBlocks={ allowedDescriptionBlocks }
-								template={ descriptionTemplate }
-								templateInsertUpdatesSelection={ true }
-							/>
+							<div className="logo-section__description js-gsap-fade">
+								<InnerBlocks
+									allowedBlocks={allowedDescriptionBlocks}
+									template={descriptionTemplate}
+									templateInsertUpdatesSelection={true}
+								/>
+							</div>
 						</div>
 					</div>
 				</div>

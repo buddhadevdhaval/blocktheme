@@ -10,109 +10,114 @@ import { __ } from '@wordpress/i18n';
 import { ImageUploader } from '../_shared/components';
 import { getThemeAssetUrl } from '../../utils/assets';
 
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit({ attributes, setAttributes }) {
 	const {
 		iconId = 0,
 		iconAlt = '',
 		title = '',
 		description = '',
 	} = attributes;
-	const blockProps = useBlockProps( {
+	const iconSize = 70;
+	const blockProps = useBlockProps({
 		className: 'icon-card-grid__card',
-	} );
-	const placeholderIconUrl = getThemeAssetUrl( '/assets/src/images/logo.png' );
+	});
+	const placeholderIconUrl = getThemeAssetUrl('/assets/src/images/logo.png');
 
 	const iconPreviewUrl = useSelect(
-		( select ) => {
-			if ( ! iconId ) {
+		(select) => {
+			if (!iconId) {
 				return '';
 			}
 
-			const media = select( 'core' ).getMedia( iconId, {
+			const media = select('core').getMedia(iconId, {
 				context: 'view',
-			} );
+			});
 
-			if ( media === undefined ) {
+			if (media === undefined) {
 				return '';
 			}
 
 			return media?.source_url || '';
 		},
-		[ iconId ]
+		[iconId]
 	);
 	const isLoadingImage = useSelect(
-		( select ) => {
-			if ( ! iconId ) {
+		(select) => {
+			if (!iconId) {
 				return false;
 			}
 
-			return select( 'core' ).isResolving( 'getMedia', [ iconId ] );
+			return select('core').isResolving('getMedia', [iconId]);
 		},
-		[ iconId ]
+		[iconId]
 	);
 
 	return (
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Icon Settings', 'ambrygen-web' ) }
-					initialOpen={ true }
+					title={__('Card Settings', 'ambrygen-web')}
+					initialOpen={true}
 				>
 					<ImageUploader
-						url={ iconPreviewUrl }
-						label={ __( 'Icon', 'ambrygen-web' ) }
-						onSelect={ ( media ) =>
-							setAttributes( {
+						url={iconPreviewUrl}
+						label={__('Icon', 'ambrygen-web')}
+						onSelect={(media) =>
+							setAttributes({
 								iconId: media.id || 0,
 								iconAlt: media.alt || media.title || '',
-							} )
+							})
 						}
-						onRemove={ () =>
-							setAttributes( { iconId: 0, iconAlt: '' } )
+						onRemove={() =>
+							setAttributes({ iconId: 0, iconAlt: '' })
 						}
 					/>
+
 				</PanelBody>
 			</InspectorControls>
 
-			<div { ...blockProps }>
-				{ isLoadingImage && ! iconPreviewUrl && (
+			<div {...blockProps}>
+				{isLoadingImage && !iconPreviewUrl && (
 					<div className="icon-card-grid__icon-wrap">
-						<div className="icon-card-grid__icon" aria-hidden="true"></div>
+						<div
+							className="icon-card-grid__icon"
+							aria-hidden="true"
+						></div>
 					</div>
-				) }
-				{ ( iconPreviewUrl || placeholderIconUrl ) && (
+				)}
+				{!isLoadingImage && (iconPreviewUrl || placeholderIconUrl) && (
 					<div className="icon-card-grid__icon-wrap">
 						<img
-							src={ iconPreviewUrl || placeholderIconUrl }
-							alt={ iconPreviewUrl ? iconAlt || '' : '' }
+							src={iconPreviewUrl || placeholderIconUrl}
+							alt={iconPreviewUrl ? iconAlt || '' : ''}
 							className="icon-card-grid__icon"
-							width="70"
-							height="70"
+							width={iconSize}
+							height={iconSize}
 						/>
 					</div>
-				) }
+				)}
 
 				<div className="icon-card-grid__content">
 					<RichText
 						tagName="div"
 						className="subtitle1-sbold icon-card-grid__card-title"
-						value={ title }
-						onChange={ ( value ) =>
-							setAttributes( { title: value } )
+						value={title}
+						onChange={(value) =>
+							setAttributes({ title: value })
 						}
-						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+						placeholder={__('Add Title...', 'ambrygen-web')}
 					/>
 					<RichText
 						tagName="div"
 						className="body1 icon-card-grid__card-desc"
-						value={ description }
-						onChange={ ( value ) =>
-							setAttributes( { description: value } )
+						value={description}
+						onChange={(value) =>
+							setAttributes({ description: value })
 						}
-						placeholder={ __(
-							'Add Description...',
+						placeholder={__(
+							'Add Short Description...',
 							'ambrygen-web'
-						) }
+						)}
 					/>
 				</div>
 			</div>

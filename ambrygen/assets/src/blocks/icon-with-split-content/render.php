@@ -14,7 +14,9 @@ use Ambrygen\Theme\Core\Helper;
 defined( 'ABSPATH' ) || exit;
 
 $ambrygen_attributes  = is_array( $attributes ) ? $attributes : array();
+$ambrygen_block_id    = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
 $ambrygen_anchor      = isset( $ambrygen_attributes['anchor'] ) ? sanitize_html_class( $ambrygen_attributes['anchor'] ) : '';
+$ambrygen_block_id    = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
 $ambrygen_heading     = $ambrygen_attributes['heading'] ?? '';
 $ambrygen_heading_tag = Helper::get_heading_tag(
 	$ambrygen_attributes['headingTag'] ?? 'h2',
@@ -26,12 +28,18 @@ $ambrygen_has_heading = '' !== trim( wp_strip_all_tags( $ambrygen_heading ) );
 $ambrygen_has_desc    = '' !== trim( wp_strip_all_tags( $ambrygen_description ) );
 $ambrygen_heading_id  = wp_unique_id( 'symptoms-heading-' );
 
+if ( $ambrygen_anchor ) {
+	$ambrygen_heading_id = $ambrygen_anchor . '-heading';
+} elseif ( $ambrygen_block_id ) {
+	$ambrygen_heading_id = $ambrygen_block_id . '-heading';
+}
+
 $ambrygen_wrapper_args = array(
 	'class' => 'symptoms',
 );
 
-if ( $ambrygen_anchor ) {
-	$ambrygen_wrapper_args['id'] = $ambrygen_anchor;
+if ( $ambrygen_anchor || $ambrygen_block_id ) {
+	$ambrygen_wrapper_args['id'] = $ambrygen_anchor ?: $ambrygen_block_id;
 }
 
 if ( $ambrygen_has_heading ) {

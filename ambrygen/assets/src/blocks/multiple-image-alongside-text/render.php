@@ -43,7 +43,7 @@ $ambrygen_normalized_variation = 'normal-view' === $ambrygen_variation
 	: 'stats-view';
 $ambrygen_is_normal_view       = 'normal-view' === $ambrygen_normalized_variation;
 $ambrygen_is_stats_view        = ! $ambrygen_is_normal_view;
-$ambrygen_heading_class        = 'heading-' . str_replace( 'h', '', $ambrygen_heading_tag );
+$ambrygen_heading_class        = 'heading-2';
 $ambrygen_image_position_class = 'right' === $ambrygen_image_position ? ' block-rtl' : '';
 $ambrygen_variation_class      = $ambrygen_is_normal_view ? ' is-normal-view' : '';
 $ambrygen_has_heading          = '' !== trim( wp_strip_all_tags( $ambrygen_heading ) );
@@ -106,35 +106,31 @@ $ambrygen_images = isset( $ambrygen_attributes['images'] ) && is_array( $ambryge
 	: array();
 
 $ambrygen_visible_image_count = $ambrygen_is_normal_view ? 4 : 3;
-$ambrygen_images              = array_slice( $ambrygen_images, 0, $ambrygen_visible_image_count );
-$ambrygen_images              = array_values(
-	array_filter(
-		array_map(
-			static function ( $ambrygen_image, $ambrygen_image_index ) {
-				if ( ! is_array( $ambrygen_image ) ) {
-					return null;
-				}
+$ambrygen_images              = array_map(
+	static function ( $ambrygen_image, $ambrygen_image_index ) {
+		$ambrygen_image = is_array( $ambrygen_image ) ? $ambrygen_image : array();
 
-				$ambrygen_image_id  = (int) ( $ambrygen_image['id'] ?? 0 );
-				$ambrygen_image_url = isset( $ambrygen_image['url'] ) ? (string) $ambrygen_image['url'] : '';
-
-				if ( ! $ambrygen_image_id && '' === $ambrygen_image_url ) {
-					return null;
-				}
-
-				return array(
-					'id'         => $ambrygen_image_id,
-					'url'        => $ambrygen_image_url,
-					'alt'        => isset( $ambrygen_image['alt'] ) ? (string) $ambrygen_image['alt'] : '',
-					'slot_index' => (int) $ambrygen_image_index,
-				);
-			},
-			$ambrygen_images,
-			array_keys( $ambrygen_images )
-		)
-	)
+		return array(
+			'id'         => (int) ( $ambrygen_image['id'] ?? 0 ),
+			'url'        => isset( $ambrygen_image['url'] ) ? (string) $ambrygen_image['url'] : '',
+			'alt'        => isset( $ambrygen_image['alt'] ) ? (string) $ambrygen_image['alt'] : '',
+			'slot_index' => (int) $ambrygen_image_index,
+		);
+	},
+	array_pad( array_slice( $ambrygen_images, 0, $ambrygen_visible_image_count ), $ambrygen_visible_image_count, array() ),
+	range( 0, $ambrygen_visible_image_count - 1 )
 );
-$ambrygen_has_images          = ! empty( $ambrygen_images );
+$ambrygen_has_images          = array_reduce(
+	$ambrygen_images,
+	static function ( $ambrygen_has_images, $ambrygen_image ) {
+		if ( $ambrygen_has_images ) {
+			return true;
+		}
+
+		return ! empty( $ambrygen_image['id'] ) || '' !== $ambrygen_image['url'];
+	},
+	false
+);
 $ambrygen_has_stats           = $ambrygen_is_stats_view && ! empty( $ambrygen_visible_stats );
 
 if ( ! $ambrygen_has_heading && ! $ambrygen_has_content && ! $ambrygen_has_images && ! $ambrygen_has_stats ) {
@@ -191,23 +187,16 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 						<div class="multiple-image-alongside-text__image<?php echo $ambrygen_is_full_image ? ' multiple-image-alongside-text__image--bottom' : ''; ?>">
 							<div class="multiple-image-alongside-text__image-container">
 								<?php
-								if ( $ambrygen_image_id ) {
-									echo Helper::image_with_placeholder( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image() returns sanitized HTML.
-										$ambrygen_image_id,
-										$ambrygen_is_full_image ? 'full' : 'large',
-										array(
-											'class' => 'multiple-image-alongside-text__image-img',
-										)
-									);
-								} elseif ( $ambrygen_image_url ) {
-									?>
-									<img
-										class="multiple-image-alongside-text__image-img"
-										src="<?php echo esc_url( $ambrygen_image_url ); ?>"
-										alt="<?php echo esc_attr( $ambrygen_image_alt ); ?>"
-									/>
-									<?php
-								}
+								echo Helper::image_from_source( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() escapes attributes and returns wp_kses_post()-sanitized image markup.
+									$ambrygen_image_id,
+									$ambrygen_image_url,
+									$ambrygen_is_full_image ? 'full' : 'large',
+									array(
+										'alt'   => $ambrygen_image_alt,
+										'class' => 'multiple-image-alongside-text__image-img',
+									),
+									true
+								);
 								?>
 							</div>
 						</div>
@@ -270,13 +259,13 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 									<div class="multiple-image-alongside-text__stats--stat-number heading-3 mb-0"
 										aria-label="<?php echo esc_attr( $ambrygen_aria_label ); ?>">
 										<?php if ( '' !== $ambrygen_prefix ) : ?>
-											<span class="multiple-image-alongside-text__stats--stat-prefix"><?php echo esc_html( $ambrygen_prefix ); ?></span>
+											<div class="multiple-image-alongside-text__stats--stat-prefix"><?php echo esc_html( $ambrygen_prefix ); ?></div>
 										<?php endif; ?>
 										<div class="multiple-image-alongside-text__stats--count">
 											<?php echo esc_html( $ambrygen_number ); ?>
 										</div>
 										<?php if ( '' !== $ambrygen_postfix ) : ?>
-											<span class="multiple-image-alongside-text__stats--stat-postfix"><?php echo esc_html( $ambrygen_postfix ); ?></span>
+											<div class="multiple-image-alongside-text__stats--stat-postfix"><?php echo esc_html( $ambrygen_postfix ); ?></div>
 										<?php endif; ?>
 									</div>
 								<?php endif; ?>

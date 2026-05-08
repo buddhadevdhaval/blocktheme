@@ -55,7 +55,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 		const expectedId = `headline-alongside-text-${ clientId.slice( 0, 8 ) }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientId.slice( 0, 8 ) ) ) {
+		if ( ! blockId ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
@@ -131,24 +131,27 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<div
 					className="heading-content-section__inner block__rowflex is-horizontal"
 				>
-					<RichText
-						tagName={displayHeadlineTag}
-						className="heading-content-section__title heading-3 block-title mb-0 block__rowflex--heading-title"
-						value={displayHeadline}
-						onChange={(value) =>
-							setAttributes({
-								headline: value,
-								title: value,
-							})
-						}
-						allowedFormats={[
-							'core/bold',
-							'core/italic',
-							'core/text-color',
-							'ambrygen/tooltip',
-						]}
-						placeholder={__('Add Heading...', 'ambrygen-web')}
-					/>
+
+					<div className='block__rowflex--col-left'>
+						<RichText
+							tagName={displayHeadlineTag}
+							className="heading-content-section__title heading-3 block-title mb-0 block__rowflex--heading-title"
+							value={displayHeadline}
+							onChange={(value) =>
+								setAttributes({
+									headline: value,
+									title: value,
+								})
+							}
+							allowedFormats={[
+								'core/bold',
+								'core/italic',
+								'core/text-color',
+								'ambrygen/tooltip',
+							]}
+							placeholder={__('Add Heading...', 'ambrygen-web')}
+						/>
+					</div>
 					<div className='heading-content-wrapper'>
 						<div className="heading-content-section__description block__rowflex--block-content block-description">
 							<RichText
@@ -170,9 +173,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							/>
 						</div>
 						<div className="heading-content-section__content js-gsap-fade">
-							{ hasInnerBlocks && (
-								<div className="is-style-gl-s24" aria-hidden="true"></div>
-							) }
+							<div className="is-style-gl-s24" aria-hidden="true"></div>
 							<InnerBlocks
 								allowedBlocks={[
 									'core/paragraph',
@@ -192,5 +193,4 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		</>
 	);
 }
-
 

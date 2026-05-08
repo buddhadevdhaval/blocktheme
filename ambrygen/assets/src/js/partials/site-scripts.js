@@ -3,6 +3,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
+
+
 function initTooltips() {
 	const tooltipSelector = '.ambrygen-tooltip';
 	const isTouchDevice = window.matchMedia(
@@ -1745,3 +1747,344 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	});
 })(window.jQuery);
+
+/**
+ * Global Search Functionality
+ */
+
+function initGlobalSearch() {
+
+	const modal = document.getElementById('global-search-modal');
+	if (!modal) {
+		return;
+	}
+
+
+	const input = modal.querySelector('#global-search-input');
+	const closeBtn = modal.querySelector('.search-modal__close');
+	const resultsContainer = modal.querySelector('#search-results-list');
+	const resultsCountLabel = modal.querySelector('#search-results-count');
+	const currentPageSpan = modal.querySelector('#search-current-page');
+	const totalPagesSpan = modal.querySelector('#search-total-pages');
+	const loading = modal.querySelector('#search-loading');
+	const stats = modal.querySelector('.search-modal__stats');
+	const filtersContainer = modal.querySelector('.search-modal__filters');
+	const mobileFiltersContainer = modal.querySelector('.search-modal__filters-mobile');
+	const mobileSelect = mobileFiltersContainer ? mobileFiltersContainer.querySelector('select') : null;
+	const paginationContainer = modal.querySelector('#search-pagination');
+	const prevBtn = modal.querySelector('#search-prev');
+	const nextBtn = modal.querySelector('#search-next');
+	const searchIcon = modal.querySelector('.search-modal__submit-icon');
+
+	let currentPostType = 'all';
+	let currentPage = 1;
+
+	document.addEventListener(
+		'click',
+		(e) => {
+			const searchWrapper = e.target.closest('.header__search');
+			if (searchWrapper) {
+
+				e.preventDefault();
+				e.stopPropagation();
+				openModal();
+			}
+		},
+		true
+	);
+
+	document.addEventListener('keydown', (e) => {
+		if (
+			e.key === 'Enter' &&
+			e.target.classList.contains('morphing-btn-input')
+		) {
+
+			e.preventDefault();
+			openModal();
+		}
+	});
+
+	function openModal() {
+		if (!modal) {
+			return;
+		}
+		modal.style.display = 'flex';
+		modal.setAttribute('aria-hidden', 'false');
+		document.body.classList.add('modal-open');
+
+		setTimeout(() => {
+			modal.classList.add('is-active');
+			if (input) {
+				input.focus();
+			}
+		}, 10);
+	}
+
+	function closeModal() {
+		modal.classList.remove('is-active');
+		modal.setAttribute('aria-hidden', 'true');
+		document.body.classList.remove('modal-open');
+
+		setTimeout(() => {
+			if (!modal.classList.contains('is-active')) {
+				modal.style.display = 'none';
+			}
+		}, 300);
+	}
+
+	if (closeBtn) {
+		closeBtn.addEventListener('click', closeModal);
+	}
+
+	const overlay = modal.querySelector('.modal-popup__overlay');
+	if (overlay) {
+		overlay.addEventListener('click', closeModal);
+	}
+
+	if (prevBtn) {
+		prevBtn.addEventListener('click', () => {
+			if (currentPage > 1) {
+				currentPage--;
+				performSearch();
+			}
+		});
+	}
+	if (nextBtn) {
+		nextBtn.addEventListener('click', () => {
+			currentPage++;
+			performSearch();
+		});
+	}
+
+	if (input) {
+		input.addEventListener('input', () => {
+			if (input.value.trim().length === 0) {
+				performSearch();
+			}
+		});
+
+		input.addEventListener('keydown', (e) => {
+			if (e.key === 'Enter') {
+				e.preventDefault();
+				currentPage = 1;
+				performSearch();
+			}
+		});
+	}
+
+	if (searchIcon) {
+		searchIcon.addEventListener('click', () => {
+			currentPage = 1;
+			performSearch();
+		});
+	}
+
+	async function performSearch() {
+		if (!input) {
+			return;
+		}
+		const searchTerm = input.value.trim();
+
+		if (searchTerm.length < 2) {
+			if (resultsContainer) {
+				resultsContainer.innerHTML =
+					'<div class="search-modal__initial-message body1-reg">Start your search...</div>';
+			}
+			if (stats) {
+				stats.style.display = 'none';
+			}
+			if (filtersContainer) {
+				filtersContainer.classList.remove('is-visible');
+			}
+			if (mobileFiltersContainer) {
+				mobileFiltersContainer.classList.remove('is-visible');
+			}
+			if (paginationContainer) {
+				paginationContainer.style.display = 'none';
+			}
+			if (resultsCountLabel) {
+				resultsCountLabel.textContent = '0';
+			}
+			return;
+		}
+
+		if (stats) {
+			stats.style.display = 'block';
+		}
+		if (filtersContainer) {
+			filtersContainer.classList.add('is-visible');
+		}
+		if (mobileFiltersContainer) {
+			mobileFiltersContainer.classList.add('is-visible');
+		}
+
+		if (loading) {
+			loading.style.display = 'block';
+		}
+		if (resultsContainer) {
+			resultsContainer.style.opacity = '0.5';
+		}
+
+		const formData = new FormData();
+		formData.append('action', 'ambrygen_global_search');
+		formData.append('nonce', window.ambrygenAjax.nonce);
+		formData.append('s', searchTerm);
+		formData.append('post_type', currentPostType);
+		formData.append('paged', String(currentPage));
+
+		try {
+			const response = await fetch(window.ambrygenAjax.ajaxUrl, {
+				method: 'POST',
+				body: formData,
+			});
+			const result = await response.json();
+
+			if (result.success) {
+				renderResults(result.data, searchTerm);
+				renderFilters(result.data.counts);
+			}
+		} catch (error) {
+			console.error('Global Search Error:', error);
+		} finally {
+			if (loading) {
+				loading.style.display = 'none';
+			}
+			if (resultsContainer) {
+				resultsContainer.style.opacity = '1';
+			}
+		}
+	}
+
+	function renderFilters(counts) {
+		if (!filtersContainer && !mobileSelect) return;
+
+		const labels = {
+			all: 'All',
+			post: 'Blog Post',
+			page: 'Web Page',
+			webinar: 'Webinar',
+			press_release: 'Press Release',
+			conferences: 'Conferences',
+			presentation: 'Scientific Presentation',
+			poster: 'Scientific Poster',
+			publication: 'Peer-Reviewed Publication',
+		};
+
+		const filteredTypes = Object.keys(counts).filter(
+			(type) => counts[type] > 0 || type === 'all'
+		);
+
+		// Render Desktop Buttons
+		if (filtersContainer) {
+			const buttonsHtml = filteredTypes
+				.map((type) => {
+					const isActive = type === currentPostType;
+					const label =
+						labels[type] ||
+						type.charAt(0).toUpperCase() + type.slice(1);
+					return `<button class="tab-button ${isActive ? 'active' : ''
+						}" data-post-type="${type}">${label}</button>`;
+				})
+				.join('');
+
+			filtersContainer.innerHTML = buttonsHtml;
+
+			filtersContainer.querySelectorAll('.tab-button').forEach((btn) => {
+				btn.addEventListener('click', () => {
+					currentPostType = btn.getAttribute('data-post-type');
+					currentPage = 1;
+					performSearch();
+				});
+			});
+		}
+
+		if (mobileSelect) {
+			const optionsHtml = filteredTypes
+				.map((type) => {
+					const isSelected = type === currentPostType;
+					const label =
+						labels[type] ||
+						type.charAt(0).toUpperCase() + type.slice(1);
+					return `<option value="${type}" ${isSelected ? 'selected' : ''
+						}>${label}</option>`;
+				})
+				.join('');
+
+			mobileSelect.innerHTML = optionsHtml;
+		}
+	}
+
+	if (mobileSelect) {
+		mobileSelect.addEventListener('change', () => {
+			currentPostType = mobileSelect.value;
+			currentPage = 1;
+			performSearch();
+		});
+	}
+
+	function renderResults(data, searchTerm) {
+		if (resultsCountLabel) {
+			resultsCountLabel.textContent = data.total || '0';
+		}
+		if (currentPageSpan) {
+			currentPageSpan.textContent = data.current_page || '1';
+		}
+		if (totalPagesSpan) {
+			totalPagesSpan.textContent = data.total_pages || '1';
+		}
+
+		if (paginationContainer) {
+			paginationContainer.style.display =
+				data.total_pages > 1 ? 'flex' : 'none';
+		}
+		if (prevBtn) {
+			prevBtn.disabled = data.current_page <= 1;
+		}
+		if (nextBtn) {
+			nextBtn.disabled = data.current_page >= data.total_pages;
+		}
+
+		if (!resultsContainer) {
+			return;
+		}
+
+		if (!data.results || data.results.length === 0) {
+			resultsContainer.innerHTML =
+				'<div class="search-modal__no-results">No results found for your search.</div>';
+
+			if (!data.total || data.total == 0) {
+				if (filtersContainer) filtersContainer.style.display = 'none';
+				if (stats) stats.style.display = 'none';
+			}
+			return;
+		}
+
+		resultsContainer.innerHTML = data.results
+			.map((post) => {
+				const highlightedExcerpt = searchTerm
+					? post.excerpt.replace(
+						new RegExp(`(${searchTerm})`, 'gi'),
+						'<mark class="search-highlight">$1</mark>'
+					)
+					: post.excerpt;
+
+				return `
+                <div class="search-result-card">
+					<div class="search-result-card__content">
+						<div class="search-result-card__label">${post.post_type_label}</div>
+						<div class="search-result-card__title heading-6">${post.title}</div>
+						<div class="search-result-card__excerpt body2-reg">${highlightedExcerpt}</div>
+                        <a href="${post.url}" class="site-btn has-right-arrow btn-medium search-result-card__btn">Read More</a>
+					</div>
+                </div>
+            `;
+			})
+			.join('');
+	}
+}
+
+if (document.readyState === 'loading') {
+	document.addEventListener('DOMContentLoaded', initGlobalSearch);
+} else {
+	initGlobalSearch();
+}

@@ -44,26 +44,6 @@ section:has(.testimonial-slider) {
 			top: -200px;
 			width: clamp(242px, 15.125rem + (1vw - 16px) * 10, 282px);
 			left: -2vw;
-
-			@include bp.between(1441px, 1680px) {
-				// right: calc(100% + -60px);
-				// top: -30px;
-			}
-
-			@include bp.between(1351px, 1440px) {
-				// right: calc(100% + -180px);
-				// top: 110px;
-			}
-
-			@include bp.max(xxxl) {
-				// right: calc(100% + -140px);
-				// top: -200px;
-			}
-
-			@include bp.max(xl) {
-				// right: calc(100% + -140px);
-				// top: -200px;
-			}
 		}
 
 		&__overlay-right {
@@ -71,21 +51,6 @@ section:has(.testimonial-slider) {
 			right: -130px;
 			height: clamp(282px, calc(17.625rem + ((1vw - 9.91px) * 25.0696)), 372px);
 			width: clamp(292px, calc(18.25rem + ((1vw - 9.91px) * 41.7827)), 442px);
-
-			// @include bp.max(xxxl) {
-			//     bottom: auto;
-			//     height: 272px;
-			//     left: calc(100% - 120px);
-			//     top: 50%;
-			//     width: 342px;
-			// }
-
-			// @include bp.max(xl) {
-			//     bottom: auto;
-			//     height: 194px;
-			//     top: 46%;
-			//     width: 232px;
-			// }
 		}
 	}
 
@@ -107,11 +72,7 @@ section:has(.testimonial-slider) {
 	.testimonial-slider-wrapper {
 		background: var(--theme_white);
 		border-radius: fluid(16, 24);
-		// padding: fluid(32, 50);
 
-		.swiper-wrapper {
-			// overflow: hidden;
-		}
 	}
 
 	&__card {
@@ -147,5 +108,44 @@ section:has(.testimonial-slider) {
 		display: flex;
 		justify-content: center;
 		margin-top: fluid(24, 32);
+	}
+
+	&__author {
+		display: flex;
+		align-items: center;
+		gap: fluid(16, 24);
+
+		&--image {
+			flex-shrink: 0;
+
+			img {
+				display: block;
+				width: fluid(60, 80);
+				height: fluid(60, 80);
+				border-radius: 50%;
+				object-fit: cover;
+			}
+		}
+
+		&--content {
+			display: flex;
+			flex-direction: column;
+			gap: fluid(4, 8);
+			text-align: left;
+			flex: 1;
+		}
+
+		&--name {
+			font-weight: 600;
+			font-size: fluid(14, 16);
+			line-height: 1.4;
+			color: var(--theme_gray_900);
+		}
+
+		&--role {
+			font-size: fluid(12, 14);
+			line-height: 1.4;
+			color: var(--theme_gray_600);
+		}
 	}
 }

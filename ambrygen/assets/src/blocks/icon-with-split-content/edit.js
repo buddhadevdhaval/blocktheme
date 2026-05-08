@@ -61,29 +61,47 @@ function sanitizePlainText( text = '' ) {
 	return text.replace( /<[^>]*>/g, ' ' ).replace( /\s+/g, ' ' ).trim();
 }
 
-export default function Edit( { attributes, setAttributes } ) {
-	const { blockId, heading, headingTag, description, items = [] } = attributes;
-	const hasHeading = '' !== heading.trim();
-	const hasDescription = '' !== description.trim();
+export default function Edit( { attributes, setAttributes, clientId } ) {
+	const {
+		blockId,
+		anchor,
+		heading,
+		headingTag,
+		description,
+		items = [],
+	} = attributes;
 	const HeadingTag = headingTag || 'h2';
+	const isExample = blockId === 'icon-with-split-content-example';
 
 	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
+
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+
+		if ( ! blockId ) {
+			setAttributes( { blockId: expectedId } );
+			return;
+		}
+
 		const { hasChanges, normalizedItems } = normalizeItemsWithIds( items );
 
 		if ( hasChanges ) {
 			setAttributes( { items: normalizedItems } );
 		}
-	}, [ items, setAttributes ] );
+	}, [ clientId, blockId, isExample, items, setAttributes ] );
 
 	const blockProps = useBlockProps( {
 		className: 'symptoms',
+		id: anchor || blockId || undefined,
 	} );
 
-	if ( blockId === 'icon-with-split-content-example' ) {
+	if ( isExample ) {
 		return (
 			<BlockExamplePreview
 				className="icon-with-split-content-example-preview"
-				imagePath="/assets/src/images/cta-tiles-with-3-card/default-image.png"
+				imagePath="/assets/src/images/icon-with-split-content/preview.png"
 			/>
 		);
 	}
@@ -134,7 +152,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			<InspectorControls>
 				<PanelBody
 					title={ __( 'Heading Settings', 'ambrygen-web' ) }
-					initialOpen={ true }
+					initialOpen={ false }
 				>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
@@ -148,7 +166,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 				<PanelBody
 					title={ __( 'Repeater', 'ambrygen-web' ) }
-					initialOpen={ false }
+					initialOpen={ true }
 				>
 					{ items.map( ( item, index ) => (
 						<div key={ item.id }>
@@ -205,12 +223,14 @@ export default function Edit( { attributes, setAttributes } ) {
 			<div { ...blockProps }>
 				<div className="symptoms__grid">
 					<div className="symptoms__left">
-						<Notice status="info" isDismissible={ false }>
-							{ __(
-								'Add each icon image from the left-side repeater settings panel.',
-								'ambrygen-web'
-							) }
-						</Notice>
+						{ items.length === 0 && (
+							<Notice status="info" isDismissible={ false }>
+								{ __(
+									'Add each icon image from the left-side repeater settings panel.',
+									'ambrygen-web'
+								) }
+							</Notice>
+						) }
 
 						{ items.map( ( item ) => (
 							<div
@@ -243,9 +263,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 						/>
 
-						{ hasHeading && hasDescription && (
-							<div className="is-style-gl-s12" aria-hidden="true"></div>
-						) }
+						<div className="is-style-gl-s12" aria-hidden="true"></div>
 
 						<RichText
 							tagName="div"
@@ -262,4 +280,3 @@ export default function Edit( { attributes, setAttributes } ) {
 		</Fragment>
 	);
 }
-

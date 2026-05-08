@@ -1,0 +1,16 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ambrygen/conference-slider-arrows",
+	"title": "Conference Slider Arrows",
+	"category": "theme",
+	"icon": "move",
+	"description": "Navigation arrows for the conference in-progress slider.",
+	"supports": {
+		"html": false,
+		"inserter": false
+	},
+	"textdomain": "ambrygen",
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

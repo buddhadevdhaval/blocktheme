@@ -22,17 +22,22 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		imageUrl,
 		imageAlt,
 	} = attributes;
+	const isExample = blockId === 'supporting-image-example';
 
 	useEffect( () => {
+		if ( isExample ) {
+			return;
+		}
+
 		const clientIdSuffix = clientId.slice( 0, 8 );
 		const expectedId = `supporting-image-${ clientIdSuffix }`;
 
-		if ( ! blockId || ! blockId.endsWith( clientIdSuffix ) ) {
+		if ( ! blockId ) {
 			setAttributes( {
 				blockId: expectedId,
 			} );
 		}
-	}, [ clientId, blockId, setAttributes ] );
+	}, [ clientId, blockId, isExample, setAttributes ] );
 
 	const HeadingTag = headingTag || 'h2';
 
@@ -41,7 +46,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		id: anchor || blockId || undefined,
 	} );
 
-	if ( blockId === 'supporting-image-example' ) {
+	if ( isExample ) {
 		return (
 			<BlockExamplePreview
 				className="supporting-image-example-preview"
@@ -55,7 +60,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			<InspectorControls>
 				<PanelBody
 					title={ __( 'Heading Settings', 'ambrygen-web' ) }
-					initialOpen={ true }
+					initialOpen={ false }
 				>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
@@ -72,7 +77,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					initialOpen={ true }
 				>
 					<ImageUploader
-						label={ __( 'Chart Image', 'ambrygen-web' ) }
+						label={ __( 'Image', 'ambrygen-web' ) }
 						url={ imageUrl }
 						onSelect={ ( media ) =>
 							setAttributes( {
@@ -125,16 +130,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							setAttributes( { heading: value } )
 						}
 						placeholder={ __(
-							'Add heading',
+							'Add Heading...',
 							'ambrygen-web'
 						) }
 					/>
-					{ description && (
-						<div
-							className="is-style-gl-s24"
-							aria-hidden="true"
-						></div>
-					) }
+					<div
+						className="is-style-gl-s24"
+						aria-hidden="true"
+					></div>
 					<RichText
 						tagName="div"
 						className="subtitle1-regular supporting-image__description  block-description"
@@ -143,7 +146,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							setAttributes( { description: value } )
 						}
 						placeholder={ __(
-							'Add description',
+							'Add Description...',
 							'ambrygen-web'
 						) }
 					/>

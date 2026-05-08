@@ -16,9 +16,9 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		modal.className = 'modal-popup modal-popup--video';
 		modal.innerHTML = `
 			<div class="modal-popup__overlay"></div>
-			<div class="modal-popup__panel" role="dialog" aria-modal="true">
+			<div class="modal-popup__panel" role="dialog" aria-modal="true" aria-label="Video dialog">
 				<button type="button" class="modal-popup__close" aria-label="Close modal">
-					<img decoding="async" src="${ closeIcon }" alt="Close" />
+					<img decoding="async" src="${ closeIcon }" alt="" />
 				</button>
 				<div class="modal-content">
 					<div class="modal-content__video-wrapper"></div>
@@ -49,13 +49,22 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	};
 
 	blocks.forEach( ( block ) => {
+		if ( block.dataset.themeVideoBound === '1' ) {
+			return;
+		}
+
+		const videoTrigger = block.querySelector(
+			'.features-media__video.media_video'
+		);
 		const toggleWrap = block.querySelector( '.play-icon-video' );
 		const playIconWrap = toggleWrap?.querySelector( '.play-icon' );
 		const pauseIconWrap = toggleWrap?.querySelector( '.pause-icon' );
 
-		if ( ! toggleWrap || ! playIconWrap || ! pauseIconWrap ) {
+		if ( ! videoTrigger || ! toggleWrap || ! playIconWrap || ! pauseIconWrap ) {
 			return;
 		}
+
+		block.dataset.themeVideoBound = '1';
 
 		pauseIconWrap.style.display = 'none';
 
@@ -68,6 +77,19 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			return;
 		}
 
+		videoTrigger.style.cursor = 'pointer';
+		videoTrigger.setAttribute( 'role', 'button' );
+		videoTrigger.setAttribute( 'tabindex', '0' );
+		videoTrigger.setAttribute( 'aria-haspopup', 'dialog' );
+		videoTrigger.setAttribute( 'aria-expanded', 'false' );
+
+		const mediaElements = videoTrigger.querySelectorAll(
+			'iframe, video, .play-icon-video'
+		);
+		mediaElements.forEach( ( element ) => {
+			element.style.pointerEvents = 'none';
+		} );
+
 		let modal = null;
 
 		const closeModal = () => {
@@ -76,6 +98,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			}
 
 			modal.classList.remove( 'is-active' );
+			videoTrigger.setAttribute( 'aria-expanded', 'false' );
 			modal
 				.querySelector( '.modal-content__video-wrapper' )
 				?.replaceChildren();
@@ -140,6 +163,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			setVideoSize( videoWrapper );
 			setMediaSize( modalMedia );
 			videoWrapper.replaceChildren( modalMedia );
+			videoTrigger.setAttribute( 'aria-expanded', 'true' );
 			modal.classList.add( 'is-active' );
 
 			if ( video ) {
@@ -147,9 +171,18 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			}
 		};
 
-		toggleWrap.addEventListener( 'click', ( event ) => {
+		const handleActivate = ( event ) => {
 			event.preventDefault();
 			openModal();
+		};
+
+		videoTrigger.addEventListener( 'click', handleActivate );
+		videoTrigger.addEventListener( 'keydown', ( event ) => {
+			if ( event.key !== 'Enter' && event.key !== ' ' ) {
+				return;
+			}
+
+			handleActivate( event );
 		} );
 
 		document.addEventListener( 'keydown', ( event ) => {

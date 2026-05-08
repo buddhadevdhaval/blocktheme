@@ -2,10 +2,12 @@ import { __ } from '@wordpress/i18n';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { PanelBody } from '@wordpress/components';
 import { ImageUploader } from '../_shared/components';
+import { ServerSideRender } from '@wordpress/server-side-render';
 
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit( { attributes, setAttributes, context, name } ) {
 	const { overlayTopImage, overlayBottomImage } = attributes;
 	const blockProps = useBlockProps();
+	const previewPostId = context?.postId ? Number( context.postId ) : 0;
 
 	return (
 		<div { ...blockProps }>
@@ -46,12 +48,13 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 			</InspectorControls>
 
-			<div className="wp-block-group author-slider-block container-1280">
-				<div style={ { padding: '50px', textAlign: 'center', border: '1px dashed #ccc' } }>
-					<h3 className="heading-5">{ __( 'Webinar Author Slider', 'ambrygen-web' ) }</h3>
-					<p className="body1-reg">{ __( 'Authors selected in the post meta will appear here as a slider on the frontend.', 'ambrygen-web' ) }</p>
-				</div>
-			</div>
+			<ServerSideRender
+				block={ name }
+				attributes={ {
+					...attributes,
+					previewPostId,
+				} }
+			/>
 		</div>
 	);
 }

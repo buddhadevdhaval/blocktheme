@@ -30,12 +30,9 @@
       "type": "string",
       "default": ""
     },
-    "variation": {
-      "type": "string",
-      "default": "our-testing-menu"
-    },
     "blockId": {
-      "type": "string"
+      "type": "string",
+      "default": ""
     },
     "link": {
       "type": "object",
@@ -55,9 +52,6 @@
         "alt": ""
       }
     }
-  },
-  "providesContext": {
-    "ambrygen/variation": "variation"
   },
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",

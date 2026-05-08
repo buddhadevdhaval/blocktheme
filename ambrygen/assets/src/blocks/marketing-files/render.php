@@ -25,16 +25,17 @@ $ambrygen_sections = isset( $ambrygen_attributes['sections'] ) && is_array( $amb
 	? $ambrygen_attributes['sections']
 	: array();
 
-if ( ! in_array( $ambrygen_heading, array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ), true ) ) {
-	$ambrygen_heading = 'h2';
+$ambrygen_heading = Helper::get_heading_tag( $ambrygen_heading, 'h2' );
+
+$ambrygen_wrapper_args = array(
+	'class' => 'marketing-files',
+);
+
+if ( ! empty( $ambrygen_block_id ) ) {
+	$ambrygen_wrapper_args['id'] = $ambrygen_block_id;
 }
 
-$ambrygen_wrapper_attributes = get_block_wrapper_attributes(
-	array(
-		'id'    => $ambrygen_block_id,
-		'class' => 'marketing-files',
-	)
-);
+$ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_args );
 
 $ambrygen_query = null;
 
@@ -60,6 +61,7 @@ if ( $ambrygen_term_id > 0 ) {
 			'post_type'      => 'marketing_material',
 			'post_status'    => 'publish',
 			'posts_per_page' => -1,
+			'no_found_rows'  => true,
 			'orderby'        => 'title',
 			'order'          => 'ASC',
 			'tax_query'      => $ambrygen_tax_query,
@@ -74,7 +76,7 @@ if ( $ambrygen_term_id > 0 ) {
 		<div class="test-catlouge">
 			<div class="test-catlouge__header">
 			<?php if ( '' !== trim( wp_strip_all_tags( $ambrygen_title ) ) ) : ?>
-				<<?php echo esc_html( $ambrygen_heading ); ?> class="heading-4 block-title mb-0 test-catlouge__title"><?php echo wp_kses_post( $ambrygen_title ); ?></<?php echo esc_html( $ambrygen_heading ); ?>>
+				<<?php echo tag_escape( $ambrygen_heading ); ?> class="heading-4 block-title mb-0 test-catlouge__title"><?php echo wp_kses_post( $ambrygen_title ); ?></<?php echo tag_escape( $ambrygen_heading ); ?>>
 			<?php endif; ?>
 		</div>
 
@@ -182,7 +184,7 @@ if ( $ambrygen_term_id > 0 ) {
 								</div>
 							</div>
 
-							<button class="test-catlouge__item-toggle" type="button" aria-expanded="false" aria-label="<?php echo esc_attr( $ambrygen_category_name ); ?>">
+							<button class="test-catlouge__item-toggle" type="button" aria-expanded="false" aria-label="<?php echo esc_attr( sprintf( __( 'Toggle %s files', 'ambrygen-web' ), $ambrygen_category_name ) ); ?>">
 								<span class="test-catlouge__icon-cross"></span>
 							</button>
 						</div>
@@ -245,7 +247,7 @@ if ( $ambrygen_term_id > 0 ) {
 						</div>
 					</div>
 
-					<button class="test-catlouge__item-toggle" type="button" aria-expanded="false" aria-label="<?php echo esc_attr( $ambrygen_global_category_name ); ?>">
+					<button class="test-catlouge__item-toggle" type="button" aria-expanded="false" aria-label="<?php echo esc_attr( sprintf( __( 'Toggle %s files', 'ambrygen-web' ), $ambrygen_global_category_name ) ); ?>">
 						<span class="test-catlouge__icon-cross"></span>
 					</button>
 				</div>

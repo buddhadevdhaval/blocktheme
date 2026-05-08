@@ -52,6 +52,7 @@ export const DEFAULT_IMAGES = () => ( {
  * @param {Function} props.onMove       - Move handler.
  * @param {Function} props.onRemove     - Remove handler.
  * @param {number}   [props.minCount=1] - Minimum allowed items.
+ * @param {number}   [props.iconSize]   - Icon size.
  */
 export function ItemControls( {
 	index,
@@ -59,11 +60,13 @@ export function ItemControls( {
 	onMove,
 	onRemove,
 	minCount = 1,
+	iconSize,
 } ) {
 	return (
 		<div style={ { display: 'flex', gap: '4px' } }>
 			<Button
 				icon={ chevronUp }
+				iconSize={ iconSize }
 				size="small"
 				disabled={ index === 0 }
 				onClick={ () => onMove( index, -1 ) }
@@ -71,6 +74,7 @@ export function ItemControls( {
 			/>
 			<Button
 				icon={ chevronDown }
+				iconSize={ iconSize }
 				size="small"
 				disabled={ index >= total - 1 }
 				onClick={ () => onMove( index, 1 ) }
@@ -78,6 +82,7 @@ export function ItemControls( {
 			/>
 			<Button
 				icon={ trash }
+				iconSize={ iconSize }
 				size="small"
 				isDestructive
 				disabled={ total <= minCount }
@@ -98,6 +103,8 @@ export function ItemControls( {
  * @param {Function} props.onMove   - Move handler.
  * @param {Function} props.onRemove - Remove handler.
  * @param {number}   props.minCount - Minimum item count.
+ * @param {number}   props.iconSize - Icon size.
+ * @param {string}   props.prefix   - Item label prefix.
  */
 export function ItemHeader( {
 	index,
@@ -107,6 +114,7 @@ export function ItemHeader( {
 	onRemove,
 	minCount,
 	prefix = __( 'Item', 'ambrygen-web' ),
+	iconSize,
 } ) {
 	return (
 		<div
@@ -130,6 +138,7 @@ export function ItemHeader( {
 					onMove={ onMove }
 					onRemove={ onRemove }
 					minCount={ minCount }
+					iconSize={ iconSize }
 				/>
 			</div>
 		</div>

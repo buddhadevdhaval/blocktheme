@@ -40,6 +40,7 @@ export default function OurTestingMenu( {
 				</PanelBody>
 			</InspectorControls>
 			<div className="our-testing-menu__header block__rowflex">
+				<div className='block__rowflex--col-left'>
 				<RichText
 					tagName={ headingTag || 'h2' }
 					className="block-title block__rowflex--heading-title heading-3 mb-0"
@@ -49,7 +50,7 @@ export default function OurTestingMenu( {
 					}
 					placeholder="Add Title..."
 				/>
-
+				</div>
 				<div className="block__rowflex--block-content subtitle1-reg">
 					<RichText
 						tagName="p"

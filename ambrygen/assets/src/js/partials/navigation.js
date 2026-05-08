@@ -22,6 +22,29 @@
 // 	});
 // });
 document.addEventListener( 'DOMContentLoaded', () => {
+	const topBarCookiePrefix = 'ambrygen_top_bar_dismissed_';
+
+	const setCookie = ( name, value, days = 30 ) => {
+		const expires = new Date();
+		expires.setTime( expires.getTime() + days * 24 * 60 * 60 * 1000 );
+		document.cookie = `${ name }=${ value }; expires=${ expires.toUTCString() }; path=/`;
+	};
+
+	const getCookie = ( name ) => {
+		const cookieName = `${ name }=`;
+		const cookies = document.cookie.split( ';' );
+
+		for ( let index = 0; index < cookies.length; index++ ) {
+			const cookie = cookies[ index ].trim();
+
+			if ( cookie.indexOf( cookieName ) === 0 ) {
+				return cookie.substring( cookieName.length );
+			}
+		}
+
+		return null;
+	};
+
 	/* =====================================================
 	 * MODULE 0: Desktop guard
 	 * ===================================================== */
@@ -182,7 +205,17 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	 * ===================================================== */
 	const topBar = document.getElementById( 'top-bar-ajax' );
 	const header = document.querySelector( '.header' );
-	const topBarCloseBtn = topBar?.querySelector( '.top-bar__close' );
+	const topBars = topBar?.querySelectorAll( '.top-bar' ) || [];
+	const topBarCloseButtons =
+		topBar?.querySelectorAll( '.top-bar__close' ) || [];
+
+	topBars.forEach( ( topBarItem ) => {
+		const topBarKey = topBarItem.dataset.topBarKey;
+
+		if ( topBarKey && getCookie( `${ topBarCookiePrefix }${ topBarKey }` ) ) {
+			topBarItem.style.display = 'none';
+		}
+	} );
 
 	const updateOverlayHeightMobile = () => {
 		if ( ! navOverlay ) {
@@ -207,12 +240,28 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 	updateOverlayHeightMobile();
 
-	topBarCloseBtn?.addEventListener( 'click', () => {
-		if ( topBar ) {
-			topBar.style.display = 'none';
-		}
+	topBarCloseButtons.forEach( ( closeButton ) => {
+		closeButton.addEventListener( 'click', () => {
+			const topBarItem = closeButton.closest( '.top-bar' );
+			const topBarKey = topBarItem?.dataset.topBarKey;
 
-		updateOverlayHeightMobile();
+			if ( topBarItem ) {
+				topBarItem.style.display = 'none';
+			}
+
+			if ( topBarKey ) {
+				setCookie( `${ topBarCookiePrefix }${ topBarKey }`, '1' );
+			}
+
+			if (
+				topBar &&
+				! topBar.querySelector( '.top-bar:not([style*="display: none"])' )
+			) {
+				topBar.style.display = 'none';
+			}
+
+			updateOverlayHeightMobile();
+		} );
 	} );
 
 	window.addEventListener( 'resize', () => {
@@ -272,10 +321,10 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	/* =====================================================
 	 * MODULE 8.5: User Icon Modal Toggle
 	 * ===================================================== */
-	const userIconBtn = document.querySelector( '.user-icon-click' );
 	const userModal = document.getElementById( 'modal-popup' );
+	const userIconBtns = document.querySelectorAll( '.user-icon-click' );
 
-	if ( userIconBtn && userModal ) {
+	if ( userIconBtns.length > 0 && userModal ) {
 		const modalOverlay = userModal.querySelector( '.modal-popup__overlay' );
 		const modalCloseBtn = userModal.querySelector( '.modal-popup__close' );
 
@@ -297,15 +346,17 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			body.classList.remove( 'no-overflow' );
 		};
 
-		userIconBtn.addEventListener( 'click', ( e ) => {
-			e.preventDefault();
-			e.stopPropagation();
+		userIconBtns.forEach( ( btn ) => {
+			btn.addEventListener( 'click', ( e ) => {
+				e.preventDefault();
+				e.stopPropagation();
 
-			if ( userModal.classList.contains( 'is-active' ) ) {
-				closeModal();
-			} else {
-				openModal();
-			}
+				if ( userModal.classList.contains( 'is-active' ) ) {
+					closeModal();
+				} else {
+					openModal();
+				}
+			} );
 		} );
 
 		modalOverlay?.addEventListener( 'click', closeModal );

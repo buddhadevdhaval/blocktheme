@@ -110,9 +110,11 @@ $ambrygen_pause_icon_src = get_theme_file_uri( 'assets/src/images/pause-icon.svg
 	<?php if ( $ambrygen_has_header_content ) : ?>
 		<div class="careers-highlight__header block__rowflex">
 			<?php if ( $ambrygen_has_title ) : ?>
+				<div class="block__rowflex--col-left">
 				<<?php echo tag_escape( $ambrygen_heading_level ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="careers-highlight__title block__rowflex--heading-title heading-4 mb-0 js-gsap-fade">
 					<?php echo wp_kses_post( $ambrygen_title ); ?>
 				</<?php echo tag_escape( $ambrygen_heading_level ); ?>>
+				</div>
 			<?php endif; ?>
 
 			<?php if ( $ambrygen_has_intro || $ambrygen_has_top_link ) : ?>

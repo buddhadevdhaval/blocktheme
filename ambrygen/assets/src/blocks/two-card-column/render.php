@@ -18,15 +18,15 @@ use Ambrygen\Theme\Core\Helper;
 /**
  * Attributes
  */
+$ambrygen_eyebrow      = $attributes['eyebrow'] ?? '';
 $ambrygen_heading     = $attributes['heading'] ?? '';
 $ambrygen_heading_tag = Helper::get_heading_tag( $attributes['headingTag'] ?? 'h2', 'h2' );
-$ambrygen_eyebrow     = $attributes['eyebrow'] ?? '';
 $ambrygen_description = $attributes['description'] ?? '';
-$ambrygen_variation   = $attributes['variation'] ?? 'two-column-solution-card';
+$ambrygen_variation   = $attributes['variation'] ?? 'variation-1';
 $ambrygen_block_id    = isset( $attributes['blockId'] ) ? sanitize_html_class( $attributes['blockId'] ) : '';
 $ambrygen_heading_id  = '';
 
-$ambrygen_is_ordering_options = ( 'ordering-options' === $ambrygen_variation );
+$ambrygen_is_ordering_options = ( 'variation-2' === $ambrygen_variation );
 
 /**
  * Wrapper attributes
@@ -57,8 +57,15 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 
 	<?php if ( $ambrygen_is_ordering_options ) : ?>
-		<?php if ( ! empty( $ambrygen_heading ) || ! empty( $ambrygen_description ) ) : ?>
+		<?php if ( ! empty( $ambrygen_eyebrow ) || ! empty( $ambrygen_heading ) || ! empty( $ambrygen_description ) ) : ?>
 			<div class="ordering-options__header">
+				<?php if ( ! empty( $ambrygen_eyebrow ) ) : ?>
+					<div class="hero-kicker ordering-options__eyebrow">
+						<?php echo wp_kses_post( $ambrygen_eyebrow ); ?>
+					</div>
+					<div class="is-style-gl-s12" aria-hidden="true"></div>
+				<?php endif; ?>
+
 				<?php if ( ! empty( $ambrygen_heading ) ) : ?>
 					<<?php echo tag_escape( $ambrygen_heading_tag ); ?>
 						<?php if ( ! empty( $ambrygen_heading_id ) ) : ?>
@@ -82,7 +89,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 			</div>
 		<?php endif; ?>
 
-		<?php if ( ! empty( $ambrygen_heading ) || ! empty( $ambrygen_description ) ) : ?>
+		<?php if ( ! empty( $ambrygen_eyebrow ) || ! empty( $ambrygen_heading ) || ! empty( $ambrygen_description ) ) : ?>
 			<div class="is-style-gl-s24" aria-hidden="true"></div>
 		<?php endif; ?>
 
@@ -92,17 +99,8 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 
 	<?php else : ?>
 
-		<?php if ( ! empty( $ambrygen_eyebrow ) || ! empty( $ambrygen_heading ) || ! empty( $ambrygen_description ) ) : ?>
+		<?php if ( ! empty( $ambrygen_heading ) || ! empty( $ambrygen_description ) ) : ?>
 			<div class="cta-tiles-with-content__header block__rowflex">
-
-				<?php if ( $ambrygen_is_ordering_options && ! empty( $ambrygen_eyebrow ) ) : ?>
-					<div class="block__rowflex--heading-title">
-						<div class="hero-kicker ordering-options__eyebrow">
-							<?php echo wp_kses_post( $ambrygen_eyebrow ); ?>
-						</div>
-						<div class="is-style-gl-s12" aria-hidden="true"></div>
-					</div>
-				<?php endif; ?>
 
 				<?php if ( ! empty( $ambrygen_heading ) ) : ?>
 					<<?php echo tag_escape( $ambrygen_heading_tag ); ?>

@@ -626,12 +626,10 @@ export default function Edit( { attributes, setAttributes } ) {
 												] }
 											/>
 										</div>
-										{ slide.eyebrow && (
-											<div
-												className="is-style-gl-s24"
-												aria-hidden="true"
-											></div>
-										) }
+										<div
+											className="is-style-gl-s24"
+											aria-hidden="true"
+										></div>
 
 										<RichText
 											tagName={ slide.headingTag || 'h1' }
@@ -656,12 +654,10 @@ export default function Edit( { attributes, setAttributes } ) {
 											] }
 										/>
 
-										{ slide.content && (
-											<div
-												className="is-style-gl-s24"
-												aria-hidden="true"
-											></div>
-										) }
+										<div
+											className="is-style-gl-s24"
+											aria-hidden="true"
+										></div>
 										<div className="hero-section__description">
 											<RichText
 												tagName="p"

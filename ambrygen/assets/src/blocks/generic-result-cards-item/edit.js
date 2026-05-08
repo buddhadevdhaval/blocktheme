@@ -138,9 +138,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 						placeholder={ __( 'Add Card Heading...', 'ambrygen-web' ) }
 					/>
-					{ hasTitle && hasSubtitle && (
-						<div className="is-style-gl-s8" aria-hidden="true"></div>
-					) }
+					<div className="is-style-gl-s8" aria-hidden="true"></div>
 					<RichText
 						tagName="div"
 						className="body1-sbold principles-steps__card-summary"
@@ -150,9 +148,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 						placeholder={ __( 'Add Card Sub Heading...', 'ambrygen-web' ) }
 					/>
-					{ hasSubtitle && hasDescription && (
-						<div className="is-style-gl-s16" aria-hidden="true"></div>
-					) }
+					<div className="is-style-gl-s16" aria-hidden="true"></div>
 					<div className="principles-steps__card-description">
 						<InnerBlocks
 							allowedBlocks={ ALLOWED_INNER_BLOCKS }
@@ -164,4 +160,3 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
-

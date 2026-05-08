@@ -2,14 +2,22 @@
 
 .ambrygen-tooltip {
 	position: relative;
-	// cursor: help;
 	color: var(--theme_link_color);
-	border-bottom: 1px solid var(--theme_link_border_color);
+	// border-bottom: 1px solid var(--theme_link_border_color);
 	font-weight: 700;
+
+	.bg-primary_800 & {
+		color: var(--theme_gray_200);
+	}
 
 	&:hover {
 		color: var(--theme_link_color_hover);
-		border-color: var(--theme_link_border_color_hover);
+		// border-color: var(--theme_link_border_color_hover);
+
+		.bg-primary_800 & {
+			color: var(--theme_white);
+			// border-color: var(--theme_white);
+		}
 	}
 
 	&:hover .ambrygen-tooltip__content,
@@ -42,6 +50,7 @@
 	pointer-events: none;
 	transition: opacity 0.18s ease, transform 0.18s ease;
 	z-index: 20;
+	text-align: left;
 
 	&:before {
 		content: "";

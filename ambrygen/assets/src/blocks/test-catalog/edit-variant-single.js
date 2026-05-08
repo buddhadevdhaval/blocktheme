@@ -2,7 +2,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { Button, ComboboxControl, PanelBody, Spinner } from '@wordpress/components';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useMemo, useState } from '@wordpress/element';
 
 const SEARCH_DEBOUNCE_MS = 300;
 
@@ -52,7 +52,10 @@ export default function SingleVersionSettings({ attributes, setAttributes }) {
 		singleProductVersionIds,
 	} = attributes;
 
-	const selectedVersionIds = normalizeIds( singleProductVersionIds );
+	const selectedVersionIds = useMemo(
+		() => normalizeIds( singleProductVersionIds ),
+		[ singleProductVersionIds ]
+	);
 
 	const [categorySearch, setCategorySearch] = useState('');
 	const [categoryOptions, setCategoryOptions] = useState([]);

@@ -392,7 +392,7 @@ function MaterialCategoryRow( { value, onChange, index, total, onMove, onRemove 
 				onChange={ setPostsSearchInput }
 				disabled={ ! materialType?.id || ! category?.id }
 				help={ __(
-					'Search to instantly filter posts.',
+					'Search to instantly filter posts. Only published posts with valid active marketing files will show in the preview.',
 					'ambrygen-web'
 				) }
 			/>
@@ -402,7 +402,7 @@ function MaterialCategoryRow( { value, onChange, index, total, onMove, onRemove 
 			{ materialType?.id > 0 && category?.id > 0 && ! isLoadingPosts && postsOptions.length === 0 && (
 				<p>
 					{ __(
-						'No posts found for this selection.',
+						'No posts found for this selection. Check that the post is published, matches this material type and category, and has at least one active file row with a valid attachment.',
 						'ambrygen-web'
 					) }
 				</p>

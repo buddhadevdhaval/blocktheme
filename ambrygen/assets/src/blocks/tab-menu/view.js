@@ -208,9 +208,13 @@ document.addEventListener( 'DOMContentLoaded', function () {
 					}
 
 					setActiveTab( clickedPair.tab );
-					scrollToTarget( clickedPair.target );
+
+					if ( tabBehavior === 'scroll' ) {
+						scrollToTarget( clickedPair.target );
+					}
 				} );
 			} );
+			
 
 			if ( mobileSelect ) {
 				mobileSelect.addEventListener( 'change', function () {

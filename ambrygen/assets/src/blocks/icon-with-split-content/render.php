@@ -16,7 +16,6 @@ defined( 'ABSPATH' ) || exit;
 $ambrygen_attributes  = is_array( $attributes ) ? $attributes : array();
 $ambrygen_block_id    = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
 $ambrygen_anchor      = isset( $ambrygen_attributes['anchor'] ) ? sanitize_html_class( $ambrygen_attributes['anchor'] ) : '';
-$ambrygen_block_id    = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
 $ambrygen_heading     = $ambrygen_attributes['heading'] ?? '';
 $ambrygen_heading_tag = Helper::get_heading_tag(
 	$ambrygen_attributes['headingTag'] ?? 'h2',
@@ -36,6 +35,7 @@ if ( $ambrygen_anchor ) {
 
 $ambrygen_wrapper_args = array(
 	'class' => 'symptoms',
+	'role'  => 'region',
 );
 
 if ( $ambrygen_anchor || $ambrygen_block_id ) {
@@ -43,10 +43,8 @@ if ( $ambrygen_anchor || $ambrygen_block_id ) {
 }
 
 if ( $ambrygen_has_heading ) {
-	$ambrygen_wrapper_args['role']            = 'region';
 	$ambrygen_wrapper_args['aria-labelledby'] = $ambrygen_heading_id;
 } else {
-	$ambrygen_wrapper_args['role']       = 'region';
 	$ambrygen_wrapper_args['aria-label'] = __( 'Icon with split content', 'ambrygen-web' );
 }
 
@@ -62,7 +60,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 				<?php foreach ( $ambrygen_items as $ambrygen_item ) : ?>
 					<?php
 					$ambrygen_icon_id  = isset( $ambrygen_item['iconId'] ) ? absint( $ambrygen_item['iconId'] ) : 0;
-					$ambrygen_icon_url = isset( $ambrygen_item['iconUrl'] ) ? esc_url_raw( $ambrygen_item['iconUrl'] ) : '';
+					$ambrygen_icon_url = isset( $ambrygen_item['iconUrl'] ) ? $ambrygen_item['iconUrl'] : '';
 					$ambrygen_icon_alt = isset( $ambrygen_item['iconAlt'] ) ? sanitize_text_field( $ambrygen_item['iconAlt'] ) : '';
 					$ambrygen_text     = isset( $ambrygen_item['text'] ) ? sanitize_text_field( $ambrygen_item['text'] ) : '';
 					?>

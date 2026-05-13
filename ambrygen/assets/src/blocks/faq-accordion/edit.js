@@ -16,6 +16,7 @@ import {
 	ImageUploader,
 	TagSelector,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 import { getThemeAssetUrl } from '../../utils/assets';
 
 const createParagraphBlock = ( content = '' ) =>
@@ -93,6 +94,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	);
 	const hasDescription = Boolean( description );
 	const hasFaqContent = hasInnerBlocks || faqs.length > 0;
+	const isExample = blockId === 'faq-accordion-example';
 	const blockProps = useBlockProps( {
 		className: `block-layout alongside-faq ${ variantClassName }`,
 	} );
@@ -123,16 +125,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		[]
 	);
 
-	useEffect( () => {
-		const clientIdSuffix = clientId.slice( 0, 8 );
-		const expectedId = `section-${ clientIdSuffix }`;
-
-		if ( ! blockId ) {
-			setAttributes( {
-				blockId: expectedId,
-			} );
-		}
-	}, [ clientId, blockId, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		enabled: ! isExample,
+		setAttributes,
+	} );
 
 	useEffect( () => {
 		if ( hasInnerBlocks || ! faqs.length ) {
@@ -143,7 +141,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		setAttributes({ faqs: [] });
 	}, [ clientId, faqs, hasInnerBlocks, replaceInnerBlocks, setAttributes]);
 
-	if ( blockId === 'faq-accordion-example' ) {
+	if ( isExample ) {
 		return (
 			<BlockVariationsExamplePreview
 				variants={ variants }

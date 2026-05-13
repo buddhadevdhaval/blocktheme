@@ -199,8 +199,20 @@ if ( ! empty( $attributes['buttons'] ) && is_array( $attributes['buttons'] ) ) {
 						$ambrygen_button_target = '_blank' === ( $button['target'] ?? '' ) ? '_blank' : '';
 						$ambrygen_button_rel    = $button['rel'] ?? '';
 
-						if ( '_blank' === $ambrygen_button_target && empty( $ambrygen_button_rel ) ) {
-							$ambrygen_button_rel = 'noopener noreferrer';
+						if ( '_blank' === $ambrygen_button_target ) {
+							$ambrygen_rel_parts = $ambrygen_button_rel
+								? array_filter( array_map( 'trim', explode( ' ', $ambrygen_button_rel ) ) )
+								: array();
+
+							if ( ! in_array( 'noopener', $ambrygen_rel_parts, true ) ) {
+								$ambrygen_rel_parts[] = 'noopener';
+							}
+
+							if ( ! in_array( 'noreferrer', $ambrygen_rel_parts, true ) ) {
+								$ambrygen_rel_parts[] = 'noreferrer';
+							}
+
+							$ambrygen_button_rel = implode( ' ', $ambrygen_rel_parts );
 						}
 						?>
 						<a

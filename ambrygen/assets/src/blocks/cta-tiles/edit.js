@@ -343,7 +343,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								<div className="logo-title-section__content">
 									<HeadingTag className="heading-2 block-title mb-0">
 										<RichText
-											tagName="span"
+											tagName="div"
 											value={heading}
 											onChange={(value) =>
 												setAttributes({ heading: value })
@@ -398,7 +398,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					{variation === CTA_TILES_VARIATIONS.IMAGE_ONLY_TITLE && (
 						<HeadingTag className="block-title heading-3 mb-0">
 							<RichText
-								tagName="span"
+								tagName="div"
 								value={heading}
 								onChange={(value) =>
 									setAttributes({ heading: value })

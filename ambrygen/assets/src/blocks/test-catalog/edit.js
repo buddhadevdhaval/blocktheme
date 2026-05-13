@@ -18,7 +18,11 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useState, useMemo } from '@wordpress/element';
 import { ServerSideRender } from '@wordpress/server-side-render';
 import SingleVersionSettings from './edit-variant-single';
-import { ItemHeader } from '../_shared/components';
+import {
+	BlockExamplePreview,
+	ItemHeader,
+} from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 const HEADING_OPTIONS = [
 	{ label: 'H1', value: 'h1' },
@@ -270,13 +274,26 @@ export default function Edit({ attributes, setAttributes, clientId, name }) {
 		marketingMaterialTypeId = 0,
 		editVariant = 'tabs',
 	} = attributes;
+	const isExample = blockId === 'test-catalog-example';
 	const TagName = headingLevel || 'h2';
 
 	const [materialTypeOptions, setMaterialTypeOptions] = useState([]);
 	const [isLoadingMaterialTypes, setIsLoadingMaterialTypes] =
 		useState(false);
 
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		enabled: ! isExample,
+		idPrefix: 'test-catalog',
+		setAttributes,
+	} );
+
 	useEffect(() => {
+		if ( isExample ) {
+			return;
+		}
+
 		setIsLoadingMaterialTypes(true);
 		apiFetch({
 			path: '/wp/v2/marketing_material_type?per_page=100&_fields=id,name',
@@ -290,17 +307,7 @@ export default function Edit({ attributes, setAttributes, clientId, name }) {
 				);
 			})
 			.finally(() => setIsLoadingMaterialTypes(false));
-	}, []);
-
-	useEffect(() => {
-		const expectedId = `test-catalog-${clientId.slice(0, 8)}`;
-
-		if ( !blockId ) {
-			setAttributes({
-				blockId: expectedId,
-			});
-		}
-	}, [blockId, clientId, setAttributes]);
+	}, [ isExample ]);
 
 	const addTab = () => {
 		setAttributes({
@@ -346,6 +353,15 @@ export default function Edit({ attributes, setAttributes, clientId, name }) {
 		];
 		setAttributes( { selectedTabs: nextTabs } );
 	};
+
+	if ( isExample ) {
+		return (
+			<BlockExamplePreview
+				className="test-catalog-example-preview"
+				imagePath="/assets/src/images/test-catalog/preview.svg"
+			/>
+		);
+	}
 
 	return (
 		<>

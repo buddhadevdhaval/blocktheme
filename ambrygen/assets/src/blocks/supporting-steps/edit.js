@@ -452,7 +452,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							/>
 							<RichText
 								tagName="div"
-								className="subtitle1-regular supporting-steps__description"
+								className="subtitle1-regular supporting-steps__description block-description"
 								value={ description }
 								onChange={ ( value ) =>
 									setAttributes( {

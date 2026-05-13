@@ -4,12 +4,11 @@ import {
 	RichText,
 	useBlockProps,
 } from '@wordpress/block-editor';
-import { createBlock } from '@wordpress/blocks';
 import { PanelBody } from '@wordpress/components';
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
 import { BlockExamplePreview, TagSelector } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 const ALLOWED_BLOCKS = [ 'ambrygen/generic-result-cards-item' ];
 
@@ -20,20 +19,18 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		( select ) => select( 'core/block-editor' ).getBlockCount( clientId ),
 		[ clientId ]
 	);
-	const { insertBlocks } = useDispatch( 'core/block-editor' );
+	const isExample = blockId === 'generic-result-cards-example';
 
-	useEffect( () => {
-		const clientIdSuffix = clientId.slice( 0, 8 );
-		const expectedId = `section-${ clientIdSuffix }`;
-
-		if ( ! blockId ) {
-			setAttributes( { blockId: expectedId } );
-		}
-	}, [ clientId, blockId, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		enabled: ! isExample,
+		setAttributes,
+	} );
 
 	const HeadingTag = headingTag || 'h2';
 
-	if ( blockId === 'generic-result-cards-example' ) {
+	if ( isExample ) {
 		return (
 			<BlockExamplePreview
 				className="generic-result-cards-example-preview"
@@ -54,25 +51,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const hasDescription = !! subtitle;
 	const hasHeaderContent = hasEyebrow || hasHeading || hasDescription;
 	const hasBottomDescription = !! footContent;
-
-	const addCardItem = () => {
-		insertBlocks(
-			createBlock( 'ambrygen/generic-result-cards-item' ),
-			undefined,
-			clientId
-		);
-	};
-
-	const handleAddCardClick = ( event ) => {
-		event.preventDefault();
-		event.stopPropagation();
-		addCardItem();
-	};
-
-	const handleAddCardMouseDown = ( event ) => {
-		event.preventDefault();
-		event.stopPropagation();
-	};
 
 	return (
 		<>
@@ -136,19 +114,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								[ 'ambrygen/generic-result-cards-item' ],
 							] }
 							templateLock={ false }
-							renderAppender={ false }
 						/>
-					</div>
-					<div className="is-style-gl-s24" aria-hidden="true"></div>
-					<div className="action-button">
-						<button
-							type="button"
-							className="components-button is-secondary"
-							onMouseDown={ handleAddCardMouseDown }
-							onClick={ handleAddCardClick }
-						>
-							{ __( 'Add item', 'ambrygen-web' ) }
-						</button>
 					</div>
 
 					<div className="is-style-gl-s50" aria-hidden="true"></div>

@@ -46,8 +46,8 @@ if ( ! empty( $ambrygen_heading ) ) {
 		: wp_unique_id( 'two-column-solution-card-title-' );
 	$ambrygen_wrapper_args['aria-labelledby'] = $ambrygen_heading_id;
 } else {
-	$ambrygen_wrapper_args['aria-label'] = $ambrygen_is_ordering_options 
-		? __( 'Ordering options wrapper', 'ambrygen-web' ) 
+	$ambrygen_wrapper_args['aria-label'] = $ambrygen_is_ordering_options
+		? __( 'Ordering options wrapper', 'ambrygen-web' )
 		: __( 'Two column solution card', 'ambrygen-web' );
 }
 
@@ -103,6 +103,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 			<div class="cta-tiles-with-content__header block__rowflex">
 
 				<?php if ( ! empty( $ambrygen_heading ) ) : ?>
+					<div class="block__rowflex--col-left">
 					<<?php echo tag_escape( $ambrygen_heading_tag ); ?>
 						<?php if ( ! empty( $ambrygen_heading_id ) ) : ?>
 							id="<?php echo esc_attr( $ambrygen_heading_id ); ?>"
@@ -111,6 +112,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 					>
 						<?php echo wp_kses( $ambrygen_heading, Helper::allowed_heading_html() ); ?>
 					</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
+						</div>
 				<?php endif; ?>
 
 				<?php if ( ! empty( $ambrygen_description ) ) : ?>

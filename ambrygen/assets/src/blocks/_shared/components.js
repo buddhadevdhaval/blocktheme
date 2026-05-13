@@ -127,7 +127,7 @@ export function ItemHeader( {
 				gap: '8px',
 			} }
 		>
-			<strong style={ { flex: '1 1 auto', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }>
+			<strong style={ { flex: '1 1 auto', overflow: 'hidden', textOverflow: 'ellipsis' } }>
 				{ prefix } { index + 1 }:{ ' ' }
 				{ label || __( 'Untitled', 'ambrygen-web' ) }
 			</strong>

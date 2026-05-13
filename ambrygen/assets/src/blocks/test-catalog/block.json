@@ -64,9 +64,7 @@
   "textdomain": "ambrygen-web",
   "example": {
     "attributes": {
-      "eyebrow": "TEST CATALOG",
-      "title": "Available hereditary cancer tests",
-      "subtitle": "Browse tests by category. Ask your healthcare provider which panel is right for your situation."
+      "blockId": "test-catalog-example"
     }
   }
 }

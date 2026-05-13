@@ -5,9 +5,12 @@ import {
 	useBlockProps,
 } from '@wordpress/block-editor';
 import { Button, PanelBody, TextControl } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { ImageUploader } from '../_shared/components';
 import { getThemeAssetUrl } from '../../utils/assets';
+
+const getSafeHttpUrl = ( url ) =>
+	/^https?:\/\//i.test( url ) ? url : '';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const {
@@ -63,7 +66,10 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title="Card Settings" initialOpen={ true }>
+				<PanelBody
+					title={ __( 'Card Settings', 'ambrygen-web' ) }
+					initialOpen={ true }
+				>
 					<TextControl
 						label={ __( 'Count', 'ambrygen-web' ) }
 						value={ count }
@@ -109,7 +115,10 @@ export default function Edit( { attributes, setAttributes } ) {
 							} }
 						>
 							<TextControl
-								label={ `Link ${ i + 1 } Label` }
+								label={ sprintf(
+									__( 'Link %d Label', 'ambrygen-web' ),
+									i + 1
+								) }
 								value={ link.label }
 								onChange={ ( val ) => updateLink( i, 'label', val ) }
 							/>
@@ -120,11 +129,12 @@ export default function Edit( { attributes, setAttributes } ) {
 									opensInNewTab: link.target === '_blank',
 								} }
 								onChange={ ( newLink ) => {
+									const safeUrl = getSafeHttpUrl( newLink.url );
 									const updated = [ ...links ];
 
 									updated[ i ] = {
 										...updated[ i ],
-										url: newLink.url,
+										url: safeUrl,
 										target: newLink.opensInNewTab ? '_blank' : '',
 										rel: newLink.opensInNewTab
 											? 'noopener noreferrer'
@@ -140,7 +150,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								isDestructive
 								style={ { marginTop: 8 } }
 							>
-								Remove Link
+								{ __( 'Remove Link', 'ambrygen-web' ) }
 							</Button>
 						</div>
 					) ) }
@@ -150,7 +160,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						variant="secondary"
 						style={ { marginTop: 12 } }
 					>
-						Add Link
+						{ __( 'Add Link', 'ambrygen-web' ) }
 					</Button>
 				</PanelBody>
 			</InspectorControls>
@@ -177,7 +187,10 @@ export default function Edit( { attributes, setAttributes } ) {
 
 						{ count && (
 							<div className="info-list__count subtitle2-sbold">
-								{ count } Tests
+								{ sprintf(
+									__( '%s Tests', 'ambrygen-web' ),
+									count
+								) }
 							</div>
 						) }
 
@@ -202,16 +215,13 @@ export default function Edit( { attributes, setAttributes } ) {
 									link.url && (
 										<div
 											key={ link._key || i }
-											className="info-list__link-col text-md-Semibold"
+											className="info-list__link-col"
 										>
-											<a
-												href={ link.url }
-												target={ link.target || undefined }
-												rel={ link.rel || undefined }
-												className="info-list__link"
+											<div
+												className="info-list__link site-btn is-style-site-text-btn has-right-arrow text-14"
 											>
 												{ link.label }
-											</a>
+											</div>
 										</div>
 									)
 							) }

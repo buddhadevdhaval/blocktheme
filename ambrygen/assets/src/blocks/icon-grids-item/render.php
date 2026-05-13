@@ -403,7 +403,7 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 
 							if ( $ambrygen_link_label && $ambrygen_link_url ) :
 								?>
-							<div class="info-list__link-col text-md-Semibold">
+							<div class="info-list__link-col">
 								<a
 									href="<?php echo esc_url( $ambrygen_link_url ); ?>"
 									class="info-list__link site-btn is-style-site-text-btn has-right-arrow text-14"
@@ -464,10 +464,11 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 
 							if ( $ambrygen_link_label && $ambrygen_link_url ) :
 								?>
-							<div class="info-list__link-col text-md-Semibold">
+							<div class="info-list__link-col">
+								<div class="is-style-gl-s16" aria-hidden="true"></div>
 								<a
 									href="<?php echo esc_url( $ambrygen_link_url ); ?>"
-									class="info-list__link"
+									class="info-list__link site-btn is-style-site-text-btn has-right-arrow text-14"
 									<?php if ( '_blank' === $ambrygen_link_target ) : ?>
 										target="_blank"
 									<?php endif; ?>

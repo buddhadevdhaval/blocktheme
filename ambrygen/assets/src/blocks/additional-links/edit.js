@@ -4,12 +4,10 @@ import {
 	RichText,
 	InspectorControls,
 } from '@wordpress/block-editor';
-import { PanelBody, Button } from '@wordpress/components';
-import { createBlock } from '@wordpress/blocks';
-import { useDispatch } from '@wordpress/data';
-import { useEffect } from '@wordpress/element';
+import { PanelBody } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { BlockExamplePreview, TagSelector } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 const createDefaultCta = () => ({
 	text: '',
@@ -57,26 +55,17 @@ const TEMPLATE = [
 
 export default function Edit({ attributes, setAttributes, clientId }) {
 	const { blockId, heading, headingTag, description } = attributes;
-	const { insertBlock } = useDispatch('core/block-editor');
 	const isExample = blockId === 'additional-links-example';
 	const blockProps = useBlockProps({
 		className: 'additional-links',
 	});
 
-	useEffect(() => {
-		if (isExample) {
-			return;
-		}
-
-		const expectedId = `section-${clientId.slice(0, 8)}`;
-
-		// Re-seed when the stored ID was copied from another block instance.
-		if (!blockId ) {
-			setAttributes({
-				blockId: expectedId,
-			});
-		}
-	}, [clientId, blockId, isExample, setAttributes]);
+	useUniqueBlockId({
+		blockId,
+		clientId,
+		enabled: !isExample,
+		setAttributes,
+	});
 
 	if (isExample) {
 		return (
@@ -86,22 +75,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			/>
 		);
 	}
-
-
-	const handleAddItem = () => {
-		insertBlock(
-			createBlock('ambrygen/additional-links-item', {
-				cta: createDefaultCta(),
-				icon: {
-					id: 0,
-					url: '',
-					alt: '',
-				},
-			}),
-			undefined,
-			clientId
-		);
-	};
 
 	return (
 		<div {...blockProps}>
@@ -159,14 +132,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					allowedBlocks={['ambrygen/additional-links-item']}
 					template={TEMPLATE}
 					templateLock={false}
-					renderAppender={false}
 				/>
-
-				<div className="is-style-gl-s24" aria-hidden="true"></div>
-
-				<Button variant="primary" onClick={handleAddItem}>
-					{__('Add Link', 'ambrygen-web')}
-				</Button>
 			</div>
 		</div>
 	);

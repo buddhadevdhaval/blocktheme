@@ -15,6 +15,7 @@ import {
 	BlockVariationsExamplePreview,
 	TagSelector,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 const VARIATION_VALUES = {
 	VARIATION_1: 'variation-1',
@@ -64,19 +65,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		[]
 	);
 
-	useEffect( () => {
-		if ( isExample ) {
-			return;
-		}
-
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
-
-		if ( ! blockId ) {
-			setAttributes( {
-				blockId: expectedId,
-			} );
-		}
-	}, [ clientId, blockId, isExample, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		enabled: ! isExample,
+		setAttributes,
+	} );
 
 	const isVariation2 = variation === VARIATION_VALUES.VARIATION_2;
 
@@ -227,19 +221,21 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				) : (
 					<>
 						<div className="cta-tiles-with-content__header block__rowflex">
-							<RichText
-								tagName={ HeadingTag }
-								className="heading-3 block-title mb-0 block__rowflex--heading-title"
-								value={ heading }
-								allowedFormats={ [ 'core/text-color' ] }
-								onChange={ ( value ) =>
-									setAttributes( { heading: value } )
-								}
-								placeholder={ __(
-									'Add Heading...',
-									'ambrygen-web'
-								) }
-							/>
+							<div className="block__rowflex--col-left">
+								<RichText
+									tagName={ HeadingTag }
+									className="heading-3 block-title mb-0 block__rowflex--heading-title"
+									value={ heading }
+									allowedFormats={ [ 'core/text-color' ] }
+									onChange={ ( value ) =>
+										setAttributes( { heading: value } )
+									}
+									placeholder={ __(
+										'Add Heading...',
+										'ambrygen-web'
+									) }
+								/>
+							</div>
 
 							<div className="block__rowflex--block-content subtitle-1-regular">
 								<RichText

@@ -1,0 +1,18 @@
+@use "../../css/partials/variables/breakpoints" as bp;
+@use "../../css/partials/variables/fluid_mixins" as *;
+
+.icon-card-grid__grid {
+	display: block;
+
+	>.block-editor-inner-blocks {
+		>.block-editor-block-list__layout {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 24px;
+
+			@include bp.min(md) {
+				grid-template-columns: repeat(2, 1fr);
+			}
+		}
+	}
+}

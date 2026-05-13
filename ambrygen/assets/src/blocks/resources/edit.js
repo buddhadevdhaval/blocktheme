@@ -25,6 +25,7 @@ import {
 	ImageUploader,
 	TagSelector,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 const createRepeaterId = ( prefix ) =>
 	`${ prefix }-${ Date.now().toString( 36 ) }-${ Math.random()
@@ -82,20 +83,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	} = attributes;
 	const isExample = blockId === 'resources-example';
 
-	useEffect( () => {
-		if ( isExample ) {
-			return;
-		}
-
-		const clientIdSuffix = clientId.slice( 0, 8 );
-		const expectedId = `section-${ clientIdSuffix }`;
-
-		if ( ! blockId ) {
-			setAttributes( {
-				blockId: expectedId,
-			} );
-		}
-	}, [ clientId, blockId, isExample, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		enabled: ! isExample,
+		setAttributes,
+	} );
 
 	useEffect( () => {
 		if ( isExample ) {

@@ -30,7 +30,7 @@ $ambrygen_copy_html     = '';
 $ambrygen_cta_html      = '';
 
 if ( $ambrygen_is_variation_2 && $ambrygen_inner_content ) {
-	$ambrygen_blocks = parse_blocks( $content );
+	$ambrygen_blocks = $block->parsed_block['innerBlocks'] ?? array();
 
 	foreach ( $ambrygen_blocks as $ambrygen_block ) {
 		$ambrygen_block_name = $ambrygen_block['blockName'] ?? '';
@@ -60,15 +60,15 @@ if ( $ambrygen_is_variation_2 && $ambrygen_inner_content ) {
 			if ( 'UL' === $ambrygen_tag_name || 'OL' === $ambrygen_tag_name ) {
 				$ambrygen_copy_processor->add_class( 'body1' );
 				$ambrygen_copy_processor->add_class( 'ordering-options__card-list' );
-				$ambrygen_copy_html = $ambrygen_copy_processor->get_updated_html();
 			}
 
 			if ( 'P' === $ambrygen_tag_name ) {
 				$ambrygen_copy_processor->add_class( 'body1' );
 				$ambrygen_copy_processor->add_class( 'ordering-options__card-paragraph' );
-				$ambrygen_copy_html = $ambrygen_copy_processor->get_updated_html();
 			}
 		}
+
+		$ambrygen_copy_html = trim( $ambrygen_copy_processor->get_updated_html() );
 	}
 }
 
@@ -83,8 +83,7 @@ $ambrygen_image_html = Helper::image_from_source(
 		'class'   => $ambrygen_is_variation_2 ? '' : 'cta-tiles-with-content__image',
 		'alt'     => $ambrygen_image_alt,
 		'loading' => 'lazy',
-	),
-	true
+	)
 );
 
 /**
@@ -99,16 +98,11 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 );
 ?>
 
-<div <?php echo wp_kses_data( $ambrygen_wrapper_attributes ); ?>>
-	<div class="<?php echo esc_attr( $ambrygen_is_variation_2 ? 'ordering-options__card-image' : 'cta-tiles-with-content__image-container' ); ?>">
-		<?php
-		// Helper::image_from_source() already returns safe HTML.
-		echo $ambrygen_image_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		?>
-	</div>
+<div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() output is sanitized by WordPress core. ?>>
+
 
 	<div class="<?php echo esc_attr( $ambrygen_is_variation_2 ? 'ordering-options__card-body' : 'cta-tiles-with-content__body' ); ?>">
-		<div class="<?php echo esc_attr( $ambrygen_is_variation_2 ? 'ordering-options__card-content' : '' ); ?>">
+		<!-- <div class="<?php //echo esc_attr( $ambrygen_is_variation_2 ? 'ordering-options__card-content' : '' ); ?>"> -->
 
 			<?php if ( ! empty( $ambrygen_section_title ) ) : ?>
 				<div class="<?php echo esc_attr( $ambrygen_is_variation_2 ? 'heading-5 ordering-options__card-title mb-0' : 'cta-tiles-with-content__title' ); ?>">
@@ -128,12 +122,21 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 					<?php echo $ambrygen_copy_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Processed InnerBlocks content is sanitized by WordPress rendering. ?>
 				</div>
 			<?php endif; ?>
-		</div>
+		<!-- </div> -->
 
 		<?php if ( $ambrygen_is_variation_2 && $ambrygen_cta_html ) : ?>
 			<div class="is-style-gl-s24" aria-hidden="true"></div>
 			<?php echo $ambrygen_cta_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- InnerBlocks content is rendered by WordPress core. ?>
 		<?php endif; ?>
 	</div>
+
+	<?php if ( $ambrygen_image_id > 0 || ! empty( $ambrygen_image_url ) ) : ?>
+	<div class="<?php echo esc_attr( $ambrygen_is_variation_2 ? 'ordering-options__card-image' : 'cta-tiles-with-content__image-container' ); ?>">
+		<?php
+		// Helper::image_from_source() already returns safe HTML.
+		echo $ambrygen_image_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		?>
+	</div>
+	<?php endif; ?>
 
 </div>

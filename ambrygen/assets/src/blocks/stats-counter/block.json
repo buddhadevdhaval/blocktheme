@@ -19,6 +19,10 @@
 			"type": "string",
 			"default": ""
 		},
+		"variation": {
+			"type": "string",
+			"default": "variation-1"
+		},
 		"counters": {
 			"type": "array",
 			"default": [],

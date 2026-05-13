@@ -60,6 +60,8 @@ $ambrygen_icon_url   = isset( $ambrygen_icon['url'] ) ? esc_url( $ambrygen_icon[
 $ambrygen_icon_alt   = isset( $ambrygen_icon['alt'] ) ? sanitize_text_field( $ambrygen_icon['alt'] ) : '';
 $ambrygen_has_icon   = $ambrygen_icon_id || $ambrygen_icon_url;
 
+// Keep the pre-fallback flag for the empty-block early return, but always render
+// a fallback logo for cards that have other content and no explicit icon selected.
 if ( ! $ambrygen_icon_url ) {
 	$ambrygen_icon_url = esc_url( get_theme_file_uri( 'assets/src/images/logo.png' ) );
 }

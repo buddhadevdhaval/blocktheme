@@ -618,6 +618,11 @@ function initTooltips() {
 				} else {
 					container.removeAttribute('data-ambrygen-category');
 				}
+
+				if (!args.load_more) {
+					hydrateInitialPagination(container);
+				}
+
 			})
 			.catch((err) => console.error('Archive AJAX Error:', err))
 			.finally(() => {
@@ -808,6 +813,51 @@ function initTooltips() {
 						});
 					tabBtn.classList.add('active', 'is-active');
 					tabBtn.setAttribute('aria-selected', 'true');
+				}
+
+				const mobileSelect = tabBtn
+					.closest('.category-filter-search__tabs')
+					?.querySelector('.tabs__mobile-nav .tabs__select');
+				if (mobileSelect && tabBtn.hasAttribute('data-tag-id')) {
+					mobileSelect.value = tabBtn.getAttribute('data-tag-id') || '0';
+				}
+			}
+		}
+
+		const mobileTabSelect = event.target.closest(
+			'.category-filter-search__tabs .tabs__mobile-nav .tabs__select'
+		);
+		if (mobileTabSelect) {
+			const container = mobileTabSelect
+				.closest('.event-carousel, .latest-blogs')
+				?.querySelector('.ambrygen-ajax-pagination');
+			if (container) {
+				const selectedValue = parseInt(mobileTabSelect.value || '0', 10);
+				const updateArgs = { paged: 1 };
+
+				updateArgs.tag = Number.isNaN(selectedValue) ? 0 : selectedValue;
+				updateConferenceResults(container, updateArgs);
+
+				const tabsWrapper = mobileTabSelect
+					.closest('.category-filter-search__tabs');
+				const desktopTabs = tabsWrapper?.querySelectorAll(
+					'.tabs__nav .tab-button'
+				);
+				if (desktopTabs?.length) {
+					desktopTabs.forEach((btn) => {
+						const btnTagId = parseInt(
+							btn.getAttribute('data-tag-id') || '0',
+							10
+						);
+						const isActive = btnTagId === updateArgs.tag;
+
+						btn.classList.toggle('active', isActive);
+						btn.classList.toggle('is-active', isActive);
+						btn.setAttribute(
+							'aria-selected',
+							isActive ? 'true' : 'false'
+						);
+					});
 				}
 			}
 		}
@@ -1094,6 +1144,18 @@ function initTooltips() {
 			window.location.reload();
 		}
 	});
+
+	document
+		.querySelectorAll('.ambrygen-ajax-pagination')
+		.forEach((container) => {
+			const totalPages = parseInt(
+				container.getAttribute('data-ambrygen-total-pages'),
+				10
+			);
+			if (!isNaN(totalPages)) {
+				hydrateInitialPagination(container);
+			}
+		});
 
 	initEventTabs();
 })();
@@ -1560,17 +1622,30 @@ document.addEventListener('DOMContentLoaded', () => {
 	/**
 	 * Author Slider (Webinar Pages)
 	 */
-	const authorSliderEl = document.querySelector('.author-slider');
-	if (authorSliderEl && typeof Swiper !== 'undefined') {
-		// Function to set max height of cards
-		const setAuthorSliderCardHeight = () => {
-			const cardElements = document.querySelectorAll('.author-slider__card');
+	const authorSliderElements = document.querySelectorAll('.author-slider');
+	if (authorSliderElements.length > 0 && typeof Swiper !== 'undefined') {
+		authorSliderElements.forEach((authorSliderEl) => {
+			if (authorSliderEl.classList.contains('swiper-initialized')) {
+				return;
+			}
 
-			if (cardElements.length > 0) {
-				// Get the maximum height of all card elements
+			const cardElements =
+				authorSliderEl.querySelectorAll('.author-slider__card');
+			const nextEl = authorSliderEl.querySelector('.author-slider__nav-next');
+			const prevEl = authorSliderEl.querySelector('.author-slider__nav-prev');
+			const slideCount =
+				authorSliderEl.querySelectorAll('.swiper-slide').length;
+			const hasMultipleSlides = slideCount > 1;
+
+			// Keep all cards the same height within this slider.
+			const setAuthorSliderCardHeight = () => {
+				if (cardElements.length === 0) {
+					return;
+				}
+
 				let maxHeight = 0;
+
 				cardElements.forEach((card) => {
-					// Reset height to auto to get natural height
 					card.style.height = 'auto';
 					const height = card.offsetHeight;
 					if (height > maxHeight) {
@@ -1578,76 +1653,54 @@ document.addEventListener('DOMContentLoaded', () => {
 					}
 				});
 
-				// Apply max height to all cards
 				if (maxHeight > 0) {
 					cardElements.forEach((card) => {
 						card.style.height = maxHeight + 'px';
 					});
 				}
-			}
-		};
+			};
 
-		const authorSwiper = new Swiper(authorSliderEl, {
-			slidesPerView: 1,
-			loop: true,
-			autoHeight: false,
-			speed: 1000,
-			// autoplay: {
-			// 	delay: 5000,
-			// 	disableOnInteraction: false,
-			// },
-			// spaceBetween: 30,
-			effect: 'fade',
-			fadeEffect: {
-				crossFade: true,
-			},
-			speed: 600,
-			navigation: {
-				nextEl: '.author-slider__nav-next',
-				prevEl: '.author-slider__nav-prev',
-			},
-			breakpoints: {
-				767: {
-					autoHeight: false,
+			new Swiper(authorSliderEl, {
+				slidesPerView: 1,
+				loop: hasMultipleSlides,
+				loopAdditionalSlides: hasMultipleSlides ? slideCount : 0,
+				loopPreventsSliding: false,
+				autoHeight: false,
+				effect: 'fade',
+				fadeEffect: {
+					crossFade: true,
 				},
-			},
-			on: {
-				init: setAuthorSliderCardHeight,
-				slideChange: setAuthorSliderCardHeight,
-			}
-		});
+				speed: 600,
+				breakpoints: {
+					767: {
+						autoHeight: false,
+					},
+				},
+				on: {
+					init: setAuthorSliderCardHeight,
+					slideChange: setAuthorSliderCardHeight,
+				},
+			});
 
-		// Recalculate on window resize
-		window.addEventListener('resize', setAuthorSliderCardHeight);
+			if (hasMultipleSlides && prevEl) {
+				prevEl.addEventListener('click', (event) => {
+					event.preventDefault();
+					event.stopPropagation();
+					authorSliderEl.swiper?.slidePrev();
+				});
+			}
+
+			if (hasMultipleSlides && nextEl) {
+				nextEl.addEventListener('click', (event) => {
+					event.preventDefault();
+					event.stopPropagation();
+					authorSliderEl.swiper?.slideNext();
+				});
+			}
+
+			window.addEventListener('resize', setAuthorSliderCardHeight);
+		});
 	}
-
-	/**
-	 * Initial Pagination Visibility Check
-	 */
-	document
-		.querySelectorAll('.ambrygen-ajax-pagination')
-		.forEach((container) => {
-			const totalPages = parseInt(
-				container.getAttribute('data-ambrygen-total-pages'),
-				10
-			);
-			if (!isNaN(totalPages)) {
-				hydrateInitialPagination(container);
-			} else {
-				// If attribute missing, check if it's currently showing only one page
-				const paginationList =
-					container.querySelector('.pagination-list');
-				if (paginationList && paginationList.children.length <= 1) {
-					const paginationRow = container.querySelector(
-						'.pagination-buttons-row'
-					);
-					if (paginationRow) {
-						paginationRow.style.display = 'none';
-					}
-				}
-			}
-		});
-
 
 	/**
 	 * Tabs Table Content

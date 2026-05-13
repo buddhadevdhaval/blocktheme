@@ -184,7 +184,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 				<?php endif; ?>
 
 				<?php if ( $ambrygen_description ) : ?>
-					<div class="subtitle1-regular supporting-steps__description">
+					<div class="subtitle1-regular supporting-steps__description block-description">
 						<?php echo wp_kses_post( $ambrygen_description ); ?>
 					</div>
 				<?php endif; ?>

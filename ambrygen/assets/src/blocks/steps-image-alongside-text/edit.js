@@ -4,10 +4,8 @@ import {
 	InnerBlocks,
 	InspectorControls,
 } from '@wordpress/block-editor';
-import { createBlock } from '@wordpress/blocks';
 import { useEffect, useRef } from '@wordpress/element';
-import { PanelBody, ToggleControl, Button } from '@wordpress/components';
-import { useDispatch } from '@wordpress/data';
+import { PanelBody, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 import { BlockExamplePreview, TagSelector } from '../_shared/components';
@@ -21,8 +19,6 @@ const TEMPLATE = [
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { blockId, heading, headingTag, description, showFullImage } =
 		attributes;
-
-	const { insertBlock } = useDispatch( 'core/block-editor' );
 
 	const blockProps = useBlockProps( {
 		className: `steps-iot-block ${
@@ -172,27 +168,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							'ambrygen/steps-image-alongside-text-item',
 						] }
 						template={ TEMPLATE }
-						renderAppender={ false }
+						templateLock={ false }
 					/>
 				</div>
 				<div className="is-style-gl-s24" aria-hidden="true"></div>
-
-				<Button
-					variant="primary"
-					onClick={ () => {
-						insertBlock(
-							createBlock(
-								'ambrygen/steps-image-alongside-text-item'
-							),
-							undefined,
-							clientId
-						);
-					} }
-				>
-					{ __( 'Add New Record', 'ambrygen-web' ) }
-				</Button>
 			</section>
 		</>
 	);
 }
-

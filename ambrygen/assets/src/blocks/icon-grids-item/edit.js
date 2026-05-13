@@ -486,7 +486,7 @@ export default function Edit({
 												key={
 													link._key || i
 												}
-												className="info-list__link-col text-md-Semibold"
+												className="info-list__link-col"
 											>
 												<a
 													href={link.url}
@@ -496,7 +496,7 @@ export default function Edit({
 													rel={
 														link.rel || undefined
 													}
-													className="info-list__link"
+													className="info-list__link site-btn is-style-site-text-btn has-right-arrow text-14"
 												>
 													{link.label}
 												</a>
@@ -748,22 +748,13 @@ export default function Edit({
 														link._key ||
 														i
 													}
-													className="info-list__link-col text-md-Semibold"
+													className="info-list__link-col"
 												>
-													<a
-														href={link.url}
-														target={
-															link.target ||
-															undefined
-														}
-														rel={
-															link.rel ||
-															undefined
-														}
-														className="info-list__link"
+													<div
+														className="info-list__link site-btn is-style-site-text-btn has-right-arrow text-14"
 													>
 														{link.label}
-													</a>
+													</div>
 												</div>
 											)
 									)}

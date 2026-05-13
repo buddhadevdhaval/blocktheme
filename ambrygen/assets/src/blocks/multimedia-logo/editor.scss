@@ -5,16 +5,21 @@
 	}
 
 	&__bottom {
-		display: flex;
+		// display: flex;
 	}
 
 	&__left {
-		flex: 50% 0 0;
+		// flex: 50% 0 0;
 	}
 
 	&__right {
-		flex: 50% 0 0;
+		// flex: 50% 0 0;
 	}
 }
 
 
+.logo-section__right * {
+	white-space: inherit !important;
+	word-break: break-all !important;
+	overflow-wrap: break-word !important;
+}

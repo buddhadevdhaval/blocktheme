@@ -81,26 +81,34 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 				<div class="subtitle1-sbold info-list__title">
 					<?php echo wp_kses_post( $ambrygen_title_raw ); ?>
 				</div>
+				<div class="is-style-gl-s8" aria-hidden="true"></div>
 			<?php endif; ?>
 
 			<?php if ( $ambrygen_count ) : ?>
 				<div class="info-list__count subtitle2-sbold">
-					<?php echo esc_html( $ambrygen_count ); ?> Tests
+					<?php
+					/* translators: %s: numeric count of tests */
+					printf(
+						esc_html__( '%s Tests', 'ambrygen-web' ),
+						esc_html( $ambrygen_count )
+					);
+					?>
 				</div>
 			<?php endif; ?>
 
-			<?php if ( ! empty( $ambrygen_attributes['description'] ) ) : ?>
+			<?php if ( ! empty( $ambrygen_description ) ) : ?>
 				<?php if ( $ambrygen_title || $ambrygen_count ) : ?>
 					<div class="is-style-gl-s8" aria-hidden="true"></div>
 				<?php endif; ?>
 				<div class="info-list__description text-md-reg">
-					<?php echo wp_kses_post( $ambrygen_attributes['description'] ); ?>
+					<?php echo wp_kses_post( $ambrygen_description ); ?>
 				</div>
 				<div class="is-style-gl-s16" aria-hidden="true"></div>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $ambrygen_visible_links ) ) : ?>
 				<div class="info-list__links">
+					<div class="is-style-gl-s16" aria-hidden="true"></div>
 					<?php
 					foreach ( $ambrygen_visible_links as $ambrygen_link ) :
 						$ambrygen_link_label  = isset( $ambrygen_link['label'] ) ? sanitize_text_field( $ambrygen_link['label'] ) : '';
@@ -110,10 +118,10 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 
 						if ( $ambrygen_link_label && $ambrygen_link_url ) :
 							?>
-							<div class="info-list__link-col text-md-Semibold">
+							<div class="info-list__link-col">
 								<a
 									href="<?php echo esc_url( $ambrygen_link_url ); ?>"
-									class="info-list__link"
+									class="info-list__link site-btn is-style-site-text-btn has-right-arrow text-14"
 									<?php if ( '_blank' === $ambrygen_link_target ) : ?>
 										target="_blank"
 									<?php endif; ?>

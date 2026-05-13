@@ -89,15 +89,16 @@ $ambrygen_offcanvas_id       = $ambrygen_block_id
 	<?php if ( ! empty( $ambrygen_title ) || ! empty( $ambrygen_intro ) ) : ?>
 
 		<div class="<?php echo esc_attr( $ambrygen_block_class ); ?>__header block__rowflex">
-
 			<?php if ( ! empty( $ambrygen_title ) ) : ?>
+				<div class="block__rowflex--col-left">
 				<<?php echo tag_escape( $ambrygen_heading_level ); ?> class="<?php echo esc_attr( $ambrygen_block_class ); ?>__title block__rowflex--heading-title heading-3 mb-0 js-gsap-fade">
 					<?php echo wp_kses_post( $ambrygen_title ); ?>
 				</<?php echo tag_escape( $ambrygen_heading_level ); ?>>
+				</div>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $ambrygen_intro ) ) : ?>
-				<div class="<?php echo esc_attr( $ambrygen_block_class ); ?>__intro block__rowflex--block-content <?php echo esc_attr( $ambrygen_is_slider_view ? 'subtitle1-reg' : 'subtitle1' ); ?> js-gsap-fade">
+				<div class="<?php echo esc_attr( $ambrygen_block_class ); ?>__intro block__rowflex--block-content subtitle1-reg js-gsap-fade <?php echo esc_attr( $ambrygen_is_slider_view ? 'subtitle1-reg' : 'subtitle1' ); ?> js-gsap-fade">
 					<?php echo wp_kses_post( $ambrygen_intro ); ?>
 				</div>
 			<?php endif; ?>
@@ -150,7 +151,7 @@ $ambrygen_offcanvas_id       = $ambrygen_block_id
 			?>
 		</div>
 	<?php endif; ?>
-    
+
 
 		<div
 			id="<?php echo esc_attr( $ambrygen_offcanvas_id ); ?>"

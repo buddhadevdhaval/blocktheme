@@ -27,6 +27,11 @@ $ambrygen_link_text   = isset( $ambrygen_link['text'] ) ? sanitize_text_field( $
 $ambrygen_link_url    = isset( $ambrygen_link['url'] ) ? esc_url( $ambrygen_link['url'] ) : '';
 $ambrygen_link_target = isset( $ambrygen_link['target'] ) ? sanitize_text_field( $ambrygen_link['target'] ) : '';
 $ambrygen_link_rel    = isset( $ambrygen_link['rel'] ) ? sanitize_text_field( $ambrygen_link['rel'] ) : '';
+
+if ( '_blank' === $ambrygen_link_target ) {
+	$ambrygen_link_rel = trim( 'noopener noreferrer ' . $ambrygen_link_rel );
+}
+
 $ambrygen_has_cta     = ! empty( $ambrygen_link_text ) && ! empty( $ambrygen_link_url );
 $ambrygen_content     = trim( (string) $content );
 $ambrygen_is_large    = ! empty( $ambrygen_attributes['isLargeIcon'] );

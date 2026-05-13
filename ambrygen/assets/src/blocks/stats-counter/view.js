@@ -1,4 +1,12 @@
 ( () => {
+	function formatCounterValue( value, targetText ) {
+		if ( targetText.includes( ',' ) ) {
+			return value.toString().replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
+		}
+
+		return value.toString();
+	}
+
 	function animateStatsCounter( element, duration = 1500 ) {
 		if (
 			! element ||
@@ -7,9 +15,11 @@
 			return;
 		}
 
-		const text = element.textContent.trim();
-		const numText = text.replace( /[^0-9]/g, '' );
-		const finalValue = parseInt( numText, 10 );
+		const text = element.dataset.targetText || element.textContent.trim();
+		const finalValue = parseInt(
+			element.dataset.targetValue || text.replace( /[^0-9]/g, '' ),
+			10
+		);
 
 		if ( Number.isNaN( finalValue ) ) {
 			return;
@@ -22,7 +32,7 @@
 			const progress = Math.min( elapsed / duration, 1 );
 			const easeOut = 1 - Math.pow( 1 - progress, 3 );
 			const currentValue = Math.floor( finalValue * easeOut );
-			const nextValue = currentValue.toLocaleString();
+			const nextValue = formatCounterValue( currentValue, text );
 
 			if ( element.textContent !== nextValue ) {
 				element.textContent = nextValue;

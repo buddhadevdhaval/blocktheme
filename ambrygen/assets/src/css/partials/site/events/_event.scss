@@ -698,6 +698,7 @@
 		@include bp.max(lg) {
 			margin: 0;
 			order: 2;
+			width: 100%;
 		}
 
 		@include bp.max(sm) {

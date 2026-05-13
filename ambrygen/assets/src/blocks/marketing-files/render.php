@@ -137,8 +137,39 @@ if ( $ambrygen_term_id > 0 ) {
 								wp_cache_set( $ambrygen_cache_key, $ambrygen_category_posts, 'ambrygen_marketing', 12 * HOUR_IN_SECONDS );
 							}
 						}
+
+						$ambrygen_grid_html = '';
+						if ( ! empty( $ambrygen_category_posts ) ) {
+							ob_start();
+							foreach ( $ambrygen_category_posts as $ambrygen_post ) {
+								if (
+									class_exists( Helper::class )
+									&& is_callable( array( Helper::class, 'render_marketing_material_item' ) )
+								) {
+									$ambrygen_item_cache_key = 'marketing_material_html_' . $ambrygen_post->ID;
+									$ambrygen_item_html      = wp_cache_get( $ambrygen_item_cache_key, 'ambrygen_marketing' );
+
+									if ( false === $ambrygen_item_html ) {
+										$ambrygen_item_html = Helper::render_marketing_material_item(
+											$ambrygen_post->ID,
+											get_the_title( $ambrygen_post->ID )
+										);
+
+										if ( ! is_string( $ambrygen_item_html ) ) {
+											$ambrygen_item_html = '';
+										}
+
+										wp_cache_set( $ambrygen_item_cache_key, $ambrygen_item_html, 'ambrygen_marketing', 12 * HOUR_IN_SECONDS );
+									}
+
+									echo $ambrygen_item_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								}
+							}
+							$ambrygen_grid_html = trim( (string) ob_get_clean() );
+						}
 						?>
 
+						<?php if ( '' !== $ambrygen_grid_html ) : ?>
 						<div class="test-catlouge__item">
 							<div class="test-catlouge__item-main">
 								<?php if ( '' !== trim( wp_strip_all_tags( $ambrygen_category_name ) ) ) : ?>
@@ -152,34 +183,7 @@ if ( $ambrygen_term_id > 0 ) {
 								<div class="test-catlouge__item-content">
 									<div class="test-catlouge__divider"></div>
 									<div class="test-catlouge__grid">
-										<?php if ( ! empty( $ambrygen_category_posts ) ) : ?>
-											<?php foreach ( $ambrygen_category_posts as $ambrygen_post ) : ?>
-												<?php
-												if (
-													class_exists( Helper::class )
-													&& is_callable( array( Helper::class, 'render_marketing_material_item' ) )
-												) {
-													$ambrygen_item_cache_key = 'marketing_material_html_' . $ambrygen_post->ID;
-													$ambrygen_item_html      = wp_cache_get( $ambrygen_item_cache_key, 'ambrygen_marketing' );
-
-													if ( false === $ambrygen_item_html ) {
-														$ambrygen_item_html = Helper::render_marketing_material_item(
-															$ambrygen_post->ID,
-															get_the_title( $ambrygen_post->ID )
-														);
-
-														if ( ! is_string( $ambrygen_item_html ) ) {
-															$ambrygen_item_html = '';
-														}
-
-														wp_cache_set( $ambrygen_item_cache_key, $ambrygen_item_html, 'ambrygen_marketing', 12 * HOUR_IN_SECONDS );
-													}
-
-													echo $ambrygen_item_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-												}
-												?>
-											<?php endforeach; ?>
-										<?php endif; ?>
+										<?php echo $ambrygen_grid_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 									</div>
 								</div>
 							</div>
@@ -188,6 +192,7 @@ if ( $ambrygen_term_id > 0 ) {
 								<span class="test-catlouge__icon-cross"></span>
 							</button>
 						</div>
+						<?php endif; ?>
 					<?php endforeach; ?>
 						</div>
 				<?php endforeach; ?>
@@ -198,6 +203,39 @@ if ( $ambrygen_term_id > 0 ) {
 			</div>
 		<?php elseif ( $ambrygen_query && $ambrygen_query->have_posts() ) : ?>
 			<div class="test-catlouge__items">
+				<?php
+				$ambrygen_global_grid_html = '';
+				ob_start();
+				while ( $ambrygen_query->have_posts() ) :
+					$ambrygen_query->the_post();
+					if (
+						class_exists( Helper::class )
+						&& is_callable( array( Helper::class, 'render_marketing_material_item' ) )
+					) {
+						$ambrygen_post_id        = get_the_ID();
+						$ambrygen_item_cache_key = 'marketing_material_html_' . $ambrygen_post_id;
+						$ambrygen_item_html      = wp_cache_get( $ambrygen_item_cache_key, 'ambrygen_marketing' );
+
+						if ( false === $ambrygen_item_html ) {
+							$ambrygen_item_html = Helper::render_marketing_material_item(
+								$ambrygen_post_id,
+								get_the_title()
+							);
+
+							if ( ! is_string( $ambrygen_item_html ) ) {
+								$ambrygen_item_html = '';
+							}
+
+							wp_cache_set( $ambrygen_item_cache_key, $ambrygen_item_html, 'ambrygen_marketing', 12 * HOUR_IN_SECONDS );
+						}
+
+						echo $ambrygen_item_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					}
+				endwhile;
+				wp_reset_postdata();
+				$ambrygen_global_grid_html = trim( (string) ob_get_clean() );
+				?>
+				<?php if ( '' !== $ambrygen_global_grid_html ) : ?>
 				<div class="test-catlouge__item">
 					<?php
 					$ambrygen_global_category_name = isset( $ambrygen_category['name'] ) ? (string) $ambrygen_category['name'] : '';
@@ -214,35 +252,7 @@ if ( $ambrygen_term_id > 0 ) {
 						<div class="test-catlouge__item-content">
 							<div class="test-catlouge__divider"></div>
 							<div class="test-catlouge__grid">
-								<?php
-								while ( $ambrygen_query->have_posts() ) :
-									$ambrygen_query->the_post();
-									if (
-										class_exists( Helper::class )
-										&& is_callable( array( Helper::class, 'render_marketing_material_item' ) )
-									) {
-										$ambrygen_post_id        = get_the_ID();
-										$ambrygen_item_cache_key = 'marketing_material_html_' . $ambrygen_post_id;
-										$ambrygen_item_html      = wp_cache_get( $ambrygen_item_cache_key, 'ambrygen_marketing' );
-
-										if ( false === $ambrygen_item_html ) {
-											$ambrygen_item_html = Helper::render_marketing_material_item(
-												$ambrygen_post_id,
-												get_the_title()
-											);
-
-											if ( ! is_string( $ambrygen_item_html ) ) {
-												$ambrygen_item_html = '';
-											}
-
-											wp_cache_set( $ambrygen_item_cache_key, $ambrygen_item_html, 'ambrygen_marketing', 12 * HOUR_IN_SECONDS );
-										}
-
-										echo $ambrygen_item_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-									}
-								endwhile;
-								?>
-								<?php wp_reset_postdata(); ?>
+								<?php echo $ambrygen_global_grid_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 							</div>
 						</div>
 					</div>
@@ -251,6 +261,11 @@ if ( $ambrygen_term_id > 0 ) {
 						<span class="test-catlouge__icon-cross"></span>
 					</button>
 				</div>
+				<?php else : ?>
+				<div class="test-catlouge__items no-results">
+					<p><?php esc_html_e( 'No marketing materials found in this category.', 'ambrygen-web' ); ?></p>
+				</div>
+				<?php endif; ?>
 			</div>
 		<?php else : ?>
 			<div class="test-catlouge__items no-results">

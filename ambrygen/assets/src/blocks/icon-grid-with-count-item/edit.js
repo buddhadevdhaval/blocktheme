@@ -5,50 +5,21 @@ import {
 } from '@wordpress/block-editor';
 import {
 	PanelBody,
-	Button,
 	TextControl,
-	SelectControl,
-	Spinner,
 } from '@wordpress/components';
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useSelect } from '@wordpress/data';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
 
 export default function Edit( {
 	attributes,
 	setAttributes,
-	clientId,
 } ) {
-	const { removeBlock } = useDispatch( 'core/block-editor' );
 	const {
 		termlinktext,
 		title = '',
 		selectedTerm = null,
 	} = attributes;
-
-	const terms = useSelect(
-		( select ) =>
-			select( 'core' ).getEntityRecords( 'taxonomy', 'poster_category', {
-				per_page: 100,
-				hide_empty: false,
-				orderby: 'name',
-				order: 'asc',
-			} ),
-		[]
-	);
-
-	const selectedTermIds = useSelect(
-		( select ) => {
-			const blockEditor = select( 'core/block-editor' );
-			const parentId = blockEditor.getBlockRootClientId( clientId );
-			const siblings = blockEditor.getBlocks( parentId );
-
-			return siblings
-				.map( ( block ) => Number( block.attributes?.selectedTerm || 0 ) )
-				.filter( ( id ) => id > 0 && id !== Number( selectedTerm || 0 ) );
-		},
-		[ clientId, selectedTerm ]
-	);
 
 	const { selectedTermData, imageUrl } = useSelect(
 		( select ) => {
@@ -87,28 +58,6 @@ export default function Edit( {
 		}
 	}, [ selectedTermData, title, setAttributes ] );
 
-	const onSelectTerm = ( termId ) => {
-		if ( ! terms ) {
-			return;
-		}
-
-		const term = terms.find( ( item ) => item.id === Number( termId ) );
-
-		if ( ! term ) {
-			return;
-		}
-
-		setAttributes( {
-			selectedTerm: term.id,
-			title: decodeEntities( term.name ),
-			category: decodeEntities( term.slug ),
-			termData: {
-				count: term.count,
-				image: term.meta?.term_image || '',
-			},
-		} );
-	};
-
 	const blockProps = useBlockProps( {
 		className: 'item-card',
 	} );
@@ -117,10 +66,6 @@ export default function Edit( {
 		? decodeEntities( selectedTermData.name )
 		: title;
 	const selectedTermLink = selectedTermData?.link || '#';
-	const availableTerms = terms
-		? terms.filter( ( term ) => ! selectedTermIds.includes( term.id ) )
-		: null;
-	const hasAvailableTerms = Boolean( availableTerms?.length );
 
 	return (
 		<>
@@ -140,42 +85,6 @@ export default function Edit( {
 			</InspectorControls>
 
 			<div { ...blockProps }>
-				{ ! selectedTerm && (
-					<>
-						{ ! terms && <Spinner /> }
-
-						{ availableTerms && (
-							<SelectControl
-								label="Select Category"
-								value=""
-								options={ [
-									...( hasAvailableTerms
-										? [
-												{
-													label: 'Select Category',
-													value: '',
-												},
-												...availableTerms.map( ( term ) => ( {
-													label: decodeEntities( term.name ),
-													value: term.id,
-												} ) ),
-										  ]
-										: [
-												{
-													label: 'No categories available',
-													value: '',
-												},
-										  ] ),
-								] }
-								disabled={ ! hasAvailableTerms }
-								onChange={ ( value ) => {
-									onSelectTerm( value );
-								} }
-							/>
-						) }
-					</>
-				) }
-
 				{ Boolean( selectedTerm ) && (
 					<>
 						{ imageUrl && (
@@ -210,25 +119,6 @@ export default function Edit( {
 								className="is-style-gl-s24"
 								aria-hidden="true"
 							></div>
-							<div className="info-list__actions actions-button">
-								<Button
-									isSecondary
-									onClick={ () => {
-										setAttributes( {
-											selectedTerm: 0,
-										} );
-									} }
-								>
-									Change
-								</Button>
-
-								<Button
-									isDestructive
-									onClick={ () => removeBlock( clientId ) }
-								>
-									Remove
-								</Button>
-							</div>
 						</div>
 					</>
 				) }

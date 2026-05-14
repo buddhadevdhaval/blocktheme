@@ -17,7 +17,7 @@ $ambrygen_attributes         = $attributes ?? array();
 $ambrygen_heading            = $ambrygen_attributes['heading'] ?? '';
 $ambrygen_block_id           = isset( $ambrygen_attributes['blockId'] )
 	? sanitize_html_class( $ambrygen_attributes['blockId'] )
-	: sanitize_html_class( wp_unique_id( 'multimedia-assets-' ) );
+	: '';
 $ambrygen_heading_tag        = Helper::get_heading_tag( $ambrygen_attributes['headingTag'] ?? 'h2', 'h2' );
 $ambrygen_heading_id         = $ambrygen_heading ? wp_unique_id( 'multimedia-assets-heading-' ) : '';
 

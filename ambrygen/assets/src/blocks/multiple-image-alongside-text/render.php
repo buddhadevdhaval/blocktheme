@@ -37,15 +37,27 @@ $ambrygen_block_id             = isset( $ambrygen_attributes['blockId'] )
 	: '';
 $ambrygen_variation            = $ambrygen_attributes['variation'] ?? 'stats-view';
 $ambrygen_image_position       = $ambrygen_attributes['imagePosition'] ?? 'left';
+$ambrygen_text_alignment       = $ambrygen_attributes['textAlignment'] ?? 'left';
 $ambrygen_content_top_align    = ! empty( $ambrygen_attributes['contentTopAlign'] );
-$ambrygen_normalized_variation = 'normal-view' === $ambrygen_variation
-	? 'normal-view'
+$ambrygen_allowed_variations   = array( 'stats-view', 'text-view', 'normal-view' );
+$ambrygen_normalized_variation = in_array( $ambrygen_variation, $ambrygen_allowed_variations, true )
+	? $ambrygen_variation
 	: 'stats-view';
+$ambrygen_allowed_alignments   = array( 'left', 'center', 'right' );
+$ambrygen_text_alignment       = in_array( $ambrygen_text_alignment, $ambrygen_allowed_alignments, true )
+	? $ambrygen_text_alignment
+	: 'left';
 $ambrygen_is_normal_view       = 'normal-view' === $ambrygen_normalized_variation;
+$ambrygen_is_text_view         = 'text-view' === $ambrygen_normalized_variation;
 $ambrygen_is_stats_view        = ! $ambrygen_is_normal_view;
 $ambrygen_heading_class        = 'heading-2';
+$ambrygen_heading_classes      = $ambrygen_is_text_view
+	? $ambrygen_heading_class . ' mb-0 js-gsap-fade'
+	: 'multiple-image-alongside-text__heading ' . $ambrygen_heading_class . ' mb-0 js-gsap-fade';
 $ambrygen_image_position_class = 'right' === $ambrygen_image_position ? ' block-rtl' : '';
 $ambrygen_variation_class      = $ambrygen_is_normal_view ? ' is-normal-view' : '';
+$ambrygen_variation_class      = $ambrygen_is_text_view ? ' is-text-view' : $ambrygen_variation_class;
+$ambrygen_alignment_class      = $ambrygen_is_text_view ? ' has-text-align-' . $ambrygen_text_alignment : '';
 $ambrygen_has_heading          = '' !== trim( wp_strip_all_tags( $ambrygen_heading ) );
 $ambrygen_has_content          = '' !== trim( wp_strip_all_tags( $ambrygen_content ) );
 $ambrygen_heading_id           = '';
@@ -105,7 +117,7 @@ $ambrygen_images = isset( $ambrygen_attributes['images'] ) && is_array( $ambryge
 	? $ambrygen_attributes['images']
 	: array();
 
-$ambrygen_visible_image_count = $ambrygen_is_normal_view ? 4 : 3;
+$ambrygen_visible_image_count = $ambrygen_is_text_view ? 0 : ( $ambrygen_is_normal_view ? 4 : 3 );
 $ambrygen_images              = array_map(
 	static function ( $ambrygen_image, $ambrygen_image_index ) {
 		$ambrygen_image = is_array( $ambrygen_image ) ? $ambrygen_image : array();
@@ -151,6 +163,7 @@ $ambrygen_wrapper_args = array(
 				$ambrygen_content_top_align ? 'has-top-align' : '',
 				trim( $ambrygen_image_position_class ),
 				trim( $ambrygen_variation_class ),
+				trim( $ambrygen_alignment_class ),
 			)
 		)
 	),
@@ -169,48 +182,50 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 ?>
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() output is escaped by WordPress core. ?>>
 	<div class="multiple-image-alongside-text__grid">
-		<div class="multiple-image-alongside-text__col multiple-image-alongside-text__col--images">
-			<div class="multiple-image-alongside-text__images">
-				<?php foreach ( $ambrygen_images as $ambrygen_image_index => $ambrygen_image ) : ?>
-					<?php
-					$ambrygen_image_id      = (int) $ambrygen_image['id'];
-					$ambrygen_image_url     = (string) $ambrygen_image['url'];
-					$ambrygen_image_alt     = (string) $ambrygen_image['alt'];
-					$ambrygen_is_full_image = ! $ambrygen_is_normal_view && 2 === (int) $ambrygen_image['slot_index'];
-					$ambrygen_wrapper_class = 'multiple-image-alongside-text__image-wrapper js-gsap-fade';
+		<?php if ( ! $ambrygen_is_text_view ) : ?>
+			<div class="multiple-image-alongside-text__col multiple-image-alongside-text__col--images">
+				<div class="multiple-image-alongside-text__images">
+					<?php foreach ( $ambrygen_images as $ambrygen_image_index => $ambrygen_image ) : ?>
+						<?php
+						$ambrygen_image_id      = (int) $ambrygen_image['id'];
+						$ambrygen_image_url     = (string) $ambrygen_image['url'];
+						$ambrygen_image_alt     = (string) $ambrygen_image['alt'];
+						$ambrygen_is_full_image = ! $ambrygen_is_normal_view && 2 === (int) $ambrygen_image['slot_index'];
+						$ambrygen_wrapper_class = 'multiple-image-alongside-text__image-wrapper js-gsap-fade';
 
-					if ( $ambrygen_is_full_image ) {
-						$ambrygen_wrapper_class .= ' multiple-image-alongside-text__image-wrapper--full';
-					}
-					?>
-					<div class="<?php echo esc_attr( $ambrygen_wrapper_class ); ?>">
-						<div class="multiple-image-alongside-text__image<?php echo $ambrygen_is_full_image ? ' multiple-image-alongside-text__image--bottom' : ''; ?>">
-							<div class="multiple-image-alongside-text__image-container">
-								<?php
-								echo Helper::image_from_source( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() escapes attributes and returns wp_kses_post()-sanitized image markup.
-									$ambrygen_image_id,
-									$ambrygen_image_url,
-									$ambrygen_is_full_image ? 'full' : 'large',
-									array(
-										'alt'   => $ambrygen_image_alt,
-										'class' => 'multiple-image-alongside-text__image-img',
-									),
-									true
-								);
-								?>
+						if ( $ambrygen_is_full_image ) {
+							$ambrygen_wrapper_class .= ' multiple-image-alongside-text__image-wrapper--full';
+						}
+						?>
+						<div class="<?php echo esc_attr( $ambrygen_wrapper_class ); ?>">
+							<div class="multiple-image-alongside-text__image<?php echo $ambrygen_is_full_image ? ' multiple-image-alongside-text__image--bottom' : ''; ?>">
+								<div class="multiple-image-alongside-text__image-container">
+									<?php
+									echo Helper::image_from_source( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() escapes attributes and returns wp_kses_post()-sanitized image markup.
+										$ambrygen_image_id,
+										$ambrygen_image_url,
+										$ambrygen_is_full_image ? 'full' : 'large',
+										array(
+											'alt'   => $ambrygen_image_alt,
+											'class' => 'multiple-image-alongside-text__image-img',
+										),
+										true
+									);
+									?>
+								</div>
 							</div>
 						</div>
-					</div>
-				<?php endforeach; ?>
+					<?php endforeach; ?>
+				</div>
 			</div>
-		</div>
+		<?php endif; ?>
 
 		<div class="multiple-image-alongside-text__col multiple-image-alongside-text__col--content">
 			<div class="multiple-image-alongside-text__content">
 
 				<?php if ( $ambrygen_has_heading ) : ?>
 					<<?php echo tag_escape( $ambrygen_heading_tag ); ?>
-						class="multiple-image-alongside-text__heading <?php echo esc_attr( $ambrygen_heading_class ); ?> mb-0 js-gsap-fade"
+						class="<?php echo esc_attr( $ambrygen_heading_classes ); ?>"
 						id="<?php echo esc_attr( $ambrygen_heading_id ); ?>"
 						>
 						<?php

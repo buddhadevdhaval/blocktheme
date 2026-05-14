@@ -22,11 +22,11 @@ import {
 	DEFAULT_IMAGES,
 	ItemHeader,
 	PanelItem,
-	Field,
 } from '../_shared/components';
 import { useArrayHandlers } from '../_shared/utils';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo } from '@wordpress/element';
+import { getIframeSrc } from '../../utils/validation.js';
 
 // Use same icon as ordering options if possible or standard play icon
 import playIcon from '../../images/play-icon.svg';
@@ -40,6 +40,86 @@ const DEFAULT_FILE = {
 	fileUrl: '',
 	fileName: '',
 	sizeType: 'small',
+};
+
+const getEmbedSourceFromInput = ( url ) => {
+	if ( ! url || typeof url !== 'string' ) {
+		return '';
+	}
+
+	const trimmedUrl = url.trim();
+	const iframeSrcMatch = trimmedUrl.match( /src=["']([^"']+)["']/i );
+
+	return iframeSrcMatch?.[ 1 ] || trimmedUrl;
+};
+
+const isAllowedEmbedUrl = ( url ) => {
+	const embedSource = getEmbedSourceFromInput( url );
+
+	if ( ! embedSource ) {
+		return false;
+	}
+
+	try {
+		const parsedUrl = new URL( embedSource );
+		const hostname = parsedUrl.hostname.replace( /^www\./, '' );
+
+		if ( parsedUrl.protocol !== 'https:' ) {
+			return false;
+		}
+
+		if (
+			[ 'youtube.com', 'youtube-nocookie.com', 'm.youtube.com' ].includes(
+				hostname
+			) &&
+			parsedUrl.pathname.startsWith( '/embed/' )
+		) {
+			const videoId = parsedUrl.pathname.split( '/embed/' )[ 1 ];
+
+			return /^[a-zA-Z0-9_-]{11}$/.test( videoId || '' );
+		}
+
+		if (
+			hostname === 'player.vimeo.com' &&
+			/^\/video\/\d+$/.test( parsedUrl.pathname )
+		) {
+			return true;
+		}
+
+		return false;
+	} catch ( error ) {
+		return false;
+	}
+};
+
+const getNonAutoplayEmbedUrl = ( url ) => {
+	if ( ! url ) {
+		return '';
+	}
+
+	try {
+		const parsedUrl = new URL( url );
+
+		parsedUrl.searchParams.delete( 'autoplay' );
+
+		return parsedUrl.toString();
+	} catch ( error ) {
+		return url;
+	}
+};
+
+const getEditorIframeSrc = ( url ) => {
+	const embedSource = getEmbedSourceFromInput( url );
+
+	if ( ! embedSource ) {
+		return '';
+	}
+
+	if ( isAllowedEmbedUrl( embedSource ) ) {
+		return getNonAutoplayEmbedUrl( embedSource );
+	}
+
+	return getNonAutoplayEmbedUrl( getIframeSrc( embedSource ) || '' );
 };
 
 export default function Edit( { attributes, setAttributes } ) {
@@ -78,7 +158,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		imageUrl === defaultImage && imageId === defaultImageId;
 	const displayImage = imageUrl || defaultImage;
 	const displayImageAlt = imageUrl ? imageAlt || '' : '';
-	const hasTextContent = sectiontitle || validFiles.length > 0;
+	const videoPreviewSrc = getEditorIframeSrc( cta.iframeUrl || '' );
 
 	useEffect( () => {
 		if (
@@ -100,33 +180,47 @@ export default function Edit( { attributes, setAttributes } ) {
 		'files'
 	);
 
-	const updateFileMedia = ( index, media ) => {
-		setAttributes( ( prev ) => {
-			const nextFiles = [ ...( prev.files || [] ) ];
-			nextFiles[ index ] = {
-				...nextFiles[ index ],
-				fileUrl: media?.url || '',
-				fileId: media?.id || 0,
-				fileName:
-					media?.title ||
-					media?.filename ||
-					nextFiles[ index ]?.fileName ||
-					'',
-			};
-			return { files: nextFiles };
+	const updateImage = ( media ) => {
+		if ( ! media?.url ) {
+			return;
+		}
+
+		setAttributes( {
+			imageUrl: media.url,
+			imageId: media.id || 0,
+			imageAlt: media.alt || '',
 		} );
 	};
 
+	const updateFileMedia = ( index, media ) => {
+		if ( ! media?.url ) {
+			return;
+		}
+
+		const nextFiles = [ ...( files || [] ) ];
+		nextFiles[ index ] = {
+			...nextFiles[ index ],
+			fileUrl: media.url,
+			fileId: media.id || 0,
+			fileName:
+				media.title ||
+				media.filename ||
+				nextFiles[ index ]?.fileName ||
+				'',
+		};
+
+		setAttributes( { files: nextFiles } );
+	};
+
 	const clearFileMedia = ( index ) => {
-		setAttributes( ( prev ) => {
-			const nextFiles = [ ...( prev.files || [] ) ];
-			nextFiles[ index ] = {
-				...nextFiles[ index ],
-				fileUrl: '',
-				fileId: 0,
-			};
-			return { files: nextFiles };
-		} );
+		const nextFiles = [ ...( files || [] ) ];
+		nextFiles[ index ] = {
+			...nextFiles[ index ],
+			fileUrl: '',
+			fileId: 0,
+		};
+
+		setAttributes( { files: nextFiles } );
 	};
 
 	return (
@@ -140,13 +234,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<ImageUploader
 						label={ __( 'Card Image', 'ambrygen-web' ) }
 						url={ isDefaultImage ? '' : imageUrl }
-						onSelect={ ( media ) =>
-							setAttributes( {
-								imageUrl: media.url,
-								imageId: media.id,
-								imageAlt: media.alt || '',
-							} )
-						}
+						onSelect={ updateImage }
 						onRemove={ () =>
 							setAttributes( {
 								imageUrl: '',
@@ -203,7 +291,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						{ ! cta.isPopup && (
 							<CtaButtonField
 								label={ __(
-									'CTA Link Settings',
+									'',
 									'ambrygen-web'
 								) }
 								value={ cta }
@@ -394,7 +482,7 @@ export default function Edit( { attributes, setAttributes } ) {
 										setAttributes( { formContent: value } )
 									}
 									placeholder={ __(
-										'Form Content…',
+										'Form Content...',
 										'ambrygen-web'
 									) }
 									className="form-content-editor"
@@ -480,18 +568,6 @@ export default function Edit( { attributes, setAttributes } ) {
 								) }
 							</div>
 
-							<Field
-								label={ __(
-									'File Name (optional)',
-									'ambrygen-web'
-								) }
-								value={ fileItem.fileName || '' }
-								onChange={ ( value ) =>
-									update( index, 'fileName', value )
-								}
-								onClick={ ( e ) => e.stopPropagation() }
-							/>
-
 							<SelectControl
 								label={ __( 'File Size Type', 'ambrygen-web' ) }
 								value={ fileItem.sizeType || 'small' }
@@ -557,7 +633,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									setAttributes( { sectiontitle: value } )
 								}
 								placeholder={ __(
-									'Add Title…',
+									'Add Title...',
 									'ambrygen-web'
 								) }
 								allowedFormats={ [ 'core/text-color' ] }
@@ -601,10 +677,16 @@ export default function Edit( { attributes, setAttributes } ) {
 							<div
 								className={ `approach-card__cta ${
 									cta.variant || 'dark'
-								} ${
-									cta.isVideo
-										? 'site-btn has-right-arrow'
+								} site-btn ${
+									cta.isPopup && cta.popupType === 'video'
+										? 'has-video-arrow has-right-arrow'
 										: ''
+								}${
+									cta.isPopup && cta.popupType === 'form'
+										? ' has-form-arrow has-right-arrow'
+										: ''
+								}${
+									! cta.isPopup ? ' has-right-arrow' : ''
 								}` }
 								role="presentation"
 							>
@@ -697,7 +779,7 @@ export default function Edit( { attributes, setAttributes } ) {
 											/>
 										) : (
 											<iframe
-												src={ cta.iframeUrl || '' }
+												src={ videoPreviewSrc }
 												title="Video player"
 												style={ {
 													position: 'absolute',
@@ -718,7 +800,7 @@ export default function Edit( { attributes, setAttributes } ) {
 												<img
 													src={ playIcon }
 													className="play-icon__img"
-													alt="Play Icon"
+													alt=""
 												/>
 											</div>
 										</div>
@@ -754,11 +836,10 @@ export default function Edit( { attributes, setAttributes } ) {
 								<div className="heading-6 mb-2">
 									{ formTitle }
 								</div>
-								<div
+								<RichText.Content
+									tagName="div"
 									className="body2-reg mb-3"
-									dangerouslySetInnerHTML={ {
-										__html: formContent,
-									} }
+									value={ formContent }
 								/>
 							</div>
 						) }

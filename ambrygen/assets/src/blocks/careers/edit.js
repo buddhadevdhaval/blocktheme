@@ -62,6 +62,86 @@ const getPostTitle = (post) => {
 	return post?.title?.rendered || post?.title?.raw || '';
 };
 
+const getEmbedSourceFromInput = (url) => {
+	if (!url || typeof url !== 'string') {
+		return '';
+	}
+
+	const trimmedUrl = url.trim();
+	const iframeSrcMatch = trimmedUrl.match(/src=["']([^"']+)["']/i);
+
+	return iframeSrcMatch?.[1] || trimmedUrl;
+};
+
+const isAllowedEmbedUrl = (url) => {
+	const embedSource = getEmbedSourceFromInput(url);
+
+	if (!embedSource) {
+		return false;
+	}
+
+	try {
+		const parsedUrl = new URL(embedSource);
+		const hostname = parsedUrl.hostname.replace(/^www\./, '');
+
+		if (parsedUrl.protocol !== 'https:') {
+			return false;
+		}
+
+		if (
+			['youtube.com', 'youtube-nocookie.com', 'm.youtube.com'].includes(
+				hostname
+			) &&
+			parsedUrl.pathname.startsWith('/embed/')
+		) {
+			const videoId = parsedUrl.pathname.split('/embed/')[1];
+
+			return /^[a-zA-Z0-9_-]{11}$/.test(videoId || '');
+		}
+
+		if (
+			hostname === 'player.vimeo.com' &&
+			/^\/video\/\d+$/.test(parsedUrl.pathname)
+		) {
+			return true;
+		}
+
+		return false;
+	} catch (error) {
+		return false;
+	}
+};
+
+const getNonAutoplayEmbedUrl = (url) => {
+	if (!url) {
+		return '';
+	}
+
+	try {
+		const parsedUrl = new URL(url);
+
+		parsedUrl.searchParams.delete('autoplay');
+
+		return parsedUrl.toString();
+	} catch (error) {
+		return url;
+	}
+};
+
+const getEditorIframeSrc = (url) => {
+	const embedSource = getEmbedSourceFromInput(url);
+
+	if (!embedSource) {
+		return '';
+	}
+
+	if (isAllowedEmbedUrl(embedSource)) {
+		return getNonAutoplayEmbedUrl(embedSource);
+	}
+
+	return getNonAutoplayEmbedUrl(getIframeSrc(embedSource) || '');
+};
+
 export default function Edit({ attributes, setAttributes, clientId }) {
 	const {
 		blockId,
@@ -80,7 +160,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	const [jobSearchInput, setJobSearchInput] = useState('');
 	const { insertBlocks, removeBlocks } = useDispatch('core/block-editor');
-	const iframeSrc = getIframeSrc(videoUrl);
+	const iframeSrc = getEditorIframeSrc(videoUrl);
 	const hasEditorVideo =
 		(videoType === 'mp4' && videoObj?.url) ||
 		(videoType === 'embed' && iframeSrc);

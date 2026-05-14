@@ -100,10 +100,6 @@
         "stacked"
       ]
     },
-    "contentAlignment": {
-      "type": "string",
-      "default": "left"
-    },
     "contentTopAlign": {
       "type": "boolean",
       "default": false

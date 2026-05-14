@@ -51,14 +51,11 @@ $ambrygen_selected_tabs = isset( $ambrygen_attributes['selectedTabs'] ) && is_ar
 	);
 	
 $ambrygen_initial_visible_tests = 12;
-$ambrygen_has_header = ! empty( $ambrygen_heading ) || ! empty( $ambrygen_description );
-$ambrygen_taxonomy = 'poster_category';
-$ambrygen_heading  = $attributes['heading'] ?? '';
-$ambrygen_desc     = $attributes['description'] ?? '';
-$ambrygen_tabs_uid = $ambrygen_block_id ? $ambrygen_block_id : wp_unique_id( 'genetic-testing-grid-' );
+$ambrygen_taxonomy              = 'poster_category';
+$ambrygen_tabs_uid              = $ambrygen_block_id ? $ambrygen_block_id : wp_unique_id( 'genetic-testing-grid-' );
 
 $ambrygen_has_heading = '' !== trim( wp_strip_all_tags( $ambrygen_heading ) );
-$ambrygen_has_desc    = '' !== trim( wp_strip_all_tags( $ambrygen_desc ) );
+$ambrygen_has_desc    = '' !== trim( wp_strip_all_tags( $ambrygen_description ) );
 $ambrygen_has_header  = $ambrygen_has_heading || $ambrygen_has_desc;
 ?>
 
@@ -109,17 +106,24 @@ $ambrygen_has_header  = $ambrygen_has_heading || $ambrygen_has_desc;
 
 			<div class="tabs-content bg-gradient1">
 				<div class="is-style-gl-s20" aria-hidden="true"></div>
-				<div class="tabs__nav">
+				<div class="tabs__nav" role="tablist" aria-label="<?php esc_attr_e( 'Testing categories', 'ambrygen-web' ); ?>">
 					<?php foreach ( $ambrygen_selected_tabs as $ambrygen_index => $ambrygen_tab_data ) : ?>
 						<?php
 						$ambrygen_is_active = 0 === $ambrygen_index ? ' is-active' : '';
 						$ambrygen_tab_slug  = isset( $ambrygen_tab_data['termSlug'] ) ? sanitize_title( (string) $ambrygen_tab_data['termSlug'] ) : '';
 						$ambrygen_tab_id    = 'all' === $ambrygen_tab_slug || '' === $ambrygen_tab_slug ? 'all' : $ambrygen_tab_slug;
+						$ambrygen_tab_uid   = $ambrygen_tabs_uid . '-tab-' . $ambrygen_index;
+						$ambrygen_panel_id  = $ambrygen_tabs_uid . '-panel-' . $ambrygen_index . '-' . $ambrygen_tab_id;
 						$ambrygen_tab_text  = isset( $ambrygen_tab_data['text'] ) ? sanitize_text_field( $ambrygen_tab_data['text'] ) : '';
 						?>
 						<button type="button"
+							role="tab"
+							id="<?php echo esc_attr( $ambrygen_tab_uid ); ?>"
+							aria-selected="<?php echo esc_attr( 0 === $ambrygen_index ? 'true' : 'false' ); ?>"
+							aria-controls="<?php echo esc_attr( $ambrygen_panel_id ); ?>"
 							class="icon_ajax_tab tabs__tab text-md-Semibold<?php echo esc_attr( $ambrygen_is_active ); ?>"
-							data-tab-target="<?php echo esc_attr( $ambrygen_tab_id ); ?>">
+							data-tab-target="<?php echo esc_attr( $ambrygen_panel_id ); ?>"
+							data-term-slug="<?php echo esc_attr( $ambrygen_tab_id ); ?>">
 							<?php echo esc_html( $ambrygen_tab_text ); ?>
 						</button>
 					<?php endforeach; ?>
@@ -133,6 +137,7 @@ $ambrygen_has_header  = $ambrygen_has_heading || $ambrygen_has_desc;
 						<?php
 						$ambrygen_tab_slug   = isset( $ambrygen_tab_data['termSlug'] ) ? sanitize_title( (string) $ambrygen_tab_data['termSlug'] ) : '';
 						$ambrygen_tab_id     = 'all' === $ambrygen_tab_slug || '' === $ambrygen_tab_slug ? 'all' : $ambrygen_tab_slug;
+						$ambrygen_tab_uid    = $ambrygen_tabs_uid . '-tab-' . $ambrygen_index;
 						$ambrygen_panel_id   = $ambrygen_tabs_uid . '-panel-' . $ambrygen_index . '-' . $ambrygen_tab_id;
 						$ambrygen_term_id    = isset( $ambrygen_tab_data['termId'] ) ? absint( $ambrygen_tab_data['termId'] ) : 0;
 						$ambrygen_is_active  = 0 === $ambrygen_index ? ' is-active' : '';
@@ -147,9 +152,21 @@ $ambrygen_has_header  = $ambrygen_has_heading || $ambrygen_has_desc;
 						);
 
 						if ( $ambrygen_term_id ) {
-							$ambrygen_tab_term = get_term( $ambrygen_term_id, $ambrygen_taxonomy );
+							$ambrygen_term_cache_key = 'gtg_term_id_' . $ambrygen_taxonomy . '_' . $ambrygen_term_id;
+							$ambrygen_tab_term       = wp_cache_get( $ambrygen_term_cache_key, 'ambrygen_blocks' );
+
+							if ( false === $ambrygen_tab_term ) {
+								$ambrygen_tab_term = get_term( $ambrygen_term_id, $ambrygen_taxonomy );
+								wp_cache_set( $ambrygen_term_cache_key, $ambrygen_tab_term, 'ambrygen_blocks', HOUR_IN_SECONDS );
+							}
 						} elseif ( 'all' !== $ambrygen_tab_id ) {
-							$ambrygen_tab_term = get_term_by( 'slug', $ambrygen_tab_id, $ambrygen_taxonomy );
+							$ambrygen_term_cache_key = 'gtg_term_slug_' . $ambrygen_taxonomy . '_' . md5( $ambrygen_tab_id );
+							$ambrygen_tab_term       = wp_cache_get( $ambrygen_term_cache_key, 'ambrygen_blocks' );
+
+							if ( false === $ambrygen_tab_term ) {
+								$ambrygen_tab_term = get_term_by( 'slug', $ambrygen_tab_id, $ambrygen_taxonomy );
+								wp_cache_set( $ambrygen_term_cache_key, $ambrygen_tab_term, 'ambrygen_blocks', HOUR_IN_SECONDS );
+							}
 						}
 
 						if ( $ambrygen_tab_term && ! is_wp_error( $ambrygen_tab_term ) ) {
@@ -164,11 +181,23 @@ $ambrygen_has_header  = $ambrygen_has_heading || $ambrygen_has_desc;
 							$ambrygen_query_args['post__in'] = array( 0 );
 						}
 
-						$ambrygen_tests_query = new WP_Query( $ambrygen_query_args );
+						$ambrygen_cache_key = 'gtg_tab_posts_' . md5( serialize( $ambrygen_query_args ) );
+						$ambrygen_cached    = wp_cache_get( $ambrygen_cache_key, 'ambrygen_blocks' );
+
+						if ( false === $ambrygen_cached ) {
+							$ambrygen_tests_query = new WP_Query( $ambrygen_query_args );
+							wp_cache_set( $ambrygen_cache_key, $ambrygen_tests_query, 'ambrygen_blocks', HOUR_IN_SECONDS );
+						} else {
+							$ambrygen_tests_query = $ambrygen_cached;
+						}
+
 						$ambrygen_total_tests = (int) $ambrygen_tests_query->post_count;
 						?>
 						<div class="tabs__panel<?php echo esc_attr( $ambrygen_is_active ); ?>"
-							id="<?php echo esc_attr( $ambrygen_tab_id ); ?>">
+							id="<?php echo esc_attr( $ambrygen_panel_id ); ?>"
+							role="tabpanel"
+							aria-labelledby="<?php echo esc_attr( $ambrygen_tab_uid ); ?>"
+							data-term-slug="<?php echo esc_attr( $ambrygen_tab_id ); ?>">
 							<div class="features-tabs__grid">
 								<?php if ( $ambrygen_tests_query->have_posts() ) : ?>
 									<?php $ambrygen_post_index = 0; ?>

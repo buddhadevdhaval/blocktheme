@@ -328,6 +328,84 @@ function initTooltips() {
 		});
 	}
 
+	function resetTooltipPosition(tooltipContent) {
+		if (!tooltipContent) {
+			return;
+		}
+
+		tooltipContent.style.position = '';
+		tooltipContent.style.left = '';
+		tooltipContent.style.top = '';
+		tooltipContent.style.right = '';
+		tooltipContent.style.maxWidth = '';
+		tooltipContent.style.minWidth = '';
+		tooltipContent.style.setProperty('--ambrygen-tooltip-shift-x', '0px');
+		tooltipContent.style.setProperty('--ambrygen-tooltip-arrow-left', 'auto');
+		tooltipContent.style.setProperty('--ambrygen-tooltip-arrow-right', '');
+	}
+
+	function positionTooltip(node) {
+		if (!node || window.matchMedia('(max-width: 480px)').matches) {
+			resetTooltipPosition(node?.querySelector('.ambrygen-tooltip__content'));
+			return;
+		}
+
+		const tooltipContent = node.querySelector('.ambrygen-tooltip__content');
+		if (!tooltipContent) {
+			return;
+		}
+
+		resetTooltipPosition(tooltipContent);
+
+		const viewportPadding = 16;
+		const arrowOffset = 28;
+		const triggerRect = node.getBoundingClientRect();
+		const tooltipWidth = Math.min(320, window.innerWidth - viewportPadding * 2);
+		const preferredLeft = triggerRect.right - tooltipWidth;
+		const left = Math.min(
+			Math.max(viewportPadding, preferredLeft),
+			window.innerWidth - viewportPadding - tooltipWidth
+		);
+		const top = triggerRect.bottom + 10;
+
+		tooltipContent.style.position = 'fixed';
+		tooltipContent.style.left = `${left}px`;
+		tooltipContent.style.top = `${top}px`;
+		tooltipContent.style.right = 'auto';
+		tooltipContent.style.minWidth = `${tooltipWidth}px`;
+		tooltipContent.style.maxWidth = `${tooltipWidth}px`;
+
+		const contentRect = tooltipContent.getBoundingClientRect();
+		const triggerCenter = triggerRect.left + triggerRect.width / 2;
+		const triggerCenterInTooltip = triggerCenter - contentRect.left;
+		const maxArrowLeft = contentRect.width - arrowOffset - 12;
+		const arrowLeft = triggerCenterInTooltip - arrowOffset / 2;
+		const clampedArrowLeft = Math.min(
+			Math.max(12, arrowLeft),
+			Math.max(12, maxArrowLeft)
+		);
+
+		tooltipContent.style.setProperty(
+			'--ambrygen-tooltip-arrow-left',
+			`${clampedArrowLeft}px`
+		);
+		tooltipContent.style.setProperty('--ambrygen-tooltip-arrow-right', 'auto');
+	}
+
+	function positionAllTooltips() {
+		document.querySelectorAll(tooltipSelector).forEach((node) => {
+			positionTooltip(node);
+		});
+	}
+
+	function getClosestTooltipNode(target) {
+		if (!(target instanceof Element)) {
+			return null;
+		}
+
+		return target.closest(tooltipSelector);
+	}
+
 	function clearActiveTooltips(exceptNode = null) {
 		document.querySelectorAll(tooltipSelector).forEach((node) => {
 			if (exceptNode && node === exceptNode) {
@@ -338,7 +416,7 @@ function initTooltips() {
 	}
 
 	document.addEventListener('click', (event) => {
-		const tooltipNode = event.target.closest(tooltipSelector);
+		const tooltipNode = getClosestTooltipNode(event.target);
 
 		if (!tooltipNode) {
 			if (isTouchDevice) {
@@ -352,7 +430,10 @@ function initTooltips() {
 		}
 
 		// Allow clicking links inside tooltip content on touch devices.
-		if (event.target.closest('.ambrygen-tooltip__content a')) {
+		if (
+			event.target instanceof Element &&
+			event.target.closest('.ambrygen-tooltip__content a')
+		) {
 			return;
 		}
 
@@ -372,9 +453,26 @@ function initTooltips() {
 		}
 	});
 
+	document.addEventListener('mouseenter', (event) => {
+		const tooltipNode = getClosestTooltipNode(event.target);
+		if (tooltipNode) {
+			positionTooltip(tooltipNode);
+		}
+	}, true);
+
+	document.addEventListener('focusin', (event) => {
+		const tooltipNode = getClosestTooltipNode(event.target);
+		if (tooltipNode) {
+			positionTooltip(tooltipNode);
+		}
+	});
+
+	window.addEventListener('resize', positionAllTooltips);
+
 	// Initialize tooltip divs on page load
 	hydrateEscapedTooltips();
 	initializeTooltipDivs();
+	positionAllTooltips();
 }
 
 (function () {

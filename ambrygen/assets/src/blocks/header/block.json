@@ -8,22 +8,6 @@
   "icon": "admin-home",
   "description": "Complete site header with navigation and mega menus",
   "attributes": {
-    "topBarText": {
-      "type": "string",
-      "default": "Find us at ACMG! We're on booth A312, Walk in to connect with us, or use this link to setup a 1:1."
-    },
-    "topBarLinkText": {
-      "type": "string",
-      "default": ""
-    },
-    "topBarLinkUrl": {
-      "type": "string",
-      "default": ""
-    },
-    "topBarVisible": {
-      "type": "boolean",
-      "default": true
-    },
     "navItems": {
       "type": "array",
       "default": [
@@ -106,10 +90,6 @@
   "render": "file:./render.php",
   "example": {
     "attributes": {
-      "topBarText": "Find us at ACMG! We're on booth A312, Walk in to connect with us, or use this link to setup a 1:1.",
-      "topBarLinkText": "Learn More",
-      "topBarLinkUrl": "https://example.com",
-      "topBarVisible": true,
       "navItems": [
         {
           "label": "Patients",

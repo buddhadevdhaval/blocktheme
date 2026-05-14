@@ -15,7 +15,7 @@ import {
 } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useEffect, useRef, useState } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -25,6 +25,7 @@ import {
 	ImageUploader,
 	TagSelector,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 const ALLOWED_BLOCKS = [ 'ambrygen/testimonials-slider-item' ];
 const TEMPLATE = [ [ 'ambrygen/testimonials-slider-item', {} ] ];
@@ -51,6 +52,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		graphicRightUrl,
 		graphicRightAlt,
 	} = attributes;
+	const isExample = blockId === 'testimonials-slider-example';
 	const swiperRef = useRef( null );
 	const [ activeSlideIndex, setActiveSlideIndex ] = useState( 0 );
 
@@ -68,13 +70,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const hasRightGraphic = !! graphicRightUrl;
 	const hasGraphicImages = hasLeftGraphic || hasRightGraphic;
 
-	useEffect( () => {
-		const expectedId = `testimonials-slider-${ clientId.slice( 0, 8 ) }`;
-
-		if ( ! blockId ) {
-			setAttributes( { blockId: expectedId } );
-		}
-	}, [ blockId, clientId, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		enabled: ! isExample,
+		idPrefix: 'testimonials-slider',
+		setAttributes,
+	} );
 
 	useEffect( () => {
 		if ( hasInnerBlocks || ! testimonials.length ) {
@@ -136,30 +138,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 	}, [ activeSlideIndex, innerBlocks ] );
 
-	useEffect( () => {
-		if ( ! autoplay || innerBlocks.length <= 1 ) {
-			return undefined;
-		}
-
-		const autoplayTimer = window.setInterval( () => {
-			setActiveSlideIndex(
-				( currentIndex ) => ( currentIndex + 1 ) % innerBlocks.length
-			);
-		}, 3000 );
-
-		return () => window.clearInterval( autoplayTimer );
-	}, [ autoplay, innerBlocks.length ] );
-
 	const blockProps = useBlockProps( {
 		className: 'testimonial-slider',
-		id: blockId || undefined,
+		id: isExample ? undefined : blockId || undefined,
 	} );
 
-	if ( blockId === 'testimonials-slider-example' ) {
+	if ( isExample ) {
 		return (
 			<BlockExamplePreview
 				className="testimonials-example-preview"
-				imagePath="/assets/src/images/testimonial/preview.png"
+				imagePath="/assets/src/images/testimonial-slider/preview.png"
 			/>
 		);
 	}
@@ -360,13 +348,34 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								{ hasMultipleSlides &&
 									innerBlocks.map( ( block, index ) => (
 										<span
-											key={ block.clientId || index }
+											key={ block.clientId }
+											role="button"
+											tabIndex={ 0 }
 											className={ `swiper-pagination-bullet${
 												index === activeSlideIndex
 													? ' swiper-pagination-bullet-active'
 													: ''
 											}` }
 											onClick={ () => setActiveSlideIndex( index ) }
+											onKeyDown={ ( event ) => {
+												if (
+													event.key === 'Enter' ||
+													event.key === ' '
+												) {
+													event.preventDefault();
+													setActiveSlideIndex( index );
+												}
+											} }
+											aria-label={ sprintf(
+												/* translators: %d: testimonial slide number. */
+												__( 'Go to testimonial %d', 'ambrygen-web' ),
+												index + 1
+											) }
+											aria-current={
+												index === activeSlideIndex
+													? 'true'
+													: undefined
+											}
 										></span>
 									) ) }
 							</div>

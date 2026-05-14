@@ -220,13 +220,13 @@ if ( '_blank' === $theme_video_link_target && $theme_video_link_text ) {
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 						allowfullscreen
 						class="features-media__iframe"
+						tabindex="-1"
+						aria-hidden="true"
 					></iframe>
 
 					<div
 						class="play-icon-video"
-						role="button"
-						tabindex="0"
-						aria-label="<?php esc_attr_e( 'Play video in modal', 'ambrygen-web' ); ?>"
+						aria-hidden="true"
 					>
 						<div class="play-icon circle-icon">
 							<img src="<?php echo esc_url( $theme_video_play_icon_src ); ?>" class="play-icon__img" alt="" aria-hidden="true">
@@ -247,6 +247,8 @@ if ( '_blank' === $theme_video_link_target && $theme_video_link_text ) {
 						preload="metadata"
 						loop
 						controls
+						tabindex="-1"
+						aria-hidden="true"
 						<?php if ( $theme_video_poster_url ) : ?>
 							poster="<?php echo esc_url( $theme_video_poster_url ); ?>"
 						<?php endif; ?>
@@ -257,9 +259,7 @@ if ( '_blank' === $theme_video_link_target && $theme_video_link_text ) {
 
 					<div
 						class="play-icon-video"
-						role="button"
-						tabindex="0"
-						aria-label="<?php esc_attr_e( 'Play video in modal', 'ambrygen-web' ); ?>"
+						aria-hidden="true"
 					>
 						<div class="play-icon circle-icon">
 							<img src="<?php echo esc_url( $theme_video_play_icon_src ); ?>" class="play-icon__img" alt="" aria-hidden="true">

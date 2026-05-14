@@ -68,7 +68,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								setAttributes( { title: value } )
 							}
 							placeholder={ __(
-								'Timeline item title',
+								'Add Title...',
 								'ambrygen-web'
 							) }
 						/>
@@ -83,7 +83,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								setAttributes( { intro: value } )
 							}
 							placeholder={ __(
-								'Optional intro text',
+								'Add Intro...',
 								'ambrygen-web'
 							) }
 						/>

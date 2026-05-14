@@ -46,7 +46,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		topIconUrl,
 		imagePosition,
 		layoutStyle,
-		contentAlignment,
 		contentTopAlign,
 		variation = 'simple-content-with-image',
 		buttons,
@@ -118,9 +117,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const blockProps = useBlockProps( {
 		className: `iot-block ${ layoutStyle } ${ imagePositionClass } ${ borderClass } ${ topAlignClass } ${ imageSizeClass } ${ originalImageClass }`,
-		style: {
-			'--content-alignment': contentAlignment,
-		},
 	} );
 
 	const updateButton = ( index, field, value ) => {
@@ -428,10 +424,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 				<div className="iot-block__content">
 					{ /* Text content */ }
-					<div
-						className="iot-block__text"
-						style={ { textAlign: contentAlignment } }
-					>
+					<div className="iot-block__text">
 						{ topIconUrl && (
 							<>
 								<div className="iot-block__top-icon">

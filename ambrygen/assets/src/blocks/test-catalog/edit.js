@@ -280,7 +280,7 @@ export default function Edit({ attributes, setAttributes, clientId, name }) {
 	const [materialTypeOptions, setMaterialTypeOptions] = useState([]);
 	const [isLoadingMaterialTypes, setIsLoadingMaterialTypes] =
 		useState(false);
-
+	
 	useUniqueBlockId( {
 		blockId,
 		clientId,
@@ -288,6 +288,27 @@ export default function Edit({ attributes, setAttributes, clientId, name }) {
 		idPrefix: 'test-catalog',
 		setAttributes,
 	} );
+
+	useEffect( () => {
+		if ( isExample || ! selectedTabs.length ) {
+			return;
+		}
+
+		const hasMissingIds = selectedTabs.some( ( tab ) => ! tab?.id );
+
+		if ( ! hasMissingIds ) {
+			return;
+		}
+
+		setAttributes( {
+			selectedTabs: selectedTabs.map( ( tab, index ) => ( {
+				...tab,
+				id:
+					tab?.id ||
+					`tab-${ clientId.slice( 0, 8 ) }-${ index + 1 }-${ Date.now() }`,
+			} ) ),
+		} );
+	}, [ clientId, isExample, selectedTabs, setAttributes ] );
 
 	useEffect(() => {
 		if ( isExample ) {
@@ -447,7 +468,7 @@ export default function Edit({ attributes, setAttributes, clientId, name }) {
 					<PanelBody title={__('Tabs', 'ambrygen-web')} initialOpen>
 						{selectedTabs.map((tab, index) => (
 							<TabSettings
-								key={tab.id || `tab-${index}`}
+								key={tab.id}
 								index={index}
 								tab={tab}
 								updateTab={updateTab}
@@ -457,7 +478,7 @@ export default function Edit({ attributes, setAttributes, clientId, name }) {
 							/>
 						))}
 
-						<Button isSecondary onClick={addTab}>
+						<Button variant="secondary" onClick={addTab}>
 							{__('Add Tab', 'ambrygen-web')}
 						</Button>
 					</PanelBody>
@@ -484,7 +505,7 @@ export default function Edit({ attributes, setAttributes, clientId, name }) {
 								onChange={(value) =>
 									setAttributes({ title: value })
 								}
-								placeholder={__('Add title...', 'ambrygen-web')}
+								placeholder={__('Add Heading...', 'ambrygen-web')}
 							/>
 						</TagName>
 						<div className="is-style-gl-s12"></div>
@@ -496,7 +517,7 @@ export default function Edit({ attributes, setAttributes, clientId, name }) {
 								setAttributes({ subtitle: value })
 							}
 							placeholder={__(
-								'Add subtitle...',
+								'Add Subtitle...',
 								'ambrygen-web'
 							)}
 						/>

@@ -13,7 +13,27 @@
 		},
 		"links": {
 			"type": "array",
-			"default": []
+			"default": [],
+			"items": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"text": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					},
+					"target": {
+						"type": "string"
+					},
+					"rel": {
+						"type": "string"
+					}
+				}
+			}
 		},
 		"headingTag": {
 			"type": "string",
@@ -37,7 +57,7 @@
 	},
 	"example": {
 		"attributes": {
-			"blockId": "link-list-example"
+			"blockId": "example-block-preview"
 		}
 	},
 	"textdomain": "ambrygen-web",

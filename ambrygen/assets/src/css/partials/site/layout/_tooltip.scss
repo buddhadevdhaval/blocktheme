@@ -7,12 +7,20 @@
 	font-weight: 700;
 
 	.bg-primary_800 & {
-		color: var(--theme_gray_200);
+		color: var(--theme_link_color);
+	}
+
+	.bg-blue-gradient & {
+		color: var(--theme_lightblue);
 	}
 
 	&:hover {
 		color: var(--theme_link_color_hover);
 		// border-color: var(--theme_link_border_color_hover);
+
+		.bg-blue-gradient & {
+			color: var(--theme_lightblue);
+		}
 
 		.bg-primary_800 & {
 			color: var(--theme_white);
@@ -24,16 +32,19 @@
 	&:focus-visible .ambrygen-tooltip__content,
 	&.is-tooltip-active .ambrygen-tooltip__content {
 		opacity: 1;
-		transform: translateX(0%) translateY(-2px);
+		transform: translateX(var(--ambrygen-tooltip-shift-x, 0%)) translateY(-2px);
 		pointer-events: auto;
 	}
 }
 
 .ambrygen-tooltip__content {
+	--ambrygen-tooltip-shift-x: 0%;
+	--ambrygen-tooltip-arrow-right: 14px;
+	--ambrygen-tooltip-arrow-left: auto;
 	position: absolute;
 	right: 0%;
 	top: calc(100% + 10px);
-	transform: translateX(0%);
+	transform: translateX(var(--ambrygen-tooltip-shift-x, 0%));
 	border-radius: 8px;
 	background-color: var(--theme_smith_apple);
 	color: var(--theme_white);
@@ -52,6 +63,10 @@
 	z-index: 20;
 	text-align: left;
 
+	.bg-primary_800 & {
+		background-color: var(--theme_link_color);
+	}
+
 	&:before {
 		content: "";
 		display: block;
@@ -59,10 +74,15 @@
 		height: 6px;
 		position: absolute;
 		top: -6px;
-		right: 14px;
+		left: var(--ambrygen-tooltip-arrow-left);
+		right: var(--ambrygen-tooltip-arrow-right);
 		background-image: url(../images/primary900-icons/tooltip-bottom.svg);
 		background-position: right top;
 		background-repeat: no-repeat;
+
+		.bg-primary_800 & {
+			background-image: url(../images/primary600-icons/tooltip-bottom.svg);
+		}
 	}
 }
 
@@ -75,16 +95,17 @@
 }
 
 .ambrygen-tooltip__description {
-	font-size: 12px;
+	font-size: 11px;
 	font-style: normal;
 	font-weight: 400;
-	line-height: 18px;
+	line-height: 15px;
 	letter-spacing: -0.18px;
 	margin-top: 4px;
 }
 
 @include bp.max(480px) {
 	.ambrygen-tooltip__content {
+		--ambrygen-tooltip-arrow-left: auto;
 		left: 50%;
 		right: auto;
 		transform: translateX(-50%);

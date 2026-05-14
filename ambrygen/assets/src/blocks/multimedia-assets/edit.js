@@ -8,9 +8,10 @@ import { PanelBody } from '@wordpress/components';
 
 import {
 	TagSelector,
+	BlockExamplePreview,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
 
 const ALLOWED_BLOCKS = [ 'ambrygen/multimedia-assets-item' ];
 
@@ -18,24 +19,31 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
 		heading,
 		headingTag,
+		blockId,
 	} = attributes;
-	const { blockId } = attributes;
+	const isExample = blockId === 'example-block-preview';
 
-	useEffect( () => {
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
-
-		if ( ! blockId ) {
-			setAttributes( {
-				blockId: expectedId,
-			} );
-		}
-	}, [ clientId, blockId, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		enabled: ! isExample,
+		setAttributes,
+	} );
 
 	const blockProps = useBlockProps( {
 		className: `block-layout multimedia-assets our-approach`,
 	} );
 
 	const HeadingTag = headingTag || 'h2';
+
+	if ( isExample ) {
+		return (
+			<BlockExamplePreview
+				className="example-block-preview"
+				imagePath="/assets/src/images/multimedia-assets/preview.png"				
+			/>
+		);
+	}
 
 	return (
 		<>
@@ -67,7 +75,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								setAttributes( { heading: value } )
 							}
 							allowedFormats={ [ 'core/text-color' ] }
-							placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
+							placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 						/>
 					</div>
 				</div>

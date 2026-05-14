@@ -1,5 +1,90 @@
 @use "../../css/partials/variables/fluid_mixins" as *;
 
+.icon-grid-with-count__term-count,
+.icon-grid-with-count__picker-help {
+	margin: 0 0 12px;
+}
+
+.icon-grid-with-count__picker-help {
+	color: #757575;
+}
+
+.icon-grid-with-count__term-picker {
+	display: grid;
+	gap: 10px;
+
+	.components-base-control__help {
+		margin-bottom: 0;
+	}
+}
+
+.icon-grid-with-count__term-options {
+	display: grid;
+	gap: 4px;
+	max-height: 220px;
+	margin-top: 8px;
+	overflow-y: auto;
+	border: 1px solid #ddd;
+	background: #fff;
+}
+
+.icon-grid-with-count__selected-terms {
+	display: grid;
+	gap: 8px;
+}
+
+.icon-grid-with-count__picker-label {
+	font-weight: 600;
+}
+
+.icon-grid-with-count__selected-term-list {
+	display: grid;
+	gap: 4px;
+	max-height: 220px;
+	overflow-y: auto;
+	border: 1px solid #ddd;
+	background: #fff;
+}
+
+.icon-grid-with-count__selected-term,
+.icon-grid-with-count__term-option {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	padding: 8px 10px;
+	border-bottom: 1px solid #eee;
+
+	&:last-child {
+		border-bottom: 0;
+	}
+
+	> span {
+		min-width: 0;
+		overflow-wrap: anywhere;
+	}
+
+	.components-button {
+		flex: 0 0 auto;
+	}
+}
+
+.icon-grid-with-count__picker-field {
+	min-width: 0;
+
+	.components-base-control {
+		margin-bottom: 0;
+	}
+
+	.components-base-control__field {
+		margin-bottom: 0;
+	}
+
+	.components-base-control__label {
+		margin-bottom: 8px;
+	}
+}
+
 .wp-block.our-testing-menu {
 	.our-testing-menu__grid {
 		display: block;

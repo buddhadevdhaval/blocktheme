@@ -20,9 +20,14 @@
 		});
 	}
 
+	function isSafeUrl(url) {
+		return /^https?:\/\//i.test(url.trim());
+	}
+
 	function buildCard(post, index) {
 		const title = decodeHtml(post?.title?.rendered || '');
 		const url = post?.link || '#';
+		const safeUrl = isSafeUrl(url) ? url : '#';
 		const terms = post?._embedded?.['wp:term']?.flat?.() || [];
 		const category = decodeHtml(terms?.[0]?.name || 'Category');
 		const isExtra = index >= INITIAL_VISIBLE_TEST_COUNT;
@@ -43,7 +48,7 @@
 					</div>
 				</div>
 				<a class="features-tabs__view-link site-btn is-style-site-text-btn has-right-arrow" href="${escapeHtml(
-				url
+				safeUrl
 			)}" aria-label="View product for ${escapeHtml(
 				title
 			)}">View Product</a>
@@ -71,6 +76,9 @@
 	async function fetchAllPosts(baseUrl) {
 		const firstUrl = `${baseUrl}&page=1`;
 		const firstResponse = await fetch(firstUrl);
+		if (!firstResponse.ok) {
+			throw new Error(`HTTP ${firstResponse.status}`);
+		}
 		const firstPosts = await firstResponse.json();
 		const totalPages = Number(
 			firstResponse.headers.get('X-WP-TotalPages') || 1
@@ -86,7 +94,12 @@
 			)
 		);
 		const restPosts = await Promise.all(
-			restResponses.map((response) => response.json())
+			restResponses.map((response) => {
+				if (!response.ok) {
+					throw new Error(`HTTP ${response.status}`);
+				}
+				return response.json();
+			})
 		);
 
 		return [firstPosts, ...restPosts].flat();
@@ -152,7 +165,11 @@
 	}
 
 	async function loadPanelPosts(panel, termSlug) {
-		if (!panel || panel.dataset.loaded === '1') {
+		if (
+			!panel ||
+			panel.dataset.loaded === '1' ||
+			panel.dataset.loaded === 'loading'
+		) {
 			return;
 		}
 
@@ -170,6 +187,9 @@
 						termSlug
 					)}`
 				);
+				if (!termRes.ok) {
+					throw new Error(`HTTP ${termRes.status}`);
+				}
 				const termData = await termRes.json();
 				termId =
 					Array.isArray(termData) && termData[0]?.id
@@ -236,10 +256,9 @@
 
 		const activateTab = (target) => {
 			tabs.forEach((tab) => {
-				tab.classList.toggle(
-					'is-active',
-					tab.dataset.tabTarget === target
-				);
+				const isActive = tab.dataset.tabTarget === target;
+				tab.classList.toggle('is-active', isActive);
+				tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
 			});
 
 			panels.forEach((panel) => {
@@ -247,7 +266,7 @@
 			});
 
 			const activePanel = panels.find((panel) => panel.id === target);
-			loadPanelPosts(activePanel, target);
+			loadPanelPosts(activePanel, activePanel?.dataset.termSlug || target);
 		};
 
 		let activeTarget = tabs.find((tab) =>

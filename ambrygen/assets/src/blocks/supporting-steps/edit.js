@@ -3,13 +3,19 @@ import {
 	RichText,
 	useBlockProps,
 } from '@wordpress/block-editor';
-import { Button, PanelBody } from '@wordpress/components';
+import {
+	Button,
+	PanelBody,
+	TextControl,
+} from '@wordpress/components';
 import { useEffect, useRef } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { getThemeAssetUrl } from '../../utils/assets';
+import { useUniqueBlockId } from '../_shared/hooks';
 import {
 	BlockVariationsExamplePreview,
 	ImageUploader,
+	ItemHeader,
 	TagSelector,
 } from '../_shared/components';
 
@@ -35,6 +41,77 @@ const createStat = () => ( {
 	stats: '',
 	postfix: '',
 } );
+
+const normalizeStep = ( step = {} ) => ( {
+	id: step.id || createItemId( 'step' ),
+	iconId: Number( step.iconId ) || 0,
+	iconUrl: step.iconUrl || '',
+	iconAlt: step.iconAlt || '',
+	label: step.label || '',
+} );
+
+const normalizeSteps = ( steps = [] ) =>
+	steps.map( ( step ) => normalizeStep( step ) );
+
+const normalizeStat = ( stat = {} ) => ( {
+	id: stat.id || createItemId( 'stat' ),
+	label: stat.label || '',
+	stats: stat.stats || '',
+	postfix: stat.postfix || '',
+} );
+
+const normalizeStats = ( stats = [] ) =>
+	stats.map( ( stat ) => normalizeStat( stat ) );
+
+function StepControls( {
+	step,
+	updateStep,
+	replaceStepIcon,
+	clearStepIcon,
+	index,
+} ) {
+	return (
+		<div className="supporting-steps__step-controls">
+			<TextControl
+				label={ __( 'Label', 'ambrygen-web' ) }
+				value={ step.label }
+				onChange={ ( value ) => updateStep( step.id, 'label', value ) }
+			/>
+			<ImageUploader
+				label={ sprintf(
+					/* translators: %d: Step number. */
+					__( 'Step %d Icon', 'ambrygen-web' ),
+					index + 1
+				) }
+				url={ step.iconUrl }
+				onSelect={ ( media ) => replaceStepIcon( step.id, media ) }
+				onRemove={ () => clearStepIcon( step.id ) }
+			/>
+		</div>
+	);
+}
+
+function StatControls( { stat, updateStat } ) {
+	return (
+		<div className="supporting-steps__stat-controls">
+			<TextControl
+				label={ __( 'Label', 'ambrygen-web' ) }
+				value={ stat.label }
+				onChange={ ( value ) => updateStat( stat.id, 'label', value ) }
+			/>
+			<TextControl
+				label={ __( 'Stat', 'ambrygen-web' ) }
+				value={ stat.stats }
+				onChange={ ( value ) => updateStat( stat.id, 'stats', value ) }
+			/>
+			<TextControl
+				label={ __( 'Postfix', 'ambrygen-web' ) }
+				value={ stat.postfix }
+				onChange={ ( value ) => updateStat( stat.id, 'postfix', value ) }
+			/>
+		</div>
+	);
+}
 
 const VARIANTS = [
 	{
@@ -70,19 +147,22 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const isExample = blockId === 'supporting-steps-example';
 	const HeadingTag = headingTag || 'h2';
 	const hasInitializedDefaultStep = useRef( false );
+	const sourceSteps = Array.isArray( steps ) ? steps : [];
+	const stepsLength = sourceSteps.length;
+	const hasMissingStepIds = sourceSteps.some( ( step ) => ! step?.id );
+	const visibleSteps = sourceSteps.slice( 0, MAX_STEPS );
+	const sourceStats = Array.isArray( stats ) ? stats : [];
+	const statsLength = sourceStats.length;
+	const hasMissingStatIds = sourceStats.some( ( stat ) => ! stat?.id );
+	const visibleStats = sourceStats.slice( 0, MAX_STATS );
 
-	useEffect( () => {
-		if ( isExample ) {
-			return;
-		}
-
-		const clientIdSuffix = clientId.slice( 0, 8 );
-		const expectedId = `supporting-steps-${ clientIdSuffix }`;
-
-		if ( ! blockId ) {
-			setAttributes( { blockId: expectedId } );
-		}
-	}, [ blockId, clientId, isExample, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		enabled: ! isExample,
+		idPrefix: 'supporting-steps',
+		setAttributes,
+	} );
 
 	useEffect( () => {
 		if ( isExample || hasInitializedDefaultStep.current ) {
@@ -95,6 +175,36 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			setAttributes( { steps: [ createStep() ] } );
 		}
 	}, [ isExample, steps.length, setAttributes ] );
+
+	useEffect( () => {
+		if ( ! stepsLength ) {
+			return;
+		}
+
+		if ( hasMissingStepIds || stepsLength > MAX_STEPS ) {
+			setAttributes( {
+				steps: normalizeSteps( sourceSteps ).slice( 0, MAX_STEPS ),
+			} );
+		}
+	}, [ hasMissingStepIds, setAttributes, sourceSteps, stepsLength ] );
+
+	useEffect( () => {
+		if ( ! isStatsView || ! statsLength ) {
+			return;
+		}
+
+		if ( hasMissingStatIds || statsLength > MAX_STATS ) {
+			setAttributes( {
+				stats: normalizeStats( sourceStats ).slice( 0, MAX_STATS ),
+			} );
+		}
+	}, [
+		hasMissingStatIds,
+		isStatsView,
+		setAttributes,
+		sourceStats,
+		statsLength,
+	] );
 
 	const blockProps = useBlockProps( {
 		className: `supporting-steps${ isStatsView ? ' variation-stats-view' : '' }`,
@@ -111,47 +221,147 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		);
 	}
 
-	const updateStep = ( index, field, value ) => {
-		const updatedSteps = [ ...steps ];
-		updatedSteps[ index ] = {
-			...updatedSteps[ index ],
-			[ field ]: value,
-		};
-		setAttributes( { steps: updatedSteps } );
-	};
-
-	const addStep = () => {
-		if ( steps.length >= MAX_STEPS ) {
-			return;
-		}
-		setAttributes( { steps: [ ...steps, createStep() ] } );
-	};
-
-	const removeStep = ( index ) => {
+	const updateStep = ( stepId, field, value ) => {
 		setAttributes( {
-			steps: steps.filter( ( _, stepIndex ) => stepIndex !== index ),
+			steps: sourceSteps.map( ( step ) =>
+				step.id === stepId ? { ...step, [ field ]: value } : step
+			),
 		} );
 	};
 
-	const updateStat = ( index, field, value ) => {
-		const updatedStats = [ ...stats ];
-		updatedStats[ index ] = {
-			...updatedStats[ index ],
-			[ field ]: value,
-		};
-		setAttributes( { stats: updatedStats } );
+	const addStep = () => {
+		if ( sourceSteps.length >= MAX_STEPS ) {
+			return;
+		}
+		setAttributes( {
+			steps: normalizeSteps( [ ...sourceSteps, createStep() ] ).slice(
+				0,
+				MAX_STEPS
+			),
+		} );
+	};
+
+	const removeStep = ( stepId ) => {
+		if ( sourceSteps.length <= 1 ) {
+			return;
+		}
+
+		setAttributes( {
+			steps: normalizeSteps(
+				sourceSteps.filter( ( step ) => step.id !== stepId )
+			),
+		} );
+	};
+
+	const moveStep = ( stepId, direction ) => {
+		const currentIndex = sourceSteps.findIndex(
+			( step ) => step.id === stepId
+		);
+		const nextIndex = currentIndex + direction;
+
+		if (
+			currentIndex < 0 ||
+			nextIndex < 0 ||
+			nextIndex >= sourceSteps.length
+		) {
+			return;
+		}
+
+		const updatedSteps = [ ...sourceSteps ];
+		[ updatedSteps[ currentIndex ], updatedSteps[ nextIndex ] ] = [
+			updatedSteps[ nextIndex ],
+			updatedSteps[ currentIndex ],
+		];
+
+		setAttributes( {
+			steps: normalizeSteps( updatedSteps ).slice( 0, MAX_STEPS ),
+		} );
+	};
+
+	const replaceStepIcon = ( stepId, media ) => {
+		setAttributes( {
+			steps: sourceSteps.map( ( step ) =>
+				step.id === stepId
+					? {
+							...step,
+							iconId: media?.id || 0,
+							iconUrl: media?.url || '',
+							iconAlt: media?.alt || '',
+					  }
+					: step
+			),
+		} );
+	};
+
+	const clearStepIcon = ( stepId ) => {
+		setAttributes( {
+			steps: sourceSteps.map( ( step ) =>
+				step.id === stepId
+					? {
+							...step,
+							iconId: 0,
+							iconUrl: '',
+							iconAlt: '',
+					  }
+					: step
+			),
+		} );
+	};
+
+	const updateStat = ( statId, field, value ) => {
+		setAttributes( {
+			stats: sourceStats.map( ( stat ) =>
+				stat.id === statId ? { ...stat, [ field ]: value } : stat
+			),
+		} );
 	};
 
 	const addStat = () => {
-		if ( stats.length >= MAX_STATS ) {
+		if ( sourceStats.length >= MAX_STATS ) {
 			return;
 		}
-		setAttributes( { stats: [ ...stats, createStat() ] } );
+		setAttributes( {
+			stats: normalizeStats( [ ...sourceStats, createStat() ] ).slice(
+				0,
+				MAX_STATS
+			),
+		} );
 	};
 
-	const removeStat = ( index ) => {
+	const removeStat = ( statId ) => {
+		if ( sourceStats.length <= 1 ) {
+			return;
+		}
+
 		setAttributes( {
-			stats: stats.filter( ( _, statIndex ) => statIndex !== index ),
+			stats: normalizeStats(
+				sourceStats.filter( ( stat ) => stat.id !== statId )
+			),
+		} );
+	};
+
+	const moveStat = ( statId, direction ) => {
+		const currentIndex = sourceStats.findIndex(
+			( stat ) => stat.id === statId
+		);
+		const nextIndex = currentIndex + direction;
+
+		if (
+			currentIndex < 0 ||
+			nextIndex < 0 ||
+			nextIndex >= sourceStats.length
+		) {
+			return;
+		}
+
+		const updatedStats = [ ...sourceStats ];
+		[ updatedStats[ currentIndex ], updatedStats[ nextIndex ] ] = [
+			updatedStats[ nextIndex ],
+			updatedStats[ currentIndex ],
+		];
+
+		setAttributes( {
+			stats: normalizeStats( updatedStats ).slice( 0, MAX_STATS ),
 		} );
 	};
 
@@ -207,50 +417,39 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					title={ __( 'Steps', 'ambrygen-web' ) }
 					initialOpen={ true }
 				>
-					<Button
-						variant="primary"
-						onClick={ addStep }
-						disabled={ steps.length >= MAX_STEPS }
-					>
-						{ __( 'Add Step', 'ambrygen-web' ) }
-					</Button>
-
-					{ steps.map( ( step, index ) => (
-						<ImageUploader
+					{ visibleSteps.map( ( step, index ) => (
+						<div
 							key={ step.id }
-							label={ sprintf(
-								/* translators: %d: Step number. */
-								__( 'Step %d Icon', 'ambrygen-web' ),
-								index + 1
-							) }
-							url={ step.iconUrl }
-							onSelect={ ( media ) => {
-								const updatedSteps = [ ...steps ];
-								updatedSteps[ index ] = {
-									...updatedSteps[ index ],
-									iconId: media.id || 0,
-									iconUrl: media.url,
-									iconAlt:
-										media.alt || step.label || '',
-								};
-								setAttributes( {
-									steps: updatedSteps,
-								} );
-							} }
-							onRemove={ () => {
-								const updatedSteps = [ ...steps ];
-								updatedSteps[ index ] = {
-									...updatedSteps[ index ],
-									iconId: 0,
-									iconUrl: '',
-									iconAlt: '',
-								};
-								setAttributes( {
-									steps: updatedSteps,
-								} );
-							} }
-						/>
+							className="supporting-steps__inspector-step"
+						>
+							<ItemHeader
+								index={ index }
+								label={ step.label }
+								total={ visibleSteps.length }
+								prefix="STEP"
+								onMove={ ( itemIndex, dir ) =>
+									moveStep( visibleSteps[ itemIndex ].id, dir )
+								}
+								onRemove={ ( itemIndex ) =>
+									removeStep( visibleSteps[ itemIndex ].id )
+								}
+								minCount={ 1 }
+							/>
+							<StepControls
+								step={ step }
+								index={ index }
+								updateStep={ updateStep }
+								replaceStepIcon={ replaceStepIcon }
+								clearStepIcon={ clearStepIcon }
+							/>
+						</div>
 					) ) }
+
+					{ visibleSteps.length < MAX_STEPS && (
+						<Button variant="primary" onClick={ addStep }>
+							{ __( 'Add New Step', 'ambrygen-web' ) }
+						</Button>
+					) }
 				</PanelBody>
 
 				{ isStatsView && (
@@ -258,21 +457,44 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						title={ __( 'Stats Items', 'ambrygen-web' ) }
 						initialOpen={ false }
 					>
-						<Button
-							variant="secondary"
-							onClick={ addStat }
-							disabled={ stats.length >= MAX_STATS }
-						>
-							{ __( 'Add Stat', 'ambrygen-web' ) }
-						</Button>
+						{ visibleStats.map( ( stat, index ) => (
+							<div
+								key={ stat.id }
+								className="supporting-steps__inspector-stat"
+							>
+								<ItemHeader
+									index={ index }
+									label={ stat.label }
+									total={ visibleStats.length }
+									prefix="STAT"
+									onMove={ ( itemIndex, dir ) =>
+										moveStat( visibleStats[ itemIndex ].id, dir )
+									}
+									onRemove={ ( itemIndex ) =>
+										removeStat( visibleStats[ itemIndex ].id )
+									}
+									minCount={ 1 }
+								/>
+								<StatControls
+									stat={ stat }
+									updateStat={ updateStat }
+								/>
+							</div>
+						) ) }
+
+						{ visibleStats.length < MAX_STATS && (
+							<Button variant="primary" onClick={ addStat }>
+								{ __( 'Add New Stat', 'ambrygen-web' ) }
+							</Button>
+						) }
 					</PanelBody>
 				) }
 			</InspectorControls>
 
 			<div { ...blockProps }>
-				{ steps.length > 0 && (
+				{ visibleSteps.length > 0 && (
 					<div className="supporting-steps__steps">
-						{ steps.map( ( step, index ) => (
+						{ visibleSteps.map( ( step ) => (
 							<div
 								className="supporting-steps__step-card"
 								key={ step.id }
@@ -287,34 +509,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 										/>
 									</div>
 								) }
-								<RichText
-									tagName="div"
-									className="subtitle2-sbold supporting-steps__step-label"
-									value={ step.label }
-									onChange={ ( value ) =>
-										updateStep(
-											index,
-											'label',
-											value
-										)
-									}
-									placeholder={ __(
-										'Add Icon Label...',
-										'ambrygen-web'
-									) }
-								/>
-								<Button
-									variant="secondary"
-									isDestructive
-									onClick={ () =>
-										removeStep( index )
-									}
-								>
-									{ __(
-										'Remove Step',
-										'ambrygen-web'
-									) }
-								</Button>
+								<div className="subtitle2-sbold supporting-steps__step-label">
+									{ step.label ||
+										__(
+											'Add step label in sidebar',
+											'ambrygen-web'
+										) }
+								</div>
 							</div>
 						) ) }
 					</div>
@@ -348,77 +549,37 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								) }
 							/>
 
-							{ stats.length > 0 && (
+							{ visibleStats.length > 0 && (
 								<div className="supporting-steps__stats">
-									{ stats.map( ( stat, index ) => (
+									{ visibleStats.map( ( stat ) => (
 										<div
 											className="supporting-steps__stats-item"
 											key={ stat.id }
 										>
-											<RichText
-												tagName="div"
-												className="supporting-steps__stats-label subtitle1-sbold"
-												value={ stat.label }
-												onChange={ ( value ) =>
-													updateStat(
-														index,
+											<div className="supporting-steps__stats-label subtitle1-sbold">
+												{ stat.label ||
+													__(
 														'label',
-														value
-													)
-												}
-												placeholder={ __(
-													'Add label',
-													'ambrygen-web'
-												) }
-											/>
-											<div className="supporting-steps__stats-value">
-												<RichText
-													tagName="span"
-													value={ stat.stats }
-													onChange={ ( value ) =>
-														updateStat(
-															index,
-															'stats',
-															value
-														)
-													}
-													placeholder={ __(
-														'Add stat',
 														'ambrygen-web'
 													) }
-												/>
-												{ ' ' }
-												<RichText
-													tagName="span"
-													className="supporting-steps__stats-postfix"
-													value={
-														stat.postfix
-													}
-													onChange={ ( value ) =>
-														updateStat(
-															index,
-															'postfix',
-															value
-														)
-													}
-													placeholder={ __(
-														'Add postfix',
-														'ambrygen-web'
-													) }
-												/>
 											</div>
-											<Button
-												variant="secondary"
-												isDestructive
-												onClick={ () =>
-													removeStat( index )
-												}
-											>
-												{ __(
-													'Remove Stat',
-													'ambrygen-web'
-												) }
-											</Button>
+											<div className="supporting-steps__stats-value">
+												<span>
+													{ stat.stats ||
+														__(
+															'stat',
+															'ambrygen-web'
+														) }
+												</span>
+												{ ' ' }
+												<span className="supporting-steps__stats-postfix">
+													{ stat.postfix ||
+														__(
+															'postfix',
+															'ambrygen-web'
+														) }
+												</span>
+											</div>
 										</div>
 									) ) }
 								</div>

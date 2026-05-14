@@ -13,6 +13,7 @@ import {
 	ItemHeader,
 	TagSelector,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 const createLinkId = () =>
 	`link-${ Date.now().toString( 36 ) }-${ Math.random()
@@ -38,22 +39,15 @@ const normalizeLinks = ( links = [] ) =>
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { blockId, anchor, title, headingTag, links = [] } = attributes;
-	const isExample = blockId === 'link-list-example';
+	const isExample = blockId === 'example-block-preview';
 
-	useEffect( () => {
-		if ( isExample ) {
-			return;
-		}
-
-		const clientIdSuffix = clientId.slice( 0, 8 );
-		const expectedId = `link-list-${ clientIdSuffix }`;
-
-		if ( ! blockId ) {
-			setAttributes( {
-				blockId: expectedId,
-			} );
-		}
-	}, [ clientId, blockId, isExample, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		enabled: ! isExample,
+		idPrefix: 'link-list',
+		setAttributes,
+	} );
 
 	const linkItemsLength = links.length;
 	const hasMissingLinkIds = links.some( ( link ) => ! link?.id );
@@ -140,13 +134,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const itemsTemplate = [
 		[
 			'core/paragraph',
-			{ placeholder: __( 'Add content…', 'ambrygen-web' ) },
+			{ placeholder: __( 'Add content...', 'ambrygen-web' ) },
 		],
 	];
 
 	if ( isExample ) {
 		return (
-			<BlockExamplePreview imagePath="/assets/src/images/cta-tiles-with-3-card/default-image.png" />
+			<BlockExamplePreview
+				className="example-block-preview"
+				imagePath="/assets/src/images/link-list/preview.png"
+			/>
 		);
 	}
 
@@ -215,7 +212,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							tagName={ headingTag }
 							className="download-list__title heading-3 block-title mb-0"
 							value={ title }
-							placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
+							placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 							onChange={ ( val ) =>
 								setAttributes( { title: val } )
 							}
@@ -236,7 +233,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							<div className="download-list__item-link">
 								<span className="download-list__item-text">
 									{ link.text ||
-										__( 'Add Link Text…', 'ambrygen-web' ) }
+										__(
+											'Add Link Text...',
+											'ambrygen-web'
+										) }
 								</span>
 							</div>
 						</div>

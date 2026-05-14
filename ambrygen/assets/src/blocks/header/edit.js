@@ -2,7 +2,6 @@
  * Header Block - Edit Component
  *
  * Renders the header block editor interface with:
- * - Top bar configuration
  * - Navigation items management
  * - Mega menu block assignments
  *
@@ -151,53 +150,6 @@ function NavItemEditor( {
 }
 
 /**
- * Top bar preview component.
- *
- * @param {Object}  props          The component props.
- * @param {boolean} props.visible  If visible.
- * @param {string}  props.text     Text.
- * @param {string}  props.linkText Link text.
- * @return {JSX.Element|null} The rendered element.
- */
-function TopBar( { visible, text, linkText } ) {
-	if ( ! visible ) {
-		return null;
-	}
-
-	return (
-		<div className="top-bar center-align container-1340" id="top-bar-ajax">
-			<div className="top-bar__wrapper wrapper">
-				<div className="top-bar__row">
-					<div className="top-bar__text">
-						{ text }
-						{ linkText && (
-							<span style={ { marginLeft: '5px' } }>
-								<button
-									type="button"
-									className="top-bar__link is-style-link-text-btn"
-									style={ {
-										background: 'transparent',
-										border: 'none',
-										padding: 0,
-										cursor: 'pointer',
-									} }
-									onClick={ ( e ) => e.preventDefault() }
-								>
-									{ linkText }
-								</button>
-							</span>
-						) }
-					</div>
-					<div className="top-bar__close">
-						<span className="top-bar__close-icon">×</span>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
-}
-
-/**
  * Navigation item in preview.
  *
  * @param {Object}   props          The component props.
@@ -253,9 +205,6 @@ function NavItem( { item, isActive, onClick } ) {
  * Header preview in the editor.
  *
  * @param {Object}      props
- * @param {boolean}     props.topBarVisible
- * @param {string}      props.topBarText
- * @param {string}      props.topBarLinkText
  * @param {Array}       props.navItems
  * @param {string}      props.loginText
  * @param {string|null} props.activeMenu
@@ -265,9 +214,6 @@ function NavItem( { item, isActive, onClick } ) {
  * @return {JSX.Element} The rendered element.
  */
 function HeaderPreview( {
-	topBarVisible,
-	topBarText,
-	topBarLinkText,
 	navItems,
 	loginText,
 	activeMenu,
@@ -277,11 +223,6 @@ function HeaderPreview( {
 } ) {
 	return (
 		<>
-			<TopBar
-				visible={ topBarVisible }
-				text={ topBarText }
-				linkText={ topBarLinkText }
-			/>
 			<div className="header container-1340">
 				<div className="wrapper">
 					<div className="header__inner d-flex justify-content-between">
@@ -367,8 +308,6 @@ function HeaderPreview( {
  */
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
-		topBarText,
-		topBarVisible,
 		navItems,
 		loginUrl,
 		loginText,
@@ -376,8 +315,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		mobileCtaUrl,
 		logoUrl,
 		logoAlt,
-		topBarLinkText,
-		topBarLinkUrl,
 	} = attributes;
 
 	// Get inner blocks (mega menus)
@@ -501,43 +438,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					</MediaUploadCheck>
 				</PanelBody>
 
-				{ /* Top Bar Settings */ }
-				<PanelBody title={ __( 'Top Bar', 'ambrygen-web' ) } initialOpen={ false }>
-					<Toggle
-						label={ __( 'Show Top Bar', 'ambrygen-web' ) }
-						checked={ topBarVisible }
-						onChange={ ( v ) =>
-							setAttributes( { topBarVisible: v } )
-						}
-					/>
-					{ topBarVisible && (
-						<>
-							<Field
-								label={ __( 'Message', 'ambrygen-web' ) }
-								value={ topBarText }
-								onChange={ ( v ) =>
-									setAttributes( { topBarText: v } )
-								}
-							/>
-							<CardDivider />
-							<Field
-								label={ __( 'Link Label', 'ambrygen-web' ) }
-								value={ topBarLinkText }
-								onChange={ ( v ) =>
-									setAttributes( { topBarLinkText: v } )
-								}
-							/>
-							<Field
-								label={ __( 'Link URL', 'ambrygen-web' ) }
-								value={ topBarLinkUrl }
-								onChange={ ( v ) =>
-									setAttributes( { topBarLinkUrl: v } )
-								}
-							/>
-						</>
-					) }
-				</PanelBody>
-
 				{ /* Navigation Items */ }
 				<PanelBody title={ __( 'Navigation Items', 'ambrygen-web' ) } initialOpen>
 					<p className="components-base-control__help">
@@ -633,9 +533,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 			<div { ...blockProps }>
 				<HeaderPreview
-					topBarVisible={ topBarVisible }
-					topBarText={ topBarText }
-					topBarLinkText={ topBarLinkText }
 					navItems={ navItems }
 					loginText={ loginText }
 					activeMenu={ activeMenuId }
@@ -695,4 +592,3 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
-

@@ -27,6 +27,7 @@ import {
 import { useArrayHandlers } from '../_shared/utils';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo } from '@wordpress/element';
+import { getIframeSrc } from '../../utils/validation.js';
 
 // Use same icon as ordering options if possible or standard play icon
 import playIcon from '../../images/play-icon.svg';
@@ -40,6 +41,86 @@ const DEFAULT_FILE = {
 	fileUrl: '',
 	fileName: '',
 	sizeType: 'small',
+};
+
+const getEmbedSourceFromInput = ( url ) => {
+	if ( ! url || typeof url !== 'string' ) {
+		return '';
+	}
+
+	const trimmedUrl = url.trim();
+	const iframeSrcMatch = trimmedUrl.match( /src=["']([^"']+)["']/i );
+
+	return iframeSrcMatch?.[ 1 ] || trimmedUrl;
+};
+
+const isAllowedEmbedUrl = ( url ) => {
+	const embedSource = getEmbedSourceFromInput( url );
+
+	if ( ! embedSource ) {
+		return false;
+	}
+
+	try {
+		const parsedUrl = new URL( embedSource );
+		const hostname = parsedUrl.hostname.replace( /^www\./, '' );
+
+		if ( parsedUrl.protocol !== 'https:' ) {
+			return false;
+		}
+
+		if (
+			[ 'youtube.com', 'youtube-nocookie.com', 'm.youtube.com' ].includes(
+				hostname
+			) &&
+			parsedUrl.pathname.startsWith( '/embed/' )
+		) {
+			const videoId = parsedUrl.pathname.split( '/embed/' )[ 1 ];
+
+			return /^[a-zA-Z0-9_-]{11}$/.test( videoId || '' );
+		}
+
+		if (
+			hostname === 'player.vimeo.com' &&
+			/^\/video\/\d+$/.test( parsedUrl.pathname )
+		) {
+			return true;
+		}
+
+		return false;
+	} catch ( error ) {
+		return false;
+	}
+};
+
+const getNonAutoplayEmbedUrl = ( url ) => {
+	if ( ! url ) {
+		return '';
+	}
+
+	try {
+		const parsedUrl = new URL( url );
+
+		parsedUrl.searchParams.delete( 'autoplay' );
+
+		return parsedUrl.toString();
+	} catch ( error ) {
+		return url;
+	}
+};
+
+const getEditorIframeSrc = ( url ) => {
+	const embedSource = getEmbedSourceFromInput( url );
+
+	if ( ! embedSource ) {
+		return '';
+	}
+
+	if ( isAllowedEmbedUrl( embedSource ) ) {
+		return getNonAutoplayEmbedUrl( embedSource );
+	}
+
+	return getNonAutoplayEmbedUrl( getIframeSrc( embedSource ) || '' );
 };
 
 export default function Edit( { attributes, setAttributes, context } ) {
@@ -85,6 +166,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 	const displayImage = imageUrl || defaultImage;
 	const displayImageAlt = imageUrl ? imageAlt || '' : '';
 	const hasTextContent = sectiontitle || description || validFiles.length > 0;
+	const videoPreviewSrc = getEditorIframeSrc( cta.iframeUrl || '' );
 
 	useEffect( () => {
 		if (
@@ -757,7 +839,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 											/>
 										) : (
 											<iframe
-												src={ cta.iframeUrl || '' }
+												src={ videoPreviewSrc }
 												title="Video player"
 												style={ {
 													position: 'absolute',

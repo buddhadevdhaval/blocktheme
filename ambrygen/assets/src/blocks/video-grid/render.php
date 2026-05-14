@@ -47,12 +47,6 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	aria-label="<?php esc_attr_e( 'Video grid section', 'ambrygen-web' ); ?>"
 >
 	<div class="two-column-videos">
-		<?php if ( ! empty( trim( wp_strip_all_tags( $ambrygen_intro ) ) ) ) : ?>
-			<div class="block__rowflex--block-content subtitle-1-regular js-gsap-fade two-column-videos__header-description">
-				<?php echo wp_kses_post( $ambrygen_intro ); ?>
-			</div>
-		<?php endif; ?>
-
 		<?php if ( ! empty( trim( wp_strip_all_tags( $ambrygen_subheading ) ) ) || ! empty( trim( wp_strip_all_tags( $ambrygen_sub_intro ) ) ) ) : ?>
 			<div class="is-style-gl-s32" aria-hidden="true"></div>
 			<div class="two-column-videos__subheading">

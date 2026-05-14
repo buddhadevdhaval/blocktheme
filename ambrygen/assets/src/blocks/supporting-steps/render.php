@@ -40,7 +40,7 @@ $ambrygen_steps = array_values(
 		$ambrygen_steps,
 		static function ( $ambrygen_step ) {
 			$ambrygen_step_icon_id = isset( $ambrygen_step['iconId'] ) ? absint( $ambrygen_step['iconId'] ) : 0;
-			$ambrygen_step_icon_url = isset( $ambrygen_step['iconUrl'] ) ? (string) $ambrygen_step['iconUrl'] : '';
+			$ambrygen_step_icon_url = isset( $ambrygen_step['iconUrl'] ) ? esc_url_raw( $ambrygen_step['iconUrl'] ) : '';
 			$ambrygen_step_label   = $ambrygen_step['label'] ?? '';
 
 			return $ambrygen_step_icon_id || $ambrygen_step_icon_url || $ambrygen_step_label;
@@ -90,7 +90,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 			<?php foreach ( $ambrygen_steps as $ambrygen_step ) : ?>
 				<?php
 				$ambrygen_step_icon_id = isset( $ambrygen_step['iconId'] ) ? absint( $ambrygen_step['iconId'] ) : 0;
-				$ambrygen_step_icon_url = isset( $ambrygen_step['iconUrl'] ) ? (string) $ambrygen_step['iconUrl'] : '';
+				$ambrygen_step_icon_url = isset( $ambrygen_step['iconUrl'] ) ? esc_url_raw( $ambrygen_step['iconUrl'] ) : '';
 				$ambrygen_step_icon_alt = isset( $ambrygen_step['iconAlt'] ) ? sanitize_text_field( $ambrygen_step['iconAlt'] ) : '';
 				$ambrygen_step_label   = $ambrygen_step['label'] ?? '';
 				?>

@@ -167,6 +167,30 @@ $ambrygen_test_catalog_page_context = array(
 	'page_path' => is_string($ambrygen_source_page_path) ? $ambrygen_source_page_path : '',
 );
 
+$ambrygen_normalized_tabs = array();
+
+foreach ( $ambrygen_tabs as $ambrygen_index => $ambrygen_tab ) {
+	$ambrygen_term_id = isset( $ambrygen_tab['termId'] ) ? absint( $ambrygen_tab['termId'] ) : 0;
+	$ambrygen_term_slug = isset( $ambrygen_tab['termSlug'] ) ? sanitize_title( (string) $ambrygen_tab['termSlug'] ) : '';
+	$ambrygen_label = isset( $ambrygen_tab['text'] ) ? (string) $ambrygen_tab['text'] : '';
+	$ambrygen_excluded_ids = isset( $ambrygen_tab['excludedPostIds'] ) && is_array( $ambrygen_tab['excludedPostIds'] )
+		? array_map( 'absint', $ambrygen_tab['excludedPostIds'] )
+		: array();
+	$ambrygen_tab_suffix = $ambrygen_term_slug ? $ambrygen_term_slug : 'tab-' . $ambrygen_index;
+	$ambrygen_tab_id_prefix = $ambrygen_block_id ? $ambrygen_block_id : 'test-catalog';
+	$ambrygen_panel_id = sanitize_html_class( $ambrygen_tab_id_prefix . '-' . $ambrygen_tab_suffix . '-panel' );
+	$ambrygen_button_id = sanitize_html_class( $ambrygen_tab_id_prefix . '-' . $ambrygen_tab_suffix . '-tab' );
+
+	$ambrygen_normalized_tabs[] = array(
+		'term_id' => $ambrygen_term_id,
+		'term_slug' => $ambrygen_term_slug,
+		'label' => $ambrygen_label,
+		'excluded_ids' => $ambrygen_excluded_ids,
+		'panel_id' => $ambrygen_panel_id,
+		'button_id' => $ambrygen_button_id,
+	);
+}
+
 ?>
 <div
 	<?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
@@ -282,12 +306,13 @@ $ambrygen_test_catalog_page_context = array(
 													<div class="test-catlouge__links test">
 														<?php foreach ($ambrygen_gene_links as $ambrygen_link): ?>
 															<a href="<?php echo esc_url($ambrygen_link['url']); ?>"
-																class="test-catlouge__link" target="_blank" rel="noopener"
+																class="test-catlouge__link" target="_blank" rel="noopener noreferrer"
+																aria-label="<?php echo esc_attr( sprintf( __( '%1$s (opens in a new tab)', 'ambrygen-web' ), $ambrygen_link['label'] ) ); ?>"
 																data-material-id="<?php echo esc_attr($ambrygen_link['material_id'] ?? ''); ?>"
 																data-file-id="<?php echo esc_attr($ambrygen_link['file_id'] ?? ''); ?>">
 																<?php echo esc_html($ambrygen_link['label']); ?>
 																<img src="<?php echo esc_url(get_template_directory_uri() . '/assets/src/images/download-icon.svg'); ?>"
-																	alt="" />
+																	alt="" aria-hidden="true" />
 															</a>
 														<?php endforeach; ?>
 													</div>
@@ -302,7 +327,7 @@ $ambrygen_test_catalog_page_context = array(
 
 							<button class="test-catlouge__item-toggle" type="button" aria-expanded="false"
 								aria-label="<?php esc_attr_e('Toggle test details', 'ambrygen-web'); ?>">
-								<span class="test-catlouge__icon-cross"></span>
+								<span class="test-catlouge__icon-cross" aria-hidden="true"></span>
 							</button>
 						</div>
 					<?php endforeach; ?>
@@ -319,29 +344,24 @@ $ambrygen_test_catalog_page_context = array(
 					<div class="tabs__mobile-nav">
 						<select class="tabs__select text-md-sbold"
 							aria-label="<?php esc_attr_e('Select test category', 'ambrygen-web'); ?>">
-							<?php foreach ($ambrygen_tabs as $ambrygen_index => $ambrygen_tab): ?>
-								<?php
-								$ambrygen_term_slug = isset($ambrygen_tab['termSlug']) ? sanitize_title((string) $ambrygen_tab['termSlug']) : '';
-								$ambrygen_label = isset($ambrygen_tab['text']) ? (string) $ambrygen_tab['text'] : '';
-								?>
-								<option value="<?php echo esc_attr($ambrygen_term_slug); ?>" <?php selected(0, $ambrygen_index); ?>>
-									<?php echo esc_html($ambrygen_label); ?>
+							<?php foreach ($ambrygen_normalized_tabs as $ambrygen_index => $ambrygen_tab): ?>
+								<option value="<?php echo esc_attr($ambrygen_tab['panel_id']); ?>" <?php selected(0, $ambrygen_index); ?>>
+									<?php echo esc_html($ambrygen_tab['label']); ?>
 								</option>
 							<?php endforeach; ?>
 						</select>
 					</div>
 
 					<div class="tabs__nav" role="tablist">
-						<?php foreach ($ambrygen_tabs as $ambrygen_index => $ambrygen_tab): ?>
-							<?php
-							$ambrygen_term_slug = isset($ambrygen_tab['termSlug']) ? sanitize_title((string) $ambrygen_tab['termSlug']) : '';
-							$ambrygen_label = isset($ambrygen_tab['text']) ? (string) $ambrygen_tab['text'] : '';
-							$ambrygen_active = 0 === $ambrygen_index ? ' is-active' : '';
-							?>
+						<?php foreach ($ambrygen_normalized_tabs as $ambrygen_index => $ambrygen_tab): ?>
+							<?php $ambrygen_active = 0 === $ambrygen_index ? ' is-active' : ''; ?>
 							<button class="tabs__tab text-md-sbold<?php echo esc_attr($ambrygen_active); ?>" type="button"
-								data-tab-target="<?php echo esc_attr($ambrygen_term_slug); ?>"
+								id="<?php echo esc_attr( $ambrygen_tab['button_id'] ); ?>"
+								role="tab"
+								data-tab-target="<?php echo esc_attr($ambrygen_tab['panel_id']); ?>"
+								aria-controls="<?php echo esc_attr( $ambrygen_tab['panel_id'] ); ?>"
 								aria-selected="<?php echo 0 === $ambrygen_index ? 'true' : 'false'; ?>">
-								<?php echo esc_html($ambrygen_label); ?>
+								<?php echo esc_html($ambrygen_tab['label']); ?>
 							</button>
 						<?php endforeach; ?>
 					</div>
@@ -349,11 +369,8 @@ $ambrygen_test_catalog_page_context = array(
 					<div class="is-style-gl-s32"></div>
 
 					<div class="tabs__panels">
-						<?php foreach ($ambrygen_tabs as $ambrygen_index => $ambrygen_tab): ?>
+						<?php foreach ($ambrygen_normalized_tabs as $ambrygen_index => $ambrygen_tab): ?>
 							<?php
-							$ambrygen_term_id = isset($ambrygen_tab['termId']) ? absint($ambrygen_tab['termId']) : 0;
-							$ambrygen_term_slug = isset($ambrygen_tab['termSlug']) ? sanitize_title((string) $ambrygen_tab['termSlug']) : '';
-							$ambrygen_excluded_ids = isset($ambrygen_tab['excludedPostIds']) && is_array($ambrygen_tab['excludedPostIds']) ? array_map('absint', $ambrygen_tab['excludedPostIds']) : array();
 							$ambrygen_query = new WP_Query(
 								array(
 									'post_type' => 'product_version',
@@ -362,12 +379,12 @@ $ambrygen_test_catalog_page_context = array(
 									'no_found_rows' => true,
 									'orderby' => 'title',
 									'order' => 'ASC',
-									'post__not_in' => $ambrygen_excluded_ids,
+									'post__not_in' => $ambrygen_tab['excluded_ids'],
 									'tax_query' => array(
 										array(
 											'taxonomy' => 'poster_category',
 											'field' => 'term_id',
-											'terms' => $ambrygen_term_id,
+											'terms' => $ambrygen_tab['term_id'],
 										),
 									),
 								)
@@ -375,7 +392,9 @@ $ambrygen_test_catalog_page_context = array(
 							$ambrygen_active = 0 === $ambrygen_index ? ' is-active' : '';
 							?>
 							<div class="tabs__panel<?php echo esc_attr($ambrygen_active); ?>"
-								id="<?php echo esc_attr($ambrygen_term_slug); ?>">
+								id="<?php echo esc_attr($ambrygen_tab['panel_id']); ?>"
+								role="tabpanel"
+								aria-labelledby="<?php echo esc_attr( $ambrygen_tab['button_id'] ); ?>">
 								<?php if ($ambrygen_query->have_posts()): ?>
 									<div class="test-catlouge__items">
 										<?php
@@ -428,12 +447,13 @@ $ambrygen_test_catalog_page_context = array(
 																		<div class="test-catlouge__links">
 																			<?php foreach ($ambrygen_gene_links as $ambrygen_link): ?>
 																				<a href="<?php echo esc_url($ambrygen_link['url']); ?>"
-																					class="test-catlouge__link" target="_blank" rel="noopener"
+																					class="test-catlouge__link" target="_blank" rel="noopener noreferrer"
+																					aria-label="<?php echo esc_attr( sprintf( __( '%1$s (opens in a new tab)', 'ambrygen-web' ), $ambrygen_link['label'] ) ); ?>"
 																					data-material-id="<?php echo esc_attr($ambrygen_link['material_id'] ?? ''); ?>"
 																					data-file-id="<?php echo esc_attr($ambrygen_link['file_id'] ?? ''); ?>">
 																					<?php echo esc_html($ambrygen_link['label']); ?>
 																					<img src="<?php echo esc_url(get_template_directory_uri() . '/assets/src/images/download-icon.svg'); ?>"
-																						alt="" />
+																						alt="" aria-hidden="true" />
 																				</a>
 																			<?php endforeach; ?>
 																		</div>
@@ -458,7 +478,7 @@ $ambrygen_test_catalog_page_context = array(
 
 												<button class="test-catlouge__item-toggle" type="button" aria-expanded="false"
 													aria-label="<?php esc_attr_e('Toggle test details', 'ambrygen-web'); ?>">
-													<span class="test-catlouge__icon-cross"></span>
+													<span class="test-catlouge__icon-cross" aria-hidden="true"></span>
 												</button>
 											</div>
 										<?php endwhile; ?>

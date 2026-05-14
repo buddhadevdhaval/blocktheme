@@ -6,7 +6,7 @@ import {
 	MediaUpload,
 	MediaUploadCheck,
 } from '@wordpress/block-editor';
-import { useEffect, useMemo } from '@wordpress/element';
+import { useMemo } from '@wordpress/element';
 import {
 	PanelBody,
 	SelectControl,
@@ -23,6 +23,7 @@ import {
 	CtaButtonField,
 	BlockExamplePreview,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 import playIcon from '../../images/play-icon.svg';
 
 const getEmbedSourceFromInput = ( url ) => {
@@ -75,6 +76,22 @@ const isAllowedEmbedUrl = ( url ) => {
 	}
 };
 
+const getNonAutoplayEmbedUrl = ( url ) => {
+	if ( ! url ) {
+		return '';
+	}
+
+	try {
+		const parsedUrl = new URL( url );
+
+		parsedUrl.searchParams.delete( 'autoplay' );
+
+		return parsedUrl.toString();
+	} catch ( error ) {
+		return url;
+	}
+};
+
 const getEditorIframeSrc = ( url ) => {
 	const embedSource = getEmbedSourceFromInput( url );
 
@@ -83,10 +100,19 @@ const getEditorIframeSrc = ( url ) => {
 	}
 
 	if ( isAllowedEmbedUrl( embedSource ) ) {
-		return embedSource;
+		return getNonAutoplayEmbedUrl( embedSource );
 	}
 
-	return getIframeSrc( embedSource ) || '';
+	return getNonAutoplayEmbedUrl( getIframeSrc( embedSource ) || '' );
+};
+
+const videoSelectButtonStyle = {
+	marginBottom: '10px',
+};
+
+const removeVideoButtonStyle = {
+	marginBottom: '15px',
+	display: 'block',
 };
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
@@ -112,19 +138,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const blockProps = useBlockProps( { className: 'features-media' } );
 	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
 
-	useEffect( () => {
-		if ( isExample ) {
-			return;
-		}
-
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
-
-		if ( ! blockId ) {
-			setAttributes( {
-				blockId: expectedId,
-			} );
-		}
-	}, [ clientId, blockId, isExample, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		enabled: ! isExample,
+		idPrefix: 'section',
+		setAttributes,
+	} );
 
 	const iframeSrc = getEditorIframeSrc( iframeUrl );
 	const hasPosterImage = Boolean( posterImage?.url );
@@ -134,8 +154,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	);
 	const imagePreviewUrl = imageMedia?.source_url || imageUrl || '';
 	const displayUrl = imagePreviewUrl || defaults?.placeholder?.url || '';
-
-	const getImageUrl = ( imgObj ) => ( imgObj?.url ? imgObj.url : '' );
 
 	if ( isExample ) {
 		return (
@@ -260,9 +278,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 												<Button
 													variant="secondary"
 													onClick={ open }
-													style={ {
-														marginBottom: '10px',
-													} }
+													style={
+														videoSelectButtonStyle
+													}
 												>
 													{ videoUrl
 														? __(
@@ -287,10 +305,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 													videoUrl: '',
 												} )
 											}
-											style={ {
-												marginBottom: '15px',
-												display: 'block',
-											} }
+											style={ removeVideoButtonStyle }
 										>
 											{ __(
 												'Remove Video',
@@ -321,7 +336,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							) }
 
 							<ImageUploader
-								url={ getImageUrl( posterImage ) }
+								url={ posterImage?.url || '' }
 								id={ posterImage?.id || null }
 								onSelect={ ( media ) =>
 									setAttributes( {

@@ -20,10 +20,6 @@
     $ambrygen_attributes = isset($attributes) && is_array($attributes) ? $attributes : [];
     $ambrygen_content    = isset($content) ? $content : '';
 
-    $ambrygen_top_bar_text      = isset($ambrygen_attributes['topBarText']) ? $ambrygen_attributes['topBarText'] : '';
-    $ambrygen_top_bar_link_text = isset($ambrygen_attributes['topBarLinkText']) ? $ambrygen_attributes['topBarLinkText'] : '';
-    $ambrygen_top_bar_link_url  = isset($ambrygen_attributes['topBarLinkUrl']) ? $ambrygen_attributes['topBarLinkUrl'] : '';
-    $ambrygen_top_bar_visible   = isset($ambrygen_attributes['topBarVisible']) ? (bool) $ambrygen_attributes['topBarVisible'] : true;
     $ambrygen_nav_items = isset($ambrygen_attributes['navItems']) && is_array($ambrygen_attributes['navItems'])
     ? $ambrygen_attributes['navItems']
     : [];
@@ -72,9 +68,7 @@
     }
     }
     $ambrygen_top_bar_items = [];
-    $ambrygen_has_published_top_bar_messages = false;
 
-if ($ambrygen_top_bar_visible) {
     $ambrygen_top_bar_posts = get_posts(
         [
             'post_type'      => 'top_bar_message',
@@ -86,8 +80,6 @@ if ($ambrygen_top_bar_visible) {
             ],
         ]
     );
-
-    $ambrygen_has_published_top_bar_messages = ! empty($ambrygen_top_bar_posts);
 
     foreach ($ambrygen_top_bar_posts as $ambrygen_top_bar_post) {
         $ambrygen_start_date_raw = (string) get_post_meta($ambrygen_top_bar_post->ID, 'top_bar_message_start_date', true);
@@ -136,12 +128,13 @@ if ($ambrygen_top_bar_visible) {
             continue;
         }
 
-        $ambrygen_message_text = (string) get_post_meta($ambrygen_top_bar_post->ID, 'top_bar_message_text', true);
-        $ambrygen_message_text = '' !== trim(wp_strip_all_tags($ambrygen_message_text))
-            ? $ambrygen_message_text
-            : $ambrygen_top_bar_post->post_title;
+        $ambrygen_top_bar_title = get_the_title($ambrygen_top_bar_post);
+        $ambrygen_message_text  = (string) get_post_meta($ambrygen_top_bar_post->ID, 'top_bar_message_text', true);
 
-        if ('' === trim(wp_strip_all_tags($ambrygen_message_text))) {
+        if (
+            '' === trim(wp_strip_all_tags($ambrygen_top_bar_title))
+            && '' === trim(wp_strip_all_tags($ambrygen_message_text))
+        ) {
             continue;
         }
 
@@ -152,6 +145,7 @@ if ($ambrygen_top_bar_visible) {
 
         $ambrygen_top_bar_items[] = [
             'key'         => 'post-' . (string) $ambrygen_top_bar_post->ID,
+            'title'       => $ambrygen_top_bar_title,
             'text'        => $ambrygen_message_text,
             'link_text'   => (string) get_post_meta($ambrygen_top_bar_post->ID, 'top_bar_message_link_text', true),
             'link_url'    => (string) get_post_meta($ambrygen_top_bar_post->ID, 'top_bar_message_link_url', true),
@@ -159,45 +153,54 @@ if ($ambrygen_top_bar_visible) {
             'dismissible' => '1' === (string) get_post_meta($ambrygen_top_bar_post->ID, 'top_bar_message_dismissible', true),
         ];
     }
-}
-
-if (
-    empty($ambrygen_top_bar_items)
-    && ! $ambrygen_has_published_top_bar_messages
-    && ! empty($ambrygen_top_bar_text)
-) {
-    if (empty($_COOKIE['ambrygen_top_bar_dismissed_manual'])) {
-        $ambrygen_top_bar_items[] = [
-            'key'         => 'manual',
-            'text'        => $ambrygen_top_bar_text,
-            'link_text'   => $ambrygen_top_bar_link_text,
-            'link_url'    => $ambrygen_top_bar_link_url,
-            'color'       => 'bg-primary_25',
-            'dismissible' => true,
-        ];
-    }
-}
 ?>
 
 <header class="header-section">
 
-	<?php if ($ambrygen_top_bar_visible && ! empty($ambrygen_top_bar_items)): ?>
+	<?php if (! empty($ambrygen_top_bar_items)): ?>
 		<div class="top-bar-stack" id="top-bar-ajax">
 			<?php foreach ($ambrygen_top_bar_items as $ambrygen_top_bar_item) : ?>
 				<?php $ambrygen_top_bar_color = ! empty($ambrygen_top_bar_item['color']) ? sanitize_html_class($ambrygen_top_bar_item['color']) : 'bg-primary_25'; ?>
+				<?php $ambrygen_top_bar_title = ! empty($ambrygen_top_bar_item['title']) ? $ambrygen_top_bar_item['title'] : $ambrygen_top_bar_item['text']; ?>
+				<?php $ambrygen_top_bar_message = ! empty($ambrygen_top_bar_item['text']) ? $ambrygen_top_bar_item['text'] : ''; ?>
+				<?php $ambrygen_has_top_bar_details = '' !== trim(wp_strip_all_tags($ambrygen_top_bar_message)) && trim(wp_strip_all_tags($ambrygen_top_bar_message)) !== trim(wp_strip_all_tags($ambrygen_top_bar_title)); ?>
 				<div class="top-bar <?php echo esc_attr($ambrygen_top_bar_color); ?> center-align container-1340"
 					data-top-bar-key="<?php echo esc_attr($ambrygen_top_bar_item['key'] ?? 'manual'); ?>">
 					<div class="top-bar__wrapper wrapper">
 						<div class="top-bar__row">
 							<div class="top-bar__text">
 								<span class="top-bar__text-content">
-									<?php echo wp_kses_post($ambrygen_top_bar_item['text']); ?>
+									<span class="top-bar__summary">
+										<?php echo esc_html($ambrygen_top_bar_title); ?>
+									</span>
 
-									<?php if (! empty($ambrygen_top_bar_item['link_text']) && ! empty($ambrygen_top_bar_item['link_url'])): ?>
+									<?php if ($ambrygen_has_top_bar_details): ?>
+										<button type="button"
+											class="top-bar__link top-bar__toggle"
+											style="display: contents;"
+											aria-expanded="false">
+											<span class="top-bar__toggle-label site-btn is-style-site-text-btn has-right-arrow"><?php esc_html_e('Read More', 'ambrygen-web'); ?></span>
+										</button>
+									<?php endif; ?>
+
+									<?php if (! $ambrygen_has_top_bar_details && ! empty($ambrygen_top_bar_item['link_text']) && ! empty($ambrygen_top_bar_item['link_url'])): ?>
 										<a href="<?php echo esc_url($ambrygen_top_bar_item['link_url']); ?>"
 											class="top-bar__link  site-btn is-style-site-text-btn has-right-arrow">
 											<?php echo esc_html($ambrygen_top_bar_item['link_text']); ?>
 										</a>
+									<?php endif; ?>
+
+									<?php if ($ambrygen_has_top_bar_details): ?>
+										<span class="top-bar__details" hidden>
+											<?php echo wp_kses_post($ambrygen_top_bar_message); ?>
+
+											<?php if (! empty($ambrygen_top_bar_item['link_text']) && ! empty($ambrygen_top_bar_item['link_url'])): ?>
+												<a href="<?php echo esc_url($ambrygen_top_bar_item['link_url']); ?>"
+													class="top-bar__link  site-btn is-style-site-text-btn has-right-arrow">
+													<?php echo esc_html($ambrygen_top_bar_item['link_text']); ?>
+												</a>
+											<?php endif; ?>
+										</span>
 									<?php endif; ?>
 								</span>
 

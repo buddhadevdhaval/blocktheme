@@ -22,13 +22,13 @@ $ambrygen_attributes = is_array( $attributes ?? null ) ? $attributes : array();
 
 $ambrygen_block_id = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
 $ambrygen_title = $ambrygen_attributes['title'] ?? '';
-$ambrygen_heading_tag = $ambrygen_attributes['headingTag'] ?? 'h2';
+$ambrygen_heading_tag = Helper::get_heading_tag( $ambrygen_attributes['headingTag'] ?? 'h2', 'h2' );
 $ambrygen_content = isset( $content ) ? trim( (string) $content ) : '';
 $ambrygen_graphic_left_id = isset( $ambrygen_attributes['graphicLeftId'] ) ? absint( $ambrygen_attributes['graphicLeftId'] ) : 0;
-$ambrygen_graphic_left_url = isset( $ambrygen_attributes['graphicLeftUrl'] ) ? (string) $ambrygen_attributes['graphicLeftUrl'] : '';
+$ambrygen_graphic_left_url = isset( $ambrygen_attributes['graphicLeftUrl'] ) ? esc_url_raw( $ambrygen_attributes['graphicLeftUrl'] ) : '';
 $ambrygen_graphic_left_alt = isset( $ambrygen_attributes['graphicLeftAlt'] ) ? sanitize_text_field( $ambrygen_attributes['graphicLeftAlt'] ) : '';
 $ambrygen_graphic_right_id = isset( $ambrygen_attributes['graphicRightId'] ) ? absint( $ambrygen_attributes['graphicRightId'] ) : 0;
-$ambrygen_graphic_right_url = isset( $ambrygen_attributes['graphicRightUrl'] ) ? (string) $ambrygen_attributes['graphicRightUrl'] : '';
+$ambrygen_graphic_right_url = isset( $ambrygen_attributes['graphicRightUrl'] ) ? esc_url_raw( $ambrygen_attributes['graphicRightUrl'] ) : '';
 $ambrygen_graphic_right_alt = isset( $ambrygen_attributes['graphicRightAlt'] ) ? sanitize_text_field( $ambrygen_attributes['graphicRightAlt'] ) : '';
 $ambrygen_has_title = '' !== trim( wp_strip_all_tags( $ambrygen_title ) );
 $ambrygen_has_left_graphic = $ambrygen_graphic_left_id || '' !== $ambrygen_graphic_left_url;
@@ -58,8 +58,6 @@ if ( $ambrygen_block_id ) {
 }
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_args );
-
-$ambrygen_heading_tag = in_array( $ambrygen_heading_tag, array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ), true ) ? $ambrygen_heading_tag : 'h2';
 ?>
 
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
@@ -67,40 +65,36 @@ $ambrygen_heading_tag = in_array( $ambrygen_heading_tag, array( 'h1', 'h2', 'h3'
 		<div class="graphic-images" aria-hidden="true">
 			<?php if ( $ambrygen_has_left_graphic ) : ?>
 				<div class="graphic-images__overlay-left graphic-images__img-block">
-					<?php if ( $ambrygen_graphic_left_id ) : ?>
-						<?php
-						echo Helper::image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-							$ambrygen_graphic_left_id,
-							'full',
-							array(
-								'class'   => 'overlay__img',
-								'alt'     => $ambrygen_graphic_left_alt,
-								'loading' => 'lazy',
-							)
-						);
-						?>
-					<?php elseif ( $ambrygen_graphic_left_url ) : ?>
-						<img src="<?php echo esc_url( $ambrygen_graphic_left_url ); ?>" class="overlay__img" alt="<?php echo esc_attr( $ambrygen_graphic_left_alt ); ?>" loading="lazy" decoding="async" />
-					<?php endif; ?>
+					<?php
+					echo Helper::image_from_source( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() escapes attributes and returns wp_kses_post()-sanitized image markup.
+						$ambrygen_graphic_left_id,
+						$ambrygen_graphic_left_url,
+						'full',
+						array(
+							'class'    => 'overlay__img',
+							'alt'      => $ambrygen_graphic_left_alt,
+							'loading'  => 'lazy',
+							'decoding' => 'async',
+						)
+					);
+					?>
 				</div>
 			<?php endif; ?>
 			<?php if ( $ambrygen_has_right_graphic ) : ?>
 				<div class="graphic-images__overlay-right graphic-images__img-block">
-					<?php if ( $ambrygen_graphic_right_id ) : ?>
-						<?php
-						echo Helper::image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-							$ambrygen_graphic_right_id,
-							'full',
-							array(
-								'class'   => 'overlay__img',
-								'alt'     => $ambrygen_graphic_right_alt,
-								'loading' => 'lazy',
-							)
-						);
-						?>
-					<?php elseif ( $ambrygen_graphic_right_url ) : ?>
-						<img src="<?php echo esc_url( $ambrygen_graphic_right_url ); ?>" class="overlay__img" alt="<?php echo esc_attr( $ambrygen_graphic_right_alt ); ?>" loading="lazy" decoding="async" />
-					<?php endif; ?>
+					<?php
+					echo Helper::image_from_source( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() escapes attributes and returns wp_kses_post()-sanitized image markup.
+						$ambrygen_graphic_right_id,
+						$ambrygen_graphic_right_url,
+						'full',
+						array(
+							'class'    => 'overlay__img',
+							'alt'      => $ambrygen_graphic_right_alt,
+							'loading'  => 'lazy',
+							'decoding' => 'async',
+						)
+					);
+					?>
 				</div>
 			<?php endif; ?>
 		</div>

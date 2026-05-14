@@ -34,7 +34,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	$ambrygen_top_icon_url         = $attributes['topIconUrl'] ?? '';
 	$ambrygen_top_icon_alt         = $attributes['topIconAlt'] ?? '';
 	$ambrygen_image_position       = $attributes['imagePosition'] ?? 'right';
-	$ambrygen_content_alignment    = $attributes['contentAlignment'] ?? 'left';
 	$ambrygen_content_top_align    = ! empty( $attributes['contentTopAlign'] );
 	$ambrygen_variation            = $attributes['variation'] ?? 'simple-content-with-image';
 	$ambrygen_border_required      = $attributes['borderRequired'] ?? false;

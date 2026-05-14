@@ -2,7 +2,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { Button, ComboboxControl, PanelBody, Spinner } from '@wordpress/components';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useState } from '@wordpress/element';
+import { useEffect, useMemo, useRef, useState } from '@wordpress/element';
 
 const SEARCH_DEBOUNCE_MS = 300;
 
@@ -45,6 +45,11 @@ const normalizeIds = ( value ) => {
 	return [];
 };
 
+const createRowKey = () =>
+	`test-catalog-row-${ Date.now() }-${ Math.random()
+		.toString( 36 )
+		.slice( 2, 10 ) }`;
+
 export default function SingleVersionSettings({ attributes, setAttributes }) {
 	const {
 		singleCategoryId = 0,
@@ -66,6 +71,24 @@ export default function SingleVersionSettings({ attributes, setAttributes }) {
 	const [versionOptions, setVersionOptions] = useState([]);
 	const [isLoadingVersions, setIsLoadingVersions] = useState(false);
 	const [versionsError, setVersionsError] = useState(false);
+	const rowKeysRef = useRef( [] );
+
+	const versionRows = useMemo( () => {
+		const baseIds = selectedVersionIds.length
+			? selectedVersionIds
+			: singleProductVersionId
+				? [ Number( singleProductVersionId ) ]
+				: [];
+
+		rowKeysRef.current = baseIds.map(
+			( _id, index ) => rowKeysRef.current[ index ] || createRowKey()
+		);
+
+		return baseIds.map( ( versionId, index ) => ( {
+			key: rowKeysRef.current[ index ],
+			versionId,
+		} ) );
+	}, [ selectedVersionIds, singleProductVersionId ] );
 
 	useEffect(() => {
 		let isMounted = true;
@@ -295,14 +318,9 @@ export default function SingleVersionSettings({ attributes, setAttributes }) {
 					) }
 				</p>
 
-				{ ( selectedVersionIds.length
-					? selectedVersionIds
-					: singleProductVersionId
-						? [ singleProductVersionId ]
-						: []
-				).map( ( versionId, index ) => (
+				{ versionRows.map( ( { key, versionId }, index ) => (
 					<div
-						key={ `version-${ versionId }-${ index }` }
+						key={ key }
 						style={ { marginBottom: '12px' } }
 					>
 						<ComboboxControl
@@ -357,6 +375,7 @@ export default function SingleVersionSettings({ attributes, setAttributes }) {
 										? [ Number( singleProductVersionId ) ]
 										: [];
 								base.splice( index, 1 );
+								rowKeysRef.current.splice( index, 1 );
 								const nextIds = base.map( ( id ) => Number( id ) || 0 );
 								setAttributes( {
 									singleProductVersionIds: nextIds,
@@ -372,13 +391,14 @@ export default function SingleVersionSettings({ attributes, setAttributes }) {
 				) ) }
 
 				<Button
-					isSecondary
+					variant="secondary"
 					onClick={ () => {
 						const base = selectedVersionIds.length
 							? [ ...selectedVersionIds ]
 							: singleProductVersionId
 								? [ Number( singleProductVersionId ) ]
 								: [];
+						rowKeysRef.current.push( createRowKey() );
 						setAttributes( {
 							singleProductVersionIds: [ ...base, 0 ],
 						} );
@@ -391,7 +411,7 @@ export default function SingleVersionSettings({ attributes, setAttributes }) {
 
 				{ ( selectedVersionIds.length > 0 || singleProductVersionId > 0 ) && (
 					<Button
-						isSecondary
+						variant="secondary"
 						onClick={ () =>
 							setAttributes( {
 								singleProductVersionId: 0,

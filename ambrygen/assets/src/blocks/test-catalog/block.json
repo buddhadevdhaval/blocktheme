@@ -16,15 +16,15 @@
     },
     "eyebrow": {
       "type": "string",
-      "default": "TEST CATALOG"
+      "default": ""
     },
     "title": {
       "type": "string",
-      "default": "Available hereditary cancer tests"
+      "default": ""
     },
     "subtitle": {
       "type": "string",
-      "default": "Browse tests by category. Ask your healthcare provider which panel is right for your situation."
+      "default": ""
     },
     "headingLevel": {
       "type": "string",
@@ -33,6 +33,29 @@
     },
     "selectedTabs": {
       "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "termId": {
+            "type": "number"
+          },
+          "termSlug": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "excludedPostIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      },
       "default": []
     },
     "marketingMaterialTypeId": {
@@ -53,6 +76,9 @@
     },
     "singleProductVersionIds": {
       "type": "array",
+      "items": {
+        "type": "number"
+      },
       "default": []
     }
   },

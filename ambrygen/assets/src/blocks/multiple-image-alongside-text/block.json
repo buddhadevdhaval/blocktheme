@@ -37,6 +37,7 @@
       "type": "string",
       "enum": [
         "stats-view",
+        "text-view",
         "normal-view"
       ],
       "default": "stats-view"
@@ -81,6 +82,15 @@
       "type": "boolean",
       "default": false
     },
+    "textAlignment": {
+      "type": "string",
+      "enum": [
+        "left",
+        "center",
+        "right"
+      ],
+      "default": "left"
+    },
     "imagePosition": {
       "type": "string",
       "enum": [
@@ -97,6 +107,18 @@
       "description": "Three foreground images with a stats repeater.",
       "attributes": {
         "variation": "stats-view"
+      },
+      "scope": [
+        "inserter"
+      ]
+    },
+    {
+      "name": "text-view",
+      "title": "Text View",
+      "description": "Heading, body text, and stats without foreground images.",
+      "attributes": {
+        "variation": "text-view",
+        "textAlignment": "center"
       },
       "scope": [
         "inserter"

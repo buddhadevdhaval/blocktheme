@@ -67,6 +67,22 @@ const isAllowedEmbedUrl = ( url ) => {
 	}
 };
 
+const getNonAutoplayEmbedUrl = ( url ) => {
+	if ( ! url ) {
+		return '';
+	}
+
+	try {
+		const parsedUrl = new URL( url );
+
+		parsedUrl.searchParams.delete( 'autoplay' );
+
+		return parsedUrl.toString();
+	} catch ( error ) {
+		return url;
+	}
+};
+
 const getEditorIframeSrc = ( url ) => {
 	const embedSource = getEmbedSourceFromInput( url );
 
@@ -75,10 +91,10 @@ const getEditorIframeSrc = ( url ) => {
 	}
 
 	if ( isAllowedEmbedUrl( embedSource ) ) {
-		return embedSource;
+		return getNonAutoplayEmbedUrl( embedSource );
 	}
 
-	return getIframeSrc( embedSource ) || '';
+	return getNonAutoplayEmbedUrl( getIframeSrc( embedSource ) || '' );
 };
 
 export default function Edit( { attributes, setAttributes } ) {

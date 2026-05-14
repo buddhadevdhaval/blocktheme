@@ -43,6 +43,16 @@
 
 	}
 
+	&.is-text-view {
+		.multiple-image-alongside-text__col--content {
+			grid-column: span 12;
+		}
+
+		.multiple-image-alongside-text__content {
+			max-width: none;
+		}
+	}
+
 	&.has-top-align {
 
 		.multiple-image-alongside-text__grid {

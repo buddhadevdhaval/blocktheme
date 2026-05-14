@@ -4,6 +4,7 @@ import {
 	A11y,
 	EffectFade,
 	Keyboard,
+	Navigation,
 	Pagination,
 } from 'swiper/modules';
 
@@ -36,17 +37,17 @@ const initTestimonialSliders = () => {
 		const slideCount =
 			sliderElement.querySelectorAll( '.swiper-slide' ).length;
 
-		const swiperInstance = new Swiper( sliderElement, {
+		new Swiper( sliderElement, {
 			modules: [
 				Pagination,
+				Navigation,
 				EffectFade,
 				Autoplay,
 				Keyboard,
 				A11y,
 			],
-			loop: slideCount > 1,
-			loopAdditionalSlides: slideCount > 1 ? slideCount : 0,
-			loopPreventsSliding: false,
+			loop: false,
+			rewind: slideCount > 1,
 			speed: 600,
 			slidesPerView,
 			spaceBetween: 0,
@@ -62,6 +63,13 @@ const initTestimonialSliders = () => {
 						clickable: true,
 				  }
 				: false,
+			navigation:
+				prevEl && nextEl
+					? {
+							prevEl,
+							nextEl,
+					  }
+					: false,
 			autoplay: autoplayEnabled
 				? {
 						delay: 3000,
@@ -78,20 +86,6 @@ const initTestimonialSliders = () => {
 				nextSlideMessage: 'Next testimonial',
 			},
 		} );
-
-		if ( prevEl ) {
-			prevEl.addEventListener( 'click', ( event ) => {
-				event.preventDefault();
-				swiperInstance.slidePrev();
-			} );
-		}
-
-		if ( nextEl ) {
-			nextEl.addEventListener( 'click', ( event ) => {
-				event.preventDefault();
-				swiperInstance.slideNext();
-			} );
-		}
 	} );
 };
 

@@ -13,21 +13,26 @@ defined( 'ABSPATH' ) || exit;
 use Ambrygen\Theme\Core\Helper;
 
 $ambrygen_attributes  = is_array( $attributes ?? null ) ? $attributes : array();
-$ambrygen_block_id    = $ambrygen_attributes['blockId'] ?? '';
+$ambrygen_anchor      = isset( $ambrygen_attributes['anchor'] )
+	? sanitize_html_class( (string) $ambrygen_attributes['anchor'] )
+	: '';
+$ambrygen_block_id    = isset( $ambrygen_attributes['blockId'] )
+	? sanitize_html_class( (string) $ambrygen_attributes['blockId'] )
+	: '';
 $ambrygen_title       = $ambrygen_attributes['title'] ?? '';
 $ambrygen_description = $ambrygen_attributes['description'] ?? '';
 $ambrygen_heading_tag = Helper::get_heading_tag( $ambrygen_attributes['headingTag'] ?? 'h2', 'h2' );
+$ambrygen_wrapper_id  = $ambrygen_anchor ?: $ambrygen_block_id;
 
-$ambrygen_wrapper_attributes = get_block_wrapper_attributes(
-	$ambrygen_block_id
-		? array(
-			'class' => 'block-layout timeline-block',
-			'id'    => $ambrygen_block_id,
-		)
-		: array(
-			'class' => 'block-layout timeline-block',
-		)
+$ambrygen_wrapper_args = array(
+	'class' => 'block-layout timeline-block',
 );
+
+if ( $ambrygen_wrapper_id ) {
+	$ambrygen_wrapper_args['id'] = $ambrygen_wrapper_id;
+}
+
+$ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_args );
 ?>
 
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>

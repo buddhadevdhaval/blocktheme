@@ -36,6 +36,8 @@ $ambrygen_richtext_allowed = array(
 		'rel'    => true,
 		'class'  => true,
 	),
+	'sub'    => array(),
+	'sup'    => array(),
 );
 
 $ambrygen_attributes = $attributes ?? array();

@@ -36,6 +36,7 @@ import {
 import {
 	Button,
 	PanelBody,
+	SelectControl,
 	TextareaControl,
 	TextControl,
 } from '@wordpress/components';
@@ -43,7 +44,16 @@ import {
 const VALID_HEADING_LEVELS = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ];
 const MAX_STATS = 4;
 const MAX_IMAGES = 4;
-const EMPTY_STAT_PLACEHOLDER = '0';
+const VARIATIONS = [
+	'stats-view',
+	'text-view',
+	'normal-view',
+];
+const TEXT_ALIGNMENTS = [
+	{ label: __( 'Left', 'ambrygen-web' ), value: 'left' },
+	{ label: __( 'Center', 'ambrygen-web' ), value: 'center' },
+	{ label: __( 'Right', 'ambrygen-web' ), value: 'right' },
+];
 
 const createStatId = () =>
 	`stat-${ Date.now().toString( 36 ) }-${ Math.random()
@@ -151,15 +161,24 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		images = [],
 		headingLevel,
 		imagePosition = 'left',
+		textAlignment = 'left',
 	} = attributes;
 	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
 	const placeholderImage = defaults?.placeholder || {};
-	const normalizedVariation =
-		variation === 'normal-view' ? 'normal-view' : 'stats-view';
+	const normalizedVariation = VARIATIONS.includes( variation )
+		? variation
+		: 'stats-view';
 	const isExample = blockId === 'multiple-image-alongside-text-example';
 	const isNormalView = 'normal-view' === normalizedVariation;
+	const isTextView = 'text-view' === normalizedVariation;
 	const isStatsView = ! isNormalView;
 	const isImageRight = isNormalView || imagePosition === 'right';
+	const shouldShowImages = ! isTextView;
+	const normalizedTextAlignment = [ 'left', 'center', 'right' ].includes(
+		textAlignment
+	)
+		? textAlignment
+		: 'left';
 	const sourceStats = Array.isArray( stats ) ? stats : [];
 	const statsLength = sourceStats.length;
 	const hasMissingStatIds = sourceStats.some( ( stat ) => ! stat?.id );
@@ -277,6 +296,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const blockProps = useBlockProps();
 	const HeadingTag = normalizeHeadingLevel( headingLevel );
 	const headingClass = 'heading-2';
+	const headingClasses = isTextView
+		? `${ headingClass } mb-0`
+		: `multiple-image-alongside-text__heading ${ headingClass } mb-0`;
 	const showStats = isStatsView;
 	const hasVisibleStats = showStats && visibleStats.length > 0;
 	const previewImages = visibleImages
@@ -299,6 +321,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			value: 'stats-view',
 			image: getThemeAssetUrl(
 				'/assets/src/images/multiple-image-alongside-text/states-view.png'
+			),
+		},
+		{
+			label: __( 'Text View', 'ambrygen-web' ),
+			value: 'text-view',
+			image: getThemeAssetUrl(
+				'/assets/src/images/multiple-image-alongside-text/stats-view-without-image.png'
 			),
 		},
 		{
@@ -344,6 +373,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	] );
 
 	useEffect( () => {
+		if ( isTextView ) {
+			return;
+		}
+
 		const expectedImagePosition = isNormalView ? 'right' : 'left';
 
 		if ( imagePosition !== expectedImagePosition ) {
@@ -351,7 +384,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				imagePosition: expectedImagePosition,
 			} );
 		}
-	}, [ imagePosition, isNormalView, setAttributes ] );
+	}, [ imagePosition, isNormalView, isTextView, setAttributes ] );
 
 	if ( isExample ) {
 		return (
@@ -390,6 +423,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 											variant.value === 'normal-view'
 												? 'right'
 												: 'left',
+										textAlignment:
+											variant.value === 'text-view'
+												? 'center'
+												: 'left',
 									} )
 								}
 							>
@@ -403,6 +440,24 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						) ) }
 					</div>
 				</PanelBody>
+
+				{ isTextView && (
+					<PanelBody
+						title={ __( 'Text Alignment', 'ambrygen-web' ) }
+						initialOpen={ false }
+					>
+						<SelectControl
+							label={ __( 'Heading and Body Text', 'ambrygen-web' ) }
+							value={ normalizedTextAlignment }
+							options={ TEXT_ALIGNMENTS }
+							onChange={ ( value ) =>
+								setAttributes( {
+									textAlignment: value,
+								} )
+							}
+						/>
+					</PanelBody>
+				) }
 
 				<PanelBody
 					title={ __( 'Heading Settings', 'ambrygen-web' ) }
@@ -420,24 +475,26 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 				</PanelBody>
 
-				<PanelBody
-					title={ __( 'Images', 'ambrygen-web' ) }
-					initialOpen={ false }
-				>
-					{ visibleImages.map( ( image, index ) => (
-						<ImageUploader
-							key={ `foreground-image-${ index + 1 }` }
-							label={ `${
-								__( 'Foreground Image', 'ambrygen-web' )
-							} ${ index + 1 }` }
-							url={ image.url }
-							onSelect={ ( media ) =>
-								updateImage( index, media )
-							}
-							onRemove={ () => removeImage( index ) }
-						/>
-					) ) }
-				</PanelBody>
+				{ shouldShowImages && (
+					<PanelBody
+						title={ __( 'Images', 'ambrygen-web' ) }
+						initialOpen={ false }
+					>
+						{ visibleImages.map( ( image, index ) => (
+							<ImageUploader
+								key={ `foreground-image-${ index + 1 }` }
+								label={ `${
+									__( 'Foreground Image', 'ambrygen-web' )
+								} ${ index + 1 }` }
+								url={ image.url }
+								onSelect={ ( media ) =>
+									updateImage( index, media )
+								}
+								onRemove={ () => removeImage( index ) }
+							/>
+						) ) }
+					</PanelBody>
+				) }
 
 				{ isStatsView && (
 					<PanelBody
@@ -480,42 +537,48 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			<div
 				className={ `multiple-image-alongside-text ${
 					isImageRight ? ' block-rtl' : ''
-				}${ isNormalView ? ' is-normal-view' : '' }` }
+				}${ isNormalView ? ' is-normal-view' : '' }${
+					isTextView ? ' is-text-view' : ''
+				} has-text-align-${ normalizedTextAlignment }` }
 			>
 				<div className="is-style-gl-s50" aria-hidden="true" />
 				<div className="multiple-image-alongside-text__grid">
-					<div className="multiple-image-alongside-text__col multiple-image-alongside-text__col--images">
-						<div className="multiple-image-alongside-text__images">
-							{ previewImages.map( ( image, index ) => (
-								<div
-									key={ image.key }
-									className={ `multiple-image-alongside-text__image-wrapper${
-										image.isFullImage
-											? ' multiple-image-alongside-text__image-wrapper--full'
-											: ''
-									}${
-										image.isPlaceholder
-											? ' is-placeholder'
-											: ''
-									}` }
-								>
-									<div className="multiple-image-alongside-text__image">
-										{ image.url && (
-											<img
-												src={ image.url }
-												alt={ image.alt }
-											/>
-										) }
+					{ shouldShowImages && (
+						<div className="multiple-image-alongside-text__col multiple-image-alongside-text__col--images">
+							<div className="multiple-image-alongside-text__images">
+								{ previewImages.map( ( image ) => (
+									<div
+										key={ image.key }
+										className={ `multiple-image-alongside-text__image-wrapper${
+											image.isFullImage
+												? ' multiple-image-alongside-text__image-wrapper--full'
+												: ''
+										}${
+											image.isPlaceholder
+												? ' is-placeholder'
+												: ''
+										}` }
+									>
+										<div className="multiple-image-alongside-text__image">
+											{ image.url && (
+												<img
+													src={ image.url }
+													alt={ image.alt }
+												/>
+											) }
+										</div>
 									</div>
-								</div>
-							) ) }
+								) ) }
+							</div>
 						</div>
-					</div>
-					<div className="multiple-image-alongside-text__col multiple-image-alongside-text__col--content">
+					) }
+					<div
+						className="multiple-image-alongside-text__col multiple-image-alongside-text__col--content"
+					>
 						<div className="multiple-image-alongside-text__content">
 							<RichText
 								tagName={ HeadingTag }
-								className={ `multiple-image-alongside-text__heading ${ headingClass } mb-0` }
+								className={ headingClasses }
 								value={ heading }
 								onChange={ ( value ) =>
 									setAttributes( { heading: value } )
@@ -583,8 +646,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 																	}
 																</div>
 																<div className="multiple-image-alongside-text__stats--count multiple-image-alongside-text__stats--stat-data">
-																	{ stat.number ||
-																		EMPTY_STAT_PLACEHOLDER }
+																	{
+																		stat.number
+																	}
 																</div>
 																<div className="multiple-image-alongside-text__stats--stat-postfix multiple-image-alongside-text__stats--stat-data">
 																	{

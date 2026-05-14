@@ -217,6 +217,75 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		}
 	} );
 
+	topBar?.querySelectorAll( '.top-bar__toggle' ).forEach( ( toggle ) => {
+		const topBarItem = toggle.closest( '.top-bar' );
+		const textContent = topBarItem?.querySelector(
+			'.top-bar__text-content'
+		);
+		const summary = topBarItem?.querySelector( '.top-bar__summary' );
+		const details = topBarItem?.querySelector( '.top-bar__details' );
+		const label = toggle.querySelector( '.top-bar__toggle-label' );
+
+		Object.assign( toggle.style, {
+			background: 'transparent',
+			border: '0',
+			color: 'inherit',
+			display: 'contents',
+			cursor: 'pointer',
+			marginLeft: '8px',
+			padding: '0',
+		} );
+
+		if ( textContent ) {
+			Object.assign( textContent.style, {
+				display: 'block',
+				flex: '1',
+				textAlign: 'center',
+			} );
+		}
+
+		toggle.addEventListener( 'click', () => {
+			if (
+				! topBarItem ||
+				! textContent ||
+				! summary ||
+				! details ||
+				! label
+			) {
+				return;
+			}
+
+			const isExpanded = topBarItem.classList.toggle(
+				'top-bar--expanded'
+			);
+
+			toggle.setAttribute( 'aria-expanded', String( isExpanded ) );
+			details.hidden = ! isExpanded;
+			label.innerHTML = isExpanded
+				? 'Read Less'
+				: 'Read More';
+
+			if ( isExpanded ) {
+				textContent.appendChild( toggle );
+			} else {
+				summary.insertAdjacentElement( 'afterend', toggle );
+			}
+
+			Object.assign( textContent.style, {
+				display: isExpanded ? 'flex' : 'block',
+				flexDirection: isExpanded ? 'column' : '',
+				gap: isExpanded ? '8px' : '',
+				textAlign: 'center',
+			} );
+
+			Object.assign( toggle.style, {
+				marginLeft: isExpanded ? '0' : '8px',
+			} );
+
+			updateOverlayHeightMobile();
+		} );
+	} );
+
 	const updateOverlayHeightMobile = () => {
 		if ( ! navOverlay ) {
 			return;

@@ -34,6 +34,7 @@
 
 		@include bp.max(lg) {
 			font-size: 14px;
+			align-items: flex-start;
 		}
 	}
 
@@ -44,6 +45,10 @@
 
 	.top-bar__link {
 		// margin-left: 12px;
+	}
+
+	&__text-content {
+		align-items: center;
 	}
 
 	&__close {

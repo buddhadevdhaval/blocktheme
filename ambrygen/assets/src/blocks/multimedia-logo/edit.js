@@ -7,7 +7,7 @@ import {
 	MediaUploadCheck,
 	InnerBlocks,
 } from '@wordpress/block-editor';
-import { PanelBody, Button, TextControl } from '@wordpress/components';
+import { PanelBody, Button } from '@wordpress/components';
 import { useMemo, useEffect } from '@wordpress/element';
 import {
 	BlockExamplePreview,
@@ -16,9 +16,9 @@ import {
 	DEFAULT_IMAGES,
 	ItemHeader,
 	PanelItem,
-	Field,
 	TagSelector,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 function createDownloadId() {
 	return `download-${Date.now()}-${Math.random()
@@ -35,6 +35,41 @@ function createDefaultDownload(group) {
 		fileUrl: '',
 		fileId: 0,
 	};
+}
+
+function getFileExtensionLabel(fileName = '', fileUrl = '', mimeType = '') {
+	const source = fileName || fileUrl;
+
+	if (source) {
+		try {
+			const normalizedSource = source.includes('://')
+				? new URL(source).pathname
+				: source;
+			const cleanSource = normalizedSource.split('?')[0];
+			const extension = cleanSource.split('.').pop();
+
+			if (extension && extension !== cleanSource) {
+				return extension.toUpperCase();
+			}
+		} catch {
+			const cleanSource = source.split('?')[0];
+			const extension = cleanSource.split('.').pop();
+
+			if (extension && extension !== cleanSource) {
+				return extension.toUpperCase();
+			}
+		}
+	}
+
+	if (mimeType) {
+		const mimeExtension = mimeType.split('/').pop();
+
+		if (mimeExtension) {
+			return mimeExtension.toUpperCase();
+		}
+	}
+
+	return __('Download file', 'ambrygen-web');
 }
 
 function normalizeDownloadsWithIds(downloads = []) {
@@ -59,8 +94,27 @@ function normalizeDownloadsWithIds(downloads = []) {
 	};
 }
 
-export default function Edit({ attributes, setAttributes }) {
+const ALLOWED_DESCRIPTION_BLOCKS = [
+	'core/paragraph',
+	'core/buttons',
+	'core/button',
+	'core/spacer',
+	'core/list',
+];
+
+const DESCRIPTION_TEMPLATE = [
+	[
+		'core/paragraph',
+		{
+			placeholder: __( 'Add Description...', 'ambrygen-web' ),
+		},
+	],
+];
+
+export default function Edit({ attributes, setAttributes, clientId }) {
 	const {
+		anchor,
+		blockId,
 		sectionTitle,
 		headingTag,
 		logoImageUrl,
@@ -71,23 +125,15 @@ export default function Edit({ attributes, setAttributes }) {
 		secondaryImageId,
 	} = attributes;
 	const HeadingTag = headingTag || 'h2';
+	const isExample = blockId === 'example-block-preview';
 
-	const allowedDescriptionBlocks = [
-		'core/paragraph',
-		'core/buttons',
-		'core/button',
-		'core/spacer',
-		'core/list',
-	];
-
-	const descriptionTemplate = [
-		[
-			'core/paragraph',
-			{
-				placeholder: __('Description', 'ambrygen-web'),
-			},
-		],
-	];
+	useUniqueBlockId({
+		blockId,
+		clientId,
+		enabled: !isExample,
+		idPrefix: 'multimedia-logo',
+		setAttributes,
+	});
 
 	useEffect(() => {
 		const { hasChanges, normalizedDownloads } =
@@ -100,27 +146,20 @@ export default function Edit({ attributes, setAttributes }) {
 
 	const blockProps = useBlockProps({
 		className: 'logo-section',
+		id: anchor || blockId,
 	});
 	const defaultImages = useMemo(() => DEFAULT_IMAGES(), []);
 	const displayLogo = logoImageUrl || defaultImages.placeholder.url;
 	const hasSecondaryImage = Boolean(secondaryImageId || secondaryImageUrl);
 
-	if (sectionTitle === 'multimedia-logo-example') {
+	if (isExample) {
 		return (
 			<BlockExamplePreview
 				className="multimedia-logo-example-preview"
-				imagePath="/assets/src/images/cta-tiles-with-3-card/default-image.png"
+				imagePath="/assets/src/images/multimedia-logo/preview.png"
 			/>
 		);
 	}
-
-	const updateDownload = (downloadId, key, value) => {
-		setAttributes({
-			downloads: downloads.map((item) =>
-				item.id === downloadId ? { ...item, [key]: value } : item
-			),
-		});
-	};
 
 	const addDownload = (group) => {
 		setAttributes({
@@ -151,11 +190,18 @@ export default function Edit({ attributes, setAttributes }) {
 	};
 
 	const updateDownloadMedia = (downloadId, media) => {
+		const label = getFileExtensionLabel(
+			media?.filename,
+			media?.url,
+			media?.mime
+		);
+
 		setAttributes({
 			downloads: downloads.map((item) =>
 				item.id === downloadId
 					? {
 						...item,
+						label,
 						fileUrl: media?.url || '',
 						fileId: media?.id || 0,
 					}
@@ -170,6 +216,7 @@ export default function Edit({ attributes, setAttributes }) {
 				item.id === downloadId
 					? {
 						...item,
+						label: '',
 						fileUrl: '',
 						fileId: 0,
 					}
@@ -180,6 +227,10 @@ export default function Edit({ attributes, setAttributes }) {
 
 	const webDownloads = downloads.filter((item) => item.group === 'web');
 	const printDownloads = downloads.filter((item) => item.group === 'print');
+	const getDownloadLabel = (item) =>
+		item.label ||
+		getFileExtensionLabel('', item.fileUrl) ||
+		__('Download file', 'ambrygen-web');
 
 	const renderDownloadPanel = (group) => {
 		const groupDownloads = downloads
@@ -198,27 +249,14 @@ export default function Edit({ attributes, setAttributes }) {
 					<PanelItem key={item.id}>
 						<ItemHeader
 							index={index}
-							label={item.groupName || item.label || item.fileUrl}
+							label={
+								item.label ||
+								getFileExtensionLabel('', item.fileUrl)
+							}
 							total={downloads.length}
 							onMove={(i, dir) => moveDownload(i, dir)}
 							onRemove={() => removeDownload(item.id)}
 							minCount={0}
-						/>
-
-						<TextControl
-							label={__('Group Name', 'ambrygen-web')}
-							value={item.groupName || ''}
-							onChange={(value) =>
-								updateDownload(item.id, 'groupName', value)
-							}
-						/>
-
-						<TextControl
-							label={__('Link Name', 'ambrygen-web')}
-							value={item.label || ''}
-							onChange={(value) =>
-								updateDownload(item.id, 'label', value)
-							}
 						/>
 
 						<div style={{ marginBottom: '8px' }}>
@@ -301,13 +339,6 @@ export default function Edit({ attributes, setAttributes }) {
 					title={__('Content Settings', 'ambrygen-web')}
 					initialOpen
 				>
-					<Field
-						label={__('Heading', 'ambrygen-web')}
-						value={sectionTitle}
-						onChange={(value) =>
-							setAttributes({ sectionTitle: value })
-						}
-					/>
 					<ImageUploader
 						label={__('Image-1', 'ambrygen-web')}
 						url={logoImageUrl}
@@ -347,13 +378,13 @@ export default function Edit({ attributes, setAttributes }) {
 				</PanelBody>
 
 				<PanelBody
-					title={__('Group For Web', 'ambrygen-web')}
+					title={__('For Web', 'ambrygen-web')}
 					initialOpen={false}
 				>
 					{renderDownloadPanel('web')}
 				</PanelBody>
 				<PanelBody
-					title={__('Group For Print', 'ambrygen-web')}
+					title={__('For Print', 'ambrygen-web')}
 					initialOpen={false}
 				>
 					{renderDownloadPanel('print')}
@@ -388,9 +419,9 @@ export default function Edit({ attributes, setAttributes }) {
 					<div className="logo-section__downloads">
 						<div className="logo-section__downloads-group">
 							<div className="logo-section__downloads-title subtitle2-sbold">
-								{__('Group For Web', 'ambrygen-web')}
+								{__('For Web', 'ambrygen-web')}
 							</div>
-							<div className="logo-section__downloads-stack">
+							<div className="logo-section__downloads-list">
 								{webDownloads.length === 0 && (
 									<div className="logo-section__downloads-empty">
 										{__(
@@ -402,26 +433,17 @@ export default function Edit({ attributes, setAttributes }) {
 								{webDownloads.map((item) => (
 									<div
 										key={item.id}
-										className="logo-section__downloads-block"
+										className="logo-section__downloads-item with-icon"
 									>
-										<div className="logo-section__downloads-group-name">
-											{item.groupName ||
-												__(
-													'Group Name',
-													'ambrygen-web'
-												)}
-										</div>
-										<div className="logo-section__downloads-list">
-											<div className='logo-section__downloads-item with-icon'>
-												<span className="logo-section__downloads-link">
-													{item.label ||
-														__(
-															'Download file',
-															'ambrygen-web'
-														)}
-												</span>
-											</div>
-										</div>
+										<a
+											className="logo-section__downloads-link text-small"
+											href={item.fileUrl || '#'}
+											onClick={(event) =>
+												event.preventDefault()
+											}
+										>
+											{getDownloadLabel(item)}
+										</a>
 									</div>
 								))}
 							</div>
@@ -429,9 +451,9 @@ export default function Edit({ attributes, setAttributes }) {
 
 						<div className="logo-section__downloads-group">
 							<div className="logo-section__downloads-title subtitle2-sbold">
-								{__('Group For Print', 'ambrygen-web')}
+								{__('For Print', 'ambrygen-web')}
 							</div>
-							<div className="logo-section__downloads-stack">
+							<div className="logo-section__downloads-list">
 								{printDownloads.length === 0 && (
 									<div className="logo-section__downloads-empty">
 										{__(
@@ -441,27 +463,22 @@ export default function Edit({ attributes, setAttributes }) {
 									</div>
 								)}
 								{printDownloads.map((item) => (
-									<div
-										key={item.id}
-										className="logo-section__downloads-block"
-									>
-										<div className="logo-section__downloads-group-name">
-											{item.groupName ||
-												__(
-													'Group Name',
-													'ambrygen-web'
-												)}
-										</div>
-										<div className="logo-section__downloads-list">
-											<div className='logo-section__downloads-item with-icon'>
-												<span className="logo-section__downloads-link">
-													{item.label ||
-														__(
-															'Download file',
-															'ambrygen-web'
-														)}
-												</span>
+									<div key={item.id}>
+										{item.groupName && (
+											<div className="logo-section__downloads-group-name">
+												{item.groupName}
 											</div>
+										)}
+										<div className="logo-section__downloads-item with-icon">
+											<a
+												className="logo-section__downloads-link text-small"
+												href={item.fileUrl || '#'}
+												onClick={(event) =>
+													event.preventDefault()
+												}
+											>
+												{getDownloadLabel(item)}
+											</a>
 										</div>
 									</div>
 								))}
@@ -489,8 +506,8 @@ export default function Edit({ attributes, setAttributes }) {
 						<div className="logo-section__right-content">
 							<div className="logo-section__description js-gsap-fade">
 								<InnerBlocks
-									allowedBlocks={allowedDescriptionBlocks}
-									template={descriptionTemplate}
+									allowedBlocks={ALLOWED_DESCRIPTION_BLOCKS}
+									template={DESCRIPTION_TEMPLATE}
 									templateInsertUpdatesSelection={true}
 								/>
 							</div>

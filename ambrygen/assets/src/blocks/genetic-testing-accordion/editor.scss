@@ -1,18 +1,18 @@
 .genetic-testing-accordion-admin {
-	border: 2px dashed #ddd;
+	border: 2px dashed var(--theme_border_3);
 	padding: 20px;
-	background: #fdfdfd;
+	background: var(--theme_white);
 
 	.genetic-testing-accordion__admin-header {
 		margin-bottom: 20px;
-		color: #006494;
+		color: var(--theme_amb_blue_006494);
 	}
 
 	.genetic-testing-selection__item {
 		margin-bottom: 15px;
 		padding: 10px;
-		background: #fff;
-		border: 1px solid #eee;
+		background: var(--theme_white);
+		border: 1px solid var(--theme_gray_2);
 		border-radius: 4px;
 	}
 

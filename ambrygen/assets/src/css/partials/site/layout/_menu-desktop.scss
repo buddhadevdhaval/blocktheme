@@ -435,6 +435,11 @@
 						grid-template-columns: 305px 1fr;
 					}
 
+					.nav__item--mega-menu__submenu-inner--links {
+						justify-content: space-around;
+						height: 90%;
+					}
+
 					&--submenu-inner {
 						// height: 100%;
 						position: relative;

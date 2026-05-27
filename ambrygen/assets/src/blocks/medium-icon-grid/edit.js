@@ -5,10 +5,10 @@ import {
 	useBlockProps,
 } from '@wordpress/block-editor';
 import { PanelBody } from '@wordpress/components';
-import { useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import { BlockExamplePreview, TagSelector } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 const ALLOWED_BLOCKS = [ 'ambrygen/medium-icon-grid-item' ];
 
@@ -39,18 +39,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	} = attributes;
 	const isExample = blockId === 'medium-icon-grid-example';
 
-	useEffect( () => {
-		if ( isExample ) {
-			return;
-		}
-
-		const clientIdSuffix = clientId.slice( 0, 8 );
-		const expectedId = `section-${ clientIdSuffix }`;
-
-		if ( ! blockId ) {
-			setAttributes( { blockId: expectedId } );
-		}
-	}, [ blockId, clientId, isExample, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: ! isExample,
+	} );
 
 	const blockProps = useBlockProps( {
 		className: 'icon-card-grid',
@@ -108,7 +102,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					<div className="is-style-gl-s12"></div>
 					<RichText
 						tagName="div"
-						className="body1 icon-card-grid__desc"
+						className="body1 icon-card-grid__desc block-description"
 						value={ description }
 						onChange={ ( value ) =>
 							setAttributes( { description: value } )

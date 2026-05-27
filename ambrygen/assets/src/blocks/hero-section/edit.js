@@ -37,6 +37,7 @@ import {
 	TagSelector,
 	ImageUploader,
 	CtaButtonField,
+	BlockExamplePreview,
 } from '../_shared/components';
 
 const PRIMARY_BUTTON_VARIANT = 'is-style-site-tertiary-btn';
@@ -128,6 +129,7 @@ const isSlideConfigured = ( slide = {} ) => {
  */
 export default function Edit( { attributes, setAttributes } ) {
 	const {
+		blockId,
 		slides = [],
 		showSliderNav,
 		showSliderDots,
@@ -135,6 +137,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		autoplayDelay,
 		showSmallImage,
 	} = attributes;
+	const isExample = blockId === 'hero-section-example';
 
 	const [ currentSlide, setCurrentSlide ] = useState( 0 );
 
@@ -254,6 +257,15 @@ export default function Edit( { attributes, setAttributes } ) {
 		!! slide.primarybutton?.text && !! slide.primarybutton?.url;
 	const hasSecondaryButton =
 		!! slide.secondarybutton?.text && !! slide.secondarybutton?.url;
+
+	if ( isExample ) {
+		return (
+			<BlockExamplePreview
+				className="hero-section-example-preview"
+				imagePath="/assets/src/images/hero-section/preview.png"
+			/>
+		);
+	}
 
 	return (
 		<>

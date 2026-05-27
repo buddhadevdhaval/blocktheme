@@ -12,7 +12,7 @@ import {
 
 import { PanelBody } from '@wordpress/components';
 import { BlockExamplePreview, TagSelector } from '../_shared/components';
-import { useEffect } from '@wordpress/element';
+import { useUniqueBlockId } from '../_shared/hooks';
 import { getThemeAssetUrl } from '../../utils/assets';
 
 const ALLOWED_BLOCKS = [ 'ambrygen/cta-tiles-with-3-card-item' ];
@@ -42,19 +42,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { blockId, sectionTitle, headingTag } = attributes;
 	const isExample = blockId === 'cta-tiles-with-3-card-example';
 
-	useEffect( () => {
-		if ( isExample ) {
-			return;
-		}
-
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
-
-		if ( ! blockId ) {
-			setAttributes( {
-				blockId: expectedId,
-			} );
-		}
-	}, [ clientId, blockId, isExample, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: ! isExample,
+	} );
 
 	const blockProps = useBlockProps( {
 		className: 'cta-tiles-with-3-card',
@@ -110,4 +103,3 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
-

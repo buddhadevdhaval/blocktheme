@@ -154,6 +154,8 @@ HTML;
 					src="<?php echo esc_url($ambrygen_theme_form_url); ?>"
 					title="<?php esc_attr_e('Website Contact Us Form', 'ambrygen-web'); ?>"
 					class="theme-form-block__iframe"
+					style="display:block;width:100%;border:0;opacity:0;visibility:hidden;"
+					scrolling="no"
 					loading="lazy"
 				></iframe>
 			<?php else: ?>

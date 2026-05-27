@@ -93,7 +93,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 			<div class="is-style-gl-s24" aria-hidden="true"></div>
 		<?php endif; ?>
 
-		<div class="ordering-options__cards">
+		<div class="ordering-options__cards ordering-options-cards-grid">
 			<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</div>
 

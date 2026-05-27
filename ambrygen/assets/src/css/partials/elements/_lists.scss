@@ -44,10 +44,10 @@ footer {
 	// Ordered / Unordered List
 	ul,
 	ol {
-		margin: 0 0 20px 25px;
+		margin: 0 0 30px 25px;
 
 		@include bp.max(md) {
-			margin: 0 0 15px 18px;
+			margin: 0 0 30px 18px;
 		}
 
 		&:last-child {
@@ -94,6 +94,10 @@ footer {
 			padding-left: 25px;
 			position: relative;
 
+			.bg-primary_700 & {
+				color: #FFF;
+			}
+
 			@include bp.max(md) {
 				padding-left: 18px;
 			}
@@ -112,6 +116,10 @@ footer {
 				@media (width <=991px) {
 					width: 8px;
 					height: 8px;
+				}
+
+				.bg-primary_700 & {
+					background-color: var(--theme_primary_white);
 				}
 			}
 		}

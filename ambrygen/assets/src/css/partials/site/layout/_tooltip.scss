@@ -101,6 +101,18 @@
 	line-height: 15px;
 	letter-spacing: -0.18px;
 	margin-top: 4px;
+
+	a {
+		padding-bottom: 1px;
+		&:hover {
+			color: var(--theme_primary_white);
+			border-color: var(--theme_primary_white);
+		}
+
+		.bg-primary_800 & {
+			color: var(--theme_primary_white);
+		}
+	}
 }
 
 @include bp.max(480px) {

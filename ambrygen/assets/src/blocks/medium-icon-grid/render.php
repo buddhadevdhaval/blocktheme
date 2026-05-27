@@ -70,7 +70,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 			<?php endif; ?>
 
 			<?php if ( $ambrygen_has_description ) : ?>
-				<div class="body1 icon-card-grid__desc"><?php echo wp_kses_post( $ambrygen_description ); ?></div>
+				<div class="body1 icon-card-grid__desc block-description"><?php echo wp_kses_post( $ambrygen_description ); ?></div>
 			<?php endif; ?>
 		</div>
 	<?php endif; ?>

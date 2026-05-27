@@ -9,6 +9,7 @@ import { PanelBody, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 import { BlockExamplePreview, TagSelector } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 const TEMPLATE = [
 	[ 'ambrygen/steps-image-alongside-text-item' ],
 	[ 'ambrygen/steps-image-alongside-text-item' ],
@@ -28,8 +29,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const containerRef = useRef( null );
 	const activeIndex = useRef( 0 );
+	const isExample = blockId === 'steps-image-alongside-text-example';
 
-	if ( blockId === 'steps-image-alongside-text-example' ) {
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: ! isExample,
+	} );
+
+	if ( isExample ) {
 		return (
 			<BlockExamplePreview
 				className="steps-image-alongside-text-example-preview"
@@ -37,16 +46,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			/>
 		);
 	}
-
-	useEffect( () => {
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
-
-		if ( ! blockId ) {
-			setAttributes( {
-				blockId: expectedId,
-			} );
-		}
-	}, [ blockId, clientId, setAttributes ] );
 
 	useEffect( () => {
 		const vTabsContainer = containerRef.current;

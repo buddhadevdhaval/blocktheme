@@ -16,6 +16,7 @@ import {
 	ItemHeader,
 	TagSelector,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 const DEFAULT_AWARD = {
 	id: 'award-1',
@@ -53,19 +54,20 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const hasAwards = awardsWithImages.length > 0;
 	const HeadingTag = headingTag || 'h2';
 
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: ! isExample,
+	} );
+
 	useEffect( () => {
 		if ( isExample ) {
 			return;
 		}
 
-		const clientIdSuffix = clientId.slice( 0, 8 );
-		const expectedId = `section-${ clientIdSuffix }`;
 		const hasMissingIds = awards.some( ( award ) => ! award?.id );
 		const nextAttributes = {};
-
-		if ( ! blockId ) {
-			nextAttributes.blockId = expectedId;
-		}
 
 		if ( ! awards.length ) {
 			nextAttributes.awards = DEFAULT_AWARDS;
@@ -81,7 +83,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 
 		setAttributes( nextAttributes );
-	}, [ awards, blockId, clientId, isExample, setAttributes ] );
+	}, [ awards, isExample, setAttributes ] );
 
 	const blockProps = useBlockProps( {
 		id: blockId || undefined,

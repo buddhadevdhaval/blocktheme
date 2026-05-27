@@ -5,7 +5,7 @@ import {
 } from '@wordpress/block-editor';
 import { PanelBody } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 import {
 	BlockExamplePreview,
@@ -21,33 +21,28 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		description,
 	} = attributes;
 	const HeadingTag = headingTag || 'h2';
+	const isExample = blockId === 'theme-quote-example';
 
-	useEffect(() => {
-		if (blockId === 'theme-quote-example') {
-			return;
-		}
-
-		const expectedId = `theme-quote-${clientId.slice(0, 8)}`;
-
-		if ( !blockId ) {
-			setAttributes({
-				blockId: expectedId,
-			});
-		}
-	}, [blockId, clientId, setAttributes]);
-
-	if (blockId === 'theme-quote-example') {
-		return (
-			<BlockExamplePreview
-				className="theme-quote-example-preview"
-				imagePath="/assets/src/images/ambrygen-default-image.png"
-			/>
-		);
-	}
+	useUniqueBlockId({
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: !isExample,
+		idPrefix: 'theme-quote',
+	});
 
 	const blockProps = useBlockProps({
 		className: 'theme-quote',
 	});
+
+	if (isExample) {
+		return (
+			<BlockExamplePreview
+				className="theme-quote-example-preview"
+				imagePath="/assets/src/images/theme-quote/preview.png"
+			/>
+		);
+	}
 
 	return (
 		<>
@@ -129,4 +124,3 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		</>
 	);
 }
-

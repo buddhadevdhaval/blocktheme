@@ -1,13 +1,8 @@
-document.addEventListener( 'DOMContentLoaded', function () {
+const initTabMenuBlocks = function () {
 	document
 		.querySelectorAll( '.secondary-sticky-tabs' )
 		.forEach( function ( wrapper ) {
 			const tabs = wrapper.querySelectorAll( '.tab-menu-section__tab' );
-			const mobileSelect = wrapper.querySelector(
-				'.tabs__mobile-nav .tabs__select'
-			);
-			const managedAttr = 'data-tab-menu-managed';
-			const originalHiddenAttr = 'data-tab-menu-original-hidden';
 
 			if ( ! tabs.length ) {
 				return;
@@ -25,7 +20,7 @@ document.addEventListener( 'DOMContentLoaded', function () {
 					10
 				);
 			};
-			const scrollToTarget = function ( target ) {
+			const scrollToTarget = function ( target, behavior = 'smooth' ) {
 				const targetPosition =
 					target.getBoundingClientRect().top +
 					window.pageYOffset -
@@ -33,8 +28,18 @@ document.addEventListener( 'DOMContentLoaded', function () {
 
 				window.scrollTo( {
 					top: targetPosition,
-					behavior: 'smooth',
+					behavior,
 				} );
+			};
+			const getTargetScrollPosition = function ( target ) {
+				return (
+					target.getBoundingClientRect().top +
+					window.pageYOffset -
+					getOffset()
+				);
+			};
+			const normalizeHash = function ( hash ) {
+				return decodeURIComponent( ( hash || '' ).replace( /^#/, '' ) );
 			};
 			const resolveTargetElement = function ( targetId ) {
 				if ( ! targetId ) {
@@ -98,6 +103,13 @@ document.addEventListener( 'DOMContentLoaded', function () {
 				return;
 			}
 
+			const mobileSelect = wrapper.querySelector(
+				'.tabs__mobile-nav .tabs__select'
+			);
+			const managedAttr = 'data-tab-menu-managed';
+			const originalHiddenAttr = 'data-tab-menu-original-hidden';
+			let pendingHashNavigationTarget = '';
+			let initialHashTargetId = '';
 			const setActiveTab = function ( activeTab ) {
 				tabs.forEach( function ( tab ) {
 					const isActive = tab === activeTab;
@@ -109,8 +121,7 @@ document.addEventListener( 'DOMContentLoaded', function () {
 				} );
 
 				if ( mobileSelect ) {
-					mobileSelect.value =
-						activeTab.dataset.scrollTarget || '';
+					mobileSelect.value = activeTab.dataset.scrollTarget || '';
 				}
 
 				if ( tabBehavior !== 'tab-mode' ) {
@@ -189,16 +200,145 @@ document.addEventListener( 'DOMContentLoaded', function () {
 					);
 				} );
 			};
+			const findPairByTarget = function ( targetElement ) {
+				if ( ! targetElement ) {
+					return null;
+				}
+
+				return (
+					sectionPairs.find( function ( pair ) {
+						return (
+							pair.target === targetElement ||
+							pair.target.contains( targetElement )
+						);
+					} ) || null
+				);
+			};
+			const syncHash = function ( targetId ) {
+				if ( ! targetId || ! window.history?.pushState ) {
+					return;
+				}
+
+				const nextHash = `#${ targetId }`;
+				if ( window.location.hash !== nextHash ) {
+					window.history.pushState( null, '', nextHash );
+				}
+			};
+			const handleHashNavigation = function ( shouldScroll = false ) {
+				const targetId = normalizeHash( window.location.hash );
+
+				if ( ! targetId ) {
+					pendingHashNavigationTarget = '';
+					return;
+				}
+
+				if (
+					pendingHashNavigationTarget &&
+					pendingHashNavigationTarget === targetId
+				) {
+					pendingHashNavigationTarget = '';
+					return;
+				}
+
+				const hashTarget = document.getElementById( targetId );
+				const matchedPair = findPairByTarget( hashTarget );
+
+				if ( ! matchedPair ) {
+					pendingHashNavigationTarget = '';
+					return;
+				}
+
+				pendingHashNavigationTarget = '';
+				setActiveTab( matchedPair.tab );
+
+				if ( shouldScroll ) {
+					const scrollTarget = hashTarget || matchedPair.target;
+					const targetPosition = getTargetScrollPosition(
+						scrollTarget
+					);
+					const currentPosition = window.pageYOffset;
+
+					if ( Math.abs( currentPosition - targetPosition ) < 12 ) {
+						return;
+					}
+
+					scrollToTarget(
+						scrollTarget,
+						'smooth'
+					);
+				}
+			};
+			const handleInitialHashNavigation = function () {
+				if ( ! initialHashTargetId ) {
+					return;
+				}
+
+				window.requestAnimationFrame( function () {
+					window.requestAnimationFrame( function () {
+						syncHash( initialHashTargetId );
+						handleHashNavigation( true );
+					} );
+				} );
+			};
+			const handleAnchorClick = function ( event ) {
+				const anchor = event.target.closest( 'a[href^="#"]' );
+
+				if ( ! anchor ) {
+					return;
+				}
+
+				const rawHref = anchor.getAttribute( 'href' ) || '';
+				const targetId = normalizeHash( rawHref );
+
+				if ( ! targetId ) {
+					return;
+				}
+
+				const hashTarget = document.getElementById( targetId );
+				const matchedPair = findPairByTarget( hashTarget );
+
+				if ( ! matchedPair ) {
+					return;
+				}
+
+				event.preventDefault();
+				setActiveTab( matchedPair.tab );
+				pendingHashNavigationTarget = targetId;
+				syncHash( targetId );
+				scrollToTarget( hashTarget || matchedPair.target, 'smooth' );
+			};
 
 			const defaultPair =
 				sectionPairs.find( function ( pair ) {
 					return pair.tab.classList.contains( 'active' );
 				} ) || sectionPairs[ 0 ];
+			const currentHashTargetId = normalizeHash( window.location.hash );
+			const initialHashPair = currentHashTargetId
+				? findPairByTarget(
+						document.getElementById( currentHashTargetId )
+				  )
+				: null;
 
-			setActiveTab( defaultPair.tab );
+			if ( initialHashPair && currentHashTargetId ) {
+				initialHashTargetId = currentHashTargetId;
+				window.history.replaceState(
+					null,
+					'',
+					`${ window.location.pathname }${ window.location.search }`
+				);
+				window.scrollTo( {
+					top: 0,
+					behavior: 'auto',
+				} );
+				setActiveTab( initialHashPair.tab );
+			}
+
+			if ( ! initialHashPair ) {
+				setActiveTab( defaultPair.tab );
+			}
 
 			tabs.forEach( function ( tab ) {
-				tab.addEventListener( 'click', function () {
+				tab.addEventListener( 'click', function ( event ) {
 					const clickedPair = sectionPairs.find( function ( pair ) {
 						return pair.tab === tab;
 					} );
@@ -207,20 +347,26 @@ document.addEventListener( 'DOMContentLoaded', function () {
 						return;
 					}
 
+					event.preventDefault();
 					setActiveTab( clickedPair.tab );
+					pendingHashNavigationTarget = clickedPair.target.id;
+					syncHash( clickedPair.target.id );
 
-					if ( tabBehavior === 'scroll' ) {
+					if ( tabBehavior === 'scroll' || tabBehavior === 'tab-mode' ) {
 						scrollToTarget( clickedPair.target );
 					}
 				} );
 			} );
-			
 
 			if ( mobileSelect ) {
 				mobileSelect.addEventListener( 'change', function () {
-					const selectedTab = Array.from( tabs ).find( function ( tab ) {
-						return tab.dataset.scrollTarget === mobileSelect.value;
-					} );
+					const selectedTab = Array.from( tabs ).find(
+						function ( tab ) {
+							return (
+								tab.dataset.scrollTarget === mobileSelect.value
+							);
+						}
+					);
 
 					if ( ! selectedTab ) {
 						return;
@@ -231,6 +377,10 @@ document.addEventListener( 'DOMContentLoaded', function () {
 			}
 
 			const updateActiveTabFromScroll = function () {
+				if ( tabBehavior !== 'scroll' ) {
+					return;
+				}
+
 				const offset = getOffset();
 				const scrollPoint = window.pageYOffset + offset;
 				const firstPair = sectionPairs[ 0 ];
@@ -240,10 +390,6 @@ document.addEventListener( 'DOMContentLoaded', function () {
 
 				if ( firstPair && scrollPoint <= wrapperBottom ) {
 					setActiveTab( firstPair.tab );
-					return;
-				}
-
-				if ( tabBehavior !== 'scroll' ) {
 					return;
 				}
 
@@ -265,5 +411,21 @@ document.addEventListener( 'DOMContentLoaded', function () {
 			};
 
 			window.addEventListener( 'scroll', updateActiveTabFromScroll );
+			window.addEventListener( 'hashchange', function () {
+				handleHashNavigation( true );
+			} );
+			document.addEventListener( 'click', handleAnchorClick );
+			if ( ! initialHashTargetId ) {
+				handleHashNavigation();
+			}
+			window.addEventListener( 'load', handleInitialHashNavigation, {
+				once: true,
+			} );
 		} );
-} );
+};
+
+if ( document.readyState === 'loading' ) {
+	document.addEventListener( 'DOMContentLoaded', initTabMenuBlocks );
+} else {
+	initTabMenuBlocks();
+}

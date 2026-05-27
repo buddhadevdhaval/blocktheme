@@ -10,13 +10,14 @@ import {
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
 import { useSelect } from '@wordpress/data';
-import { useEffect, useMemo } from '@wordpress/element';
+import { useMemo } from '@wordpress/element';
 import { PanelBody } from '@wordpress/components';
 import {
 	TagSelector,
 	ImageUploader,
 	BlockExamplePreview,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 /**
  * Edit component for the Testimonials block.
@@ -35,8 +36,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		blockId,
 		heading,
 		headingTag,
-		mainImage,
-		mainImageAlt,
 		secondaryImage,
 		secondaryImageAlt,
 		overlayImage,
@@ -80,16 +79,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		],
 		[]
 	);
+	const isExample = blockId === 'testimonials-example';
 
-	useEffect( () => {
-		const expectedId = `testimonials-${ clientId }`;
-
-		if ( ! blockId ) {
-			setAttributes( {
-				blockId: expectedId,
-			} );
-		}
-	}, [ clientId, blockId, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: ! isExample,
+		idPrefix: 'testimonials',
+	} );
 
 	// Determine heading tag, default to H2
 	const Tag = headingTag || 'h2';
@@ -122,7 +120,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		} );
 	};
 
-	if ( blockId === 'testimonials-example' ) {
+	if ( isExample ) {
 		return (
 			<BlockExamplePreview
 				className="testimonials-example-preview"
@@ -173,20 +171,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								secondaryImage: '',
 								secondaryImageId: 0,
 								secondaryImageAlt: '',
-							} )
-						}
-					/>
-					<ImageUploader
-						url={ mainImage }
-						label={ __( 'Image', 'ambrygen-web' ) }
-						onSelect={ ( media ) =>
-							updateImage( media, 'mainImage' )
-						}
-						onRemove={ () =>
-							setAttributes( {
-								mainImage: '',
-								mainImageId: 0,
-								mainImageAlt: '',
 							} )
 						}
 					/>

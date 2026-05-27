@@ -41,7 +41,7 @@
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
         @include bp.min(lg) {
-            align-items: center;
+            // align-items: center;
         }
 
         &:focus-within {

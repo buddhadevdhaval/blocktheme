@@ -23,8 +23,15 @@
 	}
 }
 
+.three-column-image-grid {
+	.grid-content {
+		display: block;
+	}
+}
 
 .three-column-image-grid__content {
+	display: block;
+
 	>.block-editor-inner-blocks {
 		.three-column-card__inner {
 			.three-column-card__image {

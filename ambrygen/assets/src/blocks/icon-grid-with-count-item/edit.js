@@ -2,10 +2,12 @@ import { useEffect } from '@wordpress/element';
 import {
 	useBlockProps,
 	InspectorControls,
+	URLInput,
 } from '@wordpress/block-editor';
 import {
 	PanelBody,
 	TextControl,
+	ToggleControl,
 } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -18,6 +20,9 @@ export default function Edit( {
 	const {
 		termlinktext,
 		title = '',
+		customName = '',
+		customCount = '',
+		customLink = {},
 		selectedTerm = null,
 	} = attributes;
 
@@ -62,15 +67,81 @@ export default function Edit( {
 		className: 'item-card',
 	} );
 
-	const selectedTermName = selectedTermData?.name
+	const fallbackTermName = selectedTermData?.name
 		? decodeEntities( selectedTermData.name )
 		: title;
-	const selectedTermLink = selectedTermData?.link || '#';
+	const displayName = customName || fallbackTermName;
+	const displayCount =
+		customCount !== '' && customCount !== null
+			? customCount
+			: selectedTermData?.count;
+	const displayLink = customLink?.url || selectedTermData?.link || '#';
 
 	return (
 		<>
 			<InspectorControls>
 				<PanelBody title="Card Settings" initialOpen={ true }>
+					<TextControl
+						label={ __( 'Custom Name', 'ambrygen-web' ) }
+						value={ customName }
+						onChange={ ( value ) =>
+							setAttributes( {
+								customName: value,
+							} )
+						}
+						placeholder={ fallbackTermName || __( 'Category name', 'ambrygen-web' ) }
+						help={ __(
+							'Leave empty to use the selected category name.',
+							'ambrygen-web'
+						) }
+					/>
+					<TextControl
+						label={ __( 'Custom Count', 'ambrygen-web' ) }
+						value={ customCount }
+						onChange={ ( value ) =>
+							setAttributes( {
+								customCount: value,
+							} )
+						}
+						placeholder={
+							selectedTermData?.count !== undefined &&
+							selectedTermData?.count !== null
+								? String( selectedTermData.count )
+								: __( '0', 'ambrygen-web' )
+						}
+						help={ __(
+							'Leave empty to use the selected category count.',
+							'ambrygen-web'
+						) }
+					/>
+					<div className="components-base-control">
+						<label className="components-base-control__label">
+							{ __( 'Custom Link', 'ambrygen-web' ) }
+						</label>
+						<URLInput
+							value={ customLink?.url || '' }
+							onChange={ ( url ) =>
+								setAttributes( {
+									customLink: {
+										...customLink,
+										url: url || '',
+									},
+								} )
+							}
+						/>
+					</div>
+					<ToggleControl
+						label={ __( 'Open custom link in new tab', 'ambrygen-web' ) }
+						checked={ Boolean( customLink?.opensInNewTab ) }
+						onChange={ ( value ) =>
+							setAttributes( {
+								customLink: {
+									...customLink,
+									opensInNewTab: value,
+								},
+							} )
+						}
+					/>
 					<TextControl
 						label={ __( 'Button Text', 'ambrygen-web' ) }
 						value={ termlinktext }
@@ -96,13 +167,14 @@ export default function Edit( {
 						<div className="item-card__content">
 							<div className="item-card__info">
 								<div className="item-card__category body2-medium">
-									{ selectedTermName }
+									{ displayName }
 								</div>
 
-								{ selectedTermData?.count !== undefined &&
-									selectedTermData?.count !== null && (
+								{ displayCount !== undefined &&
+									displayCount !== null &&
+									displayCount !== '' && (
 										<div className="item-card__title subtitle2-sbold">
-											{ selectedTermData.count } Tests
+											{ displayCount } Tests
 										</div>
 									) }
 
@@ -110,7 +182,9 @@ export default function Edit( {
 							</div>
 							<a
 								className="site-btn is-style-site-text-btn has-right-arrow text-14"
-								href={ selectedTermLink }
+								href={ displayLink }
+								target={ customLink?.opensInNewTab ? '_blank' : undefined }
+								rel={ customLink?.opensInNewTab ? 'noopener noreferrer' : undefined }
 								onClick={ ( e ) => e.preventDefault() }
 							>
 								{ termlinktext || __( 'View Test', 'ambrygen-web' ) }

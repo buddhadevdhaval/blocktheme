@@ -53,8 +53,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				.map( ( block ) => ( {
 					...block,
 					targetId:
-						block.attributes?.blockId ||
 						block.attributes?.anchor ||
+						block.attributes?.blockId ||
 						'',
 				} ) )
 				.filter( ( block ) => block.targetId )

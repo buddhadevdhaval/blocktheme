@@ -23,7 +23,9 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					button.setAttribute( 'aria-selected', isActive ? 'true' : 'false' );
 				} );
 				panels.forEach( ( panel ) => {
-					panel.classList.toggle( 'is-active', panel.id === targetId );
+					const isActive = panel.id === targetId;
+					panel.classList.toggle( 'is-active', isActive );
+					panel.hidden = ! isActive;
 				} );
 				if ( select ) {
 					select.value = targetId;

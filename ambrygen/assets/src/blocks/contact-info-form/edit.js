@@ -18,6 +18,7 @@ import {
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
+import { useUniqueBlockId } from '../_shared/hooks';
 import { getThemeAssetUrl } from '../../utils/assets';
 
 const CONTACT_INFO_FORM_VARIATIONS = {
@@ -110,17 +111,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const hasInfoListing = isInfoView && ( phoneNumber || emailAddress );
 	const hasCta = isInfoView && ctaValue.text && ctaValue.url;
 	const hasTextContent = hasEyebrow || hasHeading || hasDescription;
+	const isExample = blockId === 'contact-info-form-example';
 
-	useEffect( () => {
-		const clientIdSuffix = clientId.slice( 0, 8 );
-		const expectedId = `section-${ clientIdSuffix }`;
-
-		if ( !blockId ) {
-			setAttributes({
-				blockId: expectedId,
-			} );
-		}
-	}, [ clientId, blockId, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: ! isExample,
+	} );
 
 	useEffect( () => {
 		if ( ! variation ) {
@@ -130,7 +128,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 	}, [ variation, normalizedVariation, setAttributes ] );
 
-	if ( blockId === 'contact-info-form-example' ) {
+	if ( isExample ) {
 		return (
 			<BlockVariationsExamplePreview
 				variants={ variants }
@@ -323,7 +321,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { eyebrow: value } )
 						}
-						className="newsletter__content-block__eyebrow-text eyebrow"
+						className="newsletter__content-block__eyebrow-text eyebrow hero-kicker"
 						placeholder={ __(
 							'Add Eyebrow...',
 							'ambrygen-web'

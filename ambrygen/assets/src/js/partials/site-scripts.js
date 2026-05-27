@@ -328,25 +328,37 @@ function initTooltips() {
 		});
 	}
 
-	function resetTooltipPosition(tooltipContent) {
-		if (!tooltipContent) {
+	function ensureTooltipPlacementStyles() {
+		if (document.getElementById('ambrygen-tooltip-placement-styles')) {
 			return;
 		}
 
-		tooltipContent.style.position = '';
-		tooltipContent.style.left = '';
-		tooltipContent.style.top = '';
-		tooltipContent.style.right = '';
-		tooltipContent.style.maxWidth = '';
-		tooltipContent.style.minWidth = '';
-		tooltipContent.style.setProperty('--ambrygen-tooltip-shift-x', '0px');
-		tooltipContent.style.setProperty('--ambrygen-tooltip-arrow-left', 'auto');
-		tooltipContent.style.setProperty('--ambrygen-tooltip-arrow-right', '');
+		const style = document.createElement('style');
+		style.id = 'ambrygen-tooltip-placement-styles';
+		style.textContent = `
+			.ambrygen-tooltip__content[data-tooltip-placement="mobile"]::before {
+				left: var(--ambrygen-tooltip-arrow-left) !important;
+				right: auto !important;
+				transform: none !important;
+			}
+
+			.ambrygen-tooltip__content[data-tooltip-placement="right"]::before {
+				left: var(--ambrygen-tooltip-arrow-left) !important;
+				right: auto !important;
+				transform: none !important;
+			}
+
+			.ambrygen-tooltip__content[data-tooltip-placement="left"]::before {
+				left: var(--ambrygen-tooltip-arrow-left) !important;
+				right: auto !important;
+				transform: none !important;
+			}
+		`;
+		document.head.appendChild(style);
 	}
 
-	function positionTooltip(node) {
-		if (!node || window.matchMedia('(max-width: 480px)').matches) {
-			resetTooltipPosition(node?.querySelector('.ambrygen-tooltip__content'));
+	function updateTooltipPlacement(node) {
+		if (!node) {
 			return;
 		}
 
@@ -355,55 +367,121 @@ function initTooltips() {
 			return;
 		}
 
-		resetTooltipPosition(tooltipContent);
-
 		const viewportPadding = 16;
-		const arrowOffset = 28;
-		const triggerRect = node.getBoundingClientRect();
-		const tooltipWidth = Math.min(320, window.innerWidth - viewportPadding * 2);
-		const preferredLeft = triggerRect.right - tooltipWidth;
-		const left = Math.min(
-			Math.max(viewportPadding, preferredLeft),
-			window.innerWidth - viewportPadding - tooltipWidth
-		);
-		const top = triggerRect.bottom + 10;
+		const nodeRect = node.getBoundingClientRect();
+		const triggerCenter = nodeRect.left + nodeRect.width / 2;
+		const shouldOpenRight = triggerCenter < window.innerWidth / 2;
+		const isMobileViewport = window.matchMedia('(max-width: 480px)').matches;
+		const isTooltipActive =
+			node.matches(':hover, :focus-visible') ||
+			node.classList.contains('is-tooltip-active');
+		const translateY = isTooltipActive ? ' translateY(-2px)' : '';
 
-		tooltipContent.style.position = 'fixed';
-		tooltipContent.style.left = `${left}px`;
-		tooltipContent.style.top = `${top}px`;
-		tooltipContent.style.right = 'auto';
-		tooltipContent.style.minWidth = `${tooltipWidth}px`;
-		tooltipContent.style.maxWidth = `${tooltipWidth}px`;
+		if (isMobileViewport) {
+			const tooltipWidth = Math.min(320, window.innerWidth - viewportPadding * 2);
+			const desiredLeft = triggerCenter - tooltipWidth / 2;
+			const clampedLeft = Math.min(
+				Math.max(viewportPadding, desiredLeft),
+				window.innerWidth - viewportPadding - tooltipWidth
+			);
+			const leftOffset = clampedLeft - nodeRect.left;
+			const arrowLeft = Math.min(
+				Math.max(triggerCenter - clampedLeft - 14, 8),
+				tooltipWidth - 36
+			);
 
-		const contentRect = tooltipContent.getBoundingClientRect();
-		const triggerCenter = triggerRect.left + triggerRect.width / 2;
-		const triggerCenterInTooltip = triggerCenter - contentRect.left;
-		const maxArrowLeft = contentRect.width - arrowOffset - 12;
-		const arrowLeft = triggerCenterInTooltip - arrowOffset / 2;
-		const clampedArrowLeft = Math.min(
-			Math.max(12, arrowLeft),
-			Math.max(12, maxArrowLeft)
-		);
-
-		tooltipContent.style.setProperty(
-			'--ambrygen-tooltip-arrow-left',
-			`${clampedArrowLeft}px`
-		);
-		tooltipContent.style.setProperty('--ambrygen-tooltip-arrow-right', 'auto');
-	}
-
-	function positionAllTooltips() {
-		document.querySelectorAll(tooltipSelector).forEach((node) => {
-			positionTooltip(node);
-		});
-	}
-
-	function getClosestTooltipNode(target) {
-		if (!(target instanceof Element)) {
-			return null;
+			tooltipContent.style.width = `${tooltipWidth}px`;
+			tooltipContent.style.minWidth = `${tooltipWidth}px`;
+			tooltipContent.style.maxWidth = `${tooltipWidth}px`;
+			tooltipContent.style.left = `${leftOffset}px`;
+			tooltipContent.style.right = 'auto';
+			tooltipContent.style.transform = `translateX(0%)${translateY}`;
+			tooltipContent.style.setProperty(
+				'--ambrygen-tooltip-arrow-left',
+				`${arrowLeft}px`
+			);
+			tooltipContent.style.setProperty(
+				'--ambrygen-tooltip-arrow-right',
+				'auto'
+			);
+			tooltipContent.style.setProperty(
+				'--ambrygen-tooltip-shift-x',
+				'0%'
+			);
+			tooltipContent.setAttribute('data-tooltip-placement', 'mobile');
+			return;
 		}
 
-		return target.closest(tooltipSelector);
+		const tooltipWidth = Math.min(320, window.innerWidth - viewportPadding * 2);
+		const desiredLeft = triggerCenter - tooltipWidth / 2;
+		const clampedLeft = Math.min(
+			Math.max(viewportPadding, desiredLeft),
+			window.innerWidth - viewportPadding - tooltipWidth
+		);
+		const leftOffset = clampedLeft - nodeRect.left;
+		const rightOffset = nodeRect.right - (clampedLeft + tooltipWidth);
+		const arrowLeft = Math.min(
+			Math.max(triggerCenter - clampedLeft - 14, 8),
+			tooltipWidth - 36
+		);
+
+		tooltipContent.style.width = `${tooltipWidth}px`;
+		tooltipContent.style.minWidth = `${tooltipWidth}px`;
+		tooltipContent.style.maxWidth = '320px';
+		tooltipContent.style.transform = `translateX(0%)${translateY}`;
+		tooltipContent.style.setProperty(
+			'--ambrygen-tooltip-shift-x',
+			'0%'
+		);
+
+		if (shouldOpenRight) {
+			tooltipContent.style.left = `${leftOffset}px`;
+			tooltipContent.style.right = 'auto';
+			tooltipContent.style.setProperty(
+				'--ambrygen-tooltip-arrow-left',
+				`${arrowLeft}px`
+			);
+			tooltipContent.style.setProperty(
+				'--ambrygen-tooltip-arrow-right',
+				'auto'
+			);
+			tooltipContent.setAttribute('data-tooltip-placement', 'right');
+			return;
+		}
+
+		tooltipContent.style.left = 'auto';
+		tooltipContent.style.right = `${rightOffset}px`;
+		tooltipContent.style.setProperty(
+			'--ambrygen-tooltip-arrow-left',
+			`${arrowLeft}px`
+		);
+		tooltipContent.style.setProperty(
+			'--ambrygen-tooltip-arrow-right',
+			'auto'
+		);
+		tooltipContent.setAttribute('data-tooltip-placement', 'left');
+	}
+
+	function bindTooltipPlacement() {
+		const syncTooltipPlacement = (event) => {
+			const eventTarget =
+				event.target instanceof Element ? event.target : null;
+			const tooltipNode = eventTarget
+				? eventTarget.closest(tooltipSelector)
+				: null;
+			if (tooltipNode) {
+				updateTooltipPlacement(tooltipNode);
+			}
+		};
+
+		document.addEventListener('mouseenter', syncTooltipPlacement, true);
+		document.addEventListener('focusin', syncTooltipPlacement);
+
+		window.addEventListener('resize', () => {
+			document.querySelectorAll(tooltipSelector).forEach((node) => {
+				updateTooltipPlacement(node);
+			});
+		});
 	}
 
 	function clearActiveTooltips(exceptNode = null) {
@@ -416,7 +494,7 @@ function initTooltips() {
 	}
 
 	document.addEventListener('click', (event) => {
-		const tooltipNode = getClosestTooltipNode(event.target);
+		const tooltipNode = event.target.closest(tooltipSelector);
 
 		if (!tooltipNode) {
 			if (isTouchDevice) {
@@ -430,10 +508,7 @@ function initTooltips() {
 		}
 
 		// Allow clicking links inside tooltip content on touch devices.
-		if (
-			event.target instanceof Element &&
-			event.target.closest('.ambrygen-tooltip__content a')
-		) {
+		if (event.target.closest('.ambrygen-tooltip__content a')) {
 			return;
 		}
 
@@ -445,6 +520,9 @@ function initTooltips() {
 		);
 		clearActiveTooltips();
 		tooltipNode.classList.toggle('is-tooltip-active', willActivate);
+		if (willActivate) {
+			updateTooltipPlacement(tooltipNode);
+		}
 	});
 
 	document.addEventListener('keydown', (event) => {
@@ -453,26 +531,11 @@ function initTooltips() {
 		}
 	});
 
-	document.addEventListener('mouseenter', (event) => {
-		const tooltipNode = getClosestTooltipNode(event.target);
-		if (tooltipNode) {
-			positionTooltip(tooltipNode);
-		}
-	}, true);
-
-	document.addEventListener('focusin', (event) => {
-		const tooltipNode = getClosestTooltipNode(event.target);
-		if (tooltipNode) {
-			positionTooltip(tooltipNode);
-		}
-	});
-
-	window.addEventListener('resize', positionAllTooltips);
-
 	// Initialize tooltip divs on page load
 	hydrateEscapedTooltips();
 	initializeTooltipDivs();
-	positionAllTooltips();
+	ensureTooltipPlacementStyles();
+	bindTooltipPlacement();
 }
 
 (function () {

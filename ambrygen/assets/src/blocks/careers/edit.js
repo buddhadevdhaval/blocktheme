@@ -25,6 +25,7 @@ import {
 	CtaButtonField,
 	TagSelector,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 import { getIframeSrc } from '../../utils/validation.js';
 import playIcon from '../../images/play-icon.svg';
 
@@ -152,10 +153,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		videoObj,
 		videoPoster,
 		careerslink,
-		videoType,
+		videoType = 'embed',
 		link,
-		joblocationicon,
-		jobtypeicon,
 	} = attributes;
 
 	const [jobSearchInput, setJobSearchInput] = useState('');
@@ -274,17 +273,21 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		[selectedJobIds, selectedJobsById]
 	);
 	const hasJobOptions = jobOptions.length > 0;
+	const isExample = blockId === 'careers-example';
+
+	useUniqueBlockId({
+		blockId,
+		clientId,
+		enabled: !isExample,
+		idPrefix: 'section',
+		setAttributes,
+	});
 
 	useEffect(() => {
-		const clientIdSuffix = clientId.slice(0, 8);
-		const expectedId = `section-${clientIdSuffix}`;
-
-		if ( !blockId ) {
-			setAttributes({
-				blockId: expectedId,
-			});
+		if (!attributes.videoType) {
+			setAttributes({ videoType: 'embed' });
 		}
-	}, [clientId, blockId, setAttributes]);
+	}, [attributes.videoType, setAttributes]);
 
 	const blockProps = useBlockProps({ className: 'careers-highlight' });
 
@@ -317,7 +320,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		}
 	};
 
-	if (blockId === 'careers-example') {
+	if (isExample) {
 		return (
 			<BlockExamplePreview
 				className="cta-tiles-with-3-card-example-preview"
@@ -343,11 +346,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<PanelBody title={__('Video Settings', 'ambrygen-web')} initialOpen={true}>
 					<SelectControl
 						label={__('Video Type', 'ambrygen-web')}
-						value={videoType}
+						value={videoType || 'embed'}
 						options={[
 							{
 								label: __(
-									'Self Hosted (MP4)',
+									'Upload video (MP4)',
 									'ambrygen-web'
 								),
 								value: 'mp4',
@@ -429,12 +432,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 					{videoType === 'embed' && (
 						<TextControl
-							label={__(
-								'YouTube or Vimeo URL',
-								'ambrygen-web'
-							)}
+							label={__('Video URL', 'ambrygen-web')}
 							help={__(
-								'Supports youtube.com, youtu.be, vimeo.com',
+								'Paste YouTube/Vimeo or iframe embed URL.',
 								'ambrygen-web'
 							)}
 							value={videoUrl || ''}
@@ -464,34 +464,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						showVariant={false}
 						onChange={(value) =>
 							setAttributes({ careerslink: value })
-						}
-					/>
-				</PanelBody>
-
-				<PanelBody title={__('Job Icon Settings', 'ambrygen-web')} initialOpen={false}>
-					<ImageUploader
-						label={__('Job Location Icon', 'ambrygen-web')}
-						url={joblocationicon?.url}
-						onSelect={(media) =>
-							setAttributes({
-								joblocationicon:
-									normalizeImageObject(media),
-							})
-						}
-						onRemove={() =>
-							setAttributes({ joblocationicon: null })
-						}
-					/>
-					<ImageUploader
-						label={__('Job Type Icon', 'ambrygen-web')}
-						url={jobtypeicon?.url}
-						onSelect={(media) =>
-							setAttributes({
-								jobtypeicon: normalizeImageObject(media),
-							})
-						}
-						onRemove={() =>
-							setAttributes({ jobtypeicon: null })
 						}
 					/>
 				</PanelBody>
@@ -566,7 +538,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						)}
 					</div>
 				</div>
-				{hasHeaderContent && <div className="is-style-gl-s50"></div>}
+				<div className="is-style-gl-s50"></div>
 
 				<div className="careers-highlight__row">
 					<div className="careers-highlight__left">

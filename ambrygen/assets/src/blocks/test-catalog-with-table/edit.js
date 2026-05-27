@@ -11,6 +11,7 @@ import {
 	SearchControl,
 	Spinner,
 	TextControl,
+	ToggleControl,
 } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -26,7 +27,6 @@ const HEADING_OPTIONS = [
 	{ label: 'H6', value: 'h6' },
 ];
 
-const SEARCH_DEBOUNCE_MS = 300;
 const ORDER_URL = '/providers/ordering-process';
 
 const getPostLabel = ( post ) => decodeEntities( post?.title?.rendered || '' );
@@ -132,20 +132,10 @@ const getTabCategoryLabel = ( tab, terms = [] ) => {
 };
 
 function TabSettings( { index, tab, updateTab, removeTab, totalTabs } ) {
-	const [ childSearchInput, setChildSearchInput ] = useState( tab.text || '' );
-	const [ childSearch, setChildSearch ] = useState( tab.text || '' );
 	const [ productSearchInput, setProductSearchInput ] = useState( '' );
 	const subTermDependency = Array.isArray( tab.subTermIds )
 		? tab.subTermIds.map( Number ).sort( ( a, b ) => a - b ).join( ',' )
 		: '';
-
-	useEffect( () => {
-		const timeoutId = setTimeout(
-			() => setChildSearch( childSearchInput ),
-			SEARCH_DEBOUNCE_MS
-		);
-		return () => clearTimeout( timeoutId );
-	}, [ childSearchInput ] );
 
 	const {
 		childTerms,
@@ -168,10 +158,6 @@ function TabSettings( { index, tab, updateTab, removeTab, totalTabs } ) {
 
 			if ( tab.parentTermId ) {
 				childQuery.parent = tab.parentTermId;
-			}
-
-			if ( childSearch ) {
-				childQuery.search = childSearch;
 			}
 
 			const fetchedChildTerms = select( 'core' ).getEntityRecords(
@@ -247,7 +233,7 @@ function TabSettings( { index, tab, updateTab, removeTab, totalTabs } ) {
 					: false,
 			};
 		},
-		[ childSearch, tab.parentTermId, tab.termId, subTermDependency ]
+		[ tab.parentTermId, tab.termId, subTermDependency ]
 	);
 
 	const childCategoryOptions = useMemo( () => {
@@ -329,7 +315,6 @@ function TabSettings( { index, tab, updateTab, removeTab, totalTabs } ) {
 					label={ __( 'Child Category', 'ambrygen-web' ) }
 					value={ String( tab.termId || '' ) }
 					options={ childCategoryOptions }
-					onFilterValueChange={ setChildSearchInput }
 					onChange={ ( value ) => {
 						const term = [
 							...( childTerms || [] ),
@@ -700,22 +685,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		tableEyebrow,
 		tableTitle,
 		tableDescription,
+		hideTable = false,
 		headingLevel,
 		parentCategoryId = 0,
 		selectedTabs = [],
 	} = attributes;
 
 	const TagName = headingLevel || 'h2';
-	const [ parentSearchInput, setParentSearchInput ] = useState( '' );
-	const [ parentSearch, setParentSearch ] = useState( '' );
-
-	useEffect( () => {
-		const timeoutId = setTimeout(
-			() => setParentSearch( parentSearchInput ),
-			SEARCH_DEBOUNCE_MS
-		);
-		return () => clearTimeout( timeoutId );
-	}, [ parentSearchInput ] );
 
 	useEffect( () => {
 		const expectedId = `test-catalog-with-table-${ clientId.slice( 0, 8 ) }`;
@@ -733,10 +709,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				order: 'asc',
 				_fields: 'id,name,slug,parent',
 			};
-
-			if ( parentSearch ) {
-				parentQuery.search = parentSearch;
-			}
 
 			return {
 				parentTerms: select( 'core' ).getEntityRecords(
@@ -757,7 +729,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				),
 			};
 		},
-		[ parentCategoryId, parentSearch ]
+		[ parentCategoryId ]
 	);
 
 	const parentCategoryOptions = useMemo(
@@ -810,7 +782,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						label={ __( 'Parent Category', 'ambrygen-web' ) }
 						value={ String( parentCategoryId || '' ) }
 						options={ parentCategoryOptions }
-						onFilterValueChange={ setParentSearchInput }
 						onChange={ ( value ) => {
 							const nextParentId = Number( value ) || 0;
 							setAttributes( {
@@ -859,6 +830,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 					/>
 				</PanelBody>
+
+				<PanelBody title={ __( 'Table Settings', 'ambrygen-web' ) }>
+					<ToggleControl
+						label={ __( 'Hide table section', 'ambrygen-web' ) }
+						checked={ hideTable }
+						onChange={ ( value ) => setAttributes( { hideTable: value } ) }
+					/>
+				</PanelBody>
 			</InspectorControls>
 
 			<div { ...useBlockProps() }>
@@ -884,7 +863,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					</div>
 				</div>
 
-				<div className="is-style-gl-s24" aria-hidden="true"></div>
+				<div className="is-style-gl-s50" aria-hidden="true"></div>
 
 				<div className="container-1280 bg-primary_25 block-bg">
 
@@ -927,46 +906,50 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 				</div>
 
-				<div className="is-style-gl-s50" aria-hidden="true"></div>
+				{ ! hideTable && (
+					<>
+						<div className="is-style-gl-s50" aria-hidden="true"></div>
 
-				<div className="container-1280">
+						<div className="container-1280">
 
-						<div className="block-layout catlouge-table-result">
-							<div className="catlouge-table-result__header">
-								<RichText
-									tagName="div"
-									className="eyebrow catlouge-table-result__subtitle"
-									value={ tableEyebrow }
-									onChange={ ( value ) => setAttributes( { tableEyebrow: value } ) }
-									placeholder={ __( 'Table eyebrow...', 'ambrygen-web' ) }
-								/>
-								{ !! tableEyebrow && (
-									<div className="is-style-gl-s12" aria-hidden="true"></div>
-								) }
-								<TagName className="heading-4 mb-0 block-title catlouge-table-result__title">
-									<RichText
-										tagName="span"
-										value={ tableTitle }
-										onChange={ ( value ) => setAttributes( { tableTitle: value } ) }
-										placeholder={ __( 'Table title...', 'ambrygen-web' ) }
-									/>
-								</TagName>
-								{ !! tableTitle && (
-									<div className="is-style-gl-s12" aria-hidden="true"></div>
-								) }
-								<RichText
-									tagName="div"
-									className="body1 catlouge-table-result__desc block-description"
-									value={ tableDescription }
-									onChange={ ( value ) => setAttributes( { tableDescription: value } ) }
-									placeholder={ __( 'Table description...', 'ambrygen-web' ) }
-								/>
-							</div>
+								<div className="block-layout catlouge-table-result">
+									<div className="catlouge-table-result__header">
+										<RichText
+											tagName="div"
+											className="eyebrow catlouge-table-result__subtitle"
+											value={ tableEyebrow }
+											onChange={ ( value ) => setAttributes( { tableEyebrow: value } ) }
+											placeholder={ __( 'Table eyebrow...', 'ambrygen-web' ) }
+										/>
+										{ !! tableEyebrow && (
+											<div className="is-style-gl-s12" aria-hidden="true"></div>
+										) }
+										<TagName className="heading-4 mb-0 block-title catlouge-table-result__title">
+											<RichText
+												tagName="span"
+												value={ tableTitle }
+												onChange={ ( value ) => setAttributes( { tableTitle: value } ) }
+												placeholder={ __( 'Table title...', 'ambrygen-web' ) }
+											/>
+										</TagName>
+										{ !! tableTitle && (
+											<div className="is-style-gl-s12" aria-hidden="true"></div>
+										) }
+										<RichText
+											tagName="div"
+											className="body1 catlouge-table-result__desc block-description"
+											value={ tableDescription }
+											onChange={ ( value ) => setAttributes( { tableDescription: value } ) }
+											placeholder={ __( 'Table description...', 'ambrygen-web' ) }
+										/>
+									</div>
 
-							<TablePreview selectedTabs={ selectedTabs } />
+									<TablePreview selectedTabs={ selectedTabs } />
+								</div>
+
 						</div>
-
-				</div>
+					</>
+				) }
 			</div>
 		</>
 	);

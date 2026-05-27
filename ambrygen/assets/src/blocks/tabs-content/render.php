@@ -61,6 +61,9 @@ $ambrygen_found_item = false;
 				$ambrygen_processor = new WP_HTML_Tag_Processor( $ambrygen_html );
 				if ( $ambrygen_processor->next_tag( array( 'class_name' => 'tabs-table-content__item' ) ) ) {
 					$ambrygen_processor->add_class( 'is-active' );
+					if ( $ambrygen_processor->next_tag( array( 'class_name' => 'tabs-table-content__header' ) ) ) {
+						$ambrygen_processor->set_attribute( 'aria-expanded', 'true' );
+					}
 					$ambrygen_html = $ambrygen_processor->get_updated_html();
 					$ambrygen_found_item = true;
 				}
@@ -73,7 +76,13 @@ $ambrygen_found_item = false;
 				);
 
 				if ( is_string( $ambrygen_updated_html ) && $ambrygen_updated_html !== $ambrygen_html ) {
-					$ambrygen_html = $ambrygen_updated_html;
+					$ambrygen_expanded_html = preg_replace(
+						'/(class=(["\'])[^"\']*\\btabs-table-content__header\\b[^"\']*\\2[^>]*aria-expanded=)(["\'])false\\3/',
+						'$1$3true$3',
+						$ambrygen_updated_html,
+						1
+					);
+					$ambrygen_html = is_string( $ambrygen_expanded_html ) ? $ambrygen_expanded_html : $ambrygen_updated_html;
 					$ambrygen_found_item = true;
 				}
 			}

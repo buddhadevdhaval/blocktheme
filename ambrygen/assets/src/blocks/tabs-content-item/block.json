@@ -16,6 +16,10 @@
       "type": "string",
       "default": ""
     },
+    "itemId": {
+      "type": "string",
+      "default": ""
+    },
     "isDefaultActive": {
       "type": "boolean",
       "default": false
@@ -25,18 +29,5 @@
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
 	"style": "file:./style-index.css",
-  "render": "file:./render.php",
-  "example": {
-    "attributes": {
-      "heading": "Order a Sample Kit"
-    },
-    "innerBlocks": [
-      {
-        "name": "core/paragraph",
-        "attributes": {
-          "content": "Tab content goes here."
-        }
-      }
-    ]
-  }
+  "render": "file:./render.php"
 }

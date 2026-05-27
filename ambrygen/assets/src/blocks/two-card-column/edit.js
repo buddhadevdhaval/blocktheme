@@ -6,7 +6,7 @@ import {
 	BlockContextProvider,
 } from '@wordpress/block-editor';
 import { PanelBody } from '@wordpress/components';
-import { useEffect, useMemo } from '@wordpress/element';
+import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';
 import { createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
@@ -76,7 +76,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const blockProps = useBlockProps( {
 		className: isVariation2
-			? 'ordering-options'
+			? 'block-layout ordering-options'
 			: 'cta-tiles-with-content',
 	} );
 
@@ -160,10 +160,17 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								onChange={ ( value ) =>
 									setAttributes( { eyebrow: value } )
 								}
-								placeholder={ __( 'Add Eyebrow...', 'ambrygen-web' ) }
+								placeholder={ __(
+									'Add Eyebrow…',
+									'ambrygen-web'
+								) }
 								allowedFormats={ [] }
 							/>
-							<div class="is-style-gl-s12" aria-hidden="true"></div>
+
+							<div
+								className="is-style-gl-s12"
+								aria-hidden="true"
+							></div>
 
 							<RichText
 								tagName={ HeadingTag }
@@ -174,7 +181,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									setAttributes( { heading: value } )
 								}
 								placeholder={ __(
-									'Add Heading...',
+									'Add Heading…',
 									'ambrygen-web'
 								) }
 							/>
@@ -194,7 +201,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									} )
 								}
 								placeholder={ __(
-									'Add Description...',
+									'Add Description…',
 									'ambrygen-web'
 								) }
 							/>
@@ -205,14 +212,17 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							aria-hidden="true"
 						></div>
 
-						<div className="ordering-options__cards">
+						<div className="ordering-options__cards ordering-options-cards-grid">
 							<BlockContextProvider
 								value={ {
-									'ambrygen/twoCardColumnVariation': variation,
+									'ambrygen/twoCardColumnVariation':
+										variation,
 								} }
 							>
 								<InnerBlocks
-									allowedBlocks={ [ 'ambrygen/two-card-column-item' ] }
+									allowedBlocks={ [
+										'ambrygen/two-card-column-item',
+									] }
 									template={ VARIATION_2_TEMPLATE }
 								/>
 							</BlockContextProvider>
@@ -231,7 +241,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 										setAttributes( { heading: value } )
 									}
 									placeholder={ __(
-										'Add Heading...',
+										'Add Heading…',
 										'ambrygen-web'
 									) }
 								/>
@@ -239,7 +249,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 							<div className="block__rowflex--block-content subtitle-1-regular">
 								<RichText
-									tagName="div"
+									tagName="p"
 									value={ description }
 									onChange={ ( value ) =>
 										setAttributes( {
@@ -247,7 +257,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 										} )
 									}
 									placeholder={ __(
-										'Add Description...',
+										'Add Description…',
 										'ambrygen-web'
 									) }
 								/>
@@ -262,7 +272,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						<div className="cta-tiles-with-content__grid">
 							<BlockContextProvider
 								value={ {
-									'ambrygen/twoCardColumnVariation': variation,
+									'ambrygen/twoCardColumnVariation':
+										variation,
 								} }
 							>
 								<InnerBlocks

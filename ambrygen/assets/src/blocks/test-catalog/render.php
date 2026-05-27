@@ -166,6 +166,10 @@ $ambrygen_test_catalog_page_context = array(
 	'page_title' => (string) $ambrygen_source_page_title,
 	'page_path' => is_string($ambrygen_source_page_path) ? $ambrygen_source_page_path : '',
 );
+$ambrygen_has_eyebrow  = '' !== trim( wp_strip_all_tags( $ambrygen_eyebrow ) );
+$ambrygen_has_title    = '' !== trim( wp_strip_all_tags( $ambrygen_title ) );
+$ambrygen_has_subtitle = '' !== trim( wp_strip_all_tags( $ambrygen_subtitle ) );
+$ambrygen_has_header   = $ambrygen_has_eyebrow || $ambrygen_has_title || $ambrygen_has_subtitle;
 
 $ambrygen_normalized_tabs = array();
 
@@ -201,22 +205,26 @@ foreach ( $ambrygen_tabs as $ambrygen_index => $ambrygen_tab ) {
 	data-page-path="<?php echo esc_attr( $ambrygen_test_catalog_page_context['page_path'] ); ?>"
 >
 	<div class="test-catlouge">
-		<?php if ('' !== trim(wp_strip_all_tags($ambrygen_title))): ?>
+		<?php if ( $ambrygen_has_header ) : ?>
 		<div class="test-catlouge__header">
-			<?php if ('' !== trim(wp_strip_all_tags($ambrygen_eyebrow))): ?>
+			<?php if ( $ambrygen_has_eyebrow ) : ?>
 				<div class="hero-kicker overline-text test-catlouge__eyebrow">
 					<?php echo wp_kses_post($ambrygen_eyebrow); ?>
 				</div>
-				<div class="is-style-gl-s12"></div>
+				<?php if ( $ambrygen_has_title || $ambrygen_has_subtitle ) : ?>
+					<div class="is-style-gl-s12"></div>
+				<?php endif; ?>
 			<?php endif; ?>
 
-			<?php if ('' !== trim(wp_strip_all_tags($ambrygen_title))): ?>
+			<?php if ( $ambrygen_has_title ) : ?>
 				<<?php echo tag_escape($ambrygen_heading); ?> class="heading-4 block-title mb-0
 					test-catlouge__title"><?php echo wp_kses_post($ambrygen_title); ?></<?php echo tag_escape($ambrygen_heading); ?>>
-				<div class="is-style-gl-s12"></div>
+				<?php if ( $ambrygen_has_subtitle ) : ?>
+					<div class="is-style-gl-s12"></div>
+				<?php endif; ?>
 			<?php endif; ?>
 
-			<?php if ('' !== trim(wp_strip_all_tags($ambrygen_subtitle))): ?>
+			<?php if ( $ambrygen_has_subtitle ) : ?>
 				<div class="body1 test-catlouge__subtitle"><?php echo wp_kses_post($ambrygen_subtitle); ?></div>
 			<?php endif; ?>
 		</div>
@@ -394,7 +402,8 @@ foreach ( $ambrygen_tabs as $ambrygen_index => $ambrygen_tab ) {
 							<div class="tabs__panel<?php echo esc_attr($ambrygen_active); ?>"
 								id="<?php echo esc_attr($ambrygen_tab['panel_id']); ?>"
 								role="tabpanel"
-								aria-labelledby="<?php echo esc_attr( $ambrygen_tab['button_id'] ); ?>">
+								aria-labelledby="<?php echo esc_attr( $ambrygen_tab['button_id'] ); ?>"
+								<?php echo 0 === $ambrygen_index ? '' : 'hidden'; ?>>
 								<?php if ($ambrygen_query->have_posts()): ?>
 									<div class="test-catlouge__items">
 										<?php

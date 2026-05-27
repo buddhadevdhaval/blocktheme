@@ -11,7 +11,12 @@ import {
 } from '@wordpress/components';
 import { useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { TagSelector, ItemHeader } from '../_shared/components';
+import {
+	BlockExamplePreview,
+	TagSelector,
+	ItemHeader,
+} from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 const createLocationMapItemId = () =>
 	`loc-${ Date.now() }-${ Math.random().toString( 36 ).slice( 2, 9 ) }`;
@@ -94,30 +99,30 @@ const isAllowedMapUrl = ( value ) => {
 };
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const blockProps = useBlockProps( {
-		className: 'location-map',
-	} );
-
 	const {
 		blockId,
+		anchor,
 		title,
 		headingLevel = 'h2',
 		locations = [],
 		iframe,
 	} = attributes;
+	const isExample = blockId === 'example-block-preview';
+	const blockProps = useBlockProps( {
+		className: 'location-map',
+		id: isExample ? undefined : anchor || blockId || undefined,
+	} );
 
 	const HeadingTag = headingLevel || 'h2';
 	const iframeSrc = getIframeSrc( iframe ) || DEFAULT_MAP_IFRAME_SRC;
 
-	useEffect( () => {
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
-
-		if ( ! blockId ) {
-			setAttributes( {
-				blockId: expectedId,
-			} );
-		}
-	}, [ clientId, blockId, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		enabled: ! isExample && ! anchor,
+		idPrefix: 'section',
+		setAttributes,
+	} );
 
 	useEffect( () => {
 		if ( locations.length ) {
@@ -200,12 +205,21 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const filledLocations = locations.filter( hasLocationMapItemContent );
 	const previewLocations = filledLocations.length ? filledLocations : locations.slice( 0, 2 );
 
+	if ( isExample ) {
+		return (
+			<BlockExamplePreview
+				className="example-block-preview"
+				imagePath="/assets/src/images/location-map/preview.png"
+			/>
+		);
+	}
+
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
 				<PanelBody
 					title={ __( 'Heading Settings', 'ambrygen-web' ) }
-					initialOpen
+					initialOpen={false}
 				>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
@@ -217,7 +231,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Map Settings', 'ambrygen-web' ) }>
+				<PanelBody title={ __( 'Map Settings', 'ambrygen-web' ) } initialOpen={false}>
 					<PanelRow>
 						<TextControl
 							label={ __( 'Iframe', 'ambrygen-web' ) }

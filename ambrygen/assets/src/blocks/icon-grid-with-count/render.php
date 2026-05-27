@@ -131,8 +131,10 @@ $ambrygen_bg_alt      = isset( $ambrygen_bg_image['alt'] ) ? sanitize_text_field
 			<div class="is-style-gl-s64" aria-hidden="true"></div>
 		<?php endif; ?>
 
-		<div class="our-testing-menu__grid">
-			<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-		</div>
+		<?php if ( $ambrygen_has_items ) : ?>
+			<div class="our-testing-menu__grid">
+				<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			</div>
+		<?php endif; ?>
 	</div>
 </div>

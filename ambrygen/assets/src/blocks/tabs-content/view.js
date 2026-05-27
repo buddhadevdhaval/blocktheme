@@ -8,6 +8,17 @@
 			.querySelectorAll( '.tabs-table-content__item' )
 			.forEach( ( item ) => {
 				item.classList.toggle( 'is-active', item === activeItem );
+
+				const header = item.querySelector(
+					'.tabs-table-content__header'
+				);
+
+				if ( header ) {
+					header.setAttribute(
+						'aria-expanded',
+						item === activeItem ? 'true' : 'false'
+					);
+				}
 			} );
 	}
 
@@ -60,7 +71,27 @@
 					window.history.replaceState( null, '', `#${ item.id }` );
 				}
 			} );
+
+			header.addEventListener( 'keydown', ( event ) => {
+				if ( event.key !== 'Enter' && event.key !== ' ' ) {
+					return;
+				}
+
+				event.preventDefault();
+				setActiveItem( container, item );
+				if ( window.location.hash !== `#${ item.id }` ) {
+					window.history.replaceState( null, '', `#${ item.id }` );
+				}
+			} );
 		} );
+
+		const initialActiveItem =
+			items.find( ( item ) => item.classList.contains( 'is-active' ) ) ||
+			items[ 0 ];
+
+		if ( initialActiveItem ) {
+			setActiveItem( container, initialActiveItem );
+		}
 
 		activateFromHash();
 		window.addEventListener( 'hashchange', activateFromHash );

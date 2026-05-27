@@ -24,13 +24,17 @@ $ambrygen_cta_text   = $ambrygen_cta['text'] ?? '';
 $ambrygen_cta_url    = $ambrygen_cta['url'] ?? '';
 $ambrygen_cta_target = $ambrygen_cta['target'] ?? '';
 $ambrygen_cta_rel    = $ambrygen_cta['rel'] ?? '';
+$ambrygen_has_title  = '' !== trim( wp_strip_all_tags( $ambrygen_title ) );
+$ambrygen_has_intro  = '' !== trim( wp_strip_all_tags( $ambrygen_intro ) );
 
 if ( '_blank' === $ambrygen_cta_target ) {
 	$ambrygen_rel_parts = $ambrygen_cta_rel ? array_filter( array_unique( explode( ' ', $ambrygen_cta_rel ) ) ) : array();
 	$ambrygen_cta_rel   = implode( ' ', array_unique( array_merge( $ambrygen_rel_parts, array( 'noopener', 'noreferrer' ) ) ) );
 }
 
-$ambrygen_content = trim( $content );
+$ambrygen_content   = trim( $content );
+$ambrygen_has_cta   = '' !== trim( (string) $ambrygen_cta_url );
+$ambrygen_has_above = false;
 ?>
 
 <div <?php echo get_block_wrapper_attributes( array( 'class' => 'timeline-block__item' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
@@ -55,28 +59,37 @@ $ambrygen_content = trim( $content );
 		</div>
 
 		<div class="timeline-block__text-content">
-			<?php if ( $ambrygen_title ) : ?>
+			<?php if ( $ambrygen_has_title ) : ?>
 				<h3 class="subtitle1-sbold mb-0 timeline-block__text-title js-gsap-fade">
 					<?php echo wp_kses( $ambrygen_title, Helper::allowed_heading_html() ); ?>
 				</h3>
+				<?php $ambrygen_has_above = true; ?>
 			<?php endif; ?>
 
-			<?php if ( $ambrygen_intro ) : ?>
-				<div class="is-style-gl-s12" aria-hidden="true"></div>
+			<?php if ( $ambrygen_has_intro ) : ?>
+				<?php if ( $ambrygen_has_above ) : ?>
+					<div class="is-style-gl-s12" aria-hidden="true"></div>
+				<?php endif; ?>
 				<div class="text-md-regular timeline-block__intro js-gsap-fade">
 					<?php echo wp_kses_post( wpautop( $ambrygen_intro ) ); ?>
 				</div>
+				<?php $ambrygen_has_above = true; ?>
 			<?php endif; ?>
 
 			<?php if ( $ambrygen_content ) : ?>
-				<div class="is-style-gl-s12" aria-hidden="true"></div>
+				<?php if ( $ambrygen_has_above ) : ?>
+					<div class="is-style-gl-s12" aria-hidden="true"></div>
+				<?php endif; ?>
 				<div class="timeline-block__body text-md-regular js-gsap-fade">
 					<?php echo $ambrygen_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</div>
+				<?php $ambrygen_has_above = true; ?>
 			<?php endif; ?>
 
-			<?php if ( $ambrygen_cta_url ) : ?>
-				<div class="is-style-gl-s12" aria-hidden="true"></div>
+			<?php if ( $ambrygen_has_cta ) : ?>
+				<?php if ( $ambrygen_has_above ) : ?>
+					<div class="is-style-gl-s12" aria-hidden="true"></div>
+				<?php endif; ?>
 				<a
 					class="site-btn is-style-site-text-btn has-right-arrow js-gsap-fade"
 					href="<?php echo esc_url( $ambrygen_cta_url ); ?>"

@@ -37,6 +37,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				const isActive = panel.id === targetId;
 				panel.classList.toggle( 'is-active', isActive );
 				panel.classList.toggle( 'active', isActive );
+				panel.hidden = ! isActive;
 			} );
 
 			if ( select ) {

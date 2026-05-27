@@ -4,7 +4,6 @@ import {
 	useBlockProps,
 	InspectorControls,
 } from '@wordpress/block-editor';
-import { useEffect } from '@wordpress/element';
 import { PanelBody } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import {
@@ -12,6 +11,7 @@ import {
 	BlockExamplePreview,
 	ImageUploader,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 const ALLOWED_BLOCKS = [ 'ambrygen/large-icon-grid-item' ];
 const TEMPLATE = [
@@ -27,17 +27,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const HeadingTag = headingTag || 'h2';
 	const hasBackgroundImage = Boolean( backgroundImage?.url );
 
-	useEffect( () => {
-		if ( isExample ) {
-			return;
-		}
-
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
-
-		if ( ! blockId ) {
-			setAttributes( { blockId: expectedId } );
-		}
-	}, [ clientId, blockId, isExample, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: ! isExample,
+	} );
 
 	if ( isExample ) {
 		return (

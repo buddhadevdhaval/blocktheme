@@ -30,10 +30,10 @@ $ambrygen_video_poster = isset( $ambrygen_attributes['videoPoster'] ) && is_arra
 	? $ambrygen_attributes['videoPoster']
 	: array();
 
-$ambrygen_video_type = isset( $ambrygen_attributes['videoType'] ) ? sanitize_key( $ambrygen_attributes['videoType'] ) : 'mp4'; // mp4 | embed.
+$ambrygen_video_type = isset( $ambrygen_attributes['videoType'] ) ? sanitize_key( $ambrygen_attributes['videoType'] ) : 'embed'; // mp4 | embed.
 
 if ( ! in_array( $ambrygen_video_type, array( 'mp4', 'embed' ), true ) ) {
-	$ambrygen_video_type = 'mp4';
+	$ambrygen_video_type = 'embed';
 }
 
 $ambrygen_careers_link_top = isset( $ambrygen_attributes['link'] ) && is_array( $ambrygen_attributes['link'] )

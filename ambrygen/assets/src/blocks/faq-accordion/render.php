@@ -130,7 +130,7 @@
 				<?php endif; ?>
 
 				<?php if ( $ambrygen_inner_content || ! empty( $ambrygen_faqs ) ) : ?>
-					<div class="is-style-gl-s24" aria-hidden="true"></div>
+					<div class="is-style-gl-s64" aria-hidden="true"></div>
 					<div
 						class="faq"
 						role="region"

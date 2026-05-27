@@ -4,7 +4,7 @@
 	}
 
 	&__inspector-step {
-		border-top: 1px solid #ddd;
+		border-top: 1px solid var(--theme_border_3);
 		padding-top: 12px;
 
 		&:not(:last-child) {

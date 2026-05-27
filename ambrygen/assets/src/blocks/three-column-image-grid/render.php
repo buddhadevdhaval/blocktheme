@@ -14,6 +14,9 @@ defined( 'ABSPATH' ) || exit;
 use Ambrygen\Theme\Core\Helper;
 
 $ambrygen_attributes         = is_array( $attributes ) ? $attributes : array();
+$ambrygen_anchor             = isset( $ambrygen_attributes['anchor'] )
+	? sanitize_html_class( (string) $ambrygen_attributes['anchor'] )
+	: '';
 $ambrygen_eyebrow            = $ambrygen_attributes['eyebrow'] ?? '';
 $ambrygen_heading            = $ambrygen_attributes['heading'] ?? '';
 $ambrygen_description        = $ambrygen_attributes['description'] ?? '';
@@ -49,8 +52,8 @@ $wrapper_args = array(
 	'class' => trim( 'block-layout three-column-image-grid ' . $ambrygen_variation_class ),
 );
 
-if ( $ambrygen_block_id ) {
-	$wrapper_args['id'] = $ambrygen_block_id;
+if ( $ambrygen_anchor || $ambrygen_block_id ) {
+	$wrapper_args['id'] = $ambrygen_anchor ?: $ambrygen_block_id;
 }
 
 if ( $ambrygen_heading_id ) {
@@ -103,7 +106,7 @@ $wrapper_attributes = get_block_wrapper_attributes( $wrapper_args );
 		<div class="is-style-gl-s32" aria-hidden="true"></div>
 	<?php endif; ?>
 
-	<div class="three-column-image-grid__content">
+	<div class="three-column-image-grid__content grid-content">
 		<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- InnerBlocks content is escaped by WordPress core. ?>
 	</div>
 

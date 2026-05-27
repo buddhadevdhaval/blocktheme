@@ -24,6 +24,7 @@ $ambrygen_material_type_id = isset( $ambrygen_material_type['id'] ) ? absint( $a
 $ambrygen_sections = isset( $ambrygen_attributes['sections'] ) && is_array( $ambrygen_attributes['sections'] )
 	? $ambrygen_attributes['sections']
 	: array();
+$ambrygen_has_title = '' !== trim( wp_strip_all_tags( $ambrygen_title ) );
 
 $ambrygen_heading = Helper::get_heading_tag( $ambrygen_heading, 'h2' );
 
@@ -74,13 +75,15 @@ if ( $ambrygen_term_id > 0 ) {
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="marketing-files__inner">
 		<div class="test-catlouge">
-			<div class="test-catlouge__header">
-			<?php if ( '' !== trim( wp_strip_all_tags( $ambrygen_title ) ) ) : ?>
-				<<?php echo tag_escape( $ambrygen_heading ); ?> class="heading-4 block-title mb-0 test-catlouge__title"><?php echo wp_kses_post( $ambrygen_title ); ?></<?php echo tag_escape( $ambrygen_heading ); ?>>
+			<?php if ( $ambrygen_has_title ) : ?>
+				<div class="test-catlouge__header">
+					<<?php echo tag_escape( $ambrygen_heading ); ?> class="heading-4 block-title mb-0 test-catlouge__title"><?php echo wp_kses_post( $ambrygen_title ); ?></<?php echo tag_escape( $ambrygen_heading ); ?>>
+				</div>
 			<?php endif; ?>
-		</div>
 
-		<div class="is-style-gl-s32"></div>
+		<?php if ( $ambrygen_has_title ) : ?>
+			<div class="is-style-gl-s32"></div>
+		<?php endif; ?>
 
 		<?php if ( ! empty( $ambrygen_sections ) ) : ?>
 			
@@ -273,4 +276,5 @@ if ( $ambrygen_term_id > 0 ) {
 			</div>
 		<?php endif; ?>
 	</div>
+</div>
 </div>

@@ -4,7 +4,6 @@ import {
 	useBlockProps,
 	InspectorControls,
 } from '@wordpress/block-editor';
-import { useEffect } from '@wordpress/element';
 import { PanelBody, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import {
@@ -13,6 +12,7 @@ import {
 	ImageUploader,
 	CtaButtonField,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 const ALLOWED_BLOCKS = [ 'ambrygen/small-icon-grid-item' ];
 const TEMPLATE = [
@@ -36,17 +36,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const hasBackgroundImage = Boolean( backgroundImage?.url );
 	const hasCta = Boolean( link?.url && link?.text );
 
-	useEffect( () => {
-		if ( isExample ) {
-			return;
-		}
-
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
-
-		if ( ! blockId ) {
-			setAttributes( { blockId: expectedId } );
-		}
-	}, [ clientId, blockId, isExample, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: ! isExample,
+	} );
 
 	if ( isExample ) {
 		return (

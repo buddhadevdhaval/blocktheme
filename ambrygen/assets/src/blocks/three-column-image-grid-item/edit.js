@@ -330,7 +330,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 						{ ( ! isVariationTwo || ! cta.isPopup ) && (
 							<CtaButtonField
 								label={ __(
-									'CTA Link Settings',
+									'',
 									'ambrygen-web'
 								) }
 								value={ cta }
@@ -344,34 +344,37 @@ export default function Edit( { attributes, setAttributes, context } ) {
 						{ isVariationTwo &&
 							!! cta.isPopup &&
 							cta.popupType === 'video' && (
-							<div
-								style={ {
-									marginTop: '16px',
-									paddingTop: '16px',
-									borderTop: '1px solid #ccc',
-								} }
-							>
-								<p
+								<div
 									style={ {
-										marginBottom: '8px',
-										fontWeight: '500',
+										marginTop: '16px',
+										paddingTop: '16px',
+										borderTop: '1px solid #ccc',
 									} }
 								>
-									{ __( 'Video Settings', 'ambrygen-web' ) }
-								</p>
+									<p
+										style={ {
+											marginBottom: '8px',
+											fontWeight: '500',
+										} }
+									>
+										{ __(
+											'Video Settings',
+											'ambrygen-web'
+										) }
+									</p>
 
-								<TextControl
-									label={ __(
-										'Button Text',
-										'ambrygen-web'
-									) }
-									value={ cta.text || '' }
-									onChange={ ( value ) =>
-										setAttributes( {
-											cta: { ...cta, text: value },
-										} )
-									}
-								/>
+									<TextControl
+										label={ __(
+											'Button Text',
+											'ambrygen-web'
+										) }
+										value={ cta.text || '' }
+										onChange={ ( value ) =>
+											setAttributes( {
+												cta: { ...cta, text: value },
+											} )
+										}
+									/>
 
 								<SelectControl
 									label={ __( 'Video Type', 'ambrygen-web' ) }
@@ -665,12 +668,10 @@ export default function Edit( { attributes, setAttributes, context } ) {
 								/>
 							) }
 						</div>
-						{ hasTextContent && (
-							<div
-								className="is-style-gl-s24"
-								aria-hidden="true"
-							></div>
-						) }
+						<div
+							className="is-style-gl-s24"
+							aria-hidden="true"
+						></div>
 
 						<div className="three-column-card__text-content">
 							<RichText
@@ -681,7 +682,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 									setAttributes( { sectiontitle: value } )
 								}
 								placeholder={ __(
-									'Add Title...',
+									'Add Title…',
 									'ambrygen-web'
 								) }
 								allowedFormats={ [ 'core/text-color' ] }
@@ -695,31 +696,42 @@ export default function Edit( { attributes, setAttributes, context } ) {
 									setAttributes( { description: value } )
 								}
 								placeholder={ __(
-									'Add Short Description...',
+									'Add Short Description…',
 									'ambrygen-web'
 								) }
 							/>
 							{ validFiles.length > 0 && (
-								<div className="three-column-card__files">
-									{ validFiles.map( ( file ) => {
-										const extension = file?.fileUrl
-											?.split( '.' )
-											.pop()
-											?.toUpperCase();
+								<div className="three-column-card__files download-link has-downloads">
+									<div className="three-column-card__files-list download-link__files-list">
+										{ validFiles.map( ( file ) => {
+											const fileLabel =
+												file?.fileName ||
+												file?.fileUrl
+													?.split( '/' )
+													.pop() ||
+												'';
 
-										return (
-											<div
-												key={ file.id }
-												className="three-column-card__file"
-											>
-												{ extension && (
-													<span className="file-type">
-														({ extension })
-													</span>
-												) }
-											</div>
-										);
-									} ) }
+											return (
+												<div
+													key={ file.id }
+													className="three-column-card__files-item download-link__files-item"
+												>
+													<div className="three-column-card__files-link download-link__files-link">
+														{ fileLabel }
+														{ file?.sizeType && (
+															<span className="download-link__size">
+																(
+																{
+																	file.sizeType
+																}
+																)
+															</span>
+														) }
+													</div>
+												</div>
+											);
+										} ) }
+									</div>
 								</div>
 							) }
 						</div>
@@ -737,17 +749,15 @@ export default function Edit( { attributes, setAttributes, context } ) {
 							<div
 								className={ `three-column-card__cta ${
 									cta.variant || 'dark'
-								} site-btn ${
+								} site-btn${
 									cta.isPopup && cta.popupType === 'video'
-										? 'has-video-arrow has-right-arrow'
+										? ' has-video-arrow'
 										: ''
 								}${
 									cta.isPopup && cta.popupType === 'form'
 										? ' has-form-arrow has-right-arrow'
 										: ''
-								}${
-									! cta.isPopup ? ' has-right-arrow' : ''
-								}` }
+								}${ ! cta.isPopup ? ' has-right-arrow' : '' }` }
 								role="presentation"
 							>
 								{ cta.text }

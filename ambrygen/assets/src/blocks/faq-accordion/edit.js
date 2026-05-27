@@ -196,8 +196,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						type='heading'
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'FAQ Settings', 'ambrygen-web' ) } initialOpen={ true }>
-					{ showImage && (
+				{ showImage && (
+					<PanelBody title={ __( 'FAQ Settings', 'ambrygen-web' ) } initialOpen={ true }>
 						<ImageUploader
 							label={ __( 'FAQ Image', 'ambrygen-web' ) }
 							url={ isDefaultImage ? '' : imageUrl }
@@ -216,8 +216,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								} )
 							}
 						/>
-					) }
-				</PanelBody>
+					</PanelBody>
+				) }
 			</InspectorControls>
 
 			<div { ...blockProps }>
@@ -271,7 +271,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							/>
 
 							<div
-								className="is-style-gl-s24"
+								className="is-style-gl-s64"
 								aria-hidden="true"
 							></div>
 

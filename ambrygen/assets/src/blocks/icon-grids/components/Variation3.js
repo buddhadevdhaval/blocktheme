@@ -175,6 +175,7 @@ export default function Variation3( { attributes, setAttributes } ) {
 
 			<section className="features-tabs">
 				<div className="features-tabs__header block__rowflex">
+					<div className="block__rowflex--col-left">
 					<RichText
 						tagName={ headingTag || 'h2' }
 						className="heading-2 block-title mb-0 block__rowflex--heading-title"
@@ -184,8 +185,7 @@ export default function Variation3( { attributes, setAttributes } ) {
 						}
 						placeholder="Add Title..."
 					/>
-
-					<div className="is-style-gl-s20" aria-hidden="true"></div>
+					</div>
 
 					<div className="block__rowflex--block-content subtitle-1-regular">
 						<RichText

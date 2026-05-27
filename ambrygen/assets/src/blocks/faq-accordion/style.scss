@@ -169,6 +169,11 @@
 
 	&__question {
 		flex: 1 0 0;
+
+		.bg-primary_700 &,
+		.bg-primary_800 & {
+			color: var(--theme_primary_white);
+		}
 	}
 
 	&__icon {
@@ -204,10 +209,13 @@
 
 		li {
 			&:before {
-				background-color: var(--theme_gray_600);
-				;
+				// background-color: var(--theme_gray_600);
 				width: 8px;
 				height: 8px;
+			}
+
+			.bg-primary_700 & {
+				// color: #FFF;
 			}
 		}
 	}

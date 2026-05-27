@@ -69,6 +69,11 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 );
 $ambrygen_index              = 0;
 $ambrygen_slides_region_id   = wp_unique_id( 'hero-section-slides-' );
+$ambrygen_archive_heading    = '';
+
+if ( is_tax( 'poster_category' ) ) {
+	$ambrygen_archive_heading = single_term_title( '', false );
+}
 
 if ( ! $ambrygen_slide_count ) {
 	return;
@@ -145,6 +150,9 @@ if ( ! $ambrygen_slide_count ) {
 				$ambrygen_overlay_image_2_alt = isset( $ambrygen_slide['overlayImage2Alt'] ) ? sanitize_text_field( $ambrygen_slide['overlayImage2Alt'] ) : '';
 
 				$ambrygen_heading = $ambrygen_slide['heading'] ?? '';
+				if ( '' === trim( wp_strip_all_tags( $ambrygen_heading ) ) && '' !== $ambrygen_archive_heading ) {
+					$ambrygen_heading = $ambrygen_archive_heading;
+				}
 				$ambrygen_content = $ambrygen_slide['content'] ?? '';
 				$ambrygen_eyebrow = $ambrygen_slide['eyebrow'] ?? '';
 
@@ -224,9 +232,11 @@ if ( ! $ambrygen_slide_count ) {
 							array(
 								'class'         => 'hero-section__image',
 								'alt'           => $ambrygen_background_alt,
-								'loading'       => 0 === $ambrygen_index ? 'eager' : 'lazy',
+								//'loading'       => 0 === $ambrygen_index ? 'eager' : 'lazy',
+								'loading'       => 'lazy',
 								'decoding'      => 'async',
-								'fetchpriority' => 0 === $ambrygen_index ? 'high' : 'auto',
+								//'fetchpriority' => 0 === $ambrygen_index ? 'high' : 'auto',
+								'fetchpriority' => 'auto',
 							),
 							true
 						);

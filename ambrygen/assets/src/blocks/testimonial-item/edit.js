@@ -6,10 +6,11 @@ import {
 import { __ } from '@wordpress/i18n';
 import { useMemo } from '@wordpress/element';
 import { PanelBody } from '@wordpress/components';
+import { useDispatch, useSelect } from '@wordpress/data';
 
 import { DEFAULT_IMAGES, ImageUploader } from '../_shared/components';
 
-export default function Edit( { attributes, setAttributes, context } ) {
+export default function Edit( { attributes, setAttributes, context, clientId } ) {
 	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
 	const fallbackImage = defaults?.placeholder || {};
 	const { logo, logoAlt, quote, author, role } = attributes;
@@ -19,9 +20,23 @@ export default function Edit( { attributes, setAttributes, context } ) {
 	const displayMainImageAlt = mainImage
 		? mainImageAlt || ''
 		: fallbackImage.alt || '';
+	const { parentClientId, blockIndex } = useSelect(
+		( select ) => {
+			const blockEditor = select( 'core/block-editor' );
+			const rootClientId = blockEditor.getBlockRootClientId( clientId );
+
+			return {
+				parentClientId: rootClientId,
+				blockIndex: blockEditor.getBlockIndex( clientId, rootClientId ),
+			};
+		},
+		[ clientId ]
+	);
+	const { updateBlockAttributes } = useDispatch( 'core/block-editor' );
 	const blockProps = useBlockProps( {
 		className: 'ambry-testimonials__grid__item',
 	} );
+	const isFirstItem = blockIndex === 0;
 
 	const updateLogo = ( media ) => {
 		if ( ! media?.url ) {
@@ -35,12 +50,49 @@ export default function Edit( { attributes, setAttributes, context } ) {
 		} );
 	};
 
+	const updateMainImage = ( media ) => {
+		if ( ! media?.url || ! parentClientId ) {
+			return;
+		}
+
+		updateBlockAttributes( parentClientId, {
+			mainImage: media.url,
+			mainImageId: media.id || 0,
+			mainImageAlt: media.alt || '',
+		} );
+	};
+
+	const removeMainImage = () => {
+		if ( ! parentClientId ) {
+			return;
+		}
+
+		updateBlockAttributes( parentClientId, {
+			mainImage: '',
+			mainImageId: 0,
+			mainImageAlt: '',
+		} );
+	};
+
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
+				{ isFirstItem && (
+					<PanelBody
+						title={ __( 'Image Settings', 'ambrygen-web' ) }
+						initialOpen={ true }
+					>
+						<ImageUploader
+							label={ __( 'Image', 'ambrygen-web' ) }
+							url={ mainImage }
+							onSelect={ updateMainImage }
+							onRemove={ removeMainImage }
+						/>
+					</PanelBody>
+				) }
 				<PanelBody
 					title={ __( 'Logo Settings', 'ambrygen-web' ) }
-					initialOpen={ true }
+					initialOpen={ ! isFirstItem }
 				>
 					<ImageUploader
 						label={ __( 'Logo', 'ambrygen-web' ) }

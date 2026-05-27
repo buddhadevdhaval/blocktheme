@@ -56,7 +56,7 @@
         "mp4",
         "embed"
       ],
-      "default": "mp4"
+      "default": "embed"
     },
     "videoPoster": {
       "type": "object",

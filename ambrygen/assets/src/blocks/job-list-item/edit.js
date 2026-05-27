@@ -8,6 +8,14 @@ import { __ } from '@wordpress/i18n';
 const getTermLabel = ( terms ) =>
 	terms?.map( ( term ) => term.name ).join( ', ' ) || '';
 
+const getPostTitle = ( post ) => {
+	if ( typeof post?.title === 'string' ) {
+		return post.title;
+	}
+
+	return post?.title?.rendered || post?.title?.raw || '';
+};
+
 export default function Edit( { attributes, context } ) {
 	const { postId } = attributes;
 
@@ -51,7 +59,7 @@ export default function Edit( { attributes, context } ) {
 			}
 			return select( 'core' ).getEntityRecords( 'taxonomy', 'job_type', {
 				include: jobTypeTermIds,
-				per_page: -1,
+				per_page: jobTypeTermIds.length,
 			} );
 		},
 		[ jobTypeTermIds ]
@@ -68,7 +76,7 @@ export default function Edit( { attributes, context } ) {
 				'job_location',
 				{
 					include: jobLocationTermIds,
-					per_page: -1,
+					per_page: jobLocationTermIds.length,
 				}
 			);
 		},
@@ -94,7 +102,7 @@ export default function Edit( { attributes, context } ) {
 				<>
 					<div className="careers-highlight__job--row">
 						<div className="careers-highlight__job-title subtitle2-sbold">
-							{ decodeEntities( selectedPost.title.rendered ) }
+							{ decodeEntities( getPostTitle( selectedPost ) ) }
 						</div>
 						{ jobTypeLabel && (
 							<div className="careers-highlight__job-tag text-small-medium">

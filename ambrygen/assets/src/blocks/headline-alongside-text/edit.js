@@ -7,7 +7,7 @@ import {
 import { useSelect } from '@wordpress/data';
 import { PanelBody } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 import {
 	BlockExamplePreview,
@@ -39,42 +39,40 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const displayHeadlineTag = headlineTag || titleTag || 'h2';
 	const isExample = blockId === 'headline-alongside-text-example';
 
-	if ( isExample ) {
-		return (
-			<BlockExamplePreview
-				className="headline-alongside-text-example-preview"
-				imagePath="/assets/src/images/ambrygen-default-image.png"
-			/>
-		);
-	}
-
-	useEffect( () => {
-		if ( isExample ) {
-			return;
-		}
-
-		const expectedId = `headline-alongside-text-${ clientId.slice( 0, 8 ) }`;
-
-		if ( ! blockId ) {
-			setAttributes( {
-				blockId: expectedId,
-			} );
-		}
-	}, [ clientId, blockId, isExample, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: ! isExample,
+		idPrefix: 'headline-alongside-text',
+	} );
 
 	const hasInnerBlocks = useSelect(
 		( select ) => {
+			if ( isExample ) {
+				return false;
+			}
+
 			const { getBlockOrder } = select( 'core/block-editor' );
 
 			return getBlockOrder( clientId ).length > 0;
 		},
-		[ clientId ]
+		[ clientId, isExample ]
 	);
 
 	const blockProps = useBlockProps({
 		className: `heading-content-section ${isMediumText ? 'variation-medium-text' : ''
 			}`,
 	});
+
+	if ( isExample ) {
+		return (
+			<BlockExamplePreview
+				className="headline-alongside-text-example-preview"
+				imagePath="/assets/src/images/headline-alongside-text/preview.png"
+			/>
+		);
+	}
 
 	return (
 		<>
@@ -193,4 +191,3 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		</>
 	);
 }
-

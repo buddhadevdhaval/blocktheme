@@ -390,3 +390,8 @@ picture {
 }
 
 
+.wp-block-ambrygen-section-container:has(.icon-grid) {
+    position: relative;
+    overflow: hidden;
+}
+

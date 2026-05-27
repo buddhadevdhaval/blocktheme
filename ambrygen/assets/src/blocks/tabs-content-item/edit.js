@@ -6,13 +6,22 @@ import {
 } from '@wordpress/block-editor';
 import { PanelBody, ToggleControl } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
+import { useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 const CONTENT_TEMPLATE = [ [ 'core/paragraph', { content: '' } ] ];
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const { heading, isDefaultActive } = attributes;
+	const { heading, itemId, isDefaultActive } = attributes;
 	const { updateBlockAttributes } = useDispatch( 'core/block-editor' );
+
+	useEffect( () => {
+		const expectedItemId = `tabs-content-item-${ clientId.slice( 0, 8 ) }`;
+
+		if ( itemId !== expectedItemId ) {
+			setAttributes( { itemId: expectedItemId } );
+		}
+	}, [ clientId, itemId, setAttributes ] );
 
 	const { isFirstItem, hasAnyDefaultActive, rootClientId, activeTabId } =
 		useSelect(
@@ -88,6 +97,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		className: `tabs-table-content__item${
 			shouldShowActive ? ' is-active' : ''
 		}`,
+		id: itemId || undefined,
 	} );
 
 	return (
@@ -116,6 +126,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					} }
 					role="button"
 					tabIndex={ 0 }
+					aria-expanded={ shouldShowActive }
 				>
 					<RichText
 						tagName="div"

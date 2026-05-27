@@ -24,7 +24,12 @@ $ambrygen_image_id      = isset( $attributes['imageId'] ) ? absint( $attributes[
 $ambrygen_image_url     = isset( $attributes['imageUrl'] ) ? esc_url_raw( $attributes['imageUrl'] ) : '';
 $ambrygen_image_alt     = isset( $attributes['imageAlt'] ) ? sanitize_text_field( $attributes['imageAlt'] ) : '';
 $ambrygen_variation     = $block->context['ambrygen/twoCardColumnVariation'] ?? '';
-$ambrygen_is_variation_2 = 'variation-2' === $ambrygen_variation;
+
+if ( 'variation-2' === $ambrygen_variation ) {
+	$ambrygen_is_variation_2 = 'variation-2';
+} else {
+	$ambrygen_is_variation_2 = false;
+}
 $ambrygen_inner_content = trim( (string) $content );
 $ambrygen_copy_html     = '';
 $ambrygen_cta_html      = '';
@@ -100,9 +105,19 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() output is sanitized by WordPress core. ?>>
 
+	<?php if ( $ambrygen_is_variation_2 && ( $ambrygen_image_id > 0 || ! empty( $ambrygen_image_url ) ) ) : ?>
+		<div class="ordering-options__card-image">
+			<?php
+			// Helper::image_from_source() already returns safe HTML.
+			echo $ambrygen_image_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			?>
+		</div>
+	<?php endif; ?>
 
 	<div class="<?php echo esc_attr( $ambrygen_is_variation_2 ? 'ordering-options__card-body' : 'cta-tiles-with-content__body' ); ?>">
-		<!-- <div class="<?php //echo esc_attr( $ambrygen_is_variation_2 ? 'ordering-options__card-content' : '' ); ?>"> -->
+		<?php if ( $ambrygen_is_variation_2 ) : ?>
+			<div class="ordering-options__card-content">
+		<?php endif; ?>
 
 			<?php if ( ! empty( $ambrygen_section_title ) ) : ?>
 				<div class="<?php echo esc_attr( $ambrygen_is_variation_2 ? 'heading-5 ordering-options__card-title mb-0' : 'cta-tiles-with-content__title' ); ?>">
@@ -122,7 +137,10 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 					<?php echo $ambrygen_copy_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Processed InnerBlocks content is sanitized by WordPress rendering. ?>
 				</div>
 			<?php endif; ?>
-		<!-- </div> -->
+
+		<?php if ( $ambrygen_is_variation_2 ) : ?>
+			</div>
+		<?php endif; ?>
 
 		<?php if ( $ambrygen_is_variation_2 && $ambrygen_cta_html ) : ?>
 			<div class="is-style-gl-s24" aria-hidden="true"></div>
@@ -130,13 +148,13 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 		<?php endif; ?>
 	</div>
 
-	<?php if ( $ambrygen_image_id > 0 || ! empty( $ambrygen_image_url ) ) : ?>
-	<div class="<?php echo esc_attr( $ambrygen_is_variation_2 ? 'ordering-options__card-image' : 'cta-tiles-with-content__image-container' ); ?>">
-		<?php
-		// Helper::image_from_source() already returns safe HTML.
-		echo $ambrygen_image_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		?>
-	</div>
+	<?php if ( ! $ambrygen_is_variation_2 && ( $ambrygen_image_id > 0 || ! empty( $ambrygen_image_url ) ) ) : ?>
+		<div class="cta-tiles-with-content__image-container">
+			<?php
+			// Helper::image_from_source() already returns safe HTML.
+			echo $ambrygen_image_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			?>
+		</div>
 	<?php endif; ?>
 
 </div>

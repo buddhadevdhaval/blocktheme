@@ -147,25 +147,21 @@ function SubmenuLink( {
 						/>
 						<ToggleControl
 							label={ __( 'Open in new tab', 'ambrygen-web' ) }
-							checked={ !! link.opensInNewTab }
+							checked={
+								!! link.opensInNewTab ||
+								link.target === '_blank'
+							}
 							onChange={ ( checked ) => {
 								onUpdate(
 									itemIndex,
 									linkIndex,
-									'opensInNewTab',
-									checked
-								);
-								onUpdate(
-									itemIndex,
-									linkIndex,
-									'target',
-									checked ? '_blank' : ''
-								);
-								onUpdate(
-									itemIndex,
-									linkIndex,
-									'rel',
-									checked ? 'noopener noreferrer' : ''
+									{
+										opensInNewTab: checked,
+										target: checked ? '_blank' : '',
+										rel: checked
+											? 'noopener noreferrer'
+											: '',
+									}
 								);
 							} }
 						/>
@@ -348,7 +344,9 @@ export default function Edit( { attributes, setAttributes } ) {
 		setAttributes( ( prev ) => {
 			const newItems = [ ...prev.items ];
 			const links = [ ...newItems[ itemIndex ].submenuLinks ];
-			links[ linkIndex ] = { ...links[ linkIndex ], [ key ]: value };
+			const updates =
+				typeof key === 'object' && key !== null ? key : { [ key ]: value };
+			links[ linkIndex ] = { ...links[ linkIndex ], ...updates };
 			newItems[ itemIndex ] = {
 				...newItems[ itemIndex ],
 				submenuLinks: links,

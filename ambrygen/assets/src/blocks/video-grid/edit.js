@@ -13,6 +13,7 @@ import {
 	BlockExamplePreview,
 	TagSelector,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 const ALLOWED_BLOCKS = [ 'ambrygen/video-grid-item' ];
 const TEMPLATE = [
@@ -44,19 +45,12 @@ export default function Edit( {
 		[ clientId ]
 	);
 
-	useEffect( () => {
-		if ( isExample ) {
-			return;
-		}
-
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
-
-		if ( blockId !== expectedId ) {
-			setAttributes( {
-				blockId: expectedId,
-			} );
-		}
-	}, [ clientId, blockId, isExample, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: ! isExample,
+	} );
 
 	useEffect( () => {
 		if ( variation !== 'variation-features' ) {

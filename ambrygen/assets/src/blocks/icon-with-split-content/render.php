@@ -13,6 +13,28 @@ use Ambrygen\Theme\Core\Helper;
 
 defined( 'ABSPATH' ) || exit;
 
+if ( ! function_exists( 'ambrygen_icon_with_split_content_normalize_text' ) ) {
+	/**
+	 * Normalize plain text values while preserving word spacing from legacy HTML.
+	 *
+	 * @param mixed $text Raw text value.
+	 * @return string
+	 */
+	function ambrygen_icon_with_split_content_normalize_text( $text ) {
+		$text = is_scalar( $text ) ? (string) $text : '';
+
+		if ( '' === $text ) {
+			return '';
+		}
+
+		$text = wp_specialchars_decode( $text, ENT_QUOTES );
+		$text = preg_replace( '/<[^>]*>/', ' ', $text );
+		$text = wp_strip_all_tags( $text );
+
+		return trim( preg_replace( '/\s+/u', ' ', $text ) );
+	}
+}
+
 $ambrygen_attributes  = is_array( $attributes ) ? $attributes : array();
 $ambrygen_block_id    = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
 $ambrygen_anchor      = isset( $ambrygen_attributes['anchor'] ) ? sanitize_html_class( $ambrygen_attributes['anchor'] ) : '';
@@ -62,7 +84,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 					$ambrygen_icon_id  = isset( $ambrygen_item['iconId'] ) ? absint( $ambrygen_item['iconId'] ) : 0;
 					$ambrygen_icon_url = isset( $ambrygen_item['iconUrl'] ) ? $ambrygen_item['iconUrl'] : '';
 					$ambrygen_icon_alt = isset( $ambrygen_item['iconAlt'] ) ? sanitize_text_field( $ambrygen_item['iconAlt'] ) : '';
-					$ambrygen_text     = isset( $ambrygen_item['text'] ) ? sanitize_text_field( $ambrygen_item['text'] ) : '';
+					$ambrygen_text     = isset( $ambrygen_item['text'] ) ? ambrygen_icon_with_split_content_normalize_text( $ambrygen_item['text'] ) : '';
 					?>
 					<div class="symptoms__item">
 						<?php if ( $ambrygen_icon_id || $ambrygen_icon_url ) : ?>

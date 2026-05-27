@@ -20,10 +20,15 @@ $ambrygen_count          = 0;
 $ambrygen_img_id         = 0;
 $ambrygen_term_url       = '';
 $ambrygen_termlinktext   = '';
+$ambrygen_custom_name    = isset( $ambrygen_attributes['customName'] ) ? sanitize_text_field( $ambrygen_attributes['customName'] ) : '';
+$ambrygen_custom_count   = isset( $ambrygen_attributes['customCount'] ) ? sanitize_text_field( $ambrygen_attributes['customCount'] ) : '';
+$ambrygen_custom_link    = is_array( $ambrygen_attributes['customLink'] ?? null ) ? $ambrygen_attributes['customLink'] : array();
+$ambrygen_link_target    = ! empty( $ambrygen_custom_link['opensInNewTab'] ) ? '_blank' : '';
+$ambrygen_link_rel       = $ambrygen_link_target ? 'noopener noreferrer' : '';
 
 $ambrygen_termlinktext = ! empty( $ambrygen_attributes['termlinktext'] )
 	? $ambrygen_attributes['termlinktext']
-	: 'View Product';
+	: 'View Test';
 
 $ambrygen_selected_term_id = isset( $ambrygen_attributes['selectedTerm'] )
 	? absint( $ambrygen_attributes['selectedTerm'] )
@@ -40,6 +45,18 @@ if ( $ambrygen_selected_term_id ) {
 		$ambrygen_term_link_raw = get_term_link( $ambrygen_term );
 		$ambrygen_term_url      = is_wp_error( $ambrygen_term_link_raw ) ? '' : esc_url( $ambrygen_term_link_raw );
 	}
+}
+
+if ( '' !== $ambrygen_custom_name ) {
+	$ambrygen_title = $ambrygen_custom_name;
+}
+
+if ( '' !== $ambrygen_custom_count ) {
+	$ambrygen_count = $ambrygen_custom_count;
+}
+
+if ( ! empty( $ambrygen_custom_link['url'] ) ) {
+	$ambrygen_term_url = esc_url( $ambrygen_custom_link['url'] );
 }
 
 $ambrygen_has_content = ! empty( $ambrygen_title ) || ! empty( $ambrygen_count ) || ! empty( $ambrygen_img_id );
@@ -95,6 +112,8 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 			<a
 				class="site-btn is-style-site-text-btn has-right-arrow text-14"
 				href="<?php echo esc_url( $ambrygen_term_url ); ?>"
+				<?php echo $ambrygen_link_target ? ' target="' . esc_attr( $ambrygen_link_target ) . '"' : ''; ?>
+				<?php echo $ambrygen_link_rel ? ' rel="' . esc_attr( $ambrygen_link_rel ) . '"' : ''; ?>
 				aria-label="<?php echo esc_attr( 'View tests for ' . $ambrygen_title ); ?>"
 			>
 				<?php echo esc_html( $ambrygen_termlinktext ); ?>

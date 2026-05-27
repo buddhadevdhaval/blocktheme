@@ -8,7 +8,7 @@ import {
 import { PanelBody, SelectControl, TextControl } from '@wordpress/components';
 import { BlockExamplePreview, TagSelector } from '../_shared/components';
 import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 const ALLOWED_BLOCKS = [ 'core/shortcode' ];
 
@@ -25,18 +25,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		formMode = 'shortcode',
 		formUrl = '',
 	} = attributes;
+	const isExample = blockId === 'theme-form-example';
 
-	useEffect( () => {
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: ! isExample,
+	} );
 
-		if ( ! blockId ) {
-			setAttributes( {
-				blockId: expectedId,
-			} );
-		}
-	}, [ clientId, blockId, setAttributes ] );
-
-	if ( blockId === 'theme-form-example' ) {
+	if ( isExample ) {
 		return (
 			<BlockExamplePreview
 				className="theme-form-example-preview"

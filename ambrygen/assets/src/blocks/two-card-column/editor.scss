@@ -44,10 +44,10 @@
 	padding: 8px;
 
 	&__item {
-		border: 1px solid #dcdcde;
+		border: 1px solid var(--theme_border_3);
 		border-radius: 12px;
 		overflow: hidden;
-		background: #fff;
+		background: var(--theme_white);
 	}
 
 	img {
@@ -62,4 +62,9 @@
 	&__cards {
 		display: block;
 	}
+}
+
+
+.ordering-options .ordering-options-cards-grid {
+	display: block;
 }

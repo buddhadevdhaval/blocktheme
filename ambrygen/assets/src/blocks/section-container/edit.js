@@ -34,6 +34,7 @@ import {
 	SelectControl,
 	ToggleControl,
 } from '@wordpress/components';
+import { ImageUploader } from '../_shared/components';
 
 /**
  * ContainerWidthControl Component
@@ -156,9 +157,11 @@ export default function Edit( { attributes, setAttributes, className = '' } ) {
 	const {
 		containerWidth = 'container-1340',
 		backgroundStyle = '',
+		backgroundImageUrl = '',
 		isFixedBackground = false,
 	} = attributes;
 	const hasInsideBackground = isFixedBackground === true;
+	const hasBackgroundImage = Boolean( backgroundImageUrl );
 
 	const customClasses = className
 		.split( ' ' )
@@ -201,6 +204,35 @@ export default function Edit( { attributes, setAttributes, className = '' } ) {
 	);
 
 	/**
+	 * Handles background image selection.
+	 *
+	 * @param {Object} media Selected media object.
+	 */
+	const handleBackgroundImageSelect = useCallback(
+		( media ) => {
+			if ( ! media?.url ) {
+				return;
+			}
+
+			setAttributes( {
+				backgroundImageId: media.id || 0,
+				backgroundImageUrl: media.url,
+			} );
+		},
+		[ setAttributes ]
+	);
+
+	/**
+	 * Removes the selected background image.
+	 */
+	const handleBackgroundImageRemove = useCallback( () => {
+		setAttributes( {
+			backgroundImageId: 0,
+			backgroundImageUrl: '',
+		} );
+	}, [ setAttributes ] );
+
+	/**
 	 * Handles Inside background toggle.
 	 * Memoized with useCallback for performance.
 	 *
@@ -215,6 +247,11 @@ export default function Edit( { attributes, setAttributes, className = '' } ) {
 
 	const blockProps = useBlockProps( {
 		className: classes || undefined,
+		style: hasBackgroundImage
+			? {
+					'--section-container-bg-image': `url(${ backgroundImageUrl })`,
+			  }
+			: undefined,
 	} );
 
 	return (
@@ -237,6 +274,12 @@ export default function Edit( { attributes, setAttributes, className = '' } ) {
 					<BackgroundStyleControl
 						value={ backgroundStyle }
 						onChange={ handleBackgroundChange }
+					/>
+					<ImageUploader
+						label={ __( 'Background Image', 'ambrygen-web' ) }
+						url={ backgroundImageUrl }
+						onSelect={ handleBackgroundImageSelect }
+						onRemove={ handleBackgroundImageRemove }
 					/>
 					<ToggleControl
 						label={ __( 'Inside Background', 'ambrygen-web' ) }

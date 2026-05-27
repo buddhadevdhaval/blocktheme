@@ -3,7 +3,6 @@ import {
 	RichText,
 	useBlockProps,
 } from '@wordpress/block-editor';
-import { useEffect } from '@wordpress/element';
 import { PanelBody, Placeholder } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import {
@@ -11,6 +10,7 @@ import {
 	ImageUploader,
 	TagSelector,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
@@ -24,20 +24,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	} = attributes;
 	const isExample = blockId === 'supporting-image-example';
 
-	useEffect( () => {
-		if ( isExample ) {
-			return;
-		}
-
-		const clientIdSuffix = clientId.slice( 0, 8 );
-		const expectedId = `supporting-image-${ clientIdSuffix }`;
-
-		if ( ! blockId ) {
-			setAttributes( {
-				blockId: expectedId,
-			} );
-		}
-	}, [ clientId, blockId, isExample, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: ! isExample,
+		idPrefix: 'supporting-image',
+	} );
 
 	const HeadingTag = headingTag || 'h2';
 

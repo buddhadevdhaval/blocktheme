@@ -51,12 +51,12 @@ $ambrygen_location_icon  = isset( $ambrygen_context['ambrygen/joblocationicon'] 
 	? $ambrygen_context['ambrygen/joblocationicon']
 	: array();
 $ambrygen_type_image_url = ! empty( $ambrygen_type_icon['url'] )
-	? (string) $ambrygen_type_icon['url']
-	: esc_url( get_theme_file_uri( 'assets/src/images/clock-icon.svg' ) );
+	? esc_url_raw( $ambrygen_type_icon['url'] )
+	: esc_url_raw( get_theme_file_uri( 'assets/src/images/clock-icon.svg' ) );
 
 $ambrygen_location_image_url = ! empty( $ambrygen_location_icon['url'] )
-	? (string) $ambrygen_location_icon['url']
-	: esc_url( get_theme_file_uri( 'assets/src/images/marker-pin-icon.svg' ) );
+	? esc_url_raw( $ambrygen_location_icon['url'] )
+	: esc_url_raw( get_theme_file_uri( 'assets/src/images/marker-pin-icon.svg' ) );
 ?>
 
 <div class="careers-highlight__job js-gsap-fade">

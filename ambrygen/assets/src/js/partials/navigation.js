@@ -24,7 +24,7 @@
 document.addEventListener( 'DOMContentLoaded', () => {
 	const topBarCookiePrefix = 'ambrygen_top_bar_dismissed_';
 
-	const setCookie = ( name, value, days = 30 ) => {
+	const setCookie = ( name, value, days = 1 ) => {
 		const expires = new Date();
 		expires.setTime( expires.getTime() + days * 24 * 60 * 60 * 1000 );
 		document.cookie = `${ name }=${ value }; expires=${ expires.toUTCString() }; path=/`;
@@ -319,7 +319,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			}
 
 			if ( topBarKey ) {
-				setCookie( `${ topBarCookiePrefix }${ topBarKey }`, '1' );
+				setCookie( `${ topBarCookiePrefix }${ topBarKey }`, '1', 1 );
 			}
 
 			if (

@@ -1,4 +1,189 @@
 document.addEventListener( 'DOMContentLoaded', () => {
+ const iframeResizeHandlers = new WeakSet();
+ const iframeResizeTimers = new WeakMap();
+
+ const setIframeBaseMinHeight = ( iframe ) => {
+  if ( ! iframe ) {
+   return;
+  }
+
+  iframe.dataset.viewportMode = window.innerWidth < 768 ? 'mobile' : 'desktop';
+  iframe.style.minHeight = window.innerWidth < 768 ? '900px' : '1200px';
+ };
+
+ const resetIframeHeightForResize = ( iframe ) => {
+  if ( ! iframe ) {
+   return;
+  }
+
+  const currentHeight = parseInt( iframe.style.height, 10 );
+
+  if ( ! Number.isNaN( currentHeight ) && currentHeight > 0 ) {
+   iframe.style.minHeight = `${ currentHeight }px`;
+  }
+
+  iframe.style.height = '';
+  iframe.dataset.heightSynced = '';
+  setIframeBaseMinHeight( iframe );
+ };
+
+ const reloadIframeForResize = ( iframe ) => {
+  if ( ! iframe || ! iframe.src ) {
+   return;
+  }
+
+  resetIframeHeightForResize( iframe );
+  iframe.classList.remove( 'is-ready' );
+  iframe.style.opacity = '0';
+  iframe.style.visibility = 'hidden';
+  iframe.src = iframe.src;
+ };
+
+ const getIframeHeightFromMessage = ( messageData ) => {
+  if ( ! messageData ) {
+   return null;
+  }
+
+  if ( typeof messageData === 'string' ) {
+   const directHeightMatch = messageData.match( /^setHeight:(\d+)(?::.*)?$/i );
+
+   if ( directHeightMatch ) {
+    return directHeightMatch[ 1 ];
+   }
+
+   if ( messageData.startsWith( '{' ) ) {
+    try {
+     const parsedData = JSON.parse( messageData );
+     return getIframeHeightFromMessage( parsedData );
+    } catch ( error ) {
+     return null;
+    }
+   }
+
+   return null;
+  }
+
+  if ( typeof messageData === 'object' ) {
+   const messageType = String(
+    messageData.type || messageData.action || ''
+   ).toLowerCase();
+
+   if (
+    messageType === 'setheight' ||
+    messageType === 'resize' ||
+    messageType === 'iframe-resize'
+   ) {
+    return (
+     messageData.height ||
+     messageData.frameHeight ||
+     messageData.scrollHeight ||
+     null
+    );
+   }
+
+   return (
+    messageData.height ||
+    messageData.frameHeight ||
+    messageData.scrollHeight ||
+    null
+   );
+  }
+
+  return null;
+ };
+
+ const markIframeReady = ( iframe ) => {
+  if ( ! iframe ) {
+   return;
+  }
+
+  iframe.style.opacity = '';
+  iframe.style.visibility = '';
+  iframe.classList.add( 'is-ready' );
+ };
+
+ const syncIframeHeight = ( iframe, nextHeight ) => {
+  const parsedHeight = parseInt( nextHeight, 10 );
+
+  if ( ! iframe || Number.isNaN( parsedHeight ) || parsedHeight < 200 ) {
+   return;
+  }
+
+  iframe.style.height = `${ parsedHeight }px`;
+  iframe.dataset.heightSynced = 'true';
+  markIframeReady( iframe );
+ };
+
+ const queueIframeHeightSync = ( iframe, nextHeight ) => {
+  if ( ! iframe ) {
+   return;
+  }
+
+  const existingTimer = iframeResizeTimers.get( iframe );
+
+  if ( existingTimer ) {
+   window.clearTimeout( existingTimer );
+  }
+
+  const nextTimer = window.setTimeout( () => {
+   syncIframeHeight( iframe, nextHeight );
+   iframeResizeTimers.delete( iframe );
+  }, 180 );
+
+  iframeResizeTimers.set( iframe, nextTimer );
+ };
+
+ const bindIframeAutoHeight = ( iframe ) => {
+  if ( ! iframe || iframeResizeHandlers.has( iframe ) ) {
+   return;
+  }
+
+  iframeResizeHandlers.add( iframe );
+  setIframeBaseMinHeight( iframe );
+
+  iframe.addEventListener( 'load', () => {
+   setIframeBaseMinHeight( iframe );
+
+   window.setTimeout( () => {
+    if ( iframe.dataset.heightSynced === 'true' ) {
+     return;
+    }
+
+    markIframeReady( iframe );
+   }, 1200 );
+  } );
+
+  window.addEventListener( 'message', ( event ) => {
+   if ( event.source !== iframe.contentWindow ) {
+    return;
+   }
+
+   const iframeHeight = getIframeHeightFromMessage( event.data );
+
+   if ( iframeHeight ) {
+    queueIframeHeightSync( iframe, iframeHeight );
+   }
+  } );
+ };
+
+ document
+  .querySelectorAll( '.theme-form-block__iframe' )
+  .forEach( ( iframe ) => bindIframeAutoHeight( iframe ) );
+
+ let viewportResizeTimer = null;
+
+ window.addEventListener( 'resize', () => {
+   if ( viewportResizeTimer ) {
+    window.clearTimeout( viewportResizeTimer );
+   }
+
+   viewportResizeTimer = window.setTimeout( () => {
+     document
+      .querySelectorAll( '.theme-form-block__iframe' )
+      .forEach( ( iframe ) => reloadIframeForResize( iframe ) );
+    }, 180 );
+ } );
+
  const formatPhoneNumber = ( value ) => {
   const digits = value.replace( /\D/g, '' ).slice( 0, 10 );
 

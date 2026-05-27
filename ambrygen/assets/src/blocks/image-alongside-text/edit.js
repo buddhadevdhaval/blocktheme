@@ -6,7 +6,7 @@ import {
 	LinkControl,
 	InnerBlocks,
 } from '@wordpress/block-editor';
-import { Fragment, useEffect, useMemo } from '@wordpress/element';
+import { Fragment, useMemo } from '@wordpress/element';
 import {
 	PanelBody,
 	PanelRow,
@@ -21,6 +21,7 @@ import {
 	DEFAULT_IMAGES,
 	BlockVariationsExamplePreview,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 import { getThemeAssetUrl } from '../../utils/assets';
 
 const ALLOWED_CONTENT_BLOCKS = [
@@ -55,19 +56,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const currentImagePosition = imagePosition || 'right';
 	const isExample = blockId === 'image-alongside-text-example';
 
-	useEffect( () => {
-		if ( isExample ) {
-			return;
-		}
-
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
-
-		if ( ! blockId ) {
-			setAttributes( {
-				blockId: expectedId,
-			} );
-		}
-	}, [ clientId, blockId, isExample, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: ! isExample,
+	} );
 
 	const isImageRight =
 		currentImagePosition === 'right' ||

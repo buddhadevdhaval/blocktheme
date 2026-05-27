@@ -12,6 +12,7 @@ import {
 	ItemHeader,
 	BlockExamplePreview,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 const createStepId = () =>
 	`step-${ Date.now().toString( 36 ) }-${ Math.random()
@@ -87,19 +88,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const hasMissingIds = steps.some( ( step ) => ! step?.id );
 	const isExample = blockId === 'order-process-steps-example';
 
-	useEffect( () => {
-		if ( isExample ) {
-			return;
-		}
-
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
-
-		if ( ! blockId ) {
-			setAttributes( {
-				blockId: expectedId,
-			} );
-		}
-	}, [ clientId, blockId, isExample, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: ! isExample,
+	} );
 
 	useEffect( () => {
 		if ( ! stepsLength ) {
@@ -355,4 +349,3 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
-

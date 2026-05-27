@@ -55,7 +55,7 @@
 		flex-direction: column;
 		max-width: 380px;
 		text-align: center;
-		word-break: break-all;
+		word-break: break-word;
 
 		@include bp.max(lg) {
 			$cols-lg: 2;

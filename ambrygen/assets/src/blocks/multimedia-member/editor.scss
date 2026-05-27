@@ -4,7 +4,7 @@
 }
 
 .multimedia-member__member-help {
-	color: #757575;
+	color: var(--theme_amb_help);
 }
 
 .multimedia-member__member-picker {
@@ -22,8 +22,8 @@
 	max-height: 220px;
 	margin-top: 8px;
 	overflow-y: auto;
-	border: 1px solid #ddd;
-	background: #fff;
+	border: 1px solid var(--theme_border_3);
+	background: var(--theme_white);
 }
 
 .multimedia-member__selected-members {
@@ -40,8 +40,8 @@
 	gap: 4px;
 	max-height: 220px;
 	overflow-y: auto;
-	border: 1px solid #ddd;
-	background: #fff;
+	border: 1px solid var(--theme_border_3);
+	background: var(--theme_white);
 }
 
 .multimedia-member__selected-member,
@@ -51,7 +51,7 @@
 	justify-content: space-between;
 	gap: 8px;
 	padding: 8px 10px;
-	border-bottom: 1px solid #eee;
+	border-bottom: 1px solid var(--theme_gray_2);
 
 	&:last-child {
 		border-bottom: 0;

@@ -31,9 +31,11 @@ export default function Save( { attributes, className = '' } ) {
 	const {
 		containerWidth = 'container-1340',
 		backgroundStyle = '',
+		backgroundImageUrl = '',
 		isFixedBackground = false,
 	} = attributes;
 	const hasInsideBackground = isFixedBackground === true;
+	const hasBackgroundImage = Boolean( backgroundImageUrl );
 
 	const customClasses = className
 		.split( ' ' )
@@ -51,6 +53,11 @@ export default function Save( { attributes, className = '' } ) {
 
 	const blockProps = useBlockProps.save( {
 		className: classes || undefined,
+		style: hasBackgroundImage
+			? {
+					'--section-container-bg-image': `url(${ backgroundImageUrl })`,
+			  }
+			: undefined,
 	} );
 
 	return createElement(

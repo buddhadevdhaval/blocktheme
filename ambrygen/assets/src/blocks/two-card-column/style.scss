@@ -156,11 +156,18 @@
 		flex: 1;
 	}
 
-	&__card-title {
-
-		.ordering-options .ordering-options__card & {
+	.ordering-options__card-title,
+	.block-editor-rich-text__editable.ordering-options__card-title {
+		body & {
 			color: var(--theme_gray_900);
 		}
+	}
+
+	&__card-title {
+		// .ordering-options .ordering-options__card &,
+		// .bg-primary_700 & {
+		// 	color: var(--theme_gray_900);
+		// }
 	}
 
 	&__card-subtitle {
@@ -178,6 +185,7 @@
 		li {
 			padding-left: 20px;
 			margin-bottom: 10px;
+			color: var(--theme_body_color);
 
 			&::before {
 				background-color: var(--theme_gray_600);

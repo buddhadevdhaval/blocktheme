@@ -15,6 +15,7 @@ import {
 	ItemHeader,
 	BlockVariationsExamplePreview,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 import { getThemeAssetUrl } from '../../utils/assets';
 
 const createCounterId = () =>
@@ -76,18 +77,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const countersLength = counters.length;
 	const hasMissingIds = counters.some( ( counter ) => ! counter?.id );
 
-	useEffect( () => {
-		if ( isExample ) {
-			return;
-		}
-
-		const clientIdSuffix = clientId.slice( 0, 8 );
-		const expectedId = `section-${ clientIdSuffix }`;
-
-		if ( ! blockId ) {
-			setAttributes( { blockId: expectedId } );
-		}
-	}, [ clientId, blockId, isExample, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: ! isExample,
+	} );
 
 	useEffect( () => {
 		if ( ! countersLength ) {

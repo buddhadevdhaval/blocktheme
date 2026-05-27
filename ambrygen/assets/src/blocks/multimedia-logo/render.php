@@ -15,6 +15,7 @@
 
     $ambrygen_attributes  = is_array($attributes) ? $attributes : [];
     $ambrygen_anchor      = isset($ambrygen_attributes['anchor']) ? sanitize_html_class($ambrygen_attributes['anchor']) : '';
+    $ambrygen_block_id    = isset($ambrygen_attributes['blockId']) ? sanitize_html_class($ambrygen_attributes['blockId']) : '';
     $ambrygen_section     = isset($ambrygen_attributes['sectionTitle']) ? $ambrygen_attributes['sectionTitle'] : '';
     $ambrygen_heading_tag = Helper::get_heading_tag(
     $ambrygen_attributes['headingTag'] ?? 'h2',
@@ -68,8 +69,8 @@
     'role'  => 'region',
     ];
 
-    if ($ambrygen_anchor) {
-    $ambrygen_wrapper_attributes_array['id'] = $ambrygen_anchor;
+    if ($ambrygen_anchor || $ambrygen_block_id) {
+    $ambrygen_wrapper_attributes_array['id'] = $ambrygen_anchor ? $ambrygen_anchor : $ambrygen_block_id;
     }
 
     if ($ambrygen_has_heading) {
@@ -115,7 +116,7 @@
 		<div class="logo-section__downloads">
 			<div class="logo-section__downloads-group js-gsap-fade">
 				<div class="logo-section__downloads-title subtitle2-sbold">
-					<?php esc_html_e('Group For Web', 'ambrygen-web'); ?>
+					<?php esc_html_e('For Web', 'ambrygen-web'); ?>
 				</div>
 
 				<div class="logo-section__downloads-list">
@@ -144,9 +145,9 @@
 
 			<div class="logo-section__downloads-group js-gsap-fade">
 				<div class="logo-section__downloads-title subtitle2-sbold">
-					<?php esc_html_e('Group For Print', 'ambrygen-web'); ?>
+					<?php esc_html_e('For Print', 'ambrygen-web'); ?>
 				</div>
-
+            <div class="logo-section__downloads-list">
 					<?php foreach ($ambrygen_downloads_print as $ambrygen_item): ?>
 						<?php
                             $ambrygen_file_url   = isset($ambrygen_item['fileUrl']) ? esc_url_raw($ambrygen_item['fileUrl']) : '';
@@ -155,7 +156,7 @@
                             $ambrygen_link_text  = $ambrygen_label ? $ambrygen_label : __('Download file', 'ambrygen-web');
                         ?>
 						<?php if ($ambrygen_file_url): ?>
-							<div class="logo-section__downloads-list">
+							
 								<?php if ($ambrygen_group_name): ?>
 									<div class="logo-section__downloads-group-name">
 										<?php echo esc_html($ambrygen_group_name); ?>
@@ -170,9 +171,10 @@
 										<?php echo esc_html($ambrygen_link_text); ?>
 									</a>
 								</div>
-							</div>
+						
 						<?php endif; ?>
 					<?php endforeach; ?>
+                    	</div>
 
 			</div>
 		</div>

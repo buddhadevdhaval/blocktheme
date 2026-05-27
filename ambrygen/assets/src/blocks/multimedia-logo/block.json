@@ -27,6 +27,9 @@
       ],
       "default": "h2"
     },
+    "blockId": {
+      "type": "string"
+    },
     "logoImageUrl": {
       "type": "string",
       "default": ""
@@ -90,7 +93,7 @@
   "render": "file:./render.php",
   "example": {
     "attributes": {
-      "sectionTitle": "multimedia-logo-example"
+      "blockId": "example-block-preview"
     }
   }
 }

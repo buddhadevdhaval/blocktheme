@@ -18,6 +18,21 @@
       "type": "string",
       "default": ""
     },
+    "customName": {
+      "type": "string",
+      "default": ""
+    },
+    "customCount": {
+      "type": "string",
+      "default": ""
+    },
+    "customLink": {
+      "type": "object",
+      "default": {
+        "url": "",
+        "opensInNewTab": false
+      }
+    },
     "selectedTerm": {
       "type": "number",
       "default": 0

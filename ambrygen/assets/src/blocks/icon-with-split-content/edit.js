@@ -18,6 +18,7 @@ import {
 	ItemHeader,
 	TagSelector,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 
 function createItemId() {
 	return `icon-item-${ Date.now() }-${ Math.random()
@@ -73,15 +74,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const HeadingTag = headingTag || 'h2';
 	const isExample = blockId === 'icon-with-split-content-example';
 
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: ! isExample,
+	} );
+
 	useEffect( () => {
 		if ( isExample ) {
-			return;
-		}
-
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
-
-		if ( ! blockId ) {
-			setAttributes( { blockId: expectedId } );
 			return;
 		}
 
@@ -90,7 +91,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		if ( hasChanges ) {
 			setAttributes( { items: normalizedItems } );
 		}
-	}, [ clientId, blockId, isExample, items, setAttributes ] );
+	}, [ isExample, items, setAttributes ] );
 
 	const blockProps = useBlockProps( {
 		className: 'symptoms',
@@ -203,10 +204,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 							<TextControl
 								label={ __( 'Title', 'ambrygen-web' ) }
-								value={ sanitizePlainText( item.text || '' ) }
+								value={ item.text || '' }
 								onChange={ ( value ) =>
 									updateItem( item.id, {
-										text: sanitizePlainText( value ),
+										text: value,
 									} )
 								}
 								placeholder={ __( 'Title', 'ambrygen-web' ) }

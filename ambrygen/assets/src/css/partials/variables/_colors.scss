@@ -17,6 +17,8 @@
 	--theme_black_1: #14191f;
 	--theme_black_2: #606364;
 	--theme_black_30: rgba(0, 0, 0, 0.30);
+	--theme_black_55: rgba(0, 0, 0, 0.55);
+	--theme_black_50: rgba(0, 0, 0, 0.50);
 
 	/* Theme Light */
 	--theme_white: #fff;
@@ -72,6 +74,22 @@
 	--theme_primary_800: #005E7F;
 	--theme_cg_blue: #0079A4;
 	/* Primary 700 */
+
+	/* Ambry-specific additions (block-specific exact colors) */
+	--theme_amb_dark_blue: #003a63;
+	--theme_amb_dark_blue_hover: #004a7c;
+	--theme_amb_blue_006494: #006494;
+	--theme_amb_bg_f7f9fb: #f7f9fb;
+	--theme_amb_border_ebebeb: #ebebeb;
+	--theme_amb_text_444: #444;
+	--theme_amb_text_666: #666;
+
+	/* Scrollbar + muted text for blocks */
+	--theme_amb_scroll_thumb: #b5b5b5;
+	--theme_amb_scroll_thumb_hover: #8c8c8c;
+	--theme_amb_scroll_track: #f1f1f1;
+	--theme_amb_muted: #6b7280;
+	--theme_amb_help: #757575;
 
 
 	--theme_green_500: #0BC196;

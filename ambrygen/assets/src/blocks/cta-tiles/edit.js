@@ -15,6 +15,7 @@ import {
 	BlockVariationsExamplePreview,
 	TagSelector,
 } from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 import { getThemeAssetUrl } from '../../utils/assets';
 
 // Constants
@@ -129,17 +130,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const hasTopImage = Boolean(topImageID && topImageURL);
 	const isExample = blockId === 'cta-tiles-example';
 
-	// Initialize block ID
-	useEffect(() => {
-		if (isExample) {
-			return;
-		}
-
-		const expectedId = `section-${clientId.slice(0, 8)}`;
-		if (!blockId) {
-			setAttributes({ blockId: expectedId });
-		}
-	}, [clientId, blockId, isExample, setAttributes]);
+	useUniqueBlockId({
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: !isExample,
+	});
 
 	// Normalize variation on mount
 	useEffect(() => {
@@ -367,7 +363,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 										className="is-style-gl-s16"
 										aria-hidden="true"
 									/>
-									<div className="body1-reg logo-title-section__description">
+									<div className="body1-reg logo-title-section__description block-description">
 										<RichText
 											tagName="div"
 											value={description}

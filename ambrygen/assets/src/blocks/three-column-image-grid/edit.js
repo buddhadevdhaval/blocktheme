@@ -11,13 +11,15 @@ import {
 	TagSelector,
 } from '../_shared/components';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo } from '@wordpress/element';
+import { useMemo } from '@wordpress/element';
+import { useUniqueBlockId } from '../_shared/hooks';
 import { getThemeAssetUrl } from '../../utils/assets';
 
 const ALLOWED_BLOCKS = [ 'ambrygen/three-column-image-grid-item' ];
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
+		anchor,
 		eyebrow,
 		heading,
 		description,
@@ -45,15 +47,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		[]
 	);
 
-	useEffect( () => {
-		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
+	const isExample = blockId === 'three-column-image-grid-example';
 
-		if ( ! blockId ) {
-			setAttributes( {
-				blockId: expectedId,
-			} );
-		}
-	}, [ clientId, blockId, setAttributes ] );
+	useUniqueBlockId( {
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: ! isExample,
+	} );
 
 	const variationClass = variation === 'variation-2' ? 'is-variation-2' : '';
 	const showEyebrow = variation !== 'variation-2';
@@ -61,11 +62,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const blockProps = useBlockProps( {
 		className: `block-layout three-column-image-grid ${ variationClass }`,
+		id: anchor || blockId || undefined,
 	} );
 
 	const HeadingTag = headingTag || 'h2';
 
-	if ( blockId === 'three-column-image-grid-example' ) {
+	if ( isExample ) {
 		return (
 			<BlockVariationsExamplePreview
 				variants={ VARIANTS }
@@ -136,17 +138,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								onChange={ ( value ) =>
 									setAttributes( { eyebrow: value } )
 								}
-								className="eyebrow"
+								className="hero-kicker js-gsap-fade"
 								placeholder={ __(
-									'Add Eyebrow...',
+									'Add Eyebrow…',
 									'ambrygen-web'
 								) }
 							/>
 						) }
-						<div
-							className="is-style-gl-s12"
-							aria-hidden="true"
-						/>
+						<div className="is-style-gl-s12" aria-hidden="true" />
 						<RichText
 							tagName={ HeadingTag }
 							className={ `block-title block__rowflex--heading-title heading-3 mb-0` }
@@ -155,12 +154,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								setAttributes( { heading: value } )
 							}
 							allowedFormats={ [ 'core/text-color' ] }
-							placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+							placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 						/>
 					</div>
 
 					<div className="heading-content-wrapper">
-						<div className="block__rowflex--block-content subtitle1-reg">
+						<div className="block__rowflex--block-content subtitle1-reg js-gsap-fade">
 							<RichText
 								tagName="div"
 								value={ description }
@@ -169,7 +168,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								}
 								multiline="p"
 								placeholder={ __(
-									'Add description...',
+									'Add description…',
 									'ambrygen-web'
 								) }
 							/>
@@ -179,7 +178,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 				<div className="is-style-gl-s32" aria-hidden="true"></div>
 
-				<div className="three-column-image-grid__content">
+				<div className="three-column-image-grid__content grid-content">
 					<InnerBlocks
 						allowedBlocks={ ALLOWED_BLOCKS }
 						template={ [

@@ -46,6 +46,10 @@
       "type": "string",
       "default": "These are our most commonly ordered panels - choose based on your patient's clinical presentation."
     },
+    "hideTable": {
+      "type": "boolean",
+      "default": false
+    },
     "headingLevel": {
       "type": "string",
       "default": "h2",

@@ -33,7 +33,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<?php if ( $ambrygen_has_member_title ) : ?>
-		<div class="features-media__header block__rowflex">
+		<div class="features-media__header block__rowflex  is-vertical">
 			<<?php echo tag_escape( $ambrygen_member_heading_tag ); ?> class="block-title block__rowflex--heading-title heading-2 mb-0 js-gsap-fade">
 				<?php echo wp_kses( $ambrygen_member_title, Helper::allowed_heading_html() ); ?>
 			</<?php echo tag_escape( $ambrygen_member_heading_tag ); ?>>

@@ -145,12 +145,15 @@
 	}
 
 	$ambrygen_member_post = get_post( $ambrygen_member_post_id );
-	if ( ! $ambrygen_member_post || 'publish' !== $ambrygen_member_post->post_status ) {
+	if ( ! $ambrygen_member_post || 'author' !== $ambrygen_member_post->post_type || 'publish' !== $ambrygen_member_post->post_status ) {
 		return;
 	}
 
 	$ambrygen_member_title       = get_the_title( $ambrygen_member_post_id );
-	$ambrygen_member_designation = sanitize_text_field( (string) get_post_meta( $ambrygen_member_post_id, 'designation', true ) );
+	$ambrygen_member_designation = sanitize_text_field( (string) get_post_meta( $ambrygen_member_post_id, 'user_designation', true ) );
+	if ( '' === $ambrygen_member_designation ) {
+		$ambrygen_member_designation = sanitize_text_field( (string) get_post_meta( $ambrygen_member_post_id, 'designation', true ) );
+	}
 	$ambrygen_member_featured_id = absint( get_post_thumbnail_id( $ambrygen_member_post_id ) );
 	$ambrygen_member_small_file  = $ambrygen_parse_download_file( get_post_meta( $ambrygen_member_post_id, 'small_image', true ) );
 	$ambrygen_member_large_file  = $ambrygen_parse_download_file( get_post_meta( $ambrygen_member_post_id, 'large_image', true ) );
@@ -196,14 +199,14 @@
 
 	if ( ! empty( $ambrygen_member_large_file['url'] ) ) {
 		$ambrygen_member_download_files[] = array(
-			'label' => esc_html__( 'Download Large', 'ambrygen-web' ),
+			'label' => esc_html__( 'Large', 'ambrygen-web' ),
 			'url'   => $ambrygen_member_large_file['url'],
 		);
 	}
 
 	if ( ! empty( $ambrygen_member_small_file['url'] ) ) {
 		$ambrygen_member_download_files[] = array(
-			'label' => esc_html__( 'Download Small', 'ambrygen-web' ),
+			'label' => esc_html__( 'Small', 'ambrygen-web' ),
 			'url'   => $ambrygen_member_small_file['url'],
 		);
 	}

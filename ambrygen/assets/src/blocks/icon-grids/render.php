@@ -168,15 +168,17 @@ $ambrygen_content = $content ?? '';
 			<div class="features-tabs__header block__rowflex">
 
 				<?php if (!empty($attributes['heading'])): ?>
-					<<?php echo tag_escape($ambrygen_heading_tag); ?> class="heading-2 block-title mb-0
-						block__rowflex--heading-title js-gsap-fade">
-						<?php
-						echo wp_kses(
-							$attributes['heading'],
-							Helper::allowed_heading_html()
-						);
-						?>
-					</<?php echo tag_escape($ambrygen_heading_tag); ?>>
+					<div class="block__rowflex--col-left">
+						<<?php echo tag_escape($ambrygen_heading_tag); ?> class="heading-2 block-title mb-0
+							block__rowflex--heading-title js-gsap-fade">
+							<?php
+							echo wp_kses(
+								$attributes['heading'],
+								Helper::allowed_heading_html()
+							);
+							?>
+						</<?php echo tag_escape($ambrygen_heading_tag); ?>>
+					</div>
 				<?php endif; ?>
 
 				<?php if (!empty($attributes['description'])): ?>

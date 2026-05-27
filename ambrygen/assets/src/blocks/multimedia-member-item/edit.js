@@ -1,6 +1,6 @@
 import { useBlockProps } from '@wordpress/block-editor';
-import { Spinner, Button } from '@wordpress/components';
-import { useSelect, useDispatch } from '@wordpress/data';
+import { Spinner } from '@wordpress/components';
+import { useSelect } from '@wordpress/data';
 import { DEFAULT_IMAGES } from '../_shared/components';
 import { __ } from '@wordpress/i18n';
 import { useMemo } from '@wordpress/element';
@@ -75,7 +75,6 @@ const normalizeMemberMediaMeta = ( metaValue ) => {
 
 export default function Edit( { attributes, clientId } ) {
 	const { postId } = attributes;
-	const { removeBlock } = useDispatch( 'core/block-editor' );
 	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
 
 	const selectedPost = useSelect(
@@ -85,11 +84,10 @@ export default function Edit( { attributes, clientId } ) {
 			}
 			return select( 'core' ).getEntityRecord(
 				'postType',
-				'our_team',
+				'author',
 				postId,
 				{
 					_embed: true,
-					context: 'edit',
 				}
 			);
 		},
@@ -193,7 +191,7 @@ export default function Edit( { attributes, clientId } ) {
 			{ ! postId && (
 				<p>
 					{ __(
-						'Select members from the Multimedia Member block settings.',
+						'Select authors from the Multimedia Member block settings.',
 						'ambrygen-web'
 					) }
 				</p>
@@ -252,39 +250,15 @@ export default function Edit( { attributes, clientId } ) {
 								className="is-style-gl-s10"
 								aria-hidden="true"
 							></div>
-							{ selectedPost.meta?.designation && (
+							{ ( selectedPost.meta?.user_designation || selectedPost.meta?.designation ) && (
 								<span className="multimedia-member__role subtitle2">
 									{ decodeEntities(
-										selectedPost.meta?.designation || ''
+										selectedPost.meta?.user_designation ||
+											selectedPost.meta?.designation ||
+											''
 									) }
 								</span>
 							) }
-						</div>
-					</div>
-
-					<div
-						className="multimedia-member-item__actions"
-						style={ {
-							marginTop: '12px',
-							padding: '10px',
-							background: '#f0f0f0',
-							border: '1px solid #ccc',
-						} }
-					>
-						<div className="multimedia-member__meta body2-reg">
-							<strong>
-								{ __( 'Admin Settings', 'ambrygen-web' ) }
-							</strong>{ ' ' }
-							( { memberMediaItems.length }{ ' ' }
-							{ __( 'media items total', 'ambrygen-web' ) } )
-						</div>
-						<div className="actions-button">
-							<Button
-								isDestructive
-								onClick={ () => removeBlock( clientId ) }
-							>
-								{ __( 'Remove Member', 'ambrygen-web' ) }
-							</Button>
 						</div>
 					</div>
 				</>

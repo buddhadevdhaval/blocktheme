@@ -138,7 +138,7 @@
 
 						<?php if ($ambrygen_has_description): ?>
 							<div class="is-style-gl-s16" aria-hidden="true"></div>
-							<div class="body1-reg logo-title-section__description js-gsap-fade">
+							<div class="body1-reg logo-title-section__description block-description js-gsap-fade">
 								<?php echo wp_kses_post($ambrygen_description); ?>
 							</div>
 						<?php endif; ?>

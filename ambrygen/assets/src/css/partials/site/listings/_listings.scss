@@ -75,12 +75,36 @@
 			padding: 20px;
 		}
 
+
+
 		.wp-block-read-more,
 		.press-releases__item-read-more,
 		.listing-archive__item-read-more {
 			margin-top: auto;
 			align-self: flex-start;
 		}
+	}
+
+
+	&__post-label-listing {
+		display: flex;
+		gap: 8px;
+	}
+
+	&__post-label {
+		background-color: var(--theme_clear_skies);
+		border: 1px solid var(--theme_primary_200);
+		border-radius: 16px;
+		color: var(--theme_cg_blue);
+		display: inline-flex;
+		font-size: 12px;
+		font-style: normal;
+		font-weight: 400;
+		letter-spacing: -.18px;
+		line-height: 1.5;
+		margin: 0;
+		padding: 2px 10px 2px 8px;
+		text-decoration: none;
 	}
 
 	// ── Poster Title ───────────────────────────────────────────────────────

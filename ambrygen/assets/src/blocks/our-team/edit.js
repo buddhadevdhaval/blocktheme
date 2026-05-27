@@ -28,7 +28,11 @@ import {
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { TagSelector } from '../_shared/components';
+import {
+	BlockVariationsExamplePreview,
+	TagSelector,
+} from '../_shared/components';
+import { useUniqueBlockId } from '../_shared/hooks';
 import { getThemeAssetUrl } from '../../utils/assets';
 
 const LAYOUT_VARIANTS = [
@@ -105,6 +109,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		showPagination = true,
 		autoplay = false,
 	} = attributes;
+	const isExample = blockId === 'our-team-example';
 
 	const normalizedVariation = normalizeVariation(variation);
 	const isSliderView = normalizedVariation === 'slider-view';
@@ -121,16 +126,23 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	const memberTypeTerms = useSelect(
 		(select) =>
+			isExample
+				? []
+				:
 			select('core').getEntityRecords('taxonomy', 'member_type', {
 				per_page: WP_REST_MAX_PER_PAGE,
 				hide_empty: false,
 				_fields: 'id,name',
 			}),
-		[]
+		[isExample]
 	);
 
 	const manualTeamPosts = useSelect(
 		(select) => {
+			if (isExample) {
+				return [];
+			}
+
 			if (isSliderView && selectionMode === 'taxonomy') {
 				return [];
 			}
@@ -153,11 +165,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				query
 			);
 		},
-		[isSliderView, selectionMode, debouncedMemberSearchInput]
+		[isExample, isSliderView, selectionMode, debouncedMemberSearchInput]
 	);
 
 	const taxonomyTeamPosts = useSelect(
 		(select) => {
+			if (isExample) {
+				return [];
+			}
+
 			if (
 				!isSliderView ||
 				deferredSelectionMode !== 'taxonomy' ||
@@ -194,11 +210,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 			return posts;
 		},
-		[isSliderView, deferredSelectionMode, deferredMemberTypes]
+		[isExample, isSliderView, deferredSelectionMode, deferredMemberTypes]
 	);
 
 	const isResolvingTaxonomyPosts = useSelect(
 		(select) => {
+			if (isExample) {
+				return false;
+			}
+
 			if (
 				!isSliderView ||
 				deferredSelectionMode !== 'taxonomy' ||
@@ -231,12 +251,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 			return false;
 		},
-		[isSliderView, deferredSelectionMode, deferredMemberTypes]
+		[isExample, isSliderView, deferredSelectionMode, deferredMemberTypes]
 	);
 
 	const innerBlocks = useSelect(
-		(select) => select('core/block-editor').getBlocks(clientId),
-		[clientId]
+		(select) => (isExample ? [] : select('core/block-editor').getBlocks(clientId)),
+		[clientId, isExample]
 	);
 	const selectedPostIds = useMemo(
 		() =>
@@ -253,6 +273,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	const selectedTeamPostsById = useSelect(
 		(select) => {
+			if (isExample) {
+				return {};
+			}
+
 			if (!selectedPostIds.length) {
 				return {};
 			}
@@ -289,7 +313,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				...currentBatch,
 			};
 		},
-		[selectedPostIds]
+		[isExample, selectedPostIds]
 	);
 	const innerBlockCount = innerBlocks.length;
 	const hasInnerBlocks = innerBlockCount > 0;
@@ -412,27 +436,31 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		setMemberSearchInput('');
 	};
 
-	useEffect(() => {
-		const clientIdSuffix = clientId.slice(0, 8);
-		const expectedId = `section-${clientIdSuffix}`;
+	useUniqueBlockId({
+		blockId,
+		clientId,
+		setAttributes,
+		enabled: !isExample,
+	});
 
-		if (!blockId) {
-			setAttributes({
-				blockId: expectedId,
-			});
+	useEffect(() => {
+		if (isExample) {
+			return;
 		}
-	}, [clientId, blockId, setAttributes]);
 
-	useEffect(() => {
 		const timeoutId = setTimeout(
 			() => setDebouncedMemberSearchInput(memberSearchInput.trim()),
 			SEARCH_DEBOUNCE_MS
 		);
 
 		return () => clearTimeout(timeoutId);
-	}, [memberSearchInput]);
+	}, [isExample, memberSearchInput]);
 
 	useEffect(() => {
+		if (isExample) {
+			return;
+		}
+
 		if (
 			!isSliderView ||
 			deferredSelectionMode !== 'taxonomy' ||
@@ -461,6 +489,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 		replaceInnerBlocks(clientId, newBlocks, false);
 	}, [
+		isExample,
 		isSliderView,
 		deferredSelectionMode,
 		deferredMemberTypes,
@@ -472,6 +501,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	]);
 
 	useEffect(() => {
+		if (isExample) {
+			return;
+		}
+
 		if (!isSliderView || !hasInnerBlocks) {
 			return;
 		}
@@ -557,9 +590,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			animationFrameIds.forEach(cancelAnimationFrame);
 			animationFrameIds = [];
 
-			resetSliderPreview();
+		resetSliderPreview();
 		};
 	}, [
+		isExample,
 		isSliderView,
 		showNavigation,
 		showPagination,
@@ -569,6 +603,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	]);
 
 	useEffect(() => {
+		if (isExample) {
+			return;
+		}
+
 		if (!isSliderView || !swiperInstance.current) {
 			return;
 		}
@@ -587,7 +625,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		});
 
 		return () => cancelAnimationFrame(animationFrameId);
-	}, [isSliderView, innerBlockCount]);
+	}, [isExample, isSliderView, innerBlockCount]);
+
+	if (isExample) {
+		return (
+			<BlockVariationsExamplePreview
+				variants={LAYOUT_VARIANTS}
+				className="cta-tiles-example-preview"
+				itemClass="cta-tiles-example-preview__item"
+			/>
+		);
+	}
 
 	return (
 		<>

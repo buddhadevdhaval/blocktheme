@@ -69,9 +69,9 @@ export default function OrderingOptionsEdit( {
 							renderAppender={ InnerBlocks.ButtonBlockAppender }
 						/>
 					</div>
-
-					<div className="is-style-gl-s16" aria-hidden="true"></div>
 				</div>
+
+				<div className="is-style-gl-s24" aria-hidden="true"></div>
 			</div>
 		</>
 	);

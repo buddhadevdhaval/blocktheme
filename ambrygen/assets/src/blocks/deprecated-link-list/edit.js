@@ -213,7 +213,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const blockProps = useBlockProps( {
 		className: [
-			'download-list',
+			'block-layout download-list',
 			variation === 'grid-view' ? 'variation-grid-view' : '',
 		]
 			.filter( Boolean )

@@ -676,7 +676,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 						<div className="three-column-card__text-content">
 							<RichText
 								tagName="h3"
-								className="three-column-card__title heading-5 mb-0"
+								className="three-column-card__title block-inside-title heading-5 mb-0"
 								value={ sectiontitle }
 								onChange={ ( value ) =>
 									setAttributes( { sectiontitle: value } )

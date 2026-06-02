@@ -28,11 +28,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		clientId,
 		setAttributes,
 		enabled: !isExample,
-		idPrefix: 'theme-quote',
+		idPrefix: 'theme-quote block-layout',
 	});
 
 	const blockProps = useBlockProps({
-		className: 'theme-quote',
+		className: 'theme-quote block-layout',
 	});
 
 	if (isExample) {
@@ -100,7 +100,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						/>
 					</div>
 
-					<div className="block__rowflex--block-content subtitle-1-regular theme-quote__header-description">
+					<div className="block__rowflex--block-content subtitle-1-regular theme-quote__header-description block-description">
 						<RichText
 							tagName="div"
 							value={description}

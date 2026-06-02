@@ -64,7 +64,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="order-process-steps__header">
 		<?php if ( $ambrygen_has_heading ) : ?>
-			<<?php echo tag_escape( $ambrygen_heading_tag ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-4 block-title mb-0">
+			<<?php echo tag_escape( $ambrygen_heading_tag ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-4 block-title mb-0 order-process-steps__heading js-gsap-fade">
 				<?php
 				echo wp_kses( $ambrygen_heading, Helper::allowed_heading_html() );
 				?>
@@ -75,9 +75,9 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 			<?php if ( $ambrygen_has_heading ) : ?>
 				<div class="is-style-gl-s12" aria-hidden="true"></div>
 			<?php endif; ?>
-			<p class="body1 order-process-steps__subtitle">
+			<div class="body1 order-process-steps__subtitle js-gsap-fade">
 				<?php echo wp_kses_post( $ambrygen_subtitle ); ?>
-			</p>
+			</div>
 		<?php endif; ?>
 	</div>
 
@@ -98,7 +98,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 				$ambrygen_has_title   = '' !== trim( wp_strip_all_tags( $ambrygen_step_title ) );
 				$ambrygen_has_desc    = '' !== trim( wp_strip_all_tags( $ambrygen_step_desc ) );
 				?>
-				<div class="order-process-steps__step" role="listitem">
+				<div class="order-process-steps__step js-gsap-fade" role="listitem">
 					<?php if ( $ambrygen_icon_id || $ambrygen_icon_url ) : ?>
 						<div class="order-process-steps__step-icon">
 							<?php

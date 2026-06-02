@@ -39,9 +39,9 @@ class Publications extends AbstractPostType {
 	public function extra_args(): array {
 		return array(
 			'rewrite' => array(
-				'slug' => 'peer-reviewed-publication',
+				'slug' => 'science/peer-reviewed-publication',
 			),
-			'has_archive' => 'peer-reviewed-publications',
+			'has_archive' => 'science/peer-reviewed-publications',
 		);
 	}
 
@@ -51,6 +51,17 @@ class Publications extends AbstractPostType {
 				'label'    => __( 'Old ID', 'ambrygen-web' ),
 				'type'     => 'number',
 				'sanitize' => 'absint',
+			),
+			'authors' => array(
+				'label' => __( 'Authors', 'ambrygen-web' ),
+				'type'  => 'textarea',
+			),
+			'linked_author' => array(
+				'label'       => __( 'Linked Authors', 'ambrygen-web' ),
+				'type'        => 'post_relationship',
+				'post_types'  => array( 'author' ),
+				'multiple'    => true,
+				'description' => __( 'Select matching author profiles for this publication.', 'ambrygen-web' ),
 			),
 		);
 	}

@@ -160,7 +160,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		VARIATION_CLASS_NAMES[CTA_TILES_VARIATIONS.IMAGE_ONLY_TITLE];
 
 	const blockProps = useBlockProps({
-		className: `cta-tiles block-${variationClassName} ${ambClass} grid-column${effectiveGridColumns}`,
+		className: `block-layout cta-tiles block-${variationClassName} ${ambClass} grid-column${effectiveGridColumns}`,
 	});
 
 	const HeadingTag = headingTag || 'h2';

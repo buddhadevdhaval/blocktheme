@@ -116,7 +116,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				{ text && (
 					<div className="additional-link__card-content">
 						{ safeUrl ? (
-							<a
+							<div
 								href={ safeUrl }
 								className="additional-link__card-link"
 								target={ target || undefined }
@@ -124,7 +124,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								style={ { pointerEvents: 'none' } }
 							>
 								{ text }
-							</a>
+							</div>
 						) : (
 							<div className="additional-link__card-link">
 								{ text }

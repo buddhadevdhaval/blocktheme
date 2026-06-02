@@ -63,7 +63,7 @@ $ambrygen_render_blocks = static function ( array $blocks ): string {
 };
 
 $wrapper_args = array(
-	'class' => 'download-list',
+	'class' => 'download-list block-layout',
 );
 
 if ( $ambrygen_anchor || $ambrygen_block_id ) {
@@ -81,9 +81,9 @@ $wrapper_attributes = get_block_wrapper_attributes( $wrapper_args );
 
 ?>
 
-<section <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+<div <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="download-list__inner">
-		<div class="download-list__header-area mb-24">
+		<div class="download-list__header-area mb-24 js-gsap-fade">
 			<div class="download-list__content">
 				<?php if ( $ambrygen_title ) : ?>
 					<<?php echo tag_escape( $ambrygen_heading_tag ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="download-list__title heading-3 block-title mb-0">
@@ -127,7 +127,7 @@ $wrapper_attributes = get_block_wrapper_attributes( $wrapper_args );
 						);
 					}
 					?>
-					<div class="download-list__item">
+					<div class="download-list__item js-gsap-fade">
 						<a
 							class="download-list__item-link"
 							<?php if ( $ambrygen_url ) : ?>
@@ -152,4 +152,4 @@ $wrapper_attributes = get_block_wrapper_attributes( $wrapper_args );
 			?>
 		</div>
 	</div>
-</section>
+							</div>

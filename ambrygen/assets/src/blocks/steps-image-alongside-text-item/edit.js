@@ -117,13 +117,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 			<div { ...blockProps }>
 				<div className="vertical-tabs__header">
-					<div className="caption-semi-bold vertical-tabs__step-label">
+					<div className="caption-semi-bold vertical-tabs__step-label block-description">
 						{ `${ __( 'Step', 'ambrygen-web' ) } ${ stepNumber + 1 }` }
 					</div>
 
 					<RichText
 						tagName="div"
-						className="subtitle1-sbold vertical-tabs__title"
+						className="subtitle1-sbold vertical-tabs__title block-description"
 						value={ resolvedStepTitle }
 						onChange={ ( value ) =>
 							setAttributes( {
@@ -137,7 +137,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 					<RichText
 						tagName="div"
-						className="body1-regular vertical-tabs__desc"
+						className="body1-regular vertical-tabs__desc block-description"
 						value={ description }
 						onChange={ ( value ) =>
 							setAttributes( { description: value } )

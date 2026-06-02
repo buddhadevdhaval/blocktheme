@@ -157,7 +157,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			</InspectorControls>
 			<div
 				{ ...useBlockProps( {
-					className: 'download-list collaborators-list',
+					className: 'download-list block-layout collaborators-list',
 				} ) }
 			>
 				<div className="download-list__inner">

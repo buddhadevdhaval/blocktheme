@@ -67,7 +67,7 @@ $ambrygen_grid_class         = $ambrygen_item_count >= 4
 	<div class="principles-steps">
 		<div class="principles-steps__header text-center">
 			<?php if ( $ambrygen_has_eyebrow ) : ?>
-				<div class="overline-text principles-steps__eyebrow hero-kicker">
+				<div class="overline-text principles-steps__eyebrow hero-kicker js-gsap-fade">
 					<?php echo wp_kses_post( $ambrygen_eyebrow ); ?>
 				</div>
 			<?php endif; ?>
@@ -75,7 +75,7 @@ $ambrygen_grid_class         = $ambrygen_item_count >= 4
 				<div class="is-style-gl-s12" aria-hidden="true"></div>
 			<?php endif; ?>
 			<?php if ( $ambrygen_has_heading ) : ?>
-				<<?php echo tag_escape( $ambrygen_heading_tag ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-4 block-title mb-0 principles-steps__title">
+				<<?php echo tag_escape( $ambrygen_heading_tag ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-4 block-title mb-0 principles-steps__title js-gsap-fade">
 					<?php echo wp_kses( $ambrygen_heading, Helper::allowed_heading_html() ); ?>
 				</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 			<?php endif; ?>
@@ -83,7 +83,8 @@ $ambrygen_grid_class         = $ambrygen_item_count >= 4
 				<div class="is-style-gl-s12" aria-hidden="true"></div>
 			<?php endif; ?>
 			<?php if ( $ambrygen_has_subtitle ) : ?>
-				<div class="block-description body1 principles-steps__subtitle">
+				<div class="block-description body1 principles-steps__subtitle js-gsap-fade">
+						<?php echo wp_kses_post( $ambrygen_subtitle ); ?>
 					<?php echo wp_kses_post( $ambrygen_subtitle ); ?>
 				</div>
 			<?php endif; ?>
@@ -99,7 +100,7 @@ $ambrygen_grid_class         = $ambrygen_item_count >= 4
 
 		<?php if ( $ambrygen_has_foot_content ) : ?>
 			<div class="is-style-gl-s50" aria-hidden="true"></div>
-			<div class="foot-content text-center">
+			<div class="foot-content text-center js-gsap-fade">
 				<?php echo wp_kses_post( $ambrygen_foot_content ); ?>
 			</div>
 		<?php endif; ?>

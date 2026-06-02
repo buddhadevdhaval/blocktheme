@@ -31,7 +31,7 @@ $ambrygen_has_cards       = '' !== $ambrygen_cards_content;
 $ambrygen_heading_id      = $ambrygen_has_heading ? ( $ambrygen_block_id ? $ambrygen_block_id . '-heading' : wp_unique_id( 'medium-icon-grid-heading-' ) ) : '';
 
 $ambrygen_wrapper_attributes_array = array(
-	'class' => 'icon-card-grid',
+	'class' => 'icon-card-grid block-layout',
 );
 
 if ( $ambrygen_block_id ) {
@@ -53,7 +53,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 		<!-- Section Header -->
 		<div class="icon-card-grid__header">
 			<?php if ( $ambrygen_has_tagline ) : ?>
-				<div class="hero-kicker icon-card-grid__tagline"><?php echo esc_html( $ambrygen_tagline ); ?>
+				<div class="hero-kicker icon-card-grid__tagline js-gsap-fade"><?php echo esc_html( $ambrygen_tagline ); ?>
 				</div>
 			<?php endif; ?>
 
@@ -62,7 +62,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 			<?php endif; ?>
 
 			<?php if ( $ambrygen_has_heading ) : ?>
-				<<?php echo tag_escape( $ambrygen_heading_tag ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-4 block-title mb-0 icon-card-grid__heading"><?php echo wp_kses( $ambrygen_heading, Helper::allowed_heading_html() ); ?></<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
+				<<?php echo tag_escape( $ambrygen_heading_tag ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-4 block-title mb-0 icon-card-grid__heading js-gsap-fade"><?php echo wp_kses( $ambrygen_heading, Helper::allowed_heading_html() ); ?></<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 			<?php endif; ?>
 
 			<?php if ( $ambrygen_has_heading && $ambrygen_has_description ) : ?>
@@ -70,7 +70,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 			<?php endif; ?>
 
 			<?php if ( $ambrygen_has_description ) : ?>
-				<div class="body1 icon-card-grid__desc block-description"><?php echo wp_kses_post( $ambrygen_description ); ?></div>
+				<div class="body1 icon-card-grid__desc block-description js-gsap-fade"><?php echo wp_kses_post( $ambrygen_description ); ?></div>
 			<?php endif; ?>
 		</div>
 	<?php endif; ?>

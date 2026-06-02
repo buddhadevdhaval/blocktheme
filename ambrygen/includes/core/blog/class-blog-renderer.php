@@ -60,7 +60,7 @@ final class BlogRenderer
         }
 
         if ($total_posts === 0) {
-            return '<p class="no-results-message text-center text-lg-reg">No blog posts found.</p>';
+            return '<div class="no-results-message text-center no-result-alert">No blog posts found.</div>';
         }
 
         $html = render_block($query_block);
@@ -79,70 +79,54 @@ final class BlogRenderer
     public function render_latest_blog_content(\WP_Query $query): string
     {
         if (!$query->have_posts()) {
-            return '<p class="no-results-message text-center text-lg-reg">No blog posts found.</p>';
+            return '<div class="no-results-message text-center no-result-alert">No blog posts found.</div>';
         }
 
         ob_start();
         ?>
-        <div class="event-carousel__grid">
-            <?php while ($query->have_posts()) : $query->the_post(); 
+        <div class="blog-listing">
+            <?php while ($query->have_posts()) : $query->the_post();
                 $post_id = get_the_ID();
                 $thumbnail_id = get_post_thumbnail_id($post_id);
+                $publish_date = get_the_date('F j, Y', $post_id);
                 ?>
-                <div class="event-carousel__card">
-                    <div class="event-carousel__image-wrap">
-                        <a href="<?php the_permalink(); ?>">
-                            <?php 
-                            echo \Ambrygen\Theme\Core\Helper::image_with_placeholder(
-                                $thumbnail_id,
-                                'large',
-                                array('class' => 'event-carousel__image')
-                            ); 
-                            ?>
-                        </a>
-                        <div class="event-carousel__month-info">
-                            <span class="event-carousel__month"><?php echo get_the_date('F j, Y', $post_id); ?></span>
+                <a href="<?php the_permalink(); ?>" class="blog-listing__card">
+                    <div class="blog-listing__image-wrap">
+                        <?php
+                        $img_id = $thumbnail_id;
+                        if ( ! $img_id ) {
+                            $img_id = \Ambrygen\Theme\Core\Theme_Options::get_blog_default_image_id();
+                        }
+
+                        echo \Ambrygen\Theme\Core\Helper::image_with_placeholder(
+                            $img_id,
+                            'large',
+                            array('class' => 'blog-listing__image')
+                        );
+                        ?>
+                        <div class="blog-listing__date flag-details">
+                            <span><?php echo esc_html($publish_date); ?></span>
                         </div>
                     </div>
-                    <div class="event-carousel__body">
+                    <div class="blog-listing__content">
                         <div class="is-style-gl-s16" aria-hidden="true"></div>
-                        <div class="event-carousel__static-content">
-                            <h3 class="event-carousel__card-title text-lg-semibold mb-0">
-                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                            </h3>
-                            <div class="is-style-gl-s8" aria-hidden="true"></div>
-                            <?php 
-                            $linked_author_ids = get_post_meta($post_id, 'linked_author', true);
-                            if (empty($linked_author_ids)) {
-                                $linked_author_ids = [];
-                            } elseif (!is_array($linked_author_ids)) {
-                                $linked_author_ids = [$linked_author_ids];
-                            }
-
-                            $authors_data = [];
-                            foreach ($linked_author_ids as $author_id) {
-                                if ('author' === get_post_type($author_id)) {
-                                    $authors_data[] = [
-                                        'name' => get_the_title($author_id),
-                                        'avatar_id' => get_post_thumbnail_id($author_id),
-                                        'designation' => get_post_meta($author_id, 'designation', true),
-                                    ];
-                                }
-                            }
-                            ?>
-                            <?php if (!empty($authors_data)) : ?>
-                                <div class="event-carousel__author-block">
-                                    <div class="event-carousel__author-avatars">
-                                        <?php foreach ($authors_data as $author) : ?>
-                                            <?php if ($author['avatar_id']) : ?>
-                                                <div class="event-carousel__author-avatar">
-                                                    <?php echo \Ambrygen\Theme\Core\Helper::image($author['avatar_id'], 'thumbnail'); ?>
-                                                </div>
-                                            <?php endif; ?>
-                                        <?php endforeach; ?>
-                                    </div>
-                                    <div class="event-carousel__author-name text-small-semibold">
-                                        <?php 
+                        <div class="is-style-gl-s8" aria-hidden="true"></div>
+                        <h3 class="text-lg-semibold blog-listing__title mb-0">
+                            <?php the_title(); ?>
+                        </h3>
+                        <div class="is-style-gl-s20" aria-hidden="true"></div>
+                        <?php
+                        $authors_data = $this->get_post_authors_data($post_id);
+                        if (!empty($authors_data)) : ?>
+                            <div class="blog-listing__author-block">
+                                <?php if (!empty($authors_data[0]['avatar_id'])) : ?>
+                                    <?php echo \Ambrygen\Theme\Core\Helper::image($authors_data[0]['avatar_id'], 'thumbnail', array('class' => 'blog-listing__author-avatar', 'width' => 36, 'height' => 36)); ?>
+                                <?php else: ?>
+                                    <img class="blog-listing__author-avatar" src="https://i.pravatar.cc/40?img=47" alt="" width="36" height="36" />
+                                <?php endif; ?>
+                                <div class="blog-listing__author-info">
+                                    <span class="blog-listing__author-name text-small-semibold">
+                                        <?php
                                         $author_names = array_map(function($author) {
                                             $out = esc_html($author['name']);
                                             if (!empty($author['designation'])) {
@@ -150,55 +134,102 @@ final class BlogRenderer
                                             }
                                             return $out;
                                         }, $authors_data);
-                                        echo implode(' | ', $author_names); 
+                                        echo implode(' | ', $author_names);
                                         ?>
-                                    </div>
+                                    </span>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
+                        <div class="is-style-gl-s8" aria-hidden="true"></div>
+                        <div class="blog-listing__body">
+                            <div class="body-s blog-listing__description">
+                                <?php echo wp_kses_post(wp_trim_words(get_the_excerpt(), 25)); ?>
+                            </div>
+                            <?php
+                            $terms = get_the_terms($post_id, 'post_tag');
+                            if (!empty($terms) && !is_wp_error($terms)) : ?>
+                                <div class="body-s blog-listing__category">
+                                    <?php foreach ($terms as $term) : ?>
+                                        <div class="blog-listing__category__item"><?php echo esc_html($term->name); ?></div>
+                                    <?php endforeach; ?>
                                 </div>
                             <?php endif; ?>
                         </div>
-
-                        <div class="is-style-gl-s16" aria-hidden="true"></div>
-
-                        <div class="event-carousel__content-wrap">
-                            <div class="event-carousel__details">
-                                <div class="body-s">
-                                    <?php echo wp_kses_post(wp_trim_words(get_the_excerpt(), 15)); ?>
-                                </div>
-                            </div>
-
-                            <div class="event-carousel__description">
-                                <?php 
-                                $tags = get_the_terms($post_id, 'post_tag');
-                                if (!empty($tags) && !is_wp_error($tags)) : ?>
-                                    <div class="event-carousel__tags" aria-hidden="true">
-                                        <div class="event-carousel__tags lists-item-category">
-                                            <?php foreach ($tags as $tag) : ?>
-                                                <div class="category-item">
-                                                    <a href="<?php echo esc_url(get_term_link($tag)); ?>" class="event-carousel__tag event-carousel__tag--success">
-                                                        <div class="event-carousel__tag-dot"></div> <?php echo esc_html($tag->name); ?>
-                                                    </a>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                        </div>
                     </div>
-                </div>
+                </a>
             <?php endwhile; ?>
         </div>
-        
-        <div class="load-more-wrap text-center <?php echo ($query->max_num_pages <= 1) ? 'is-hidden' : ''; ?>">
-            <button type="button" class="load-more-btn text-small-semibold" 
+
+        <div class="is-style-gl-s50" aria-hidden="true"></div>
+        <div class="load-more-btn <?php echo ($query->found_posts <= 6 || $query->max_num_pages <= 1) ? 'is-hidden' : ''; ?>"
+             style="<?php echo ($query->found_posts <= 6 || $query->max_num_pages <= 1) ? 'display: none;' : ''; ?>">
+            <button type="button" class="site-btn is-style-site-text-btn has-right-arrow"
                 data-total-pages="<?php echo esc_attr($query->max_num_pages); ?>">
-                <?php esc_html_e('LOAD MORE', 'ambrygen-web'); ?>
-                <span class="load-more-icon"></span>
+                <?php esc_html_e('Load More', 'ambrygen-web'); ?>
             </button>
         </div>
         <?php
         wp_reset_postdata();
         return ob_get_clean();
+    }
+
+    /**
+     * Get author data for a post.
+     *
+     * @param int $post_id Post ID.
+     * @return array
+     */
+    public function get_post_authors_data(int $post_id): array
+    {
+        $authors_data = [];
+        $repeater_authors = get_post_meta($post_id, 'webinar_authors', true);
+
+        if (is_array($repeater_authors) && !empty($repeater_authors)) {
+            foreach ($repeater_authors as $row) {
+                $author_id = isset($row['linked_author']) ? (int) $row['linked_author'] : 0;
+                $author_post = $author_id > 0 ? get_post($author_id) : null;
+                if ($author_post && 'author' === $author_post->post_type) {
+                    $avatar_id   = ! empty( $row['image_id'] ) ? (int) $row['image_id'] : get_post_thumbnail_id($author_id);
+                    $designation = ! empty( $row['designation'] ) ? $row['designation'] : get_post_meta($author_id, 'user_designation', true);
+                    $bio         = isset($row['bio']) ? wp_kses_post((string) $row['bio']) : '';
+
+                    $authors_data[] = [
+                        'author_id'   => $author_id,
+                        'name'        => get_the_title($author_id),
+                        'avatar_id'   => $avatar_id,
+                        'designation' => $designation,
+                        'bio'         => '' !== trim(wp_strip_all_tags($bio)) ? $bio : apply_filters('the_content', $author_post->post_content),
+                    ];
+                }
+            }
+        }
+
+        // Fallback to legacy linked_author if repeater is empty
+        if (empty($authors_data)) {
+            $linked_author_ids = get_post_meta($post_id, 'linked_author', true);
+            if (!empty($linked_author_ids)) {
+                if (!is_array($linked_author_ids)) {
+                    $linked_author_ids = [$linked_author_ids];
+                }
+
+                foreach ($linked_author_ids as $author_id) {
+                    $author_id   = (int) $author_id;
+                    $author_post = $author_id > 0 ? get_post($author_id) : null;
+                    if ($author_post && 'author' === $author_post->post_type) {
+                        $authors_data[] = [
+                            'author_id'   => $author_id,
+                            'name'        => get_the_title($author_id),
+                            'avatar_id'   => get_post_thumbnail_id($author_id),
+                            'designation' => get_post_meta($author_id, 'user_designation', true),
+                            'bio'         => apply_filters('the_content', $author_post->post_content),
+                        ];
+                    }
+                }
+            }
+        }
+
+        return $authors_data;
     }
 
     /**

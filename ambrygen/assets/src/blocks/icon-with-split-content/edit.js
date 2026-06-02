@@ -94,7 +94,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	}, [ isExample, items, setAttributes ] );
 
 	const blockProps = useBlockProps( {
-		className: 'symptoms',
+		className: 'symptoms block-layout',
 		id: anchor || blockId || undefined,
 	} );
 
@@ -268,7 +268,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 						<RichText
 							tagName="div"
-							className="subtitle1-regular symptoms__desc"
+							className="subtitle1-regular symptoms__desc block-description"
 							value={ description }
 							onChange={ ( value ) =>
 								setAttributes( { description: value } )

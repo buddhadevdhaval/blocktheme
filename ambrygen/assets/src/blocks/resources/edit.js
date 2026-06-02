@@ -117,7 +117,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	}, [ isExample, resourceCards, customCollaborators, setAttributes ] );
 
 	const blockProps = useBlockProps( {
-		className: 'resources',
+		className: 'resources block-layout',
 		id: blockId || undefined,
 	} );
 

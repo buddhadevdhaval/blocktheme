@@ -528,7 +528,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			</InspectorControls>
 
 			<div
-				className={ `multiple-image-alongside-text ${
+				className={ `multiple-image-alongside-text  block-layout ${
 					isImageRight ? ' block-rtl' : ''
 				}${ isNormalView ? ' is-normal-view' : '' }${
 					isTextView ? ' is-text-view' : ''

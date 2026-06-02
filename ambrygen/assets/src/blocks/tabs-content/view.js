@@ -97,7 +97,7 @@
 		window.addEventListener( 'hashchange', activateFromHash );
 	}
 
-	window.addEventListener( 'load', () => {
+	document.addEventListener( 'DOMContentLoaded', () => {
 		document
 			.querySelectorAll( '.tabs-table-content' )
 			.forEach( initTabsTable );

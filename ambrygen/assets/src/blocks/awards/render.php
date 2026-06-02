@@ -60,7 +60,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 ?>
 
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() returns escaped attributes. ?>>
-	<div class="awards-slider">
+	<div class="awards-slider block-layout">
 		<div class="awards-slider__header block__rowflex is-vertical">
 			<?php if ( $ambrygen_title ) : ?>
 				<<?php echo tag_escape( $ambrygen_heading_tag ); ?>

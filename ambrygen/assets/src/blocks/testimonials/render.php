@@ -60,7 +60,7 @@ $ambrygen_status_id  = 'testimonials-status-' . $ambrygen_id;
  * Wrapper attributes.
  */
 $ambrygen_wrapper_attributes_array = array(
-	'class'                             => 'wp-block-ambrygen-testimonials ambry-testimonials testimonials-slider',
+	'class'                             => 'block-layout wp-block-ambrygen-testimonials ambry-testimonials  testimonials-slider',
 	'data-testimonials-status-id'       => $ambrygen_status_id,
 	'data-testimonials-prev-label'      => __( 'Previous testimonial', 'ambrygen-web' ),
 	'data-testimonials-next-label'      => __( 'Next testimonial', 'ambrygen-web' ),
@@ -78,7 +78,7 @@ if ( $ambrygen_has_heading ) {
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_attributes_array );
 ?>
 
-<section <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+<div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 
 	<div class="ambry-testimonials__graphic-images" aria-hidden="true">
 
@@ -161,4 +161,4 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 
 		</div>
 	</div>
-</section>
+</div>

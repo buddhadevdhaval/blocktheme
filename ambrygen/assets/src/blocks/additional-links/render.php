@@ -25,7 +25,7 @@ $wrapper_attributes   = get_block_wrapper_attributes(
 	array_filter(
 		array(
 			'id'    => $ambrygen_block_id ?: null,
-			'class' => 'additional-links',
+			'class' => 'additional-links block-layout',
 		)
 	)
 );
@@ -35,14 +35,14 @@ $wrapper_attributes   = get_block_wrapper_attributes(
 	<div class="careers-highlight__header block__rowflex">
 		<?php if ( $ambrygen_has_heading ) : ?>
 			<div class="block__rowflex--col-left">
-			<<?php echo tag_escape( $ambrygen_heading_tag ); ?> class="careers-highlight__title block__rowflex--heading-title heading-4 mb-0 js-gsap-fade">
+			<<?php echo tag_escape( $ambrygen_heading_tag ); ?> class="careers-highlight__title block__rowflex--heading-title heading-4 mb-0 js-gsap-fade block-title">
 				<?php echo wp_kses( $ambrygen_heading, Helper::allowed_heading_html() ); ?>
 			</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 		</div>
 		<?php endif; ?>
 
 		<?php if ( $ambrygen_has_desc ) : ?>
-			<div class="careers-highlight__intro block__rowflex--block-content subtitle1-reg js-gsap-fade">
+			<div class="careers-highlight__intro block__rowflex--block-content subtitle1-reg js-gsap-fade block-description">
 				<?php echo wp_kses_post( $ambrygen_description ); ?>
 			</div>
 		<?php endif; ?>

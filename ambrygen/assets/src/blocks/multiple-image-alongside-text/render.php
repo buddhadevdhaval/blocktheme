@@ -159,7 +159,7 @@ $ambrygen_wrapper_args = array(
 		' ',
 		array_filter(
 			array(
-				'multiple-image-alongside-text',
+				'multiple-image-alongside-text block-layout',
 				$ambrygen_content_top_align ? 'has-top-align' : '',
 				trim( $ambrygen_image_position_class ),
 				trim( $ambrygen_variation_class ),

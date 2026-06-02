@@ -57,7 +57,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const { blockId, heading, headingTag, description } = attributes;
 	const isExample = blockId === 'additional-links-example';
 	const blockProps = useBlockProps({
-		className: 'additional-links',
+		className: 'additional-links block-layout',
 	});
 
 	useUniqueBlockId({
@@ -98,7 +98,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<div className='block__rowflex--col-left'>
 					<RichText
 						tagName={headingTag}
-						className="careers-highlight__title block__rowflex--heading-title heading-4 mb-0"
+						className="careers-highlight__title block__rowflex--heading-title heading-4 mb-0 block-title"
 						value={heading}
 						placeholder={__('Add Heading...', 'ambrygen-web')}
 						allowedFormats={[
@@ -111,7 +111,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</div>
 				<RichText
 					tagName="div"
-					className="careers-highlight__intro block__rowflex--block-content subtitle1-reg"
+					className="careers-highlight__intro block__rowflex--block-content subtitle1-reg block-description"
 					value={description}
 					placeholder={__('Add Description...', 'ambrygen-web')}
 					allowedFormats={[

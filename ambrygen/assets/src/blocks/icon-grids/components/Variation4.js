@@ -9,7 +9,7 @@ export default function Variation4( { attributes, setAttributes, template } ) {
 			<div className="icon-grid__header">
 				<RichText
 					tagName={ headingTag || 'h2' }
-					className="heading-3 block-title mb-0"
+					className="heading-3 block-title mb-0 js-gsap-fade"
 					value={ heading }
 					onChange={ ( value ) =>
 						setAttributes( { heading: value } )
@@ -17,7 +17,7 @@ export default function Variation4( { attributes, setAttributes, template } ) {
 					placeholder="Add Title..."
 				/>
 				<div className="is-style-gl-s20" aria-hidden="true"></div>
-				<div className="text-xl-reg icon-grid__intro text-center">
+				<div className="text-xl-reg icon-grid__intro text-center js-gsap-fade">
 					<RichText
 						tagName="p"
 						value={ description }
@@ -30,7 +30,7 @@ export default function Variation4( { attributes, setAttributes, template } ) {
 				{ hasCta && (
 					<a
 						href={ link.url }
-						className="site-btn is-style-site-text-btn has-right-arrow text-14"
+						className="site-btn is-style-site-text-btn has-right-arrow text-14 js-gsap-fade"
 						target={ link.target || undefined }
 						rel={ link.rel || undefined }
 						onClick={ ( event ) => event.preventDefault() }

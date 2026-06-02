@@ -134,7 +134,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 
 	const blockProps = useBlockProps( {
-		className: 'download-list variation-grid-view',
+		className: 'download-list block-layout variation-grid-view',
 		id: anchor || blockId,
 	} );
 
@@ -201,7 +201,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			</InspectorControls>
 
 			<div className="download-list__inner">
-				<div className="download-list__header-area mb-24">
+				<div className="download-list__header-area mb-24 ">
 					<RichText
 						tagName={ headingTag }
 						className="download-list__title heading-3 block-title mb-0"

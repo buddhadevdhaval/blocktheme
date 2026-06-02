@@ -32,6 +32,19 @@ class PressRelease extends AbstractPostType {
 		return 'dashicons-media-document';
 	}
 
+	public function has_archive(): bool {
+		return true;
+	}
+
+	public function extra_args(): array {
+		return array(
+			'rewrite' => array(
+				'slug' => 'company/press-release',
+			),
+			'has_archive' => 'company/press-releases',
+		);
+	}
+
 	public function meta_fields(): array {
 		return array(
 			'_old_id' => array(

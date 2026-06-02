@@ -172,6 +172,39 @@ class SharedTaxonomies extends AbstractPostType {
 						'label' => __( 'CDS Count', 'ambrygen-web' ),
 						'type'  => 'text',
 					),
+					'show_static_count_on_product_version' => array(
+						'label'       => __( 'Show static genes count on product version', 'ambrygen-web' ),
+						'type'        => 'checkbox',
+						'value'       => '1',
+						'sanitize'    => 'absint',
+						'description' => __( 'Enable custom genes count content for this gene on product version listings.', 'ambrygen-web' ),
+					),
+					'static_count'               => array(
+						'label'       => __( 'Genes Count', 'ambrygen-web' ),
+						'type'        => 'text',
+						'description' => __( 'Count value to show when Genes count is enabled.', 'ambrygen-web' ),
+					),
+					'static_count_before_text'   => array(
+						'label'       => __( 'Before Genes Count Text', 'ambrygen-web' ),
+						'type'        => 'text',
+						'description' => __( 'Optional text displayed before the static count.', 'ambrygen-web' ),
+					),
+					'static_count_after_text'    => array(
+						'label'       => __( 'After Genes Count Text', 'ambrygen-web' ),
+						'type'        => 'text',
+						'description' => __( 'Optional text displayed after the static count.', 'ambrygen-web' ),
+					),
+					'static_count_link'          => array(
+						'label'       => __( 'Genes Count Link', 'ambrygen-web' ),
+						'type'        => 'url',
+						'sanitize'    => 'esc_url_raw',
+						'description' => __( 'Optional link shown with the genes count content.', 'ambrygen-web' ),
+					),
+					'static_count_link_text'     => array(
+						'label'       => __( 'Genes Count Link Text', 'ambrygen-web' ),
+						'type'        => 'text',
+						'description' => __( 'Link label for the genes count link.', 'ambrygen-web' ),
+					),
 				),
 			),
 		);

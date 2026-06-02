@@ -53,6 +53,22 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					);
 				} );
 			} );
+
+			nav.addEventListener( 'keydown', ( event ) => {
+				const idx = buttons.indexOf( document.activeElement );
+				if ( idx === -1 ) return;
+				let next = -1;
+				if ( event.key === 'ArrowRight' ) next = ( idx + 1 ) % buttons.length;
+				if ( event.key === 'ArrowLeft' ) next = ( idx - 1 + buttons.length ) % buttons.length;
+				if ( event.key === 'Home' ) next = 0;
+				if ( event.key === 'End' ) next = buttons.length - 1;
+				if ( next !== -1 ) {
+					event.preventDefault();
+					buttons.forEach( ( b, i ) => b.setAttribute( 'tabindex', i === next ? '0' : '-1' ) );
+					buttons[ next ].focus();
+					activateTab( buttons[ next ].getAttribute( 'data-tab-target' ) || '' );
+				}
+			} );
 		}
 
 		if ( select ) {
@@ -112,6 +128,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					credentials: 'same-origin',
 					headers: {
 						'Content-Type': 'application/json',
+						'X-WP-Nonce': window.ambrygenCatalog?.nonce || '',
 					},
 					body: JSON.stringify( {
 						page_id: Number( pageId ) || 0,
@@ -141,6 +158,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 						credentials: 'same-origin',
 						headers: {
 							'Content-Type': 'application/json',
+							'X-WP-Nonce': window.ambrygenCatalog?.nonce || '',
 						},
 						body: JSON.stringify( {
 							material_id: materialId,

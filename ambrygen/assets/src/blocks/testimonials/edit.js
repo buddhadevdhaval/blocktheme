@@ -104,7 +104,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		[ clientId ]
 	);
 	const blockProps = useBlockProps( {
-		className: 'ambry-testimonials',
+		className: 'ambry-testimonials block-layout',
 		id: blockId || undefined,
 	} );
 

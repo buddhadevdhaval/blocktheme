@@ -40,7 +40,7 @@
     $ambrygen_quote_attribution_clean = preg_replace('/\s+style=["\'][^"\']*["\']/i', '', $ambrygen_quote_attribution);
 
     $ambrygen_wrapper_attributes_array = [
-    'class' => 'theme-quote',
+    'class' => 'theme-quote block-layout',
     'role'  => 'region',
     ];
 

@@ -14,7 +14,7 @@ use Ambrygen\Theme\Core\Helper;
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class' => 'mid-page-cta text-center',
+		'class' => 'mid-page-cta text-center block-layout',
 	)
 );
 
@@ -40,8 +40,8 @@ if ( $ambrygen_inner_content && preg_match( '/<a\b/i', $ambrygen_inner_content )
 				continue;
 			}
 			?>
-			<a 
-				class="<?php echo esc_attr( $ambrygen_button_variant ); ?>" 
+			<a
+				class="<?php echo esc_attr( $ambrygen_button_variant ); ?>"
 				href="<?php echo esc_url( $ambrygen_button_url ); ?>"
 				role="button"
 			>
@@ -61,7 +61,7 @@ if ( $ambrygen_inner_content && preg_match( '/<a\b/i', $ambrygen_inner_content )
 
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<?php if ( ! empty( $ambrygen_title ) ) : ?>
-		<<?php echo esc_attr( $ambrygen_tag ); ?> class="block-title mb-0 heading-3">
+		<<?php echo esc_attr( $ambrygen_tag ); ?> class="block-title mb-0 heading-3 js-gsap-fade">
 			<?php echo wp_kses_post( $ambrygen_title ); ?>
 		</<?php echo esc_attr( $ambrygen_tag ); ?>>
 

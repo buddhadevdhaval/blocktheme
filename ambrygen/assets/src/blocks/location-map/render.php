@@ -77,11 +77,11 @@ $ambrygen_iframe_is_https = 'https' === strtolower( (string) $ambrygen_iframe_sc
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	$ambrygen_wrapper_id
 		? array(
-			'class' => 'location-map',
+			'class' => 'location-map block-layout',
 			'id'    => $ambrygen_wrapper_id,
 		)
 		: array(
-			'class' => 'location-map',
+			'class' => 'location-map block-layout',
 		)
 );
 ?>

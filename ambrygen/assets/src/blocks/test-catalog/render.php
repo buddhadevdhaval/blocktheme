@@ -24,33 +24,6 @@ $ambrygen_get_genetic_testing_link = static function ( int $ambrygen_post_id ): 
 		&& is_callable( array( Helper::class, 'get_genetic_testing_link_by_product_version' ) )
 	) {
 		$ambrygen_genetic_testing_link = Helper::get_genetic_testing_link_by_product_version( $ambrygen_post_id );
-	} else {
-		$ambrygen_link_query = new WP_Query(
-			array(
-				'post_type'      => 'genetic-testing',
-				'post_status'    => 'publish',
-				'posts_per_page' => 1,
-				'fields'         => 'ids',
-				'no_found_rows'  => true,
-				'meta_query'     => array(
-					array(
-						'key'     => 'linked_posts_genetic',
-						'value'   => 'i:' . absint( $ambrygen_post_id ) . ';',
-						'compare' => 'LIKE',
-					),
-				),
-			)
-		);
-
-		if ( ! empty( $ambrygen_link_query->posts[0] ) ) {
-			$ambrygen_linked_id  = absint( $ambrygen_link_query->posts[0] );
-			$ambrygen_linked_url = $ambrygen_linked_id ? get_permalink( $ambrygen_linked_id ) : '';
-
-			$ambrygen_genetic_testing_link = array(
-				'post_id' => $ambrygen_linked_id,
-				'url'     => is_string( $ambrygen_linked_url ) ? $ambrygen_linked_url : '',
-			);
-		}
 	}
 
 	if ( ! is_array( $ambrygen_genetic_testing_link ) ) {
@@ -84,6 +57,11 @@ $ambrygen_get_marketing_material_rows = static function ( int $ambrygen_product_
 
 	if ( ! is_array( $ambrygen_linked_posts ) ) {
 		$ambrygen_linked_posts = array( $ambrygen_linked_posts );
+	}
+
+	$ambrygen_valid_linked_ids = array_filter( array_map( 'absint', $ambrygen_linked_posts ) );
+	if ( $ambrygen_type_id > 0 && ! empty( $ambrygen_valid_linked_ids ) ) {
+		update_object_term_cache( $ambrygen_valid_linked_ids, 'marketing_material' );
 	}
 
 	$ambrygen_grid_html = '';
@@ -204,11 +182,11 @@ foreach ( $ambrygen_tabs as $ambrygen_index => $ambrygen_tab ) {
 	data-page-title="<?php echo esc_attr( $ambrygen_test_catalog_page_context['page_title'] ); ?>"
 	data-page-path="<?php echo esc_attr( $ambrygen_test_catalog_page_context['page_path'] ); ?>"
 >
-	<div class="test-catlouge">
+	<div class="test-catlouge block-layout">
 		<?php if ( $ambrygen_has_header ) : ?>
 		<div class="test-catlouge__header">
 			<?php if ( $ambrygen_has_eyebrow ) : ?>
-				<div class="hero-kicker overline-text test-catlouge__eyebrow">
+				<div class="hero-kicker overline-text test-catlouge__eyebrow js-gsap-fade">
 					<?php echo wp_kses_post($ambrygen_eyebrow); ?>
 				</div>
 				<?php if ( $ambrygen_has_title || $ambrygen_has_subtitle ) : ?>
@@ -217,7 +195,7 @@ foreach ( $ambrygen_tabs as $ambrygen_index => $ambrygen_tab ) {
 			<?php endif; ?>
 
 			<?php if ( $ambrygen_has_title ) : ?>
-				<<?php echo tag_escape($ambrygen_heading); ?> class="heading-4 block-title mb-0
+				<<?php echo tag_escape($ambrygen_heading); ?> class="heading-4 js-gsap-fade block-title mb-0
 					test-catlouge__title"><?php echo wp_kses_post($ambrygen_title); ?></<?php echo tag_escape($ambrygen_heading); ?>>
 				<?php if ( $ambrygen_has_subtitle ) : ?>
 					<div class="is-style-gl-s12"></div>
@@ -225,7 +203,7 @@ foreach ( $ambrygen_tabs as $ambrygen_index => $ambrygen_tab ) {
 			<?php endif; ?>
 
 			<?php if ( $ambrygen_has_subtitle ) : ?>
-				<div class="body1 test-catlouge__subtitle"><?php echo wp_kses_post($ambrygen_subtitle); ?></div>
+				<div class="body1 test-catlouge__subtitle js-gsap-fade"><?php echo wp_kses_post($ambrygen_subtitle); ?></div>
 			<?php endif; ?>
 		</div>
 		<div class="is-style-gl-s32"></div>
@@ -262,7 +240,7 @@ foreach ( $ambrygen_tabs as $ambrygen_index => $ambrygen_tab ) {
 						$ambrygen_summary = has_excerpt($ambrygen_post_id) ? get_the_excerpt($ambrygen_post_id) : wp_trim_words(wp_strip_all_tags(get_the_content(null, false, $ambrygen_post_id)), 24);
 						?>
 
-						<div class="test-catlouge__item">
+						<div class="test-catlouge__item js-gsap-fade">
 							<div class="test-catlouge__item-main">
 								<div class="test-catlouge__item-top">
 									<div class="subtitle1-sbold mb-0 test-catlouge__item-title"><?php the_title(); ?></div>
@@ -342,7 +320,7 @@ foreach ( $ambrygen_tabs as $ambrygen_index => $ambrygen_tab ) {
 				</div>
 				<?php wp_reset_postdata(); ?>
 			<?php else: ?>
-				<div class="test-catlouge__items no-results">
+				<div class="test-catlouge__items no-results js-gsap-fade">
 					<p><?php esc_html_e('Select a product version in the block settings to show its data.', 'ambrygen-web'); ?></p>
 				</div>
 			<?php endif; ?>
@@ -368,6 +346,7 @@ foreach ( $ambrygen_tabs as $ambrygen_index => $ambrygen_tab ) {
 								role="tab"
 								data-tab-target="<?php echo esc_attr($ambrygen_tab['panel_id']); ?>"
 								aria-controls="<?php echo esc_attr( $ambrygen_tab['panel_id'] ); ?>"
+								tabindex="<?php echo 0 === $ambrygen_index ? '0' : '-1'; ?>"
 								aria-selected="<?php echo 0 === $ambrygen_index ? 'true' : 'false'; ?>">
 								<?php echo esc_html($ambrygen_tab['label']); ?>
 							</button>
@@ -379,24 +358,32 @@ foreach ( $ambrygen_tabs as $ambrygen_index => $ambrygen_tab ) {
 					<div class="tabs__panels">
 						<?php foreach ($ambrygen_normalized_tabs as $ambrygen_index => $ambrygen_tab): ?>
 							<?php
-							$ambrygen_query = new WP_Query(
-								array(
-									'post_type' => 'product_version',
-									'post_status' => 'publish',
-									'posts_per_page' => -1,
-									'no_found_rows' => true,
-									'orderby' => 'title',
-									'order' => 'ASC',
-									'post__not_in' => $ambrygen_tab['excluded_ids'],
-									'tax_query' => array(
-										array(
-											'taxonomy' => 'poster_category',
-											'field' => 'term_id',
-											'terms' => $ambrygen_tab['term_id'],
+							$ambrygen_tab_cache_key = 'test_catalog_tab_' . $ambrygen_tab['term_id'] . '_' . md5( implode( ',', $ambrygen_tab['excluded_ids'] ) );
+							$ambrygen_post_ids = wp_cache_get( $ambrygen_tab_cache_key, 'ambrygen_catalog' );
+
+							if ( false === $ambrygen_post_ids ) {
+								$ambrygen_query = new WP_Query(
+									array(
+										'post_type' => 'product_version',
+										'post_status' => 'publish',
+										'posts_per_page' => -1,
+										'no_found_rows' => true,
+										'orderby' => 'title',
+										'order' => 'ASC',
+										'post__not_in' => $ambrygen_tab['excluded_ids'],
+										'tax_query' => array(
+											array(
+												'taxonomy' => 'poster_category',
+												'field' => 'term_id',
+												'terms' => $ambrygen_tab['term_id'],
+											),
 										),
-									),
-								)
-							);
+										'fields' => 'ids',
+									)
+								);
+								$ambrygen_post_ids = is_array( $ambrygen_query->posts ) ? array_map( 'absint', $ambrygen_query->posts ) : array();
+								wp_cache_set( $ambrygen_tab_cache_key, $ambrygen_post_ids, 'ambrygen_catalog', HOUR_IN_SECONDS );
+							}
 							$ambrygen_active = 0 === $ambrygen_index ? ' is-active' : '';
 							?>
 							<div class="tabs__panel<?php echo esc_attr($ambrygen_active); ?>"
@@ -404,12 +391,10 @@ foreach ( $ambrygen_tabs as $ambrygen_index => $ambrygen_tab ) {
 								role="tabpanel"
 								aria-labelledby="<?php echo esc_attr( $ambrygen_tab['button_id'] ); ?>"
 								<?php echo 0 === $ambrygen_index ? '' : 'hidden'; ?>>
-								<?php if ($ambrygen_query->have_posts()): ?>
-									<div class="test-catlouge__items">
+								<?php if ( ! empty( $ambrygen_post_ids ) ) : ?>
+									<div class="test-catlouge__items js-gsap-fade">
 										<?php
-										while ($ambrygen_query->have_posts()):
-											$ambrygen_query->the_post();
-											$ambrygen_post_id = get_the_ID();
+										foreach ( $ambrygen_post_ids as $ambrygen_post_id ) :
 											$ambrygen_gene_terms = get_the_terms($ambrygen_post_id, 'gene');
 											$ambrygen_gene_count = is_array($ambrygen_gene_terms) ? count($ambrygen_gene_terms) : 0;
 											$ambrygen_summary = has_excerpt($ambrygen_post_id) ? get_the_excerpt($ambrygen_post_id) : wp_trim_words(wp_strip_all_tags(get_the_content(null, false, $ambrygen_post_id)), 24);
@@ -418,7 +403,7 @@ foreach ( $ambrygen_tabs as $ambrygen_index => $ambrygen_tab ) {
 											<div class="test-catlouge__item">
 												<div class="test-catlouge__item-main">
 													<div class="test-catlouge__item-top">
-														<div class="subtitle1-sbold mb-0 test-catlouge__item-title"><?php the_title(); ?>
+														<div class="subtitle1-sbold mb-0 test-catlouge__item-title"><?php echo esc_html( get_the_title( $ambrygen_post_id ) ); ?>
 														</div>
 														<?php if ($ambrygen_gene_count > 0): ?>
 															<div class="text-sm-medium test-catlouge__badge">
@@ -490,19 +475,18 @@ foreach ( $ambrygen_tabs as $ambrygen_index => $ambrygen_tab ) {
 													<span class="test-catlouge__icon-cross" aria-hidden="true"></span>
 												</button>
 											</div>
-										<?php endwhile; ?>
+										<?php endforeach; ?>
 									</div>
 								<?php else: ?>
-									<div class="test-catlouge__items no-results">
+									<div class="test-catlouge__items no-results js-gsap-fade">
 										<p><?php esc_html_e('No product versions found in this category.', 'ambrygen-web'); ?></p>
 									</div>
 								<?php endif; ?>
-								<?php wp_reset_postdata(); ?>
 							</div>
 						<?php endforeach; ?>
 					</div>
 				<?php else: ?>
-					<div class="test-catlouge__items no-results">
+					<div class="test-catlouge__items no-results js-gsap-fade">
 						<p><?php esc_html_e('Add one or more categories in the block settings to build this catalog.', 'ambrygen-web'); ?>
 						</p>
 					</div>

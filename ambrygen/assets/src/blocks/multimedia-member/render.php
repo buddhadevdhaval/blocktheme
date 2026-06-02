@@ -21,7 +21,7 @@ $ambrygen_member_heading_tag = Helper::get_heading_tag( (string) ( $attributes['
 $ambrygen_has_member_title   = '' !== trim( wp_strip_all_tags( (string) $ambrygen_member_title ) );
 
 $ambrygen_wrapper_args = array(
-	'class' => 'multimedia-member',
+	'class' => 'multimedia-member block-layout',
 );
 
 if ( '' !== $ambrygen_member_block_id ) {

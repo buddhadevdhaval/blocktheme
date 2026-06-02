@@ -32,7 +32,7 @@ $ambrygen_is_ordering_options = ( 'variation-2' === $ambrygen_variation );
  * Wrapper attributes
  */
 $ambrygen_wrapper_args = array(
-	'class' => $ambrygen_is_ordering_options ? 'block-layout ordering-options' : 'cta-tiles-with-content',
+	'class' => $ambrygen_is_ordering_options ? 'block-layout ordering-options' : 'cta-tiles-with-content block-layout ',
 	'role'  => 'region',
 );
 
@@ -60,7 +60,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 		<?php if ( ! empty( $ambrygen_eyebrow ) || ! empty( $ambrygen_heading ) || ! empty( $ambrygen_description ) ) : ?>
 			<div class="ordering-options__header">
 				<?php if ( ! empty( $ambrygen_eyebrow ) ) : ?>
-					<div class="hero-kicker ordering-options__eyebrow">
+					<div class="hero-kicker ordering-options__eyebrow js-gsap-fade">
 						<?php echo wp_kses_post( $ambrygen_eyebrow ); ?>
 					</div>
 					<div class="is-style-gl-s12" aria-hidden="true"></div>
@@ -71,7 +71,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 						<?php if ( ! empty( $ambrygen_heading_id ) ) : ?>
 							id="<?php echo esc_attr( $ambrygen_heading_id ); ?>"
 						<?php endif; ?>
-						class="heading-4 block-title mb-0"
+						class="heading-4 block-title mb-0 js-gsap-fade"
 					>
 						<?php echo wp_kses( $ambrygen_heading, Helper::allowed_heading_html() ); ?>
 					</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
@@ -82,7 +82,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 				<?php endif; ?>
 
 				<?php if ( ! empty( $ambrygen_description ) ) : ?>
-					<div class="body1 ordering-options__subtitle">
+					<div class="body1 ordering-options__subtitle js-gsap-fade">
 						<?php echo wp_kses_post( $ambrygen_description ); ?>
 					</div>
 				<?php endif; ?>
@@ -103,12 +103,12 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 			<div class="cta-tiles-with-content__header block__rowflex">
 
 				<?php if ( ! empty( $ambrygen_heading ) ) : ?>
-					<div class="block__rowflex--col-left">
+					<div class="block__rowflex--col-left js-gsap-fade">
 					<<?php echo tag_escape( $ambrygen_heading_tag ); ?>
 						<?php if ( ! empty( $ambrygen_heading_id ) ) : ?>
 							id="<?php echo esc_attr( $ambrygen_heading_id ); ?>"
 						<?php endif; ?>
-						class="heading-3 block-title mb-0 block__rowflex--heading-title js-gsap-fade"
+						class="heading-3 block-title mb-0 block__rowflex--heading-title"
 					>
 						<?php echo wp_kses( $ambrygen_heading, Helper::allowed_heading_html() ); ?>
 					</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>

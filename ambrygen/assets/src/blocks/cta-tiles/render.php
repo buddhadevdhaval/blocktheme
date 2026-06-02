@@ -79,7 +79,7 @@
     }
 
     $ambrygen_wrapper_attrs = [
-    'class' => 'cta-tiles block-' . sanitize_html_class($ambrygen_variation_class) . ' ' . $amb_class . ' grid-column' . $ambrygen_grid_columns,
+    'class' => ' block-layout cta-tiles block-' . sanitize_html_class($ambrygen_variation_class) . ' ' . $amb_class . ' grid-column' . $ambrygen_grid_columns,
     ];
 
     if ($ambrygen_heading) {

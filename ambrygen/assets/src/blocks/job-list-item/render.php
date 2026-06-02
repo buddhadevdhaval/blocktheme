@@ -23,7 +23,7 @@ if ( ! $ambrygen_post_id ) {
 
 $ambrygen_post = get_post( $ambrygen_post_id );
 
-if ( ! $ambrygen_post || 'publish' !== $ambrygen_post->post_status ) {
+if ( ! $ambrygen_post || 'publish' !== $ambrygen_post->post_status || 'jobs' !== $ambrygen_post->post_type ) {
 	return;
 }
 

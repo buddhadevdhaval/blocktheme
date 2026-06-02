@@ -47,7 +47,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	} );
 
 	const blockProps = useBlockProps( {
-		className: 'icon-card-grid',
+		className: 'icon-card-grid block-layout',
 		id: blockId || undefined,
 	} );
 

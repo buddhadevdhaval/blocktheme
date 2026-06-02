@@ -77,7 +77,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const blockProps = useBlockProps( {
 		className: isVariation2
 			? 'block-layout ordering-options'
-			: 'cta-tiles-with-content',
+			: 'block-layout cta-tiles-with-content',
 	} );
 
 	if ( isExample ) {

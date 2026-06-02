@@ -40,7 +40,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		[ clientId ]
 	);
 	const isSliderView = parentVariation === 'slider-view';
-	const classPrefix = isSliderView ? 'our-leadership' : 'our-team';
+	const classPrefix = isSliderView ? 'our-leadership' : 'our-team block-layout';
 
 	// Search for team members based on searchInput.
 	const teamMembers = useSelect( ( select ) => {

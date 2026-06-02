@@ -30,6 +30,9 @@
 			"enum": [ "h1", "h2", "h3", "h4", "h5", "h6" ]
 		}
 	},
+	"providesContext": {
+		"ambrygen/timelineHeadingTag": "headingTag"
+	},
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css",

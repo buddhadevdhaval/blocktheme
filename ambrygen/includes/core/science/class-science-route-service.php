@@ -26,6 +26,7 @@ final class ScienceRouteService
     {
         add_action('init', [$this, 'register_rewrites']);
         add_filter('post_type_archive_link', [$this, 'filter_archive_link'], 10, 2);
+        add_filter('post_type_link', [$this, 'filter_single_link'], 20, 2);
         add_filter('query_vars', [$this, 'register_query_vars']);
     }
 
@@ -58,7 +59,7 @@ final class ScienceRouteService
         if ('' !== $publication_single) {
             add_rewrite_rule(
                 '^' . preg_quote($publication_single, '#') . '/([^/]+)/([^/]+)/?$',
-                'index.php?post_type=publication&pub_old_id=$matches[1]&pub_slug=$matches[2]',
+                'index.php?post_type=publication&_old_id=$matches[1]&pr_name=$matches[2]',
                 'top'
             );
         }
@@ -80,7 +81,7 @@ final class ScienceRouteService
         if ('' !== $presentation_single) {
             add_rewrite_rule(
                 '^' . preg_quote($presentation_single, '#') . '/([^/]+)/([^/]+)/?$',
-                'index.php?post_type=presentation&_old_id=$matches[1]&sp_slug=$matches[2]',
+                'index.php?post_type=presentation&_old_id=$matches[1]&pr_name=$matches[2]',
                 'top'
             );
         }
@@ -102,7 +103,7 @@ final class ScienceRouteService
         if ('' !== $poster_single) {
             add_rewrite_rule(
                 '^' . preg_quote($poster_single, '#') . '/([^/]+)/([^/]+)/?$',
-                'index.php?post_type=poster&po_old_id=$matches[1]&po_slug=$matches[2]',
+                'index.php?post_type=poster&_old_id=$matches[1]&pr_name=$matches[2]',
                 'top'
             );
         }
@@ -122,10 +123,6 @@ final class ScienceRouteService
         $archive_path = $this->get_archive_path($post_type);
         if ('' === $archive_path) {
             return '';
-        }
-
-        if ('publication' === $post_type) {
-            return $this->post_type_single_slugs['publication'];
         }
 
         if (! isset($this->post_type_single_slugs[$post_type])) {
@@ -148,6 +145,28 @@ final class ScienceRouteService
         }
 
         return home_url(user_trailingslashit($archive_path));
+    }
+
+    public function filter_single_link(string $link, \WP_Post $post): string
+    {
+        if (! isset($this->post_type_single_slugs[$post->post_type])) {
+            return $link;
+        }
+
+        $single_base = $this->get_single_base_path($post->post_type);
+        if ('' === $single_base) {
+            return $link;
+        }
+
+        $old_id = get_post_meta($post->ID, '_old_id', true);
+        $pr_name = get_post_meta($post->ID, 'pr_name', true);
+        $pr_slug = sanitize_title($pr_name ?: $post->post_name);
+
+        if (empty($old_id) || empty($pr_slug)) {
+            return $link;
+        }
+
+        return home_url(user_trailingslashit($single_base . '/' . $old_id . '/' . $pr_slug));
     }
 
     private function resolve_page_path(string $slug): string
@@ -203,7 +222,7 @@ final class ScienceRouteService
     public function register_presentation_query_vars(array $vars): array
     {
         $vars[] = '_old_id';
-        $vars[] = 'sp_slug';
+        $vars[] = 'pr_name';
         $vars[] = 'conference_id';
         $vars[] = 'speaker';
         $vars[] = 'collaborator';
@@ -212,8 +231,8 @@ final class ScienceRouteService
 
     public function register_poster_query_vars(array $vars): array
     {
-        $vars[] = 'po_old_id';
-        $vars[] = 'po_slug';
+        $vars[] = '_old_id';
+        $vars[] = 'pr_name';
         $vars[] = 'conference_id';
         $vars[] = 'poster_author';
         $vars[] = 'collaborator';
@@ -222,8 +241,8 @@ final class ScienceRouteService
 
     public function register_publication_query_vars(array $vars): array
     {
-        $vars[] = 'pub_old_id';
-        $vars[] = 'pub_slug';
+        $vars[] = '_old_id';
+        $vars[] = 'pr_name';
         $vars[] = 'specialty_area';
         $vars[] = 'topic';
         $vars[] = 'collaborator';

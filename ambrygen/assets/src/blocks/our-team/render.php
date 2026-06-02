@@ -27,7 +27,7 @@ $ambrygen_variation = isset( $ambrygen_attributes['variation'] ) && 'slider-view
 	: 'grid-view';
 
 $ambrygen_is_slider_view = 'slider-view' === $ambrygen_variation;
-$ambrygen_block_class    = $ambrygen_is_slider_view ? 'our-leadership' : 'our-team';
+$ambrygen_block_class    = $ambrygen_is_slider_view ? 'our-leadership' : 'our-team block-layout';
 
 $ambrygen_heading_level = isset( $ambrygen_attributes['headingLevel'] )
 	? sanitize_key( $ambrygen_attributes['headingLevel'] )

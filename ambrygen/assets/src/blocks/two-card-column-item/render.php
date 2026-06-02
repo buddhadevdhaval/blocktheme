@@ -85,7 +85,7 @@ $ambrygen_image_html = Helper::image_from_source(
 	$ambrygen_image_url,
 	'large',
 	array(
-		'class'   => $ambrygen_is_variation_2 ? '' : 'cta-tiles-with-content__image',
+		'class'   => $ambrygen_is_variation_2 ? '' : 'cta-tiles-with-content__image  block-layout',
 		'alt'     => $ambrygen_image_alt,
 		'loading' => 'lazy',
 	)
@@ -97,8 +97,8 @@ $ambrygen_image_html = Helper::image_from_source(
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
 		'class' => $ambrygen_is_variation_2
-			? 'ordering-options__card js-gsap-fade'
-			: 'cta-tiles-with-content__item js-gsap-fade',
+			? 'block-layout ordering-options__card js-gsap-fade'
+			: 'block-layout cta-tiles-with-content__item js-gsap-fade',
 	)
 );
 ?>

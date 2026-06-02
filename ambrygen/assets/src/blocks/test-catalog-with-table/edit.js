@@ -841,7 +841,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			</InspectorControls>
 
 			<div { ...useBlockProps() }>
-				<div className="genes-table catlouge-search">
+				<div className="genes-table catlouge-search block-layout">
 					<div className="genes-table__search cardiology-tests__search-area">
 						<RichText
 							tagName="div"

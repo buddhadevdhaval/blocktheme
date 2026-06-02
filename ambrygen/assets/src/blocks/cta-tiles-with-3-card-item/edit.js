@@ -55,7 +55,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	};
 
 	const blockProps = useBlockProps( {
-		className: `cta-tiles-with-3-card__card cta-tiles-with-3-card__card--${ type }`,
+		className: `cta-tiles-with-3-card__card block-layout  cta-tiles-with-3-card__card--${ type }`,
 	} );
 
 	return (
@@ -104,7 +104,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				>
 					<RichText
 						tagName="h3"
-						className="cta-tiles-with-3-card__title heading-6 mb-0 card-title"
+						className="cta-tiles-with-3-card__title heading-6 mb-0 card-title block-inside-title"
 						value={ title }
 						allowedFormats={ [
 							'core/bold',
@@ -119,7 +119,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 					<RichText
 						tagName="div"
-						className="cta-tiles-with-3-card__description body1"
+						className="cta-tiles-with-3-card__description body1 block-inside-description"
 						value={ description }
 						onChange={ ( val ) =>
 							setAttributes( { description: val } )

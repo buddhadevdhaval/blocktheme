@@ -238,7 +238,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			</InspectorControls>
 
 			<div { ...blockProps }>
-				<div className="media_video js-gsap-fade">
+				<div className="media_video">
 					{ hasPosterImage && (
 						<div className="videos__cards-item-thumbnail">
 							<img
@@ -322,7 +322,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				<div className="is-style-gl-s16" aria-hidden="true"></div>
 				<RichText
 					tagName="div"
-					className="subtitle2-sbold videos__cards-item-title"
+					className="subtitle2-sbold videos__cards-item-title block-description"
 					value={ title }
 					onChange={ ( value ) =>
 						setAttributes( {

@@ -113,8 +113,9 @@ final class ConferenceAjaxController
             return '';
         }
 
-        $blocks      = parse_blocks($contents);
-        $query_block = $this->find_first_query_block($blocks);
+        $blocks            = parse_blocks($contents);
+        $query_block       = $this->find_first_query_block($blocks);
+        $pagination_block  = $this->find_first_block_by_name($blocks, 'ambrygen/conference-archive-pagination');
         if (! $query_block) {
             return '';
         }
@@ -140,10 +141,15 @@ final class ConferenceAjaxController
         }
 
         if ($total_posts === 0) {
-            return '<p class="no-results-message text-center text-lg-reg">No conferences found</p>';
+            return '<div class="no-results-message text-center no-result-alert">No conferences found</div>';
         }
 
         $html = render_block($query_block);
+
+        if ($pagination_block) {
+            $html .= '<div style="height:64px" class="wp-block-spacer is-style-gl-s64" aria-hidden="true"></div>';
+            $html .= render_block($pagination_block);
+        }
 
         if ($query_id > 0) {
             unset($_GET['query-' . $query_id . '-page']);
@@ -167,6 +173,28 @@ final class ConferenceAjaxController
 
             if (! empty($block['innerBlocks']) && is_array($block['innerBlocks'])) {
                 $found = $this->find_first_query_block($block['innerBlocks']);
+                if ($found) {
+                    return $found;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private function find_first_block_by_name(array $blocks, string $block_name): ?array
+    {
+        foreach ($blocks as $block) {
+            if (! is_array($block)) {
+                continue;
+            }
+
+            if (isset($block['blockName']) && $block_name === $block['blockName']) {
+                return $block;
+            }
+
+            if (! empty($block['innerBlocks']) && is_array($block['innerBlocks'])) {
+                $found = $this->find_first_block_by_name($block['innerBlocks'], $block_name);
                 if ($found) {
                     return $found;
                 }

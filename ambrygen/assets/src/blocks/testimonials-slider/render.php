@@ -50,7 +50,7 @@ $ambrygen_show_pagination = array_key_exists( 'showPagination', $ambrygen_attrib
 $ambrygen_autoplay = ! empty( $ambrygen_attributes['autoplay'] );
 
 $ambrygen_wrapper_args = array(
-	'class' => 'testimonial-slider',
+	'class' => 'testimonial-slider block-layout',
 );
 
 if ( $ambrygen_block_id ) {

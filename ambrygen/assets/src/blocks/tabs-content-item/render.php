@@ -41,12 +41,12 @@ $ambrygen_content_id = $ambrygen_item_id ? $ambrygen_item_id . '-content' : '';
 	</div>
 
 	<div
-		class="tabs-table-content__content"
+		class="tabs-table-content__content js-gsap-fade"
 		<?php if ( $ambrygen_content_id ) : ?>
 			id="<?php echo esc_attr( $ambrygen_content_id ); ?>"
 		<?php endif; ?>
 	>
-		<div class="tabs-table-content__image-wrapper">
+		<div class="tabs-table-content__image-wrapper js-gsap-fade">
 			<?php echo $ambrygen_content_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</div>
 	</div>

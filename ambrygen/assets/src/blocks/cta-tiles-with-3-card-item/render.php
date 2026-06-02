@@ -67,7 +67,7 @@ $ambrygen_type = in_array( $ambrygen_type, array( 'small', 'main' ), true )
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class' => 'js-gsap-fade cta-tiles-with-3-card__card cta-tiles-with-3-card__card--' . sanitize_html_class( $ambrygen_type ),
+		'class' => 'js-gsap-fade  block-layout  cta-tiles-with-3-card__card cta-tiles-with-3-card__card--' . sanitize_html_class( $ambrygen_type ),
 		'role'  => 'listitem',
 	)
 );

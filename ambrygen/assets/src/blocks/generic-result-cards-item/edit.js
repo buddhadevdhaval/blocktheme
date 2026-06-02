@@ -131,7 +131,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				<div className="principles-steps__card-content">
 					<RichText
 						tagName={ HeadingTag }
-						className="heading-5 principles-steps__card-title mb-0"
+						className="heading-5 principles-steps__card-title mb-0 block-inside-title"
 						value={ title }
 						onChange={ ( value ) =>
 							setAttributes( { title: value } )
@@ -141,7 +141,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					<div className="is-style-gl-s8" aria-hidden="true"></div>
 					<RichText
 						tagName="div"
-						className="body1-sbold principles-steps__card-summary"
+						className="body1-sbold principles-steps__card-summary block-inside-summary"
 						value={ summary }
 						onChange={ ( value ) =>
 							setAttributes( { summary: value } )

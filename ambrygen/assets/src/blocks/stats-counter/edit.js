@@ -70,7 +70,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	);
 
 	const blockProps = useBlockProps( {
-		className: 'counter-block',
+		className: 'counter-block block-layout',
 		id: blockId || undefined,
 	} );
 
@@ -96,7 +96,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const updateCounter = ( counterId, field, value ) => {
 		const finalValue = field === 'number' ? value.replace( /\D/g, '' ) : value;
-		
+
 		setAttributes( {
 			counters: counters.map( ( counter ) =>
 				counter.id === counterId
@@ -200,12 +200,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					>
 						{ __( 'Add New Stat', 'ambrygen-web' ) }
 					</Button>
-					
+
 					<hr className="mt-16 mb-16" />
 
 					{ counters.map( ( counter, index ) => {
 						const isOpen = openStatId === counter.id;
-						
+
 						return (
 						<div
 							key={ counter.id }
@@ -225,7 +225,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								}
 								minCount={ 1 }
 							/>
-							
+
 							<Button
 								variant="tertiary"
 								icon={ isOpen ? chevronUp : chevronDown }
@@ -327,17 +327,17 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								className="stats-counter__item"
 							>
 								{ hasNumberData && (
-									<div className="stats-counter__number heading-3 mb-0">
+									<div className="stats-counter__number heading-3 mb-0 d-flex">
 										{ counter.prefix && <span className="stats-counter__number-prefix">{ counter.prefix }</span> }
-										<span className="stats-counter__number-value">{ counter.number ? Number( counter.number ).toLocaleString() : '0' }</span>
-										{ counter.postfix && <span className="stats-counter__number-suffix">{ counter.postfix }</span> }
+										<div className="stats-counter__number-value">{ counter.number ? Number( counter.number ).toLocaleString() : '0' }</div>
+										{ counter.postfix && <div className="stats-counter__number-suffix">{ counter.postfix }</div> }
 									</div>
 								) }
 
-								<div className="stats-counter__label subtitle1-sbold">
+								<div className="stats-counter__label subtitle1-sbold block-description">
 									{ counter.label || __( 'New Stat', 'ambrygen-web' ) }
 								</div>
-								<div className="stats-counter__description">
+								<div className="stats-counter__description block-description">
 									<div className="is-style-gl-s8" aria-hidden="true"></div>
 									{ counter.description ||
 										__( 'Add Description...', 'ambrygen-web' ) }

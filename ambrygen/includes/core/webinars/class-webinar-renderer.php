@@ -17,6 +17,55 @@ final class WebinarRenderer
         return '' !== $value && '0' !== $value && 'false' !== $value;
     }
 
+    /**
+     * Resolve webinar post ID for editor preview or front-end rendering.
+     * When in editor and no valid post ID, fetch a sample webinar post.
+     *
+     * @param int $post_id The post ID to resolve.
+     * @return int Resolved post ID or 0 if not found.
+     */
+    private function resolve_webinar_post_id(int $post_id): int
+    {
+        if ($post_id > 0 && 'webinar' === get_post_type($post_id)) {
+            return $post_id;
+        }
+
+        $queried_post_id = get_queried_object_id();
+        if ($queried_post_id > 0 && 'webinar' === get_post_type($queried_post_id)) {
+            return (int) $queried_post_id;
+        }
+
+        $is_editor = wp_is_json_request() || (defined('REST_REQUEST') && REST_REQUEST);
+        if (!$is_editor) {
+            return 0;
+        }
+
+        $sample_posts = get_posts(
+            array(
+                'post_type'      => 'webinar',
+                'posts_per_page' => 1,
+                'post_status'    => 'publish',
+                'fields'         => 'ids',
+            )
+        );
+
+        if (empty($sample_posts)) {
+            return 0;
+        }
+
+        return (int) $sample_posts[0];
+    }
+
+    /**
+     * Check whether the current render is happening in editor preview context.
+     *
+     * @return bool
+     */
+    private function is_editor_preview(): bool
+    {
+        return wp_is_json_request() || (defined('REST_REQUEST') && REST_REQUEST);
+    }
+
     private function get_webinar_author_entries(int $post_id): array
     {
         $rows = get_post_meta($post_id, 'webinar_authors', true);
@@ -240,6 +289,7 @@ final class WebinarRenderer
 
     public function render_webinar_meta_summary(int $post_id): string
     {
+        $post_id = $this->resolve_webinar_post_id($post_id);
         if (!$post_id) {
             return '';
         }
@@ -331,6 +381,16 @@ final class WebinarRenderer
 
     public function render_share_post(int $post_id): string
     {
+        if (!$post_id && !is_admin()) {
+            $post_id = (int) get_the_ID();
+        }
+        if (!$post_id || ('webinar' !== get_post_type($post_id) && 'press-releases' !== get_post_type($post_id))) {
+             $resolved_id = $this->resolve_webinar_post_id($post_id);
+             if ($resolved_id) {
+                 $post_id = $resolved_id;
+             }
+        }
+
         if (!$post_id) {
             return '';
         }
@@ -340,7 +400,7 @@ final class WebinarRenderer
         $theme_url = get_template_directory_uri();
 
         $facebook_url = 'https://www.facebook.com/sharer/sharer.php?u=' . urlencode($url);
-        $twitter_url  = 'https://twitter.com/intent/tweet?url=' . urlencode($url) . '&text=' . urlencode($title);
+        $twitter_url  = 'https://x.com/intent/tweet?url=' . urlencode($url) . '&text=' . urlencode($title);
         $linkedin_url = 'https://www.linkedin.com/sharing/share-offsite/?url=' . urlencode($url);
 
         ob_start();
@@ -370,6 +430,7 @@ final class WebinarRenderer
 
     public function render_webinar_registration_button(int $post_id, array $attributes = []): string
     {
+        $post_id = $this->resolve_webinar_post_id($post_id);
         if (!$post_id) {
             return '';
         }
@@ -396,6 +457,7 @@ final class WebinarRenderer
 
     public function render_author_swiper(int $post_id, array $attributes = []): string
     {
+        $post_id = $this->resolve_webinar_post_id($post_id);
         if (!$post_id) {
             return '';
         }
@@ -460,10 +522,12 @@ final class WebinarRenderer
                         </div>
                     <?php endforeach; ?>
                 </div>
+                <?php if (count($author_entries) > 1) : ?>
                 <div class="swiper-buttons author-slider__controls">
                     <button type="button" class="custom-prev author-slider__nav-prev" aria-label="<?php esc_attr_e('Previous slide', 'ambrygen-web'); ?>"></button>
                     <button type="button" class="custom-next author-slider__nav-next" aria-label="<?php esc_attr_e('Next slide', 'ambrygen-web'); ?>"></button>
                 </div>
+                <?php endif; ?>
             </div>
 
             <div class="is-style-gl-s50" aria-hidden="true"></div>
@@ -474,6 +538,7 @@ final class WebinarRenderer
 
     public function render_webinar_additional_info(int $post_id): string
     {
+        $post_id = $this->resolve_webinar_post_id($post_id);
         $options = get_option('ambrygen_theme_options');
         $content = $options['webinar_additional_content'] ?? [];
         $sections = [];

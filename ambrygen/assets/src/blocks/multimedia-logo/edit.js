@@ -145,7 +145,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	}, [downloads, setAttributes]);
 
 	const blockProps = useBlockProps({
-		className: 'logo-section',
+		className: 'logo-section block-layout',
 		id: anchor || blockId,
 	});
 	const defaultImages = useMemo(() => DEFAULT_IMAGES(), []);

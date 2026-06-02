@@ -120,7 +120,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		className: isSliderView ? undefined : 'wrapper',
 	});
 	const allowedBlocks = ['ambrygen/our-team-item'];
-	const blockClass = isSliderView ? 'our-leadership' : 'our-team';
+	const blockClass = isSliderView ? 'block-layout our-leadership' : 'block-layout our-team';
 	const { replaceInnerBlocks, insertBlocks, removeBlocks } =
 		useDispatch('core/block-editor');
 
@@ -875,7 +875,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 					<RichText
 						tagName="div"
-						className={`${blockClass}__intro block__rowflex--block-content ${isSliderView ? 'subtitle1-reg' : 'subtitle1'
+						className={`${blockClass}__intro block__rowflex--block-content block-description ${isSliderView ? 'subtitle1-reg' : 'subtitle1'
 							}`}
 						value={intro}
 						onChange={(value) =>

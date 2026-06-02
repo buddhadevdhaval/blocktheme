@@ -91,9 +91,19 @@ final class BlockRenderService
         return WebinarRenderer::instance()->render_webinar_additional_info($post_id);
     }
 
+    public function render_genetic_testing_hero(int $post_id): string
+    {
+        return GeneticTestingRenderer::instance()->render_hero($post_id);
+    }
+
     public function render_genetic_testing_details(int $post_id): string
     {
         return GeneticTestingRenderer::instance()->render_details($post_id);
+    }
+
+    public function render_genetic_testing_product_stats(int $post_id): string
+    {
+        return GeneticTestingRenderer::instance()->render_product_stats($post_id);
     }
 
     public function render_genetic_testing_genes(int $post_id): string
@@ -111,59 +121,64 @@ final class BlockRenderService
         return GeneticTestingRenderer::instance()->render_post_description($post_id);
     }
 
+    public function render_genetic_testing_related_tests(int $post_id): string
+    {
+        return GeneticTestingRenderer::instance()->render_related_tests($post_id);
+    }
+
     public function render_genetic_testing_downloads(int $post_id): string
     {
         return GeneticTestingRenderer::instance()->render_post_downloads($post_id);
     }
 
-    public function render_presentation_filters(): string
+    public function render_presentation_filters(int $post_id = 0): string
     {
-        return ScienceRenderer::instance()->render_presentation_filters();
+        return ScienceRenderer::instance()->render_presentation_filters($post_id);
     }
 
-    public function render_presentation_result_count(): string
+    public function render_presentation_result_count(int $post_id = 0): string
     {
-        return ScienceRenderer::instance()->render_presentation_result_count();
+        return ScienceRenderer::instance()->render_presentation_result_count($post_id);
     }
 
-    public function render_presentation_meta(): string
+    public function render_presentation_meta(int $post_id = 0): string
     {
-        return ScienceRenderer::instance()->render_presentation_meta();
+        return ScienceRenderer::instance()->render_presentation_meta($post_id);
     }
 
-    public function render_poster_filters(): string
+    public function render_poster_filters(int $post_id = 0): string
     {
-        return ScienceRenderer::instance()->render_poster_filters();
+        return ScienceRenderer::instance()->render_poster_filters($post_id);
     }
 
-    public function render_poster_result_count(): string
+    public function render_poster_result_count(int $post_id = 0): string
     {
-        return ScienceRenderer::instance()->render_poster_result_count();
+        return ScienceRenderer::instance()->render_poster_result_count($post_id);
     }
 
-    public function render_poster_meta(): string
+    public function render_poster_meta(int $post_id = 0): string
     {
-        return ScienceRenderer::instance()->render_poster_meta();
+        return ScienceRenderer::instance()->render_poster_meta($post_id);
     }
 
-    public function render_poster_pdf_files(): string
+    public function render_poster_pdf_files(int $post_id = 0): string
     {
-        return ScienceRenderer::instance()->render_poster_pdf_files();
+        return ScienceRenderer::instance()->render_poster_pdf_files($post_id);
     }
 
-    public function render_publication_filters(): string
+    public function render_publication_filters(int $post_id = 0): string
     {
-        return ScienceRenderer::instance()->render_publication_filters();
+        return ScienceRenderer::instance()->render_publication_filters($post_id);
     }
 
-    public function render_publication_result_count(): string
+    public function render_publication_result_count(int $post_id = 0): string
     {
-        return ScienceRenderer::instance()->render_publication_result_count();
+        return ScienceRenderer::instance()->render_publication_result_count($post_id);
     }
 
-    public function render_publication_meta(): string
+    public function render_publication_meta(int $post_id = 0): string
     {
-        return ScienceRenderer::instance()->render_publication_meta();
+        return ScienceRenderer::instance()->render_publication_meta($post_id);
     }
 
     public function has_conference_data(int $post_id): bool

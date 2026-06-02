@@ -12,7 +12,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	const { title, headingTag } = attributes;
 
 	const blockProps = useBlockProps( {
-		className: 'mid-page-cta text-center',
+		className: 'mid-page-cta text-center block-layout',
 	} );
 
 	const allowedBlocks = [ 'core/buttons', 'core/button' ];

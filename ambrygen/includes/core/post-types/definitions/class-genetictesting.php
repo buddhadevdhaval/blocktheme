@@ -64,6 +64,19 @@ class GeneticTesting extends AbstractPostType {
 				'multiple'    => true,
 				'post_types'  => array( 'marketing_material', 'product_version' ),
 			),
+			'product_stats_title' => array(
+				'label' => __( 'Product Stats Title', 'ambrygen-web' ),
+				'type'  => 'text',
+			),
+			'product_stats_repeater' => array(
+				'label' => __( 'Product Stats Repeater', 'ambrygen-web' ),
+				'type'  => 'product_stats_repeater',
+			),
+			'product_stats_footer' => array(
+				'label' => __( 'Product Stats Footer', 'ambrygen-web' ),
+				'type'  => 'wysiwyg',
+				'sanitize' => 'wp_kses_post',
+			),
 		);
 	}
 }

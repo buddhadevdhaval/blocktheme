@@ -111,7 +111,7 @@ $wrapper_attributes = get_block_wrapper_attributes(
 	array_filter(
 		array(
 			'id'    => $ambrygen_block_id ?: null,
-			'class' => 'resources',
+			'class' => 'resources block-layout',
 		)
 	)
 );
@@ -121,7 +121,8 @@ $wrapper_attributes = get_block_wrapper_attributes(
 	<?php if ( $ambrygen_has_header ) : ?>
 		<div class="resources__header">
 			<?php if ( $ambrygen_has_heading ) : ?>
-				<<?php echo tag_escape( $ambrygen_heading_level ); ?> class="heading-4 block-title mb-0 resources__title">
+				<<?php echo tag_escape( $ambrygen_heading_level ); ?> class="heading-4 block-title mb-0 resources__title js-gsap-fade" id="<?php echo esc_attr( $ambrygen_block_id ? $ambrygen_block_id . '-heading' : wp_unique_id( 'resources-heading-' ) ); ?>">
+						<?php echo wp_kses( $ambrygen_title, Helper::allowed_heading_html() ); ?>
 					<?php echo wp_kses( $ambrygen_title, Helper::allowed_heading_html() ); ?>
 				</<?php echo tag_escape( $ambrygen_heading_level ); ?>>
 			<?php endif; ?>
@@ -131,7 +132,7 @@ $wrapper_attributes = get_block_wrapper_attributes(
 			<?php endif; ?>
 
 			<?php if ( $ambrygen_has_subtitle ) : ?>
-				<div class="body1 resources__subtitle">
+				<div class="body1 resources__subtitle js-gsap-fade">
 					<?php echo wp_kses_post( $ambrygen_subtitle ); ?>
 				</div>
 			<?php endif; ?>
@@ -144,7 +145,7 @@ $wrapper_attributes = get_block_wrapper_attributes(
 
 	<div class="resources__layout">
 		<?php if ( $ambrygen_has_resource_section ) : ?>
-			<div class="test-lists-downloads">
+			<div class="test-lists-downloads js-gsap-fade">
 				<div class="resources__card">
 					<?php if ( $ambrygen_has_resources_title ) : ?>
 						<div class="subtitle2-sbold resources__card-title text-center">
@@ -223,13 +224,13 @@ $wrapper_attributes = get_block_wrapper_attributes(
 			<div class="resources__orgs-group">
 				<div class="resources__card">
 					<?php if ( $ambrygen_has_org_title ) : ?>
-						<h3 class="subtitle2-sbold resources__card-title text-center">
+						<h3 class="subtitle2-sbold resources__card-title text-center js-gsap-fade">
 							<?php echo wp_kses_post( $ambrygen_org_title ); ?>
 						</h3>
 					<?php endif; ?>
 
 					<?php if ( ! empty( $ambrygen_collaborator_terms ) || ! empty( $ambrygen_valid_custom_collaborators ) ) : ?>
-						<div class="resources__card-logo-grid resources__card-logo-grid--3-col">
+						<div class="resources__card-logo-grid resources__card-logo-grid--3-col js-gsap-fade">
 							<?php foreach ( $ambrygen_collaborator_ids as $ambrygen_term_id ) : ?>
 							<?php
 							$ambrygen_term = $ambrygen_collaborator_terms[ $ambrygen_term_id ] ?? null;

@@ -60,4 +60,42 @@ class ProductVersions extends AbstractPostType {
 			),
 		);
 	}
+
+	public function meta_fields(): array {
+		return array(
+			'featured_description' => array(
+				'label'    => __( 'Featured Description', 'ambrygen-web' ),
+				'type'     => 'wysiwyg',
+				'sanitize' => 'wp_kses_post',
+			),
+			'menu_description' => array(
+				'label'    => __( 'Menu Description', 'ambrygen-web' ),
+				'type'     => 'wysiwyg',
+				'sanitize' => 'wp_kses_post',
+			),
+			'patient_description' => array(
+				'label'    => __( 'Patient Description', 'ambrygen-web' ),
+				'type'     => 'wysiwyg',
+				'sanitize' => 'wp_kses_post',
+			),
+			'turn_around_time_high' => array(
+				'label' => __( 'Turn Around Time High', 'ambrygen-web' ),
+				'type'  => 'text',
+			),
+			'turn_around_time_low' => array(
+				'label' => __( 'Turn Around Time Low', 'ambrygen-web' ),
+				'type'  => 'text',
+			),
+			'turn_around_time_note' => array(
+				'label'    => __( 'Turn Around Time Note', 'ambrygen-web' ),
+				'type'     => 'wysiwyg',
+				'sanitize' => 'wp_kses_post',
+			),
+			'turn_around_time_show' => array(
+				'label' => __( 'Show Turn Around Time', 'ambrygen-web' ),
+				'type'  => 'checkbox',
+				'value' => '1',
+			),
+		);
+	}
 }

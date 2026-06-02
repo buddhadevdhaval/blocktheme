@@ -26,9 +26,12 @@ final class Helper {
 		add_action( 'rest_api_init', array( $this, 'register_marketing_material_tracking_routes' ) );
 		add_action( 'wp_ajax_ambrygen_track_marketing_material_click', array( $this, 'handle_marketing_material_click' ) );
 		add_action( 'wp_ajax_nopriv_ambrygen_track_marketing_material_click', array( $this, 'handle_marketing_material_click' ) );
+		add_action( 'save_post_marketing_material', array( $this, 'bump_marketing_material_cache_version' ), 10, 3 );
+		add_action( 'set_object_terms', array( $this, 'maybe_bump_marketing_material_cache_version_for_terms' ), 10, 6 );
 	}
 
 	private const MARKETING_MATERIAL_TRACKING_META_KEY = '_marketing_material_file_tracking';
+	private const MARKETING_MATERIAL_CACHE_VERSION_OPTION = 'ambrygen_marketing_material_cache_version';
 
 	/**
 	 * Allowed HTML for headings (supports <mark>).
@@ -223,7 +226,7 @@ final class Helper {
 	 *
 	 * All returned markup is passed through wp_kses_post() so callers can echo
 	 * this helper output without wrapping each usage.
-	 * URL and attribute values are escaped internally before markup is built.
+	 * URL and attribute values are escaped internally at output time.
 	 *
 	 * @param int    $image_id        Attachment post ID.
 	 * @param string $image_url       Image URL fallback.
@@ -242,8 +245,6 @@ final class Helper {
 		array $url_attrs = array()
 	): string {
 		$image_url = esc_url( $image_url );
-		$attrs     = array_map( 'esc_attr', $attrs );
-		$url_attrs = array_map( 'esc_attr', $url_attrs );
 
 		if ( $image_id ) {
 			$attachment_attrs = $attrs;
@@ -294,7 +295,7 @@ final class Helper {
 	}
 
 	/**
-	 * Get safe image ALT text with fallback.
+	 * Get image ALT text with fallback.
 	 *
 	 * @param int $image_id Attachment ID.
 	 * @return string
@@ -306,7 +307,7 @@ final class Helper {
 			$alt = get_the_title( $image_id );
 		}
 
-		return esc_attr( $alt );
+		return (string) $alt;
 	}
 
 	/**
@@ -520,6 +521,58 @@ final class Helper {
 	}
 
 	/**
+	 * Get linked author options for a content item.
+	 *
+	 * @param int $post_id Content post ID.
+	 * @return array<int, string>
+	 */
+	public static function get_linked_author_options( int $post_id ): array {
+		if ( $post_id <= 0 ) {
+			return array();
+		}
+
+		$linked_author_ids = get_post_meta( $post_id, 'linked_author', true );
+		if ( empty( $linked_author_ids ) ) {
+			return array();
+		}
+
+		if ( ! is_array( $linked_author_ids ) ) {
+			$linked_author_ids = array( $linked_author_ids );
+		}
+
+		$linked_author_ids = array_values( array_unique( array_filter( array_map( 'absint', $linked_author_ids ) ) ) );
+		if ( empty( $linked_author_ids ) ) {
+			return array();
+		}
+
+		$author_options = array();
+		foreach ( $linked_author_ids as $author_id ) {
+			if ( 'author' !== get_post_type( $author_id ) ) {
+				continue;
+			}
+
+			$author_name = trim( (string) get_the_title( $author_id ) );
+			if ( '' !== $author_name ) {
+				$author_options[ $author_id ] = $author_name;
+			}
+		}
+
+		asort( $author_options, SORT_NATURAL | SORT_FLAG_CASE );
+
+		return $author_options;
+	}
+
+	/**
+	 * Get linked author options for a poster post.
+	 *
+	 * @param int $post_id Poster post ID.
+	 * @return array<int, string>
+	 */
+	public static function get_poster_linked_author_options( int $post_id ): array {
+		return self::get_linked_author_options( $post_id );
+	}
+
+	/**
 	 * Find the first linked conference for a presentation.
 	 *
 	 * @param int $presentation_id Presentation post ID.
@@ -640,7 +693,17 @@ final class Helper {
 	 * }
 	 */
 	public static function get_poster_filter_data(): array {
-		$conferences = get_posts(
+		$poster_ids = get_posts(
+			array(
+				'post_type'      => 'poster',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+			)
+		);
+
+		$conferences = array();
+		$conference_ids = get_posts(
 			array(
 				'post_type'      => 'conferences',
 				'post_status'    => 'publish',
@@ -651,21 +714,37 @@ final class Helper {
 			)
 		);
 
-		$poster_ids = get_posts(
-			array(
-				'post_type'      => 'poster',
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'fields'         => 'ids',
-			)
-		);
+		foreach ( $conference_ids as $conference_id ) {
+			$linked_posts = get_post_meta( (int) $conference_id, 'linked_posts', true );
+			if ( empty( $linked_posts ) ) {
+				continue;
+			}
+
+			if ( ! is_array( $linked_posts ) ) {
+				$linked_posts = array( $linked_posts );
+			}
+
+			foreach ( $linked_posts as $linked_post_id ) {
+				$linked_post_id = absint( $linked_post_id );
+				if ( $linked_post_id > 0 && 'poster' === get_post_type( $linked_post_id ) ) {
+					$conferences[] = (int) $conference_id;
+					break;
+				}
+			}
+		}
+
+		$conferences = array_values( array_unique( array_filter( array_map( 'intval', $conferences ) ) ) );
 
 		$authors = array();
 		foreach ( $poster_ids as $poster_id ) {
-			$authors = array_merge( $authors, self::get_poster_authors( (int) $poster_id ) );
+			$linked_author_options = self::get_poster_linked_author_options( (int) $poster_id );
+			if ( ! empty( $linked_author_options ) ) {
+				foreach ( $linked_author_options as $author_id => $author_name ) {
+					$authors[ (int) $author_id ] = $author_name;
+				}
+			}
 		}
-		$authors = array_values( array_unique( $authors ) );
-		sort( $authors, SORT_NATURAL | SORT_FLAG_CASE );
+		asort( $authors, SORT_NATURAL | SORT_FLAG_CASE );
 
 		$collaborator_ids = array();
 		if ( ! empty( $poster_ids ) ) {
@@ -717,11 +796,23 @@ final class Helper {
 		$specialty_ids = array();
 		$topic_ids     = array();
 		$collab_ids    = array();
+		$authors       = array();
 
 		if ( ! empty( $publication_ids ) ) {
 			$specialty_ids = wp_get_object_terms( $publication_ids, 'poster_category', array( 'fields' => 'ids' ) );
 			$topic_ids     = wp_get_object_terms( $publication_ids, 'post_tag', array( 'fields' => 'ids' ) );
 			$collab_ids    = wp_get_object_terms( $publication_ids, 'collaborator', array( 'fields' => 'ids' ) );
+
+			foreach ( $publication_ids as $publication_id ) {
+				$linked_author_options = self::get_linked_author_options( (int) $publication_id );
+				if ( empty( $linked_author_options ) ) {
+					continue;
+				}
+
+				foreach ( $linked_author_options as $author_id => $author_name ) {
+					$authors[ (int) $author_id ] = $author_name;
+				}
+			}
 		}
 
 		$specialty_areas = array();
@@ -770,9 +861,12 @@ final class Helper {
 			$collaborators = array();
 		}
 
+		asort( $authors, SORT_NATURAL | SORT_FLAG_CASE );
+
 		return array(
 			'specialty_areas' => $specialty_areas,
 			'topics'          => $topics,
+			'authors'         => $authors,
 			'collaborators'   => $collaborators,
 		);
 	}
@@ -1308,6 +1402,121 @@ final class Helper {
 		}
 
 		return $cache[ $cache_key ];
+	}
+
+	/**
+	 * Get optional static count content configured on a gene term.
+	 *
+	 * @param int $gene_id Gene term ID.
+	 * @return array{enabled:bool,count:string,before_text:string,after_text:string,link:string,link_text:string}
+	 */
+	public static function get_product_version_gene_static_count_data( int $gene_id ): array {
+		$gene_id = absint( $gene_id );
+
+		if ( $gene_id <= 0 ) {
+			return array(
+				'enabled'     => false,
+				'count'       => '',
+				'before_text' => '',
+				'after_text'  => '',
+				'link'        => '',
+				'link_text'   => '',
+			);
+		}
+
+		return array(
+			'enabled'     => (bool) get_term_meta( $gene_id, 'show_static_count_on_product_version', true ),
+			'count'       => trim( (string) get_term_meta( $gene_id, 'static_count', true ) ),
+			'before_text' => trim( (string) get_term_meta( $gene_id, 'static_count_before_text', true ) ),
+			'after_text'  => trim( (string) get_term_meta( $gene_id, 'static_count_after_text', true ) ),
+			'link'        => esc_url( (string) get_term_meta( $gene_id, 'static_count_link', true ) ),
+			'link_text'   => trim( (string) get_term_meta( $gene_id, 'static_count_link_text', true ) ),
+		);
+	}
+
+	/**
+	 * Render optional static count content for a gene row in product version lists.
+	 *
+	 * @param int $gene_id Gene term ID.
+	 * @return string
+	 */
+	public static function render_product_version_gene_static_count( int $gene_id ): string {
+		$data = self::get_product_version_gene_static_count_data( $gene_id );
+
+		if ( ! $data['enabled'] ) {
+			return '';
+		}
+
+		$parts = array();
+
+		if ( '' !== $data['before_text'] ) {
+			$parts[] = '<span class="test-catlouge__static-count-before">' . esc_html( $data['before_text'] ) . '</span>';
+		}
+
+		if ( '' !== $data['count'] ) {
+			$parts[] = '<span class="test-catlouge__static-count-value">' . esc_html( $data['count'] ) . '</span>';
+		}
+
+		if ( '' !== $data['after_text'] ) {
+			$parts[] = '<span class="test-catlouge__static-count-after">' . esc_html( $data['after_text'] ) . '</span>';
+		}
+
+		if ( '' !== $data['link'] && '' !== $data['link_text'] ) {
+			$parts[] = sprintf(
+				'<a class="test-catlouge__static-count-link" href="%1$s">%2$s</a>',
+				esc_url( $data['link'] ),
+				esc_html( $data['link_text'] )
+			);
+		}
+
+		if ( empty( $parts ) ) {
+			return '';
+		}
+
+		return '<div class="test-catlouge__static-count text-sm-medium">' . implode( ' ', $parts ) . '</div>';
+	}
+
+	/**
+	 * Get plain-text static count content for table contexts.
+	 *
+	 * @param int $gene_id Gene term ID.
+	 * @return array{badge:string,details_html:string}
+	 */
+	public static function get_product_version_gene_static_count_table_content( int $gene_id ): array {
+		$data = self::get_product_version_gene_static_count_data( $gene_id );
+
+		if ( ! $data['enabled'] || '' === $data['count'] ) {
+			return array(
+				'badge'        => '',
+				'details_html' => '',
+			);
+		}
+
+		$parts = array();
+		$separator = '<span class="gl-data-table__static-count-separator" aria-hidden="true">&nbsp;</span>';
+
+		if ( '' !== $data['before_text'] ) {
+			$parts[] = '<span class="gl-data-table__static-count-before">' . esc_html( $data['before_text'] ) . '</span>';
+		}
+
+		$parts[] = '<span class="gl-data-table__static-count-value"> ' . esc_html( $data['count'] ) . ' </span>';
+
+		if ( '' !== $data['after_text'] ) {
+			$parts[] = '<span class="gl-data-table__static-count-after"> ' . esc_html( $data['after_text'] ) . '</span>';
+		}
+
+		if ( '' !== $data['link'] && '' !== $data['link_text'] ) {
+			$parts[] = sprintf(
+				'<a class="gl-data-table__static-count-link" href="%1$s">%2$s</a>',
+				esc_url( $data['link'] ),
+				esc_html( $data['link_text'] )
+			);
+		}
+
+		return array(
+			'badge'        => $data['count'],
+			'details_html' => '<span class="gl-data-table__static-count-content">' . implode( $separator, $parts ) . '</span>',
+		);
 	}
 
 	/**
@@ -2219,6 +2428,264 @@ final class Helper {
 	}
 
 	/**
+	 * Get a genetic-testing link using both product version and parent category context.
+	 *
+	 * @param int   $product_version_id Product version post ID.
+	 * @param int[] $parent_term_ids Parent category term IDs.
+	 * @return array{post_id:int,url:string}
+	 */
+	public static function get_contextual_genetic_testing_link_by_product_version( int $product_version_id, array $parent_term_ids ): array {
+		$product_version_id = absint( $product_version_id );
+		$parent_term_ids    = array_values( array_filter( array_map( 'absint', $parent_term_ids ) ) );
+
+		if ( $product_version_id <= 0 ) {
+			return array(
+				'post_id' => 0,
+				'url'     => '',
+			);
+		}
+
+		if ( ! empty( $parent_term_ids ) ) {
+			$testing_query = new \WP_Query(
+				array(
+					'post_type'      => 'genetic-testing',
+					'post_status'    => 'publish',
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+					'no_found_rows'  => true,
+					'meta_query'     => array(
+						array(
+							'key'     => 'linked_posts_genetic',
+							'value'   => 'i:' . $product_version_id . ';',
+							'compare' => 'LIKE',
+						),
+					),
+				)
+			);
+
+			if ( ! empty( $testing_query->posts ) ) {
+				foreach ( $testing_query->posts as $testing_post_id ) {
+					$testing_post_id = absint( $testing_post_id );
+					if ( $testing_post_id <= 0 ) {
+						continue;
+					}
+
+					$testing_term_ids = wp_get_post_terms(
+						$testing_post_id,
+						'poster_category',
+						array(
+							'fields' => 'ids',
+						)
+					);
+
+					if ( is_wp_error( $testing_term_ids ) || empty( $testing_term_ids ) ) {
+						continue;
+					}
+
+					$testing_term_ids = array_map( 'absint', $testing_term_ids );
+					$matches_parent   = false;
+
+					foreach ( $testing_term_ids as $testing_term_id ) {
+						if ( in_array( $testing_term_id, $parent_term_ids, true ) ) {
+							$matches_parent = true;
+							break;
+						}
+
+						$ancestors = get_ancestors( $testing_term_id, 'poster_category', 'taxonomy' );
+						$ancestors = array_map( 'absint', is_array( $ancestors ) ? $ancestors : array() );
+
+						if ( array_intersect( $parent_term_ids, $ancestors ) ) {
+							$matches_parent = true;
+							break;
+						}
+					}
+
+					if ( ! $matches_parent ) {
+						continue;
+					}
+
+					$testing_url = get_permalink( $testing_post_id );
+
+					return array(
+						'post_id' => $testing_post_id,
+						'url'     => is_string( $testing_url ) ? $testing_url : '',
+					);
+				}
+			}
+		}
+
+		return self::get_genetic_testing_link_by_product_version( $product_version_id );
+	}
+
+	/**
+	 * Build normalized product data for the test catalog with table block.
+	 *
+	 * @param \WP_Post $post Product version post.
+	 * @param int[]    $parent_term_ids Parent category context.
+	 * @return array<string,mixed>
+	 */
+	public static function get_test_catalog_with_table_item_data( \WP_Post $post, array $parent_term_ids = array() ): array {
+		$post_id     = $post->ID;
+		$gene_terms  = get_the_terms( $post_id, 'gene' );
+		$gene_names  = array();
+		$gene_ids    = array();
+		$gene_badge  = '';
+
+		if ( is_array( $gene_terms ) && ! is_wp_error( $gene_terms ) ) {
+			$gene_names = array_values(
+				array_filter(
+					array_map(
+						static function ( $term ) {
+							return isset( $term->name ) ? (string) $term->name : '';
+						},
+						$gene_terms
+					)
+				)
+			);
+			$gene_ids   = array_values(
+				array_filter(
+					array_map(
+						static function ( $term ) {
+							return isset( $term->term_id ) ? absint( $term->term_id ) : 0;
+						},
+						$gene_terms
+					)
+				)
+			);
+		}
+
+		$gene_count              = count( $gene_names );
+		$gene_badge_compact      = (string) $gene_count;
+		$gene_list_excerpt       = implode( ', ', array_slice( $gene_names, 0, 14 ) );
+		$gene_list_excerpt_html  = esc_html( $gene_list_excerpt );
+
+		if ( 1 === $gene_count && ! empty( $gene_ids[0] ) ) {
+			$static_count_content = self::get_product_version_gene_static_count_table_content( (int) $gene_ids[0] );
+			if ( '' !== $static_count_content['badge'] ) {
+				$gene_badge = $static_count_content['badge'];
+				$gene_badge_compact = $static_count_content['badge'];
+			}
+			if ( '' !== $static_count_content['details_html'] ) {
+				$gene_list_excerpt_html = $static_count_content['details_html'];
+			}
+		}
+
+		if ( '' === $gene_badge ) {
+			$gene_badge = sprintf(
+				/* translators: %d is the number of genes. */
+				_n( '%d Gene', '%d Genes', $gene_count, 'ambrygen-web' ),
+				$gene_count
+			);
+		}
+
+		$test_codes = get_the_terms( $post_id, 'product_code' );
+		$test_code  = ( ! is_wp_error( $test_codes ) && ! empty( $test_codes ) )
+			? (string) $test_codes[0]->name
+			: '-';
+
+		$tat_low      = trim( (string) get_post_meta( $post_id, 'turn_around_time_low', true ) );
+		$tat_high     = trim( (string) get_post_meta( $post_id, 'turn_around_time_high', true ) );
+		$turnaround   = '-';
+		$tat_low_num  = is_numeric( $tat_low ) ? (float) $tat_low : null;
+		$tat_high_num = is_numeric( $tat_high ) ? (float) $tat_high : null;
+
+		if ( null !== $tat_low_num && null !== $tat_high_num ) {
+			if ( $tat_high_num <= 21 ) {
+				$turnaround = self::format_turnaround_value( $tat_low_num ) . '-' . self::format_turnaround_value( $tat_high_num ) . ' days';
+			} else {
+				$turnaround = self::format_turnaround_value( $tat_low_num / 7 ) . '-' . self::format_turnaround_value( $tat_high_num / 7 ) . ' weeks';
+			}
+		} elseif ( null !== $tat_low_num ) {
+			if ( $tat_low_num <= 21 ) {
+				$turnaround = self::format_turnaround_value( $tat_low_num ) . ' days';
+			} else {
+				$turnaround = self::format_turnaround_value( $tat_low_num / 7 ) . ' weeks';
+			}
+		}
+
+		$menu_description = trim( (string) get_post_meta( $post_id, 'menu_description', true ) );
+		$summary          = '';
+
+		if ( '' !== $menu_description ) {
+			$summary = $menu_description;
+		} elseif ( has_excerpt( $post_id ) ) {
+			$summary = get_the_excerpt( $post_id );
+		} else {
+			$summary = wp_trim_words( wp_strip_all_tags( get_the_content( null, false, $post_id ) ), 34 );
+		}
+
+		$link = self::get_contextual_genetic_testing_link_by_product_version(
+			(int) $post_id,
+			$parent_term_ids
+		);
+
+		$category_names = wp_get_post_terms( $post_id, 'poster_category', array( 'fields' => 'names' ) );
+		$category_name  = ( is_array( $category_names ) && ! empty( $category_names ) )
+			? (string) $category_names[0]
+			: '';
+
+		$search_text_parts = array(
+			$test_code,
+			get_the_title( $post_id ),
+			implode( ', ', $gene_names ),
+			$turnaround,
+			$category_name,
+		);
+
+		return array(
+			'id'                => $post_id,
+			'title'             => get_the_title( $post_id ),
+			'category_name'     => $category_name,
+			'gene_count'        => $gene_count,
+			'gene_badge'        => $gene_badge,
+			'gene_badge_compact' => $gene_badge_compact,
+			'gene_list'         => $gene_names,
+			'gene_list_excerpt' => $gene_list_excerpt,
+			'gene_list_excerpt_html' => $gene_list_excerpt_html,
+			'summary'           => $summary,
+			'test_code'         => $test_code,
+			'turnaround'        => $turnaround,
+			'details_url'       => isset( $link['url'] ) ? (string) $link['url'] : '',
+			'search_text'       => strtolower( implode( ' ', $search_text_parts ) ),
+		);
+	}
+
+	/**
+	 * Format a numeric turnaround value without trailing decimals when whole.
+	 *
+	 * @param float $value Numeric value.
+	 * @return string
+	 */
+	private static function format_turnaround_value( float $value ): string {
+		if ( floor( $value ) === $value ) {
+			return (string) (int) $value;
+		}
+
+		return rtrim( rtrim( number_format( $value, 1, '.', '' ), '0' ), '.' );
+	}
+
+	/**
+	 * Collect a poster category term ID and all descendant term IDs.
+	 *
+	 * @param int $term_id Root term ID.
+	 * @return int[]
+	 */
+	public static function collect_poster_category_descendants( int $term_id ): array {
+		if ( $term_id <= 0 ) {
+			return array();
+		}
+
+		$term_ids = array( $term_id );
+		$children = get_term_children( $term_id, 'poster_category' );
+
+		if ( is_array( $children ) && ! is_wp_error( $children ) ) {
+			$term_ids = array_merge( $term_ids, array_map( 'absint', $children ) );
+		}
+
+		return array_values( array_unique( array_filter( $term_ids ) ) );
+	}
+
+	/**
 	 * Get marketing material posts for a poster category (optionally restricted to selected post IDs).
 	 *
 	 * @param int   $category_id        Poster category term ID.
@@ -2256,7 +2723,8 @@ final class Helper {
 		$args = array(
 			'post_type'      => 'marketing_material',
 			'post_status'    => 'publish',
-			'posts_per_page' => -1,
+			'posts_per_page' => 500,
+			'no_found_rows'  => true,
 			'orderby'        => 'title',
 			'order'          => 'ASC',
 			'tax_query'      => $tax_query,
@@ -2292,6 +2760,72 @@ final class Helper {
 		}
 
 		return $posts;
+	}
+
+	/**
+	 * Get the current marketing material cache version.
+	 *
+	 * @return string
+	 */
+	public static function get_marketing_material_cache_version(): string {
+		$version = get_option( self::MARKETING_MATERIAL_CACHE_VERSION_OPTION, '' );
+
+		if ( ! is_string( $version ) || '' === $version ) {
+			$version = (string) time();
+			update_option( self::MARKETING_MATERIAL_CACHE_VERSION_OPTION, $version, false );
+		}
+
+		return $version;
+	}
+
+	/**
+	 * Bump the marketing material cache version when a marketing material changes.
+	 *
+	 * @param int      $post_id Marketing material post ID.
+	 * @param \WP_Post $post    Current post object.
+	 * @param bool     $update  Whether this is an existing post update.
+	 * @return void
+	 */
+	public function bump_marketing_material_cache_version( int $post_id, \WP_Post $post, bool $update ): void {
+		unset( $update );
+
+		if ( wp_is_post_revision( $post_id ) || 'marketing_material' !== $post->post_type ) {
+			return;
+		}
+
+		update_option( self::MARKETING_MATERIAL_CACHE_VERSION_OPTION, (string) time(), false );
+	}
+
+	/**
+	 * Bump the cache version when relevant taxonomy terms change on marketing materials.
+	 *
+	 * @param int    $object_id    Object ID.
+	 * @param array  $terms        Assigned terms.
+	 * @param array  $tt_ids       Term taxonomy IDs.
+	 * @param string $taxonomy     Taxonomy slug.
+	 * @param bool   $append       Whether terms were appended.
+	 * @param array  $old_tt_ids   Old term taxonomy IDs.
+	 * @return void
+	 */
+	public function maybe_bump_marketing_material_cache_version_for_terms(
+		int $object_id,
+		array $terms,
+		array $tt_ids,
+		string $taxonomy,
+		bool $append,
+		array $old_tt_ids
+	): void {
+		unset( $terms, $tt_ids, $append, $old_tt_ids );
+
+		if ( ! in_array( $taxonomy, array( 'poster_category', 'marketing_material_type' ), true ) ) {
+			return;
+		}
+
+		if ( 'marketing_material' !== get_post_type( $object_id ) ) {
+			return;
+		}
+
+		update_option( self::MARKETING_MATERIAL_CACHE_VERSION_OPTION, (string) time(), false );
 	}
 
 	/**
@@ -2342,7 +2876,7 @@ final class Helper {
 
 		ob_start();
 		?>
-		<div class="test-catlouge__row">
+		<div class="test-catlouge__row ss">
 			<div class="test-catlouge__gene-name">
 				<?php echo esc_html( $post_title ); ?>
 			</div>

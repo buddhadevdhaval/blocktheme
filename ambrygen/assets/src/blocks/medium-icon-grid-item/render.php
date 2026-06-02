@@ -33,7 +33,7 @@ if ( ! $ambrygen_has_content ) {
 }
 ?>
 
-<div class="icon-card-grid__card">
+<div class="icon-card-grid__card js-gsap-fade">
 	<?php if ( $ambrygen_icon_id || $ambrygen_icon_url ) : ?>
 		<div class="icon-card-grid__icon-wrap">
 			<?php

@@ -56,7 +56,7 @@ if ( $ambrygen_anchor ) {
 }
 
 $ambrygen_wrapper_args = array(
-	'class' => 'symptoms',
+	'class' => 'symptoms block-layout',
 	'role'  => 'region',
 );
 
@@ -86,7 +86,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 					$ambrygen_icon_alt = isset( $ambrygen_item['iconAlt'] ) ? sanitize_text_field( $ambrygen_item['iconAlt'] ) : '';
 					$ambrygen_text     = isset( $ambrygen_item['text'] ) ? ambrygen_icon_with_split_content_normalize_text( $ambrygen_item['text'] ) : '';
 					?>
-					<div class="symptoms__item">
+					<div class="symptoms__item js-gsap-fade">
 						<?php if ( $ambrygen_icon_id || $ambrygen_icon_url ) : ?>
 							<?php
 							// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() escapes attributes and returns wp_kses_post()-sanitized image markup.
@@ -116,7 +116,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 
 		<div class="symptoms__right">
 			<?php if ( $ambrygen_has_heading ) : ?>
-				<<?php echo tag_escape( $ambrygen_heading_tag ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-4 block-title mb-0 symptoms__title">
+				<<?php echo tag_escape( $ambrygen_heading_tag ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-4 block-title mb-0 symptoms__title js-gsap-fade">
 					<?php echo wp_kses( $ambrygen_heading, Helper::allowed_heading_html() ); ?>
 				</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 			<?php endif; ?>
@@ -126,7 +126,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 			<?php endif; ?>
 
 			<?php if ( $ambrygen_has_desc ) : ?>
-				<div class="subtitle1-regular symptoms__desc">
+				<div class="subtitle1-regular symptoms__desc js-gsap-fade">
 					<?php echo wp_kses_post( $ambrygen_description ); ?>
 				</div>
 			<?php endif; ?>

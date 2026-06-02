@@ -20,13 +20,17 @@ use Ambrygen\Theme\Core\PostTypes\Definitions\ProductVersions;
 use Ambrygen\Theme\Core\PostTypes\Definitions\Publications;
 use Ambrygen\Theme\Core\PostTypes\Definitions\Posts;
 use Ambrygen\Theme\Core\PostTypes\Definitions\SharedTaxonomies;
+use Ambrygen\Theme\Core\PostTypes\Definitions\TopBarMessages;
 use Ambrygen\Theme\Core\PostTypes\Definitions\TreadShows;
 use Ambrygen\Theme\Core\PostTypes\Definitions\Webinars;
 use Ambrygen\Theme\Core\Routes\ConferenceRouteService;
+use Ambrygen\Theme\Core\Routes\GeneticTestingRouteService;
 use Ambrygen\Theme\Core\Routes\PresentationRouteService;
 use Ambrygen\Theme\Core\Routes\PosterRouteService;
 use Ambrygen\Theme\Core\Routes\PressReleaseRouteService;
+use Ambrygen\Theme\Core\Routes\PostRouteService;
 use Ambrygen\Theme\Core\Routes\PublicationRouteService;
+use Ambrygen\Theme\Core\Routes\WebinarRouteService;
 use Ambrygen\Theme\Core\Science\ScienceRouteService;
 use Ambrygen\Theme\Core\Webinars\WebinarAjaxController;
 
@@ -51,6 +55,7 @@ final class PostTypes
         ProductVersions::class,
         GeneticTesting::class,
         MarketingMaterials::class,
+        TopBarMessages::class,
         SharedTaxonomies::class,
     ];
 
@@ -82,6 +87,9 @@ final class PostTypes
 
         ConferenceRouteService::instance()->register_hooks();
         PressReleaseRouteService::instance()->register_hooks();
+        PostRouteService::instance()->register_hooks();
+        WebinarRouteService::instance()->register_hooks();
+        GeneticTestingRouteService::instance()->register_hooks();
         PresentationRouteService::instance()->register_hooks();
         PosterRouteService::instance()->register_hooks();
         PublicationRouteService::instance()->register_hooks();
@@ -189,6 +197,39 @@ final class PostTypes
         );
 
         register_post_meta(
+            'post',
+            'webinar_authors',
+            [
+                'type'              => 'array',
+                'single'            => true,
+                'sanitize_callback' => null,
+                'show_in_rest'      => [
+                    'schema' => [
+                        'type'  => 'array',
+                        'items' => [
+                            'type'       => 'object',
+                            'properties' => [
+                                'linked_author' => [
+                                    'type' => 'integer',
+                                ],
+                                'designation'   => [
+                                    'type' => 'string',
+                                ],
+                                'bio'           => [
+                                    'type' => 'string',
+                                ],
+                                'image_id'      => [
+                                    'type' => 'integer',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'auth_callback'     => static fn(): bool => current_user_can('edit_posts'),
+            ]
+        );
+
+        register_post_meta(
             'webinar',
             'linked_author',
             [
@@ -211,7 +252,7 @@ final class PostTypes
             foreach ($def->meta_fields() as $meta_key => $field) {
                 $type = $field['type'] ?? 'text';
 
-                if (in_array($type, ['marketing_material_repeater', 'event_meet_expert_repeater'], true)) {
+                if (in_array($type, ['marketing_material_repeater', 'event_meet_expert_repeater', 'product_stats_repeater'], true)) {
                     continue;
                 }
 

@@ -160,7 +160,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		blockId,
 		clientId,
 		enabled: ! isExample,
-		idPrefix: 'supporting-steps',
+		idPrefix: 'supporting-steps block-layout',
 		setAttributes,
 	} );
 
@@ -207,7 +207,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	] );
 
 	const blockProps = useBlockProps( {
-		className: `supporting-steps${ isStatsView ? ' variation-stats-view' : '' }`,
+		className: `block-layout supporting-steps${ isStatsView ? ' variation-stats-view' : '' }`,
 		id: anchor || blockId || undefined,
 	} );
 

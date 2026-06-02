@@ -7,6 +7,7 @@ use Ambrygen\Theme\Core\Admin\Fields\MarketingMaterialRepeaterField;
 use Ambrygen\Theme\Core\Admin\Fields\EventMeetExpertRepeaterField;
 use Ambrygen\Theme\Core\Admin\Fields\PosterPdfRepeaterField;
 use Ambrygen\Theme\Core\Admin\Fields\WebinarAuthorRepeaterField;
+use Ambrygen\Theme\Core\Admin\Fields\ProductStatsRepeaterField;
 use Ambrygen\Theme\Core\Singleton;
 use WP_Post;
 
@@ -34,6 +35,61 @@ final class MetaBoxController
 		add_action('add_meta_boxes', [$this, 'register_meta_boxes']);
 		add_action('save_post', [$this, 'save_meta_boxes'], 10, 2);
 		add_action('admin_enqueue_scripts', [$this, 'enqueue_post_meta_media']);
+		add_action('admin_footer', [$this, 'render_video_settings_js']);
+	}
+
+	public function render_video_settings_js(): void
+	{
+		$screen = get_current_screen();
+		if (!$screen || 'post' !== $screen->post_type) {
+			return;
+		}
+		?>
+		<script type="text/javascript">
+			(function($) {
+				$(document).ready(function() {
+					const $mediaType = $('#media_type');
+					const $videoType = $('#video_type');
+					const $videoTypeWrapper = $('.field-wrapper-video_type');
+					const $iframeWrapper = $('.field-wrapper-iframe_url');
+					const $videoWrapper = $('.field-wrapper-video_url');
+					const $posterWrapper = $('.field-wrapper-poster_image_id');
+
+					function toggleVideoFields() {
+						const mediaType = $mediaType.val();
+						const videoType = $videoType.val();
+
+						if (mediaType === 'image') {
+							$videoTypeWrapper.hide();
+							$iframeWrapper.hide();
+							$videoWrapper.hide();
+							$posterWrapper.hide();
+						} else {
+							$videoTypeWrapper.show();
+							$posterWrapper.show();
+							
+							if (videoType === 'embed') {
+								$iframeWrapper.show();
+								$videoWrapper.hide();
+							} else if (videoType === 'mp4') {
+								$iframeWrapper.hide();
+								$videoWrapper.show();
+							} else {
+								$iframeWrapper.hide();
+								$videoWrapper.hide();
+							}
+						}
+					}
+
+					if ($mediaType.length) {
+						$mediaType.on('change', toggleVideoFields);
+						$videoType.on('change', toggleVideoFields);
+						toggleVideoFields();
+					}
+				});
+			})(jQuery);
+		</script>
+		<?php
 	}
 
 	public function register_meta_boxes(): void
@@ -86,14 +142,14 @@ final class MetaBoxController
 		$fields = $def ? $def->meta_fields() : [];
 
 		wp_nonce_field('ambrygen_meta_box', 'ambrygen_meta_nonce');
-		echo '<div class="sample cs-wpblock-form-layout">';
+		echo '<div class="cs-wpblock-form-layout">';
 		foreach ($fields as $key => $field) {
 			$raw_meta = get_post_meta($post->ID, $key, true);
 			$value    = is_scalar($raw_meta) ? (string) $raw_meta : '';
 			$type     = $field['type'] ?? 'text';
 			$input_id = esc_attr($key);
 
-			echo '<div class="form-field form-field-' . esc_attr($type) . '">';
+			echo '<div class="form-field form-field-' . esc_attr($type) . ' field-wrapper-' . esc_attr($key) . '">';
 			printf(
 				'<label for="%1$s">%2$s</label>',
 				$input_id,
@@ -106,6 +162,21 @@ final class MetaBoxController
 					$input_id,
 					esc_textarea($value)
 				);
+			} elseif ('select' === $type) {
+				$options = $field['options'] ?? [];
+				printf(
+					'<select name="%1$s" id="%1$s" class="widefat">',
+					$input_id
+				);
+				foreach ($options as $opt_val => $opt_label) {
+					printf(
+						'<option value="%1$s" %2$s>%3$s</option>',
+						esc_attr($opt_val),
+						selected($value, $opt_val, false),
+						esc_html($opt_label)
+					);
+				}
+				echo '</select>';
 			} elseif ('wysiwyg' === $type) {
 				wp_editor(
 					$value,
@@ -132,6 +203,19 @@ final class MetaBoxController
 					$input_id,
 					esc_attr($date_val)
 				);
+			} elseif ('time' === $type) {
+				$time_val = '';
+				if (! empty($value)) {
+					$parsed_time = strtotime($value);
+					$time_val    = $parsed_time ? gmdate('H:i', $parsed_time) : (string) $value;
+				}
+				printf(
+					'<input type="time" name="%1$s" id="%1$s" class="widefat" value="%2$s">',
+					$input_id,
+					esc_attr($time_val)
+				);
+			} elseif ('link_picker' === $type) {
+				$this->render_link_picker_field($key, $value);
 			} elseif ('post_relationship' === $type) {
 				PostRelationshipField::instance()->render($post->ID, $key, $field);
 			} elseif ('marketing_material_repeater' === $type) {
@@ -142,6 +226,8 @@ final class MetaBoxController
 				PosterPdfRepeaterField::instance()->render($post->ID, $key, $field);
 			} elseif ('webinar_author_repeater' === $type) {
 				WebinarAuthorRepeaterField::instance()->render($post->ID, $key, $field);
+			} elseif ('product_stats_repeater' === $type) {
+				ProductStatsRepeaterField::instance()->render($post->ID, $key, $field);
 			} elseif ('media_gallery' === $type) {
 				$this->render_media_gallery_field($post->ID, $key, $field, $value);
 			} elseif ('media_file' === $type) {
@@ -174,11 +260,6 @@ final class MetaBoxController
 
 		echo '<div class="ambrygen-media-gallery-field">';
 		printf(
-			'<label for="%1$s">%2$s</label>',
-			esc_attr($key),
-			esc_html($field['label'])
-		);
-		printf(
 			'<input type="hidden" name="%1$s" id="%1$s" class="widefat ambrygen-media-gallery-input" value="%2$s" />',
 			esc_attr($key),
 			esc_attr($value)
@@ -189,9 +270,23 @@ final class MetaBoxController
 			if (! $thumb) {
 				continue;
 			}
+
+			$attachment = get_post($image_id);
+			$title      = $attachment ? $attachment->post_title : '';
 			printf(
-				'<img src="%1$s" alt="" style="width:72px;height:72px;object-fit:cover;border:1px solid #ddd;border-radius:4px;" />',
-				esc_url($thumb)
+				'<div class="ambrygen-media-gallery-preview-item" data-attachment-id="%1$d" style="position:relative;display:inline-flex;">' .
+					'<img src="%2$s" alt="" style="width:72px;height:72px;object-fit:cover;border:1px solid #ddd;border-radius:4px;display:block;" />' .
+					'<button type="button" class="button-link-delete ambrygen-media-gallery-remove-item" aria-label="%3$s" title="%3$s" style="position:absolute;top:4px;right:4px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:999px;background:rgba(17,24,39,0.82);color:#fff;text-align:center;text-decoration:none;font-size:15px;font-weight:700;line-height:1;border:1px solid rgba(255,255,255,0.22);box-shadow:0 1px 3px rgba(0,0,0,0.22);">&times;</button>' .
+				'</div>',
+				$image_id,
+				esc_url($thumb),
+				esc_attr(
+					sprintf(
+						/* translators: %s: attachment title. */
+						__('Remove image %s', 'ambrygen-web'),
+						$title ?: (string) $image_id
+					)
+				)
 			);
 		}
 		echo '</div>';
@@ -207,6 +302,41 @@ final class MetaBoxController
 		esc_html_e('Selected image IDs are saved as comma-separated values.', 'ambrygen-web');
 		echo '</p>';
 		echo '</div>';
+	}
+
+	private function render_link_picker_field(string $key, string $value): void
+	{
+		echo '<div class="ambrygen-link-picker" style="display:grid;gap:8px;">';
+		printf(
+			'<input type="hidden" name="%1$s" id="%1$s" class="ambrygen-link-picker__input widefat" value="%2$s" />',
+			esc_attr($key),
+			esc_attr($value)
+		);
+		echo '<div class="ambrygen-link-picker__value" style="padding:10px 12px;border:1px solid #dcdcde;border-radius:4px;background:#fff;">';
+		echo wp_kses_post($this->render_link_picker_value_markup($value));
+		echo '</div>';
+		echo '<div style="display:flex;gap:8px;">';
+		echo '<button type="button" class="button button-secondary ambrygen-link-picker__select">';
+		esc_html_e('Select Link', 'ambrygen-web');
+		echo '</button>';
+		echo '<button type="button" class="button button-secondary ambrygen-link-picker__clear">';
+		esc_html_e('Clear', 'ambrygen-web');
+		echo '</button>';
+		echo '</div>';
+		echo '</div>';
+	}
+
+	private function render_link_picker_value_markup(string $value): string
+	{
+		if ('' === trim($value)) {
+			return '<span class="description">' . esc_html__('No link selected.', 'ambrygen-web') . '</span>';
+		}
+
+		return sprintf(
+			'<a href="%1$s" target="_blank" rel="noopener">%2$s</a>',
+			esc_url($value),
+			esc_html($value)
+		);
 	}
 
 	private function render_media_file_field(int $post_id, string $key, array $field, string $value): void
@@ -225,11 +355,6 @@ final class MetaBoxController
 
 		echo '<div class="ambrygen-media-file-field" >';
 		printf(
-			'<label for="%1$s">%2$s</label>',
-			esc_attr($key),
-			esc_html($field['label'])
-		);
-		printf(
 			'<input type="hidden" name="%1$s" id="%1$s" class="widefat ambrygen-media-file-input" value="%2$s" />',
 			esc_attr($key),
 			esc_attr($file_id)
@@ -237,7 +362,10 @@ final class MetaBoxController
 		echo '<div class="ambrygen-media-file-preview" style="margin:8px 0;">';
 		if ($file_id > 0 && $file_url) {
 			printf(
-				'<a class="ambrygen-media-file-link" href="%1$s" target="_blank" rel="noopener">%2$s</a>',
+				'<span class="ambrygen-media-file-preview-item" data-attachment-id="%1$d">' .
+					'<a class="ambrygen-media-file-link" href="%2$s" target="_blank" rel="noopener">%3$s</a>' .
+				'</span>',
+				$file_id,
 				esc_url($file_url),
 				esc_html($file_title ?: basename($file_url))
 			);
@@ -294,18 +422,9 @@ final class MetaBoxController
 		}
 
 		if ('post' === $post->post_type) {
-			if (isset($_POST['linked_author'])) {
-				$author_ids = is_array($_POST['linked_author']) ? array_map('absint', $_POST['linked_author']) : [absint($_POST['linked_author'])];
-				$author_ids = array_filter($author_ids);
-				if (!empty($author_ids)) {
-					update_post_meta($post_id, 'linked_author', $author_ids);
-				} else {
-					delete_post_meta($post_id, 'linked_author');
-				}
-			} else {
-				delete_post_meta($post_id, 'linked_author');
+			if (isset($_POST['webinar_authors'])) {
+				$this->save_webinar_author_repeater($post_id, 'webinar_authors', []);
 			}
-			return;
 		}
 
 		$def    = $this->definitions[$post->post_type] ?? null;
@@ -335,12 +454,17 @@ final class MetaBoxController
 				continue;
 			}
 
+			if ('product_stats_repeater' === $type) {
+				$this->save_product_stats_repeater($post_id, $key, $field);
+				continue;
+			}
+
 			if (! isset($_POST[$key])) {
 				if ('checkbox' === $type) {
 					update_post_meta($post_id, $key, '0');
-				} elseif (isset($field['multiple']) && $field['multiple']) {
-					delete_post_meta($post_id, $key);
-				}
+			} elseif (isset($field['multiple']) && $field['multiple']) {
+				delete_post_meta($post_id, $key);
+			}
 				continue;
 			}
 
@@ -355,6 +479,15 @@ final class MetaBoxController
 				$parsed = strtotime($raw_val);
 				if ($parsed) {
 					$raw_val = wp_date('Y-m-d H:i:s', $parsed);
+				}
+			}
+
+			if ('time' === $type) {
+				$raw_val = sanitize_text_field((string) $raw_val);
+
+				if (empty($raw_val)) {
+					delete_post_meta($post_id, $key);
+					continue;
 				}
 			}
 
@@ -392,6 +525,88 @@ final class MetaBoxController
 				);
 			}
 		}
+
+		if ('poster' === $post->post_type) {
+			$this->maybe_assign_poster_linked_authors($post_id);
+		}
+	}
+
+	private function maybe_assign_poster_linked_authors(int $post_id): void
+	{
+		$author_names = \Ambrygen\Theme\Core\Helper::get_poster_authors($post_id);
+		if (empty($author_names)) {
+			return;
+		}
+
+		$matched_author_ids = [];
+		foreach ($author_names as $author_name) {
+			$matched_author_id = $this->find_author_post_id_by_name((string) $author_name);
+			if ($matched_author_id > 0) {
+				$matched_author_ids[] = $matched_author_id;
+			}
+		}
+
+		$matched_author_ids = array_values(array_unique(array_filter(array_map('absint', $matched_author_ids))));
+		if (empty($matched_author_ids)) {
+			return;
+		}
+
+		update_post_meta($post_id, 'linked_author', $matched_author_ids);
+	}
+
+	private function find_author_post_id_by_name(string $author_name): int
+	{
+		$normalized_name = $this->normalize_author_lookup_value($author_name);
+		if ('' === $normalized_name) {
+			return 0;
+		}
+
+		$author_posts = get_posts([
+			'post_type'      => 'author',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		]);
+
+		foreach ($author_posts as $author_post_id) {
+			$author_post_id = absint($author_post_id);
+			if ($author_post_id <= 0) {
+				continue;
+			}
+
+			$candidate_values = [
+				get_the_title($author_post_id),
+				get_post_meta($author_post_id, 'display_name', true),
+				get_post_meta($author_post_id, 'username', true),
+			];
+
+			$post_author_user_id = (int) get_post_field('post_author', $author_post_id);
+			if ($post_author_user_id > 0) {
+				$user = get_user_by('id', $post_author_user_id);
+				if ($user) {
+					$candidate_values[] = $user->display_name ?? '';
+					$candidate_values[] = $user->user_login ?? '';
+					$candidate_values[] = $user->user_nicename ?? '';
+				}
+			}
+
+			foreach ($candidate_values as $candidate_value) {
+				if ($this->normalize_author_lookup_value((string) $candidate_value) === $normalized_name) {
+					return $author_post_id;
+				}
+			}
+		}
+
+		return 0;
+	}
+
+	private function normalize_author_lookup_value(string $value): string
+	{
+		$value = wp_strip_all_tags($value);
+		$value = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
+		$value = strtolower(trim(preg_replace('/\s+/', ' ', $value)));
+
+		return $value;
 	}
 
 	private function save_marketing_material_repeater(int $post_id, string $key, array $field): void
@@ -641,6 +856,44 @@ final class MetaBoxController
 		}
 	}
 
+	private function save_product_stats_repeater(int $post_id, string $key, array $field): void
+	{
+		$rows_raw = isset($_POST[$key]) ? wp_unslash($_POST[$key]) : [];
+		if (! is_array($rows_raw)) {
+			delete_post_meta($post_id, $key);
+			return;
+		}
+
+		$rows = [];
+		foreach ($rows_raw as $row) {
+			if (! is_array($row)) {
+				continue;
+			}
+
+			$title           = isset($row['title']) ? sanitize_text_field((string) $row['title']) : '';
+			$subtitle        = isset($row['subtitle']) ? sanitize_text_field((string) $row['subtitle']) : '';
+			$description     = isset($row['description']) ? sanitize_text_field((string) $row['description']) : '';
+			$sub_description = isset($row['sub_description']) ? sanitize_text_field((string) $row['sub_description']) : '';
+
+			if ('' === $title && '' === $subtitle && '' === $description && '' === $sub_description) {
+				continue;
+			}
+
+			$rows[] = [
+				'title'           => $title,
+				'subtitle'        => $subtitle,
+				'description'     => $description,
+				'sub_description' => $sub_description,
+			];
+		}
+
+		if (empty($rows)) {
+			delete_post_meta($post_id, $key);
+		} else {
+			update_post_meta($post_id, $key, $rows);
+		}
+	}
+
 	private function sanitize_array($value): array
 	{
 		if (! is_array($value)) {
@@ -665,6 +918,8 @@ final class MetaBoxController
 		}
 
 		wp_enqueue_media();
+		wp_enqueue_script('wplink');
+		wp_enqueue_style('editor-buttons');
 		if (function_exists('wp_enqueue_editor')) {
 			wp_enqueue_editor();
 		}

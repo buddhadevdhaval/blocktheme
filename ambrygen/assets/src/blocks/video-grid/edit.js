@@ -72,7 +72,7 @@ export default function Edit( {
 	}
 
 	const blockProps = useBlockProps( {
-		className: `image-grid-block video-grid wp-block-ambrygen-gallery block-${ variation } ${ layoutClass } grid-column${
+		className: `block-layout image-grid-block video-grid wp-block-ambrygen-gallery block-${ variation } ${ layoutClass } grid-column${
 			innerBlocksCount >= 3 ? 3 : 2
 		}`,
 	} );
@@ -95,7 +95,7 @@ export default function Edit( {
 			</InspectorControls>
 
 			<section { ...blockProps }>
-				<div className="two-column-videos">
+				<div className="two-column-videos block-layout">
 					<div className="two-column-videos__subheading">
 						<RichText
 							tagName={ HeadingTag }

@@ -57,7 +57,7 @@ $ambrygen_section_label = $ambrygen_block_id
 	: wp_unique_id( 'counter-block-label-' );
 
 $ambrygen_wrapper_args = array(
-	'class'           => 'counter-block',
+	'class'           => 'counter-block block-layout',
 	'role'            => 'region',
 	'aria-labelledby' => $ambrygen_section_label,
 );

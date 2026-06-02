@@ -11,6 +11,7 @@
 		"html": false,
 		"reusable": false
 	},
+	"usesContext": [ "ambrygen/timelineHeadingTag" ],
 	"attributes": {
 		"title": {
 			"type": "string",

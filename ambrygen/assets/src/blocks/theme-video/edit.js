@@ -135,7 +135,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	} = attributes;
 
 	const isExample = blockId === 'example-block-preview';
-	const blockProps = useBlockProps( { className: 'features-media' } );
+	const blockProps = useBlockProps( { className: 'block-layout features-media' } );
 	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
 
 	useUniqueBlockId( {
@@ -388,7 +388,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							className="block-title block__rowflex--heading-title heading-2 mb-0 genetic-heading"
 						/>
 					</div>
-					<div className="block__rowflex--block-content">
+					<div className="block__rowflex--block-content block-description">
 						{ showDescription && (
 							<RichText
 								tagName="p"

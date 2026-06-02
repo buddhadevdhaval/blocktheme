@@ -3,11 +3,12 @@ import {
 	RichText,
 	useBlockProps,
 } from '@wordpress/block-editor';
+import apiFetch from '@wordpress/api-fetch';
 import {
 	PanelBody,
 	Button,
 	TextControl,
-	SelectControl,
+	ComboboxControl,
 	Spinner,
 } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
@@ -19,13 +20,6 @@ import {
 	BlockExamplePreview,
 	ImageUploader,
 } from '../_shared/components';
-
-const TAXONOMY_QUERY = {
-	per_page: 100,
-	hide_empty: false,
-	orderby: 'name',
-	order: 'asc',
-};
 
 const INITIAL_VISIBLE_TEST_COUNT = 12;
 
@@ -45,28 +39,114 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const isExample = blockId === 'genetic-testing-grid-example';
 	const HeadingTag = headingTag || 'h2';
 	const hasBackgroundImage = Boolean(backgroundImage?.url);
+	const [termSearchInput, setTermSearchInput] = useState('');
+	const [searchResults, setSearchResults] = useState([]);
+	const [isSearchingTerms, setIsSearchingTerms] = useState(false);
 
 	const blockProps = useBlockProps({
 		className: 'block-layout',
 		id: blockId || undefined,
 	});
 
-	const { terms, hasResolvedTerms } = useSelect((select) => {
-		const { getEntityRecords, hasFinishedResolution } = select('core');
+	const selectedTermSlugs = useMemo(
+		() =>
+			[
+				...new Set(
+					selectedTabs
+						.map((tab) => tab?.termSlug)
+						.filter((slug) => slug && slug !== 'all')
+				),
+			],
+		[selectedTabs]
+	);
 
-		return {
-			terms: getEntityRecords(
-				'taxonomy',
-				'poster_category',
-				TAXONOMY_QUERY
-			),
-			hasResolvedTerms: hasFinishedResolution('getEntityRecords', [
-				'taxonomy',
-				'poster_category',
-				TAXONOMY_QUERY,
-			]),
+	const { selectedTerms, hasResolvedSelectedTerms } = useSelect(
+		(select) => {
+			if (!selectedTermSlugs.length) {
+				return {
+					selectedTerms: [],
+					hasResolvedSelectedTerms: true,
+				};
+			}
+
+			const query = {
+				per_page: selectedTermSlugs.length,
+				hide_empty: false,
+				orderby: 'name',
+				order: 'asc',
+				slug: selectedTermSlugs,
+			};
+			const { getEntityRecords, hasFinishedResolution } = select('core');
+
+			return {
+				selectedTerms: getEntityRecords(
+					'taxonomy',
+					'poster_category',
+					query
+				),
+				hasResolvedSelectedTerms: hasFinishedResolution(
+					'getEntityRecords',
+					['taxonomy', 'poster_category', query]
+				),
+			};
+		},
+		[selectedTermSlugs]
+	);
+
+	useEffect(() => {
+		let isMounted = true;
+
+		if (termSearchInput.trim().length < 2) {
+			setSearchResults([]);
+			setIsSearchingTerms(false);
+			return () => {
+				isMounted = false;
+			};
+		}
+
+		const timeoutId = setTimeout(async () => {
+			setIsSearchingTerms(true);
+
+			try {
+				const fetchedTerms = await apiFetch({
+					path: `/wp/v2/poster_category?search=${encodeURIComponent(
+						termSearchInput.trim()
+					)}&per_page=20&hide_empty=false&orderby=name&order=asc&_fields=id,name,slug`,
+				});
+
+				if (isMounted) {
+					setSearchResults(
+						Array.isArray(fetchedTerms) ? fetchedTerms : []
+					);
+				}
+			} catch (error) {
+				if (isMounted) {
+					setSearchResults([]);
+				}
+			} finally {
+				if (isMounted) {
+					setIsSearchingTerms(false);
+				}
+			}
+		}, 300);
+
+		return () => {
+			isMounted = false;
+			clearTimeout(timeoutId);
 		};
-	}, []);
+	}, [termSearchInput]);
+
+	const terms = useMemo(() => {
+		const mergedTerms = [...(selectedTerms || [])];
+
+		(searchResults || []).forEach((term) => {
+			if (!mergedTerms.some((item) => item.id === term.id)) {
+				mergedTerms.push(term);
+			}
+		});
+
+		return mergedTerms;
+	}, [searchResults, selectedTerms]);
 
 	const [activeTab, setActiveTab] = useState(
 		selectedTabs.length > 0 ? selectedTabs[0].termSlug : 'all'
@@ -105,6 +185,56 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		},
 		[activeTab, terms]
 	);
+
+	const activePostCategoryIds = useMemo(
+		() =>
+			[
+				...new Set(
+					(activePosts || []).flatMap(
+						(post) => post?.poster_category || []
+					)
+				),
+			],
+		[activePosts]
+	);
+
+	const { activePostTerms } = useSelect(
+		(select) => {
+			if (!activePostCategoryIds.length) {
+				return {
+					activePostTerms: [],
+				};
+			}
+
+			const query = {
+				include: activePostCategoryIds,
+				per_page: activePostCategoryIds.length,
+				hide_empty: false,
+				orderby: 'include',
+			};
+
+			return {
+				activePostTerms: select('core').getEntityRecords(
+					'taxonomy',
+					'poster_category',
+					query
+				),
+			};
+		},
+		[activePostCategoryIds]
+	);
+
+	const availableTerms = useMemo(() => {
+		const mergedTerms = [...terms];
+
+		(activePostTerms || []).forEach((term) => {
+			if (!mergedTerms.some((item) => item.id === term.id)) {
+				mergedTerms.push(term);
+			}
+		});
+
+		return mergedTerms;
+	}, [activePostTerms, terms]);
 
 	useEffect(() => {
 		if (isExample) {
@@ -154,11 +284,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	}, [activeTab, selectedTabs]);
 
 	const getPostCategory = (post) => {
-		if (!post?.poster_category?.length || !terms?.length) {
+		if (!post?.poster_category?.length || !availableTerms?.length) {
 			return __('Category', 'ambrygen-web');
 		}
 
-		const term = terms.find(
+		const term = availableTerms.find(
 			(item) => item.id === Number(post.poster_category[0])
 		);
 
@@ -227,14 +357,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				label: __('All Tests (all)', 'ambrygen-web'),
 				value: 'all',
 			},
-			...(hasResolvedTerms && terms
+			...(terms?.length
 				? terms.map((term) => ({
 					label: decodeEntities(term.name),
 					value: term.slug,
 				}))
 				: []),
 		],
-		[hasResolvedTerms, terms]
+		[terms]
 	);
 
 	if (isExample) {
@@ -297,24 +427,53 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									updateTab(i, 'text', val)
 								}
 							/>
-							<SelectControl
+							<ComboboxControl
 								label={__(
 									'Target Category',
 									'ambrygen-web'
 								)}
 								value={tab.termSlug}
 								options={termOptions}
+								onFilterValueChange={setTermSearchInput}
 								onChange={(val) =>
-									updateTab(i, 'termSlug', val)
+									updateTab(i, 'termSlug', val || 'all')
 								}
-								disabled={!hasResolvedTerms}
+								disabled={!hasResolvedSelectedTerms}
 								help={
-									!hasResolvedTerms
-										? __(
-											'Loading categories',
+									(() => {
+										if (!hasResolvedSelectedTerms) {
+											return __(
+												'Loading saved categories',
+												'ambrygen-web'
+											);
+										}
+
+										if (isSearchingTerms) {
+											return __(
+												'Searching categories...',
+												'ambrygen-web'
+											);
+										}
+
+										if (termSearchInput.length < 2) {
+											return __(
+												'Type at least 2 characters to search categories.',
+												'ambrygen-web'
+											);
+										}
+
+										if (searchResults.length === 0) {
+											return __(
+												'No matching categories found.',
+												'ambrygen-web'
+											);
+										}
+
+										return __(
+											'Search results are limited to 20 categories.',
 											'ambrygen-web'
-										)
-										: ''
+										);
+									})()
 								}
 							/>
 							<Button
@@ -442,7 +601,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 															)}
 														</div>
 
-														<div className="heading-5 features-tabs__card-title">
+														<div className="heading-5 features-tabs__card-title block-inside-title">
 															{decodeEntities(
 																post.title
 																	?.rendered ||

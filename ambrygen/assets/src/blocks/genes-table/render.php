@@ -66,7 +66,7 @@
     $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
     $ambrygen_block_id
         ? [
-        'class' => 'genes-table',
+        'class' => 'genes-table block-layout',
         'id'    => $ambrygen_block_id,
     ]
         : [
@@ -78,14 +78,14 @@
 <div <?php echo wp_kses_data($ambrygen_wrapper_attributes); ?>>
 	<?php if ('' !== (string) $ambrygen_card_title): ?>
 		<div class="gl-data-table__card-header">
-			<h3 class="gl-data-table__card-title"><?php echo esc_html((string) $ambrygen_card_title); ?></h3>
+			<h3 class="gl-data-table__card-title js-gsap-fade"><?php echo esc_html((string) $ambrygen_card_title); ?></h3>
 		</div>
 	<?php endif; ?>
 
 	<div class="genes-table__search">
-		<div class="eyebrow kicker-text"><?php echo esc_html((string) $ambrygen_eyebrow_text); ?></div>
+		<div class="eyebrow kicker-text js-gsap-fade"><?php echo esc_html((string) $ambrygen_eyebrow_text); ?></div>
 		<div class="is-style-gl-s12" aria-hidden="true"></div>
-		<form method="get" class="genes-table__search-form">
+		<form method="get" class="genes-table__search-form js-gsap-fade">
 			<label class="screen-reader-text" for="<?php echo esc_attr($ambrygen_block_id ?: 'genes-table'); ?>-search">
 				<?php esc_html_e('Search genes', 'ambrygen-web'); ?>
 			</label>
@@ -97,7 +97,7 @@
 		</form>
 		<?php if ('' === $ambrygen_symbols && '' !== trim((string) $ambrygen_instruction_text)): ?>
 			<div class="is-style-gl-s24" aria-hidden="true"></div>
-			<div class="body1 genes-table__instruction"><?php echo esc_html((string) $ambrygen_instruction_text); ?></div>
+			<div class="body1 genes-table__instruction js-gsap-fade"><?php echo esc_html((string) $ambrygen_instruction_text); ?></div>
 		<?php endif; ?>
 	</div>
 
@@ -106,7 +106,7 @@
 		<div class="is-style-gl-s24" aria-hidden="true"></div>
 	<div class="gl-data-table-body">
 		<div class="gl-data-table variation-gray25 gl-data-table--cols-5">
-		
+
 				<div class="gl-data-table__grid">
 					<div class="gl-data-table__row gl-data-table__row--header">
 						<div class="gl-data-table__cell"><?php esc_html_e('Gene', 'ambrygen-web'); ?></div>
@@ -155,7 +155,7 @@
 		<?php endif; ?>
 	<div class="is-style-gl-s24" aria-hidden="true"></div>
 	<?php if ('' !== $ambrygen_symbols && ! empty($ambrygen_terms) && '' !== trim((string) $ambrygen_footnote_text)): ?>
-		<div class="genes-table__footnote"><?php echo wp_kses_post((string) $ambrygen_footnote_text); ?></div>
+		<div class="genes-table__footnote js-gsap-fade"><?php echo wp_kses_post((string) $ambrygen_footnote_text); ?></div>
 	<?php endif; ?>
 
 </div>

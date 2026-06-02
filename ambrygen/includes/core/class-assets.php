@@ -191,7 +191,7 @@ final class Assets {
 	 * Frontend assets
 	 */
 	public function admin(): void {
-				//admin globle 
+		//admin globle 
 		$this->register_script( 'ambrygen-admin-scripts', 'admin.min.js', array( 'jquery', 'media-editor' ) );
 		wp_enqueue_script( 'ambrygen-admin-scripts' );
 

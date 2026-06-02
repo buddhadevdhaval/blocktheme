@@ -24,14 +24,14 @@ final class BlogAjaxController
         check_ajax_referer('ambrygen-ajax', 'nonce');
 
         $paged    = isset($_POST['paged']) ? absint($_POST['paged']) : 1;
-        $per_page = isset($_POST['per_page']) ? absint($_POST['per_page']) : 8;
+        $per_page = isset($_POST['per_page']) ? absint($_POST['per_page']) : 6;
         $search   = isset($_POST['s']) ? sanitize_text_field(wp_unslash($_POST['s'])) : '';
 
         $tag      = isset($_POST['tag']) ? absint($_POST['tag']) : 0;
         $category = isset($_POST['category']) ? absint($_POST['category']) : 0;
 
         $paged    = $paged > 0 ? $paged : 1;
-        $per_page = $per_page > 0 ? $per_page : 8;
+        $per_page = $per_page > 0 ? $per_page : 6;
 
         $query_args = [
             'post_type'      => 'post',
@@ -40,7 +40,7 @@ final class BlogAjaxController
             'paged'          => $paged,
         ];
 
-        if (!empty($search)) {
+        if ($search !== '') {
             $query_args['s'] = $search;
         }
 

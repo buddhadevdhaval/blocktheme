@@ -65,7 +65,7 @@
     );
 
     $ambrygen_wrapper_attributes_array = [
-    'class' => 'logo-section',
+    'class' => 'logo-section block-layout',
     'role'  => 'region',
     ];
 

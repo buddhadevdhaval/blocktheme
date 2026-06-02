@@ -92,6 +92,13 @@ class Posters extends AbstractPostType {
 				'label' => __( 'Authors', 'ambrygen-web' ),
 				'type'  => 'textarea',
 			),
+			'linked_author'         => array(
+				'label'       => __( 'Linked Authors', 'ambrygen-web' ),
+				'type'        => 'post_relationship',
+				'post_types'  => array( 'author' ),
+				'multiple'    => true,
+				'description' => __( 'Select matching author profiles for this poster.', 'ambrygen-web' ),
+			),
 			'session_id'            => array(
 				'label'    => __( 'Session ID', 'ambrygen-web' ),
 				'type'     => 'number',

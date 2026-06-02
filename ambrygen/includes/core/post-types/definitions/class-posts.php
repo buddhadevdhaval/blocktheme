@@ -45,27 +45,34 @@ class Posts extends AbstractPostType
 	public function meta_fields(): array
 	{
 		return array(
+			'media_type' => array(
+				'label' => __('Media Type', 'ambrygen'),
+				'type' => 'select',
+				'options' => array(
+					'image' => __('Featured Image', 'ambrygen'),
+					'video' => __('Video', 'ambrygen'),
+				),
+			),
 			'video_type' => array(
 				'label' => __('Video Type', 'ambrygen'),
 				'type' => 'select',
 				'options' => array(
-					'' => __('None', 'ambrygen'),
-					'mp4' => __('MP4 File', 'ambrygen'),
-					'embed' => __('YouTube/Vimeo Embed', 'ambrygen'),
+					'embed' => __('YouTube / Vimeo', 'ambrygen'),
+					'mp4' => __('Self Hosted (MP4)', 'ambrygen'),
 				),
 			),
+			'iframe_url' => array(
+				'label' => __('Video URL', 'ambrygen'),
+				'type' => 'text',
+				'description' => __('Paste YouTube/Vimeo or iframe embed URL.', 'ambrygen'),
+			),
 			'video_url' => array(
-				'label' => __('MP4 Video URL', 'ambrygen'),
+				'label' => __('Self Hosted URL', 'ambrygen'),
 				'type' => 'media_file',
 				'description' => __('Upload or select an MP4 file from the media library.', 'ambrygen'),
 			),
-			'iframe_url' => array(
-				'label' => __('Iframe Embed URL', 'ambrygen'),
-				'type' => 'text',
-				'description' => __('YouTube or Vimeo embed link.', 'ambrygen'),
-			),
 			'poster_image_id' => array(
-				'label' => __('Video Poster/Thumbnail', 'ambrygen'),
+				'label' => __('Thumbnail / Poster Image', 'ambrygen'),
 				'type' => 'media_file',
 				'description' => __('Image to show before the video plays.', 'ambrygen'),
 			),

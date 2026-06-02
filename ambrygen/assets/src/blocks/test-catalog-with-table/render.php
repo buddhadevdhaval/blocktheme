@@ -9,6 +9,9 @@ defined( 'ABSPATH' ) || exit;
 
 use Ambrygen\Theme\Core\Helper;
 
+$ambrygen_can_collect_descendants = is_callable( array( Helper::class, 'collect_poster_category_descendants' ) );
+$ambrygen_can_build_item_data     = is_callable( array( Helper::class, 'get_test_catalog_with_table_item_data' ) );
+
 $ambrygen_attributes = is_array( $attributes ?? null ) ? $attributes : array();
 $ambrygen_block_id = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
 $ambrygen_search_label = isset( $ambrygen_attributes['searchLabel'] ) ? (string) $ambrygen_attributes['searchLabel'] : '';
@@ -50,7 +53,7 @@ $ambrygen_has_table_description = '' !== trim( wp_strip_all_tags( $ambrygen_tabl
 ?>
 
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-	<div class="genes-table catlouge-search">
+	<div class="genes-table catlouge-search block-layout">
 		<div class="genes-table__search">
 			<?php if ( $ambrygen_has_search_label ) : ?>
 				<div class="eyebrow kicker-text"><?php echo wp_kses_post( $ambrygen_search_label ); ?></div>
@@ -120,7 +123,7 @@ $ambrygen_has_table_description = '' !== trim( wp_strip_all_tags( $ambrygen_tabl
 						<div class="tabs__nav" role="tablist">
 							<?php foreach ( $ambrygen_tabs as $ambrygen_index => $ambrygen_tab ) : ?>
 								<?php $ambrygen_tab_slug = sanitize_title( (string) ( $ambrygen_tab['termSlug'] ?? '' ) ); ?>
-								<button class="tabs__tab text-md-sbold<?php echo 0 === $ambrygen_index ? ' is-active' : ''; ?>" type="button" role="tab" data-tab-target="<?php echo esc_attr( $ambrygen_tab_slug ); ?>" aria-controls="<?php echo esc_attr( $ambrygen_tab_slug ); ?>" aria-selected="<?php echo 0 === $ambrygen_index ? 'true' : 'false'; ?>">
+								<button class="tabs__tab text-md-sbold<?php echo 0 === $ambrygen_index ? ' is-active' : ''; ?>" type="button" id="<?php echo esc_attr( 'tab-btn-' . $ambrygen_tab_slug ); ?>" role="tab" data-tab-target="<?php echo esc_attr( $ambrygen_tab_slug ); ?>" aria-controls="<?php echo esc_attr( $ambrygen_tab_slug ); ?>" aria-selected="<?php echo 0 === $ambrygen_index ? 'true' : 'false'; ?>">
 									<?php echo esc_html( (string) ( $ambrygen_tab['text'] ?? '' ) ); ?>
 								</button>
 							<?php endforeach; ?>
@@ -148,21 +151,30 @@ $ambrygen_has_table_description = '' !== trim( wp_strip_all_tags( $ambrygen_tabl
 									foreach ( $ambrygen_sub_term_ids as $ambrygen_sub_term_id ) {
 										$ambrygen_query_term_ids = array_merge(
 											$ambrygen_query_term_ids,
-											Helper::collect_poster_category_descendants( $ambrygen_sub_term_id )
+											$ambrygen_can_collect_descendants
+												? Helper::collect_poster_category_descendants( $ambrygen_sub_term_id )
+												: array( $ambrygen_sub_term_id )
 										);
 									}
 								} elseif ( $ambrygen_term_id > 0 ) {
-									$ambrygen_query_term_ids = Helper::collect_poster_category_descendants( $ambrygen_term_id );
+									$ambrygen_query_term_ids = $ambrygen_can_collect_descendants
+										? Helper::collect_poster_category_descendants( $ambrygen_term_id )
+										: array( $ambrygen_term_id );
 								}
 								$ambrygen_query_term_ids = array_values( array_unique( array_filter( $ambrygen_query_term_ids ) ) );
 								$ambrygen_card_category_name = (string) ( $ambrygen_tab['text'] ?? '' );
 								if ( ! empty( $ambrygen_sub_term_ids ) ) {
-									$ambrygen_sub_term_names = array();
-									foreach ( $ambrygen_sub_term_ids as $ambrygen_sub_term_id ) {
-										$ambrygen_sub_term = get_term( $ambrygen_sub_term_id, 'poster_category' );
-										if ( $ambrygen_sub_term && ! is_wp_error( $ambrygen_sub_term ) && ! empty( $ambrygen_sub_term->name ) ) {
-											$ambrygen_sub_term_names[] = (string) $ambrygen_sub_term->name;
-										}
+									$ambrygen_sub_term_names   = array();
+									$ambrygen_fetched_sub_terms = get_terms(
+										array(
+											'taxonomy'   => 'poster_category',
+											'include'    => $ambrygen_sub_term_ids,
+											'hide_empty' => false,
+											'fields'     => 'id=>name',
+										)
+									);
+									if ( ! is_wp_error( $ambrygen_fetched_sub_terms ) ) {
+										$ambrygen_sub_term_names = array_values( array_filter( $ambrygen_fetched_sub_terms ) );
 									}
 									if ( ! empty( $ambrygen_sub_term_names ) ) {
 										$ambrygen_card_category_name = implode( ', ', array_unique( $ambrygen_sub_term_names ) );
@@ -190,13 +202,23 @@ $ambrygen_has_table_description = '' !== trim( wp_strip_all_tags( $ambrygen_tabl
 									$ambrygen_query_args['post__in'] = array( 0 );
 								}
 
-								$ambrygen_query = new WP_Query( $ambrygen_query_args );
-								$ambrygen_items = array_map(
-									static function ( $ambrygen_post ) use ( $ambrygen_parent_term_ids ) {
-										return Helper::get_test_catalog_with_table_item_data( $ambrygen_post, $ambrygen_parent_term_ids );
-									},
-									$ambrygen_query->posts
-								);
+								$ambrygen_cache_key   = 'test_catalog_tab_' . md5( wp_json_encode( $ambrygen_query_args ) );
+								$ambrygen_query_posts = wp_cache_get( $ambrygen_cache_key, 'ambrygen_catalog' );
+
+								if ( false === $ambrygen_query_posts ) {
+									$ambrygen_query       = new WP_Query( $ambrygen_query_args );
+									$ambrygen_query_posts = $ambrygen_query->posts;
+									wp_cache_set( $ambrygen_cache_key, $ambrygen_query_posts, 'ambrygen_catalog', HOUR_IN_SECONDS );
+								}
+
+								$ambrygen_items = $ambrygen_can_build_item_data
+									? array_map(
+										static function ( $ambrygen_post ) use ( $ambrygen_parent_term_ids ) {
+											return Helper::get_test_catalog_with_table_item_data( $ambrygen_post, $ambrygen_parent_term_ids );
+										},
+										$ambrygen_query_posts
+									)
+									: array();
 								foreach ( $ambrygen_items as $ambrygen_item ) {
 									$ambrygen_all_table_items[ (int) $ambrygen_item['id'] ] = $ambrygen_item;
 								}
@@ -205,7 +227,7 @@ $ambrygen_has_table_description = '' !== trim( wp_strip_all_tags( $ambrygen_tabl
 									return in_array( (int) $ambrygen_item['id'], $ambrygen_featured_ids, true );
 								} ) );
 								?>
-								<div class="tabs__panel<?php echo 0 === $ambrygen_index ? ' is-active' : ''; ?>" id="<?php echo esc_attr( $ambrygen_tab_slug ); ?>" role="tabpanel" <?php echo 0 === $ambrygen_index ? '' : 'hidden'; ?>>
+								<div class="tabs__panel<?php echo 0 === $ambrygen_index ? ' is-active' : ''; ?>" id="<?php echo esc_attr( $ambrygen_tab_slug ); ?>" role="tabpanel" aria-labelledby="<?php echo esc_attr( 'tab-btn-' . $ambrygen_tab_slug ); ?>" <?php echo 0 === $ambrygen_index ? '' : 'hidden'; ?>>
 									<div class="cardiology-filter__items-grid">
 										<?php foreach ( $ambrygen_featured_items as $ambrygen_item ) : ?>
 											<div class="cardiology-filter__card" data-search-text="<?php echo esc_attr( $ambrygen_item['search_text'] ); ?>">
@@ -226,7 +248,6 @@ $ambrygen_has_table_description = '' !== trim( wp_strip_all_tags( $ambrygen_tabl
 											</div>
 										<?php endforeach; ?>
 									</div>
-									<?php wp_reset_postdata(); ?>
 								</div>
 							<?php endforeach; ?>
 						</div>
@@ -277,7 +298,7 @@ $ambrygen_has_table_description = '' !== trim( wp_strip_all_tags( $ambrygen_tabl
 									<div class="gl-data-table__cell"><?php esc_html_e( 'Genes', 'ambrygen-web' ); ?></div>
 									<div class="gl-data-table__cell"><?php esc_html_e( 'Gene List (Abbreviated)', 'ambrygen-web' ); ?></div>
 									<div class="gl-data-table__cell"><?php esc_html_e( 'Turnaround', 'ambrygen-web' ); ?></div>
-									<div class="gl-data-table__cell"></div>
+									<div class="gl-data-table__cell"><span class="screen-reader-text"><?php esc_html_e( 'Order', 'ambrygen-web' ); ?></span></div>
 								</div>
 								<?php foreach ( array_values( $ambrygen_all_table_items ) as $ambrygen_item ) : ?>
 									<div class="gl-data-table__row" data-search-text="<?php echo esc_attr( $ambrygen_item['search_text'] ); ?>">
@@ -300,5 +321,3 @@ $ambrygen_has_table_description = '' !== trim( wp_strip_all_tags( $ambrygen_tabl
 		</div>
 	<?php endif; ?>
 </div>
-<?php
-wp_reset_postdata();

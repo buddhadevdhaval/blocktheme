@@ -132,6 +132,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		);
 		mediaElements.forEach( ( element ) => {
 			element.style.pointerEvents = 'none';
+			element.setAttribute( 'tabindex', '-1' );
 		} );
 
 		let modal = null;

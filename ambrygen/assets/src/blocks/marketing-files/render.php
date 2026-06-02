@@ -29,7 +29,7 @@ $ambrygen_has_title = '' !== trim( wp_strip_all_tags( $ambrygen_title ) );
 $ambrygen_heading = Helper::get_heading_tag( $ambrygen_heading, 'h2' );
 
 $ambrygen_wrapper_args = array(
-	'class' => 'marketing-files',
+	'class' => 'marketing-files block-layout',
 );
 
 if ( ! empty( $ambrygen_block_id ) ) {
@@ -57,17 +57,35 @@ if ( $ambrygen_term_id > 0 ) {
 		);
 	}
 
-	$ambrygen_query = new WP_Query(
-		array(
-			'post_type'      => 'marketing_material',
-			'post_status'    => 'publish',
-			'posts_per_page' => -1,
-			'no_found_rows'  => true,
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-			'tax_query'      => $ambrygen_tax_query,
-		)
+	$ambrygen_query_args = array(
+		'post_type'      => 'marketing_material',
+		'post_status'    => 'publish',
+		'posts_per_page' => 500,
+		'no_found_rows'  => true,
+		'orderby'        => 'title',
+		'order'          => 'ASC',
+		'tax_query'      => $ambrygen_tax_query,
 	);
+
+	$ambrygen_fallback_cache_key = 'marketing_material_query_' . $ambrygen_term_id . '_' . $ambrygen_material_type_id;
+	$ambrygen_fallback_post_ids  = wp_cache_get( $ambrygen_fallback_cache_key, 'ambrygen_marketing' );
+
+	if ( false === $ambrygen_fallback_post_ids ) {
+		$ambrygen_query             = new WP_Query( $ambrygen_query_args );
+		$ambrygen_fallback_post_ids = wp_list_pluck( $ambrygen_query->posts ?? array(), 'ID' );
+		wp_cache_set( $ambrygen_fallback_cache_key, $ambrygen_fallback_post_ids, 'ambrygen_marketing', 12 * HOUR_IN_SECONDS );
+	} else {
+		$ambrygen_query = new WP_Query(
+			array(
+				'post_type'      => 'marketing_material',
+				'post__in'       => $ambrygen_fallback_post_ids,
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+				'posts_per_page' => count( $ambrygen_fallback_post_ids ),
+				'no_found_rows'  => true,
+			)
+		);
+	}
 }
 
 ?>
@@ -76,7 +94,7 @@ if ( $ambrygen_term_id > 0 ) {
 	<div class="marketing-files__inner">
 		<div class="test-catlouge">
 			<?php if ( $ambrygen_has_title ) : ?>
-				<div class="test-catlouge__header">
+				<div class="test-catlouge__header js-gsap-fade">
 					<<?php echo tag_escape( $ambrygen_heading ); ?> class="heading-4 block-title mb-0 test-catlouge__title"><?php echo wp_kses_post( $ambrygen_title ); ?></<?php echo tag_escape( $ambrygen_heading ); ?>>
 				</div>
 			<?php endif; ?>
@@ -86,9 +104,9 @@ if ( $ambrygen_term_id > 0 ) {
 		<?php endif; ?>
 
 		<?php if ( ! empty( $ambrygen_sections ) ) : ?>
-			
-				<?php foreach ( $ambrygen_sections as $ambrygen_section ) : ?>
-					<div class="test-catlouge__items">
+
+				<?php foreach ( $ambrygen_sections as $ambrygen_section_index => $ambrygen_section ) : ?>
+					<div class="test-catlouge__items js-gsap-fade">
 					<?php
 					$ambrygen_section_title = isset( $ambrygen_section['title'] ) ? (string) $ambrygen_section['title'] : '';
 					$ambrygen_categories    = isset( $ambrygen_section['categories'] ) && is_array( $ambrygen_section['categories'] )
@@ -97,7 +115,7 @@ if ( $ambrygen_term_id > 0 ) {
 					?>
 
 					<?php if ( '' !== trim( wp_strip_all_tags( $ambrygen_section_title ) ) ) : ?>
-						<div class="heading-6 mb-0 test-catlouge__section-title" id="<?php echo esc_attr( sanitize_title( $ambrygen_section_title ) ); ?>">
+						<div class="heading-6 mb-0 test-catlouge__section-title" id="<?php echo esc_attr( sanitize_title( $ambrygen_section_title ) . '-' . $ambrygen_section_index ); ?>">
 							<?php echo esc_html( $ambrygen_section_title ); ?>
 						</div>
 					<?php endif; ?>
@@ -199,13 +217,13 @@ if ( $ambrygen_term_id > 0 ) {
 					<?php endforeach; ?>
 						</div>
 				<?php endforeach; ?>
-		
+
 		<?php elseif ( $ambrygen_term_id <= 0 ) : ?>
-			<div class="test-catlouge__items no-results">
+			<div class="test-catlouge__items no-results js-gsap-fade">
 				<p><?php esc_html_e( 'Select a category in the block settings to show Marketing Files.', 'ambrygen-web' ); ?></p>
 			</div>
 		<?php elseif ( $ambrygen_query && $ambrygen_query->have_posts() ) : ?>
-			<div class="test-catlouge__items">
+			<div class="test-catlouge__items js-gsap-fade">
 				<?php
 				$ambrygen_global_grid_html = '';
 				ob_start();
@@ -239,7 +257,7 @@ if ( $ambrygen_term_id > 0 ) {
 				$ambrygen_global_grid_html = trim( (string) ob_get_clean() );
 				?>
 				<?php if ( '' !== $ambrygen_global_grid_html ) : ?>
-				<div class="test-catlouge__item">
+				<div class="test-catlouge__item js-gsap-fade">
 					<?php
 					$ambrygen_global_category_name = isset( $ambrygen_category['name'] ) ? (string) $ambrygen_category['name'] : '';
 					?>
@@ -265,13 +283,13 @@ if ( $ambrygen_term_id > 0 ) {
 					</button>
 				</div>
 				<?php else : ?>
-				<div class="test-catlouge__items no-results">
+				<div class="test-catlouge__items no-results js-gsap-fade">
 					<p><?php esc_html_e( 'No marketing materials found in this category.', 'ambrygen-web' ); ?></p>
 				</div>
 				<?php endif; ?>
 			</div>
 		<?php else : ?>
-			<div class="test-catlouge__items no-results">
+			<div class="test-catlouge__items no-results js-gsap-fade">
 				<p><?php esc_html_e( 'No marketing materials found in this category.', 'ambrygen-web' ); ?></p>
 			</div>
 		<?php endif; ?>

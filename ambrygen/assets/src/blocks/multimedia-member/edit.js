@@ -373,7 +373,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			</InspectorControls>
 
 			<div { ...blockProps } ref={ containerRef }>
-				<div className="multimedia-member">
+				<div className="multimedia-member  block-layout">
 					<div className="features-media__header block__rowflex is-vertical">
 						<RichText
 							tagName={ headingTag }

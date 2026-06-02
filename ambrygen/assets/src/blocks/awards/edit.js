@@ -222,11 +222,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			</InspectorControls>
 
 			<div { ...blockProps }>
-				<div className="awards-slider">
+				<div className="awards-slider block-layout">
 					<div className="awards-slider__header block__rowflex is-vertical">
 						<RichText
 							tagName={ HeadingTag }
-							className="awards-block__title block__rowflex--heading-title heading-3 mb-0"
+							className="awards-block__title block__rowflex--heading-title heading-3 mb-0 block-title"
 							value={ title }
 							onChange={ ( value ) =>
 								setAttributes( { title: value } )
@@ -235,7 +235,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						/>
 						<RichText
 							tagName="div"
-							className="awards-slider__description block__rowflex--block-content subtitle1-reg"
+							className="awards-slider__description block__rowflex--block-content subtitle1-reg block-description"
 							value={ description }
 							onChange={ ( value ) =>
 								setAttributes( { description: value } )

@@ -14,7 +14,7 @@ const ALLOWED_BLOCKS = [ 'core/shortcode' ];
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const blockProps = useBlockProps( {
-		className: 'theme-form-block',
+		className: 'theme-form-block block-layout',
 	} );
 
 	const {

@@ -63,7 +63,9 @@ foreach (glob(__DIR__ . '/routes/*.php') ?: array() as $file) {
 require_once __DIR__ . '/class-theme-options.php';
 require_once __DIR__ . '/class-login-customizer.php';
 require_once __DIR__ . '/class-assets.php';
+require_once __DIR__ . '/class-global-video-modal-service.php';
 require_once __DIR__ . '/class-helper.php';
+require_once __DIR__ . '/class-team-cache-service.php';
 require_once __DIR__ . '/class-blocks.php';
 require_once __DIR__ . '/class-patterns.php';
 require_once __DIR__ . '/class-posttypes.php';

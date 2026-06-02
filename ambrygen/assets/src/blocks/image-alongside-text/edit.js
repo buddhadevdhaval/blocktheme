@@ -76,7 +76,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const borderClass = variation === 'title-content-with-image' && borderRequired ? 'iot-block--border' : '';
 	const topAlignClass = contentTopAlign ? 'has-top-align' : '';
-	
+
 	let imageSizeClass = '';
 	let headingClass = 'heading-2';
 	if ( variation === 'title-content-with-image' ) {
@@ -110,7 +110,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	);
 
 	const blockProps = useBlockProps( {
-		className: `iot-block ${ layoutStyle } ${ imagePositionClass } ${ borderClass } ${ topAlignClass } ${ imageSizeClass } ${ originalImageClass }`,
+		className: `block-layout iot-block ${ layoutStyle } ${ imagePositionClass } ${ borderClass } ${ topAlignClass } ${ imageSizeClass } ${ originalImageClass }`,
 	} );
 
 	const updateButton = ( index, field, value ) => {
@@ -434,7 +434,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							<>
 								<RichText
 									tagName="div"
-									className="iot-block__tagline"
+									className="iot-block__tagline hero-kicker"
 									value={ eyebrowText }
 									onChange={ ( value ) =>
 										setAttributes( { eyebrowText: value } )

@@ -27,11 +27,11 @@ $ambrygen_heading_tag      = Helper::get_heading_tag( $attributes['headingTag'] 
 $wrapper_attributes = get_block_wrapper_attributes(
 	( $ambrygen_anchor || $ambrygen_block_id )
 	? array(
-		'class' => 'download-list variation-grid-view',
+		'class' => 'download-list block-layout variation-grid-view',
 		'id'    => $ambrygen_anchor ?: $ambrygen_block_id,
 	)
 	: array(
-		'class' => 'download-list variation-grid-view',
+		'class' => 'download-list block-layout variation-grid-view',
 	)
 );
 
@@ -63,7 +63,7 @@ if ( $ambrygen_select_all || ! empty( $ambrygen_collaborator_ids ) ) {
 
 <section <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="download-list__inner">
-		<div class="download-list__header-area mb-24">
+		<div class="download-list__header-area mb-24 js-gsap-fade">
 			<div class="download-list__content">
 				<?php if ( $ambrygen_title ) : ?>
 					<<?php echo tag_escape( $ambrygen_heading_tag ); ?> class="download-list__title heading-3 block-title mb-0">
@@ -84,7 +84,7 @@ if ( $ambrygen_select_all || ! empty( $ambrygen_collaborator_ids ) ) {
 						continue;
 					}
 					?>
-					<div class="download-list__grid-item">
+					<div class="download-list__grid-item js-gsap-fade">
 						<a href="<?php echo esc_url( $ambrygen_term_link ); ?>" class="download-list__grid-link" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr( sprintf( __( '%s (opens in a new tab)', 'ambrygen-web' ), $ambrygen_term->name ) ); ?>">
 							<span class="download-list__item-text">
 								<?php echo esc_html( $ambrygen_term->name ); ?>

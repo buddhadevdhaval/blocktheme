@@ -584,8 +584,10 @@ final class ConferenceRenderer
 								$session_id = get_post_meta($presentation_id, 'session', true);
 								$presentation_name = get_post_meta($presentation_id, 'pr_name', true) ?: $presentation->post_title;
 								$speakers_list = $this->format_meta_list_value(get_post_meta($presentation_id, 'speakers', true));
+								$presentation_pdfs = $this->get_presentation_pdf_files($presentation_id);
+								$presentation_pdf_types = $this->get_pdf_type_labels($presentation_pdfs);
 								?>
-								<article class="agenda-card">
+								<article class="agenda-card presentation-card">
 									<?php if (!empty($session_id)): ?>
 										<div class="agenda-card__date-col">
 											<div class="agenda-card__day-name subtitle2-sbold"><?php esc_html_e('Session', 'ambrygen'); ?>
@@ -596,7 +598,22 @@ final class ConferenceRenderer
 
 									<div class="agenda-card__schedule">
 										<div class="agenda-card__event-title subtitle1-sbold mb-0 subtitle2-sbold">
-											<?php echo esc_html($presentation_name); ?></div>
+											<a href="<?php echo esc_url(get_permalink($presentation_id)); ?>" class="agenda-card__event-link">
+												<?php echo esc_html($presentation_name); ?>
+											</a>
+										</div>
+										<?php if (!empty($presentation_pdf_types)): ?>
+											<div class="is-style-gl-s12" aria-hidden="true"></div>
+											<div class="event-carousel__tags lists-item-category">
+												<?php foreach ($presentation_pdf_types as $presentation_pdf_type): ?>
+													<div class="category-item">
+														<a href="<?php echo esc_url(get_permalink($presentation_id)); ?>" class="event-carousel__tag"><?php echo esc_html($presentation_pdf_type); ?></a>
+													</div>
+												<?php endforeach; ?>
+												
+											</div>
+											<div class="is-style-gl-s12" aria-hidden="true"></div>
+										<?php endif; ?>
 										<?php if ($speakers_list): ?>
 											<div class="agenda-card__event-speakers body1"><?php echo esc_html($speakers_list); ?></div>
 										<?php endif; ?>
@@ -677,17 +694,18 @@ final class ConferenceRenderer
 
 	public function render_event_meta_summary(int $post_id): string
 	{
-		if (!$post_id) {
-			return '';
+		$post_id = $post_id ?: get_the_ID();
+		$is_editor = wp_is_json_request() || (defined('REST_REQUEST') && REST_REQUEST);
+
+		if ($is_editor && (! $post_id || 'conferences' !== get_post_type($post_id))) {
+			$sample_post = get_posts(['post_type' => 'conferences', 'posts_per_page' => 1]);
+			if (! empty($sample_post)) {
+				$post_id = $sample_post[0]->ID;
+			}
 		}
 
-		$post_type = get_post_type($post_id);
-		if (!$post_type) {
+		if (! $is_editor && (! $post_id || 'conferences' !== get_post_type($post_id))) {
 			return '';
-		}
-
-		if ('conferences' !== $post_type) {
-			return ScienceRenderer::instance()->render_post_meta_fields($post_id);
 		}
 
 		$tags_html = '';
@@ -772,7 +790,17 @@ final class ConferenceRenderer
 
 	public function render_event_grid_card(int $post_id): string
 	{
-		if (!$post_id) {
+		$post_id = $post_id ?: get_the_ID();
+		$is_editor = wp_is_json_request() || (defined('REST_REQUEST') && REST_REQUEST);
+
+		if ($is_editor && (! $post_id || 'conferences' !== get_post_type($post_id))) {
+			$sample_post = get_posts(['post_type' => 'conferences', 'posts_per_page' => 1]);
+			if (! empty($sample_post)) {
+				$post_id = $sample_post[0]->ID;
+			}
+		}
+
+		if (! $is_editor && (! $post_id || 'conferences' !== get_post_type($post_id))) {
 			return '';
 		}
 
@@ -1211,6 +1239,79 @@ final class ConferenceRenderer
 	}
 
 	/**
+	 * Get presentation PDF files for a presentation post.
+	 *
+	 * @param int         $post_id  Presentation post ID.
+	 * @param string|null $pdf_type Optional PDF type to filter by.
+	 * @return array<int, array{pdf_type:string,file_id:int,url:string}>
+	 */
+	private function get_presentation_pdf_files(int $post_id, ?string $pdf_type = null): array
+	{
+		$rows = get_post_meta($post_id, 'presentation_pdf_files', true);
+
+		if (! is_array($rows)) {
+			return [];
+		}
+
+		$files = [];
+
+		foreach ($rows as $row) {
+			if (! is_array($row)) {
+				continue;
+			}
+
+			$type    = isset($row['pdf_type']) ? sanitize_key($row['pdf_type']) : '';
+			$file_id = isset($row['file_id']) ? absint($row['file_id']) : 0;
+
+			if (0 === $file_id) {
+				continue;
+			}
+
+			if (null !== $pdf_type && $type !== sanitize_key($pdf_type)) {
+				continue;
+			}
+
+			$file_url = wp_get_attachment_url($file_id);
+
+			if (! $file_url) {
+				continue;
+			}
+
+			$files[] = [
+				'pdf_type' => $type,
+				'file_id'  => $file_id,
+				'url'      => $file_url,
+			];
+		}
+
+		return $files;
+	}
+
+	/**
+	 * Normalize PDF type values into unique display labels.
+	 *
+	 * @param array<int, array{pdf_type:string,file_id:int,url:string}> $files PDF files.
+	 * @return array<int, string>
+	 */
+	private function get_pdf_type_labels(array $files): array
+	{
+		$types = array_values(
+			array_filter(
+				array_map(
+					static function ($item) {
+						$type = isset($item['pdf_type']) ? trim((string) $item['pdf_type']) : '';
+						return $type ? ucfirst(str_replace('_', ' ', $type)) : '';
+					},
+					$files
+				),
+				static fn($type) => '' !== $type
+			)
+		);
+
+		return array_values(array_unique($types));
+	}
+
+	/**
 	 * Normalize list-like meta values into a readable string.
 	 *
 	 * @param mixed $value Meta value.
@@ -1218,6 +1319,14 @@ final class ConferenceRenderer
 	 */
 	private function format_meta_list_value($value): string
 	{
+		if (is_string($value)) {
+			$decoded = json_decode($value, true);
+
+			if (is_array($decoded)) {
+				$value = $decoded;
+			}
+		}
+
 		if (is_array($value)) {
 			$filtered = array_values(
 				array_filter(

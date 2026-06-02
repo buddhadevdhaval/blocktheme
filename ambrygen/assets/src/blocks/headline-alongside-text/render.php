@@ -26,7 +26,7 @@ $ambrygen_background_image_alt = isset( $ambrygen_attributes['backgroundImageAlt
 $ambrygen_headline_id = ! empty( $ambrygen_headline ) ? wp_unique_id( 'headline-alongside-text-heading-' ) : '';
 
 $ambrygen_wrapper_attributes_array = array(
-	'class' => 'heading-content-section wp-block-ambrygen-split-content-section' . ( $ambrygen_is_medium ? ' variation-medium-text' : '' ),
+	'class' => 'heading-content-section block-layout wp-block-ambrygen-split-content-section' . ( $ambrygen_is_medium ? ' variation-medium-text' : '' ),
 	'role'  => 'region',
 );
 

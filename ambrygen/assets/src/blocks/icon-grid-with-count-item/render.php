@@ -27,7 +27,7 @@ $ambrygen_link_target    = ! empty( $ambrygen_custom_link['opensInNewTab'] ) ? '
 $ambrygen_link_rel       = $ambrygen_link_target ? 'noopener noreferrer' : '';
 
 $ambrygen_termlinktext = ! empty( $ambrygen_attributes['termlinktext'] )
-	? $ambrygen_attributes['termlinktext']
+	? sanitize_text_field( $ambrygen_attributes['termlinktext'] )
 	: 'View Test';
 
 $ambrygen_selected_term_id = isset( $ambrygen_attributes['selectedTerm'] )
@@ -100,7 +100,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 				</div>
 			<?php endif; ?>
 
-			<?php if ( $ambrygen_title ) : ?>
+			<?php if ( '' !== (string) $ambrygen_count ) : ?>
 				<div class="item-card__title subtitle2-sbold">
 					<?php echo esc_html( $ambrygen_count ); ?> Tests
 				</div>
@@ -114,7 +114,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 				href="<?php echo esc_url( $ambrygen_term_url ); ?>"
 				<?php echo $ambrygen_link_target ? ' target="' . esc_attr( $ambrygen_link_target ) . '"' : ''; ?>
 				<?php echo $ambrygen_link_rel ? ' rel="' . esc_attr( $ambrygen_link_rel ) . '"' : ''; ?>
-				aria-label="<?php echo esc_attr( 'View tests for ' . $ambrygen_title ); ?>"
+				aria-label="<?php echo esc_attr( sprintf( __( 'View tests for %s', 'ambrygen-web' ), $ambrygen_title ) ); ?>"
 			>
 				<?php echo esc_html( $ambrygen_termlinktext ); ?>
 			</a>

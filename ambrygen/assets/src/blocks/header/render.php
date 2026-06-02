@@ -338,16 +338,17 @@
 				<!-- Desktop CTA -->
 				<div class="header__right--col header__btns--desktop">
 					<div class="header__search">
-						<div class="morphing-btn-form" id="header-search-form-desktop" role="search">
+						<form class="morphing-btn-form" id="header-search-form-desktop" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
 							<div class="morphing-btn-wrapper">
-								<input class="morphing-btn-input" id="header-search" type="text" name="s" aria-label="<?php esc_attr_e('Search for:', 'ambrygen-web'); ?>" placeholder="<?php esc_attr_e('Search', 'ambrygen-web'); ?>">
+								<input class="morphing-btn-input" id="header-search" type="search" name="s" value="<?php echo esc_attr(get_search_query()); ?>" aria-label="<?php esc_attr_e('Search for:', 'ambrygen-web'); ?>" placeholder="<?php esc_attr_e('Search', 'ambrygen-web'); ?>">
 								<label class="morphing-btn-label" for="header-search">
 									<img alt="Search the Site" class="morphing-btn-icon-bell" src="<?php echo esc_url(get_theme_file_uri('assets/src/images/search-icon.svg')); ?>"/> Search
 								</label>
-								<button type="button" class="morphing-btn-submit" aria-label="Submit">
+								<button type="submit" class="morphing-btn-submit" aria-label="Submit">
 									Search
 								</button>
 							</div>
+						</form>
 						</div>
 					</div>
 

@@ -22,7 +22,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		attributes;
 
 	const blockProps = useBlockProps( {
-		className: `steps-iot-block ${
+		className: `steps-iot-block block-layout ${
 			showFullImage ? ' show-full-image' : ''
 		}`,
 	} );
@@ -131,8 +131,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 			</InspectorControls>
 
-			<section { ...blockProps }>
+			<div { ...blockProps }>
 				<div className="steps-iot-block__header block__rowflex">
+					<div className="block__rowflex--col-left">
 					<RichText
 						tagName={ headingTag || 'h2' }
 						className="heading-3 block-title mb-0 block__rowflex--heading-title"
@@ -142,8 +143,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
 					/>
+					</div>
 
-					<div className="block__rowflex--block-content subtitle-1-regular">
+					<div className="block__rowflex--block-content subtitle-1-regular block-description">
 						<RichText
 							tagName="div"
 							value={ description }
@@ -171,7 +173,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 				</div>
 				<div className="is-style-gl-s24" aria-hidden="true"></div>
-			</section>
+			</div>
 		</>
 	);
 }

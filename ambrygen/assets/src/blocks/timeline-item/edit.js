@@ -77,7 +77,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 						<RichText
 							tagName="div"
-							className="text-md-regular timeline-block__intro"
+							className="text-md-regular timeline-block__intro block-description"
 							value={ intro }
 							onChange={ ( value ) =>
 								setAttributes( { intro: value } )

@@ -26,7 +26,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 		
 		<?php if ( $ambrygen_title ) : ?>
 			<div class="webinars__header">
-				<<?php echo esc_html( $ambrygen_heading_tag ); ?> class="webinars__title heading-3">
+				<<?php echo esc_html( $ambrygen_heading_tag ); ?> class="webinars__title heading-3 js-gsap-fade">
 					<?php echo wp_kses_post( $ambrygen_title ); ?>
 				</<?php echo esc_html( $ambrygen_heading_tag ); ?>>
 			</div>

@@ -248,7 +248,7 @@ export default function Variation3( { attributes, setAttributes } ) {
 													{ getPostCategory( post ) }
 												</div>
 
-												<div className="heading-5 features-tabs__card-title">
+												<div className="heading-5 features-tabs__card-title block-inside-title">
 													{ decodeEntities(
 														post.title?.rendered ||
 															''

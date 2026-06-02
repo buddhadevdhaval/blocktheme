@@ -48,16 +48,6 @@ $ambrygen_video_poster_url = ! empty( $ambrygen_video_poster['url'] )
 	? (string) $ambrygen_video_poster['url']
 	: '';
 
-$ambrygen_wrapper_attributes         = get_block_wrapper_attributes(
-	$ambrygen_block_id
-		? array(
-			'class' => 'careers-highlight',
-			'id'    => $ambrygen_block_id,
-		)
-		: array(
-			'class' => 'careers-highlight',
-		)
-);
 $ambrygen_careers_link_bottom_target = ! empty( $ambrygen_careers_link_bottom['target'] ) && '_blank' === $ambrygen_careers_link_bottom['target']
 	? '_blank'
 	: '';
@@ -100,6 +90,23 @@ $ambrygen_has_video          = ( 'mp4' === $ambrygen_video_type && $ambrygen_vid
 $ambrygen_has_header_content = $ambrygen_has_title || $ambrygen_has_intro || $ambrygen_has_top_link;
 $ambrygen_heading_id         = $ambrygen_has_title ? ( $ambrygen_block_id ? $ambrygen_block_id . '-heading' : wp_unique_id( 'careers-highlight-heading-' ) ) : '';
 $ambrygen_video_modal_id     = $ambrygen_has_video ? ( $ambrygen_block_id ? $ambrygen_block_id . '-video-modal' : wp_unique_id( 'careers-video-modal-' ) ) : '';
+$ambrygen_iframe_label       = $ambrygen_has_title
+	? wp_strip_all_tags( $ambrygen_title )
+	: __( 'Video', 'ambrygen-web' );
+$ambrygen_wrapper_args       = array(
+	'class' => 'careers-highlight block-layout',
+);
+
+if ( $ambrygen_block_id ) {
+	$ambrygen_wrapper_args['id'] = $ambrygen_block_id;
+}
+
+if ( $ambrygen_heading_id ) {
+	$ambrygen_wrapper_args['role']            = 'region';
+	$ambrygen_wrapper_args['aria-labelledby'] = $ambrygen_heading_id;
+}
+
+$ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_args );
 
 $ambrygen_play_icon_src  = get_theme_file_uri( 'assets/src/images/play-icon.svg' );
 $ambrygen_pause_icon_src = get_theme_file_uri( 'assets/src/images/pause-icon.svg' );
@@ -111,14 +118,14 @@ $ambrygen_pause_icon_src = get_theme_file_uri( 'assets/src/images/pause-icon.svg
 		<div class="careers-highlight__header block__rowflex">
 			<?php if ( $ambrygen_has_title ) : ?>
 				<div class="block__rowflex--col-left">
-				<<?php echo tag_escape( $ambrygen_heading_level ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="careers-highlight__title block__rowflex--heading-title heading-4 mb-0 js-gsap-fade">
+				<<?php echo tag_escape( $ambrygen_heading_level ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="careers-highlight__title block__rowflex--heading-title heading-4 mb-0 js-gsap-fade block-title">
 					<?php echo wp_kses_post( $ambrygen_title ); ?>
 				</<?php echo tag_escape( $ambrygen_heading_level ); ?>>
 				</div>
 			<?php endif; ?>
 
 			<?php if ( $ambrygen_has_intro || $ambrygen_has_top_link ) : ?>
-				<div class="careers-highlight__intro block__rowflex--block-content subtitle1-reg js-gsap-fade">
+				<div class="careers-highlight__intro block__rowflex--block-content subtitle1-reg js-gsap-fade block-description">
 					<?php if ( $ambrygen_has_intro ) : ?>
 						<p><?php echo wp_kses_post( $ambrygen_intro ); ?></p>
 					<?php endif; ?>
@@ -147,7 +154,7 @@ $ambrygen_pause_icon_src = get_theme_file_uri( 'assets/src/images/pause-icon.svg
 	<?php endif; ?>
 
 	<?php if ( $ambrygen_has_header_content ) : ?>
-		<div class="is-style-gl-s50"></div>
+		<div class="is-style-gl-s50" aria-hidden="true"></div>
 	<?php endif; ?>
 
 	<div class="careers-highlight__row">
@@ -160,7 +167,7 @@ $ambrygen_pause_icon_src = get_theme_file_uri( 'assets/src/images/pause-icon.svg
 
 			<?php if ( $ambrygen_has_bottom_link ) : ?>
 				<div class="block-btn js-gsap-fade">
-					<div class="is-style-gl-s32"></div>
+					<div class="is-style-gl-s32" aria-hidden="true"></div>
 					<a
 						href="<?php echo esc_url( $ambrygen_careers_link_bottom['url'] ); ?>"
 						class="site-btn is-style-site-text-btn has-right-arrow"
@@ -195,7 +202,7 @@ $ambrygen_pause_icon_src = get_theme_file_uri( 'assets/src/images/pause-icon.svg
 						<div class="careers-highlight__media media_video video-embed">
 							<iframe
 								src="<?php echo esc_url( $ambrygen_iframe_src ); ?>"
-								title="<?php esc_attr_e( 'Video', 'ambrygen-web' ); ?>"
+								title="<?php echo esc_attr( $ambrygen_iframe_label ); ?>"
 								frameborder="0"
 								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 								allowfullscreen

@@ -486,7 +486,7 @@ export default function Edit({ attributes, setAttributes, clientId, name }) {
 			</InspectorControls>
 
 			<div {...useBlockProps()}>
-				<div className="test-catlouge">
+				<div className="test-catlouge block-layout">
 					<div className="test-catlouge__header">
 						<RichText
 							tagName="div"

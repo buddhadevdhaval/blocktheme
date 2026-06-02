@@ -24,8 +24,8 @@ export default function Edit( { attributes, setAttributes, context } ) {
 
 	const blockProps = useBlockProps( {
 		className: isVariation2
-			? 'ordering-options__card'
-			: 'cta-tiles-with-content__item',
+			? 'block-layout ordering-options__card'
+			: 'block-layout cta-tiles-with-content__item',
 	} );
 
 	const defaultPlaceholder = useMemo(

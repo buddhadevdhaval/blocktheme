@@ -61,7 +61,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	);
 
 	const blockProps = useBlockProps({
-		className: `heading-content-section ${isMediumText ? 'variation-medium-text' : ''
+		className: `heading-content-section  block-layout ${isMediumText ? 'variation-medium-text' : ''
 			}`,
 	});
 

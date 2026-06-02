@@ -26,7 +26,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	}, [ clientId, blockId, setAttributes ] );
 
 	const resolvedBlockId = blockId || `section-${ clientId.slice( 0, 8 ) }`;
-	const blockProps = useBlockProps( { className: 'gl-data-table genes-table' } );
+	const blockProps = useBlockProps( { className: 'gl-data-table genes-table block-layout' } );
 
 	return (
 		<>

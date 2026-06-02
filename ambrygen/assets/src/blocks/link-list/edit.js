@@ -120,7 +120,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	};
 
 	const blockProps = useBlockProps( {
-		className: 'download-list',
+		className: 'download-list block-layout',
 		id: anchor || blockId,
 	} );
 

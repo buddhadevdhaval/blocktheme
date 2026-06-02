@@ -50,7 +50,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	} );
 
 	const blockProps = useBlockProps( {
-		className: 'cta-tiles-with-3-card',
+		className: 'cta-tiles-with-3-card  block-layout ',
 	} );
 
 	if ( isExample ) {

@@ -103,7 +103,7 @@
 	$ambrygen_mail_icon_src  = $ambrygen_icon_cache['mail'];
 
 	$ambrygen_wrapper_args = array(
-		'class' => 'newsletter newsletter-signup',
+		'class' => 'newsletter newsletter-signup block-layout',
 		'role'  => 'region',
 	);
 

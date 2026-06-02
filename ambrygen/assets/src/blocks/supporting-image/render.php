@@ -38,7 +38,7 @@ if ( ! $ambrygen_has_image && ! $ambrygen_has_content ) {
 }
 
 $ambrygen_wrapper_args = array(
-	'class' => 'supporting-image',
+	'class' => 'supporting-image block-layout',
 );
 
 if ( $ambrygen_anchor || $ambrygen_block_id ) {
@@ -72,7 +72,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 	<?php if ( $ambrygen_has_content ) : ?>
 		<div class="supporting-image__content">
 			<?php if ( $ambrygen_heading ) : ?>
-				<<?php echo tag_escape( $ambrygen_heading_tag ); ?> class="heading-4 block-title mb-0 supporting-image__heading">
+				<<?php echo tag_escape( $ambrygen_heading_tag ); ?> class="heading-4 block-title mb-0 supporting-image__heading js-gsap-fade">
 					<?php
 					echo wp_kses(
 						$ambrygen_heading,
@@ -84,7 +84,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 
 			<?php if ( $ambrygen_description ) : ?>
 				<div class="is-style-gl-s24" aria-hidden="true"></div>
-				<div class="subtitle1-regular supporting-image__description block-description">
+				<div class="subtitle1-regular supporting-image__description block-description js-gsap-fade">
 					<?php echo wp_kses_post( $ambrygen_description ); ?>
 				</div>
 			<?php endif; ?>

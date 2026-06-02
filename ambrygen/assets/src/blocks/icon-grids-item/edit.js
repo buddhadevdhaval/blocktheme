@@ -630,7 +630,7 @@ export default function Edit({
 									<div className="features-tabs__category body2-semibold">
 										{attributes.category || 'Category'}
 									</div>
-									<div className="heading-5 features-tabs__card-title">
+									<div className="heading-5 features-tabs__card-title block-inside-title">
 										<RichText
 											tagName="span"
 											value={

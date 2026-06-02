@@ -43,7 +43,7 @@ if ( ! $ambrygen_has_image && ! $ambrygen_has_title && ! $ambrygen_has_summary &
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class' => 'principles-steps__card principles-steps__card--' . sanitize_html_class( $ambrygen_variant ),
+		'class' => 'principles-steps__card  js-gsap-fade principles-steps__card--' . sanitize_html_class( $ambrygen_variant ),
 		'role'  => 'listitem',
 	)
 );

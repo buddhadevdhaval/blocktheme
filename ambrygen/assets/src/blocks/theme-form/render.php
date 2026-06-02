@@ -115,7 +115,7 @@ HTML;
     $ambrygen_wrapper_attributes    = get_block_wrapper_attributes(
     $ambrygen_theme_form_block_id
         ? [
-        'class' => 'theme-form-block',
+        'class' => 'theme-form-block block-layout',
         'id'    => $ambrygen_theme_form_block_id,
     ]
         : ['class' => 'theme-form-block']

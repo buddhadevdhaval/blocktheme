@@ -80,7 +80,7 @@ export default function Edit( {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title="Card Settings" initialOpen={ true }>
+				<PanelBody title={ __( 'Card Settings', 'ambrygen-web' ) } initialOpen={ true }>
 					<TextControl
 						label={ __( 'Custom Name', 'ambrygen-web' ) }
 						value={ customName }

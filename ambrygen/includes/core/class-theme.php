@@ -88,6 +88,8 @@ final class Theme {
 	public function load_components(): void {
 		// Frontend + shared components.
 		Helper::instance();
+		GlobalVideoModalService::instance();
+		TeamCacheService::instance();
 		Blocks::instance();
 		BlockVisibilityService::instance();
 		Assets::instance();
@@ -99,6 +101,8 @@ final class Theme {
 		\Ambrygen\Theme\Core\Admin\PostSearchAjaxController::instance();
 		MarketingMaterialTrackingAdminController::instance();
 
+		\Ambrygen\Theme\Core\Routes\SearchPageService::instance();
+		\Ambrygen\Theme\Core\Routes\LegacyRedirectService::instance();
 		// Custom Post Types
 		PostTypes::instance();
 		Theme_Options::instance();

@@ -61,7 +61,7 @@ if ( ! empty( $attributes['buttons'] ) && is_array( $attributes['buttons'] ) ) {
 	*/
 	$ambrygen_border_class       = ( 'title-content-with-image' === $ambrygen_variation && $ambrygen_border_required ) ? 'iot-block--border' : '';
 	$ambrygen_top_align_class    = $ambrygen_content_top_align ? 'has-top-align' : '';
-	
+
 	$ambrygen_image_size_class = '';
 	$ambrygen_heading_class    = 'heading-2';
 	if ( 'title-content-with-image' === $ambrygen_variation ) {
@@ -157,7 +157,7 @@ if ( ! empty( $attributes['buttons'] ) && is_array( $attributes['buttons'] ) ) {
 				<div class="is-style-gl-s16" aria-hidden="true"></div>
 			<?php endif; ?>
 			<?php if ( 'profile-content-with-image' === $ambrygen_variation && ! empty( $ambrygen_eyebrow_text ) ) : ?>
-				<div class="iot-block__tagline js-gsap-fade">
+				<div class="iot-block__tagline hero-kicker js-gsap-fade">
 					<?php echo wp_kses_post( $ambrygen_eyebrow_text ); ?>
 				</div>
 				<div class="is-style-gl-s8" aria-hidden="true"></div>

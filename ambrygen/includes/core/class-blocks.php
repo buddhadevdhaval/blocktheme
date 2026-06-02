@@ -39,6 +39,7 @@ final class Blocks
 	{
 		$this->register_block_category();
 		$this->register_blocks();
+		add_action( 'enqueue_block_assets', array( $this, 'localize_test_catalog_view_script' ) );
 	}
 
 	/**
@@ -92,5 +93,22 @@ final class Blocks
 				);
 			}
 		}
+	}
+
+	/**
+	 * Localize the test catalog view script.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function localize_test_catalog_view_script(): void
+	{
+		wp_localize_script(
+			'ambrygen-test-catalog-view-script',
+			'ambrygenCatalog',
+			array(
+				'nonce' => wp_create_nonce( 'wp_rest' ),
+			)
+		);
 	}
 }

@@ -34,7 +34,7 @@ $ambrygen_grid_columns = $ambrygen_item_count >= 3 ? '3' : '2';
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array_filter(
 		array(
-			'class' => 'image-grid-block video-grid wp-block-ambrygen-gallery block-' . sanitize_html_class( $ambrygen_variation ) . ' ' . $ambrygen_layout_class . ' grid-column' . $ambrygen_grid_columns,
+			'class' => 'block-layout image-grid-block video-grid wp-block-ambrygen-gallery block-' . sanitize_html_class( $ambrygen_variation ) . ' ' . $ambrygen_layout_class . ' grid-column' . $ambrygen_grid_columns,
 			'role'  => 'region',
 			'id'    => $ambrygen_block_id ?: null,
 		)
@@ -46,12 +46,12 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	<?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	aria-label="<?php esc_attr_e( 'Video grid section', 'ambrygen-web' ); ?>"
 >
-	<div class="two-column-videos">
+	<div class="two-column-videos block-layout">
 		<?php if ( ! empty( trim( wp_strip_all_tags( $ambrygen_subheading ) ) ) || ! empty( trim( wp_strip_all_tags( $ambrygen_sub_intro ) ) ) ) : ?>
 			<div class="is-style-gl-s32" aria-hidden="true"></div>
 			<div class="two-column-videos__subheading">
 				<?php if ( ! empty( trim( wp_strip_all_tags( $ambrygen_subheading ) ) ) ) : ?>
-					<<?php echo tag_escape( $ambrygen_heading_tag ); ?> class="heading-4 block-title mb-0">
+					<<?php echo tag_escape( $ambrygen_heading_tag ); ?> class="heading-4 block-title mb-0 js-gsap-fade">
 						<?php echo wp_kses_post( $ambrygen_subheading ); ?>
 					</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 				<?php endif; ?>
@@ -59,7 +59,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 					<div class="is-style-gl-s16" aria-hidden="true"></div>
 				<?php endif; ?>
 				<?php if ( ! empty( trim( wp_strip_all_tags( $ambrygen_sub_intro ) ) ) ) : ?>
-					<div class="body1-reg two-column-videos__subheading-description">
+					<div class="body1-reg two-column-videos__subheading-description js-gsap-fade">
 						<?php echo wp_kses_post( $ambrygen_sub_intro ); ?>
 					</div>
 				<?php endif; ?>

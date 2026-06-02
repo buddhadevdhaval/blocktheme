@@ -109,7 +109,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	} = attributes;
 	const isExample = blockId === 'example-block-preview';
 	const blockProps = useBlockProps( {
-		className: 'location-map',
+		className: 'location-map block-layout',
 		id: isExample ? undefined : anchor || blockId || undefined,
 	} );
 

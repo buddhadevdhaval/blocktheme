@@ -139,7 +139,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	}, [ activeSlideIndex, innerBlocks ] );
 
 	const blockProps = useBlockProps( {
-		className: 'testimonial-slider',
+		className: 'testimonial-slider block-layout',
 		id: isExample ? undefined : blockId || undefined,
 	} );
 

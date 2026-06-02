@@ -84,7 +84,7 @@ $theme_video_poster_alt = isset( $theme_video_poster_image['alt'] )
 $theme_video_iframe_src = Helper::get_iframe_src( $theme_video_iframe_url );
 
 $theme_video_wrapper_args = array(
-	'class' => 'features-media',
+	'class' => 'features-media block-layout',
 );
 
 if ( $theme_video_block_id ) {

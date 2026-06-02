@@ -237,6 +237,8 @@
 										<?php ++$ambrygen_post_index; ?>
 									<?php endwhile; ?>
 									<?php wp_reset_postdata(); ?>
+								<?php else: ?>
+									<p><?php esc_html_e('No Test found for this tab.', 'ambrygen-web'); ?></p>
 								<?php endif; ?>
 							</div>
 							<?php if ($ambrygen_total_tests > $ambrygen_initial_visible_tests): ?>

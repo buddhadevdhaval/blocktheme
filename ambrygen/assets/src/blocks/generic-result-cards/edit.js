@@ -40,7 +40,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	}
 
 	const blockProps = useBlockProps( {
-		className: 'card-result-block',
+		className: 'card-result-block block-layout',
 	} );
 	const gridClassName =
 		innerBlockCount >= 4

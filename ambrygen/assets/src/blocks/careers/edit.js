@@ -289,7 +289,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		}
 	}, [attributes.videoType, setAttributes]);
 
-	const blockProps = useBlockProps({ className: 'careers-highlight' });
+	const blockProps = useBlockProps({ className: 'careers-highlight block-layout' });
 
 	const toggleJobBlock = (postId, isSelected) => {
 		if (isSelected) {
@@ -511,7 +511,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							]}
 						/>
 					</div>
-					<div className="careers-highlight__intro block__rowflex--block-content subtitle1-reg">
+					<div className="careers-highlight__intro block__rowflex--block-content subtitle1-reg block-description">
 						<RichText
 							tagName="div"
 							value={intro}

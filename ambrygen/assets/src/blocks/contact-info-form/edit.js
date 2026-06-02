@@ -272,7 +272,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 			</InspectorControls>
 
-			<div className="newsletter newsletter-signup">
+			<div className="newsletter newsletter-signup block-layout">
 				<div className="newsletter__image-block">
 					{ displayImage && (
 						<img

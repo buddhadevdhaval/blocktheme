@@ -45,7 +45,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			<div { ...useBlockProps() }>
 				<div className="block-layout timeline-block collaborators">
 					<div className="timeline-block__header collaborators__header">
-						<TagName className="heading-3 block-title mb-0 collaborators__title">
+						<TagName className="heading-3 block-title mb-0 collaborators__title block-title">
 							<RichText
 								tagName="span"
 								value={ title }
@@ -63,7 +63,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 						<RichText
 							tagName="div"
-							className="text-md-regular block-description collaborators__intro"
+							className="text-md-regular block-description collaborators__intro block-description"
 							value={ intro }
 							onChange={ ( value ) =>
 								setAttributes( { intro: value } )

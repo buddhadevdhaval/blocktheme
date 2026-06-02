@@ -35,7 +35,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const HeadingTag = headingTag || 'h2';
 
 	const blockProps = useBlockProps( {
-		className: 'supporting-image',
+		className: 'supporting-image block-layout',
 		id: anchor || blockId || undefined,
 	} );
 

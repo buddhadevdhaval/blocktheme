@@ -60,7 +60,7 @@
 			}
 
 			.timeline-block__badge-col::before {
-				bottom: calc(100% - 76px - 48px);
+				bottom: calc(100% - 76px - 16px);
 
 				@include bp.max(md) {
 					display: none;
@@ -100,11 +100,11 @@
 	}
 
 	&__badge {
-		width: 48px;
-		height: 48px;
+		width: 18px;
+		height: 18px;
 		border-radius: 50%;
-		background-color: var(--theme_white);
-		border: 1.5px solid var(--theme_cg_blue);
+		background-color: var(--theme_cg_blue);
+		// border: 1.5px solid var(--theme_cg_blue);
 		color: var(--theme_cg_blue);
 		display: flex;
 		align-items: center;
@@ -118,7 +118,7 @@
 		margin-top: 76px;
 
 		&::before {
-			content: counter(timeline-step); // Automatically displays the step number
+			// content: counter(timeline-step);
 		}
 
 		@include bp.max(md) {

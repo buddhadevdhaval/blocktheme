@@ -5,8 +5,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$ambrygen_block_id = isset( $attributes['blockId'] ) ? sanitize_html_class( $attributes['blockId'] ) : '';
-$ambrygen_title    = $attributes['title'] ?? '';
+use Ambrygen\Theme\Core\Helper;
+
+$ambrygen_block_id    = isset( $attributes['blockId'] ) ? sanitize_html_class( $attributes['blockId'] ) : '';
+$ambrygen_title       = $attributes['title'] ?? '';
+$ambrygen_heading_tag = Helper::get_heading_tag( $attributes['headingTag'] ?? 'h2', 'h2' );
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	array_filter(
@@ -23,9 +26,9 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 		
 		<?php if ( $ambrygen_title ) : ?>
 			<div class="webinars__header">
-				<h2 class="webinars__title heading-3">
+				<<?php echo esc_html( $ambrygen_heading_tag ); ?> class="webinars__title heading-3 js-gsap-fade">
 					<?php echo wp_kses_post( $ambrygen_title ); ?>
-				</h2>
+				</<?php echo esc_html( $ambrygen_heading_tag ); ?>>
 			</div>
 			<div class="is-style-gl-s50" aria-hidden="true"></div>
 		<?php endif; ?>

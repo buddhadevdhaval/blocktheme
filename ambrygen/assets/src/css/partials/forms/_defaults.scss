@@ -116,7 +116,9 @@ button:-moz-focusring,
 
 
 .theme-form-wrapper {
+
 	.form-row {
+
 		.form-body {
 			display: grid;
 			grid-template-columns: repeat(12, 1fr);
@@ -144,6 +146,7 @@ button:-moz-focusring,
 				}
 
 				&[data-type="control_radio"] {
+
 					.form-label-auto {
 						margin-bottom: 16px;
 					}
@@ -152,6 +155,7 @@ button:-moz-focusring,
 			}
 
 			.form-radio-item {
+
 				label {
 					color: var(--theme_gray_700);
 					font-size: 14px;
@@ -168,6 +172,7 @@ button:-moz-focusring,
 				gap: 12px 32px;
 
 				.form-radio-item {
+
 					@include bp.max(md) {
 						flex: 0 0 100%;
 					}

@@ -67,13 +67,13 @@ export default function Edit( { attributes, setAttributes } ) {
 							onChange={ ( value ) =>
 								setAttributes( { title: value } )
 							}
-							placeholder={ __(
-								'Add Title...',
-								'ambrygen-web'
-							) }
+							placeholder={ __( 'Add Title…', 'ambrygen-web' ) }
 						/>
 
-						<div className="is-style-gl-s12" aria-hidden="true"></div>
+						<div
+							className="is-style-gl-s12"
+							aria-hidden="true"
+						></div>
 
 						<RichText
 							tagName="div"
@@ -82,13 +82,13 @@ export default function Edit( { attributes, setAttributes } ) {
 							onChange={ ( value ) =>
 								setAttributes( { intro: value } )
 							}
-							placeholder={ __(
-								'Add Intro...',
-								'ambrygen-web'
-							) }
+							placeholder={ __( 'Add Intro…', 'ambrygen-web' ) }
 						/>
 
-						<div className="is-style-gl-s12" aria-hidden="true"></div>
+						<div
+							className="is-style-gl-s12"
+							aria-hidden="true"
+						></div>
 
 						<InnerBlocks
 							allowedBlocks={ [

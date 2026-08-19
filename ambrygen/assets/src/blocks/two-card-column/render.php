@@ -18,7 +18,7 @@ use Ambrygen\Theme\Core\Helper;
 /**
  * Attributes
  */
-$ambrygen_eyebrow      = $attributes['eyebrow'] ?? '';
+$ambrygen_eyebrow     = $attributes['eyebrow'] ?? '';
 $ambrygen_heading     = $attributes['heading'] ?? '';
 $ambrygen_heading_tag = Helper::get_heading_tag( $attributes['headingTag'] ?? 'h2', 'h2' );
 $ambrygen_description = $attributes['description'] ?? '';

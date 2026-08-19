@@ -1,4 +1,3 @@
-import { useBlockProps } from '@wordpress/block-editor';
 import SsrPreview from '../shared/ssr-preview';
 
 export default function Edit( props ) {

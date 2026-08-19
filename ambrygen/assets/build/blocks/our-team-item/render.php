@@ -22,10 +22,13 @@ if ( ! $ambrygen_post_id ) {
 	return;
 }
 
-$ambrygen_cache_key   = 'team_member_' . $ambrygen_post_id;
-$ambrygen_cached_data = wp_cache_get( $ambrygen_cache_key, 'ambrygen_team' );
+$ambrygen_team_member_cache = isset( $GLOBALS['ambrygen_team_member_cache'] ) && is_array( $GLOBALS['ambrygen_team_member_cache'] )
+	? $GLOBALS['ambrygen_team_member_cache']
+	: array();
 
-if ( false === $ambrygen_cached_data ) {
+if ( isset( $ambrygen_team_member_cache[ $ambrygen_post_id ] ) ) {
+	$ambrygen_cached_data = $ambrygen_team_member_cache[ $ambrygen_post_id ];
+} else {
 	$ambrygen_display_post = get_post( $ambrygen_post_id );
 
 	if ( ! $ambrygen_display_post || 'publish' !== $ambrygen_display_post->post_status ) {
@@ -44,26 +47,20 @@ if ( false === $ambrygen_cached_data ) {
 		'bio'         => apply_filters( 'the_content', $ambrygen_display_post->post_content ),
 	);
 
-	wp_cache_set( $ambrygen_cache_key, $ambrygen_cached_data, 'ambrygen_team', 12 * HOUR_IN_SECONDS );
-} else {
-	// Validate cached post still exists and is published
-	$ambrygen_display_post = get_post( $ambrygen_post_id );
-	if ( ! $ambrygen_display_post || 'publish' !== $ambrygen_display_post->post_status ) {
-		wp_cache_delete( $ambrygen_cache_key, 'ambrygen_team' );
-		return;
-	}
+	$ambrygen_team_member_cache[ $ambrygen_post_id ] = $ambrygen_cached_data;
+	$GLOBALS['ambrygen_team_member_cache']           = $ambrygen_team_member_cache;
 }
 
-$ambrygen_name        = isset( $ambrygen_cached_data['name'] ) ? (string) $ambrygen_cached_data['name'] : '';
-$ambrygen_designation = isset( $ambrygen_cached_data['designation'] ) ? (string) $ambrygen_cached_data['designation'] : '';
-$ambrygen_image_id    = isset( $ambrygen_cached_data['image_id'] ) ? absint( $ambrygen_cached_data['image_id'] ) : 0;
-$ambrygen_bio         = isset( $ambrygen_cached_data['bio'] ) ? (string) $ambrygen_cached_data['bio'] : '';
-$ambrygen_display_id  = $ambrygen_image_id
+$ambrygen_name         = isset( $ambrygen_cached_data['name'] ) ? (string) $ambrygen_cached_data['name'] : '';
+$ambrygen_designation  = isset( $ambrygen_cached_data['designation'] ) ? (string) $ambrygen_cached_data['designation'] : '';
+$ambrygen_image_id     = isset( $ambrygen_cached_data['image_id'] ) ? absint( $ambrygen_cached_data['image_id'] ) : 0;
+$ambrygen_bio          = isset( $ambrygen_cached_data['bio'] ) ? (string) $ambrygen_cached_data['bio'] : '';
+$ambrygen_display_id   = $ambrygen_image_id
 	? $ambrygen_image_id
 	: Theme_Options::get_placeholder_image_id();
-$ambrygen_image_url   = wp_get_attachment_image_url( $ambrygen_display_id, 'medium' );
-$ambrygen_image_url   = $ambrygen_image_url ? $ambrygen_image_url : '';
-$ambrygen_is_slider   = isset( $block->context['ambrygen/ourTeamVariation'] )
+$ambrygen_image_url    = wp_get_attachment_image_url( $ambrygen_display_id, 'medium' );
+$ambrygen_image_url    = $ambrygen_image_url ? $ambrygen_image_url : '';
+$ambrygen_is_slider    = isset( $block->context['ambrygen/ourTeamVariation'] )
 	&& 'slider-view' === $block->context['ambrygen/ourTeamVariation'];
 $ambrygen_class_prefix = $ambrygen_is_slider ? 'our-leadership' : 'our-team';
 $ambrygen_parent_id    = isset( $block->context['ambrygen/ourTeamBlockId'] )

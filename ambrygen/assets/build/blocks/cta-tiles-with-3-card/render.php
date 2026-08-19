@@ -40,7 +40,7 @@ if ( empty( trim( wp_strip_all_tags( $ambrygen_section_title ) ) ) ) {
 }
 
 $ambrygen_wrapper_attributes_array = array(
-	'class' => 'cta-tiles-with-3-card',
+	'class' => 'cta-tiles-with-3-card block-layout',
 );
 
 if ( $ambrygen_block_id ) {

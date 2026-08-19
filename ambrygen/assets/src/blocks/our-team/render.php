@@ -59,13 +59,13 @@ $ambrygen_has_team_members     = 0 < $ambrygen_team_member_count;
 $ambrygen_has_multiple_members = 1 < $ambrygen_team_member_count;
 $ambrygen_show_navigation      = $ambrygen_show_navigation && $ambrygen_has_multiple_members;
 $ambrygen_show_pagination      = $ambrygen_show_pagination && $ambrygen_has_multiple_members;
-$ambrygen_swiper_config       = wp_json_encode(
+$ambrygen_swiper_config        = wp_json_encode(
 	array(
 		'autoplay'        => ! empty( $ambrygen_attributes['autoplay'] ),
 		'navigation_show' => $ambrygen_show_navigation,
 	)
 );
-$ambrygen_swiper_config       = false === $ambrygen_swiper_config ? '{}' : $ambrygen_swiper_config;
+$ambrygen_swiper_config        = false === $ambrygen_swiper_config ? '{}' : $ambrygen_swiper_config;
 
 $ambrygen_wrapper_args = array(
 	'class' => $ambrygen_block_class,

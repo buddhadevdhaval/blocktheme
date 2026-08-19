@@ -16,6 +16,7 @@
 	}
 
 	&__number {
+
 		.stats-counter & {
 			transition: color 0.3s ease;
 			color: var(--theme_cg_blue);
@@ -50,10 +51,6 @@
 		@include bp.min(xl) {
 			grid-template-columns: 562px 1fr;
 		}
-	}
-
-	&__title {
-		// color: var(--theme_gray_900);
 	}
 
 	&__stats-wrapper {

@@ -1,4 +1,5 @@
 .wp-block.icon-grid {
+
 	.icon-grid__list {
 		display: block;
 
@@ -12,11 +13,15 @@
 }
 
 .wp-block {
+
 	&.icon-grid {
+
 		&:has(.block-bg-image) {
 			position: static;
 		}
+
 		.block-bg-image {
+
 			img {
 				height: 100% !important;
 			}

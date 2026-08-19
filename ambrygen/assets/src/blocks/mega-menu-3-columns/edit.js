@@ -21,10 +21,14 @@ import {
 } from '@wordpress/components';
 import { plus, trash, chevronUp, chevronDown } from '@wordpress/icons';
 import { useEffect, useState } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
 // Shared imports
-import { useArrayHandlers, generateMenuId } from '../_shared/utils';
+import {
+	useArrayHandlers,
+	generateMenuId,
+	ensureArrayItemIds,
+} from '../_shared/utils';
 import {
 	ItemHeader,
 	ImageUploader,
@@ -41,6 +45,7 @@ import {
 const MAX_ITEMS = 3;
 
 const DEFAULT_ITEM = {
+	id: generateMenuId(),
 	image: '',
 	imageId: 0,
 	title: 'New Item',
@@ -52,6 +57,7 @@ const DEFAULT_ITEM = {
 };
 
 const DEFAULT_LINK = {
+	id: generateMenuId(),
 	label: 'New Link',
 	url: '#',
 	icon: '',
@@ -152,17 +158,11 @@ function SubmenuLink( {
 								link.target === '_blank'
 							}
 							onChange={ ( checked ) => {
-								onUpdate(
-									itemIndex,
-									linkIndex,
-									{
-										opensInNewTab: checked,
-										target: checked ? '_blank' : '',
-										rel: checked
-											? 'noopener noreferrer'
-											: '',
-									}
-								);
+								onUpdate( itemIndex, linkIndex, {
+									opensInNewTab: checked,
+									target: checked ? '_blank' : '',
+									rel: checked ? 'noopener noreferrer' : '',
+								} );
 							} }
 						/>
 					</div>
@@ -333,6 +333,29 @@ export default function Edit( { attributes, setAttributes } ) {
 		'items'
 	);
 
+	useEffect( () => {
+		let hasChanges = false;
+		const normalizedItems = ensureArrayItemIds( items ).items.map(
+			( item ) => {
+				const normalizedLinks = ensureArrayItemIds(
+					item.submenuLinks || []
+				);
+
+				if ( ! item.id || normalizedLinks.hasChanges ) {
+					hasChanges = true;
+				}
+
+				return normalizedLinks.hasChanges
+					? { ...item, submenuLinks: normalizedLinks.items }
+					: item;
+			}
+		);
+
+		if ( hasChanges ) {
+			setAttributes( { items: normalizedItems } );
+		}
+	}, [ items, setAttributes ] );
+
 	const handleAdd = () => {
 		if ( items.length < MAX_ITEMS ) {
 			add( DEFAULT_ITEM );
@@ -345,7 +368,9 @@ export default function Edit( { attributes, setAttributes } ) {
 			const newItems = [ ...prev.items ];
 			const links = [ ...newItems[ itemIndex ].submenuLinks ];
 			const updates =
-				typeof key === 'object' && key !== null ? key : { [ key ]: value };
+				typeof key === 'object' && key !== null
+					? key
+					: { [ key ]: value };
 			links[ linkIndex ] = { ...links[ linkIndex ], ...updates };
 			newItems[ itemIndex ] = {
 				...newItems[ itemIndex ],
@@ -421,7 +446,10 @@ export default function Edit( { attributes, setAttributes } ) {
 		<>
 			<InspectorControls>
 				{ /* Menu Settings */ }
-				<PanelBody title={ __( 'Menu Settings', 'ambrygen-web' ) } initialOpen>
+				<PanelBody
+					title={ __( 'Menu Settings', 'ambrygen-web' ) }
+					initialOpen
+				>
 					<Field
 						label={ __( 'Menu Name', 'ambrygen-web' ) }
 						value={ menuLabel }
@@ -443,19 +471,27 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 
 				{ /* Menu Items */ }
-				<PanelBody title={ __( 'Menu Items', 'ambrygen-web' ) } initialOpen>
+				<PanelBody
+					title={ __( 'Menu Items', 'ambrygen-web' ) }
+					initialOpen
+				>
 					<p
 						className="components-base-control__help"
 						style={ { marginBottom: '12px' } }
 					>
-						{ __(
-							`Manage up to ${ MAX_ITEMS } menu items. Current: ${ items.length }/${ MAX_ITEMS }`,
-							'ambrygen-web'
+						{ sprintf(
+							/* translators: 1: maximum menu items allowed, 2: current item count. */
+							__(
+								'Manage up to %1$d menu items. Current: %2$d/%1$d',
+								'ambrygen-web'
+							),
+							MAX_ITEMS,
+							items.length
 						) }
 					</p>
 
 					{ items.map( ( item, index ) => (
-						<PanelItem key={ index }>
+						<PanelItem key={ item.id || item.title || item.url }>
 							<ItemHeader
 								index={ index }
 								label={ item.title }
@@ -510,7 +546,10 @@ export default function Edit( { attributes, setAttributes } ) {
 
 			<div { ...blockProps }>
 				{ items.map( ( item, index ) => (
-					<div key={ index } className="nav__item--mega-menu__item">
+					<div
+						key={ item.id || item.title || item.url }
+						className="nav__item--mega-menu__item"
+					>
 						<MenuItem
 							item={ item }
 							index={ index }

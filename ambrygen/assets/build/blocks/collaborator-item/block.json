@@ -11,6 +11,10 @@
   "attributes": {
     "termId": {
       "type": "number"
+    },
+    "showImage": {
+      "type": "boolean",
+      "default": true
     }
   },
   "editorScript": "file:./index.js",

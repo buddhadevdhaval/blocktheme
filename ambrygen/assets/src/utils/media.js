@@ -6,6 +6,12 @@
  */
 export const buildSrcSet = ( sizes = {} ) =>
 	Object.values( sizes )
-		.filter( ( size ) => size?.url && size?.width )
-		.map( ( size ) => `${ size.url } ${ size.width }w` )
+		.reduce( ( srcset, size ) => {
+			if ( ! size?.url || ! size?.width ) {
+				return srcset;
+			}
+
+			srcset.push( `${ size.url } ${ size.width }w` );
+			return srcset;
+		}, [] )
 		.join( ', ' );

@@ -4,8 +4,10 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
 /**
  * Edit component for the Blog Disclaimer block.
  *
- * @param {Object} props External props.
- * @return {JSX.Element} The edit component.
+ * @param {Object}   props               External props.
+ * @param {Object}   props.attributes    Block attributes.
+ * @param {Function} props.setAttributes Updates block attributes.
+ * @return {import('@wordpress/element').WPElement} The edit component.
  */
 export default function Edit( { attributes, setAttributes } ) {
 	const { heading, content } = attributes;
@@ -42,15 +44,19 @@ export default function Edit( { attributes, setAttributes } ) {
 					tagName="div"
 					className="blog-disclaimer__heading text-small-semibold"
 					value={ heading }
-					onChange={ ( value ) => setAttributes( { heading: value } ) }
-					placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+					onChange={ ( value ) =>
+						setAttributes( { heading: value } )
+					}
+					placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 				/>
 				<RichText
 					tagName="div"
 					className="blog-disclaimer__text text-small"
 					value={ content }
-					onChange={ ( value ) => setAttributes( { content: value } ) }
-					placeholder={ __( 'Add Description...', 'ambrygen-web' ) }
+					onChange={ ( value ) =>
+						setAttributes( { content: value } )
+					}
+					placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
 				/>
 			</div>
 		</div>

@@ -13,22 +13,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Ambrygen\Theme\Core\Helper;
 
-$ambrygen_attributes        = is_array( $attributes ) ? $attributes : array();
-$ambrygen_step_title        = isset( $ambrygen_attributes['stepTitle'] ) && '' !== $ambrygen_attributes['stepTitle'] ? $ambrygen_attributes['stepTitle'] : ( $ambrygen_attributes['sectiontitle'] ?? '' );
-$ambrygen_description       = isset( $ambrygen_attributes['description'] ) ? $ambrygen_attributes['description'] : '';
-$ambrygen_image_id          = isset( $ambrygen_attributes['imageId'] ) ? absint( $ambrygen_attributes['imageId'] ) : 0;
-$ambrygen_image_url         = isset( $ambrygen_attributes['imageUrl'] ) ? esc_url_raw( $ambrygen_attributes['imageUrl'] ) : '';
-$ambrygen_image_alt         = isset( $ambrygen_attributes['imageAlt'] ) ? sanitize_text_field( $ambrygen_attributes['imageAlt'] ) : '';
-$ambrygen_cta               = isset( $ambrygen_attributes['cta'] ) && is_array( $ambrygen_attributes['cta'] ) ? $ambrygen_attributes['cta'] : array();
-$ambrygen_cta_text          = isset( $ambrygen_cta['text'] ) ? sanitize_text_field( $ambrygen_cta['text'] ) : '';
-$ambrygen_cta_url           = isset( $ambrygen_cta['url'] ) ? esc_url_raw( $ambrygen_cta['url'] ) : '';
-$ambrygen_show_full_image   = isset( $ambrygen_attributes['showFullImage'] ) ? (bool) $ambrygen_attributes['showFullImage'] : false;
-$ambrygen_has_step_title    = '' !== trim( wp_strip_all_tags( $ambrygen_step_title ) );
-$ambrygen_has_description   = '' !== trim( wp_strip_all_tags( $ambrygen_description ) );
-$ambrygen_step_title_plain  = trim( wp_strip_all_tags( $ambrygen_step_title ) );
-$ambrygen_tab_uid           = wp_unique_id( 'steps-image-alongside-text-' );
-$ambrygen_tab_id            = $ambrygen_tab_uid . '-tab';
-$ambrygen_panel_id          = $ambrygen_tab_uid . '-panel';
+$ambrygen_attributes       = is_array( $attributes ) ? $attributes : array();
+$ambrygen_step_title       = isset( $ambrygen_attributes['stepTitle'] ) && '' !== $ambrygen_attributes['stepTitle'] ? $ambrygen_attributes['stepTitle'] : ( $ambrygen_attributes['sectiontitle'] ?? '' );
+$ambrygen_description      = isset( $ambrygen_attributes['description'] ) ? $ambrygen_attributes['description'] : '';
+$ambrygen_image_id         = isset( $ambrygen_attributes['imageId'] ) ? absint( $ambrygen_attributes['imageId'] ) : 0;
+$ambrygen_image_url        = isset( $ambrygen_attributes['imageUrl'] ) ? esc_url_raw( $ambrygen_attributes['imageUrl'] ) : '';
+$ambrygen_image_alt        = isset( $ambrygen_attributes['imageAlt'] ) ? sanitize_text_field( $ambrygen_attributes['imageAlt'] ) : '';
+$ambrygen_cta              = isset( $ambrygen_attributes['cta'] ) && is_array( $ambrygen_attributes['cta'] ) ? $ambrygen_attributes['cta'] : array();
+$ambrygen_cta_text         = isset( $ambrygen_cta['text'] ) ? sanitize_text_field( $ambrygen_cta['text'] ) : '';
+$ambrygen_cta_url          = isset( $ambrygen_cta['url'] ) ? esc_url_raw( $ambrygen_cta['url'] ) : '';
+$ambrygen_show_full_image  = isset( $ambrygen_attributes['showFullImage'] ) ? (bool) $ambrygen_attributes['showFullImage'] : false;
+$ambrygen_has_step_title   = '' !== trim( wp_strip_all_tags( $ambrygen_step_title ) );
+$ambrygen_has_description  = '' !== trim( wp_strip_all_tags( $ambrygen_description ) );
+$ambrygen_step_title_plain = trim( wp_strip_all_tags( $ambrygen_step_title ) );
+$ambrygen_tab_uid          = wp_unique_id( 'steps-image-alongside-text-' );
+$ambrygen_tab_id           = $ambrygen_tab_uid . '-tab';
+$ambrygen_panel_id         = $ambrygen_tab_uid . '-panel';
 
 $ambrygen_normalize_link_attributes = static function ( $ambrygen_link ) {
 	$ambrygen_target = isset( $ambrygen_link['target'] ) && '_blank' === $ambrygen_link['target'] ? '_blank' : '';

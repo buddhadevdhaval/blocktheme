@@ -9,6 +9,7 @@ section:has(.icon-grid-block) {
 }
 
 .block-layout {
+
 	&:has(.icon-grid-block) {
 
 		.block-bg-image {
@@ -42,7 +43,7 @@ section:has(.icon-grid-block) {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		width: 100%;
-		gap: fluid(18, 24);
+		gap: fluid(18, 20);
 		position: relative;
 
 		@include bp.between(md, xl) {
@@ -62,14 +63,22 @@ section:has(.icon-grid-block) {
 		display: flex;
 		flex-wrap: wrap;
 		gap: fluid(8, 18);
-		padding: fluid(14, 24);
+		padding: fluid(14, 20);
 		height: 100%;
+
+		@include bp.max(370px) {
+			flex-direction: column;
+		}
 	}
 
 	&__image {
 		display: flex;
 		flex: fluid(54, 120) 0 0;
 		justify-content: center;
+
+		@include bp.between(xl, xxxl) {
+			flex: 78px 0 0;
+		}
 
 		@include bp.max(xl-large) {
 			justify-content: inherit;
@@ -93,6 +102,7 @@ section:has(.icon-grid-block) {
 	}
 
 	&__links {
+
 		/* Style will add here */
 	}
 
@@ -110,11 +120,13 @@ section:has(.icon-grid-block) {
 		padding: 0;
 		border: 0;
 		overflow-wrap: anywhere;
+		text-transform: none;
 	}
 }
 
 
 .variation-grid-post {
+
 	.info-list-block__header {
 		text-align: center;
 	}

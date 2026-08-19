@@ -46,8 +46,8 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 $ambrygen_attributes     = $attributes ?? array();
 $ambrygen_icon_variation = $block->context['ambrygen/variation'] ?? '';
 
-$ambrygen_title_raw      = $ambrygen_attributes['title'] ?? '';
-$ambrygen_title          = wp_strip_all_tags( $ambrygen_title_raw );
+$ambrygen_title_raw = $ambrygen_attributes['title'] ?? '';
+$ambrygen_title     = wp_strip_all_tags( $ambrygen_title_raw );
 
 $ambrygen_links = is_array( $ambrygen_attributes['links'] ?? null )
 	? $ambrygen_attributes['links']
@@ -132,7 +132,7 @@ if ( ! $ambrygen_has_content && 'variation-3' !== $ambrygen_icon_variation ) {
 
 $ambrygen_card_class = '';
 
-$ambrygen_wrapper_class      = 'our-testing-menu' === $ambrygen_icon_variation ? 'item-card js-gsap-fade' : 'info-list__col js-gsap-fade';
+$ambrygen_wrapper_class = 'our-testing-menu' === $ambrygen_icon_variation ? 'item-card js-gsap-fade' : 'info-list__col js-gsap-fade';
 if ( 'variation-4' === $ambrygen_icon_variation ) {
 	$ambrygen_wrapper_class = 'icon-grid__item js-gsap-fade';
 }
@@ -200,7 +200,7 @@ if ( 'variation-3' === $ambrygen_icon_variation ) {
 		<div class="<?php echo esc_attr( $ambrygen_card_class ); ?>">
 	<?php endif; ?>
 
-		<?php if ( 'our-testing-menu' !== $ambrygen_icon_variation && 'variation-4' !== $ambrygen_icon_variation  && 'variation-5' !== $ambrygen_icon_variation && ( $ambrygen_icon_id || $ambrygen_icon_url ) ) : ?>
+		<?php if ( 'our-testing-menu' !== $ambrygen_icon_variation && 'variation-4' !== $ambrygen_icon_variation && 'variation-5' !== $ambrygen_icon_variation && ( $ambrygen_icon_id || $ambrygen_icon_url ) ) : ?>
 			<div class="info-list__image">
 				<?php
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() returns escaped image markup.

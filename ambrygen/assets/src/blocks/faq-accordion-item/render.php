@@ -36,18 +36,18 @@ $ambrygen_richtext_allowed = array(
 	),
 );
 
-$ambrygen_attributes  = is_array( $attributes ?? null ) ? $attributes : array();
-$ambrygen_question    = $ambrygen_attributes['question'] ?? '';
-$ambrygen_sub_heading = $ambrygen_attributes['subHeading'] ?? '';
-$ambrygen_answer_id   = wp_unique_id( 'faq-answer-' );
-$ambrygen_answer_html = trim( $content );
-$ambrygen_answer_text = trim(
+$ambrygen_attributes   = is_array( $attributes ?? null ) ? $attributes : array();
+$ambrygen_question     = $ambrygen_attributes['question'] ?? '';
+$ambrygen_sub_heading  = $ambrygen_attributes['subHeading'] ?? '';
+$ambrygen_answer_id    = wp_unique_id( 'faq-answer-' );
+$ambrygen_answer_html  = trim( $content );
+$ambrygen_answer_text  = trim(
 	wp_strip_all_tags(
 		html_entity_decode( $ambrygen_answer_html, ENT_QUOTES | ENT_HTML5, 'UTF-8' )
 	)
 );
-$ambrygen_answer_text = trim( str_replace( "\xc2\xa0", ' ', $ambrygen_answer_text ) );
-$ambrygen_variant     = $block->context['ambrygen/faqAccordionVariant'] ?? 'default';
+$ambrygen_answer_text  = trim( str_replace( "\xc2\xa0", ' ', $ambrygen_answer_text ) );
+$ambrygen_variant      = $block->context['ambrygen/faqAccordionVariant'] ?? 'default';
 $ambrygen_has_question = '' !== trim( wp_strip_all_tags( $ambrygen_question ) );
 
 if ( 'without-image' !== $ambrygen_variant ) {

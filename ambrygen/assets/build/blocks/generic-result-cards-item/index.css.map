@@ -1,1 +1,0 @@
-{"version":3,"file":"generic-result-cards-item/index.css","mappings":";;;AACC;EACC;AAAF,C","sources":["webpack://ambrygen/./assets/src/blocks/generic-result-cards-item/editor.scss"],"sourcesContent":[".wp-block-ambrygen-generic-result-cards-item {\n\t.principles-steps__card {\n\t\tmin-height: 280px;\n\t}\n}\n"],"names":[],"ignoreList":[],"sourceRoot":""}

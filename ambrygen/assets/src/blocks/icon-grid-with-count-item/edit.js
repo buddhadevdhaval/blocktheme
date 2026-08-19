@@ -4,19 +4,12 @@ import {
 	InspectorControls,
 	URLInput,
 } from '@wordpress/block-editor';
-import {
-	PanelBody,
-	TextControl,
-	ToggleControl,
-} from '@wordpress/components';
+import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
 
-export default function Edit( {
-	attributes,
-	setAttributes,
-} ) {
+export default function Edit( { attributes, setAttributes } ) {
 	const {
 		termlinktext,
 		title = '',
@@ -75,12 +68,15 @@ export default function Edit( {
 		customCount !== '' && customCount !== null
 			? customCount
 			: selectedTermData?.count;
-	const displayLink = customLink?.url || selectedTermData?.link || '#';
+	const customLinkFieldId = 'icon-grid-with-count-item-custom-link';
 
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Card Settings', 'ambrygen-web' ) } initialOpen={ true }>
+				<PanelBody
+					title={ __( 'Card Settings', 'ambrygen-web' ) }
+					initialOpen={ true }
+				>
 					<TextControl
 						label={ __( 'Custom Name', 'ambrygen-web' ) }
 						value={ customName }
@@ -89,7 +85,10 @@ export default function Edit( {
 								customName: value,
 							} )
 						}
-						placeholder={ fallbackTermName || __( 'Category name', 'ambrygen-web' ) }
+						placeholder={
+							fallbackTermName ||
+							__( 'Category name', 'ambrygen-web' )
+						}
 						help={ __(
 							'Leave empty to use the selected category name.',
 							'ambrygen-web'
@@ -115,10 +114,14 @@ export default function Edit( {
 						) }
 					/>
 					<div className="components-base-control">
-						<label className="components-base-control__label">
+						<label
+							className="components-base-control__label"
+							htmlFor={ customLinkFieldId }
+						>
 							{ __( 'Custom Link', 'ambrygen-web' ) }
 						</label>
 						<URLInput
+							id={ customLinkFieldId }
 							value={ customLink?.url || '' }
 							onChange={ ( url ) =>
 								setAttributes( {
@@ -131,7 +134,10 @@ export default function Edit( {
 						/>
 					</div>
 					<ToggleControl
-						label={ __( 'Open custom link in new tab', 'ambrygen-web' ) }
+						label={ __(
+							'Open custom link in new tab',
+							'ambrygen-web'
+						) }
 						checked={ Boolean( customLink?.opensInNewTab ) }
 						onChange={ ( value ) =>
 							setAttributes( {
@@ -178,17 +184,15 @@ export default function Edit( {
 										</div>
 									) }
 
-								<div className="is-style-gl-s8" aria-hidden="true"></div>
+								<div
+									className="is-style-gl-s8"
+									aria-hidden="true"
+								></div>
 							</div>
-							<a
-								className="site-btn is-style-site-text-btn has-right-arrow text-14"
-								href={ displayLink }
-								target={ customLink?.opensInNewTab ? '_blank' : undefined }
-								rel={ customLink?.opensInNewTab ? 'noopener noreferrer' : undefined }
-								onClick={ ( e ) => e.preventDefault() }
-							>
-								{ termlinktext || __( 'View Test', 'ambrygen-web' ) }
-							</a>
+							<div className="site-btn is-style-site-text-btn has-right-arrow text-14">
+								{ termlinktext ||
+									__( 'View Test', 'ambrygen-web' ) }
+							</div>
 							<div
 								className="is-style-gl-s24"
 								aria-hidden="true"

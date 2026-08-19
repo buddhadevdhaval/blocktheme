@@ -14,10 +14,14 @@ import {
 import { Button, Tooltip, PanelBody, CardDivider } from '@wordpress/components';
 import { plus, trash, chevronUp, chevronDown } from '@wordpress/icons';
 import { useState, useEffect, useCallback } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
 // Shared imports
-import { useArrayHandlers, generateMenuId } from '../_shared/utils';
+import {
+	useArrayHandlers,
+	generateMenuId,
+	ensureArrayItemIds,
+} from '../_shared/utils';
 import {
 	ItemHeader,
 	ImageUploader,
@@ -31,6 +35,7 @@ import {
 ───────────────────────────────────────────────────────────── */
 
 const DEFAULT_ITEM = {
+	id: generateMenuId(),
 	label: 'New Solution',
 	url: '#',
 	icon: '',
@@ -57,7 +62,7 @@ const DEFAULT_ITEM = {
  * @param {Function} props.onRemove Callback fired when item is removed.
  * @param {Function} props.onMove   Callback fired when item is moved up or down.
  * @param {number}   props.total    Total number of items.
- * @return {JSX.Element}                       Rendered list item element.
+ * @return {import('@wordpress/element').WPElement} Rendered list item element.
  */
 function LeftListItem( {
 	item,
@@ -69,8 +74,6 @@ function LeftListItem( {
 	onMove,
 	total,
 } ) {
-	const handleClick = () => onSelect( index );
-
 	return (
 		<li
 			style={ {
@@ -78,7 +81,6 @@ function LeftListItem( {
 				backgroundColor: isActive ? '#f0f0f0' : 'transparent',
 				borderRadius: '4px',
 			} }
-			onClick={ handleClick }
 		>
 			<div style={ { marginBottom: '4px', display: 'flex' } }>
 				<Button
@@ -102,10 +104,17 @@ function LeftListItem( {
 					label={ __( 'Move Down', 'ambrygen-web' ) }
 				/>
 			</div>
-			<a
-				href={ item.url }
+			<button
+				type="button"
 				className="nav__item--mega-menu__submenu-inner--link submenu-inner-link"
-				onClick={ ( e ) => e.preventDefault() }
+				onClick={ () => onSelect( index ) }
+				style={ {
+					background: 'transparent',
+					border: 0,
+					padding: 0,
+					width: '100%',
+					textAlign: 'left',
+				} }
 			>
 				<div className="nav__item--mega-menu__submenu-inner--icon">
 					<IconPicker
@@ -119,7 +128,7 @@ function LeftListItem( {
 					value={ item.label }
 					onChange={ ( v ) => onUpdate( index, 'label', v ) }
 				/>
-			</a>
+			</button>
 			<div style={ { marginTop: '5px', paddingLeft: '32px' } }>
 				<Field
 					value={ item.url }
@@ -156,7 +165,7 @@ function LeftListItem( {
  * @param {Object}   props.item     Active menu item object.
  * @param {number}   props.index    Index of the active item.
  * @param {Function} props.onUpdate Callback to update item fields.
- * @return {JSX.Element}             Rendered right panel element.
+ * @return {import('@wordpress/element').WPElement} Rendered right panel element.
  */
 function RightPanel( { item, index, onUpdate } ) {
 	if ( ! item ) {
@@ -187,7 +196,10 @@ function RightPanel( { item, index, onUpdate } ) {
 						<img src={ item.image } alt="" />
 					) : (
 						<span style={ { color: '#999', fontSize: '12px' } }>
-							{ __( 'No image set - use sidebar to upload', 'ambrygen-web' ) }
+							{ __(
+								'No image set - use sidebar to upload',
+								'ambrygen-web'
+							) }
 						</span>
 					) }
 				</figure>
@@ -253,6 +265,14 @@ export default function Edit( { attributes, setAttributes } ) {
 		'items'
 	);
 
+	useEffect( () => {
+		const normalizedItems = ensureArrayItemIds( items );
+
+		if ( normalizedItems.hasChanges ) {
+			setAttributes( { items: normalizedItems.items } );
+		}
+	}, [ items, setAttributes ] );
+
 	// Select item and scroll to it in sidebar
 	const handleSelect = useCallback( ( index ) => {
 		setActiveIndex( index );
@@ -299,7 +319,10 @@ export default function Edit( { attributes, setAttributes } ) {
 		<>
 			<InspectorControls>
 				{ /* Menu Settings */ }
-				<PanelBody title={ __( 'Menu Settings', 'ambrygen-web' ) } initialOpen>
+				<PanelBody
+					title={ __( 'Menu Settings', 'ambrygen-web' ) }
+					initialOpen
+				>
 					<Field
 						label={ __( 'Menu Name', 'ambrygen-web' ) }
 						value={ menuLabel }
@@ -321,20 +344,27 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 
 				{ /* Solution Items */ }
-				<PanelBody title={ __( 'Solution Items', 'ambrygen-web' ) } initialOpen>
+				<PanelBody
+					title={ __( 'Solution Items', 'ambrygen-web' ) }
+					initialOpen
+				>
 					<p
 						className="components-base-control__help"
 						style={ { marginBottom: '12px' } }
 					>
-						{ __(
-							`Manage solution items. Current: ${ items.length } items`,
-							'ambrygen-web'
+						{ sprintf(
+							/* translators: %d: current solution item count. */
+							__(
+								'Manage solution items. Current: %d items',
+								'ambrygen-web'
+							),
+							items.length
 						) }
 					</p>
 
 					{ items.map( ( item, index ) => (
 						<PanelItem
-							key={ index }
+							key={ item.id || item.label || item.url }
 							active={ activeIndex === index }
 							onClick={ () => setActiveIndex( index ) }
 						>
@@ -350,7 +380,10 @@ export default function Edit( { attributes, setAttributes } ) {
 								/>
 								<ImageUploader
 									url={ item.image }
-									label={ __( 'Right Side Image', 'ambrygen-web' ) }
+									label={ __(
+										'Right Side Image',
+										'ambrygen-web'
+									) }
 									onSelect={ ( media ) =>
 										updateImage( index, media )
 									}
@@ -375,7 +408,10 @@ export default function Edit( { attributes, setAttributes } ) {
 									onClick={ ( e ) => e.stopPropagation() }
 								/>
 								<Field
-									label={ __( 'Right Title', 'ambrygen-web' ) }
+									label={ __(
+										'Right Title',
+										'ambrygen-web'
+									) }
 									value={ item.rightTitle }
 									onChange={ ( v ) =>
 										update( index, 'rightTitle', v )
@@ -423,7 +459,9 @@ export default function Edit( { attributes, setAttributes } ) {
 							<ul className="nav__item--mega-menu__submenu-inner--links">
 								{ items.map( ( item, index ) => (
 									<LeftListItem
-										key={ index }
+										key={
+											item.id || item.label || item.url
+										}
 										item={ item }
 										index={ index }
 										isActive={ activeIndex === index }

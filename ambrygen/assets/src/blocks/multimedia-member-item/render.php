@@ -95,7 +95,7 @@
 
 		return $ambrygen_items;
 	};
-	$ambrygen_parse_download_file       = static function ( $ambrygen_raw_meta ): array {
+	$ambrygen_parse_download_file      = static function ( $ambrygen_raw_meta ): array {
 		$ambrygen_file_id  = 0;
 		$ambrygen_file_url = '';
 

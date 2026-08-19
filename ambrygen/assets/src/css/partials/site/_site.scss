@@ -10,6 +10,7 @@
 @use "blocks-background";
 @use "blocks_head";
 @use "swiper-custom";
+@use "cookie-consent";
 
 // events
 @use "events/event";
@@ -26,11 +27,8 @@
 
 /* Detail Pages */
 @use "detail-pages/archive-single";
-@use "detail-pages/event-details.scss";
+@use "detail-pages/event-details";
 @use "detail-pages/genetic-detail";
-
 @use "cardiology";
-
 @use "sidebar-common";
-
 @use "search-modal";

@@ -9,22 +9,22 @@ defined( 'ABSPATH' ) || exit;
 
 use Ambrygen\Theme\Core\Helper;
 
-$ambrygen_attributes = is_array( $attributes ?? null ) ? $attributes : array();
-$ambrygen_block_id   = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
-$ambrygen_title      = isset( $ambrygen_attributes['title'] ) ? (string) $ambrygen_attributes['title'] : '';
-$ambrygen_heading    = isset( $ambrygen_attributes['headingLevel'] ) ? sanitize_key( $ambrygen_attributes['headingLevel'] ) : 'h2';
-$ambrygen_category   = isset( $ambrygen_attributes['selectedCategory'] ) && is_array( $ambrygen_attributes['selectedCategory'] )
+$ambrygen_attributes       = is_array( $attributes ?? null ) ? $attributes : array();
+$ambrygen_block_id         = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
+$ambrygen_title            = isset( $ambrygen_attributes['title'] ) ? (string) $ambrygen_attributes['title'] : '';
+$ambrygen_heading          = isset( $ambrygen_attributes['headingLevel'] ) ? sanitize_key( $ambrygen_attributes['headingLevel'] ) : 'h2';
+$ambrygen_category         = isset( $ambrygen_attributes['selectedCategory'] ) && is_array( $ambrygen_attributes['selectedCategory'] )
 	? $ambrygen_attributes['selectedCategory']
 	: array();
-$ambrygen_term_id    = isset( $ambrygen_category['id'] ) ? absint( $ambrygen_category['id'] ) : 0;
-$ambrygen_material_type = isset( $ambrygen_attributes['selectedMaterialType'] ) && is_array( $ambrygen_attributes['selectedMaterialType'] )
+$ambrygen_term_id          = isset( $ambrygen_category['id'] ) ? absint( $ambrygen_category['id'] ) : 0;
+$ambrygen_material_type    = isset( $ambrygen_attributes['selectedMaterialType'] ) && is_array( $ambrygen_attributes['selectedMaterialType'] )
 	? $ambrygen_attributes['selectedMaterialType']
 	: array();
 $ambrygen_material_type_id = isset( $ambrygen_material_type['id'] ) ? absint( $ambrygen_material_type['id'] ) : 0;
-$ambrygen_sections = isset( $ambrygen_attributes['sections'] ) && is_array( $ambrygen_attributes['sections'] )
+$ambrygen_sections         = isset( $ambrygen_attributes['sections'] ) && is_array( $ambrygen_attributes['sections'] )
 	? $ambrygen_attributes['sections']
 	: array();
-$ambrygen_has_title = '' !== trim( wp_strip_all_tags( $ambrygen_title ) );
+$ambrygen_has_title        = '' !== trim( wp_strip_all_tags( $ambrygen_title ) );
 
 $ambrygen_heading = Helper::get_heading_tag( $ambrygen_heading, 'h2' );
 
@@ -37,6 +37,9 @@ if ( ! empty( $ambrygen_block_id ) ) {
 }
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_args );
+$ambrygen_cache_version      = class_exists( Helper::class ) && is_callable( array( Helper::class, 'get_marketing_material_cache_version' ) )
+	? Helper::get_marketing_material_cache_version()
+	: '1';
 
 $ambrygen_query = null;
 
@@ -67,7 +70,7 @@ if ( $ambrygen_term_id > 0 ) {
 		'tax_query'      => $ambrygen_tax_query,
 	);
 
-	$ambrygen_fallback_cache_key = 'marketing_material_query_' . $ambrygen_term_id . '_' . $ambrygen_material_type_id;
+	$ambrygen_fallback_cache_key = 'marketing_material_query_' . $ambrygen_cache_version . '_' . $ambrygen_term_id . '_' . $ambrygen_material_type_id;
 	$ambrygen_fallback_post_ids  = wp_cache_get( $ambrygen_fallback_cache_key, 'ambrygen_marketing' );
 
 	if ( false === $ambrygen_fallback_post_ids ) {
@@ -122,17 +125,17 @@ if ( $ambrygen_term_id > 0 ) {
 
 					<?php foreach ( $ambrygen_categories as $ambrygen_category_item ) : ?>
 						<?php
-						$ambrygen_category_name       = isset( $ambrygen_category_item['name'] ) ? (string) $ambrygen_category_item['name'] : '';
-						$ambrygen_category_term       = isset( $ambrygen_category_item['category'] ) && is_array( $ambrygen_category_item['category'] )
+						$ambrygen_category_name        = isset( $ambrygen_category_item['name'] ) ? (string) $ambrygen_category_item['name'] : '';
+						$ambrygen_category_term        = isset( $ambrygen_category_item['category'] ) && is_array( $ambrygen_category_item['category'] )
 							? $ambrygen_category_item['category']
 							: array();
-						$ambrygen_category_id         = isset( $ambrygen_category_term['id'] ) ? absint( $ambrygen_category_term['id'] ) : ( isset( $ambrygen_category_item['id'] ) ? absint( $ambrygen_category_item['id'] ) : 0 );
-						$ambrygen_category_name       = '' !== trim( $ambrygen_category_name ) ? $ambrygen_category_name : ( isset( $ambrygen_category_term['name'] ) ? (string) $ambrygen_category_term['name'] : '' );
-						$ambrygen_row_material_type   = isset( $ambrygen_category_item['materialType'] ) && is_array( $ambrygen_category_item['materialType'] )
+						$ambrygen_category_id          = isset( $ambrygen_category_term['id'] ) ? absint( $ambrygen_category_term['id'] ) : ( isset( $ambrygen_category_item['id'] ) ? absint( $ambrygen_category_item['id'] ) : 0 );
+						$ambrygen_category_name        = '' !== trim( $ambrygen_category_name ) ? $ambrygen_category_name : ( isset( $ambrygen_category_term['name'] ) ? (string) $ambrygen_category_term['name'] : '' );
+						$ambrygen_row_material_type    = isset( $ambrygen_category_item['materialType'] ) && is_array( $ambrygen_category_item['materialType'] )
 							? $ambrygen_category_item['materialType']
 							: array();
 						$ambrygen_row_material_type_id = isset( $ambrygen_row_material_type['id'] ) ? absint( $ambrygen_row_material_type['id'] ) : 0;
-						$ambrygen_category_post_ids   = isset( $ambrygen_category_item['selectedPostIds'] ) && is_array( $ambrygen_category_item['selectedPostIds'] )
+						$ambrygen_category_post_ids    = isset( $ambrygen_category_item['selectedPostIds'] ) && is_array( $ambrygen_category_item['selectedPostIds'] )
 							? $ambrygen_category_item['selectedPostIds']
 							: array();
 
@@ -141,7 +144,7 @@ if ( $ambrygen_term_id > 0 ) {
 							class_exists( Helper::class )
 							&& is_callable( array( Helper::class, 'get_marketing_material_posts_for_category' ) )
 						) {
-							$ambrygen_cache_key = 'marketing_material_posts_' . $ambrygen_category_id . '_' . $ambrygen_row_material_type_id . '_' . $ambrygen_material_type_id . '_' . md5( wp_json_encode( $ambrygen_category_post_ids ) );
+							$ambrygen_cache_key      = 'marketing_material_posts_' . $ambrygen_cache_version . '_' . $ambrygen_category_id . '_' . $ambrygen_row_material_type_id . '_' . $ambrygen_material_type_id . '_' . md5( wp_json_encode( $ambrygen_category_post_ids ) );
 							$ambrygen_category_posts = wp_cache_get( $ambrygen_cache_key, 'ambrygen_marketing' );
 
 							if ( false === $ambrygen_category_posts ) {
@@ -167,7 +170,7 @@ if ( $ambrygen_term_id > 0 ) {
 									class_exists( Helper::class )
 									&& is_callable( array( Helper::class, 'render_marketing_material_item' ) )
 								) {
-									$ambrygen_item_cache_key = 'marketing_material_html_' . $ambrygen_post->ID;
+									$ambrygen_item_cache_key = 'marketing_material_html_' . $ambrygen_cache_version . '_' . $ambrygen_post->ID;
 									$ambrygen_item_html      = wp_cache_get( $ambrygen_item_cache_key, 'ambrygen_marketing' );
 
 									if ( false === $ambrygen_item_html ) {
@@ -234,7 +237,7 @@ if ( $ambrygen_term_id > 0 ) {
 						&& is_callable( array( Helper::class, 'render_marketing_material_item' ) )
 					) {
 						$ambrygen_post_id        = get_the_ID();
-						$ambrygen_item_cache_key = 'marketing_material_html_' . $ambrygen_post_id;
+						$ambrygen_item_cache_key = 'marketing_material_html_' . $ambrygen_cache_version . '_' . $ambrygen_post_id;
 						$ambrygen_item_html      = wp_cache_get( $ambrygen_item_cache_key, 'ambrygen_marketing' );
 
 						if ( false === $ambrygen_item_html ) {
@@ -294,5 +297,4 @@ if ( $ambrygen_term_id > 0 ) {
 			</div>
 		<?php endif; ?>
 	</div>
-</div>
 </div>

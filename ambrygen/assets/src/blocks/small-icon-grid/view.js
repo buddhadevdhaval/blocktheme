@@ -33,7 +33,9 @@
 			return;
 		}
 
-		const isMobile = window.matchMedia( '(hover: none), (pointer: coarse)' ).matches;
+		const isMobile = window.matchMedia(
+			'(hover: none), (pointer: coarse)'
+		).matches;
 		const isActive = tooltipNode.classList.contains( 'is-tooltip-active' );
 
 		closeTooltips( blockNode );

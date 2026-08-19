@@ -5,22 +5,19 @@
 <!-- wp:group {"tagName":"main","className":"wp-block-group","htmlId":"main-content"} -->
 <main id="main-content" class="wp-block-group">
 
-	<!-- wp:group {"tagName":"section","className":"container-1136 poster-archive-section"} -->
-	<section class="container-1280 poster-archive-section listing-archive-section">
+	<!-- wp:group {"tagName":"section","className":"container-1280 poster-archive-section listing-archive-section"} -->
+	<section class="wp-block-group container-1280 poster-archive-section listing-archive-section">
 
 		<!-- wp:group {"className":"wrapper"} -->
 		<div class="wp-block-group wrapper">
 
-			<!-- wp:spacer {"height":"64px","className":"is-style-gl-s32"} -->
-			<div class="is-style-gl-s32" aria-hidden="true"></div>
+			<!-- wp:spacer {"height":"32px","className":"is-style-gl-s32"} -->
+			<div style="height:32px" aria-hidden="true" class="wp-block-spacer is-style-gl-s32"></div>
 			<!-- /wp:spacer -->
 
-
-			<!-- ── Main Layout: Stacked Filters + Content ── -->
 			<!-- wp:group {"className":"poster-archive__layout"} -->
 			<div class="wp-block-group poster-archive__layout cs-wp-archive_layout listing-archive-layout">
 
-				<!-- ── Top: Filters ── -->
 				<!-- wp:group {"className":"poster-archive__filters"} -->
 				<div class="wp-block-group poster-archive__filters cs-wp-archive__filter listing-archive-filter">
 					<!-- wp:template-part {"slug":"poster-filters","theme":"ambrygen","area":"uncategorized"} /-->
@@ -28,21 +25,18 @@
 				<!-- /wp:group -->
 
 				<!-- wp:spacer {"height":"32px","className":"is-style-gl-s32"} -->
-				<div class="is-style-gl-s32" aria-hidden="true"></div>
+				<div style="height:32px" aria-hidden="true" class="wp-block-spacer is-style-gl-s32"></div>
 				<!-- /wp:spacer -->
 
-				<!-- ── Bottom: Results Content ── -->
 				<!-- wp:group {"className":"poster-archive__content"} -->
 				<div class="wp-block-group poster-archive__content cs-wp-archive_content listing-archive-content">
 
-					<!-- Result count -->
 					<!-- wp:ambrygen/poster-result-count {"className":"poster-archive__result-count"} /-->
 
 					<!-- wp:spacer {"height":"20px","className":"is-style-gl-s20"} -->
-					<div class="is-style-gl-s20" aria-hidden="true"></div>
+					<div style="height:20px" aria-hidden="true" class="wp-block-spacer is-style-gl-s20"></div>
 					<!-- /wp:spacer -->
 
-					<!-- Query Loop -->
 					<!-- wp:query {"queryId":31,"query":{"perPage":10,"pages":0,"offset":0,"postType":"poster","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true}} -->
 					<div class="wp-block-query poster-archive__query cs-wp-archive__query listing-archive__query">
 
@@ -51,40 +45,25 @@
 						<!-- wp:group {"className":"poster-archive__item"} -->
 						<div class="wp-block-group poster-archive__item cs-wp-archive__item listing-archive__item">
 
-							<!-- Title -->
 							<!-- wp:post-title {"isLink":true,"level":3,"className":"heading-5 mb-0 poster-archive__item-title listing-archive__item-title"} /-->
 
-							<!-- Category pill -->
-							<!-- wp:post-terms {"term":"poster_category","separator":", ","className":"lists-item-category poster-archive__item-category listing-archive__item-category"} /-->
+							<!-- wp:ambrygen/poster-category-list /-->
 
 							<!-- wp:spacer {"height":"12px","className":"is-style-gl-s12"} -->
-							<!-- <div class="is-style-gl-s12" aria-hidden="true"></div> -->
+							<div style="height:12px" aria-hidden="true" class="wp-block-spacer is-style-gl-s12"></div>
 							<!-- /wp:spacer -->
 
-							<!-- Collaborators -->
-							<!-- wp:post-terms {"term":"collaborator","prefix":"Collaborators: ","separator":", ","className":"listing__item-collaborator items-listing-bullet has-separator"} /-->
+							<!-- wp:post-terms {"term":"collaborator","prefix":"Collaborators: ","separator":", ","className":"text-md-regular mb-0 poster-archive__item-collaborators listing-archive__item-collaborators"} /-->
 
-							<!-- Meta (session, authors, conference) -->
-							<!-- wp:ambrygen/poster-meta {"className":"poster-archive__item-meta  listing-archive__item-meta"} /-->
+							<!-- wp:ambrygen/poster-meta {"className":"poster-archive__item-meta listing-archive__item-meta"} /-->
 
 						</div>
 						<!-- /wp:group -->
 
 						<!-- /wp:post-template -->
 
-						<!-- wp:query-no-results -->
-						<!-- wp:group {"className":"poster-archive__empty"} -->
-						<div class="wp-block-group poster-archive__empty listing-archive__empty">
-							<!-- wp:paragraph {"className":"text-md-regular mb-0"} -->
-							<div class="block-content mb-0">No posters found matching your filters. Try adjusting or
-								clearing your search criteria.</div>
-							<!-- /wp:paragraph -->
-						</div>
-						<!-- /wp:group -->
-						<!-- /wp:query-no-results -->
-
 						<!-- wp:spacer {"height":"32px","className":"is-style-gl-s32"} -->
-						<div class="is-style-gl-s32" aria-hidden="true"></div>
+						<div style="height:32px" aria-hidden="true" class="wp-block-spacer is-style-gl-s32"></div>
 						<!-- /wp:spacer -->
 
 						<!-- wp:group {"className":"pagination-buttons-row","layout":{"type":"default"}} -->
@@ -112,8 +91,8 @@
 			</div>
 			<!-- /wp:group -->
 
-			<!-- wp:spacer {"height":"64px","className":"is-style-gl-s50"} -->
-			<div class="is-style-gl-s50" aria-hidden="true"></div>
+			<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
+			<div style="height:50px" aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
 			<!-- /wp:spacer -->
 
 		</div>
@@ -125,6 +104,8 @@
 </main>
 <!-- /wp:group -->
 
-<!-- wp:ambrygen/newsletter-form /-->
+<!-- wp:ambrygen/section-container -->
+<!-- wp:ambrygen/contact-info-form /-->
+<!-- /wp:ambrygen/section-container -->
 
 <!-- wp:template-part {"slug":"footer"} /-->

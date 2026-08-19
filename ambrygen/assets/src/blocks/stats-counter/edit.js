@@ -1,8 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import {
-	InspectorControls,
-	useBlockProps,
-} from '@wordpress/block-editor';
+import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
 	Button,
 	PanelBody,
@@ -95,7 +92,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	}, [ counters, countersLength, hasMissingIds, setAttributes ] );
 
 	const updateCounter = ( counterId, field, value ) => {
-		const finalValue = field === 'number' ? value.replace( /\D/g, '' ) : value;
+		const finalValue =
+			field === 'number' ? value.replace( /\D/g, '' ) : value;
 
 		setAttributes( {
 			counters: counters.map( ( counter ) =>
@@ -118,9 +116,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 
 		setAttributes( {
-			counters: counters
-				.filter( ( counter ) => counter.id !== counterId )
-				.map( normalizeCounter ),
+			counters: counters.reduce( ( nextCounters, counter ) => {
+				if ( counter.id !== counterId ) {
+					nextCounters.push( normalizeCounter( counter ) );
+				}
+
+				return nextCounters;
+			}, [] ),
 		} );
 	};
 
@@ -207,110 +209,168 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						const isOpen = openStatId === counter.id;
 
 						return (
-						<div
-							key={ counter.id }
-							className="stats-counter__inspector-item"
-							style={ { border: '1px solid #ddd', padding: '12px', marginBottom: '12px', borderRadius: '4px', backgroundColor: '#fff' } }
-						>
-							<ItemHeader
-								index={ index }
-								label={ counter.label || __( 'Untitled Stat', 'ambrygen-web' ) }
-								total={ counters.length }
-								prefix="STAT"
-								onMove={ ( i, dir ) =>
-									moveCounter( counters[ i ].id, dir )
-								}
-								onRemove={ ( i ) =>
-									removeCounter( counters[ i ].id )
-								}
-								minCount={ 1 }
-							/>
-
-							<Button
-								variant="tertiary"
-								icon={ isOpen ? chevronUp : chevronDown }
-								onClick={ () => toggleStat( counter.id ) }
-								style={ { width: '100%', justifyContent: 'center', marginBottom: isOpen ? '16px' : '0' } }
+							<div
+								key={ counter.id }
+								className="stats-counter__inspector-item"
+								style={ {
+									border: '1px solid #ddd',
+									padding: '12px',
+									marginBottom: '12px',
+									borderRadius: '4px',
+									backgroundColor: '#fff',
+								} }
 							>
-								{ isOpen ? __( 'Hide Fields', 'ambrygen-web' ) : __( 'Show Fields', 'ambrygen-web' ) }
-							</Button>
+								<ItemHeader
+									index={ index }
+									label={
+										counter.label ||
+										__( 'Untitled Stat', 'ambrygen-web' )
+									}
+									total={ counters.length }
+									prefix="STAT"
+									onMove={ ( i, dir ) =>
+										moveCounter( counters[ i ].id, dir )
+									}
+									onRemove={ ( i ) =>
+										removeCounter( counters[ i ].id )
+									}
+									minCount={ 1 }
+								/>
 
-							{ isOpen && (
-								<div className="stats-counter__stat-controls">
-									{ ! isVariationTwo && (
-										<>
-											<TextControl
-												label={ __( 'Prefix', 'ambrygen-web' ) }
-												value={ counter.prefix }
-												onChange={ ( value ) =>
-													updateCounter( counter.id, 'prefix', value )
-												}
-											/>
-											<TextControl
-												label={ __( 'Number', 'ambrygen-web' ) }
-												value={ counter.number }
-												onChange={ ( value ) =>
-													updateCounter( counter.id, 'number', value )
-												}
-											/>
-											<TextControl
-												label={ __( 'Postfix', 'ambrygen-web' ) }
-												value={ counter.postfix }
-												onChange={ ( value ) =>
-													updateCounter( counter.id, 'postfix', value )
-												}
-											/>
-										</>
-									) }
-									<TextControl
-										label={
-											isVariationTwo
-												? __( 'Digit', 'ambrygen-web' )
-												: __( 'Label', 'ambrygen-web' )
-										}
-										value={ counter.label }
-										placeholder={
-											isVariationTwo
-												? __( 'Enter Digit', 'ambrygen-web' )
-												: __( 'New Stat', 'ambrygen-web' )
-										}
-										onChange={ ( value ) =>
-											updateCounter( counter.id, 'label', value )
-										}
-									/>
-									<TextareaControl
-										label={ __( 'Description', 'ambrygen-web' ) }
-										value={ counter.description }
-										placeholder={ __(
-											'Add description here',
-											'ambrygen-web'
+								<Button
+									variant="tertiary"
+									icon={ isOpen ? chevronUp : chevronDown }
+									onClick={ () => toggleStat( counter.id ) }
+									style={ {
+										width: '100%',
+										justifyContent: 'center',
+										marginBottom: isOpen ? '16px' : '0',
+									} }
+								>
+									{ isOpen
+										? __( 'Hide Fields', 'ambrygen-web' )
+										: __( 'Show Fields', 'ambrygen-web' ) }
+								</Button>
+
+								{ isOpen && (
+									<div className="stats-counter__stat-controls">
+										{ ! isVariationTwo && (
+											<>
+												<TextControl
+													label={ __(
+														'Prefix',
+														'ambrygen-web'
+													) }
+													value={ counter.prefix }
+													onChange={ ( value ) =>
+														updateCounter(
+															counter.id,
+															'prefix',
+															value
+														)
+													}
+												/>
+												<TextControl
+													label={ __(
+														'Number',
+														'ambrygen-web'
+													) }
+													value={ counter.number }
+													onChange={ ( value ) =>
+														updateCounter(
+															counter.id,
+															'number',
+															value
+														)
+													}
+												/>
+												<TextControl
+													label={ __(
+														'Postfix',
+														'ambrygen-web'
+													) }
+													value={ counter.postfix }
+													onChange={ ( value ) =>
+														updateCounter(
+															counter.id,
+															'postfix',
+															value
+														)
+													}
+												/>
+											</>
 										) }
-										onChange={ ( value ) =>
-											updateCounter( counter.id, 'description', value )
-										}
-									/>
-								</div>
-							) }
-						</div>
-					)} ) }
+										<TextControl
+											label={
+												isVariationTwo
+													? __(
+															'Digit',
+															'ambrygen-web'
+													  )
+													: __(
+															'Label',
+															'ambrygen-web'
+													  )
+											}
+											value={ counter.label }
+											placeholder={
+												isVariationTwo
+													? __(
+															'Enter Digit',
+															'ambrygen-web'
+													  )
+													: __(
+															'New Stat',
+															'ambrygen-web'
+													  )
+											}
+											onChange={ ( value ) =>
+												updateCounter(
+													counter.id,
+													'label',
+													value
+												)
+											}
+										/>
+										<TextareaControl
+											label={ __(
+												'Description',
+												'ambrygen-web'
+											) }
+											value={ counter.description }
+											placeholder={ __(
+												'Add description here',
+												'ambrygen-web'
+											) }
+											onChange={ ( value ) =>
+												updateCounter(
+													counter.id,
+													'description',
+													value
+												)
+											}
+										/>
+									</div>
+								) }
+							</div>
+						);
+					} ) }
 				</PanelBody>
 			</InspectorControls>
 
 			{ isVariationTwo ? (
 				<div className="intro__stats-wrapper">
 					{ counters.map( ( counter ) => (
-						<div
-							key={ counter.id }
-							className="intro__stat"
-						>
+						<div key={ counter.id } className="intro__stat">
 							<div className="intro__stat-value">
 								<div className="intro__stat-value-lg">
-									{ counter.label || __( 'New Stat', 'ambrygen-web' ) }
+									{ counter.label ||
+										__( 'New Stat', 'ambrygen-web' ) }
 								</div>
 							</div>
 							<div className="intro__stat-desc">
 								{ counter.description ||
-									__( 'Add Description...', 'ambrygen-web' ) }
+									__( 'Add Description…', 'ambrygen-web' ) }
 							</div>
 						</div>
 					) ) }
@@ -328,19 +388,40 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							>
 								{ hasNumberData && (
 									<div className="stats-counter__number heading-3 mb-0 d-flex">
-										{ counter.prefix && <span className="stats-counter__number-prefix">{ counter.prefix }</span> }
-										<div className="stats-counter__number-value">{ counter.number ? Number( counter.number ).toLocaleString() : '0' }</div>
-										{ counter.postfix && <div className="stats-counter__number-suffix">{ counter.postfix }</div> }
+										{ counter.prefix && (
+											<span className="stats-counter__number-prefix">
+												{ counter.prefix }
+											</span>
+										) }
+										<div className="stats-counter__number-value">
+											{ counter.number
+												? Number(
+														counter.number
+												  ).toLocaleString()
+												: '0' }
+										</div>
+										{ counter.postfix && (
+											<div className="stats-counter__number-suffix">
+												{ counter.postfix }
+											</div>
+										) }
 									</div>
 								) }
 
 								<div className="stats-counter__label subtitle1-sbold block-description">
-									{ counter.label || __( 'New Stat', 'ambrygen-web' ) }
+									{ counter.label ||
+										__( 'New Stat', 'ambrygen-web' ) }
 								</div>
 								<div className="stats-counter__description block-description">
-									<div className="is-style-gl-s8" aria-hidden="true"></div>
+									<div
+										className="is-style-gl-s8"
+										aria-hidden="true"
+									></div>
 									{ counter.description ||
-										__( 'Add Description...', 'ambrygen-web' ) }
+										__(
+											'Add Description…',
+											'ambrygen-web'
+										) }
 								</div>
 							</div>
 						);

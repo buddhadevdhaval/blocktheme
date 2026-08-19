@@ -19,19 +19,16 @@ $ambrygen_select_all       = isset( $attributes['selectAllCollaborators'] ) ? (b
 $ambrygen_collaborator_ids = isset( $attributes['collaboratorIds'] ) && is_array( $attributes['collaboratorIds'] ) ? array_map( 'absint', $attributes['collaboratorIds'] ) : array();
 $ambrygen_title            = $attributes['title'] ?? '';
 $ambrygen_heading_tag      = Helper::get_heading_tag( $attributes['headingTag'] ?? 'h2', 'h2' );
-
-
-
-
+$ambrygen_section_id       = sanitize_html_class( ( $ambrygen_block_id ?: wp_unique_id( 'collaboration-link-grid-' ) ) . '-items' );
 
 $wrapper_attributes = get_block_wrapper_attributes(
 	( $ambrygen_anchor || $ambrygen_block_id )
 	? array(
-		'class' => 'download-list block-layout variation-grid-view',
+		'class' => 'download-list block-layout variation-grid-view variation-with-accordion',
 		'id'    => $ambrygen_anchor ?: $ambrygen_block_id,
 	)
 	: array(
-		'class' => 'download-list block-layout variation-grid-view',
+		'class' => 'download-list block-layout variation-grid-view variation-with-accordion',
 	)
 );
 
@@ -58,7 +55,7 @@ if ( $ambrygen_select_all || ! empty( $ambrygen_collaborator_ids ) ) {
 		if ( ! is_wp_error( $ambrygen_terms ) ) {
 			$ambrygen_collaborator_terms = $ambrygen_terms;
 		}
-	}
+}
 ?>
 
 <section <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
@@ -66,15 +63,24 @@ if ( $ambrygen_select_all || ! empty( $ambrygen_collaborator_ids ) ) {
 		<div class="download-list__header-area mb-24 js-gsap-fade">
 			<div class="download-list__content">
 				<?php if ( $ambrygen_title ) : ?>
-					<<?php echo tag_escape( $ambrygen_heading_tag ); ?> class="download-list__title heading-3 block-title mb-0">
-						<?php echo wp_kses_post( $ambrygen_title ); ?>
-					</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
+					<div class="download-list__title-wrap">
+						<<?php echo tag_escape( $ambrygen_heading_tag ); ?> class="download-list__title heading-3 block-title mb-0">
+							<?php echo wp_kses_post( $ambrygen_title ); ?>
+						</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
+						<button
+							class="download-list__toggle"
+							type="button"
+							aria-expanded="false"
+							aria-controls="<?php echo esc_attr( $ambrygen_section_id ); ?>"
+							aria-label="<?php esc_attr_e( 'Expand links section', 'ambrygen-web' ); ?>"
+						>
+							<span class="download-list__toggle-icon" aria-hidden="true"></span>
+						</button>
+					</div>
 				<?php endif; ?>
-
-
 			</div>
 		</div>
-		<div class="download-list__items">
+		<div class="download-list__items is-collapsed" id="<?php echo esc_attr( $ambrygen_section_id ); ?>">
 			<?php
 			if ( ! empty( $ambrygen_collaborator_terms ) ) {
 				foreach ( $ambrygen_collaborator_terms as $ambrygen_term ) {

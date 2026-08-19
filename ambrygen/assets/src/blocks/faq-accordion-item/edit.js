@@ -24,7 +24,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 					onChange={ ( value ) =>
 						setAttributes( { question: value } )
 					}
-					placeholder={ __( 'Add Question...', 'ambrygen-web' ) }
+					placeholder={ __( 'Add Question…', 'ambrygen-web' ) }
 				/>
 
 				{ showSubHeading && (
@@ -35,10 +35,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 						onChange={ ( value ) =>
 							setAttributes( { subHeading: value } )
 						}
-						placeholder={ __(
-							'Add Subheading...',
-							'ambrygen-web'
-						) }
+						placeholder={ __( 'Add Subheading…', 'ambrygen-web' ) }
 						withoutInteractiveFormatting={ true }
 					/>
 				) }

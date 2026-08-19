@@ -59,17 +59,17 @@ if ( ! empty( $attributes['buttons'] ) && is_array( $attributes['buttons'] ) ) {
 	/*
 	* Wrapper attributes.
 	*/
-	$ambrygen_border_class       = ( 'title-content-with-image' === $ambrygen_variation && $ambrygen_border_required ) ? 'iot-block--border' : '';
-	$ambrygen_top_align_class    = $ambrygen_content_top_align ? 'has-top-align' : '';
+	$ambrygen_border_class    = ( 'title-content-with-image' === $ambrygen_variation && $ambrygen_border_required ) ? 'iot-block--border' : '';
+	$ambrygen_top_align_class = $ambrygen_content_top_align ? 'has-top-align' : '';
 
 	$ambrygen_image_size_class = '';
 	$ambrygen_heading_class    = 'heading-2';
-	if ( 'title-content-with-image' === $ambrygen_variation ) {
-		$ambrygen_image_size_class = 'size-578x564';
-	} elseif ( 'profile-content-with-image' === $ambrygen_variation ) {
-		$ambrygen_image_size_class = 'size-311x311';
-		$ambrygen_heading_class    = 'heading-4';
-	}
+if ( 'title-content-with-image' === $ambrygen_variation ) {
+	$ambrygen_image_size_class = 'size-578x564';
+} elseif ( 'profile-content-with-image' === $ambrygen_variation ) {
+	$ambrygen_image_size_class = 'size-311x311';
+	$ambrygen_heading_class    = 'heading-4';
+}
 	$ambrygen_image_size_class   = $ambrygen_image_size_class ? sanitize_html_class( $ambrygen_image_size_class ) : '';
 	$ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 		$ambrygen_block_id
@@ -183,6 +183,7 @@ if ( ! empty( $attributes['buttons'] ) && is_array( $attributes['buttons'] ) ) {
 				</div>
 			<?php endif; ?>
 			<?php if ( $ambrygen_inner_content ) : ?>
+				<div class="is-style-gl-s20" aria-hidden="true"></div>
 				<div class="iot-block__extra-content js-gsap-fade">
 					<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</div>

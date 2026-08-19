@@ -6,7 +6,9 @@
 }
 
 .block-layout {
+
 	&:has(.icon-grid-block) {
+
 		.block-bg-image {
 			position: absolute;
 			left: 0;
@@ -51,14 +53,11 @@
 			padding: 20px;
 		}
 	}
-
-	&__header {
-		// Inherit from global block__rowflex
-	}
 }
 
 // Support for item cards inside this block
 .our-testing-menu {
+
 	.item-card {
 		background-color: var(--theme_white);
 		border: 1px solid var(--theme_gray_201);

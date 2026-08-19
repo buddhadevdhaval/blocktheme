@@ -38,16 +38,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		enabled: ! isExample,
 	} );
 
-	if ( isExample ) {
-		return (
-			<BlockExamplePreview
-				className="steps-image-alongside-text-example-preview"
-				imagePath="/assets/src/images/steps-image-alongside-text/preview.png"
-			/>
-		);
-	}
-
 	useEffect( () => {
+		if ( isExample ) {
+			return undefined;
+		}
+
 		const vTabsContainer = containerRef.current;
 		if ( ! vTabsContainer ) {
 			return;
@@ -98,7 +93,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			vTabsContainer.removeEventListener( 'click', handleClick );
 			observer.disconnect();
 		};
-	}, [] );
+	}, [ isExample ] );
+
+	if ( isExample ) {
+		return (
+			<BlockExamplePreview
+				className="steps-image-alongside-text-example-preview"
+				imagePath="/assets/src/images/steps-image-alongside-text/preview.png"
+			/>
+		);
+	}
 
 	return (
 		<>
@@ -134,15 +138,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			<div { ...blockProps }>
 				<div className="steps-iot-block__header block__rowflex">
 					<div className="block__rowflex--col-left">
-					<RichText
-						tagName={ headingTag || 'h2' }
-						className="heading-3 block-title mb-0 block__rowflex--heading-title"
-						value={ heading }
-						onChange={ ( value ) =>
-							setAttributes( { heading: value } )
-						}
-						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
-					/>
+						<RichText
+							tagName={ headingTag || 'h2' }
+							className="heading-3 block-title mb-0 block__rowflex--heading-title"
+							value={ heading }
+							onChange={ ( value ) =>
+								setAttributes( { heading: value } )
+							}
+							placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
+						/>
 					</div>
 
 					<div className="block__rowflex--block-content subtitle-1-regular block-description">
@@ -153,15 +157,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								setAttributes( { description: value } )
 							}
 							placeholder={ __(
-								'Add Description...',
+								'Add Description…',
 								'ambrygen-web'
 							) }
 						/>
 					</div>
 				</div>
 
-
-					<div className="is-style-gl-s50" aria-hidden="true"></div>
+				<div className="is-style-gl-s50" aria-hidden="true"></div>
 
 				<div className="vertical-tabs" ref={ containerRef }>
 					<InnerBlocks

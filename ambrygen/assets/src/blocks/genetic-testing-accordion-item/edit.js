@@ -9,12 +9,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	// Get all genetic testing posts
 	const posts = useSelect( ( select ) => {
-		return select( 'core' ).getEntityRecords( 'postType', 'genetic-testing', {
-			per_page: -1,
-			orderby: 'title',
-			post_status: 'publish',
-			order: 'asc',
-		} );
+		return select( 'core' ).getEntityRecords(
+			'postType',
+			'genetic-testing',
+			{
+				per_page: -1,
+				orderby: 'title',
+				post_status: 'publish',
+				order: 'asc',
+			}
+		);
 	}, [] );
 
 	// Get current selected post details
@@ -38,24 +42,40 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			const parentId = blockEditor.getBlockRootClientId( clientId );
 			const siblings = blockEditor.getBlocks( parentId );
 
-			return siblings
-				.map( ( block ) => block.attributes?.postId )
-				.filter( ( id ) => id && id !== postId );
+			return siblings.reduce( ( ids, block ) => {
+				const id = block.attributes?.postId;
+
+				if ( id && id !== postId ) {
+					ids.push( id );
+				}
+
+				return ids;
+			}, [] );
 		},
 		[ clientId, postId ]
 	);
 
 	const options = posts
-		? posts
-				.filter( ( p ) => ! selectedIds.includes( p.id ) )
-				.map( ( p ) => ( {
-					label: p.title.rendered,
-					value: p.id,
-				} ) )
+		? posts.reduce( ( nextOptions, post ) => {
+				if ( selectedIds.includes( post.id ) ) {
+					return nextOptions;
+				}
+
+				nextOptions.push( {
+					label: post.title.rendered,
+					value: post.id,
+				} );
+
+				return nextOptions;
+		  }, [] )
 		: [];
 
 	return (
-		<div { ...useBlockProps( { className: 'genetic-testing-selection__item' } ) }>
+		<div
+			{ ...useBlockProps( {
+				className: 'genetic-testing-selection__item',
+			} ) }
+		>
 			{ ! posts && <Spinner /> }
 
 			{ ! postId && (
@@ -63,7 +83,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					label={ __( 'Select Genetic Test', 'ambrygen-web' ) }
 					value=""
 					options={ [
-						{ label: __( 'Choose...', 'ambrygen-web' ), value: '' },
+						{ label: __( 'Choose…', 'ambrygen-web' ), value: '' },
 						...options,
 					] }
 					onChange={ ( value ) =>
@@ -77,7 +97,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			{ postId && selectedPost && (
 				<div className="genetic-testing-selection__selected">
 					<div className="genetic-testing-selection__name">
-						<strong>Selected:</strong> { selectedPost.title.rendered }
+						<strong>Selected:</strong>{ ' ' }
+						{ selectedPost.title.rendered }
 					</div>
 					<div className="genetic-testing-selection__actions">
 						<Button

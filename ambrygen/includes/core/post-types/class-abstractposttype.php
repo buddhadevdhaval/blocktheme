@@ -32,6 +32,9 @@ namespace Ambrygen\Theme\Core\PostTypes;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Base definition contract for theme post types.
+ */
 abstract class AbstractPostType {
 
 	// -------------------------------------------------------------------------

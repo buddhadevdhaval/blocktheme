@@ -6,7 +6,12 @@ import {
 } from '@wordpress/block-editor';
 import { createBlock } from '@wordpress/blocks';
 import { __, sprintf } from '@wordpress/i18n';
-import { PanelBody, Spinner, Button, SearchControl } from '@wordpress/components';
+import {
+	PanelBody,
+	Spinner,
+	Button,
+	SearchControl,
+} from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { decodeEntities } from '@wordpress/html-entities';
 import { useEffect, useMemo, useRef, useState } from '@wordpress/element';
@@ -42,15 +47,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		enabled: ! isExample,
 	} );
 
-	if ( isExample ) {
-		return (
-			<BlockExamplePreview
-				className="multimedia-member-example-preview"
-				imagePath="/assets/src/images/multimedia-member/preview.png"
-			/>
-		);
-	}
-
 	useEffect( () => {
 		const timeoutId = setTimeout( () => {
 			setDebouncedAuthorSearchInput( authorSearchInput.trim() );
@@ -73,7 +69,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				query.search = debouncedAuthorSearchInput;
 			}
 
-			return select( 'core' ).getEntityRecords( 'postType', 'author', query );
+			return select( 'core' ).getEntityRecords(
+				'postType',
+				'author',
+				query
+			);
 		},
 		[ debouncedAuthorSearchInput ]
 	);
@@ -92,16 +92,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				query.search = debouncedAuthorSearchInput;
 			}
 
-			return select( 'core/data' ).isResolving( 'core', 'getEntityRecords', [
-				'postType',
-				'author',
-				query,
-			] );
+			return select( 'core/data' ).isResolving(
+				'core',
+				'getEntityRecords',
+				[ 'postType', 'author', query ]
+			);
 		},
 		[ debouncedAuthorSearchInput ]
 	);
 
-	
 	const containerRef = useRef( null );
 	const itemsRef = useRef( null );
 	const swiperInstances = useRef( [] );
@@ -113,9 +112,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const innerBlocksCount = innerBlocks.length;
 	const selectedPostIds = useMemo(
 		() =>
-			innerBlocks
-				.map( ( block ) => Number( block.attributes?.postId ) || 0 )
-				.filter( Boolean ),
+			innerBlocks.reduce( ( ids, block ) => {
+				const postId = Number( block.attributes?.postId ) || 0;
+
+				if ( postId ) {
+					ids.push( postId );
+				}
+
+				return ids;
+			}, [] ),
 		[ innerBlocks ]
 	);
 
@@ -153,15 +158,19 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				return false;
 			}
 
-			return select( 'core/data' ).isResolving( 'core', 'getEntityRecords', [
-				'postType',
-				'author',
-				{
-					include: selectedPostIds,
-					per_page: selectedPostIds.length,
-					orderby: 'include',
-				},
-			] );
+			return select( 'core/data' ).isResolving(
+				'core',
+				'getEntityRecords',
+				[
+					'postType',
+					'author',
+					{
+						include: selectedPostIds,
+						per_page: selectedPostIds.length,
+						orderby: 'include',
+					},
+				]
+			);
 		},
 		[ selectedPostIds ]
 	);
@@ -171,22 +180,26 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			return [];
 		}
 
-		return manualAuthorPosts
-			.filter( ( post ) => ! selectedPostIds.includes( post.id ) )
-			.map( ( post ) => {
-				const titleText = decodeEntities( getPostTitle( post ) ).trim();
+		return manualAuthorPosts.reduce( ( options, post ) => {
+			if ( selectedPostIds.includes( post.id ) ) {
+				return options;
+			}
 
-				return {
-					label:
-						titleText ||
-						sprintf(
-							/* translators: %d: author post ID. */
-							__( 'Author #%d', 'ambrygen-web' ),
-							post.id
-						),
-					value: String( post.id ),
-				};
+			const titleText = decodeEntities( getPostTitle( post ) ).trim();
+
+			options.push( {
+				label:
+					titleText ||
+					sprintf(
+						/* translators: %d: author post ID. */
+						__( 'Author #%d', 'ambrygen-web' ),
+						post.id
+					),
+				value: String( post.id ),
 			} );
+
+			return options;
+		}, [] );
 	}, [ manualAuthorPosts, selectedPostIds ] );
 
 	const selectedAuthorOptions = useMemo(
@@ -221,17 +234,23 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			return;
 		}
 
-		const invalidBlockClientIds = innerBlocks
-			.filter( ( block ) => {
+		const invalidBlockClientIds = innerBlocks.reduce(
+			( clientIds, block ) => {
 				const postId = Number( block.attributes?.postId ) || 0;
 
 				if ( ! postId ) {
-					return true;
+					clientIds.push( block.clientId );
+					return clientIds;
 				}
 
-				return ! selectedAuthorPostsById[ postId ];
-			} )
-			.map( ( block ) => block.clientId );
+				if ( ! selectedAuthorPostsById[ postId ] ) {
+					clientIds.push( block.clientId );
+				}
+
+				return clientIds;
+			},
+			[]
+		);
 
 		if ( invalidBlockClientIds.length ) {
 			removeBlocks( invalidBlockClientIds, false );
@@ -259,11 +278,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			return;
 		}
 
-		const blocksToRemove = innerBlocks
-			.filter(
-				( block ) => ( Number( block.attributes?.postId ) || 0 ) === postId
-			)
-			.map( ( block ) => block.clientId );
+		const blocksToRemove = innerBlocks.reduce( ( clientIds, block ) => {
+			if ( ( Number( block.attributes?.postId ) || 0 ) === postId ) {
+				clientIds.push( block.clientId );
+			}
+
+			return clientIds;
+		}, [] );
 
 		if ( blocksToRemove.length ) {
 			removeBlocks( blocksToRemove, false );
@@ -284,7 +305,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			);
 
 			sliders.forEach( ( sliderElement ) => {
-				const slides = sliderElement.querySelectorAll( '.swiper-slide' );
+				const slides =
+					sliderElement.querySelectorAll( '.swiper-slide' );
 				if ( slides.length === 0 ) {
 					return;
 				}
@@ -297,9 +319,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						navigation:
 							slides.length > 1
 								? {
-									nextEl: sliderElement.querySelector( '.custom-next' ),
-									prevEl: sliderElement.querySelector( '.custom-prev' ),
-								}
+										nextEl: sliderElement.querySelector(
+											'.custom-next'
+										),
+										prevEl: sliderElement.querySelector(
+											'.custom-prev'
+										),
+								  }
 								: false,
 						pagination: false,
 						observer: true,
@@ -332,6 +358,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		};
 	}, [ innerBlocksCount ] );
 
+	if ( isExample ) {
+		return (
+			<BlockExamplePreview
+				className="multimedia-member-example-preview"
+				imagePath="/assets/src/images/multimedia-member/preview.png"
+			/>
+		);
+	}
+
 	return (
 		<>
 			<InspectorControls>
@@ -346,7 +381,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Authors', 'ambrygen-web' ) } initialOpen={ false }>
+				<PanelBody
+					title={ __( 'Authors', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
 					<p
 						className="multimedia-member__member-count"
 						role="status"
@@ -361,7 +399,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					</p>
 
 					<MemberPicker
-						isLoading={ isResolvingAuthorPosts || ! manualAuthorPosts }
+						isLoading={
+							isResolvingAuthorPosts || ! manualAuthorPosts
+						}
 						options={ authorOptions }
 						selectedMembers={ selectedAuthorOptions }
 						searchValue={ authorSearchInput }
@@ -385,8 +425,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								'core/mark',
 								'core/text-color',
 							] }
-							onChange={ ( value ) => setAttributes( { title: value } ) }
-							placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+							onChange={ ( value ) =>
+								setAttributes( { title: value } )
+							}
+							placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 						/>
 					</div>
 
@@ -428,7 +470,10 @@ function MemberPicker( {
 							<div
 								className="multimedia-member__selected-member-list"
 								role="list"
-								aria-label={ __( 'Selected authors', 'ambrygen-web' ) }
+								aria-label={ __(
+									'Selected authors',
+									'ambrygen-web'
+								) }
 							>
 								{ selectedMembers.map( ( member ) => (
 									<div
@@ -440,7 +485,10 @@ function MemberPicker( {
 											{ member.label }
 											{ member.isLoading && (
 												<span className="screen-reader-text">
-													{ __( ' loading', 'ambrygen-web' ) }
+													{ __(
+														'loading',
+														'ambrygen-web'
+													) }
 												</span>
 											) }
 										</span>
@@ -448,7 +496,9 @@ function MemberPicker( {
 											isDestructive
 											variant="tertiary"
 											size="small"
-											onClick={ () => onToggle( member.value, false ) }
+											onClick={ () =>
+												onToggle( member.value, false )
+											}
 										>
 											{ __( 'Remove', 'ambrygen-web' ) }
 										</Button>
@@ -462,24 +512,30 @@ function MemberPicker( {
 							label={ __( 'Add Author', 'ambrygen-web' ) }
 							value={ searchValue }
 							onChange={ onSearchChange }
-							placeholder={ __( 'Search authors', 'ambrygen-web' ) }
+							placeholder={ __(
+								'Search authors',
+								'ambrygen-web'
+							) }
 						/>
 						<p className="multimedia-member__member-help">
 							{ hasOptions
 								? __(
-									'Search and add authors without loading the full author list.',
-									'ambrygen-web'
-								)
+										'Search and add authors without loading the full author list.',
+										'ambrygen-web'
+								  )
 								: __(
-									'No matching authors are available to add.',
-									'ambrygen-web'
-								) }
+										'No matching authors are available to add.',
+										'ambrygen-web'
+								  ) }
 						</p>
 						{ hasOptions && (
 							<div
 								className="multimedia-member__member-options"
 								role="list"
-								aria-label={ __( 'Available authors to add', 'ambrygen-web' ) }
+								aria-label={ __(
+									'Available authors to add',
+									'ambrygen-web'
+								) }
 							>
 								{ options.map( ( option ) => (
 									<div
@@ -492,7 +548,13 @@ function MemberPicker( {
 											variant="secondary"
 											size="small"
 											onClick={ () =>
-												onToggle( parseInt( option.value, 10 ), true )
+												onToggle(
+													parseInt(
+														option.value,
+														10
+													),
+													true
+												)
 											}
 										>
 											{ __( 'Add', 'ambrygen-web' ) }

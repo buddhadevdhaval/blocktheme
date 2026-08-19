@@ -14,8 +14,9 @@ document.addEventListener( 'click', ( event ) => {
 		return;
 	}
 
-	const isMobile = window.matchMedia( '(hover: none), (pointer: coarse)' )
-		.matches;
+	const isMobile = window.matchMedia(
+		'(hover: none), (pointer: coarse)'
+	).matches;
 
 	if ( isMobile ) {
 		event.preventDefault();

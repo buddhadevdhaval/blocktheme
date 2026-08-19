@@ -125,7 +125,7 @@ const isSlideConfigured = ( slide = {} ) => {
  * @param {Object}   props               Block properties.
  * @param {Object}   props.attributes    Block attributes.
  * @param {Function} props.setAttributes Function to update attributes.
- * @return {JSX.Element} Block editor interface element.
+ * @return {import('@wordpress/element').WPElement} Block editor interface element.
  */
 export default function Edit( { attributes, setAttributes } ) {
 	const {
@@ -134,6 +134,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		showSliderNav,
 		showSliderDots,
 		autoplay,
+		showPauseButton,
 		autoplayDelay,
 		showSmallImage,
 	} = attributes;
@@ -320,19 +321,35 @@ export default function Edit( { attributes, setAttributes } ) {
 						/>
 
 						{ autoplay && (
-							<RangeControl
-								label={ __(
-									'Autoplay Delay (Milliseconds)',
-									'ambrygen-web'
-								) }
-								value={ autoplayDelay }
-								onChange={ ( value ) =>
-									setAttributes( { autoplayDelay: value } )
-								}
-								min={ 1000 }
-								max={ 10000 }
-								step={ 500 }
-							/>
+							<>
+								<ToggleControl
+									label={ __(
+										'Show Pause Button',
+										'ambrygen-web'
+									) }
+									checked={ showPauseButton }
+									onChange={ ( value ) =>
+										setAttributes( {
+											showPauseButton: value,
+										} )
+									}
+								/>
+								<RangeControl
+									label={ __(
+										'Autoplay Delay (Milliseconds)',
+										'ambrygen-web'
+									) }
+									value={ autoplayDelay }
+									onChange={ ( value ) =>
+										setAttributes( {
+											autoplayDelay: value,
+										} )
+									}
+									min={ 1000 }
+									max={ 10000 }
+									step={ 500 }
+								/>
+							</>
 						) }
 					</PanelBody>
 
@@ -439,14 +456,24 @@ export default function Edit( { attributes, setAttributes } ) {
 							/>
 
 							<PanelBody
-								title={ __( 'Heading Settings', 'ambrygen-web' ) }
+								title={ __(
+									'Heading Settings',
+									'ambrygen-web'
+								) }
 								initialOpen={ false }
 							>
 								<TagSelector
-									label={ __( 'Heading Tag', 'ambrygen-web' ) }
+									label={ __(
+										'Heading Tag',
+										'ambrygen-web'
+									) }
 									value={ slideItem.headingTag || 'h2' }
 									onChange={ ( value ) =>
-										updateSlide( index, 'headingTag', value )
+										updateSlide(
+											index,
+											'headingTag',
+											value
+										)
 									}
 									type="heading"
 								/>
@@ -508,47 +535,48 @@ export default function Edit( { attributes, setAttributes } ) {
 					<div className="hero-section__slider swiper">
 						<div className="swiper-wrapper">
 							<div className="hero-section__slide swiper-slide active">
-								{ hasMultipleConfiguredSlides && showSliderNav && (
-									<div className="hero-section__slide-nav">
-										<Button
-											onClick={ () =>
-												setCurrentSlide(
-													currentSlide > 0
-														? currentSlide - 1
-														: slides.length - 1
-												)
-											}
-											variant="secondary"
-											aria-label={ __(
-												'Previous slide',
-												'ambrygen-web'
-											) }
-										>
-											&larr;
-										</Button>
-										<span>
-											{ currentSlide + 1 } /{ ' ' }
-											{ slides.length }
-										</span>
-										<Button
-											onClick={ () =>
-												setCurrentSlide(
-													currentSlide <
-														slides.length - 1
-														? currentSlide + 1
-														: 0
-												)
-											}
-											variant="secondary"
-											aria-label={ __(
-												'Next slide',
-												'ambrygen-web'
-											) }
-										>
-											&rarr;
-										</Button>
-									</div>
-								) }
+								{ hasMultipleConfiguredSlides &&
+									showSliderNav && (
+										<div className="hero-section__slide-nav">
+											<Button
+												onClick={ () =>
+													setCurrentSlide(
+														currentSlide > 0
+															? currentSlide - 1
+															: slides.length - 1
+													)
+												}
+												variant="secondary"
+												aria-label={ __(
+													'Previous slide',
+													'ambrygen-web'
+												) }
+											>
+												&larr;
+											</Button>
+											<span>
+												{ currentSlide + 1 } /{ ' ' }
+												{ slides.length }
+											</span>
+											<Button
+												onClick={ () =>
+													setCurrentSlide(
+														currentSlide <
+															slides.length - 1
+															? currentSlide + 1
+															: 0
+													)
+												}
+												variant="secondary"
+												aria-label={ __(
+													'Next slide',
+													'ambrygen-web'
+												) }
+											>
+												&rarr;
+											</Button>
+										</div>
+									) }
 								<div className="hero-section__background">
 									{ slide.backgroundImage ? (
 										<>
@@ -625,7 +653,7 @@ export default function Edit( { attributes, setAttributes } ) {
 													)
 												}
 												placeholder={ __(
-													'Add Eyebrow...',
+													'Add Eyebrow…',
 													'ambrygen-web'
 												) }
 												aria-label={ __(
@@ -655,7 +683,7 @@ export default function Edit( { attributes, setAttributes } ) {
 												)
 											}
 											placeholder={ __(
-												'Add Heading...',
+												'Add Heading…',
 												'ambrygen-web'
 											) }
 											allowedFormats={ [
@@ -682,7 +710,7 @@ export default function Edit( { attributes, setAttributes } ) {
 													)
 												}
 												placeholder={ __(
-													'Add Description...',
+													'Add Description…',
 													'ambrygen-web'
 												) }
 												aria-label={ __(

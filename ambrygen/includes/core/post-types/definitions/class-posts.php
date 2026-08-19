@@ -9,72 +9,95 @@ namespace Ambrygen\Theme\Core\PostTypes\Definitions;
 
 use Ambrygen\Theme\Core\PostTypes\AbstractPostType;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Posts -- default WordPress posts.
  */
-class Posts extends AbstractPostType
-{
+class Posts extends AbstractPostType {
 
-	public function slug(): string
-	{
+	/**
+	 * Get the post type slug.
+	 *
+	 * @return string
+	 */
+	public function slug(): string {
 		return 'post';
 	}
 
-	public function label(): string
-	{
-		return __('Posts', 'ambrygen');
+	/**
+	 * Get the plural post type label.
+	 *
+	 * @return string
+	 */
+	public function label(): string {
+		return __( 'Posts', 'ambrygen' );
 	}
 
-	public function singular_label(): string
-	{
-		return __('Post', 'ambrygen');
+	/**
+	 * Get the singular post type label.
+	 *
+	 * @return string
+	 */
+	public function singular_label(): string {
+		return __( 'Post', 'ambrygen' );
 	}
 
-	public function supports(): array
-	{
-		return array('title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'revisions');
+	/**
+	 * Get supported post features.
+	 *
+	 * @return array
+	 */
+	public function supports(): array {
+		return array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'revisions' );
 	}
 
-	public function has_archive(): bool
-	{
+	/**
+	 * Determine whether the post type has an archive.
+	 *
+	 * @return bool
+	 */
+	public function has_archive(): bool {
 		return false;
 	}
 
-	public function meta_fields(): array
-	{
+	/**
+	 * Get registered meta fields.
+	 *
+	 * @return array
+	 */
+	public function meta_fields(): array {
 		return array(
-			'media_type' => array(
-				'label' => __('Media Type', 'ambrygen'),
-				'type' => 'select',
+			'media_type'      => array(
+				'label'   => __( 'Media Type', 'ambrygen' ),
+				'type'    => 'select',
 				'options' => array(
-					'image' => __('Featured Image', 'ambrygen'),
-					'video' => __('Video', 'ambrygen'),
+					'image' => __( 'Featured Image', 'ambrygen' ),
+					'video' => __( 'Video', 'ambrygen' ),
 				),
 			),
-			'video_type' => array(
-				'label' => __('Video Type', 'ambrygen'),
-				'type' => 'select',
+			'video_type'      => array(
+				'label'   => __( 'Video Type', 'ambrygen' ),
+				'type'    => 'select',
 				'options' => array(
-					'embed' => __('YouTube / Vimeo', 'ambrygen'),
-					'mp4' => __('Self Hosted (MP4)', 'ambrygen'),
+					'embed' => __( 'YouTube / Vimeo', 'ambrygen' ),
+					'mp4'   => __( 'Self Hosted (MP4)', 'ambrygen' ),
 				),
 			),
-			'iframe_url' => array(
-				'label' => __('Video URL', 'ambrygen'),
-				'type' => 'text',
-				'description' => __('Paste YouTube/Vimeo or iframe embed URL.', 'ambrygen'),
+			'iframe_url'      => array(
+				'label'       => __( 'Video URL', 'ambrygen' ),
+				'type'        => 'text',
+				'description' => __( 'Paste YouTube/Vimeo or iframe embed URL.', 'ambrygen' ),
 			),
-			'video_url' => array(
-				'label' => __('Self Hosted URL', 'ambrygen'),
-				'type' => 'media_file',
-				'description' => __('Upload or select an MP4 file from the media library.', 'ambrygen'),
+			'video_url'       => array(
+				'label'       => __( 'Self Hosted URL', 'ambrygen' ),
+				'type'        => 'media_file',
+				'description' => __( 'Upload or select an MP4 file from the media library.', 'ambrygen' ),
 			),
 			'poster_image_id' => array(
-				'label' => __('Thumbnail / Poster Image', 'ambrygen'),
-				'type' => 'media_file',
-				'description' => __('Image to show before the video plays.', 'ambrygen'),
+				'label'       => __( 'Thumbnail / Poster Image', 'ambrygen' ),
+				'type'        => 'media_file',
+				'description' => __( 'Image to show before the video plays.', 'ambrygen' ),
 			),
 		);
 	}

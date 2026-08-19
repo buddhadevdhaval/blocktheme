@@ -33,18 +33,19 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		);
 		const slideCount =
 			sliderElement.querySelectorAll( '.swiper-slide' ).length;
-		const announcerElement =
-			sliderElement.querySelector( '[data-slide-announcer]' );
+		const announcerElement = sliderElement.querySelector(
+			'[data-slide-announcer]'
+		);
 		let shouldManageFocus = false;
-		const updateSlideAnnouncer = ( swiperInstance ) => {
-			if ( ! announcerElement || ! swiperInstance || slideCount < 1 ) {
+		const updateSlideAnnouncer = ( swiper ) => {
+			if ( ! announcerElement || ! swiper || slideCount < 1 ) {
 				return;
 			}
 
 			announcerElement.textContent = sprintf(
 				/* translators: 1: Current slide number, 2: Total slides. */
 				__( 'Slide %1$d of %2$d', 'ambrygen-web' ),
-				swiperInstance.realIndex + 1,
+				swiper.realIndex + 1,
 				slideCount
 			);
 		};
@@ -65,30 +66,31 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					: __( 'Pause autoplay', 'ambrygen-web' )
 			);
 		};
-		const manageSlideFocus = ( swiperInstance ) => {
-			if ( ! shouldManageFocus || ! swiperInstance ) {
+		const manageSlideFocus = ( swiper ) => {
+			if ( ! shouldManageFocus || ! swiper ) {
 				return;
 			}
 
-			const activeElement = document.activeElement;
+			const activeElement = sliderElement.ownerDocument.activeElement;
 
 			if (
 				! activeElement ||
-				document.body === activeElement ||
+				sliderElement.ownerDocument.body === activeElement ||
 				! sliderElement.contains( activeElement )
 			) {
 				shouldManageFocus = false;
 				return;
 			}
 
-			const activeSlide = swiperInstance.slides[ swiperInstance.activeIndex ];
+			const activeSlide = swiper.slides[ swiper.activeIndex ];
 
 			if ( ! activeSlide ) {
 				shouldManageFocus = false;
 				return;
 			}
 
-			const firstFocusable = activeSlide.querySelector( focusableSelector );
+			const firstFocusable =
+				activeSlide.querySelector( focusableSelector );
 
 			if ( firstFocusable ) {
 				firstFocusable.focus();
@@ -123,7 +125,11 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		} );
 
 		sliderElement.addEventListener( 'click', () => {
-			if ( sliderElement.contains( document.activeElement ) ) {
+			if (
+				sliderElement.contains(
+					sliderElement.ownerDocument.activeElement
+				)
+			) {
 				shouldManageFocus = true;
 			}
 		} );

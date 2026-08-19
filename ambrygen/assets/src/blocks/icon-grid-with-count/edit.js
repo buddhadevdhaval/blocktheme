@@ -25,39 +25,45 @@ import {
 } from '../_shared/components';
 
 const ITEM_BLOCK_NAME = 'ambrygen/icon-grid-with-count-item';
-const ALLOWED_BLOCKS = [ITEM_BLOCK_NAME];
+const ALLOWED_BLOCKS = [ ITEM_BLOCK_NAME ];
 const TERMS_PER_PAGE = 20;
 
-export default function Edit({ attributes, setAttributes, clientId }) {
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { heading, headingTag, description, link, blockId, backgroundImage } =
 		attributes;
-	const { insertBlocks, removeBlocks } = useDispatch('core/block-editor');
+	const { insertBlocks, removeBlocks } = useDispatch( 'core/block-editor' );
 	const isExample = blockId === 'icon-grid-with-count-example';
 	const HeadingTag = headingTag || 'h2';
-	const hasBackgroundImage = Boolean(backgroundImage?.url);
-	const [termSearchInput, setTermSearchInput] = useState('');
+	const hasBackgroundImage = Boolean( backgroundImage?.url );
+	const [ termSearchInput, setTermSearchInput ] = useState( '' );
 
-	useUniqueBlockId({
+	useUniqueBlockId( {
 		blockId,
 		clientId,
-		enabled: !isExample,
+		enabled: ! isExample,
 		idPrefix: 'section',
 		setAttributes,
-	});
+	} );
 
 	const innerBlocks = useSelect(
-		(select) => select('core/block-editor').getBlocks(clientId),
-		[clientId]
+		( select ) => select( 'core/block-editor' ).getBlocks( clientId ),
+		[ clientId ]
 	);
 	const selectedTermIds = useMemo(
 		() =>
-			innerBlocks
-				.map((block) => Number(block.attributes?.selectedTerm) || 0)
-				.filter(Boolean),
-		[innerBlocks]
+			innerBlocks.reduce( ( ids, block ) => {
+				const termId = Number( block.attributes?.selectedTerm ) || 0;
+
+				if ( termId ) {
+					ids.push( termId );
+				}
+
+				return ids;
+			}, [] ),
+		[ innerBlocks ]
 	);
 	const availableTerms = useSelect(
-		(select) => {
+		( select ) => {
 			const query = {
 				per_page: TERMS_PER_PAGE,
 				hide_empty: false,
@@ -65,99 +71,116 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				order: 'asc',
 			};
 
-			if (termSearchInput.trim()) {
+			if ( termSearchInput.trim() ) {
 				query.search = termSearchInput.trim();
 			}
 
-			return select('core').getEntityRecords(
+			return select( 'core' ).getEntityRecords(
 				'taxonomy',
 				'poster_category',
 				query
 			);
 		},
-		[termSearchInput]
+		[ termSearchInput ]
 	);
 	const selectedTermsById = useSelect(
-		(select) => {
-			if (!selectedTermIds.length) {
+		( select ) => {
+			if ( ! selectedTermIds.length ) {
 				return {};
 			}
 
-			const terms = selectedTermIds
-				.map((termId) =>
-					select('core').getEntityRecord(
-						'taxonomy',
-						'poster_category',
-						termId
-					)
-				)
-				.filter(Boolean);
+			const terms = selectedTermIds.reduce( ( records, termId ) => {
+				const record = select( 'core' ).getEntityRecord(
+					'taxonomy',
+					'poster_category',
+					termId
+				);
 
-			return terms.reduce((termsById, term) => {
-				termsById[term.id] = term;
+				if ( record ) {
+					records.push( record );
+				}
+
+				return records;
+			}, [] );
+
+			return terms.reduce( ( termsById, term ) => {
+				termsById[ term.id ] = term;
 				return termsById;
-			}, {});
+			}, {} );
 		},
-		[selectedTermIds]
+		[ selectedTermIds ]
 	);
 
-	const termOptions = useMemo(() => {
-		if (!Array.isArray(availableTerms)) {
+	const termOptions = useMemo( () => {
+		if ( ! Array.isArray( availableTerms ) ) {
 			return [];
 		}
 
-		return availableTerms
-			.filter((term) => !selectedTermIds.includes(term.id))
-			.map((term) => ({
+		return availableTerms.reduce( ( options, term ) => {
+			if ( selectedTermIds.includes( term.id ) ) {
+				return options;
+			}
+
+			options.push( {
 				label:
-					decodeEntities(term.name).trim() ||
+					decodeEntities( term.name ).trim() ||
 					sprintf(
 						/* translators: %d: taxonomy term ID. */
-						__('Category #%d', 'ambrygen-web'),
+						__( 'Category #%d', 'ambrygen-web' ),
 						term.id
 					),
 				value: term.id,
-			}));
-	}, [availableTerms, selectedTermIds]);
+			} );
+
+			return options;
+		}, [] );
+	}, [ availableTerms, selectedTermIds ] );
 	const selectedTermOptions = useMemo(
 		() =>
-			selectedTermIds.map((termId) => {
-				const term = selectedTermsById[termId];
+			selectedTermIds.map( ( termId ) => {
+				const term = selectedTermsById[ termId ];
 				return {
 					value: termId,
 					label:
-						decodeEntities(term?.name || '').trim() ||
+						decodeEntities( term?.name || '' ).trim() ||
 						sprintf(
 							/* translators: %d: taxonomy term ID. */
-							__('Category #%d', 'ambrygen-web'),
+							__( 'Category #%d', 'ambrygen-web' ),
 							termId
 						),
-					isLoading: !term,
+					isLoading: ! term,
 				};
-			}),
-		[selectedTermIds, selectedTermsById]
+			} ),
+		[ selectedTermIds, selectedTermsById ]
 	);
 
-	useEffect(() => {
-		const emptyBlockIds = innerBlocks
-			.filter(
-				(block) => !(Number(block.attributes?.selectedTerm) || 0)
-			)
-			.map((block) => block.clientId);
+	useEffect( () => {
+		const emptyBlockIds = innerBlocks.reduce( ( clientIds, block ) => {
+			if ( ! ( Number( block.attributes?.selectedTerm ) || 0 ) ) {
+				clientIds.push( block.clientId );
+			}
 
-		if (emptyBlockIds.length) {
-			removeBlocks(emptyBlockIds, false);
+			return clientIds;
+		}, [] );
+
+		if ( emptyBlockIds.length ) {
+			removeBlocks( emptyBlockIds, false );
 		}
-	}, [innerBlocks, removeBlocks]);
+	}, [ innerBlocks, removeBlocks ] );
 
-	const toggleTermBlock = (termId, isSelected) => {
-		if (isSelected) {
-			if (selectedTermIds.includes(termId)) {
+	const blockProps = useBlockProps( {
+		className: 'block-layout our-testing-menu',
+		id: blockId || undefined,
+	} );
+
+	const toggleTermBlock = ( termId, isSelected ) => {
+		if ( isSelected ) {
+			if ( selectedTermIds.includes( termId ) ) {
 				return;
 			}
 
 			insertBlocks(
-				createBlock(ITEM_BLOCK_NAME, { selectedTerm: termId }),
+				createBlock( ITEM_BLOCK_NAME, { selectedTerm: termId } ),
 				innerBlocks.length,
 				clientId,
 				false
@@ -165,81 +188,80 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			return;
 		}
 
-		const blocksToRemove = innerBlocks
-			.filter(
-				(block) =>
-					(Number(block.attributes?.selectedTerm) || 0) === termId
-			)
-			.map((block) => block.clientId);
+		const blocksToRemove = innerBlocks.reduce( ( clientIds, block ) => {
+			if (
+				( Number( block.attributes?.selectedTerm ) || 0 ) === termId
+			) {
+				clientIds.push( block.clientId );
+			}
 
-		if (blocksToRemove.length) {
-			removeBlocks(blocksToRemove, false);
+			return clientIds;
+		}, [] );
+
+		if ( blocksToRemove.length ) {
+			removeBlocks( blocksToRemove, false );
 		}
 	};
 
-	if (isExample) {
+	if ( isExample ) {
 		return (
-			<BlockExamplePreview
-				imagePath="/assets/src/images/icon-grid-with-count/preview.png"
-			/>
+			<BlockExamplePreview imagePath="/assets/src/images/icon-grid-with-count/preview.png" />
 		);
 	}
 
-	const blockProps = useBlockProps({
-		className: 'block-layout our-testing-menu',
-		id: blockId || undefined,
-	});
-
 	return (
-		<div {...blockProps}>
+		<div { ...blockProps }>
 			<InspectorControls>
-				<PanelBody title={__('Heading Settings', 'ambrygen-web')} initialOpen={false}>
+				<PanelBody
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
 					<TagSelector
-						label={__('Heading Tag', 'ambrygen-web')}
-						value={headingTag || 'h2'}
-						onChange={(value) =>
-							setAttributes({ headingTag: value })
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
+						value={ headingTag || 'h2' }
+						onChange={ ( value ) =>
+							setAttributes( { headingTag: value } )
 						}
 						type="heading"
 					/>
 				</PanelBody>
-				<PanelBody title={__('Display Settings', 'ambrygen-web')}>
+				<PanelBody title={ __( 'Display Settings', 'ambrygen-web' ) }>
 					<ImageUploader
-						url={backgroundImage?.url || ''}
-						label={__('Background Image', 'ambrygen-web')}
-						onSelect={(media) =>
-							setAttributes({
+						url={ backgroundImage?.url || '' }
+						label={ __( 'Background Image', 'ambrygen-web' ) }
+						onSelect={ ( media ) =>
+							setAttributes( {
 								backgroundImage: {
 									id: media.id,
 									url: media.url,
 									alt: media.alt || '',
 								},
-							})
+							} )
 						}
-						onRemove={() =>
-							setAttributes({
+						onRemove={ () =>
+							setAttributes( {
 								backgroundImage: {
 									url: '',
 									id: 0,
 									alt: '',
 								},
-							})
+							} )
 						}
 					/>
 					<CtaButtonField
-						label={__('', 'ambrygen-web')}
-						textLabel={__('Link Text', 'ambrygen-web')}
+						label={ __( '', 'ambrygen-web' ) }
+						textLabel={ __( 'Link Text', 'ambrygen-web' ) }
 						defaultVariant="primary"
-						value={link}
-						showVariant={false}
-						onChange={(value) =>
-							setAttributes({ link: value })
+						value={ link }
+						showVariant={ false }
+						onChange={ ( value ) =>
+							setAttributes( { link: value } )
 						}
 					/>
 				</PanelBody>
 				<PanelBody
-					title={__('Grid Items', 'ambrygen-web')}
-					initialOpen={false}
+					title={ __( 'Grid Items', 'ambrygen-web' ) }
+					initialOpen={ false }
 				>
 					<p
 						className="icon-grid-with-count__term-count"
@@ -247,94 +269,85 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						aria-live="polite"
 						aria-atomic="true"
 					>
-						{sprintf(
+						{ sprintf(
 							/* translators: %d: number of selected categories. */
-							__('%d category(s) selected', 'ambrygen-web'),
+							__( '%d category(s) selected', 'ambrygen-web' ),
 							selectedTermIds.length
-						)}
+						) }
 					</p>
 					<TermPicker
-						isLoading={!availableTerms}
-						options={termOptions}
-						selectedTerms={selectedTermOptions}
-						searchValue={termSearchInput}
-						onSearchChange={setTermSearchInput}
-						onToggle={toggleTermBlock}
-						hasOptions={termOptions.length > 0}
+						isLoading={ ! availableTerms }
+						options={ termOptions }
+						selectedTerms={ selectedTermOptions }
+						searchValue={ termSearchInput }
+						onSearchChange={ setTermSearchInput }
+						onToggle={ toggleTermBlock }
+						hasOptions={ termOptions.length > 0 }
 					/>
 				</PanelBody>
 			</InspectorControls>
-			{hasBackgroundImage && (
+			{ hasBackgroundImage && (
 				<div className="block-bg-image">
 					<img
-						src={backgroundImage.url}
-						alt={backgroundImage.alt || ''}
+						src={ backgroundImage.url }
+						alt={ backgroundImage.alt || '' }
 					/>
 				</div>
-			)}
+			) }
 			<div className="our-testing-menu__header block__rowflex">
-				<div className='block__rowflex--col-left'>
+				<div className="block__rowflex--col-left">
 					<RichText
-						tagName={HeadingTag}
+						tagName={ HeadingTag }
 						className="block-title block__rowflex--heading-title heading-3 mb-0"
-						value={heading}
-						onChange={(value) =>
-							setAttributes({ heading: value })
+						value={ heading }
+						onChange={ ( value ) =>
+							setAttributes( { heading: value } )
 						}
-						placeholder={__('Add Heading...', 'ambrygen-web')}
+						placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 					/>
 				</div>
 
 				<div className="block__rowflex--block-content subtitle1-reg">
 					<RichText
 						tagName="p"
-						value={description}
-						onChange={(value) =>
-							setAttributes({ description: value })
+						value={ description }
+						onChange={ ( value ) =>
+							setAttributes( { description: value } )
 						}
-						placeholder={__(
-							'Add Description...',
-							'ambrygen-web'
-						)}
+						placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
 					/>
 
 					<div className="block_rowflex-link">
-						{link?.url && link?.text && (
-							<a
-								href={link.url}
-								target={link.target || undefined}
-								rel={link.rel || undefined}
-								className="site-btn is-style-site-text-btn has-right-arrow"
-								onClick={(e) => e.preventDefault()}
-							>
-								{link.text}
-								{link.target === '_blank' && (
+						{ link?.url && link?.text && (
+							<div className="site-btn is-style-site-text-btn has-right-arrow">
+								{ link.text }
+								{ link.target === '_blank' && (
 									<span className="screen-reader-text">
-										{__(
+										{ __(
 											'(opens in new tab)',
 											'ambrygen-web'
-										)}
+										) }
 									</span>
-								)}
-							</a>
-						)}
+								) }
+							</div>
+						) }
 					</div>
 				</div>
 			</div>
 			<div className="is-style-gl-s64" aria-hidden="true"></div>
 
 			<div className="our-testing-menu__grid">
-				{selectedTermIds.length === 0 && (
-					<Notice status="info" isDismissible={false}>
-						{__(
+				{ selectedTermIds.length === 0 && (
+					<Notice status="info" isDismissible={ false }>
+						{ __(
 							'Add categories from the Grid Items settings panel.',
 							'ambrygen-web'
-						)}
+						) }
 					</Notice>
-				)}
+				) }
 				<InnerBlocks
-					allowedBlocks={ALLOWED_BLOCKS}
-					renderAppender={false}
+					allowedBlocks={ ALLOWED_BLOCKS }
+					renderAppender={ false }
 					orientation="horizontal"
 				/>
 			</div>
@@ -342,7 +355,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	);
 }
 
-function TermPicker({
+function TermPicker( {
 	isLoading,
 	options,
 	selectedTerms,
@@ -350,111 +363,111 @@ function TermPicker({
 	onSearchChange,
 	onToggle,
 	hasOptions,
-}) {
+} ) {
 	return (
 		<div className="icon-grid-with-count__term-picker">
-			{isLoading ? (
+			{ isLoading ? (
 				<Spinner />
 			) : (
 				<>
-					{selectedTerms.length > 0 && (
+					{ selectedTerms.length > 0 && (
 						<div className="icon-grid-with-count__selected-terms">
 							<div className="icon-grid-with-count__picker-label">
-								{__('Selected Categories', 'ambrygen-web')}
+								{ __( 'Selected Categories', 'ambrygen-web' ) }
 							</div>
 							<div
 								className="icon-grid-with-count__selected-term-list"
 								role="list"
-								aria-label={__(
+								aria-label={ __(
 									'Selected categories',
 									'ambrygen-web'
-								)}
+								) }
 							>
-								{selectedTerms.map((term) => (
+								{ selectedTerms.map( ( term ) => (
 									<div
-										key={term.value}
+										key={ term.value }
 										className="icon-grid-with-count__selected-term"
 										role="listitem"
 									>
 										<span>
-											{term.label}
-											{term.isLoading && (
+											{ term.label }
+											{ term.isLoading && (
 												<span className="screen-reader-text">
-													{__(
-														' loading',
+													{ __(
+														'loading',
 														'ambrygen-web'
-													)}
+													) }
 												</span>
-											)}
+											) }
 										</span>
 										<Button
 											isDestructive
 											variant="tertiary"
 											size="small"
-											onClick={() =>
-												onToggle(term.value, false)
+											onClick={ () =>
+												onToggle( term.value, false )
 											}
 										>
-											{__('Remove', 'ambrygen-web')}
+											{ __( 'Remove', 'ambrygen-web' ) }
 										</Button>
 									</div>
-								))}
+								) ) }
 							</div>
 						</div>
-					)}
+					) }
 					<div className="icon-grid-with-count__picker-field">
 						<SearchControl
-							label={__('Add Category', 'ambrygen-web')}
-							value={searchValue}
-							onChange={onSearchChange}
-							placeholder={__(
+							label={ __( 'Add Category', 'ambrygen-web' ) }
+							value={ searchValue }
+							onChange={ onSearchChange }
+							placeholder={ __(
 								'Search categories',
 								'ambrygen-web'
-							)}
+							) }
 						/>
 						<p className="icon-grid-with-count__picker-help">
-							{hasOptions
+							{ hasOptions
 								? __(
-									'Search and add categories without using the item dropdown.',
-									'ambrygen-web'
-								)
+										'Search and add categories without using the item dropdown.',
+										'ambrygen-web'
+								  )
 								: __(
-									'No matching categories are available to add.',
-									'ambrygen-web'
-								)}
+										'No matching categories are available to add.',
+										'ambrygen-web'
+								  ) }
 						</p>
-						{hasOptions && (
+						{ hasOptions && (
 							<div
 								className="icon-grid-with-count__term-options"
 								role="list"
-								aria-label={__(
+								aria-label={ __(
 									'Available categories to add',
 									'ambrygen-web'
-								)}
+								) }
 							>
-								{options.map((option) => (
+								{ options.map( ( option ) => (
 									<div
-										key={option.value}
+										key={ option.value }
 										className="icon-grid-with-count__term-option"
 										role="listitem"
 									>
-										<span>{option.label}</span>
+										<span>{ option.label }</span>
 										<Button
 											variant="secondary"
 											size="small"
-											onClick={() =>
-												onToggle(option.value, true)
+											onClick={ () =>
+												onToggle( option.value, true )
 											}
 										>
-											{__('Add', 'ambrygen-web')}
+											{ __( 'Add', 'ambrygen-web' ) }
 										</Button>
 									</div>
-								))}
+								) ) }
 							</div>
-						)}
+						) }
 					</div>
 				</>
-			)}
+			) }
 		</div>
 	);
 }

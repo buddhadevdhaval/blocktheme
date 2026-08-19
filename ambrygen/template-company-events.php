@@ -101,7 +101,15 @@ get_header();
 								<a class="blog-post__link" href="<?php echo esc_url( get_permalink() ); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'Learn more about %s', 'ambrygen-web' ), get_the_title() ) ); ?>">
 									<div class="blog-post__image-wrap">
 										<?php if ( has_post_thumbnail() ) : ?>
-											<?php the_post_thumbnail( 'large', array( 'class' => 'blog-post__image', 'loading' => 'lazy' ) ); ?>
+											<?php
+											the_post_thumbnail(
+												'large',
+												array(
+													'class'   => 'blog-post__image',
+													'loading' => 'lazy',
+												)
+											);
+											?>
 										<?php else : ?>
 											<img class="blog-post__image" src="<?php echo esc_url( AMBRYGEN_DEFAULT_IMAGE ); ?>" alt="<?php echo esc_attr( get_the_title() ); ?>" loading="lazy" />
 										<?php endif; ?>
@@ -147,7 +155,7 @@ get_header();
 				<div class="is-style-gl-s32" aria-hidden="true"></div>
 				<div class="conferences__grid">
 					<?php
-					$paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
+					$paged     = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
 					$past_args = array(
 						'post_type'      => 'trade_shows',
 						'posts_per_page' => 10,
@@ -162,12 +170,20 @@ get_header();
 							$past_query->the_post();
 							$location = get_post_meta( get_the_ID(), 'location', true );
 							$date_str = get_post_meta( get_the_ID(), 'date_short', true ); // or derive from main date
-							$terms = get_the_terms( get_the_ID(), 'category' ); // Or custom taxonomy
+							$terms    = get_the_terms( get_the_ID(), 'category' ); // Or custom taxonomy
 							?>
 							<a href="<?php echo esc_url( get_permalink() ); ?>" class="conferences__card">
 								<div class="conferences__image-wrap">
 									<?php if ( has_post_thumbnail() ) : ?>
-										<?php the_post_thumbnail( 'large', array( 'class' => 'conferences__image', 'loading' => 'lazy' ) ); ?>
+										<?php
+										the_post_thumbnail(
+											'large',
+											array(
+												'class'   => 'conferences__image',
+												'loading' => 'lazy',
+											)
+										);
+										?>
 									<?php else : ?>
 										<img class="conferences__image" src="<?php echo esc_url( AMBRYGEN_DEFAULT_IMAGE ); ?>" alt="<?php echo esc_attr( get_the_title() ); ?>" loading="lazy" />
 									<?php endif; ?>
@@ -212,17 +228,19 @@ get_header();
 						<div class="is-style-gl-s64" aria-hidden="true"></div>
 						
 						<?php
-						$current_page = max( 1, get_query_var( 'paged' ) );
-						$total_pages = $past_query->max_num_pages;
-						$pagination_links = paginate_links( array(
-							'base'      => str_replace( 999999999, '%#%', esc_url( get_pagenum_link( 999999999 ) ) ),
-							'format'    => '?paged=%#%',
-							'current'   => $current_page,
-							'total'     => $total_pages,
-							'prev_text' => __( 'Previous', 'ambrygen-web' ),
-							'next_text' => __( 'Next', 'ambrygen-web' ),
-							'type'      => 'array',
-						) );
+						$current_page     = max( 1, get_query_var( 'paged' ) );
+						$total_pages      = $past_query->max_num_pages;
+						$pagination_links = paginate_links(
+							array(
+								'base'      => str_replace( 999999999, '%#%', esc_url( get_pagenum_link( 999999999 ) ) ),
+								'format'    => '?paged=%#%',
+								'current'   => $current_page,
+								'total'     => $total_pages,
+								'prev_text' => __( 'Previous', 'ambrygen-web' ),
+								'next_text' => __( 'Next', 'ambrygen-web' ),
+								'type'      => 'array',
+							)
+						);
 
 						if ( is_array( $pagination_links ) ) {
 							?>
@@ -234,9 +252,9 @@ get_header();
 										<?php
 										foreach ( $pagination_links as $link ) {
 											$active_class = ( strpos( $link, 'current' ) !== false ) ? ' pagination__link--active' : '';
-											$link = str_replace( 'page-numbers', 'pagination__link' . $active_class, $link );
-											$link = str_replace( 'prev', 'pagination__nav pagination__nav--prev', $link );
-											$link = str_replace( 'next', 'pagination__nav pagination__nav--next', $link );
+											$link         = str_replace( 'page-numbers', 'pagination__link' . $active_class, $link );
+											$link         = str_replace( 'prev', 'pagination__nav pagination__nav--prev', $link );
+											$link         = str_replace( 'next', 'pagination__nav pagination__nav--next', $link );
 											echo '<li class="pagination__item">' . wp_kses_post( $link ) . '</li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 										}
 										?>

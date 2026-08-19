@@ -43,6 +43,7 @@
 				}
 
 				@include bp.min(lg) {
+
 					&::before {
 						background-color: var(--theme_link_color);
 					}
@@ -50,6 +51,7 @@
 			}
 
 			@include bp.min(lg) {
+
 				.tabs-table-content__title {
 					color: var(--theme_cg_blue);
 				}
@@ -64,6 +66,7 @@
 		&:not(.is-active) {
 
 			@include bp.min(lg) {
+
 				.tabs-table-content__title {
 					color: var(--theme_gray_500);
 				}
@@ -78,6 +81,12 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+
+		&:focus-visible {
+			outline: 2px solid var(--theme_cg_blue);
+			outline-offset: 2px;
+			border-radius: 4px;
+		}
 
 		@include bp.min(lg) {
 			padding: 24px 0;
@@ -103,7 +112,7 @@
 			background-image: url(../../images/plus-circle.svg);
 			background-size: contain;
 			background-repeat: no-repeat;
-			transition: all 0.3s ease;
+			transition: background-image 0.3s ease, filter 0.3s ease;
 			margin-right: 0;
 			filter: brightness(0) saturate(100%) invert(28%) sepia(83%) saturate(1491%) hue-rotate(169deg) brightness(98%) contrast(104%);
 
@@ -141,6 +150,7 @@
 }
 
 @keyframes fadeIn {
+
 	from {
 		opacity: 0;
 	}

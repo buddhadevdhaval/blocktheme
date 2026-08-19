@@ -7,6 +7,7 @@
 }
 
 .timeline-block {
+
 	&__header {
 		max-width: 960px;
 		margin: 0 auto;
@@ -19,7 +20,7 @@
 		width: 100%;
 		max-width: 1040px;
 		margin: 0 auto;
-		counter-reset: timeline-step; // Initializes the counter
+		counter-reset: timeline-step;
 
 		@include bp.max(md) {
 			gap: 48px;
@@ -31,7 +32,7 @@
 		gap: 24px;
 		width: 100%;
 		align-items: flex-start;
-		counter-increment: timeline-step; // Increments counter for each item
+		counter-increment: timeline-step;
 
 		@include bp.max(md) {
 			flex-direction: column;
@@ -39,6 +40,7 @@
 		}
 
 		&:first-child {
+
 			.timeline-block__badge-col::before {
 				top: 76px;
 
@@ -104,7 +106,6 @@
 		height: 18px;
 		border-radius: 50%;
 		background-color: var(--theme_cg_blue);
-		// border: 1.5px solid var(--theme_cg_blue);
 		color: var(--theme_cg_blue);
 		display: flex;
 		align-items: center;
@@ -116,10 +117,6 @@
 		line-height: 1.33;
 		letter-spacing: 0.45px;
 		margin-top: 76px;
-
-		&::before {
-			// content: counter(timeline-step);
-		}
 
 		@include bp.max(md) {
 			margin-top: 0;
@@ -167,7 +164,6 @@
 			height: auto;
 			display: block;
 			object-fit: contain;
-			// aspect-ratio: 2 / 1;
 		}
 	}
 
@@ -175,6 +171,7 @@
 		color: var(--theme_gray_900);
 
 		&::before {
+
 			@include bp.max(md) {
 				content: counter(timeline-step) ". ";
 				color: var(--theme_gray_900);

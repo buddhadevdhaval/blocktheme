@@ -130,12 +130,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const primaryButton = buttons?.[ 0 ] || {};
 	const secondaryButton = buttons?.[ 1 ] || {};
-	const hasEyebrowText = Boolean( eyebrowText );
-	const hasHeading = Boolean( heading );
-	const hasCardTitle = Boolean( cardTitle );
-	const hasCardSubtitle = Boolean( cardSubtitle );
-	const hasNoRiskText = Boolean( noRiskText );
-	const hasAtRiskText = Boolean( atRiskText );
 	const ctaButtons = [
 		{
 			key: 'primary',
@@ -148,14 +142,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			fallbackText: __( 'Button 2', 'ambrygen-web' ),
 		},
 	];
-	const hasButtons = ctaButtons.some( ( { button } ) =>
-		hasButtonPreviewValue( button )
-	);
 
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) } initialOpen={ false }>
+				<PanelBody
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag || 'h2' }
@@ -165,7 +159,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						type="heading"
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'Button Settings', 'ambrygen-web' ) } initialOpen={ true }>
+				<PanelBody
+					title={ __( 'Button Settings', 'ambrygen-web' ) }
+					initialOpen={ true }
+				>
 					<div className="is-style-gl-s16" aria-hidden="true"></div>
 					<CtaButtonField
 						label={ __( 'Primary Button', 'ambrygen-web' ) }
@@ -211,10 +208,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 						placeholder={ __( 'Add Eyebrow…', 'ambrygen-web' ) }
 					/>
-					<div
-						className="is-style-gl-s12"
-						aria-hidden="true"
-					></div>
+					<div className="is-style-gl-s12" aria-hidden="true"></div>
 					<RichText
 						tagName={ headingTag || 'h2' }
 						className="heading-4 block-title mb-0"

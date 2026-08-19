@@ -10,8 +10,9 @@
 	&.inner-hero-banner {
 
 		.hero-section__slide {
-			min-height: 380px;
+			min-height: 300px;
 			padding: 62px 0 0;
+
 			@include bp.max(lg) {
 				padding: 0;
 				min-height: inherit;
@@ -28,7 +29,7 @@
 		}
 
 		.hero-section__content {
-			min-height: 318px;
+			min-height: 240px;
 
 			@include bp.max(lg) {
 				min-height: inherit;
@@ -75,10 +76,14 @@
 	&__image,
 	.block-editor__container img {
 		border-bottom-left-radius: clamp(120px, calc(7.5rem + ((1vw - 7.68px) * 18.0412)), 225px);
-		height: 100%;
 		object-fit: cover;
 		width: 100%;
 		display: block;
+		min-height: 270px;
+
+		@include bp.max(lg) {
+			object-position: left;
+		}
 	}
 
 	&__overlay {

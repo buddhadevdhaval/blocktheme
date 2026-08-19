@@ -85,15 +85,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		variant === 'without-image'
 			? `variation-${ variant } variation-boxed`
 			: `variation-${ variant }`;
-	const { insertBlock, replaceInnerBlocks } = useDispatch(
-		'core/block-editor'
-	);
+	const { insertBlock, replaceInnerBlocks } =
+		useDispatch( 'core/block-editor' );
 	const hasInnerBlocks = useSelect(
-		(select) => select('core/block-editor').getBlockCount(clientId) > 0,
-		[clientId]
+		( select ) =>
+			select( 'core/block-editor' ).getBlockCount( clientId ) > 0,
+		[ clientId ]
 	);
-	const hasDescription = Boolean( description );
-	const hasFaqContent = hasInnerBlocks || faqs.length > 0;
 	const isExample = blockId === 'faq-accordion-example';
 	const blockProps = useBlockProps( {
 		className: `block-layout alongside-faq ${ variantClassName }`,
@@ -138,8 +136,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 
 		replaceInnerBlocks( clientId, faqs.map( createFaqItemBlock ), false );
-		setAttributes({ faqs: [] });
-	}, [ clientId, faqs, hasInnerBlocks, replaceInnerBlocks, setAttributes]);
+		setAttributes( { faqs: [] } );
+	}, [ clientId, faqs, hasInnerBlocks, replaceInnerBlocks, setAttributes ] );
 
 	if ( isExample ) {
 		return (
@@ -164,9 +162,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								key={ item.value }
 								type="button"
 								className={ `variant-button ${
-									variant === item.value
-										? 'is-selected'
-										: ''
+									variant === item.value ? 'is-selected' : ''
 								}` }
 								aria-pressed={ variant === item.value }
 								onClick={ () =>
@@ -184,20 +180,25 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							</button>
 						) ) }
 					</div>
-
 				</PanelBody>
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) } initialOpen={ false }>
+				<PanelBody
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag }
 						onChange={ ( value ) =>
 							setAttributes( { headingTag: value } )
 						}
-						type='heading'
+						type="heading"
 					/>
 				</PanelBody>
 				{ showImage && (
-					<PanelBody title={ __( 'FAQ Settings', 'ambrygen-web' ) } initialOpen={ true }>
+					<PanelBody
+						title={ __( 'FAQ Settings', 'ambrygen-web' ) }
+						initialOpen={ true }
+					>
 						<ImageUploader
 							label={ __( 'FAQ Image', 'ambrygen-web' ) }
 							url={ isDefaultImage ? '' : imageUrl }
@@ -249,7 +250,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									setAttributes( { title: value } )
 								}
 								placeholder={ __(
-									'Add Heading...',
+									'Add Heading…',
 									'ambrygen-web'
 								) }
 							/>
@@ -265,7 +266,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									setAttributes( { description: value } )
 								}
 								placeholder={ __(
-									'Add Description...',
+									'Add Description…',
 									'ambrygen-web'
 								) }
 							/>

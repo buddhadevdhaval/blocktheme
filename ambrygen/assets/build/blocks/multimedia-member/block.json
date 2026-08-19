@@ -5,7 +5,7 @@
   "title": "Multimedia Member",
   "category": "ambrygen",
   "icon": "images-alt2",
-  "description": "Slider of multimedia member content pulled from our_team posts.",
+  "description": "Slider of multimedia member content pulled from author posts.",
   "supports": {
     "html": false
   },
@@ -28,21 +28,6 @@
         "h4",
         "h5",
         "h6"
-      ]
-    },
-    "memberTypes": {
-      "type": "array",
-      "items": {
-        "type": "number"
-      },
-      "default": []
-    },
-    "selectionMode": {
-      "type": "string",
-      "default": "manual",
-      "enum": [
-        "manual",
-        "taxonomy"
       ]
     }
   },

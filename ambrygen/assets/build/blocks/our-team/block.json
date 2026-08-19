@@ -82,6 +82,7 @@
   "render": "file:./render.php",
   "example": {
     "attributes": {
+      "blockId": "our-team-example",
       "title": "Title",
       "intro": "We are proud to be leading the industry that we love and working together.",
       "headingLevel": "h2",

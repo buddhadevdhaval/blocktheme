@@ -18,105 +18,143 @@ defined( 'ABSPATH' ) || exit;
  */
 class Posters extends AbstractPostType {
 
+	/**
+	 * Get the post type slug.
+	 *
+	 * @return string
+	 */
 	public function slug(): string {
 		return 'poster';
 	}
 
+	/**
+	 * Get the plural post type label.
+	 *
+	 * @return string
+	 */
 	public function label(): string {
 		return __( 'Posters', 'ambrygen-web' );
 	}
 
+	/**
+	 * Get the singular post type label.
+	 *
+	 * @return string
+	 */
 	public function singular_label(): string {
 		return __( 'Poster', 'ambrygen-web' );
 	}
 
+	/**
+	 * Get the admin menu icon.
+	 *
+	 * @return string
+	 */
 	public function menu_icon(): string {
 		return 'dashicons-format-image';
 	}
 
+	/**
+	 * Get additional post type arguments.
+	 *
+	 * @return array
+	 */
 	public function extra_args(): array {
 		return array(
-			'rewrite' => array(
+			'rewrite'     => array(
 				'slug' => 'scientific-posters',
 			),
 			'has_archive' => 'scientific-posters',
 		);
 	}
 
+	/**
+	 * Get registered meta fields.
+	 *
+	 * @return array
+	 */
 	public function meta_fields(): array {
 		return array(
-			'_old_id'               => array(
+			'_old_id'                => array(
 				'label'    => __( 'Old ID', 'ambrygen-web' ),
 				'type'     => 'number',
+				'hidden'   => true,
 				'sanitize' => 'absint',
 			),
-			'poster_pdf_files'      => array(
-				'label' => __( 'Poster PDFs', 'ambrygen-web' ),
+			'poster_pdf_files'       => array(
+				'label' => __( '', 'ambrygen-web' ),
 				'type'  => 'poster_pdf_repeater',
 			),
-			'lis_active'            => array(
+			'lis_active'             => array(
 				'label' => __( 'LIS Active', 'ambrygen-web' ),
 				'type'  => 'checkbox',
 				'value' => '1',
 			),
-			'name'                  => array(
+			'name'                   => array(
 				'label' => __( 'Name', 'ambrygen-web' ),
 				'type'  => 'text',
 			),
-			'description'           => array(
+			'description'            => array(
 				'label' => __( 'Description', 'ambrygen-web' ),
 				'type'  => 'textarea',
 			),
-			'slug'                  => array(
+			'slug'                   => array(
 				'label' => __( 'Slug', 'ambrygen-web' ),
 				'type'  => 'text',
 			),
-			'launch_id'             => array(
+			'launch_id'              => array(
 				'label'    => __( 'Launch ID', 'ambrygen-web' ),
 				'type'     => 'number',
 				'sanitize' => 'absint',
 			),
-			'start_at'              => array(
-				'label' => __( 'Start Date', 'ambrygen-web' ),
-				'type'  => 'date',
+			'start_at'               => array(
+				'label' => __( 'Start Date & Time', 'ambrygen-web' ),
+				'type'  => 'datetime-local',
 			),
-			'end_at'                => array(
-				'label' => __( 'End Date', 'ambrygen-web' ),
-				'type'  => 'date',
+			'end_at'                 => array(
+				'label' => __( 'End Date & Time', 'ambrygen-web' ),
+				'type'  => 'datetime-local',
 			),
-			'pr_name'               => array(
+			'pr_name'                => array(
 				'label' => __( 'PR Name', 'ambrygen-web' ),
 				'type'  => 'text',
 			),
-			'authors'               => array(
-				'label' => __( 'Authors', 'ambrygen-web' ),
-				'type'  => 'textarea',
-			),
-			'linked_author'         => array(
+			// 'authors'               => array(
+			// 'label' => __( 'Authors', 'ambrygen-web' ),
+			// 'type'  => 'textarea',
+			// ),
+			'linked_author'          => array(
 				'label'       => __( 'Linked Authors', 'ambrygen-web' ),
 				'type'        => 'post_relationship',
 				'post_types'  => array( 'author' ),
 				'multiple'    => true,
 				'description' => __( 'Select matching author profiles for this poster.', 'ambrygen-web' ),
 			),
-			'session_id'            => array(
+			'session_id'             => array(
 				'label'    => __( 'Session ID', 'ambrygen-web' ),
-				'type'     => 'number',
-				'sanitize' => 'absint',
+				'type'     => 'text',
+				'sanitize' => 'sanitize_text_field',
 			),
-			'search_score'          => array(
+			'search_score'           => array(
 				'label'    => __( 'Search Score', 'ambrygen-web' ),
 				'type'     => 'number',
 				'sanitize' => 'floatval',
+				'hidden'   => true,
 			),
 			'launch_deactivation_id' => array(
 				'label'    => __( 'Launch Deactivation ID', 'ambrygen-web' ),
 				'type'     => 'number',
 				'sanitize' => 'absint',
+				'hidden'   => true,
 			),
 		);
 	}
 
+	/**
+	 * Get registered taxonomies.
+	 *
+	 * @return array
+	 */
 	public function taxonomies(): array {
 		return array();
 	}

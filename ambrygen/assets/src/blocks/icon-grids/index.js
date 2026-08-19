@@ -7,9 +7,8 @@ import '../shared/tooltip-format';
 import metadata from './block.json';
 import { InnerBlocks } from '@wordpress/block-editor';
 
-registerBlockType(metadata.name, {
+registerBlockType( metadata.name, {
 	...metadata,
 	edit: Edit,
 	save: () => <InnerBlocks.Content />,
-});
-
+} );

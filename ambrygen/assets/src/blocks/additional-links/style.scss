@@ -5,11 +5,11 @@ $layout-pattern: 6, 6, 4, 4, 4, 6, 6, 4, 4, 4;
 $pattern-length: list.length($layout-pattern);
 
 .additional-link {
+
 	&__cards {
 		display: grid;
 		grid-template-columns: repeat(12, 1fr);
 		gap: var(--theme_space_8);
-		// margin-top: clamp(32px, calc(2.25rem + ((1vw - 7.67px) * 2.4014)), 46px);
 
 		@include bp.max(sm) {
 			column-gap: 0;
@@ -21,6 +21,7 @@ $pattern-length: list.length($layout-pattern);
 			border: none;
 
 			&:hover {
+
 				.additional-link__card-content {
 					background: rgba(255, 255, 255, 0.7);
 
@@ -93,39 +94,6 @@ $pattern-length: list.length($layout-pattern);
 		align-items: flex-start;
 		gap: 10px;
 		text-decoration: none;
-
-		// .screen-reader-text {
-		// 	border: 0;
-		// 	clip: rect(1px, 1px, 1px, 1px);
-		// 	-webkit-clip-path: inset(50%);
-		// 	clip-path: inset(50%);
-		// 	height: 1px;
-		// 	margin: -1px;
-		// 	overflow: hidden;
-		// 	padding: 0;
-		// 	position: absolute !important;
-		// 	width: 1px;
-		// 	word-wrap: normal !important;
-		// 	word-break: normal !important;
-		// }
-
-		// .screen-reader-text:focus {
-		// 	background-color: #eee;
-		// 	clip: auto !important;
-		// 	-webkit-clip-path: none;
-		// 	clip-path: none;
-		// 	color: #444;
-		// 	display: block;
-		// 	font-size: 1em;
-		// 	height: auto;
-		// 	left: 5px;
-		// 	line-height: normal;
-		// 	padding: 15px 23px 14px;
-		// 	text-decoration: none;
-		// 	top: 5px;
-		// 	width: auto;
-		// 	z-index: 100000;
-		// }
 
 		&::after {
 			content: '';

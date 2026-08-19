@@ -8,15 +8,15 @@
 
 namespace Ambrygen\Theme\Core;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Blocks class.
  *
  * @since 1.0.0
  */
-final class Blocks
-{
+final class Blocks {
+
 	use Singleton;
 
 	/**
@@ -24,8 +24,7 @@ final class Blocks
 	 *
 	 * @since 1.0.0
 	 */
-	protected function __construct()
-	{
+	protected function __construct() {
 		$this->setup_hooks();
 	}
 
@@ -35,8 +34,7 @@ final class Blocks
 	 * @since 1.0.0
 	 * @return void
 	 */
-	private function setup_hooks(): void
-	{
+	private function setup_hooks(): void {
 		$this->register_block_category();
 		$this->register_blocks();
 		add_action( 'enqueue_block_assets', array( $this, 'localize_test_catalog_view_script' ) );
@@ -48,18 +46,17 @@ final class Blocks
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function register_block_category(): void
-	{
+	public function register_block_category(): void {
 		add_filter(
 			'block_categories_all',
 			// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- Required by filter callback signature.
-			function ($categories, $post) {
+			function ( $categories, $post ) {
 
 				return array_merge(
 					array(
 						array(
-							'slug' => 'ambrygen',
-							'title' => __('Ambrygen Blocks', 'ambrygen-web'),
+							'slug'  => 'ambrygen',
+							'title' => __( 'Ambrygen Blocks', 'ambrygen-web' ),
 						),
 					),
 					$categories
@@ -76,16 +73,15 @@ final class Blocks
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function register_blocks(): void
-	{
+	public function register_blocks(): void {
 
 		$blocks_dir = get_template_directory() . '/assets/build/blocks';
 
 		$manifest_file = $blocks_dir . '/blocks-manifest.php';
 
-		if (file_exists($manifest_file)) {
+		if ( file_exists( $manifest_file ) ) {
 
-			if (function_exists('wp_register_block_types_from_metadata_collection')) {
+			if ( function_exists( 'wp_register_block_types_from_metadata_collection' ) ) {
 
 				wp_register_block_types_from_metadata_collection(
 					$blocks_dir,
@@ -101,8 +97,7 @@ final class Blocks
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function localize_test_catalog_view_script(): void
-	{
+	public function localize_test_catalog_view_script(): void {
 		wp_localize_script(
 			'ambrygen-test-catalog-view-script',
 			'ambrygenCatalog',

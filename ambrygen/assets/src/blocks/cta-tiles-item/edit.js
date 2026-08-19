@@ -38,16 +38,8 @@ export default function Edit( { attributes, setAttributes, context } ) {
 		hasLink &&
 		( ctaTilesVariation === 'image-title-description-icon' ||
 			ctaTilesVariation === 'image-title-description' );
-	const isDefaultLinkedCard =
-		ctaTilesVariation === 'image-only-title' && hasLink;
-	const WrapperTag = isDefaultLinkedCard ? 'a' : 'div';
-	const wrapperProps = isDefaultLinkedCard
-		? {
-				...blockProps,
-				href: link.url,
-				onClick: ( event ) => event.preventDefault(),
-		  }
-		: blockProps;
+	const WrapperTag = 'div';
+	const wrapperProps = blockProps;
 
 	const onSelectImage = ( media ) => {
 		if ( ! media?.url ) {
@@ -113,7 +105,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 				</div>
 
 				<div className="card-info">
-					<div className="link-btn mb-0 heading-5">
+					<div className="link-btn mb-0 heading-5 block-inside-title">
 						<RichText
 							value={ title }
 							onChange={ ( value ) =>
@@ -124,7 +116,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 					</div>
 
 					<div
-						className={ `card-description  ${
+						className={ `card-description block-inside-description  ${
 							ctaTilesVariation !== 'image-only-title'
 								? 'body2-reg'
 								: 'text-small'
@@ -152,15 +144,11 @@ export default function Edit( { attributes, setAttributes, context } ) {
 										: 'card-cta-wrapper'
 								}` }
 							>
-								<a
-									href={ link.url || '#' }
-									onClick={ ( e ) => e.preventDefault() }
-									className="site-btn is-style-site-text-btn has-right-arrow"
-								>
+								<div className="site-btn is-style-site-text-btn has-right-arrow">
 									{ link.text ||
 										titleText ||
 										__( 'Learn more', 'ambrygen-web' ) }
-								</a>
+								</div>
 							</div>
 						</>
 					) }
@@ -169,4 +157,3 @@ export default function Edit( { attributes, setAttributes, context } ) {
 		</>
 	);
 }
-

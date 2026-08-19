@@ -27,6 +27,20 @@ const HEADING_OPTIONS = [
 	{ label: 'H6', value: 'h6' },
 ];
 
+const MoveArrowIcon = ( { direction = 'down' } ) => (
+	<svg
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		width="24"
+		height="24"
+		aria-hidden="true"
+		focusable="false"
+		style={ direction === 'up' ? { transform: 'rotate(180deg)' } : undefined }
+	>
+		<path d="M17.5 11.6L12 16l-5.5-4.4.9-1.2L12 14l4.5-3.6 1 1.2z" />
+	</svg>
+);
+
 const ORDER_URL = '/providers/ordering-process';
 
 const getPostLabel = ( post ) => decodeEntities( post?.title?.rendered || '' );
@@ -75,7 +89,15 @@ const buildPostsQuery = ( termIds = [] ) =>
 
 const getTabProductTermIds = ( tab, terms = [] ) => {
 	const selectedSubTermIds = Array.isArray( tab?.subTermIds )
-		? tab.subTermIds.map( Number ).filter( Boolean )
+		? tab.subTermIds.reduce( ( ids, termId ) => {
+				const nextId = Number( termId );
+
+				if ( nextId ) {
+					ids.push( nextId );
+				}
+
+				return ids;
+		  }, [] )
 		: [];
 
 	if ( selectedSubTermIds.length ) {
@@ -114,28 +136,59 @@ const getTermLabel = ( term, allTerms = [] ) => {
 
 const getTabCategoryLabel = ( tab, terms = [] ) => {
 	const selectedSubTerms = Array.isArray( tab?.subTermIds )
-		? tab.subTermIds
-				.map( ( termId ) =>
-					terms.find( ( term ) => Number( term.id ) === Number( termId ) )
-				)
-				.filter( Boolean )
+		? tab.subTermIds.flatMap( ( termId ) => {
+				const matchedTerm = terms.find(
+					( term ) => Number( term.id ) === Number( termId )
+				);
+				return matchedTerm ? [ matchedTerm ] : [];
+		  } )
 		: [];
 
 	if ( selectedSubTerms.length ) {
 		return selectedSubTerms
-			.map( ( term ) => decodeEntities( term.name || '' ) )
-			.filter( Boolean )
+			.flatMap( ( term ) => {
+				const name = decodeEntities( term.name || '' );
+				return name ? [ name ] : [];
+			} )
 			.join( ', ' );
 	}
 
 	return tab?.text || '';
 };
 
+const sortPostsBySelectedIds = ( posts = [], selectedIds = [] ) => {
+	const orderMap = new Map(
+		selectedIds.map( ( id, index ) => [ Number( id ), index ] )
+	);
+
+	return [ ...posts ].sort( ( a, b ) => {
+		const aIndex = orderMap.has( Number( a?.id ) )
+			? orderMap.get( Number( a.id ) )
+			: Number.MAX_SAFE_INTEGER;
+		const bIndex = orderMap.has( Number( b?.id ) )
+			? orderMap.get( Number( b.id ) )
+			: Number.MAX_SAFE_INTEGER;
+
+		return aIndex - bIndex;
+	} );
+};
+
+const getOrderedFeaturedPosts = (
+	posts = [],
+	selectedIds = [],
+	hasCustomOrder = false
+) => {
+	const featuredPosts = posts.filter( ( post ) =>
+		selectedIds.includes( Number( post.id ) )
+	);
+
+	return hasCustomOrder
+		? sortPostsBySelectedIds( featuredPosts, selectedIds )
+		: featuredPosts;
+};
+
 function TabSettings( { index, tab, updateTab, removeTab, totalTabs } ) {
 	const [ productSearchInput, setProductSearchInput ] = useState( '' );
-	const subTermDependency = Array.isArray( tab.subTermIds )
-		? tab.subTermIds.map( Number ).sort( ( a, b ) => a - b ).join( ',' )
-		: '';
 
 	const {
 		childTerms,
@@ -198,7 +251,10 @@ function TabSettings( { index, tab, updateTab, removeTab, totalTabs } ) {
 					_fields: 'id,parent',
 				}
 			);
-			const descendantIds = getTabProductTermIds( tab, fetchedAllTerms || [] );
+			const descendantIds = getTabProductTermIds(
+				tab,
+				fetchedAllTerms || []
+			);
 			const postQuery = buildPostsQuery( descendantIds );
 
 			return {
@@ -233,7 +289,7 @@ function TabSettings( { index, tab, updateTab, removeTab, totalTabs } ) {
 					: false,
 			};
 		},
-		[ tab.parentTermId, tab.termId, subTermDependency ]
+		[ tab ]
 	);
 
 	const childCategoryOptions = useMemo( () => {
@@ -242,30 +298,31 @@ function TabSettings( { index, tab, updateTab, removeTab, totalTabs } ) {
 			...( selectedChildTerm ? [ selectedChildTerm ] : [] ),
 		];
 		const seen = new Set();
-		return combined
-			.filter( ( item ) => {
-				if ( ! item || seen.has( item.id ) ) {
-					return false;
+		return combined.reduce( ( options, item ) => {
+			if ( ! item || seen.has( item.id ) ) {
+				return options;
+			}
+			if ( tab.parentTermId ) {
+				if ( Number( item.parent ) !== Number( tab.parentTermId ) ) {
+					return options;
 				}
-				if ( tab.parentTermId ) {
-					if ( Number( item.parent ) !== Number( tab.parentTermId ) ) {
-						return false;
-					}
-				} else if ( ! tab.termId && Number( item.parent ) <= 0 ) {
-					return false;
-				}
-				seen.add( item.id );
-				return true;
-			} )
-			.map( ( term ) => ( {
-				label: decodeEntities( term.name ),
-				value: String( term.id ),
-			} ) );
+			} else if ( ! tab.termId && Number( item.parent ) <= 0 ) {
+				return options;
+			}
+			seen.add( item.id );
+			options.push( {
+				label: decodeEntities( item.name ),
+				value: String( item.id ),
+			} );
+			return options;
+		}, [] );
 	}, [ childTerms, selectedChildTerm, tab.parentTermId, tab.termId ] );
 
 	const featuredIds = Array.isArray( tab.featuredProductVersionIds )
 		? tab.featuredProductVersionIds.map( Number )
 		: [];
+	const hasCustomFeaturedOrder =
+		tab.featuredProductVersionOrderCustomized === true;
 	const selectedSubTermValues = Array.isArray( tab.subTermIds )
 		? tab.subTermIds.map( String )
 		: [];
@@ -287,9 +344,20 @@ function TabSettings( { index, tab, updateTab, removeTab, totalTabs } ) {
 
 		updateTab( index, {
 			subTermIds: Array.from(
-				new Set( nextSubTermIds.map( Number ).filter( Boolean ) )
+				new Set(
+					nextSubTermIds.reduce( ( ids, termId ) => {
+						const nextId = Number( termId );
+
+						if ( nextId ) {
+							ids.push( nextId );
+						}
+
+						return ids;
+					}, [] )
+				)
 			),
 			featuredProductVersionIds: [],
+			featuredProductVersionOrderCustomized: false,
 		} );
 	};
 	const filteredPosts = Array.isArray( posts )
@@ -299,9 +367,24 @@ function TabSettings( { index, tab, updateTab, removeTab, totalTabs } ) {
 					.includes( productSearchInput.trim().toLowerCase() )
 		  )
 		: [];
+	const selectedFeaturedPosts = getOrderedFeaturedPosts(
+		Array.isArray( posts ) ? posts : [],
+		featuredIds,
+		hasCustomFeaturedOrder
+	);
+	const displayedFeaturedIds = selectedFeaturedPosts.map( ( post ) =>
+		Number( post.id )
+	);
 
 	return (
-		<div style={ { border: '1px solid #dcdcde', padding: '12px', marginBottom: '12px', borderRadius: '8px' } }>
+		<div
+			style={ {
+				border: '1px solid #dcdcde',
+				padding: '12px',
+				marginBottom: '12px',
+				borderRadius: '8px',
+			} }
+		>
 			<ItemHeader
 				index={ index }
 				label={ tab.text || `Tab ${ index + 1 }` }
@@ -318,7 +401,9 @@ function TabSettings( { index, tab, updateTab, removeTab, totalTabs } ) {
 					onChange={ ( value ) => {
 						const term = [
 							...( childTerms || [] ),
-							...( selectedChildTerm ? [ selectedChildTerm ] : [] ),
+							...( selectedChildTerm
+								? [ selectedChildTerm ]
+								: [] ),
 						].find( ( item ) => String( item.id ) === value );
 						updateTab( index, {
 							termId: term?.id || 0,
@@ -326,13 +411,23 @@ function TabSettings( { index, tab, updateTab, removeTab, totalTabs } ) {
 							text: term ? decodeEntities( term.name ) : '',
 							subTermIds: [],
 							featuredProductVersionIds: [],
+							featuredProductVersionOrderCustomized: false,
 						} );
 					} }
-					help={ __( 'Choose the child category that should load products.', 'ambrygen-web' ) }
+					help={ __(
+						'Choose the child category that should load products.',
+						'ambrygen-web'
+					) }
 				/>
 				{ isLoadingChildren && <Spinner /> }
 				{ !! tab.termId && selectedTermDescendantIds.length > 1 && (
-					<p style={ { marginTop: '8px', marginBottom: 0, color: '#50575e' } }>
+					<p
+						style={ {
+							marginTop: '8px',
+							marginBottom: 0,
+							color: '#50575e',
+						} }
+					>
 						{ __(
 							'Products from this category and its inner subcategories will be shown.',
 							'ambrygen-web'
@@ -344,7 +439,13 @@ function TabSettings( { index, tab, updateTab, removeTab, totalTabs } ) {
 						<div style={ { fontWeight: 600, marginBottom: '8px' } }>
 							{ __( 'Sub Child Category', 'ambrygen-web' ) }
 						</div>
-						<p style={ { marginTop: 0, marginBottom: '8px', color: '#50575e' } }>
+						<p
+							style={ {
+								marginTop: 0,
+								marginBottom: '8px',
+								color: '#50575e',
+							} }
+						>
 							{ __(
 								'Optional. If selected, featured products will be loaded only from these sub child categories.',
 								'ambrygen-web'
@@ -362,7 +463,10 @@ function TabSettings( { index, tab, updateTab, removeTab, totalTabs } ) {
 								} }
 							>
 								{ subChildOptions.map( ( option ) => {
-									const isChecked = selectedSubTermValues.includes( option.value );
+									const isChecked =
+										selectedSubTermValues.includes(
+											option.value
+										);
 
 									return (
 										<div
@@ -373,28 +477,51 @@ function TabSettings( { index, tab, updateTab, removeTab, totalTabs } ) {
 												justifyContent: 'space-between',
 												gap: '12px',
 												padding: '6px 0',
-												borderBottom: '1px solid #f0f0f0',
+												borderBottom:
+													'1px solid #f0f0f0',
 											} }
 										>
 											<span>{ option.label }</span>
 											<Button
-												variant={ isChecked ? 'secondary' : 'tertiary' }
+												variant={
+													isChecked
+														? 'secondary'
+														: 'tertiary'
+												}
 												size="small"
 												onClick={ () =>
-													updateSubTermSelection( option.value, ! isChecked )
+													updateSubTermSelection(
+														option.value,
+														! isChecked
+													)
 												}
 											>
 												{ isChecked
-													? __( 'Remove', 'ambrygen-web' )
-													: __( 'Add', 'ambrygen-web' ) }
+													? __(
+															'Remove',
+															'ambrygen-web'
+													  )
+													: __(
+															'Add',
+															'ambrygen-web'
+													  ) }
 											</Button>
 										</div>
 									);
 								} ) }
 							</div>
 						) : (
-							<p style={ { marginTop: 0, marginBottom: 0, color: '#50575e' } }>
-								{ __( 'No sub child categories found for this child category.', 'ambrygen-web' ) }
+							<p
+								style={ {
+									marginTop: 0,
+									marginBottom: 0,
+									color: '#50575e',
+								} }
+							>
+								{ __(
+									'No sub child categories found for this child category.',
+									'ambrygen-web'
+								) }
 							</p>
 						) }
 					</div>
@@ -420,50 +547,190 @@ function TabSettings( { index, tab, updateTab, removeTab, totalTabs } ) {
 				{ isLoadingPosts && <Spinner /> }
 				{ ! isLoadingPosts && ! tab.termId && (
 					<p style={ { color: '#50575e' } }>
-						{ __( 'Select a child category to load products.', 'ambrygen-web' ) }
+						{ __(
+							'Select a child category to load products.',
+							'ambrygen-web'
+						) }
 					</p>
 				) }
 				{ ! isLoadingPosts && !! tab.termId && (
-					<div style={ { border: '1px solid #e0e0e0', borderRadius: '6px', maxHeight: '240px', overflow: 'auto', padding: '8px' } }>
-						{ filteredPosts.length ? (
-							filteredPosts.map( ( post ) => (
-								<div
-									key={ post.id }
-									style={ {
-										display: 'flex',
-										alignItems: 'center',
-										justifyContent: 'space-between',
-										gap: '12px',
-										padding: '6px 0',
-										borderBottom: '1px solid #f0f0f0',
-									} }
-								>
-									<span>{ getPostLabel( post ) }</span>
-									<Button
-										variant={ featuredIds.includes( post.id ) ? 'secondary' : 'primary' }
-										size="small"
-										onClick={ () => {
-											const isSelected = featuredIds.includes( post.id );
-											const nextIds = isSelected
-												? featuredIds.filter( ( id ) => id !== post.id )
-												: [ ...featuredIds, post.id ];
-											updateTab( index, {
-												featuredProductVersionIds: nextIds,
-											} );
+					<>
+						<div
+							style={ {
+								border: '1px solid #e0e0e0',
+								borderRadius: '6px',
+								maxHeight: '240px',
+								overflow: 'auto',
+								padding: '8px',
+							} }
+						>
+							{ filteredPosts.length ? (
+								filteredPosts.map( ( post ) => (
+									<div
+										key={ post.id }
+										style={ {
+											display: 'flex',
+											alignItems: 'center',
+											justifyContent: 'space-between',
+											gap: '12px',
+											padding: '6px 0',
+											borderBottom: '1px solid #f0f0f0',
 										} }
 									>
-										{ featuredIds.includes( post.id )
-											? __( 'Remove', 'ambrygen-web' )
-											: __( 'Add', 'ambrygen-web' ) }
-									</Button>
+										<span>{ getPostLabel( post ) }</span>
+										<Button
+											variant={
+												featuredIds.includes( post.id )
+													? 'secondary'
+													: 'primary'
+											}
+											size="small"
+											onClick={ () => {
+												const isSelected =
+													featuredIds.includes( post.id );
+												const nextIds = isSelected
+													? featuredIds.filter(
+															( id ) => id !== post.id
+													  )
+													: [ ...featuredIds, post.id ];
+												updateTab( index, {
+													featuredProductVersionIds:
+														nextIds,
+												} );
+											} }
+										>
+											{ featuredIds.includes( post.id )
+												? __(
+														'Remove',
+														'ambrygen-web'
+												  )
+												: __( 'Add', 'ambrygen-web' ) }
+										</Button>
+									</div>
+								) )
+							) : (
+								<p style={ { margin: 0, color: '#50575e' } }>
+									{ __(
+										'No matching products found.',
+										'ambrygen-web'
+									) }
+								</p>
+							) }
+						</div>
+						<div style={ { marginTop: '16px' } }>
+							<div
+								style={ { fontWeight: 600, marginBottom: '8px' } }
+							>
+								{ __( 'Selected Product Order', 'ambrygen-web' ) }
+							</div>
+							{ selectedFeaturedPosts.length ? (
+								<div
+									style={ {
+										border: '1px solid #e0e0e0',
+										borderRadius: '6px',
+										padding: '8px',
+										background: '#fff',
+									} }
+								>
+									{ selectedFeaturedPosts.map( ( post, selectedIndex ) => (
+										<div
+											key={ post.id }
+											style={ {
+												display: 'flex',
+												alignItems: 'center',
+												justifyContent: 'space-between',
+												gap: '12px',
+												padding: '8px 0',
+												overflowWrap: 'anywhere',
+												borderBottom:
+													selectedIndex ===
+													selectedFeaturedPosts.length - 1
+														? 'none'
+														: '1px solid #f0f0f0',
+											} }
+										>
+											<span>
+												{ selectedIndex + 1 }.{' '}
+												{ getPostLabel( post ) }
+											</span>
+											<div className="moveable__buttons"
+											>
+												<Button
+													variant="tertiary"
+													size="small"
+													disabled={ selectedIndex === 0 }
+													icon={ <MoveArrowIcon direction="up" /> }
+													label={ __( 'Move Up', 'ambrygen-web' ) }
+													onClick={ () => {
+														if ( selectedIndex === 0 ) {
+															return;
+														}
+
+														const nextIds = [
+															...displayedFeaturedIds,
+														];
+														[
+															nextIds[ selectedIndex - 1 ],
+															nextIds[ selectedIndex ],
+														] = [
+															nextIds[ selectedIndex ],
+															nextIds[ selectedIndex - 1 ],
+														];
+														updateTab( index, {
+															featuredProductVersionIds:
+																nextIds,
+															featuredProductVersionOrderCustomized: true,
+														} );
+													} }
+												/>
+												<Button
+													variant="tertiary"
+													size="small"
+													disabled={
+														selectedIndex ===
+														selectedFeaturedPosts.length - 1
+													}
+													icon={ <MoveArrowIcon direction="down" /> }
+													label={ __( 'Move Down', 'ambrygen-web' ) }
+													onClick={ () => {
+														if (
+															selectedIndex ===
+															selectedFeaturedPosts.length - 1
+														) {
+															return;
+														}
+
+														const nextIds = [
+															...displayedFeaturedIds,
+														];
+														[
+															nextIds[ selectedIndex ],
+															nextIds[ selectedIndex + 1 ],
+														] = [
+															nextIds[ selectedIndex + 1 ],
+															nextIds[ selectedIndex ],
+														];
+														updateTab( index, {
+															featuredProductVersionIds:
+																nextIds,
+															featuredProductVersionOrderCustomized: true,
+														} );
+													} }
+												/>
+												</div>
+										</div>
+									) ) }
 								</div>
-							) )
-						) : (
-							<p style={ { margin: 0, color: '#50575e' } }>
-								{ __( 'No matching products found.', 'ambrygen-web' ) }
-							</p>
-						) }
-					</div>
+							) : (
+								<p style={ { margin: 0, color: '#50575e' } }>
+									{ __(
+										'Add products above, then use this list to set their order.',
+										'ambrygen-web'
+									) }
+								</p>
+							) }
+						</div>
+					</>
 				) }
 			</div>
 		</div>
@@ -473,11 +740,16 @@ function TabSettings( { index, tab, updateTab, removeTab, totalTabs } ) {
 function TabsPreview( { selectedTabs = [] } ) {
 	const previewData = useSelect(
 		( select ) => {
-			const allTerms = select( 'core' ).getEntityRecords( 'taxonomy', 'poster_category', {
-				per_page: 100,
-				hide_empty: false,
-				_fields: 'id,parent',
-			} ) || [];
+			const allTerms =
+				select( 'core' ).getEntityRecords(
+					'taxonomy',
+					'poster_category',
+					{
+						per_page: 100,
+						hide_empty: false,
+						_fields: 'id,parent',
+					}
+				) || [];
 
 			return selectedTabs.map( ( tab ) => {
 				const postsQuery = buildPostsQuery(
@@ -491,12 +763,18 @@ function TabsPreview( { selectedTabs = [] } ) {
 					  ) || []
 					: [];
 
-				const featuredIds = Array.isArray( tab.featuredProductVersionIds )
+				const featuredIds = Array.isArray(
+					tab.featuredProductVersionIds
+				)
 					? tab.featuredProductVersionIds.map( Number )
 					: [];
+				const hasCustomFeaturedOrder =
+					tab.featuredProductVersionOrderCustomized === true;
 
-				const featuredPosts = posts.filter( ( post ) =>
-					featuredIds.includes( Number( post.id ) )
+				const featuredPosts = getOrderedFeaturedPosts(
+					posts,
+					featuredIds,
+					hasCustomFeaturedOrder
 				);
 
 				return {
@@ -511,92 +789,130 @@ function TabsPreview( { selectedTabs = [] } ) {
 		[ selectedTabs ]
 	);
 
-	return (
-		previewData.length > 0 ? (
-			<div className="tabs tabs-content">
-				<div className="tabs__mobile-nav">
-					<select className="tabs__select text-md-sbold" disabled>
-						{ previewData.map( ( tab ) => (
-							<option key={ tab.id } value={ tab.slug }>
-								{ tab.text }
-							</option>
-						) ) }
-					</select>
-				</div>
-				<div className="tabs__nav" role="tablist">
-					{ previewData.map( ( tab, index ) => (
-						<button
-							key={ tab.id }
-							className={ `tabs__tab text-md-sbold${ index === 0 ? ' is-active' : '' }` }
-							type="button"
-						>
+	return previewData.length > 0 ? (
+		<div className="tabs tabs-content">
+			<div className="tabs__mobile-nav">
+				<select className="tabs__select text-md-sbold" disabled>
+					{ previewData.map( ( tab ) => (
+						<option key={ tab.id } value={ tab.slug }>
 							{ tab.text }
-						</button>
+						</option>
 					) ) }
-				</div>
-				<div className="is-style-gl-s32"></div>
-				<div className="tabs__panels">
-					{ previewData.map( ( tab, index ) => (
-						<div
-							key={ tab.id }
-							className={ `tabs__panel${ index === 0 ? ' is-active' : '' }` }
-							id={ tab.slug }
-						>
-							<div className="cardiology-filter__items-grid">
-								{ tab.featuredPosts.length ? (
-									tab.featuredPosts.map( ( post ) => (
-										<div key={ post.id } className="cardiology-filter__card">
-											<div className="body2-semibold cardiology-filter__card-category">
-												{ tab.categoryName }
+				</select>
+			</div>
+			<div className="tabs__nav" role="tablist">
+				{ previewData.map( ( tab, index ) => (
+					<button
+						key={ tab.id }
+						className={ `tabs__tab text-md-sbold${
+							index === 0 ? ' is-active' : ''
+						}` }
+						type="button"
+					>
+						{ tab.text }
+					</button>
+				) ) }
+			</div>
+			<div className="is-style-gl-s32"></div>
+			<div className="tabs__panels">
+				{ previewData.map( ( tab, index ) => (
+					<div
+						key={ tab.id }
+						className={ `tabs__panel${
+							index === 0 ? ' is-active' : ''
+						}` }
+						id={ tab.slug }
+					>
+						<div className="cardiology-filter__items-grid">
+							{ tab.featuredPosts.length ? (
+								tab.featuredPosts.map( ( post ) => (
+									<div
+										key={ post.id }
+										className="cardiology-filter__card"
+									>
+										<div className="body2-semibold cardiology-filter__card-category">
+											{ tab.categoryName }
+										</div>
+										<div className="is-style-gl-s4"></div>
+										<div className="cardiology-filter__card-info">
+											<div className="subtitle1-sbold cardiology-filter__card-name">
+												{ getPostLabel( post ) }
 											</div>
-											<div className="is-style-gl-s4"></div>
-											<div className="cardiology-filter__card-info">
-												<div className="subtitle1-sbold cardiology-filter__card-name">
-													{ getPostLabel( post ) }
-												</div>
-												<div className="cardiology-filter__card-badge text-small-medium">
-													{ __( 'Preview', 'ambrygen-web' ) }
-												</div>
-											</div>
-											<div className="is-style-gl-s12"></div>
-											<div className="body1 cardiology-filter__card-text">
-												{ decodeEntities( post?.excerpt?.rendered || '' )
-													.replace( /<[^>]+>/g, '' )
-													.slice( 0, 140 ) || __( 'Selected product preview.', 'ambrygen-web' ) }
-											</div>
-											<div className="is-style-gl-s24"></div>
-											<div className="cardiology-filter__card-actions">
-												<a href={ ORDER_URL } className="site-btn has-right-arrow btn-small">
-													{ __( 'Order', 'ambrygen-web' ) }
-												</a>
-												<span className="site-btn is-style-site-tertiary-btn btn-small">
-													{ __( 'Test details', 'ambrygen-web' ) }
-												</span>
+											<div className="cardiology-filter__card-badge text-small-medium">
+												{ __(
+													'Preview',
+													'ambrygen-web'
+												) }
 											</div>
 										</div>
-									) )
-								) : (
-									<p>{ __( 'Select featured products for this tab.', 'ambrygen-web' ) }</p>
-								) }
-							</div>
+										<div className="is-style-gl-s12"></div>
+										<div className="body1 cardiology-filter__card-text">
+											{ decodeEntities(
+												post?.excerpt?.rendered || ''
+											)
+												.replace( /<[^>]+>/g, '' )
+												.slice( 0, 140 ) ||
+												__(
+													'Selected product preview.',
+													'ambrygen-web'
+												) }
+										</div>
+										<div className="is-style-gl-s24"></div>
+										<div className="cardiology-filter__card-actions">
+											<a
+												href={ ORDER_URL }
+												className="site-btn has-right-arrow btn-small"
+											>
+												{ __(
+													'Order',
+													'ambrygen-web'
+												) }
+											</a>
+											<span className="site-btn is-style-site-tertiary-btn btn-small">
+												{ __(
+													'Test details',
+													'ambrygen-web'
+												) }
+											</span>
+										</div>
+									</div>
+								) )
+							) : (
+								<p>
+									{ __(
+										'Select featured products for this tab.',
+										'ambrygen-web'
+									) }
+								</p>
+							) }
 						</div>
-					) ) }
-				</div>
+					</div>
+				) ) }
 			</div>
-		) : (
-			<p>{ __( 'Add one or more tabs in the block settings.', 'ambrygen-web' ) }</p>
-		)
+		</div>
+	) : (
+		<p>
+			{ __(
+				'Add one or more tabs in the block settings.',
+				'ambrygen-web'
+			) }
+		</p>
 	);
 }
 
 function TablePreview( { selectedTabs = [] } ) {
 	const tableRowsData = useSelect(
 		( select ) => {
-			const allTerms = select( 'core' ).getEntityRecords( 'taxonomy', 'poster_category', {
-				per_page: 100,
-				hide_empty: false,
-				_fields: 'id,parent',
-			} ) || [];
+			const allTerms =
+				select( 'core' ).getEntityRecords(
+					'taxonomy',
+					'poster_category',
+					{
+						per_page: 100,
+						hide_empty: false,
+						_fields: 'id,parent',
+					}
+				) || [];
 
 			return selectedTabs.map( ( tab ) => {
 				const postsQuery = buildPostsQuery(
@@ -636,25 +952,46 @@ function TablePreview( { selectedTabs = [] } ) {
 				<div className="gl-data-table variation-gray25 gl-data-table--cols-6">
 					<div className="gl-data-table__grid">
 						<div className="gl-data-table__row gl-data-table__row--header">
-							<div className="gl-data-table__cell">{ __( 'Code', 'ambrygen-web' ) }</div>
-							<div className="gl-data-table__cell">{ __( 'Test Name', 'ambrygen-web' ) }</div>
-							<div className="gl-data-table__cell">{ __( 'Genes', 'ambrygen-web' ) }</div>
-							<div className="gl-data-table__cell">{ __( 'Gene List (Abbreviated)', 'ambrygen-web' ) }</div>
-							<div className="gl-data-table__cell">{ __( 'Turnaround', 'ambrygen-web' ) }</div>
+							<div className="gl-data-table__cell">
+								{ __( 'Code', 'ambrygen-web' ) }
+							</div>
+							<div className="gl-data-table__cell">
+								{ __( 'Test Name', 'ambrygen-web' ) }
+							</div>
+							<div className="gl-data-table__cell">
+								{ __( 'Genes', 'ambrygen-web' ) }
+							</div>
+							<div className="gl-data-table__cell">
+								{ __(
+									'Gene List (Abbreviated)',
+									'ambrygen-web'
+								) }
+							</div>
+							<div className="gl-data-table__cell">
+								{ __( 'Turnaround', 'ambrygen-web' ) }
+							</div>
 							<div className="gl-data-table__cell"></div>
 						</div>
 						{ tableRows.length ? (
 							tableRows.map( ( post ) => (
-								<div key={ post.id } className="gl-data-table__row">
+								<div
+									key={ post.id }
+									className="gl-data-table__row"
+								>
 									<div className="gl-data-table__cell">-</div>
 									<div className="gl-data-table__cell gl-data-table__cell--name">
 										{ getPostLabel( post ) }
 									</div>
 									<div className="gl-data-table__cell">-</div>
 									<div className="gl-data-table__cell">-</div>
-									<div className="gl-data-table__cell gl-data-table__cell--highlight">-</div>
+									<div className="gl-data-table__cell gl-data-table__cell--highlight">
+										-
+									</div>
 									<div className="gl-data-table__cell">
-										<a href={ ORDER_URL } className="site-btn has-right-arrow btn-small">
+										<a
+											href={ ORDER_URL }
+											className="site-btn has-right-arrow btn-small"
+										>
 											{ __( 'Order', 'ambrygen-web' ) }
 										</a>
 									</div>
@@ -662,8 +999,14 @@ function TablePreview( { selectedTabs = [] } ) {
 							) )
 						) : (
 							<div className="gl-data-table__row">
-								<div className="gl-data-table__cell" style={ { gridColumn: '1 / -1' } }>
-									{ __( 'Select tab categories to preview table rows.', 'ambrygen-web' ) }
+								<div
+									className="gl-data-table__cell"
+									style={ { gridColumn: '1 / -1' } }
+								>
+									{ __(
+										'Select tab categories to preview table rows.',
+										'ambrygen-web'
+									) }
 								</div>
 							</div>
 						) }
@@ -692,9 +1035,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	} = attributes;
 
 	const TagName = headingLevel || 'h2';
+	const blockProps = useBlockProps();
 
 	useEffect( () => {
-		const expectedId = `test-catalog-with-table-${ clientId.slice( 0, 8 ) }`;
+		const expectedId = `test-catalog-with-table-${ clientId.slice(
+			0,
+			8
+		) }`;
 		if ( ! blockId ) {
 			setAttributes( { blockId: expectedId } );
 		}
@@ -734,7 +1081,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const parentCategoryOptions = useMemo(
 		() => [
-			{ label: __( 'Select parent category', 'ambrygen-web' ), value: '' },
+			{
+				label: __( 'Select parent category', 'ambrygen-web' ),
+				value: '',
+			},
 			...( Array.isArray( parentTerms )
 				? parentTerms.map( ( term ) => ( {
 						label: getTermLabel( term, parentTerms ),
@@ -757,6 +1107,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					text: '',
 					subTermIds: [],
 					featuredProductVersionIds: [],
+					featuredProductVersionOrderCustomized: false,
 				},
 			],
 		} );
@@ -770,7 +1121,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const removeTab = ( index ) => {
 		setAttributes( {
-			selectedTabs: selectedTabs.filter( ( _, tabIndex ) => tabIndex !== index ),
+			selectedTabs: selectedTabs.filter(
+				( _, tabIndex ) => tabIndex !== index
+			),
 		} );
 	};
 
@@ -794,22 +1147,38 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									text: '',
 									subTermIds: [],
 									featuredProductVersionIds: [],
+									featuredProductVersionOrderCustomized: false,
 								} ) ),
 							} );
 						} }
-						help={ __( 'Main filter. After this, choose child categories inside each tab.', 'ambrygen-web' ) }
+						help={ __(
+							'Main filter. After this, choose child categories inside each tab.',
+							'ambrygen-web'
+						) }
 					/>
 					{ isLoadingParents && <Spinner /> }
 					{ selectedParentTerm && (
-						<p style={ { marginTop: '8px', marginBottom: '12px', color: '#50575e' } }>
-							{ __( 'Selected parent:', 'ambrygen-web' ) } <strong>{ decodeEntities( selectedParentTerm.name ) }</strong>
+						<p
+							style={ {
+								marginTop: '8px',
+								marginBottom: '12px',
+								color: '#50575e',
+							} }
+						>
+							{ __( 'Selected parent:', 'ambrygen-web' ) }{ ' ' }
+							<strong>
+								{ decodeEntities( selectedParentTerm.name ) }
+							</strong>
 						</p>
 					) }
 					{ selectedTabs.map( ( tab, index ) => (
 						<TabSettings
 							key={ tab.id || `tab-${ index }` }
 							index={ index }
-							tab={ { ...tab, parentTermId: parentCategoryId || 0 } }
+							tab={ {
+								...tab,
+								parentTermId: parentCategoryId || 0,
+							} }
 							updateTab={ updateTab }
 							removeTab={ removeTab }
 							totalTabs={ selectedTabs.length }
@@ -835,118 +1204,187 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					<ToggleControl
 						label={ __( 'Hide table section', 'ambrygen-web' ) }
 						checked={ hideTable }
-						onChange={ ( value ) => setAttributes( { hideTable: value } ) }
+						onChange={ ( value ) =>
+							setAttributes( { hideTable: value } )
+						}
 					/>
 				</PanelBody>
 			</InspectorControls>
 
-			<div { ...useBlockProps() }>
+			<div { ...blockProps }>
 				<div className="genes-table catlouge-search block-layout">
 					<div className="genes-table__search cardiology-tests__search-area">
 						<RichText
 							tagName="div"
 							className="eyebrow kicker-text cardiology-tests__search-label"
 							value={ searchLabel }
-							onChange={ ( value ) => setAttributes( { searchLabel: value } ) }
-							placeholder={ __( 'Search label...', 'ambrygen-web' ) }
+							onChange={ ( value ) =>
+								setAttributes( { searchLabel: value } )
+							}
+							placeholder={ __(
+								'Search label…',
+								'ambrygen-web'
+							) }
 						/>
-						<div className="is-style-gl-s12" aria-hidden="true"></div>
-						<form className="genes-table__search-form" onSubmit={ ( event ) => event.preventDefault() }>
+						<div
+							className="is-style-gl-s12"
+							aria-hidden="true"
+						></div>
+						<div className="genes-table__search-form">
 							<input
 								type="search"
 								className="genes-table__search-input"
 								value={ searchPlaceholder }
 								readOnly
 							/>
-							<input type="submit" className="genes-table__search-button" value="Search" />
-						</form>
+							<button
+								type="button"
+								className="genes-table__search-button"
+							>
+								Search
+							</button>
+						</div>
 					</div>
 				</div>
 
 				<div className="is-style-gl-s50" aria-hidden="true"></div>
 
 				<div className="container-1280 bg-primary_25 block-bg">
-
-						<div className="block-layout cardiology-filter__grid">
-							<div className="cardiology-filter__header">
-								<RichText
-									tagName="div"
-									className="eyebrow cardiology-filter__subtitle kicker-text"
-									value={ featuredEyebrow }
-									onChange={ ( value ) => setAttributes( { featuredEyebrow: value } ) }
-									placeholder={ __( 'Featured eyebrow...', 'ambrygen-web' ) }
-								/>
-								{ !! featuredEyebrow && (
-									<div className="is-style-gl-s16" aria-hidden="true"></div>
+					<div className="block-layout cardiology-filter__grid">
+						<div className="cardiology-filter__header">
+							<RichText
+								tagName="div"
+								className="eyebrow cardiology-filter__subtitle kicker-text"
+								value={ featuredEyebrow }
+								onChange={ ( value ) =>
+									setAttributes( { featuredEyebrow: value } )
+								}
+								placeholder={ __(
+									'Featured eyebrow…',
+									'ambrygen-web'
 								) }
-								<TagName className="heading-4 block-title mb-0 cardiology-filter__title">
-									<RichText
-										tagName="span"
-										value={ featuredTitle }
-										onChange={ ( value ) => setAttributes( { featuredTitle: value } ) }
-										placeholder={ __( 'Featured title...', 'ambrygen-web' ) }
-									/>
-								</TagName>
-								{ !! featuredTitle && (
-									<div className="is-style-gl-s16" aria-hidden="true"></div>
-								) }
+							/>
+							{ !! featuredEyebrow && (
+								<div
+									className="is-style-gl-s16"
+									aria-hidden="true"
+								></div>
+							) }
+							<TagName className="heading-4 block-title mb-0 cardiology-filter__title">
 								<RichText
-									tagName="div"
-									className="body1 cardiology-filter__desc block-description"
-									value={ featuredDescription }
-									onChange={ ( value ) => setAttributes( { featuredDescription: value } ) }
-									placeholder={ __( 'Featured description...', 'ambrygen-web' ) }
+									tagName="span"
+									value={ featuredTitle }
+									onChange={ ( value ) =>
+										setAttributes( {
+											featuredTitle: value,
+										} )
+									}
+									placeholder={ __(
+										'Featured title…',
+										'ambrygen-web'
+									) }
 								/>
-							</div>
-
-							<div className="is-style-gl-s50" aria-hidden="true"></div>
-
-							<TabsPreview selectedTabs={ selectedTabs } />
+							</TagName>
+							{ !! featuredTitle && (
+								<div
+									className="is-style-gl-s16"
+									aria-hidden="true"
+								></div>
+							) }
+							<RichText
+								tagName="div"
+								className="body1 cardiology-filter__desc block-description"
+								value={ featuredDescription }
+								onChange={ ( value ) =>
+									setAttributes( {
+										featuredDescription: value,
+									} )
+								}
+								placeholder={ __(
+									'Featured description…',
+									'ambrygen-web'
+								) }
+							/>
 						</div>
 
+						<div
+							className="is-style-gl-s50"
+							aria-hidden="true"
+						></div>
+
+						<TabsPreview selectedTabs={ selectedTabs } />
+					</div>
 				</div>
 
 				{ ! hideTable && (
 					<>
-						<div className="is-style-gl-s50" aria-hidden="true"></div>
+						<div
+							className="is-style-gl-s50"
+							aria-hidden="true"
+						></div>
 
 						<div className="container-1280">
-
-								<div className="block-layout catlouge-table-result">
-									<div className="catlouge-table-result__header">
-										<RichText
-											tagName="div"
-											className="eyebrow catlouge-table-result__subtitle"
-											value={ tableEyebrow }
-											onChange={ ( value ) => setAttributes( { tableEyebrow: value } ) }
-											placeholder={ __( 'Table eyebrow...', 'ambrygen-web' ) }
-										/>
-										{ !! tableEyebrow && (
-											<div className="is-style-gl-s12" aria-hidden="true"></div>
+							<div className="block-layout catlouge-table-result">
+								<div className="catlouge-table-result__header">
+									<RichText
+										tagName="div"
+										className="eyebrow catlouge-table-result__subtitle"
+										value={ tableEyebrow }
+										onChange={ ( value ) =>
+											setAttributes( {
+												tableEyebrow: value,
+											} )
+										}
+										placeholder={ __(
+											'Table eyebrow…',
+											'ambrygen-web'
 										) }
-										<TagName className="heading-4 mb-0 block-title catlouge-table-result__title">
-											<RichText
-												tagName="span"
-												value={ tableTitle }
-												onChange={ ( value ) => setAttributes( { tableTitle: value } ) }
-												placeholder={ __( 'Table title...', 'ambrygen-web' ) }
-											/>
-										</TagName>
-										{ !! tableTitle && (
-											<div className="is-style-gl-s12" aria-hidden="true"></div>
-										) }
+									/>
+									{ !! tableEyebrow && (
+										<div
+											className="is-style-gl-s12"
+											aria-hidden="true"
+										></div>
+									) }
+									<TagName className="heading-4 mb-0 block-title catlouge-table-result__title">
 										<RichText
-											tagName="div"
-											className="body1 catlouge-table-result__desc block-description"
-											value={ tableDescription }
-											onChange={ ( value ) => setAttributes( { tableDescription: value } ) }
-											placeholder={ __( 'Table description...', 'ambrygen-web' ) }
+											tagName="span"
+											value={ tableTitle }
+											onChange={ ( value ) =>
+												setAttributes( {
+													tableTitle: value,
+												} )
+											}
+											placeholder={ __(
+												'Table title…',
+												'ambrygen-web'
+											) }
 										/>
-									</div>
-
-									<TablePreview selectedTabs={ selectedTabs } />
+									</TagName>
+									{ !! tableTitle && (
+										<div
+											className="is-style-gl-s12"
+											aria-hidden="true"
+										></div>
+									) }
+									<RichText
+										tagName="div"
+										className="body1 catlouge-table-result__desc block-description"
+										value={ tableDescription }
+										onChange={ ( value ) =>
+											setAttributes( {
+												tableDescription: value,
+											} )
+										}
+										placeholder={ __(
+											'Table description…',
+											'ambrygen-web'
+										) }
+									/>
 								</div>
 
+								<TablePreview selectedTabs={ selectedTabs } />
+							</div>
 						</div>
 					</>
 				) }

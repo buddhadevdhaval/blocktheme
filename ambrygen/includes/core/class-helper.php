@@ -15,6 +15,9 @@ use Ambrygen\Theme\Core\Theme_Options;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Shared helper utilities for markup, media, queries, and tracking.
+ */
 final class Helper {
 
 	use Singleton;
@@ -30,7 +33,7 @@ final class Helper {
 		add_action( 'set_object_terms', array( $this, 'maybe_bump_marketing_material_cache_version_for_terms' ), 10, 6 );
 	}
 
-	private const MARKETING_MATERIAL_TRACKING_META_KEY = '_marketing_material_file_tracking';
+	private const MARKETING_MATERIAL_TRACKING_META_KEY    = '_marketing_material_file_tracking';
 	private const MARKETING_MATERIAL_CACHE_VERSION_OPTION = 'ambrygen_marketing_material_cache_version';
 
 	/**
@@ -45,8 +48,8 @@ final class Helper {
 				'style' => true,
 			),
 			'span'   => array(
-				'class' => true,
-				'data-tooltip' => true,
+				'class'              => true,
+				'data-tooltip'       => true,
 				'data-tooltip-title' => true,
 			),
 			'div'    => array(
@@ -121,7 +124,6 @@ final class Helper {
 			}
 		}
 
-
 		// Get the file URL and extension
 		$image_url = wp_get_attachment_url( $image_id );
 		$file_ext  = pathinfo( $image_url, PATHINFO_EXTENSION );
@@ -145,7 +147,14 @@ final class Helper {
 		);
 	}
 
-
+	/**
+	 * Return an attachment image or the global placeholder image.
+	 *
+	 * @param int    $image_id Attachment ID.
+	 * @param string $size     Image size slug.
+	 * @param array  $attrs    Additional image attributes.
+	 * @return string
+	 */
 	public static function image_with_placeholder(
 		int $image_id = 0,
 		string $size = 'large',
@@ -196,7 +205,6 @@ final class Helper {
 		// SVG handling (no srcset/sizes)
 		if ( 'svg' === strtolower( $file_ext ) ) {
 
-
 			$attr_strings = array();
 
 			foreach ( $attrs as $key => $value ) {
@@ -220,6 +228,222 @@ final class Helper {
 			$attrs
 		);
 	}
+
+	/**
+	 * Sanitize generated image markup while preserving responsive image attributes.
+	 *
+	 * @param string $image_html Image markup to sanitize.
+	 * @return string
+	 */
+	private static function sanitize_image_markup( string $image_html ): string {
+		return wp_kses(
+			$image_html,
+			array(
+				'img' => array(
+					'alt'           => true,
+					'class'         => true,
+					'decoding'      => true,
+					'fetchpriority' => true,
+					'height'        => true,
+					'loading'       => true,
+					'sizes'         => true,
+					'src'           => true,
+					'srcset'        => true,
+					'style'         => true,
+					'width'         => true,
+				),
+			)
+		);
+	}
+
+
+
+	/**
+ * Returns a sanitized <img> element from an attachment ID, URL, or placeholder.
+ *
+ * Automatically adds responsive srcset and sizes attributes when the image
+ * exists in the WordPress Media Library.
+ *
+ * @param int    $image_id        Attachment post ID.
+ * @param string $image_url       Image URL fallback.
+ * @param string $size            Image size slug.
+ * @param array  $attrs           Additional HTML attributes.
+ * @param bool   $use_placeholder Whether to render the global placeholder when no image is available.
+ * @param array  $url_attrs       Attributes only used for URL fallback markup.
+ * @return string Safe, pre-escaped <img> HTML, or empty string.
+ */
+public static function image_from_source_oldss(
+	int $image_id = 0,
+	string $image_url = '',
+	string $size = 'large',
+	array $attrs = array(),
+	bool $use_placeholder = false,
+	array $url_attrs = array()
+): string {
+	$image_url = esc_url( $image_url );
+
+	/*
+	 * Attachment ID image.
+	 */
+	if ( $image_id ) {
+		$attachment_attrs = $attrs;
+
+		// Automatically generate responsive srcset.
+		if ( empty( $attachment_attrs['srcset'] ) ) {
+			$srcset = wp_get_attachment_image_srcset( $image_id, $size );
+
+			if ( $srcset ) {
+				$attachment_attrs['srcset'] = $srcset;
+			}
+		}
+
+		// Automatically generate responsive sizes.
+		if ( empty( $attachment_attrs['sizes'] ) ) {
+			$sizes = wp_get_attachment_image_sizes( $image_id, $size );
+
+			if ( $sizes ) {
+				$attachment_attrs['sizes'] = $sizes;
+			}
+		}
+
+		if (
+			isset( $attachment_attrs['alt'] )
+			&& '' === trim( (string) $attachment_attrs['alt'] )
+		) {
+			unset( $attachment_attrs['alt'] );
+		}
+
+		$image_html = self::image(
+			$image_id,
+			$size,
+			$attachment_attrs
+		);
+
+		if ( $image_html ) {
+			return self::sanitize_image_markup( $image_html );
+		}
+	}
+
+	/*
+	 * Image URL fallback.
+	 */
+	if ( $image_url ) {
+		$default_attrs = array(
+			'alt'      => '',
+			'loading'  => 'lazy',
+			'decoding' => 'async',
+		);
+
+		$attrs = array_merge(
+			$default_attrs,
+			$attrs,
+			$url_attrs
+		);
+
+		/*
+		 * Try to find the attachment ID from the supplied URL so WordPress
+		 * can generate srcset and sizes automatically.
+		 */
+		$url_attachment_id = attachment_url_to_postid( $image_url );
+
+		if ( $url_attachment_id ) {
+			if ( empty( $attrs['srcset'] ) ) {
+				$srcset = wp_get_attachment_image_srcset(
+					$url_attachment_id,
+					$size
+				);
+
+				if ( $srcset ) {
+					$attrs['srcset'] = $srcset;
+				}
+			}
+
+			if ( empty( $attrs['sizes'] ) ) {
+				$sizes = wp_get_attachment_image_sizes(
+					$url_attachment_id,
+					$size
+				);
+
+				if ( $sizes ) {
+					$attrs['sizes'] = $sizes;
+				}
+			}
+
+			$image_data = wp_get_attachment_image_src(
+				$url_attachment_id,
+				$size
+			);
+
+			if ( $image_data ) {
+				if ( empty( $attrs['width'] ) ) {
+					$attrs['width'] = (int) $image_data[1];
+				}
+
+				if ( empty( $attrs['height'] ) ) {
+					$attrs['height'] = (int) $image_data[2];
+				}
+			}
+		}
+
+		$attr_strings   = array();
+		$attr_strings[] = 'src="' . esc_url( $image_url ) . '"';
+
+		foreach ( $attrs as $key => $value ) {
+			if (
+				null === $value
+				|| false === $value
+				|| 'src' === $key
+			) {
+				continue;
+			}
+
+			/*
+			 * Support boolean HTML attributes.
+			 */
+			if ( true === $value ) {
+				$attr_strings[] = esc_attr( $key );
+				continue;
+			}
+
+			$attr_strings[] = sprintf(
+				'%s="%s"',
+				esc_attr( $key ),
+				esc_attr( (string) $value )
+			);
+		}
+
+		return self::sanitize_image_markup(
+			sprintf(
+				'<img %s />',
+				implode( ' ', $attr_strings )
+			)
+		);
+	}
+
+	/*
+	 * Placeholder fallback.
+	 */
+	if ( $use_placeholder ) {
+		$placeholder_attrs = $attrs;
+
+		if (
+			isset( $placeholder_attrs['alt'] )
+			&& '' === trim( (string) $placeholder_attrs['alt'] )
+		) {
+			unset( $placeholder_attrs['alt'] );
+		}
+
+		return self::sanitize_image_markup(
+			self::image_with_placeholder(
+				0,
+				$size,
+				$placeholder_attrs
+			)
+		);
+	}
+
+	return '';
+}
 
 	/**
 	 * Returns a sanitized <img> element from an attachment ID, URL, or placeholder.
@@ -257,16 +481,38 @@ final class Helper {
 
 			if ( $image_html ) {
 				return wp_kses_post( $image_html );
+				//return self::sanitize_image_markup( $image_html );
 			}
 		}
 
 		if ( $image_url ) {
 			$default_attrs = array(
-				'alt'     => '',
-				'loading' => 'lazy',
+				'alt'      => '',
+				'loading'  => 'lazy',
+				'decoding' => 'async',
 			);
 
-			$attrs          = array_merge( $default_attrs, $attrs, $url_attrs );
+			$attrs = array_merge( $default_attrs, $attrs, $url_attrs );
+
+			/*
+			 * When the fallback URL maps to a Media Library attachment, prefer the
+			 * attachment rendering path so WordPress/VIP can generate srcset,
+			 * transformed URLs, and any image-resize filters consistently.
+			 */
+			$url_attachment_id = attachment_url_to_postid( $image_url );
+
+			if ( $url_attachment_id ) {
+				if ( isset( $attrs['alt'] ) && '' === trim( (string) $attrs['alt'] ) ) {
+					unset( $attrs['alt'] );
+				}
+
+				$image_html = self::image( $url_attachment_id, $size, $attrs );
+
+				if ( $image_html ) {
+					return wp_kses_post( $image_html );
+				}
+			}
+
 			$attr_strings   = array();
 			$attr_strings[] = 'src="' . esc_url( $image_url ) . '"';
 
@@ -277,8 +523,8 @@ final class Helper {
 
 				$attr_strings[] = esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
 			}
-
 			return wp_kses_post( sprintf( '<img %s />', implode( ' ', $attr_strings ) ) );
+			//return self::sanitize_image_markup( sprintf( '<img %s />', implode( ' ', $attr_strings ) ) );
 		}
 
 		if ( $use_placeholder ) {
@@ -287,8 +533,8 @@ final class Helper {
 			if ( isset( $placeholder_attrs['alt'] ) && '' === trim( (string) $placeholder_attrs['alt'] ) ) {
 				unset( $placeholder_attrs['alt'] );
 			}
-
 			return wp_kses_post( self::image_with_placeholder( 0, $size, $placeholder_attrs ) );
+			//return self::sanitize_image_markup( self::image_with_placeholder( 0, $size, $placeholder_attrs ) );
 		}
 
 		return '';
@@ -354,13 +600,13 @@ final class Helper {
 	}
 
 			/**
-	 * Get term IDs for a given post ID and taxonomy.
-	 *
-	 * @param int    $post_id  Post ID.
-	 * @param string $taxonomy Taxonomy slug.
-	 *
-	 * @return int[] Array of term IDs.
-	 */
+			 * Get term IDs for a given post ID and taxonomy.
+			 *
+			 * @param int    $post_id  Post ID.
+			 * @param string $taxonomy Taxonomy slug.
+			 *
+			 * @return int[] Array of term IDs.
+			 */
 	public static function get_post_term_ids( int $post_id, string $taxonomy ): array {
 		if ( ! $post_id || ! taxonomy_exists( $taxonomy ) ) {
 			return array();
@@ -382,13 +628,13 @@ final class Helper {
 	}
 
 		/**
- * Check if a navigation item is active.
- *
- * VIP-safe active state detection.
- *
- * @param array $nav_item Navigation item data.
- * @return bool
- */
+		 * Check if a navigation item is active.
+		 *
+		 * VIP-safe active state detection.
+		 *
+		 * @param array $nav_item Navigation item data.
+		 * @return bool
+		 */
 	public static function ambrygen_is_nav_item_active( array $nav_item ): bool {
 
 		if ( empty( $nav_item['url'] ) ) {
@@ -396,7 +642,6 @@ final class Helper {
 		}
 
 		$item_url = esc_url_raw( $nav_item['url'] );
-
 
 		// 1️⃣ If pageId exists (BEST METHOD)
 		if ( ! empty( $nav_item['pageId'] ) ) {
@@ -481,6 +726,34 @@ final class Helper {
 	}
 
 	/**
+	 * Decode literal Unicode escape sequences in imported text.
+	 *
+	 * @param string $text Source text.
+	 * @return string
+	 */
+	public static function decode_unicode_escapes( string $text ): string {
+		$text = trim( $text );
+
+		if ( '' === $text ) {
+			return $text;
+		}
+
+		if ( ! preg_match( '/(?:\\\\u|u)[0-9a-fA-F]{4}/', $text ) ) {
+			return $text;
+		}
+
+		$decoded = preg_replace_callback(
+			'/(?<!\\\\)(?:\\\\u|u)([0-9a-fA-F]{4})/',
+			static function ( array $matches ): string {
+				return html_entity_decode( '&#x' . $matches[1] . ';', ENT_QUOTES, 'UTF-8' );
+			},
+			$text
+		);
+
+		return is_string( $decoded ) ? $decoded : $text;
+	}
+
+	/**
 	 * Normalize name-list meta into a clean string array.
 	 *
 	 * Supports JSON array strings and comma-separated strings.
@@ -517,6 +790,11 @@ final class Helper {
 			return array();
 		}
 
+		$linked_author_options = self::get_poster_linked_author_options( $post_id );
+		if ( ! empty( $linked_author_options ) ) {
+			return array_values( $linked_author_options );
+		}
+
 		return self::parse_name_list( get_post_meta( $post_id, 'authors', true ) );
 	}
 
@@ -551,13 +829,11 @@ final class Helper {
 				continue;
 			}
 
-			$author_name = trim( (string) get_the_title( $author_id ) );
+			$author_name = self::decode_unicode_escapes( (string) get_the_title( $author_id ) );
 			if ( '' !== $author_name ) {
 				$author_options[ $author_id ] = $author_name;
 			}
 		}
-
-		asort( $author_options, SORT_NATURAL | SORT_FLAG_CASE );
 
 		return $author_options;
 	}
@@ -628,7 +904,18 @@ final class Helper {
 	 * }
 	 */
 	public static function get_presentation_filter_data(): array {
-		$conferences = get_posts(
+		$presentation_ids = get_posts(
+			array(
+				'post_type'      => 'presentation',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+			)
+		);
+
+		$conferences          = array();
+		$active_presentations = array();
+		$conference_ids       = get_posts(
 			array(
 				'post_type'      => 'conferences',
 				'post_status'    => 'publish',
@@ -639,14 +926,32 @@ final class Helper {
 			)
 		);
 
-		$presentation_ids = get_posts(
-			array(
-				'post_type'      => 'presentation',
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'fields'         => 'ids',
-			)
-		);
+		foreach ( $conference_ids as $conference_id ) {
+			$linked_posts = get_post_meta( (int) $conference_id, 'linked_posts', true );
+			if ( empty( $linked_posts ) ) {
+				continue;
+			}
+
+			if ( ! is_array( $linked_posts ) ) {
+				$linked_posts = array( $linked_posts );
+			}
+
+			foreach ( $linked_posts as $linked_post_id ) {
+				$linked_post_id = absint( $linked_post_id );
+				if ( $linked_post_id > 0 && 'presentation' === get_post_type( $linked_post_id ) ) {
+					$conferences[]          = (int) $conference_id;
+					$active_presentations[] = $linked_post_id;
+					break;
+				}
+			}
+		}
+
+		$conferences          = array_values( array_unique( array_filter( array_map( 'intval', $conferences ) ) ) );
+		$active_presentations = array_values( array_unique( array_filter( array_map( 'intval', $active_presentations ) ) ) );
+
+		if ( ! empty( $active_presentations ) ) {
+			$presentation_ids = $active_presentations;
+		}
 
 		$speakers = array();
 		foreach ( $presentation_ids as $presentation_id ) {
@@ -702,7 +1007,7 @@ final class Helper {
 			)
 		);
 
-		$conferences = array();
+		$conferences    = array();
 		$conference_ids = get_posts(
 			array(
 				'post_type'      => 'conferences',
@@ -907,15 +1212,14 @@ final class Helper {
 	 * @param string $class_name Class to append.
 	 * @return string
 	 */
-	public static function append_class_to_html_attributes(string $attributes, string $class_name): string
-	{
-		if (preg_match('/class=["\']([^"\']*)["\']/i', $attributes, $matches)) {
-			$existing_classes = trim($matches[1]);
+	public static function append_class_to_html_attributes( string $attributes, string $class_name ): string {
+		if ( preg_match( '/class=["\']([^"\']*)["\']/i', $attributes, $matches ) ) {
+			$existing_classes = trim( $matches[1] );
 			$new_classes      = $existing_classes ? $existing_classes . ' ' . $class_name : $class_name;
-			return preg_replace('/class=["\']([^"\']*)["\']/i', 'class="' . esc_attr($new_classes) . '"', $attributes);
+			return preg_replace( '/class=["\']([^"\']*)["\']/i', 'class="' . esc_attr( $new_classes ) . '"', $attributes );
 		}
 
-		return $attributes . ' class="' . esc_attr($class_name) . '"';
+		return $attributes . ' class="' . esc_attr( $class_name ) . '"';
 	}
 
 	/**
@@ -926,13 +1230,12 @@ final class Helper {
 	 * @param string $value      Attribute value.
 	 * @return string
 	 */
-	public static function append_attribute_to_html_attributes(string $attributes, string $name, string $value): string
-	{
-		if (preg_match('/' . preg_quote($name, '/') . '=["\']([^"\']*)["\']/i', $attributes)) {
-			return preg_replace('/' . preg_quote($name, '/') . '=["\']([^"\']*)["\']/i', $name . '="' . esc_attr($value) . '"', $attributes);
+	public static function append_attribute_to_html_attributes( string $attributes, string $name, string $value ): string {
+		if ( preg_match( '/' . preg_quote( $name, '/' ) . '=["\']([^"\']*)["\']/i', $attributes ) ) {
+			return preg_replace( '/' . preg_quote( $name, '/' ) . '=["\']([^"\']*)["\']/i', $name . '="' . esc_attr( $value ) . '"', $attributes );
 		}
 
-		return $attributes . ' ' . $name . '="' . esc_attr($value) . '"';
+		return $attributes . ' ' . $name . '="' . esc_attr( $value ) . '"';
 	}
 
 	/**
@@ -940,9 +1243,8 @@ final class Helper {
 	 *
 	 * @return int[]
 	 */
-	public static function get_past_conference_years(): array
-	{
-		$today = date('Y-m-d');
+	public static function get_past_conference_years(): array {
+		$today = date( 'Y-m-d' );
 
 		$args = array(
 			'post_type'      => 'conferences',
@@ -959,24 +1261,24 @@ final class Helper {
 			),
 		);
 
-		$post_ids = get_posts($args);
+		$post_ids = get_posts( $args );
 		$years    = array();
 
-		foreach ($post_ids as $post_id) {
-			$end_at = get_post_meta($post_id, 'end_at', true);
-			if ($end_at) {
-				$timestamp = strtotime((string) $end_at);
-				if ($timestamp) {
-					$years[] = (int) date('Y', $timestamp);
+		foreach ( $post_ids as $post_id ) {
+			$end_at = get_post_meta( $post_id, 'end_at', true );
+			if ( $end_at ) {
+				$timestamp = strtotime( (string) $end_at );
+				if ( $timestamp ) {
+					$years[] = (int) date( 'Y', $timestamp );
 				}
 			}
 		}
 
-		$years = array_unique($years);
-		rsort($years);
+		$years = array_unique( $years );
+		rsort( $years );
 
-		if (empty($years)) {
-			$years = array((int) date('Y'));
+		if ( empty( $years ) ) {
+			$years = array( (int) date( 'Y' ) );
 		}
 
 		return $years;
@@ -987,9 +1289,8 @@ final class Helper {
 	 *
 	 * @return int[]
 	 */
-	public static function get_past_webinar_years(): array
-	{
-		$today = date('Y-m-d');
+	public static function get_past_webinar_years(): array {
+		$today = date( 'Y-m-d' );
 
 		$args = array(
 			'post_type'      => 'webinar',
@@ -1006,24 +1307,24 @@ final class Helper {
 			),
 		);
 
-		$post_ids = get_posts($args);
+		$post_ids = get_posts( $args );
 		$years    = array();
 
-		foreach ($post_ids as $post_id) {
-			$start_at = get_post_meta($post_id, 'start_at', true);
-			if ($start_at) {
-				$ts = strtotime((string) $start_at);
-				if ($ts) {
-					$years[] = (int) date('Y', $ts);
+		foreach ( $post_ids as $post_id ) {
+			$start_at = get_post_meta( $post_id, 'start_at', true );
+			if ( $start_at ) {
+				$ts = strtotime( (string) $start_at );
+				if ( $ts ) {
+					$years[] = (int) date( 'Y', $ts );
 				}
 			}
 		}
 
-		$years = array_unique($years);
-		rsort($years);
+		$years = array_unique( $years );
+		rsort( $years );
 
-		if (empty($years)) {
-			$years = array((int) date('Y'));
+		if ( empty( $years ) ) {
+			$years = array( (int) date( 'Y' ) );
 		}
 
 		return $years;
@@ -1035,10 +1336,9 @@ final class Helper {
 	 * @param string $post_type Post type slug.
 	 * @return bool
 	 */
-	public static function has_today_posts(string $post_type = 'webinar'): bool
-	{
-		$today    = date('Y-m-d');
-		$meta_key = ('webinar' === $post_type) ? 'start_at' : 'end_at';
+	public static function has_today_posts( string $post_type = 'webinar' ): bool {
+		$today    = date( 'Y-m-d' );
+		$meta_key = ( 'webinar' === $post_type ) ? 'start_at' : 'end_at';
 
 		$args = array(
 			'post_type'      => $post_type,
@@ -1055,7 +1355,7 @@ final class Helper {
 			),
 		);
 
-		$query = new \WP_Query($args);
+		$query = new \WP_Query( $args );
 		return $query->have_posts();
 	}
 
@@ -1065,11 +1365,10 @@ final class Helper {
 	 * @param string $scope 'upcoming', 'past', or empty for all published conferences.
 	 * @return \WP_Term[]
 	 */
-	public static function get_conference_tags(string $scope = ''): array
-	{
-		$post_ids = self::get_tagged_post_ids_for_scope('conferences', $scope);
+	public static function get_conference_tags( string $scope = '' ): array {
+		$post_ids = self::get_tagged_post_ids_for_scope( 'conferences', $scope );
 
-		if (empty($post_ids)) {
+		if ( empty( $post_ids ) ) {
 			return array();
 		}
 
@@ -1083,7 +1382,7 @@ final class Helper {
 			)
 		);
 
-		return is_wp_error($terms) ? array() : (array) $terms;
+		return is_wp_error( $terms ) ? array() : (array) $terms;
 	}
 
 	/**
@@ -1092,11 +1391,10 @@ final class Helper {
 	 * @param string $scope 'upcoming', 'past', or empty for all published webinars.
 	 * @return \WP_Term[]
 	 */
-	public static function get_webinar_tags(string $scope = ''): array
-	{
-		$post_ids = self::get_tagged_post_ids_for_scope('webinar', $scope);
+	public static function get_webinar_tags( string $scope = '' ): array {
+		$post_ids = self::get_tagged_post_ids_for_scope( 'webinar', $scope );
 
-		if (empty($post_ids)) {
+		if ( empty( $post_ids ) ) {
 			return array();
 		}
 
@@ -1110,7 +1408,32 @@ final class Helper {
 			)
 		);
 
-		return is_wp_error($terms) ? array() : (array) $terms;
+		if ( is_wp_error( $terms ) || empty( $terms ) ) {
+			return array();
+		}
+
+		$filtered_terms = array_filter(
+			(array) $terms,
+			static function ( $term ) {
+				if ( ! $term instanceof \WP_Term ) {
+					return false;
+				}
+				$term_name = strtolower( trim( (string) $term->name ) );
+				$term_slug = strtolower( trim( (string) $term->slug ) );
+
+				if ( str_contains( $term_name, 'gene classification' ) || str_contains( $term_name, 'variant classification' ) ) {
+					return false;
+				}
+
+				if ( str_contains( $term_slug, 'gene-classification' ) || str_contains( $term_slug, 'variant-classification' ) ) {
+					return false;
+				}
+
+				return true;
+			}
+		);
+
+		return array_values( $filtered_terms );
 	}
 
 	/**
@@ -1120,9 +1443,8 @@ final class Helper {
 	 * @param string $scope     'upcoming', 'past', or empty for all published posts.
 	 * @return int[]
 	 */
-	public static function get_tagged_post_ids_for_scope(string $post_type, string $scope = ''): array
-	{
-		$today = date('Y-m-d');
+	public static function get_tagged_post_ids_for_scope( string $post_type, string $scope = '' ): array {
+		$today = date( 'Y-m-d' );
 
 		$query_args = array(
 			'post_type'      => $post_type,
@@ -1131,8 +1453,8 @@ final class Helper {
 			'fields'         => 'ids',
 		);
 
-		if ('conferences' === $post_type) {
-			if ('upcoming' === $scope) {
+		if ( 'conferences' === $post_type ) {
+			if ( 'upcoming' === $scope ) {
 				$query_args['meta_query'] = array(
 					array(
 						'key'     => 'start_at',
@@ -1141,7 +1463,7 @@ final class Helper {
 						'type'    => 'DATE',
 					),
 				);
-			} elseif ('past' === $scope) {
+			} elseif ( 'past' === $scope ) {
 				$query_args['meta_query'] = array(
 					array(
 						'key'     => 'end_at',
@@ -1151,8 +1473,8 @@ final class Helper {
 					),
 				);
 			}
-		} elseif ('webinar' === $post_type) {
-			if ('upcoming' === $scope) {
+		} elseif ( 'webinar' === $post_type ) {
+			if ( 'upcoming' === $scope ) {
 				$query_args['meta_query'] = array(
 					array(
 						'key'     => 'start_at',
@@ -1161,7 +1483,7 @@ final class Helper {
 						'type'    => 'DATE',
 					),
 				);
-			} elseif ('past' === $scope) {
+			} elseif ( 'past' === $scope ) {
 				$query_args['meta_query'] = array(
 					array(
 						'key'     => 'start_at',
@@ -1173,8 +1495,8 @@ final class Helper {
 			}
 		}
 
-		$post_ids = get_posts($query_args);
-		return array_map('absint', (array) $post_ids);
+		$post_ids = get_posts( $query_args );
+		return array_map( 'absint', (array) $post_ids );
 	}
 
 	/**
@@ -1200,8 +1522,8 @@ final class Helper {
 				continue;
 			}
 
-			$file_id = isset( $row['file_id'] ) ? absint( $row['file_id'] ) : 0;
-			$status  = isset( $row['status'] ) ? sanitize_key( (string) $row['status'] ) : '';
+			$file_id   = isset( $row['file_id'] ) ? absint( $row['file_id'] ) : 0;
+			$status    = isset( $row['status'] ) ? sanitize_key( (string) $row['status'] ) : '';
 			$is_active = isset( $row['is_active'] ) ? absint( $row['is_active'] ) : 0;
 
 			if ( $file_id <= 0 || 'disabled_urgent' === $status || 1 !== $is_active ) {
@@ -1301,7 +1623,7 @@ final class Helper {
 				'page_path'  => isset( $page_context['page_path'] ) ? sanitize_text_field( (string) $page_context['page_path'] ) : '',
 			)
 		);
-		$cache_key = $gene_id . '_' . $type_id . '_' . md5( (string) $page_cache_key );
+		$cache_key      = $gene_id . '_' . $type_id . '_' . md5( (string) $page_cache_key );
 
 		if ( isset( $cache[ $cache_key ] ) ) {
 			return $cache[ $cache_key ];
@@ -1408,7 +1730,7 @@ final class Helper {
 	 * Get optional static count content configured on a gene term.
 	 *
 	 * @param int $gene_id Gene term ID.
-	 * @return array{enabled:bool,count:string,before_text:string,after_text:string,link:string,link_text:string}
+	 * @return array{enabled:bool,count:string,badge_label:string,before_text:string,after_text:string,link:string,link_text:string}
 	 */
 	public static function get_product_version_gene_static_count_data( int $gene_id ): array {
 		$gene_id = absint( $gene_id );
@@ -1417,6 +1739,7 @@ final class Helper {
 			return array(
 				'enabled'     => false,
 				'count'       => '',
+				'badge_label' => '',
 				'before_text' => '',
 				'after_text'  => '',
 				'link'        => '',
@@ -1427,6 +1750,7 @@ final class Helper {
 		return array(
 			'enabled'     => (bool) get_term_meta( $gene_id, 'show_static_count_on_product_version', true ),
 			'count'       => trim( (string) get_term_meta( $gene_id, 'static_count', true ) ),
+			'badge_label' => trim( (string) get_term_meta( $gene_id, 'static_count_badge_label', true ) ),
 			'before_text' => trim( (string) get_term_meta( $gene_id, 'static_count_before_text', true ) ),
 			'after_text'  => trim( (string) get_term_meta( $gene_id, 'static_count_after_text', true ) ),
 			'link'        => esc_url( (string) get_term_meta( $gene_id, 'static_count_link', true ) ),
@@ -1438,9 +1762,11 @@ final class Helper {
 	 * Render optional static count content for a gene row in product version lists.
 	 *
 	 * @param int $gene_id Gene term ID.
+	 * @param int    $gene_id Gene term ID.
+	 * @param string $gene_name Optional gene term name to prevent duplicate text output.
 	 * @return string
 	 */
-	public static function render_product_version_gene_static_count( int $gene_id ): string {
+	public static function render_product_version_gene_static_count( int $gene_id, string $gene_name = '' ): string {
 		$data = self::get_product_version_gene_static_count_data( $gene_id );
 
 		if ( ! $data['enabled'] ) {
@@ -1473,6 +1799,13 @@ final class Helper {
 			return '';
 		}
 
+		if ( '' !== $gene_name ) {
+			$rendered_text = strtolower( trim( wp_strip_all_tags( implode( ' ', $parts ) ) ) );
+			if ( $rendered_text === strtolower( trim( $gene_name ) ) ) {
+				return '';
+			}
+		}
+
 		return '<div class="test-catlouge__static-count text-sm-medium">' . implode( ' ', $parts ) . '</div>';
 	}
 
@@ -1480,7 +1813,7 @@ final class Helper {
 	 * Get plain-text static count content for table contexts.
 	 *
 	 * @param int $gene_id Gene term ID.
-	 * @return array{badge:string,details_html:string}
+	 * @return array{badge:string,badge_label:string,details_html:string}
 	 */
 	public static function get_product_version_gene_static_count_table_content( int $gene_id ): array {
 		$data = self::get_product_version_gene_static_count_data( $gene_id );
@@ -1488,26 +1821,33 @@ final class Helper {
 		if ( ! $data['enabled'] || '' === $data['count'] ) {
 			return array(
 				'badge'        => '',
+				'badge_label'  => '',
 				'details_html' => '',
 			);
 		}
 
-		$parts = array();
-		$separator = '<span class="gl-data-table__static-count-separator" aria-hidden="true">&nbsp;</span>';
+		$count_parts = array();
 
 		if ( '' !== $data['before_text'] ) {
-			$parts[] = '<span class="gl-data-table__static-count-before">' . esc_html( $data['before_text'] ) . '</span>';
+			$count_parts[] = trim( $data['before_text'] );
 		}
 
-		$parts[] = '<span class="gl-data-table__static-count-value"> ' . esc_html( $data['count'] ) . ' </span>';
+		$count_parts[] = trim( $data['count'] );
 
 		if ( '' !== $data['after_text'] ) {
-			$parts[] = '<span class="gl-data-table__static-count-after"> ' . esc_html( $data['after_text'] ) . '</span>';
+			$count_parts[] = trim( $data['after_text'] );
+		}
+
+		$count_text   = trim( implode( ' ', array_filter( $count_parts ) ) );
+		$details_html = '';
+
+		if ( '' !== $count_text ) {
+			$details_html .= '<div class="reference-table__genes-count text-small">' . esc_html( $count_text ) . '</div>';
 		}
 
 		if ( '' !== $data['link'] && '' !== $data['link_text'] ) {
-			$parts[] = sprintf(
-				'<a class="gl-data-table__static-count-link" href="%1$s">%2$s</a>',
+			$details_html .= sprintf(
+				'<div class="reference-table__count-link text-small"><a class="text-link" href="%1$s">%2$s</a></div>',
 				esc_url( $data['link'] ),
 				esc_html( $data['link_text'] )
 			);
@@ -1515,7 +1855,8 @@ final class Helper {
 
 		return array(
 			'badge'        => $data['count'],
-			'details_html' => '<span class="gl-data-table__static-count-content">' . implode( $separator, $parts ) . '</span>',
+			'badge_label'  => $data['badge_label'],
+			'details_html' => $details_html,
 		);
 	}
 
@@ -1613,16 +1954,16 @@ final class Helper {
 			$used_pages = self::get_marketing_material_used_pages( $post_id );
 
 			$report[] = array(
-				'row_index'        => absint( $index ),
-				'file_id'          => $file_id,
-				'file_title'       => $file_title,
-				'file_url'         => $file_url ? (string) $file_url : '',
-				'media_lab_id'     => $media_lab_id,
-				'impressions'      => $tracking['impressions'],
-				'clicks'           => $tracking['clicks'],
-				'last_impression'  => $tracking['last_impression'],
-				'last_click'       => $tracking['last_click'],
-				'pages'            => self::merge_marketing_material_usage_with_tracking_pages(
+				'row_index'       => absint( $index ),
+				'file_id'         => $file_id,
+				'file_title'      => $file_title,
+				'file_url'        => $file_url ? (string) $file_url : '',
+				'media_lab_id'    => $media_lab_id,
+				'impressions'     => $tracking['impressions'],
+				'clicks'          => $tracking['clicks'],
+				'last_impression' => $tracking['last_impression'],
+				'last_click'      => $tracking['last_click'],
+				'pages'           => self::merge_marketing_material_usage_with_tracking_pages(
 					$used_pages,
 					$tracking['pages'],
 					$tracking['impressions'],
@@ -1999,10 +2340,10 @@ final class Helper {
 		$page_key  = self::get_marketing_material_tracking_page_key( $page_context );
 
 		if ( 'impression' === $event ) {
-			$tracking[ $file_id ]['impressions'] = absint( $tracking[ $file_id ]['impressions'] ) + 1;
+			$tracking[ $file_id ]['impressions']     = absint( $tracking[ $file_id ]['impressions'] ) + 1;
 			$tracking[ $file_id ]['last_impression'] = $timestamp;
 		} else {
-			$tracking[ $file_id ]['clicks'] = absint( $tracking[ $file_id ]['clicks'] ) + 1;
+			$tracking[ $file_id ]['clicks']     = absint( $tracking[ $file_id ]['clicks'] ) + 1;
 			$tracking[ $file_id ]['last_click'] = $timestamp;
 		}
 
@@ -2024,10 +2365,10 @@ final class Helper {
 			}
 
 			if ( 'impression' === $event ) {
-				$tracking[ $file_id ]['pages'][ $page_key ]['impressions'] = absint( $tracking[ $file_id ]['pages'][ $page_key ]['impressions'] ) + 1;
+				$tracking[ $file_id ]['pages'][ $page_key ]['impressions']     = absint( $tracking[ $file_id ]['pages'][ $page_key ]['impressions'] ) + 1;
 				$tracking[ $file_id ]['pages'][ $page_key ]['last_impression'] = $timestamp;
 			} else {
-				$tracking[ $file_id ]['pages'][ $page_key ]['clicks'] = absint( $tracking[ $file_id ]['pages'][ $page_key ]['clicks'] ) + 1;
+				$tracking[ $file_id ]['pages'][ $page_key ]['clicks']     = absint( $tracking[ $file_id ]['pages'][ $page_key ]['clicks'] ) + 1;
 				$tracking[ $file_id ]['pages'][ $page_key ]['last_click'] = $timestamp;
 			}
 		}
@@ -2060,6 +2401,25 @@ final class Helper {
 				'permission_callback' => '__return_true',
 			)
 		);
+
+		register_rest_route(
+			'ambrygen/v1',
+			'/marketing-material-cache/clear',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( $this, 'handle_marketing_material_cache_clear_rest' ),
+				'permission_callback' => array( $this, 'can_clear_marketing_material_cache' ),
+			)
+		);
+	}
+
+	/**
+	 * Check whether the current user can clear marketing material caches.
+	 *
+	 * @return bool
+	 */
+	public function can_clear_marketing_material_cache(): bool {
+		return current_user_can( 'edit_posts' );
 	}
 
 	/**
@@ -2120,6 +2480,26 @@ final class Helper {
 		}
 
 		return new \WP_REST_Response( array( 'tracked' => false ), 400 );
+	}
+
+	/**
+	 * Clear marketing material cache on demand for editors/admins.
+	 *
+	 * @param \WP_REST_Request $request Request object.
+	 * @return \WP_REST_Response
+	 */
+	public function handle_marketing_material_cache_clear_rest( \WP_REST_Request $request ): \WP_REST_Response {
+		unset( $request );
+
+		$version = self::clear_marketing_material_cache();
+
+		return new \WP_REST_Response(
+			array(
+				'cleared' => true,
+				'version' => $version,
+			),
+			200
+		);
 	}
 
 	/**
@@ -2239,9 +2619,9 @@ final class Helper {
 	/**
 	 * Get the newest valid file per language from the marketing material repeater.
 	 *
-	 * @param int          $post_id        Marketing material post ID.
-	 * @param array        $language_slugs Language slugs to include (e.g. ['en','es']).
-	 * @param string       $taxonomy_slug  Language taxonomy slug.
+	 * @param int    $post_id        Marketing material post ID.
+	 * @param array  $language_slugs Language slugs to include (e.g. ['en','es']).
+	 * @param string $taxonomy_slug  Language taxonomy slug.
 	 * @return array<string,array{url:string,file_id:int,term_id:int}>
 	 */
 	public static function get_marketing_material_latest_files_by_language(
@@ -2249,6 +2629,11 @@ final class Helper {
 		array $language_slugs = array( 'en', 'es' ),
 		string $taxonomy_slug = 'marketing_material_language'
 	): array {
+		$post_id = absint( $post_id );
+		if ( $post_id <= 0 || 'publish' !== get_post_status( $post_id ) ) {
+			return array();
+		}
+
 		$rows = get_post_meta( $post_id, 'marketing_material_files', true );
 
 		if ( ! is_array( $rows ) || empty( $rows ) ) {
@@ -2298,6 +2683,11 @@ final class Helper {
 
 			$url = wp_get_attachment_url( $file_id );
 			if ( ! $url ) {
+				continue;
+			}
+
+			$file_status = get_post_status( $file_id );
+			if ( ! in_array( $file_status, array( 'inherit', 'publish' ), true ) ) {
 				continue;
 			}
 
@@ -2525,11 +2915,11 @@ final class Helper {
 	 * @return array<string,mixed>
 	 */
 	public static function get_test_catalog_with_table_item_data( \WP_Post $post, array $parent_term_ids = array() ): array {
-		$post_id     = $post->ID;
-		$gene_terms  = get_the_terms( $post_id, 'gene' );
-		$gene_names  = array();
-		$gene_ids    = array();
-		$gene_badge  = '';
+		$post_id    = $post->ID;
+		$gene_terms = get_the_terms( $post_id, 'gene' );
+		$gene_names = array();
+		$gene_ids   = array();
+		$gene_badge = '';
 
 		if ( is_array( $gene_terms ) && ! is_wp_error( $gene_terms ) ) {
 			$gene_names = array_values(
@@ -2554,28 +2944,27 @@ final class Helper {
 			);
 		}
 
-		$gene_count              = count( $gene_names );
-		$gene_badge_compact      = (string) $gene_count;
-		$gene_list_excerpt       = implode( ', ', array_slice( $gene_names, 0, 14 ) );
-		$gene_list_excerpt_html  = esc_html( $gene_list_excerpt );
+		$gene_count             = count( $gene_names );
+		$gene_badge             = sprintf(
+			/* translators: %d is the number of genes. */
+			_n( '%d Gene', '%d Genes', $gene_count, 'ambrygen-web' ),
+			$gene_count
+		);
+		$gene_badge_compact     = (string) $gene_count;
+		$gene_list_excerpt      = implode( ', ', array_slice( $gene_names, 0, 14 ) );
+		$gene_list_excerpt_html = esc_html( $gene_list_excerpt );
 
 		if ( 1 === $gene_count && ! empty( $gene_ids[0] ) ) {
 			$static_count_content = self::get_product_version_gene_static_count_table_content( (int) $gene_ids[0] );
 			if ( '' !== $static_count_content['badge'] ) {
-				$gene_badge = $static_count_content['badge'];
 				$gene_badge_compact = $static_count_content['badge'];
+			}
+			if ( '' !== (string) ( $static_count_content['badge_label'] ?? '' ) ) {
+				$gene_badge = (string) $static_count_content['badge_label'];
 			}
 			if ( '' !== $static_count_content['details_html'] ) {
 				$gene_list_excerpt_html = $static_count_content['details_html'];
 			}
-		}
-
-		if ( '' === $gene_badge ) {
-			$gene_badge = sprintf(
-				/* translators: %d is the number of genes. */
-				_n( '%d Gene', '%d Genes', $gene_count, 'ambrygen-web' ),
-				$gene_count
-			);
 		}
 
 		$test_codes = get_the_terms( $post_id, 'product_code' );
@@ -2633,20 +3022,24 @@ final class Helper {
 		);
 
 		return array(
-			'id'                => $post_id,
-			'title'             => get_the_title( $post_id ),
-			'category_name'     => $category_name,
-			'gene_count'        => $gene_count,
-			'gene_badge'        => $gene_badge,
-			'gene_badge_compact' => $gene_badge_compact,
-			'gene_list'         => $gene_names,
-			'gene_list_excerpt' => $gene_list_excerpt,
+			'id'                     => $post_id,
+			'title'                  => get_the_title( $post_id ),
+			'category_name'          => $category_name,
+			'gene_count'             => $gene_count,
+			'gene_badge'             => $gene_badge,
+			'gene_badge_compact'     => $gene_badge_compact,
+			'gene_list'              => $gene_names,
+			'gene_list_excerpt'      => $gene_list_excerpt,
 			'gene_list_excerpt_html' => $gene_list_excerpt_html,
-			'summary'           => $summary,
-			'test_code'         => $test_code,
-			'turnaround'        => $turnaround,
-			'details_url'       => isset( $link['url'] ) ? (string) $link['url'] : '',
-			'search_text'       => strtolower( implode( ' ', $search_text_parts ) ),
+			'summary'                => $summary,
+			'test_code'              => $test_code,
+			'turnaround'             => $turnaround,
+			'details_url'            => isset( $link['url'] ) ? (string) $link['url'] : '',
+			'search_text'            => strtolower( implode( ' ', $search_text_parts ) ),
+			'search_title'           => strtolower( get_the_title( $post_id ) ),
+			'search_gene_text'       => strtolower( implode( ' ', $gene_names ) ),
+			'search_category_text'   => strtolower( $category_name ),
+			'search_code_text'       => strtolower( $test_code ),
 		);
 	}
 
@@ -2779,6 +3172,18 @@ final class Helper {
 	}
 
 	/**
+	 * Clear marketing material cache by bumping the shared cache version.
+	 *
+	 * @return string
+	 */
+	public static function clear_marketing_material_cache(): string {
+		$version = (string) time();
+		update_option( self::MARKETING_MATERIAL_CACHE_VERSION_OPTION, $version, false );
+
+		return $version;
+	}
+
+	/**
 	 * Bump the marketing material cache version when a marketing material changes.
 	 *
 	 * @param int      $post_id Marketing material post ID.
@@ -2793,7 +3198,7 @@ final class Helper {
 			return;
 		}
 
-		update_option( self::MARKETING_MATERIAL_CACHE_VERSION_OPTION, (string) time(), false );
+		self::clear_marketing_material_cache();
 	}
 
 	/**
@@ -2825,7 +3230,7 @@ final class Helper {
 			return;
 		}
 
-		update_option( self::MARKETING_MATERIAL_CACHE_VERSION_OPTION, (string) time(), false );
+		self::clear_marketing_material_cache();
 	}
 
 	/**
@@ -2837,37 +3242,43 @@ final class Helper {
 	 */
 	public static function render_marketing_material_item( int $post_id, string $post_title ): string {
 		$post_id = absint( $post_id );
-		if ( $post_id <= 0 ) {
+		if ( $post_id <= 0 || 'publish' !== get_post_status( $post_id ) ) {
 			return '';
 		}
 
-		$files_by_lang = self::get_marketing_material_latest_files_by_language( $post_id, array( 'en', 'es' ) );
+		$rows = get_post_meta( $post_id, 'marketing_material_files', true );
 
-		$links       = array();
-		$lang_labels = array(
-			'en' => 'EN',
-			'es' => 'ES',
-		);
+		if ( ! is_array( $rows ) || empty( $rows ) ) {
+			return '';
+		}
 
-		foreach ( $lang_labels as $lang_slug => $lang_label ) {
-			if ( empty( $files_by_lang[ $lang_slug ]['url'] ) ) {
+		$links = array();
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row ) ) {
 				continue;
 			}
 
-			$links[] = array(
-				'label' => $lang_label,
-				'url'   => (string) $files_by_lang[ $lang_slug ]['url'],
-			);
-		}
+			$file_id   = isset( $row['file_id'] ) ? absint( $row['file_id'] ) : 0;
+			$status    = isset( $row['status'] ) ? sanitize_key( (string) $row['status'] ) : '';
+			$is_active = isset( $row['is_active'] ) ? absint( $row['is_active'] ) : 0;
 
-		if ( empty( $links ) ) {
-			$file = self::get_marketing_material_latest_file( $post_id );
-			if ( is_array( $file ) && ! empty( $file['url'] ) ) {
-				$links[] = array(
-					'label' => '',
-					'url'   => (string) $file['url'],
-				);
+			if ( $file_id <= 0 || 'disabled_urgent' === $status || 1 !== $is_active ) {
+				continue;
 			}
+
+			$url = wp_get_attachment_url( $file_id );
+			if ( ! $url ) {
+				continue;
+			}
+
+			$language_id    = isset( $row['language_term_id'] ) ? absint( $row['language_term_id'] ) : 0;
+			$language_term  = $language_id > 0 ? get_term( $language_id, 'marketing_material_language' ) : null;
+			$language_label = self::get_test_catalog_language_label( $language_term );
+
+			$links[] = array(
+				'label' => ( 'PDF' !== $language_label ) ? $language_label : '',
+				'url'   => (string) $url,
+			);
 		}
 
 		if ( empty( $links ) ) {
@@ -2924,10 +3335,10 @@ final class Helper {
 	 * Useful for "gene symbols" style lookups where the query could match either the term name
 	 * or a stored meta field (e.g. `isoform`).
 	 *
-	 * @param string              $taxonomy  Taxonomy slug.
-	 * @param array<int,string>   $tokens    Search tokens.
-	 * @param string              $meta_key  Term meta key to search with LIKE.
-	 * @param int                 $limit     Max terms returned (after de-dupe).
+	 * @param string            $taxonomy  Taxonomy slug.
+	 * @param array<int,string> $tokens    Search tokens.
+	 * @param string            $meta_key  Term meta key to search with LIKE.
+	 * @param int               $limit     Max terms returned (after de-dupe).
 	 * @return array<int,\WP_Term>
 	 */
 	public static function get_terms_by_name_or_meta_like( string $taxonomy, array $tokens, string $meta_key = 'isoform', int $limit = 50 ): array {

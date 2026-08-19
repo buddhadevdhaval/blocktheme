@@ -25,4 +25,4 @@ if ( ! $post_id ) {
 	$post_id = get_the_ID();
 }
 
-echo BlockRenderService::instance()->render_webinar_registration_button( $post_id, $attributes ?? [] );
+echo BlockRenderService::instance()->render_webinar_registration_button( $post_id, $attributes ?? array() );

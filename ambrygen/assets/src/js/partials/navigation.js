@@ -37,7 +37,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		for ( let index = 0; index < cookies.length; index++ ) {
 			const cookie = cookies[ index ].trim();
 
-			if ( cookie.indexOf( cookieName ) === 0 ) {
+			if ( cookie.startsWith( cookieName ) ) {
 				return cookie.substring( cookieName.length );
 			}
 		}
@@ -212,7 +212,10 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	topBars.forEach( ( topBarItem ) => {
 		const topBarKey = topBarItem.dataset.topBarKey;
 
-		if ( topBarKey && getCookie( `${ topBarCookiePrefix }${ topBarKey }` ) ) {
+		if (
+			topBarKey &&
+			getCookie( `${ topBarCookiePrefix }${ topBarKey }` )
+		) {
 			topBarItem.style.display = 'none';
 		}
 	} );
@@ -255,15 +258,12 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				return;
 			}
 
-			const isExpanded = topBarItem.classList.toggle(
-				'top-bar--expanded'
-			);
+			const isExpanded =
+				topBarItem.classList.toggle( 'top-bar--expanded' );
 
 			toggle.setAttribute( 'aria-expanded', String( isExpanded ) );
 			details.hidden = ! isExpanded;
-			label.innerHTML = isExpanded
-				? 'Read Less'
-				: 'Read More';
+			label.innerHTML = isExpanded ? 'Read Less' : 'Read More';
 
 			if ( isExpanded ) {
 				textContent.appendChild( toggle );
@@ -324,7 +324,9 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 			if (
 				topBar &&
-				! topBar.querySelector( '.top-bar:not([style*="display: none"])' )
+				! topBar.querySelector(
+					'.top-bar:not([style*="display: none"])'
+				)
 			) {
 				topBar.style.display = 'none';
 			}
@@ -396,11 +398,12 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	if ( userIconBtns.length > 0 && userModal ) {
 		const modalOverlay = userModal.querySelector( '.modal-popup__overlay' );
 		const modalCloseBtn = userModal.querySelector( '.modal-popup__close' );
+		let activeUserIconBtn = null;
 
 		const openModal = () => {
 			userModal.classList.add( 'is-active' );
 			userModal.setAttribute( 'aria-hidden', 'false' );
-			userIconBtn.setAttribute( 'aria-expanded', 'true' );
+			activeUserIconBtn?.setAttribute( 'aria-expanded', 'true' );
 			body.classList.add( 'no-overflow' );
 
 			setTimeout( () => {
@@ -411,7 +414,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		const closeModal = () => {
 			userModal.classList.remove( 'is-active' );
 			userModal.setAttribute( 'aria-hidden', 'true' );
-			userIconBtn.setAttribute( 'aria-expanded', 'false' );
+			activeUserIconBtn?.setAttribute( 'aria-expanded', 'false' );
 			body.classList.remove( 'no-overflow' );
 		};
 
@@ -419,6 +422,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			btn.addEventListener( 'click', ( e ) => {
 				e.preventDefault();
 				e.stopPropagation();
+				activeUserIconBtn = btn;
 
 				if ( userModal.classList.contains( 'is-active' ) ) {
 					closeModal();
@@ -437,7 +441,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				userModal.classList.contains( 'is-active' )
 			) {
 				closeModal();
-				userIconBtn.focus();
+				activeUserIconBtn?.focus();
 			}
 		} );
 

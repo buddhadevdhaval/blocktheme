@@ -135,7 +135,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	} = attributes;
 
 	const isExample = blockId === 'example-block-preview';
-	const blockProps = useBlockProps( { className: 'block-layout features-media' } );
+	const blockProps = useBlockProps( {
+		className: 'block-layout features-media',
+	} );
 	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
 
 	useUniqueBlockId( {

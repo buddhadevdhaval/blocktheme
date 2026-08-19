@@ -11,6 +11,9 @@ namespace Ambrygen\Theme\Core;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Customize the WordPress login screen branding.
+ */
 final class Login_Customizer {
 
 	use Singleton;
@@ -41,12 +44,12 @@ final class Login_Customizer {
 		}
 
 		// Get original dimensions to scale properly
-		$meta = wp_get_attachment_metadata( $logo_id );
-		$width = $meta['width'] ?? 320;
+		$meta   = wp_get_attachment_metadata( $logo_id );
+		$width  = $meta['width'] ?? 320;
 		$height = $meta['height'] ?? 80;
 
 		// Limit max width but maintain aspect ratio
-		$display_width = min( $width, 320 );
+		$display_width  = min( $width, 320 );
 		$display_height = ( $display_width / $width ) * $height;
 
 		?>

@@ -39,10 +39,10 @@ const DEFAULT_ACTION_LINKS = [
 	},
 ];
 
-const normalizeActionLinks = ( ambrygen_links = [] ) =>
-	DEFAULT_ACTION_LINKS.map( ( ambrygen_default_link, ambrygen_index ) => ( {
-		...ambrygen_default_link,
-		...( ambrygen_links?.[ ambrygen_index ] || {} ),
+const normalizeActionLinks = ( ambrygenLinks = [] ) =>
+	DEFAULT_ACTION_LINKS.map( ( defaultLink, index ) => ( {
+		...defaultLink,
+		...( ambrygenLinks?.[ index ] || {} ),
 	} ) );
 
 export default function Edit( { attributes, setAttributes } ) {
@@ -57,18 +57,14 @@ export default function Edit( { attributes, setAttributes } ) {
 		actionLinks = DEFAULT_ACTION_LINKS,
 	} = attributes;
 
-	const ambrygen_normalized_action_links =
-		normalizeActionLinks( actionLinks );
+	const normalizedActionLinks = normalizeActionLinks( actionLinks );
 
-	const updateActionLink = ( ambrygen_link_id, ambrygen_updates ) => {
-		const ambrygen_next_links = ambrygen_normalized_action_links.map(
-			( ambrygen_link ) =>
-				ambrygen_link.id === ambrygen_link_id
-					? { ...ambrygen_link, ...ambrygen_updates }
-					: ambrygen_link
+	const updateActionLink = ( linkId, updates ) => {
+		const nextLinks = normalizedActionLinks.map( ( link ) =>
+			link.id === linkId ? { ...link, ...updates } : link
 		);
 
-		setAttributes( { actionLinks: ambrygen_next_links } );
+		setAttributes( { actionLinks: nextLinks } );
 	};
 
 	const blockProps = useBlockProps();
@@ -83,11 +79,10 @@ export default function Edit( { attributes, setAttributes } ) {
 					<ImageUploader
 						url={ backgroundImageUrl }
 						label={ __( 'Widget Background', 'ambrygen-web' ) }
-						onSelect={ ( ambrygen_media ) =>
+						onSelect={ ( media ) =>
 							setAttributes( {
-								backgroundImageId: ambrygen_media?.id || 0,
-								backgroundImageUrl:
-									ambrygen_media?.url || '',
+								backgroundImageId: media?.id || 0,
+								backgroundImageUrl: media?.url || '',
 							} )
 						}
 						onRemove={ () =>
@@ -111,10 +106,10 @@ export default function Edit( { attributes, setAttributes } ) {
 								primaryCta?.variant ||
 								'site-btn has-right-arrow',
 						} }
-						onChange={ ( ambrygen_value ) =>
+						onChange={ ( value ) =>
 							setAttributes( {
 								primaryCta: {
-									...ambrygen_value,
+									...value,
 									variant: 'site-btn has-right-arrow',
 								},
 							} )
@@ -133,39 +128,39 @@ export default function Edit( { attributes, setAttributes } ) {
 					title={ __( 'Quick Links', 'ambrygen-web' ) }
 					initialOpen={ false }
 				>
-					{ ambrygen_normalized_action_links.map(
-						( ambrygen_link ) => (
-							<div
-								key={ ambrygen_link.id }
-								style={ {
-									paddingBottom: '16px',
-									marginBottom: '16px',
-									borderBottom: '1px solid #ddd',
+					{ normalizedActionLinks.map( ( link ) => (
+						<div
+							key={ link.id }
+							style={ {
+								paddingBottom: '16px',
+								marginBottom: '16px',
+								borderBottom: '1px solid #ddd',
+							} }
+						>
+							<CtaButtonField
+								label={
+									link.text || __( 'Link', 'ambrygen-web' )
+								}
+								value={ {
+									...link,
+									variant: 'site-btn has-right-arrow',
 								} }
-							>
-								<CtaButtonField
-									label={ ambrygen_link.text || __( 'Link', 'ambrygen-web' ) }
-									value={ {
-										...ambrygen_link,
-										variant: 'site-btn has-right-arrow',
-									} }
-									onChange={ ( ambrygen_value ) =>
-										updateActionLink( ambrygen_link.id, {
-											id: ambrygen_link.id,
-											text: ambrygen_value.text || '',
-											url: ambrygen_value.url || '',
-											target: ambrygen_value.target || '',
-											rel: ambrygen_value.rel || '',
-										} )
-									}
-									showVariant={ false }
-									textLabel={ __( 'Link Text', 'ambrygen-web' ) }
-									showNewTab={ false }
-									help=""
-								/>
-							</div>
-						)
-					) }
+								onChange={ ( value ) =>
+									updateActionLink( link.id, {
+										id: link.id,
+										text: value.text || '',
+										url: value.url || '',
+										target: value.target || '',
+										rel: value.rel || '',
+									} )
+								}
+								showVariant={ false }
+								textLabel={ __( 'Link Text', 'ambrygen-web' ) }
+								showNewTab={ false }
+								help=""
+							/>
+						</div>
+					) ) }
 				</PanelBody>
 			</InspectorControls>
 
@@ -181,10 +176,10 @@ export default function Edit( { attributes, setAttributes } ) {
 						tagName="h3"
 						className="heading-6 mb-0 order-widget__title"
 						value={ title }
-						onChange={ ( ambrygen_value ) =>
-							setAttributes( { title: ambrygen_value } )
+						onChange={ ( value ) =>
+							setAttributes( { title: value } )
 						}
-						placeholder={ __( 'Add title...', 'ambrygen-web' ) }
+						placeholder={ __( 'Add title…', 'ambrygen-web' ) }
 					/>
 					<div className="is-style-gl-s12" aria-hidden="true"></div>
 
@@ -192,26 +187,26 @@ export default function Edit( { attributes, setAttributes } ) {
 						<RichText
 							tagName="span"
 							value={ taglineLineOne }
-							onChange={ ( ambrygen_value ) =>
+							onChange={ ( value ) =>
 								setAttributes( {
-									taglineLineOne: ambrygen_value,
+									taglineLineOne: value,
 								} )
 							}
 							placeholder={ __(
-								'Add first tagline line...',
+								'Add first tagline line…',
 								'ambrygen-web'
 							) }
 						/>
 						<RichText
 							tagName="div"
 							value={ taglineLineTwo }
-							onChange={ ( ambrygen_value ) =>
+							onChange={ ( value ) =>
 								setAttributes( {
-									taglineLineTwo: ambrygen_value,
+									taglineLineTwo: value,
 								} )
 							}
 							placeholder={ __(
-								'Add second tagline line...',
+								'Add second tagline line…',
 								'ambrygen-web'
 							) }
 						/>
@@ -224,48 +219,53 @@ export default function Edit( { attributes, setAttributes } ) {
 							tagName="div"
 							className="order-widget__box-title"
 							value={ boxTitle }
-							onChange={ ( ambrygen_value ) =>
-								setAttributes( { boxTitle: ambrygen_value } )
+							onChange={ ( value ) =>
+								setAttributes( { boxTitle: value } )
 							}
 							placeholder={ __(
-								'Add box title...',
+								'Add box title…',
 								'ambrygen-web'
 							) }
 						/>
-						<div className="is-style-gl-s4" aria-hidden="true"></div>
+						<div
+							className="is-style-gl-s4"
+							aria-hidden="true"
+						></div>
 						<RichText
 							tagName="div"
 							className="body2-reg order-widget__box-subheading"
 							value={ boxSubtitle }
-							onChange={ ( ambrygen_value ) =>
+							onChange={ ( value ) =>
 								setAttributes( {
-									boxSubtitle: ambrygen_value,
+									boxSubtitle: value,
 								} )
 							}
 							placeholder={ __(
-								'Add box subtitle...',
+								'Add box subtitle…',
 								'ambrygen-web'
 							) }
 						/>
-						<div className="is-style-gl-s24" aria-hidden="true"></div>
+						<div
+							className="is-style-gl-s24"
+							aria-hidden="true"
+						></div>
 						<div className="site-btn has-right-arrow order-widget__btn">
-							{ primaryCta?.text || __( 'Login / Register', 'ambrygen-web' ) }
+							{ primaryCta?.text ||
+								__( 'Login / Register', 'ambrygen-web' ) }
 						</div>
 					</div>
 
 					<div className="is-style-gl-s24" aria-hidden="true"></div>
 
 					<div className="order-widget__grid">
-						{ ambrygen_normalized_action_links.map(
-							( ambrygen_link ) => (
-								<div
-									key={ ambrygen_link.id }
-									className="order-widget__action text-xs-bold"
-								>
-									{ ambrygen_link.text }
-								</div>
-							)
-						) }
+						{ normalizedActionLinks.map( ( link ) => (
+							<div
+								key={ link.id }
+								className="order-widget__action text-xs-bold"
+							>
+								{ link.text }
+							</div>
+						) ) }
 					</div>
 				</div>
 			</div>

@@ -35,36 +35,36 @@
 	$ambrygen_description = $ambrygen_attributes['description'] ?? '';
 	$ambrygen_phone       = isset( $ambrygen_attributes['phoneNumber'] ) ? wp_strip_all_tags( (string) $ambrygen_attributes['phoneNumber'] ) : '';
 	$ambrygen_email       = isset( $ambrygen_attributes['emailAddress'] ) ? sanitize_email( (string) $ambrygen_attributes['emailAddress'] ) : '';
-	if ( $ambrygen_email && ! is_email( $ambrygen_email ) ) {
-		$ambrygen_email = '';
-	}
-	$ambrygen_phone_href     = preg_replace( '/[^0-9+\-().\s]/', '', $ambrygen_phone );
-	$ambrygen_phone_href     = preg_replace( '/\s+/', '', (string) $ambrygen_phone_href );
-	if ( empty( $ambrygen_phone_href ) || ! preg_match( '/\d/', $ambrygen_phone_href ) ) {
-		$ambrygen_phone_href = '';
-	}
-	$ambrygen_cta            = isset( $ambrygen_attributes['cta'] ) && is_array( $ambrygen_attributes['cta'] ) ? $ambrygen_attributes['cta'] : array();
-	$ambrygen_button_text    = isset( $ambrygen_attributes['buttonText'] ) ? wp_strip_all_tags( (string) $ambrygen_attributes['buttonText'] ) : '';
-	$ambrygen_button_url     = isset( $ambrygen_attributes['buttonUrl'] ) ? (string) $ambrygen_attributes['buttonUrl'] : '';
-	$ambrygen_button_text    = isset( $ambrygen_cta['text'] ) && '' !== trim( (string) $ambrygen_cta['text'] )
+if ( $ambrygen_email && ! is_email( $ambrygen_email ) ) {
+	$ambrygen_email = '';
+}
+	$ambrygen_phone_href = preg_replace( '/[^0-9+\-().\s]/', '', $ambrygen_phone );
+	$ambrygen_phone_href = preg_replace( '/\s+/', '', (string) $ambrygen_phone_href );
+if ( empty( $ambrygen_phone_href ) || ! preg_match( '/\d/', $ambrygen_phone_href ) ) {
+	$ambrygen_phone_href = '';
+}
+	$ambrygen_cta           = isset( $ambrygen_attributes['cta'] ) && is_array( $ambrygen_attributes['cta'] ) ? $ambrygen_attributes['cta'] : array();
+	$ambrygen_button_text   = isset( $ambrygen_attributes['buttonText'] ) ? wp_strip_all_tags( (string) $ambrygen_attributes['buttonText'] ) : '';
+	$ambrygen_button_url    = isset( $ambrygen_attributes['buttonUrl'] ) ? (string) $ambrygen_attributes['buttonUrl'] : '';
+	$ambrygen_button_text   = isset( $ambrygen_cta['text'] ) && '' !== trim( (string) $ambrygen_cta['text'] )
 		? wp_strip_all_tags( (string) $ambrygen_cta['text'] )
 		: $ambrygen_button_text;
-	$ambrygen_button_url     = isset( $ambrygen_cta['url'] ) && '' !== trim( (string) $ambrygen_cta['url'] )
+	$ambrygen_button_url    = isset( $ambrygen_cta['url'] ) && '' !== trim( (string) $ambrygen_cta['url'] )
 		? (string) $ambrygen_cta['url']
 		: $ambrygen_button_url;
 	$ambrygen_button_target = isset( $ambrygen_cta['target'] ) ? sanitize_text_field( (string) $ambrygen_cta['target'] ) : '';
 	$ambrygen_button_rel    = isset( $ambrygen_cta['rel'] ) ? sanitize_text_field( (string) $ambrygen_cta['rel'] ) : '';
-	if ( '_blank' === $ambrygen_button_target ) {
-		$ambrygen_button_rel_parts = preg_split( '/\s+/', trim( $ambrygen_button_rel ) );
-		$ambrygen_button_rel_parts = is_array( $ambrygen_button_rel_parts ) ? array_filter( $ambrygen_button_rel_parts ) : array();
-		$ambrygen_button_rel_parts = array_unique(
-			array_merge(
-				$ambrygen_button_rel_parts,
-				array( 'noopener', 'noreferrer' )
-			)
-		);
-		$ambrygen_button_rel = implode( ' ', $ambrygen_button_rel_parts );
-	}
+if ( '_blank' === $ambrygen_button_target ) {
+	$ambrygen_button_rel_parts = preg_split( '/\s+/', trim( $ambrygen_button_rel ) );
+	$ambrygen_button_rel_parts = is_array( $ambrygen_button_rel_parts ) ? array_filter( $ambrygen_button_rel_parts ) : array();
+	$ambrygen_button_rel_parts = array_unique(
+		array_merge(
+			$ambrygen_button_rel_parts,
+			array( 'noopener', 'noreferrer' )
+		)
+	);
+	$ambrygen_button_rel       = implode( ' ', $ambrygen_button_rel_parts );
+}
 	$ambrygen_has_info_content = ! empty( $ambrygen_phone ) || ! empty( $ambrygen_email ) || ! empty( $ambrygen_button_text );
 	$ambrygen_has_form_content = '' !== trim( wp_strip_all_tags( $ambrygen_content ) );
 	$ambrygen_has_eyebrow      = '' !== trim( wp_strip_all_tags( $ambrygen_eyebrow ) );
@@ -72,10 +72,10 @@
 	$ambrygen_has_description  = '' !== trim( wp_strip_all_tags( $ambrygen_description ) );
 	$ambrygen_has_text_content = $ambrygen_has_eyebrow || $ambrygen_has_heading || $ambrygen_has_description;
 
-	if ( ! in_array( $ambrygen_variation, array( 'info-view', 'form-view' ), true ) ) {
-		// Prefer form view when both content types exist so the fallback stays predictable.
-		$ambrygen_variation = $ambrygen_has_form_content ? 'form-view' : 'info-view';
-	}
+if ( ! in_array( $ambrygen_variation, array( 'info-view', 'form-view' ), true ) ) {
+	// Prefer form view when both content types exist so the fallback stays predictable.
+	$ambrygen_variation = $ambrygen_has_form_content ? 'form-view' : 'info-view';
+}
 
 	$ambrygen_is_info_view = 'info-view' === $ambrygen_variation;
 	$ambrygen_is_form_view = 'form-view' === $ambrygen_variation;
@@ -92,18 +92,18 @@
 	$ambrygen_overlay_top_url    = isset( $ambrygen_attributes['overlayTopImage'] ) ? (string) $ambrygen_attributes['overlayTopImage'] : '';
 	$ambrygen_overlay_bottom_url = isset( $ambrygen_attributes['overlayBottomImage'] ) ? (string) $ambrygen_attributes['overlayBottomImage'] : '';
 	$ambrygen_heading_id         = $ambrygen_block_id ? $ambrygen_block_id . '-heading' : wp_unique_id( 'ambrygen-contact-info-form-heading-' );
-	static $ambrygen_icon_cache = array();
-	if ( ! isset( $ambrygen_icon_cache['phone'] ) ) {
-		$ambrygen_icon_cache['phone'] = get_theme_file_uri( 'assets/src/images/phone-icon.svg' );
-	}
-	if ( ! isset( $ambrygen_icon_cache['mail'] ) ) {
-		$ambrygen_icon_cache['mail'] = get_theme_file_uri( 'assets/src/images/mail-icon.svg' );
-	}
+	static $ambrygen_icon_cache  = array();
+if ( ! isset( $ambrygen_icon_cache['phone'] ) ) {
+	$ambrygen_icon_cache['phone'] = get_theme_file_uri( 'assets/src/images/phone-icon.svg' );
+}
+if ( ! isset( $ambrygen_icon_cache['mail'] ) ) {
+	$ambrygen_icon_cache['mail'] = get_theme_file_uri( 'assets/src/images/mail-icon.svg' );
+}
 	$ambrygen_phone_icon_src = $ambrygen_icon_cache['phone'];
 	$ambrygen_mail_icon_src  = $ambrygen_icon_cache['mail'];
 
 	$ambrygen_wrapper_args = array(
-		'class' => 'newsletter newsletter-signup',
+		'class' => 'newsletter newsletter-signup block-layout',
 		'role'  => 'region',
 	);
 

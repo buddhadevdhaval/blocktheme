@@ -34,7 +34,9 @@
 				? window.CSS.escape( hash )
 				: hash.replace( /[^a-zA-Z0-9_-]/g, '\\$&' );
 
-		return container.querySelector( `#${ escapedHash }.tabs-table-content__item` );
+		return container.querySelector(
+			`#${ escapedHash }.tabs-table-content__item`
+		);
 	}
 
 	function initTabsTable( container ) {

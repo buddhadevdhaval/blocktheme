@@ -7,13 +7,14 @@ body.modal-open {
 }
 
 .search-modal-wrapper {
+
 	.search-modal {
-		background-color: #FFF;
+		background-color: var(--theme_white);
 		align-items: flex-start;
 	}
 
 	.modal-popup__overlay {
-		background-color: #FFF;
+		background-color: var(--theme_white);
 	}
 }
 
@@ -88,10 +89,9 @@ body.modal-open {
 	}
 
 	&__body {
-		// flex-grow: 1;
 		display: grid;
 		grid-template-columns: 1fr 330px;
-		overflow-y: auto; // This is the scrollable area
+		overflow-y: auto;
 		padding-right: 15px;
 		gap: 30px;
 
@@ -105,7 +105,7 @@ body.modal-open {
 		}
 
 		&::-webkit-scrollbar-track {
-			background: #f1f1f1;
+			background: var(--theme_white_1);
 		}
 
 		&::-webkit-scrollbar-thumb {
@@ -128,6 +128,7 @@ body.modal-open {
 		margin: 0 0 24px 0;
 
 		@include bp.min(md) {
+
 			&.is-visible {
 				display: flex;
 			}
@@ -159,6 +160,7 @@ body.modal-open {
 		margin: 0 0 24px 0;
 
 		@include bp.max(md) {
+
 			&.is-visible {
 				display: block;
 			}
@@ -178,7 +180,7 @@ body.modal-open {
 }
 
 .search-result-card {
-	background: #fff;
+	background: var(--theme_white);
 	border: 1px solid var(--theme_gray_200, #eee);
 	border-radius: 8px;
 	overflow: hidden;
@@ -231,7 +233,6 @@ body.modal-open {
 	gap: 15px;
 
 	@include bp.max(md) {
-		// flex-direction: column;
 		align-items: center;
 		margin-top: 15px;
 		padding-top: 15px;
@@ -376,7 +377,7 @@ body.modal-open {
 	top: 20px;
 	right: 20px;
 	z-index: 10;
-	background: #f1f1f1;
+	background: var(--theme_white_1);
 	border-radius: 50%;
 	width: 40px;
 	height: 40px;
@@ -388,7 +389,7 @@ body.modal-open {
 	transition: background 0.2s;
 
 	&:hover {
-		background: #e0e0e0;
+		background: var(--theme_gray);
 	}
 
 	img {

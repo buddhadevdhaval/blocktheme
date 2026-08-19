@@ -43,23 +43,26 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		enabled: ! isExample,
 	} );
 
-	if ( isExample ) {
-		return (
-			<BlockExamplePreview
-				imagePath="/assets/src/images/small-icon-grid/preview.png"
-			/>
-		);
-	}
-
 	const blockProps = useBlockProps( {
-		className: `block-layout icon-grid ${ isLargeIcon ? 'style-large-icons' : '' }`,
+		className: `block-layout icon-grid ${
+			isLargeIcon ? 'style-large-icons' : ''
+		}`,
 		id: blockId || undefined,
 	} );
+
+	if ( isExample ) {
+		return (
+			<BlockExamplePreview imagePath="/assets/src/images/small-icon-grid/preview.png" />
+		);
+	}
 
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) } initialOpen={ false }>
+				<PanelBody
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag || 'h2' }
@@ -101,7 +104,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 					<CtaButtonField
 						label={ __( '', 'ambrygen-web' ) }
-						textLabel={__('Link Text', 'ambrygen-web')}
+						textLabel={ __( 'Link Text', 'ambrygen-web' ) }
 						defaultVariant="primary"
 						value={ link }
 						showVariant={ false }
@@ -129,7 +132,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { heading: value } )
 						}
-						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 					/>
 					<div className="is-style-gl-s20" aria-hidden="true"></div>
 					<div className="text-xl-reg icon-grid__intro text-center">
@@ -140,21 +143,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								setAttributes( { description: value } )
 							}
 							placeholder={ __(
-								'Add Description...',
+								'Add Description…',
 								'ambrygen-web'
 							) }
 						/>
 					</div>
 					{ hasCta && (
-						<a
-							href={ link.url }
-							className="site-btn is-style-site-text-btn has-right-arrow text-14"
-							target={ link.target || undefined }
-							rel={ link.rel || undefined }
-							onClick={ ( event ) => event.preventDefault() }
-						>
+						<div className="site-btn is-style-site-text-btn has-right-arrow text-14">
 							{ link.text }
-						</a>
+						</div>
 					) }
 				</div>
 

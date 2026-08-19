@@ -1,6 +1,6 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
-  "apiVersion": 2,
+  "apiVersion": 3,
   "name": "ambrygen/webinar-author-swiper",
   "version": "0.1.0",
   "title": "Webinar Author Swiper",
@@ -8,7 +8,8 @@
   "icon": "groups",
   "description": "Displays the author profiles in a Swiper slider with background graphics.",
   "supports": {
-    "html": false
+    "html": false,
+    "inserter": false
   },
   "attributes": {
     "overlayTopImageId": {
@@ -26,8 +27,15 @@
     "overlayBottomImage": {
       "type": "string",
       "default": ""
+    },
+    "previewPostId": {
+      "type": "number",
+      "default": 0
     }
   },
+  "usesContext": [
+    "postId"
+  ],
   "textdomain": "ambrygen-web",
   "editorScript": "file:./index.js",
   "render": "file:./render.php"

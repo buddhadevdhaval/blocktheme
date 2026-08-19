@@ -45,18 +45,6 @@
       "enum": [
         "variation-features"
       ]
-    },
-    "topImageId": {
-      "type": "number",
-      "default": 0
-    },
-    "topImageUrl": {
-      "type": "string",
-      "default": ""
-    },
-    "topImageAlt": {
-      "type": "string",
-      "default": ""
     }
   },
   "providesContext": {
@@ -69,14 +57,7 @@
   "render": "file:./render.php",
   "example": {
     "attributes": {
-      "description": "This is a sample preview content for this block in the inserter.",
-      "subheading": "How to Videos",
-      "headingTag": "h2",
-      "subDescription": "Optional supporting text beneath the subheading.",
-      "variation": "variation-features",
-      "topImageId": 0,
-      "topImageUrl": "",
-      "topImageAlt": ""
+      "blockId": "video-grid-example"
     }
   }
 }

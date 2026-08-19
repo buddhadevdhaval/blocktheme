@@ -17,19 +17,24 @@
   },
   "attributes": {
     "sectiontitle": {
-      "type": "string"
+      "type": "string",
+      "default": ""
     },
     "description": {
-      "type": "string"
+      "type": "string",
+      "default": ""
     },
     "imageUrl": {
-      "type": "string"
+      "type": "string",
+      "default": ""
     },
     "imageAlt": {
-      "type": "string"
+      "type": "string",
+      "default": ""
     },
     "imageId": {
-      "type": "number"
+      "type": "number",
+      "default": 0
     }
   },
   "textdomain": "ambrygen-web",

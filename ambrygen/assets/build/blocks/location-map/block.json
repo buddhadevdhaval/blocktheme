@@ -8,7 +8,8 @@
   "icon": "location-alt",
   "description": "Block with Google Maps and location list",
   "supports": {
-    "html": false
+    "html": false,
+    "anchor": true
   },
   "attributes": {
     "blockId": {
@@ -21,18 +22,13 @@
     },
     "iframe": {
       "type": "string",
-      "default": ""
+      "default": "https://maps.google.com/maps?q=Washington%20DC%2C%20USA&z=15&output=embed"
     },
     "locations": {
       "type": "array",
       "default": [
         {
-          "id": "",
-          "name": "",
-          "address": ""
-        },
-        {
-          "id": "",
+          "id": "loca-default",
           "name": "",
           "address": ""
         }
@@ -71,21 +67,7 @@
   "style": "file:./style-index.css",
   "example": {
     "attributes": {
-      "title": "Our Locations",
-      "iframe": "https://www.google.com/maps/embed?pb=example",
-      "locations": [
-        {
-          "id": "loc-headquarters",
-          "name": "Headquarters",
-          "address": "1 Enterprise, Aliso Viejo, CA 92656"
-        },
-        {
-          "id": "loc-lab",
-          "name": "Lab (For specimen shipments)",
-          "address": "7 Argonaut, Aliso Viejo, CA 92656"
-        }
-      ],
-      "headingLevel": "h2"
+      "blockId": "example-block-preview"
     }
   }
 }

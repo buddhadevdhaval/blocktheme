@@ -14,14 +14,13 @@ import {
 	TextControl,
 } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
-import { useEffect, Fragment, useMemo } from '@wordpress/element';
+import { useEffect, Fragment } from '@wordpress/element';
 import { link as linkIcon, plus, trash } from '@wordpress/icons';
 
 import { getThemeAssetUrl } from '../../utils/assets';
 import {
 	BlockExamplePreview,
 	CtaButtonField,
-	DEFAULT_IMAGES,
 	ImageUploader,
 	TagSelector,
 } from '../_shared/components';
@@ -50,13 +49,16 @@ const normalizeCustomCollaborator = ( collaborator = {} ) => ( {
 	id: collaborator.id || createRepeaterId( 'resource-collaborator' ),
 	name: collaborator.name || '',
 	url: collaborator.url || '',
+	target: collaborator.target || '',
+	rel: collaborator.rel || '',
 	imageId: collaborator.imageId || 0,
 	imageUrl: collaborator.imageUrl || '',
 	imageAlt: collaborator.imageAlt || '',
 } );
 
 const getCardKey = ( card = {} ) =>
-	card.id || `${ card.title || 'resource-card' }-${ card.pdfLinks?.length || 0 }`;
+	card.id ||
+	`${ card.title || 'resource-card' }-${ card.pdfLinks?.length || 0 }`;
 
 const getPdfLinkKey = ( link = {} ) =>
 	link.id || `${ link.label || 'resource-link' }-${ link.url || 'empty' }`;
@@ -101,7 +103,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				( card.pdfLinks || [] ).every( ( link ) => link?.id )
 		);
 		const hasCollaboratorIds = customCollaborators.every(
-			( collaborator ) => collaborator?.id && collaborator?.imageAlt !== undefined
+			( collaborator ) =>
+				collaborator?.id && collaborator?.imageAlt !== undefined
 		);
 
 		if ( hasCardIds && hasCollaboratorIds ) {
@@ -131,17 +134,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const collaboratorOptions = collaborators || [];
 	const suggestions = collaboratorOptions.map( ( term ) => term.name );
-	const defaultImages = useMemo( () => DEFAULT_IMAGES(), [] );
 	const downloadIcon = getThemeAssetUrl(
 		'/assets/src/images/download-icon.svg'
 	);
 
-	const selectedCollaboratorNames = collaboratorIds
-		.map( ( id ) => {
-			const term = collaboratorOptions.find( ( item ) => item.id === id );
-			return term ? term.name : null;
-		} )
-		.filter( Boolean );
+	const selectedCollaboratorNames = collaboratorIds.flatMap( ( id ) => {
+		const term = collaboratorOptions.find( ( item ) => item.id === id );
+		return term ? [ term.name ] : [];
+	} );
 
 	const updateCards = ( index, field, value ) => {
 		const newCards = [ ...resourceCards ];
@@ -153,7 +153,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		const newCards = [ ...resourceCards ];
 		const newLinks = [ ...( newCards[ cardIndex ].pdfLinks || [] ) ];
 		newLinks[ linkIndex ] = { ...newLinks[ linkIndex ], [ field ]: value };
-		newCards[ cardIndex ] = { ...newCards[ cardIndex ], pdfLinks: newLinks };
+		newCards[ cardIndex ] = {
+			...newCards[ cardIndex ],
+			pdfLinks: newLinks,
+		};
 		setAttributes( { resourceCards: newCards } );
 	};
 
@@ -169,7 +172,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			...currentLinks,
 			normalizePdfLink( { label: '', url: '' } ),
 		];
-		newCards[ cardIndex ] = { ...newCards[ cardIndex ], pdfLinks: newLinks };
+		newCards[ cardIndex ] = {
+			...newCards[ cardIndex ],
+			pdfLinks: newLinks,
+		};
 		setAttributes( { resourceCards: newCards } );
 	};
 
@@ -177,7 +183,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		const newCards = [ ...resourceCards ];
 		const newLinks = [ ...( newCards[ cardIndex ].pdfLinks || [] ) ];
 		newLinks.splice( linkIndex, 1 );
-		newCards[ cardIndex ] = { ...newCards[ cardIndex ], pdfLinks: newLinks };
+		newCards[ cardIndex ] = {
+			...newCards[ cardIndex ],
+			pdfLinks: newLinks,
+		};
 		setAttributes( { resourceCards: newCards } );
 	};
 
@@ -204,12 +213,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	};
 
 	const onCollaboratorsChange = ( names ) => {
-		const newIds = names
-			.map( ( name ) => {
-				const term = collaboratorOptions.find( ( item ) => item.name === name );
-				return term ? term.id : null;
-			} )
-			.filter( Boolean );
+		const newIds = names.flatMap( ( name ) => {
+			const term = collaboratorOptions.find(
+				( item ) => item.name === name
+			);
+			return term ? [ term.id ] : [];
+		} );
 
 		setAttributes( { collaboratorIds: newIds } );
 	};
@@ -222,6 +231,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					id: createRepeaterId( 'resource-collaborator' ),
 					name: '',
 					url: '',
+					target: '',
+					rel: '',
 					imageId: 0,
 					imageUrl: '',
 					imageAlt: '',
@@ -243,11 +254,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	};
 
 	const updateCustomCollaboratorLink = ( index, value ) => {
-		updateCustomCollaborator( index, 'url', value?.url || '' );
+		const newCustom = [ ...customCollaborators ];
+		newCustom[ index ] = {
+			...newCustom[ index ],
+			url: value?.url || '',
+			target: value?.target || '',
+			rel: value?.rel || '',
+		};
+		setAttributes( { customCollaborators: newCustom } );
 	};
-
-	const hasHeading = '' !== title?.trim();
-	const hasSubtitle = '' !== subtitle?.trim();
 
 	if ( isExample ) {
 		return (
@@ -261,7 +276,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	return (
 		<Fragment>
 			<InspectorControls>
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) } initialOpen={ false }>
+				<PanelBody
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingLevel }
@@ -272,7 +290,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Manage Items', 'ambrygen-web' ) } initialOpen={ true }>
+				<PanelBody
+					title={ __( 'Manage Items', 'ambrygen-web' ) }
+					initialOpen={ true }
+				>
 					{ resourceCards.map( ( card, index ) => (
 						<div
 							key={ getCardKey( card ) }
@@ -280,7 +301,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						>
 							<div className="resources__card-settings-header">
 								<strong>
-									{ __( 'Item', 'ambrygen-web' ) } { index + 1 }
+									{ __( 'Item', 'ambrygen-web' ) }{ ' ' }
+									{ index + 1 }
 								</strong>
 								<Button
 									icon={ trash }
@@ -297,93 +319,117 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								onChange={ ( value ) =>
 									updateCards( index, 'title', value )
 								}
-								placeholder={ __( 'Resources', 'ambrygen-web' ) }
+								placeholder={ __(
+									'Resources',
+									'ambrygen-web'
+								) }
 							/>
 
 							<p>
 								<strong>
-									{ __( 'PDF Downloads', 'ambrygen-web' ) } (Max 2)
+									{ __( 'PDF Downloads', 'ambrygen-web' ) }{ ' ' }
+									(Max 2)
 								</strong>
 							</p>
 
-							{ ( card.pdfLinks || [] ).map( ( link, linkIndex ) => (
-								<div
-									key={ getPdfLinkKey( link ) }
-									className="resources__pdf-link-editor"
-								>
-									<div className="resources__pdf-link-editor-header">
-										<span>
-											{ __( 'Link', 'ambrygen-web' ) } { linkIndex + 1 }
-										</span>
-										<Button
-											icon={ trash }
-											isDestructive
-											label={ __( 'Remove Link', 'ambrygen-web' ) }
-											onClick={ () =>
-												removePdfLink( index, linkIndex )
-											}
-											size="small"
-										/>
-									</div>
-
-									<TextControl
-										label={ __( 'Label', 'ambrygen-web' ) }
-										value={ link.label }
-										onChange={ ( value ) =>
-											updatePdfLink(
-												index,
-												linkIndex,
-												'label',
-												value
-											)
-										}
-										placeholder={ __( 'e.g. EN', 'ambrygen-web' ) }
-									/>
-
-									<div className="resources__pdf-link-editor-controls">
-										<div className="resources__pdf-link-editor-url">
-											<TextControl
-												label={ __( 'File URL', 'ambrygen-web' ) }
-												value={ link.url }
-												onChange={ ( value ) =>
-													updatePdfLink(
+							{ ( card.pdfLinks || [] ).map(
+								( link, linkIndex ) => (
+									<div
+										key={ getPdfLinkKey( link ) }
+										className="resources__pdf-link-editor"
+									>
+										<div className="resources__pdf-link-editor-header">
+											<span>
+												{ __( 'Link', 'ambrygen-web' ) }{ ' ' }
+												{ linkIndex + 1 }
+											</span>
+											<Button
+												icon={ trash }
+												isDestructive
+												label={ __(
+													'Remove Link',
+													'ambrygen-web'
+												) }
+												onClick={ () =>
+													removePdfLink(
 														index,
-														linkIndex,
-														'url',
-														value
+														linkIndex
 													)
 												}
+												size="small"
 											/>
 										</div>
 
-										<MediaUploadCheck>
-											<MediaUpload
-												onSelect={ ( media ) =>
-													updatePdfLink(
-														index,
-														linkIndex,
-														'url',
-														media.url
-													)
-												}
-												allowedTypes={ [ 'application/pdf' ] }
-												value={ link.url }
-												render={ ( { open } ) => (
-													<Button
-														onClick={ open }
-														icon={ linkIcon }
-														variant="secondary"
-														label={ __(
-															'Select PDF',
-															'ambrygen-web'
-														) }
-													/>
-												) }
-											/>
-										</MediaUploadCheck>
+										<TextControl
+											label={ __(
+												'Label',
+												'ambrygen-web'
+											) }
+											value={ link.label }
+											onChange={ ( value ) =>
+												updatePdfLink(
+													index,
+													linkIndex,
+													'label',
+													value
+												)
+											}
+											placeholder={ __(
+												'e.g. EN',
+												'ambrygen-web'
+											) }
+										/>
+
+										<div className="resources__pdf-link-editor-controls">
+											<div className="resources__pdf-link-editor-url">
+												<TextControl
+													label={ __(
+														'File URL',
+														'ambrygen-web'
+													) }
+													value={ link.url }
+													onChange={ ( value ) =>
+														updatePdfLink(
+															index,
+															linkIndex,
+															'url',
+															value
+														)
+													}
+												/>
+											</div>
+
+											<MediaUploadCheck>
+												<MediaUpload
+													onSelect={ ( media ) =>
+														updatePdfLink(
+															index,
+															linkIndex,
+															'url',
+															media.url
+														)
+													}
+													allowedTypes={ [
+														'application/pdf',
+													] }
+													value={ link.url }
+													render={ ( { open } ) => (
+														<Button
+															onClick={ open }
+															icon={ linkIcon }
+															variant="secondary"
+															label={ __(
+																'Select PDF',
+																'ambrygen-web'
+															) }
+														/>
+													) }
+												/>
+											</MediaUploadCheck>
+										</div>
 									</div>
-								</div>
-							) ) }
+								)
+							) }
 
 							{ ( card.pdfLinks || [] ).length < 2 && (
 								<Button
@@ -413,10 +459,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				<PanelBody title={ __( 'Collaborators', 'ambrygen-web' ) }>
 					<SelectControl
 						label={ __( 'Collaborators', 'ambrygen-web' ) }
-						value={ enableCustomCollaborators ? 'manual' : 'taxonomy' }
+						value={
+							enableCustomCollaborators ? 'manual' : 'taxonomy'
+						}
 						options={ [
 							{
-								label: __( 'Fetch from taxonomy', 'ambrygen-web' ),
+								label: __(
+									'Fetch from taxonomy',
+									'ambrygen-web'
+								),
 								value: 'taxonomy',
 							},
 							{
@@ -435,7 +486,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						<>
 							<hr />
 							<FormTokenField
-								label={ __( 'Fetch from taxonomy', 'ambrygen-web' ) }
+								label={ __(
+									'Fetch from taxonomy',
+									'ambrygen-web'
+								) }
 								value={ selectedCollaboratorNames }
 								suggestions={ suggestions }
 								onChange={ onCollaboratorsChange }
@@ -448,7 +502,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					{ enableCustomCollaborators && (
 						<div className="resources__custom-collabs-wrap">
 							<p>
-								<strong>{ __( 'Set manually', 'ambrygen-web' ) }</strong>
+								<strong>
+									{ __( 'Set manually', 'ambrygen-web' ) }
+								</strong>
 							</p>
 
 							{ customCollaborators.map( ( collab, index ) => (
@@ -458,13 +514,19 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								>
 									<div className="resources__custom-collab-editor-header">
 										<span>
-											{ __( 'Collaborator', 'ambrygen-web' ) } { index + 1 }
+											{ __(
+												'Collaborator',
+												'ambrygen-web'
+											) }{ ' ' }
+											{ index + 1 }
 										</span>
 										<Button
 											icon={ trash }
 											isDestructive
 											onClick={ () =>
-												removeCustomCollaborator( index )
+												removeCustomCollaborator(
+													index
+												)
 											}
 											size="small"
 										/>
@@ -472,9 +534,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 									<CtaButtonField
 										label={ __( 'Link', 'ambrygen-web' ) }
-										value={ { url: collab.url || '' } }
+										value={ {
+											url: collab.url || '',
+											target: collab.target || '',
+											rel: collab.rel || '',
+										} }
 										onChange={ ( value ) =>
-											updateCustomCollaboratorLink( index, value )
+											updateCustomCollaboratorLink(
+												index,
+												value
+											)
 										}
 										showText={ false }
 										showVariant={ false }
@@ -494,12 +563,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 									<div className="resources__custom-collab-image">
 										<p>
-											<strong>{ __( 'ICON', 'ambrygen-web' ) }</strong>
+											<strong>
+												{ __( 'ICON', 'ambrygen-web' ) }
+											</strong>
 										</p>
 										<ImageUploader
 											url={ collab.imageUrl }
 											onSelect={ ( media ) => {
-												const newCustom = [ ...customCollaborators ];
+												const newCustom = [
+													...customCollaborators,
+												];
 												newCustom[ index ] = {
 													...newCustom[ index ],
 													imageId: media.id,
@@ -507,11 +580,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 													imageAlt: media.alt || '',
 												};
 												setAttributes( {
-													customCollaborators: newCustom,
+													customCollaborators:
+														newCustom,
 												} );
 											} }
 											onRemove={ () => {
-												const newCustom = [ ...customCollaborators ];
+												const newCustom = [
+													...customCollaborators,
+												];
 												newCustom[ index ] = {
 													...newCustom[ index ],
 													imageId: 0,
@@ -519,7 +595,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 													imageAlt: '',
 												};
 												setAttributes( {
-													customCollaborators: newCustom,
+													customCollaborators:
+														newCustom,
 												} );
 											} }
 										/>
@@ -548,8 +625,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						tagName={ headingLevel || 'h2' }
 						className="heading-4 block-title mb-0 resources__title"
 						value={ title }
-						onChange={ ( value ) => setAttributes( { title: value } ) }
-						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+						onChange={ ( value ) =>
+							setAttributes( { title: value } )
+						}
+						placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 					/>
 
 					<div className="is-style-gl-s12" aria-hidden="true"></div>
@@ -561,7 +640,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { subtitle: value } )
 						}
-						placeholder={ __( 'Add Description...', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
 					/>
 				</div>
 
@@ -575,10 +654,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								className="subtitle2-sbold resources__card-title text-center"
 								value={ resourcesCardTitle }
 								onChange={ ( value ) =>
-									setAttributes( { resourcesCardTitle: value } )
+									setAttributes( {
+										resourcesCardTitle: value,
+									} )
 								}
 								placeholder={ __(
-									'Add Title...',
+									'Add Title…',
 									'ambrygen-web'
 								) }
 							/>
@@ -594,10 +675,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 											className="body1-sbold test-lists-downloads__item-title"
 											value={ card.title }
 											onChange={ ( value ) =>
-												updateCards( index, 'title', value )
+												updateCards(
+													index,
+													'title',
+													value
+												)
 											}
 											placeholder={ __(
-												'Add Resources...',
+												'Add Resources…',
 												'ambrygen-web'
 											) }
 										/>
@@ -606,12 +691,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 											{ ( card.pdfLinks || [] ).map(
 												( link, linkIndex ) => (
 													<div
-														key={ getPdfLinkKey( link ) }
+														key={ getPdfLinkKey(
+															link
+														) }
 														className="resources__link"
 													>
 														<span className="resources__link-label">
 															{ link.label ||
-																( linkIndex === 0
+																( linkIndex ===
+																0
 																	? __(
 																			'Link 1',
 																			'ambrygen-web'
@@ -622,15 +710,24 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 																	  ) ) }
 														</span>
 														<span className="resources__download-icon-placeholder">
-															<img src={ downloadIcon } alt="" />
+															<img
+																src={
+																	downloadIcon
+																}
+																alt=""
+															/>
 														</span>
 													</div>
 												)
 											) }
 
-											{ ( card.pdfLinks || [] ).length === 0 && (
+											{ ( card.pdfLinks || [] ).length ===
+												0 && (
 												<div className="resources__link">
-													{ __( 'No Links', 'ambrygen-web' ) }
+													{ __(
+														'No Links',
+														'ambrygen-web'
+													) }
 												</div>
 											) }
 										</div>
@@ -650,7 +747,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									setAttributes( { orgTitle: value } )
 								}
 								placeholder={ __(
-									'Add Title...',
+									'Add Title…',
 									'ambrygen-web'
 								) }
 							/>
@@ -673,41 +770,28 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									);
 
 									return (
-										<div key={ id } className="resources__card-logo-link">
+										<div
+											key={ id }
+											className="resources__card-logo-link"
+										>
 											{ term?.name || id }
 										</div>
 									);
 								} ) }
 
 								{ enableCustomCollaborators &&
-									customCollaborators.map( ( collab, index ) =>
-										collab.url ? (
-											<div
-												key={ getCollaboratorKey( collab ) }
-												className="resources__card-logo-link"
-											>
-												{ collab.imageUrl || defaultImages?.placeholder?.url ? (
-													<img
-														src={
-															collab.imageUrl ||
-															defaultImages.placeholder.url
-														}
-														alt={
-															collab.imageAlt ||
-															defaultImages?.placeholder?.alt ||
-															''
-														}
-													/>
-												) : (
-													collab.name ||
-													__(
-														'Custom Collaborator',
-														'ambrygen-web'
-													)
+									customCollaborators.map( ( collab ) => (
+										<div
+											key={ getCollaboratorKey( collab ) }
+											className="resources__card-logo-link"
+										>
+											{ collab.name ||
+												__(
+													'Custom Collaborator',
+													'ambrygen-web'
 												) }
-											</div>
-										) : null
-									) }
+										</div>
+									) ) }
 							</div>
 						</div>
 					</div>

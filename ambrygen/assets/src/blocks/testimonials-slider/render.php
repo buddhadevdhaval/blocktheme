@@ -20,21 +20,21 @@ defined( 'ABSPATH' ) || exit;
  */
 $ambrygen_attributes = is_array( $attributes ?? null ) ? $attributes : array();
 
-$ambrygen_block_id = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
-$ambrygen_title = $ambrygen_attributes['title'] ?? '';
-$ambrygen_heading_tag = Helper::get_heading_tag( $ambrygen_attributes['headingTag'] ?? 'h2', 'h2' );
-$ambrygen_content = isset( $content ) ? trim( (string) $content ) : '';
-$ambrygen_graphic_left_id = isset( $ambrygen_attributes['graphicLeftId'] ) ? absint( $ambrygen_attributes['graphicLeftId'] ) : 0;
-$ambrygen_graphic_left_url = isset( $ambrygen_attributes['graphicLeftUrl'] ) ? esc_url_raw( $ambrygen_attributes['graphicLeftUrl'] ) : '';
-$ambrygen_graphic_left_alt = isset( $ambrygen_attributes['graphicLeftAlt'] ) ? sanitize_text_field( $ambrygen_attributes['graphicLeftAlt'] ) : '';
-$ambrygen_graphic_right_id = isset( $ambrygen_attributes['graphicRightId'] ) ? absint( $ambrygen_attributes['graphicRightId'] ) : 0;
+$ambrygen_block_id          = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
+$ambrygen_title             = $ambrygen_attributes['title'] ?? '';
+$ambrygen_heading_tag       = Helper::get_heading_tag( $ambrygen_attributes['headingTag'] ?? 'h2', 'h2' );
+$ambrygen_content           = isset( $content ) ? trim( (string) $content ) : '';
+$ambrygen_graphic_left_id   = isset( $ambrygen_attributes['graphicLeftId'] ) ? absint( $ambrygen_attributes['graphicLeftId'] ) : 0;
+$ambrygen_graphic_left_url  = isset( $ambrygen_attributes['graphicLeftUrl'] ) ? esc_url_raw( $ambrygen_attributes['graphicLeftUrl'] ) : '';
+$ambrygen_graphic_left_alt  = isset( $ambrygen_attributes['graphicLeftAlt'] ) ? sanitize_text_field( $ambrygen_attributes['graphicLeftAlt'] ) : '';
+$ambrygen_graphic_right_id  = isset( $ambrygen_attributes['graphicRightId'] ) ? absint( $ambrygen_attributes['graphicRightId'] ) : 0;
 $ambrygen_graphic_right_url = isset( $ambrygen_attributes['graphicRightUrl'] ) ? esc_url_raw( $ambrygen_attributes['graphicRightUrl'] ) : '';
 $ambrygen_graphic_right_alt = isset( $ambrygen_attributes['graphicRightAlt'] ) ? sanitize_text_field( $ambrygen_attributes['graphicRightAlt'] ) : '';
-$ambrygen_has_title = '' !== trim( wp_strip_all_tags( $ambrygen_title ) );
-$ambrygen_has_left_graphic = $ambrygen_graphic_left_id || '' !== $ambrygen_graphic_left_url;
+$ambrygen_has_title         = '' !== trim( wp_strip_all_tags( $ambrygen_title ) );
+$ambrygen_has_left_graphic  = $ambrygen_graphic_left_id || '' !== $ambrygen_graphic_left_url;
 $ambrygen_has_right_graphic = $ambrygen_graphic_right_id || '' !== $ambrygen_graphic_right_url;
-$ambrygen_has_graphics = $ambrygen_has_left_graphic || $ambrygen_has_right_graphic;
-$ambrygen_inner_blocks = array();
+$ambrygen_has_graphics      = $ambrygen_has_left_graphic || $ambrygen_has_right_graphic;
+$ambrygen_inner_blocks      = array();
 
 if ( isset( $block->inner_blocks ) && is_array( $block->inner_blocks ) ) {
 	$ambrygen_inner_blocks = $block->inner_blocks;
@@ -42,12 +42,12 @@ if ( isset( $block->inner_blocks ) && is_array( $block->inner_blocks ) ) {
 	$ambrygen_inner_blocks = $block->parsed_block['innerBlocks'];
 }
 
-$ambrygen_slide_count = count( $ambrygen_inner_blocks );
+$ambrygen_slide_count         = count( $ambrygen_inner_blocks );
 $ambrygen_has_multiple_slides = $ambrygen_slide_count > 1;
-$ambrygen_slider_label = $ambrygen_has_title ? wp_strip_all_tags( $ambrygen_title ) : __( 'Testimonials', 'ambrygen-web' );
-$ambrygen_show_navigation = array_key_exists( 'showNavigation', $ambrygen_attributes ) ? (bool) $ambrygen_attributes['showNavigation'] : true;
-$ambrygen_show_pagination = array_key_exists( 'showPagination', $ambrygen_attributes ) ? (bool) $ambrygen_attributes['showPagination'] : true;
-$ambrygen_autoplay = ! empty( $ambrygen_attributes['autoplay'] );
+$ambrygen_slider_label        = $ambrygen_has_title ? wp_strip_all_tags( $ambrygen_title ) : __( 'Testimonials', 'ambrygen-web' );
+$ambrygen_show_navigation     = array_key_exists( 'showNavigation', $ambrygen_attributes ) ? (bool) $ambrygen_attributes['showNavigation'] : true;
+$ambrygen_show_pagination     = array_key_exists( 'showPagination', $ambrygen_attributes ) ? (bool) $ambrygen_attributes['showPagination'] : true;
+$ambrygen_autoplay            = ! empty( $ambrygen_attributes['autoplay'] );
 
 $ambrygen_wrapper_args = array(
 	'class' => 'testimonial-slider block-layout',

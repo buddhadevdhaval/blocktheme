@@ -4,10 +4,7 @@ import {
 	InspectorControls,
 	InnerBlocks,
 } from '@wordpress/block-editor';
-import {
-	PanelBody,
-	TextControl,
-} from '@wordpress/components';
+import { PanelBody, TextControl } from '@wordpress/components';
 import {
 	ImageUploader,
 	DEFAULT_IMAGES,
@@ -45,7 +42,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		overlayBottomImage,
 	} = attributes;
 
-	const phoneIconUrl = getThemeAssetUrl( '/assets/src/images/phone-icon.svg' );
+	const phoneIconUrl = getThemeAssetUrl(
+		'/assets/src/images/phone-icon.svg'
+	);
 	const mailIconUrl = getThemeAssetUrl( '/assets/src/images/mail-icon.svg' );
 
 	const blockProps = useBlockProps();
@@ -78,9 +77,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const displayImage = image || defaultImage.url || '';
 	const displayImageAlt = image ? imageAlt || '' : defaultImage.alt || '';
 	const phoneHref = phoneNumber.replace( /[^0-9+]/g, '' );
-	const hasEyebrow = Boolean( eyebrow );
-	const hasHeading = Boolean( heading );
-	const hasDescription = Boolean( description );
 	const hasShortcodeBlock = currentBlock?.innerBlocks?.some(
 		( innerBlock ) => innerBlock?.name === 'core/shortcode'
 	);
@@ -89,9 +85,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	);
 	const normalizedVariation =
 		variation ||
-		(hasShortcodeBlock && !hasInfoContent
+		( hasShortcodeBlock && ! hasInfoContent
 			? CONTACT_INFO_FORM_VARIATIONS.FORM
-			: CONTACT_INFO_FORM_VARIATIONS.INFO);
+			: CONTACT_INFO_FORM_VARIATIONS.INFO );
 	const isInfoView =
 		normalizedVariation === CONTACT_INFO_FORM_VARIATIONS.INFO;
 	const isFormView =
@@ -110,7 +106,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			: ctaValue.rel;
 	const hasInfoListing = isInfoView && ( phoneNumber || emailAddress );
 	const hasCta = isInfoView && ctaValue.text && ctaValue.url;
-	const hasTextContent = hasEyebrow || hasHeading || hasDescription;
 	const isExample = blockId === 'contact-info-form-example';
 
 	useUniqueBlockId( {
@@ -171,7 +166,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						) ) }
 					</div>
 				</PanelBody>
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) } initialOpen={ false }>
+				<PanelBody
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag || 'h2' }
@@ -181,7 +179,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'Content Settings', 'ambrygen-web' ) } initialOpen={ true }>
+				<PanelBody
+					title={ __( 'Content Settings', 'ambrygen-web' ) }
+					initialOpen={ true }
+				>
 					<ImageUploader
 						url={ image }
 						onSelect={ ( img ) =>
@@ -228,10 +229,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								onChange={ ( value ) =>
 									setAttributes( {
 										cta: value,
-										buttonText:
-											value?.text || '',
-										buttonUrl:
-											value?.url || '',
+										buttonText: value?.text || '',
+										buttonUrl: value?.url || '',
 									} )
 								}
 							/>
@@ -322,16 +321,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							setAttributes( { eyebrow: value } )
 						}
 						className="newsletter__content-block__eyebrow-text eyebrow hero-kicker"
-						placeholder={ __(
-							'Add Eyebrow...',
-							'ambrygen-web'
-						) }
+						placeholder={ __( 'Add Eyebrow…', 'ambrygen-web' ) }
 					/>
 
-					<div
-						className="is-style-gl-s12"
-						aria-hidden="true"
-					/>
+					<div className="is-style-gl-s12" aria-hidden="true" />
 
 					<RichText
 						tagName={ headingTag }
@@ -341,13 +334,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							setAttributes( { heading: value } )
 						}
 						className="newsletter__content-block__heading heading-3 mb-0"
-						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 					/>
 
-					<div
-						className="is-style-gl-s12"
-						aria-hidden="true"
-					/>
+					<div className="is-style-gl-s12" aria-hidden="true" />
 
 					<RichText
 						tagName="div"
@@ -356,7 +346,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							setAttributes( { description: value } )
 						}
 						className="newsletter__content-block__description-text text-medium block-description"
-						placeholder={ __( 'Add Description...', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
 					/>
 
 					{ hasInfoListing && (
@@ -372,10 +362,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 											className="newsletter__info-listing__item__icon"
 											aria-hidden="true"
 										>
-											<img
-												src={ phoneIconUrl }
-												alt=""
-											/>
+											<img src={ phoneIconUrl } alt="" />
 										</div>
 										<div className="newsletter__info-listing__item__text text-medium">
 											<a href={ `tel:${ phoneHref }` }>
@@ -390,10 +377,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 											className="newsletter__info-listing__item__icon"
 											aria-hidden="true"
 										>
-											<img
-												src={ mailIconUrl }
-												alt=""
-											/>
+											<img src={ mailIconUrl } alt="" />
 										</div>
 										<div className="newsletter__info-listing__item__text text-medium">
 											<a

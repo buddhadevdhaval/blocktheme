@@ -2,7 +2,9 @@
 @use "../../variables/fluid_mixins" as *;
 
 /* -------------------------------------------------------------------------- */
+
 /*                            Cardio HERO Section                             */
+
 /* -------------------------------------------------------------------------- */
 
 
@@ -57,7 +59,6 @@
 
 		&__back {
 			color: var(--theme_cg_blue);
-			text-decoration: none;
 			display: inline-flex;
 			align-items: center;
 			gap: 8px;
@@ -86,14 +87,6 @@
 				transition: background-color 0.3s ease;
 				transform: rotate(-180deg);
 			}
-		}
-
-		&__title {
-			max-width: 960px;
-		}
-
-		&__description {
-			max-width: 768px;
 		}
 
 		&__shape {
@@ -135,6 +128,7 @@
 				bottom: -20px;
 				right: 70px;
 				width: 226px;
+				opacity: 0.6;
 
 				@include bp.max(xxxl) {
 					right: 20px;
@@ -165,7 +159,7 @@
 		gap: fluid(24, 50);
 		align-items: flex-start;
 
-		@include bp.max(lg) {
+		@include bp.max(xl-large) {
 			flex-direction: column;
 		}
 	}
@@ -179,9 +173,16 @@
 		width: 330px;
 		flex-shrink: 0;
 
-		@include bp.max(lg) {
+		@include bp.max(xl-large) {
 			width: 100%;
 		}
+	}
+
+	&__highlight-text {
+		background: var(--theme_amb_dark_blue);
+		border-radius: 16px;
+		padding: fluid(16, 24);
+		color: var(--theme_white);
 	}
 
 
@@ -281,6 +282,39 @@
 
 
 .genetic-testing-analyzed {
+
+	.gl-data-table__cell {
+
+		&:has(.reference-table__details) {
+			flex-wrap: wrap;
+		}
+	}
+
+	.reference-table__details {
+		margin-top: 6px;
+
+		.reference-table__see-genes {
+			background: none;
+			border: none;
+			height: auto;
+			min-height: auto;
+			padding: 0;
+			text-decoration: underline;
+			font-size: 14px;
+			line-height: 1.5;
+			color: var(--theme_color_primary);
+			text-underline-offset: 4px;
+			font-weight: 400;
+			text-align: left;
+			border-radius: 0;
+			box-shadow: none;
+
+			&:hover {
+				color: var(--theme_cg_blue);
+			}
+		}
+	}
+
 	.test-catlouge {
 
 		/* Accordion Grid Area */
@@ -343,6 +377,7 @@
 
 		&__item-content {
 			overflow: hidden;
+
 			@include bp.max(md) {
 				width: calc(100% + 36px);
 			}
@@ -360,6 +395,7 @@
 			color: var(--theme_gray_700);
 			white-space: nowrap;
 			align-self: flex-start;
+			display: inline-flex;
 		}
 
 
@@ -372,7 +408,7 @@
 
 		&__grid {
 			display: grid;
-			grid-template-columns: repeat(4, 1fr);
+			grid-template-columns: repeat(2, 1fr);
 			gap: 12px 24px;
 			max-height: 380px;
 			overflow-y: auto;
@@ -380,16 +416,9 @@
 			scrollbar-color: var(--theme_gray_200) transparent;
 
 			@include bp.max(xl) {
-				grid-template-columns: repeat(3, 1fr);
-			}
-
-			@include bp.max(lg) {
-				grid-template-columns: repeat(2, 1fr);
-			}
-
-			@include bp.max(md) {
 				grid-template-columns: 1fr;
 			}
+
 		}
 
 		&__row {
@@ -398,12 +427,26 @@
 			align-items: center;
 			border-bottom: 1px solid var(--theme_gray_200);
 			padding-bottom: 8px;
+
+			@include bp.max(lg) {
+				flex-wrap: wrap;
+				gap: 6px;
+			}
+
+			&:last-child {
+				border-bottom: none;
+				padding-bottom: 0;
+			}
 		}
 
 		&__gene-name {
 			color: var(--theme_cg_blue);
 			font-weight: 500;
 			font-size: 14px;
+
+			@include bp.max(lg) {
+				flex: 100% 0 0;
+			}
 		}
 
 		&__links {
@@ -428,7 +471,7 @@
 			img {
 				width: 14px;
 				height: 14px;
-				stroke: currentColor;
+				stroke: currentcolor;
 			}
 
 			&:hover {
@@ -447,13 +490,17 @@
 		&__item-toggle {
 			background: none;
 			border: none;
-			padding: 2px 0 0 0;
+			padding: 8px;
+			margin: -8px -8px 0 0;
 			cursor: pointer;
-			width: 24px;
-			height: 24px;
+			min-width: 40px;
+			min-height: 40px;
+			width: 40px;
+			height: 40px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			flex-shrink: 0;
 		}
 
 		&__icon-cross {
@@ -463,7 +510,7 @@
 			position: relative;
 			transition: all 0.3s ease;
 
-			&:before {
+			&::before {
 				content: '';
 				position: relative;
 				width: 24px;
@@ -477,15 +524,19 @@
 			}
 		}
 
-		&__item.is-open &__icon-cross {
+		&__item.is-open {
 
-			&::before {
-				background-image: url(../images/minus-circle.svg);
+			.test-catlouge__icon-cross {
+
+				&::before {
+					background-image: url(../images/minus-circle.svg);
+				}
 			}
 		}
 	}
 
 	@keyframes fadeIn {
+
 		from {
 			opacity: 0;
 		}
@@ -494,7 +545,6 @@
 			opacity: 1;
 		}
 	}
-
 
 	button.test-catlouge__item-toggle {
 		margin: 0;

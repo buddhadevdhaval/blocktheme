@@ -17,13 +17,13 @@ use Ambrygen\Theme\Core\Helper;
 $ambrygen_attributes = $attributes ?? array();
 
 $ambrygen_default_iframe_src = 'https://maps.google.com/maps?q=Washington%20DC%2C%20USA&z=15&output=embed';
-$ambrygen_anchor        = isset( $ambrygen_attributes['anchor'] ) ? sanitize_html_class( (string) $ambrygen_attributes['anchor'] ) : '';
-$ambrygen_block_id      = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( (string) $ambrygen_attributes['blockId'] ) : '';
-$ambrygen_title         = ! empty( $ambrygen_attributes['title'] ) ? $ambrygen_attributes['title'] : '';
-$ambrygen_iframe        = ! empty( $ambrygen_attributes['iframe'] ) ? trim( (string) $ambrygen_attributes['iframe'] ) : $ambrygen_default_iframe_src;
-$ambrygen_heading_level = ! empty( $ambrygen_attributes['headingLevel'] ) ? $ambrygen_attributes['headingLevel'] : 'h2';
-$ambrygen_heading_tag   = Helper::get_heading_tag( $ambrygen_heading_level, 'h2' );
-$ambrygen_wrapper_id    = $ambrygen_anchor ?: $ambrygen_block_id;
+$ambrygen_anchor             = isset( $ambrygen_attributes['anchor'] ) ? sanitize_html_class( (string) $ambrygen_attributes['anchor'] ) : '';
+$ambrygen_block_id           = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( (string) $ambrygen_attributes['blockId'] ) : '';
+$ambrygen_title              = ! empty( $ambrygen_attributes['title'] ) ? $ambrygen_attributes['title'] : '';
+$ambrygen_iframe             = ! empty( $ambrygen_attributes['iframe'] ) ? trim( (string) $ambrygen_attributes['iframe'] ) : $ambrygen_default_iframe_src;
+$ambrygen_heading_level      = ! empty( $ambrygen_attributes['headingLevel'] ) ? $ambrygen_attributes['headingLevel'] : 'h2';
+$ambrygen_heading_tag        = Helper::get_heading_tag( $ambrygen_heading_level, 'h2' );
+$ambrygen_wrapper_id         = $ambrygen_anchor ?: $ambrygen_block_id;
 
 $ambrygen_locations = ! empty( $ambrygen_attributes['locations'] ) ? $ambrygen_attributes['locations'] : array();
 $ambrygen_locations = array_values(
@@ -53,16 +53,16 @@ if ( $ambrygen_iframe && preg_match( '/src=(["\'])(.*?)\1/i', $ambrygen_iframe, 
 	$ambrygen_iframe_src = $ambrygen_iframe_match[2];
 }
 
-$ambrygen_iframe_src      = esc_url_raw( $ambrygen_iframe_src );
-$ambrygen_iframe_scheme   = wp_parse_url( $ambrygen_iframe_src, PHP_URL_SCHEME );
-$ambrygen_iframe_host     = wp_parse_url( $ambrygen_iframe_src, PHP_URL_HOST );
-$ambrygen_iframe_path     = wp_parse_url( $ambrygen_iframe_src, PHP_URL_PATH );
-$ambrygen_iframe_query    = wp_parse_url( $ambrygen_iframe_src, PHP_URL_QUERY );
-$ambrygen_iframe_host     = is_string( $ambrygen_iframe_host ) ? strtolower( $ambrygen_iframe_host ) : '';
-$ambrygen_iframe_path     = is_string( $ambrygen_iframe_path ) ? $ambrygen_iframe_path : '';
-$ambrygen_iframe_query    = is_string( $ambrygen_iframe_query ) ? $ambrygen_iframe_query : '';
-$ambrygen_allowed_hosts   = array( 'www.google.com', 'google.com', 'maps.google.com' );
-$ambrygen_query_args      = array();
+$ambrygen_iframe_src    = esc_url_raw( $ambrygen_iframe_src );
+$ambrygen_iframe_scheme = wp_parse_url( $ambrygen_iframe_src, PHP_URL_SCHEME );
+$ambrygen_iframe_host   = wp_parse_url( $ambrygen_iframe_src, PHP_URL_HOST );
+$ambrygen_iframe_path   = wp_parse_url( $ambrygen_iframe_src, PHP_URL_PATH );
+$ambrygen_iframe_query  = wp_parse_url( $ambrygen_iframe_src, PHP_URL_QUERY );
+$ambrygen_iframe_host   = is_string( $ambrygen_iframe_host ) ? strtolower( $ambrygen_iframe_host ) : '';
+$ambrygen_iframe_path   = is_string( $ambrygen_iframe_path ) ? $ambrygen_iframe_path : '';
+$ambrygen_iframe_query  = is_string( $ambrygen_iframe_query ) ? $ambrygen_iframe_query : '';
+$ambrygen_allowed_hosts = array( 'www.google.com', 'google.com', 'maps.google.com' );
+$ambrygen_query_args    = array();
 
 wp_parse_str( $ambrygen_iframe_query, $ambrygen_query_args );
 
@@ -70,7 +70,7 @@ $ambrygen_is_maps_embed_path   = 0 === strpos( $ambrygen_iframe_path, '/maps/emb
 $ambrygen_is_maps_output_embed = 0 === strpos( $ambrygen_iframe_path, '/maps' )
 	&& isset( $ambrygen_query_args['output'] )
 	&& 'embed' === $ambrygen_query_args['output'];
-$ambrygen_iframe_is_https = 'https' === strtolower( (string) $ambrygen_iframe_scheme )
+$ambrygen_iframe_is_https      = 'https' === strtolower( (string) $ambrygen_iframe_scheme )
 	&& in_array( $ambrygen_iframe_host, $ambrygen_allowed_hosts, true )
 	&& ( $ambrygen_is_maps_embed_path || $ambrygen_is_maps_output_embed );
 

@@ -7,9 +7,15 @@ use Ambrygen\Theme\Core\Singleton;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Admin controller for marketing material tracking details.
+ */
 final class MarketingMaterialTrackingAdminController {
 	use Singleton;
 
+	/**
+	 * Constructor.
+	 */
 	protected function __construct() {
 		add_filter( 'manage_marketing_material_posts_columns', array( $this, 'add_tracking_column' ) );
 		add_action( 'manage_marketing_material_posts_custom_column', array( $this, 'render_tracking_column' ), 10, 2 );
@@ -20,11 +26,24 @@ final class MarketingMaterialTrackingAdminController {
 		add_action( 'save_post_marketing_material', array( $this, 'clear_tracking_cache' ) );
 	}
 
+	/**
+	 * Add the tracking info column to the marketing material list table.
+	 *
+	 * @param array $columns Existing admin columns.
+	 * @return array
+	 */
 	public function add_tracking_column( array $columns ): array {
 		$columns['ambrygen_tracking_info'] = __( 'Tracking Info', 'ambrygen-web' );
 		return $columns;
 	}
 
+	/**
+	 * Render the tracking column content.
+	 *
+	 * @param string $column Column key.
+	 * @param int    $post_id Marketing material post ID.
+	 * @return void
+	 */
 	public function render_tracking_column( string $column, int $post_id ): void {
 		if ( 'ambrygen_tracking_info' !== $column ) {
 			return;
@@ -33,6 +52,11 @@ final class MarketingMaterialTrackingAdminController {
 		echo $this->get_tracking_button_html( $post_id );
 	}
 
+	/**
+	 * Render the tracking info button on the edit screen.
+	 *
+	 * @return void
+	 */
 	public function render_edit_screen_button(): void {
 		$screen = get_current_screen();
 		if ( ! $screen || 'marketing_material' !== $screen->post_type ) {
@@ -49,6 +73,11 @@ final class MarketingMaterialTrackingAdminController {
 		echo '</div>';
 	}
 
+	/**
+	 * Handle the tracking details AJAX request.
+	 *
+	 * @return void
+	 */
 	public function handle_tracking_details(): void {
 		check_ajax_referer( 'ambrygen_marketing_material_tracking', 'nonce' );
 
@@ -78,10 +107,22 @@ final class MarketingMaterialTrackingAdminController {
 		);
 	}
 
+	/**
+	 * Clear the cached tracking report for a marketing material.
+	 *
+	 * @param int $post_id Marketing material post ID.
+	 * @return void
+	 */
 	public function clear_tracking_cache( int $post_id ): void {
 		delete_transient( 'ambrygen_mm_tracking_report_' . absint( $post_id ) );
 	}
 
+	/**
+	 * Build the tracking info button markup.
+	 *
+	 * @param int $post_id Marketing material post ID.
+	 * @return string
+	 */
 	private function get_tracking_button_html( int $post_id ): string {
 		return sprintf(
 			'<button type="button" class="button button-secondary ambrygen-tracking-info-button" data-post-id="%1$d">%2$s</button>',
@@ -90,6 +131,11 @@ final class MarketingMaterialTrackingAdminController {
 		);
 	}
 
+	/**
+	 * Render inline modal styles for the tracking dialog.
+	 *
+	 * @return void
+	 */
 	public function render_modal_styles(): void {
 		$screen = get_current_screen();
 		if ( ! $screen || 'marketing_material' !== $screen->post_type ) {
@@ -197,6 +243,11 @@ final class MarketingMaterialTrackingAdminController {
 		<?php
 	}
 
+	/**
+	 * Render inline modal scripts for the tracking dialog.
+	 *
+	 * @return void
+	 */
 	public function render_modal_script(): void {
 		$screen = get_current_screen();
 		if ( ! $screen || 'marketing_material' !== $screen->post_type ) {

@@ -13,7 +13,6 @@ import {
 import { PanelBody } from '@wordpress/components';
 import { BlockExamplePreview, TagSelector } from '../_shared/components';
 import { useUniqueBlockId } from '../_shared/hooks';
-import { getThemeAssetUrl } from '../../utils/assets';
 
 const ALLOWED_BLOCKS = [ 'ambrygen/cta-tiles-with-3-card-item' ];
 
@@ -57,7 +56,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		return (
 			<BlockExamplePreview
 				className="cta-tiles-with-3-card-example-preview"
-				imagePath='/assets/src/images/cta-tiles-with-3-card/default-image.png'
+				imagePath="/assets/src/images/cta-tiles-with-3-card/default-image.png"
 			/>
 		);
 	}

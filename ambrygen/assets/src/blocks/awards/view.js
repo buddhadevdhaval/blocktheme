@@ -50,7 +50,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		const wrap = ( min, max, value ) => {
 			const range = max - min;
 
-			return ( ( ( value - min ) % range ) + range ) % range + min;
+			return ( ( ( ( value - min ) % range ) + range ) % range ) + min;
 		};
 
 		let itemWidth = sliderItems[ 0 ].clientWidth;
@@ -111,7 +111,6 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				return;
 			}
 
-
 			rafId = requestAnimationFrame( render );
 
 			if ( ! prefersReducedMotion ) {
@@ -128,7 +127,6 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		visibilityObserver.observe( container );
 
 		if ( prefersReducedMotion || sliderItems.length < 2 ) {
-			return;
 		}
 	} );
 } );

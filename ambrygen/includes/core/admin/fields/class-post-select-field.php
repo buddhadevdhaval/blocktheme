@@ -18,6 +18,14 @@ class PostSelectField {
 
 	use Singleton;
 
+	/**
+	 * Render the post select dropdown field.
+	 *
+	 * @param int    $post_id Post ID.
+	 * @param string $key     Meta field key.
+	 * @param array  $field   Field definition.
+	 * @return void
+	 */
 	public function render( int $post_id, string $key, array $field ): void {
 		$value = get_post_meta( $post_id, $key, true );
 

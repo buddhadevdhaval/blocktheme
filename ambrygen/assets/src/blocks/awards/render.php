@@ -15,12 +15,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Ambrygen\Theme\Core\Helper;
 
-$ambrygen_block_id    = isset( $attributes['blockId'] ) ? sanitize_html_class( $attributes['blockId'] ) : '';
-$ambrygen_title       = $attributes['title'] ?? '';
-$ambrygen_heading_tag = Helper::get_heading_tag( $attributes['headingTag'] ?? 'h2', 'h2' );
-$ambrygen_description = $attributes['description'] ?? '';
-$ambrygen_awards      = is_array( $attributes['awards'] ?? null ) ? $attributes['awards'] : array();
-$ambrygen_heading_id  = '';
+$ambrygen_block_id           = isset( $attributes['blockId'] ) ? sanitize_html_class( $attributes['blockId'] ) : '';
+$ambrygen_title              = $attributes['title'] ?? '';
+$ambrygen_heading_tag        = Helper::get_heading_tag( $attributes['headingTag'] ?? 'h2', 'h2' );
+$ambrygen_description        = $attributes['description'] ?? '';
+$ambrygen_awards             = is_array( $attributes['awards'] ?? null ) ? $attributes['awards'] : array();
+$ambrygen_heading_id         = '';
 $ambrygen_awards_with_images = array_filter(
 	$ambrygen_awards,
 	static function ( $ambrygen_award ) {
@@ -48,7 +48,7 @@ if ( $ambrygen_block_id ) {
 }
 
 if ( '' !== trim( wp_strip_all_tags( $ambrygen_title ) ) ) {
-	$ambrygen_heading_id = $ambrygen_block_id
+	$ambrygen_heading_id                      = $ambrygen_block_id
 		? $ambrygen_block_id . '-title'
 		: wp_unique_id( 'awards-title-' );
 	$ambrygen_wrapper_args['aria-labelledby'] = $ambrygen_heading_id;

@@ -31,7 +31,7 @@ $ambrygen_block_id   = isset( $ambrygen_attributes['blockId'] )
 /**
  * Retrieve attributes with defaults.
  */
-$ambrygen_heading = isset( $ambrygen_attributes['heading'] )
+$ambrygen_heading     = isset( $ambrygen_attributes['heading'] )
 	? $ambrygen_attributes['heading']
 	: '';
 $ambrygen_has_heading = '' !== trim( wp_strip_all_tags( $ambrygen_heading ) );

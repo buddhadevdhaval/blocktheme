@@ -1,1 +1,0 @@
-{"version":3,"file":"featured-blogs/view.js","mappings":";;;;AAAA;AACA,qE","sources":["webpack://ambrygen/./assets/src/blocks/featured-blogs/view.js"],"sourcesContent":["// Featured Blogs block view script\n// Slider initialization is handled by site-scripts.js for cip-swiper\n"],"names":[],"ignoreList":[],"sourceRoot":""}

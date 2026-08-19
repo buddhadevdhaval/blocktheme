@@ -20,14 +20,6 @@ footer {
 
 @mixin custom-list-styles {
 
-	// :not(header):not(footer) {
-
-	/* -------------------------------------------------
-	>> Project Styles
-	---------------------------------------------------
-	>> Edit these styles as required
-	------------------------------------------------- */
-
 	// Description List
 	dl {
 		margin: 0 0 30px;
@@ -57,7 +49,7 @@ footer {
 
 	ul li,
 	ol li {
-		margin: 0 0 20px;
+		margin: 0 0 15px;
 		box-sizing: border-box;
 
 		@include bp.max(md) {
@@ -73,10 +65,10 @@ footer {
 	ol ol,
 	ul ol,
 	ol ul {
-		margin: 12px 0 0 25px;
+		margin: 12px 0 0 20px;
 
 		@include bp.max(md) {
-			margin: 12px 0 0 18px;
+			margin: 12px 0 0 16px;
 		}
 	}
 
@@ -91,7 +83,7 @@ footer {
 		}
 
 		li {
-			padding-left: 25px;
+			padding-left: 15px;
 			position: relative;
 
 			.bg-primary_700 & {
@@ -99,23 +91,22 @@ footer {
 			}
 
 			@include bp.max(md) {
-				padding-left: 18px;
+				padding-left: 15px;
 			}
 
 			&::before {
 				content: "";
-				width: 10px;
-				height: 10px;
+				width: 5px;
+				height: 5px;
 				background-position: left top;
 				position: absolute;
 				background-color: var(--theme_color_primary);
 				left: 0;
-				top: 8px;
+				top: 10px;
 				border-radius: 50%;
 
 				@media (width <=991px) {
-					width: 8px;
-					height: 8px;
+					top: 8px;
 				}
 
 				.bg-primary_700 & {
@@ -139,18 +130,9 @@ footer {
 		list-style-type: none;
 		margin-left: 0;
 
-		ol,
-		ul {
-			// margin-left: 10px;
-		}
-
 		>li {
 			position: relative;
-			padding-left: 25px;
-
-			@include bp.max(md) {
-				padding-left: 18px;
-			}
+			padding-left: 20px;
 
 			&::marker {
 				display: none;
@@ -169,10 +151,6 @@ footer {
 
 		ol li {
 			padding-left: 35px;
-
-			@include bp.max(md) {
-				padding-left: 30px;
-			}
 		}
 
 		ol ol li {
@@ -187,11 +165,7 @@ footer {
 			counter-reset: unset;
 
 			li {
-				padding-left: 20px;
-
-				@include bp.max(md) {
-					padding-left: 18px;
-				}
+				padding-left: 15px;
 
 				&::before {
 					content: "";
@@ -206,7 +180,6 @@ footer {
 		}
 	}
 
-	// }
 
 	/* Reset styles for header and footer lists */
 	header.header-section,

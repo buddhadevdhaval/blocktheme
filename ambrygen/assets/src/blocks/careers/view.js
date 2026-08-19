@@ -77,11 +77,12 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 		const first = focusable[ 0 ];
 		const last = focusable[ focusable.length - 1 ];
+		const activeElement = panel.ownerDocument.activeElement;
 
-		if ( event.shiftKey && document.activeElement === first ) {
+		if ( event.shiftKey && activeElement === first ) {
 			event.preventDefault();
 			last.focus();
-		} else if ( ! event.shiftKey && document.activeElement === last ) {
+		} else if ( ! event.shiftKey && activeElement === last ) {
 			event.preventDefault();
 			first.focus();
 		}
@@ -144,6 +145,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 			modal.classList.remove( 'is-active' );
 			modal.hidden = true;
+			document.body.classList.remove( 'no-overflow' );
 			mediaTrigger.setAttribute( 'aria-expanded', 'false' );
 			toggleWrap.setAttribute( 'aria-expanded', 'false' );
 			modal
@@ -154,7 +156,9 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 		const openModal = () => {
 			if ( ! modal ) {
-				modal = createModal( toggleWrap.getAttribute( 'aria-controls' ) );
+				modal = createModal(
+					toggleWrap.getAttribute( 'aria-controls' )
+				);
 				block.appendChild( modal );
 				modal
 					.querySelector( '.modal-popup__overlay' )
@@ -222,6 +226,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			videoWrapper.replaceChildren( modalMedia );
 			modal.hidden = false;
 			modal.classList.add( 'is-active' );
+			document.body.classList.add( 'no-overflow' );
 			mediaTrigger.setAttribute( 'aria-expanded', 'true' );
 			toggleWrap.setAttribute( 'aria-expanded', 'true' );
 			modal.querySelector( '.modal-popup__close' )?.focus();

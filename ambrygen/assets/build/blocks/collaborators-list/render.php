@@ -51,16 +51,16 @@ if ( 'link-all' === $ambrygen_mode ) {
 }
 ?>
 
-<div class="download-list collaborators-list" id="<?php echo \esc_attr( $ambrygen_block_id ); ?>" data-amb-open="<?php echo $ambrygen_is_open ? 'true' : 'false'; ?>">
+<div class="download-list block-layout collaborators-list" id="<?php echo \esc_attr( $ambrygen_block_id ); ?>" data-amb-open="<?php echo $ambrygen_is_open ? 'true' : 'false'; ?>">
 	<div class="download-list__inner">
-		<div class="download-list__header-area mb-24">
+		<div class="download-list__header-area mb-24 js-gsap-fade">
 			<?php if ( '' !== trim( wp_strip_all_tags( $ambrygen_subtitle ) ) ) : ?>
 				<div class="download-list__kicker hero-kicker">
 					<?php echo wp_kses_post( $ambrygen_subtitle ); ?>
 				</div>
 			<?php endif; ?>
 			<div class="is-style-gl-s12" aria-hidden="true"></div>
-			<div class="download-list__content">
+			<div class="download-list__content js-gsap-fade">
 				<<?php echo tag_escape( $ambrygen_heading_tag ); ?> class="download-list__title heading-3 block-title mb-0">
 					<?php echo wp_kses_post( $ambrygen_title ); ?>
 				</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>

@@ -41,7 +41,7 @@ $ambrygen_found_item = false;
 			&& 'ambrygen/tabs-content-item' === $ambrygen_inner_block->name
 			&& '' !== trim( $ambrygen_html )
 		) {
-			$ambrygen_attrs = is_array( $ambrygen_inner_block->attributes ?? null ) ? $ambrygen_inner_block->attributes : array();
+			$ambrygen_attrs             = is_array( $ambrygen_inner_block->attributes ?? null ) ? $ambrygen_inner_block->attributes : array();
 			$ambrygen_is_default_active = (bool) ( $ambrygen_attrs['isDefaultActive'] ?? false );
 
 			// When any tab is explicitly marked, only the marked one gets is-active.
@@ -57,7 +57,7 @@ $ambrygen_found_item = false;
 					if ( $ambrygen_processor->next_tag( array( 'class_name' => 'tabs-table-content__header' ) ) ) {
 						$ambrygen_processor->set_attribute( 'aria-expanded', 'true' );
 					}
-					$ambrygen_html = $ambrygen_processor->get_updated_html();
+					$ambrygen_html       = $ambrygen_processor->get_updated_html();
 					$ambrygen_found_item = true;
 				}
 			} else {
@@ -75,8 +75,8 @@ $ambrygen_found_item = false;
 						$ambrygen_updated_html,
 						1
 					);
-					$ambrygen_html = is_string( $ambrygen_expanded_html ) ? $ambrygen_expanded_html : $ambrygen_updated_html;
-					$ambrygen_found_item = true;
+					$ambrygen_html          = is_string( $ambrygen_expanded_html ) ? $ambrygen_expanded_html : $ambrygen_updated_html;
+					$ambrygen_found_item    = true;
 				}
 			}
 		}

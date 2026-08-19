@@ -24,7 +24,7 @@ import { PanelBody } from '@wordpress/components';
  * @param {Object}   props               Block properties.
  * @param {Object}   props.attributes    Block attributes.
  * @param {Function} props.setAttributes Function to update block attributes.
- * @return {JSX.Element} Block editor interface.
+ * @return {import('@wordpress/element').WPElement} Block editor interface.
  */
 export default function Edit( { attributes, setAttributes } ) {
 	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );

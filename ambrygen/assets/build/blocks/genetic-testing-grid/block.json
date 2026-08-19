@@ -30,17 +30,35 @@
       "type": "string",
       "default": ""
     },
-    "variation": {
-      "type": "string",
-      "default": "variation-3"
-    },
     "blockId": {
-      "type": "string"
+      "type": "string",
+      "default": ""
     },
     "selectedTabs": {
       "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "termSlug": {
+            "type": "string"
+          },
+          "orderedPostIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      },
       "default": [
         {
+          "id": "",
           "text": "All Tests",
           "termSlug": "all"
         }
@@ -54,9 +72,6 @@
         "alt": ""
       }
     }
-  },
-  "providesContext": {
-    "ambrygen/variation": "variation"
   },
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",

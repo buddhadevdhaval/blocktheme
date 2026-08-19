@@ -56,16 +56,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const swiperRef = useRef( null );
 	const [ activeSlideIndex, setActiveSlideIndex ] = useState( 0 );
 
-	const { insertBlock, replaceInnerBlocks } = useDispatch(
-		'core/block-editor'
-	);
+	const { insertBlock, replaceInnerBlocks } =
+		useDispatch( 'core/block-editor' );
 	const innerBlocks = useSelect(
 		( select ) => select( blockEditorStore ).getBlocks( clientId ),
 		[ clientId ]
 	);
 	const hasInnerBlocks = innerBlocks.length > 0;
 	const hasMultipleSlides = innerBlocks.length > 1;
-	const hasTitle = !! title;
 	const hasLeftGraphic = !! graphicLeftUrl;
 	const hasRightGraphic = !! graphicRightUrl;
 	const hasGraphicImages = hasLeftGraphic || hasRightGraphic;
@@ -155,12 +153,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const addSliderItem = () => {
 		const newSlideIndex = innerBlocks.length;
 
-		insertBlock(
-			createSliderItemBlock(),
-			newSlideIndex,
-			clientId,
-			true
-		);
+		insertBlock( createSliderItemBlock(), newSlideIndex, clientId, true );
 		setActiveSlideIndex( newSlideIndex );
 	};
 
@@ -313,7 +306,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							onChange={ ( value ) =>
 								setAttributes( { title: value } )
 							}
-							placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+							placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 						/>
 					</div>
 
@@ -323,7 +316,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						<div ref={ swiperRef }>
 							<InnerBlocks
 								allowedBlocks={ ALLOWED_BLOCKS }
-								template={ ! hasInnerBlocks ? TEMPLATE : undefined }
+								template={
+									! hasInnerBlocks ? TEMPLATE : undefined
+								}
 								renderAppender={ false }
 							/>
 						</div>
@@ -356,19 +351,26 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 													? ' swiper-pagination-bullet-active'
 													: ''
 											}` }
-											onClick={ () => setActiveSlideIndex( index ) }
+											onClick={ () =>
+												setActiveSlideIndex( index )
+											}
 											onKeyDown={ ( event ) => {
 												if (
 													event.key === 'Enter' ||
 													event.key === ' '
 												) {
 													event.preventDefault();
-													setActiveSlideIndex( index );
+													setActiveSlideIndex(
+														index
+													);
 												}
 											} }
 											aria-label={ sprintf(
 												/* translators: %d: testimonial slide number. */
-												__( 'Go to testimonial %d', 'ambrygen-web' ),
+												__(
+													'Go to testimonial %d',
+													'ambrygen-web'
+												),
 												index + 1
 											) }
 											aria-current={

@@ -78,6 +78,10 @@
       "type": "boolean",
       "default": true
     },
+    "showPauseButton": {
+      "type": "boolean",
+      "default": true
+    },
     "autoplayDelay": {
       "type": "number",
       "default": 5000

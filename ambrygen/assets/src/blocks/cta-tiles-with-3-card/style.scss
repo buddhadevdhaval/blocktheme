@@ -125,11 +125,6 @@
 		flex-direction: column;
 		flex-grow: 1;
 		width: 100%;
-		// justify-content: center;
-
-		@include bp.max(xl-large) {
-			// justify-content: inherit;
-		}
 	}
 
 	&__title,

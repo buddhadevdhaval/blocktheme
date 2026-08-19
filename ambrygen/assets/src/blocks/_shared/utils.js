@@ -22,6 +22,27 @@ export const cx = ( ...classes ) => classes.filter( Boolean ).join( ' ' );
 export const generateMenuId = () =>
 	`menu-${ Math.random().toString( 36 ).substr( 2, 9 ) }`;
 
+export const ensureArrayItemIds = ( items = [], idKey = 'id' ) => {
+	let hasChanges = false;
+
+	const normalizedItems = items.map( ( item ) => {
+		if ( item?.[ idKey ] ) {
+			return item;
+		}
+
+		hasChanges = true;
+		return {
+			...item,
+			[ idKey ]: generateMenuId(),
+		};
+	} );
+
+	return {
+		hasChanges,
+		items: normalizedItems,
+	};
+};
+
 /**
  * Creates array manipulation callbacks with immutable updates.
  *

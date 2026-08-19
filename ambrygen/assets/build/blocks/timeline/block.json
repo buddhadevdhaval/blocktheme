@@ -37,15 +37,16 @@
       ]
     }
   },
+  "providesContext": {
+    "ambrygen/timelineHeadingTag": "headingTag"
+  },
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
   "render": "file:./render.php",
   "example": {
     "attributes": {
-      "title": "Six steps from sample to report",
-      "description": "Every sample moves through six quality checkpoints before a result reaches your patient.",
-      "headingTag": "h2"
+      "blockId": "example-block-preview"
     }
   }
 }

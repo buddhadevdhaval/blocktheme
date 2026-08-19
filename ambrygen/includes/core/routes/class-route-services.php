@@ -7,6 +7,7 @@ use Ambrygen\Theme\Core\Singleton;
 
 defined('ABSPATH') || exit;
 
+
 final class ConferenceRouteService
 {
     use Singleton;
@@ -14,10 +15,31 @@ final class ConferenceRouteService
     public function register_hooks(): void
     {
         add_action('init', [$this, 'register_rewrite']);
+        add_action('parse_request', [$this, 'parse_request']);
         add_filter('query_vars', [$this, 'register_query_vars']);
         add_filter('post_type_link', [$this, 'filter_permalink'], 10, 2);
         add_action('pre_get_posts', [$this, 'filter_query']);
         add_filter('query_loop_block_query_vars', [$this, 'filter_in_progress_query'], 10, 2);
+    }
+
+    public function parse_request(\WP $wp): void
+    {
+        $request_path = wp_parse_url((string) wp_unslash($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
+
+        if (! is_string($request_path)) {
+            return;
+        }
+
+        $trimmed_path = trim($request_path, '/');
+
+        if (! preg_match('#^conference/([^/]+)/([^/]+)$#', $trimmed_path, $matches)
+            && ! preg_match('#^conferences/([^/]+)/([^/]+)$#', $trimmed_path, $matches)) {
+            return;
+        }
+
+        $wp->query_vars['post_type'] = 'conferences';
+        $wp->query_vars['_old_id']   = sanitize_text_field($matches[1]);
+        $wp->query_vars['pr_name']   = sanitize_title($matches[2]);
     }
 
     public function register_rewrite(): void
@@ -93,21 +115,39 @@ final class ConferenceRouteService
         ]);
 
         if (empty($matched_posts)) {
+            if (ctype_digit((string) $old_id)) {
+                $post_by_id = get_post((int) $old_id);
+
+                if ($post_by_id instanceof \WP_Post && 'conferences' === $post_by_id->post_type && 'publish' === $post_by_id->post_status) {
+                    $matched_posts = [$post_by_id->ID];
+                }
+            }
+        }
+
+        if (empty($matched_posts)) {
+            $matched_posts = get_posts([
+                'post_type'      => 'conferences',
+                'post_status'    => 'publish',
+                'posts_per_page' => 1,
+                'fields'         => 'ids',
+                'name'           => sanitize_title((string) $pr_name),
+            ]);
+        }
+
+        if (empty($matched_posts)) {
             return;
         }
 
         $matched_post_id = (int) $matched_posts[0];
         $matched_pr_name = (string) get_post_meta($matched_post_id, 'pr_name', true);
-        $matched_pr_slug = sanitize_title($matched_pr_name);
-
-        if ($matched_pr_slug !== sanitize_title((string) $pr_name)) {
-            return;
-        }
+        $matched_pr_slug = sanitize_title($matched_pr_name ?: get_post_field('post_name', $matched_post_id));
 
         $query->set('p', $matched_post_id);
         $query->set('post_type', 'conferences');
         $query->set('post_status', 'publish');
         $query->set('name', get_post_field('post_name', $matched_post_id));
+        $query->set('_old_id', $old_id);
+        $query->set('pr_name', $matched_pr_slug);
         $query->set('posts_per_page', 1);
         $query->is_single = true;
         $query->is_singular = true;
@@ -300,9 +340,29 @@ final class PressReleaseRouteService
     public function register_hooks(): void
     {
         add_action('init', [$this, 'register_rewrite']);
+        add_action('parse_request', [$this, 'parse_request']);
         add_filter('query_vars', [$this, 'register_query_vars']);
         add_filter('post_type_link', [$this, 'filter_permalink'], 10, 2);
         add_action('pre_get_posts', [$this, 'filter_query']);
+    }
+
+    public function parse_request(\WP $wp): void
+    {
+        $request_path = wp_parse_url((string) wp_unslash($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
+
+        if (! is_string($request_path)) {
+            return;
+        }
+
+        $trimmed_path = trim($request_path, '/');
+
+        if (! preg_match('#^company/press-release/([^/]+)/([^/]+)$#', $trimmed_path, $matches)) {
+            return;
+        }
+
+        $wp->query_vars['post_type'] = 'press-releases';
+        $wp->query_vars['_old_id']   = sanitize_text_field($matches[1]);
+        $wp->query_vars['pr_name']   = sanitize_title($matches[2]);
     }
 
     public function register_rewrite(): void
@@ -333,9 +393,10 @@ final class PressReleaseRouteService
         $old_id = get_post_meta($post->ID, '_old_id', true);
         $pr_name = get_post_meta($post->ID, 'pr_name', true);
         $pr_slug = sanitize_title($pr_name ?: $post->post_name);
+        $route_id = ! empty($old_id) ? $old_id : $post->ID;
 
-        if (! empty($old_id) && ! empty($pr_slug)) {
-            return home_url('/company/press-release/' . $old_id . '/' . $pr_slug);
+        if (! empty($route_id) && ! empty($pr_slug)) {
+            return home_url('/company/press-release/' . $route_id . '/' . $pr_slug);
         }
 
         return $post_link;
@@ -372,6 +433,26 @@ final class PressReleaseRouteService
         ]);
 
         if (empty($matched_posts)) {
+            if (ctype_digit((string) $old_id)) {
+                $post_by_id = get_post((int) $old_id);
+
+                if ($post_by_id instanceof \WP_Post && 'press-releases' === $post_by_id->post_type && 'publish' === $post_by_id->post_status) {
+                    $matched_posts = [$post_by_id->ID];
+                }
+            }
+        }
+
+        if (empty($matched_posts)) {
+            $matched_posts = get_posts([
+                'post_type'      => 'press-releases',
+                'post_status'    => 'publish',
+                'posts_per_page' => 1,
+                'fields'         => 'ids',
+                'name'           => sanitize_title((string) $pr_name),
+            ]);
+        }
+
+        if (empty($matched_posts)) {
             return;
         }
 
@@ -402,10 +483,38 @@ final class PostRouteService
     public function register_hooks(): void
     {
         add_action('init', [$this, 'register_rewrite']);
+        add_action('parse_request', [$this, 'parse_request']);
         add_filter('query_vars', [$this, 'register_query_vars']);
         add_filter('post_link', [$this, 'filter_permalink'], 10, 2);
         add_action('pre_get_posts', [$this, 'filter_query']);
+        add_filter('pre_handle_404', [$this, 'prevent_resolved_single_404'], 10, 2);
         add_action('template_redirect', [$this, 'redirect_to_canonical_permalink']);
+        add_action('template_redirect', [$this, 'send_resolved_single_status']);
+    }
+
+    public function parse_request(\WP $wp): void
+    {
+        $request_path = wp_parse_url((string) wp_unslash($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
+
+        if (! is_string($request_path)) {
+            return;
+        }
+
+        $trimmed_path = trim($request_path, '/');
+
+        if (preg_match('#^([^/]+)/blog/([^/]+)/([^/]+)$#', $trimmed_path, $matches)) {
+            $wp->query_vars['post_type']      = 'post';
+            $wp->query_vars['category_name']  = sanitize_title($matches[1]);
+            $wp->query_vars['_old_id']        = sanitize_text_field($matches[2]);
+            $wp->query_vars['pr_name']        = sanitize_title($matches[3]);
+            return;
+        }
+
+        if (preg_match('#^([^/]+)/blog/([^/]+)$#', $trimmed_path, $matches)) {
+            $wp->query_vars['post_type']      = 'post';
+            $wp->query_vars['category_name']  = sanitize_title($matches[1]);
+            $wp->query_vars['name']           = sanitize_title($matches[2]);
+        }
     }
 
     public function register_rewrite(): void
@@ -448,9 +557,10 @@ final class PostRouteService
         $old_id = get_post_meta($post->ID, '_old_id', true);
         $pr_name = get_post_meta($post->ID, 'pr_name', true);
         $pr_slug = sanitize_title($pr_name ?: $post->post_name);
+        $route_id = ! empty($old_id) ? $old_id : $post->ID;
 
-        if (! empty($old_id) && ! empty($pr_slug)) {
-            return home_url('/' . $category_slug . '/blog/' . $old_id . '/' . $pr_slug);
+        if (! empty($route_id) && ! empty($pr_slug)) {
+            return home_url('/' . $category_slug . '/blog/' . $route_id . '/' . $pr_slug);
         }
 
         if (empty($post->post_name)) {
@@ -535,6 +645,26 @@ final class PostRouteService
         ]);
 
         if (empty($matched_posts)) {
+            if (ctype_digit((string) $old_id)) {
+                $post_by_id = get_post((int) $old_id);
+
+                if ($post_by_id instanceof \WP_Post && 'post' === $post_by_id->post_type && 'publish' === $post_by_id->post_status) {
+                    $matched_posts = [$post_by_id->ID];
+                }
+            }
+        }
+
+        if (empty($matched_posts)) {
+            $matched_posts = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => 1,
+                'fields'         => 'ids',
+                'name'           => sanitize_title((string) $pr_name),
+            ]);
+        }
+
+        if (empty($matched_posts)) {
             $query->set_404();
             return;
         }
@@ -542,11 +672,6 @@ final class PostRouteService
         $matched_post_id = (int) $matched_posts[0];
         $matched_pr_name = (string) get_post_meta($matched_post_id, 'pr_name', true);
         $matched_pr_slug = sanitize_title($matched_pr_name ?: get_post_field('post_name', $matched_post_id));
-
-        if ($matched_pr_slug !== sanitize_title((string) $pr_name)) {
-            $query->set_404();
-            return;
-        }
 
         if (! has_category($category_name, $matched_post_id)) {
             $query->set_404();
@@ -557,6 +682,8 @@ final class PostRouteService
         $query->set('post_type', 'post');
         $query->set('post_status', 'publish');
         $query->set('name', get_post_field('post_name', $matched_post_id));
+        $query->set('_old_id', $old_id);
+        $query->set('pr_name', $matched_pr_slug);
         $query->set('category_name', '');
         $query->set('cat', '');
         $query->set('posts_per_page', 1);
@@ -602,6 +729,44 @@ final class PostRouteService
         wp_safe_redirect($canonical_url, 301);
         exit;
     }
+
+    public function prevent_resolved_single_404($preempt, \WP_Query $query)
+    {
+        if (! $query->is_main_query()) {
+            return $preempt;
+        }
+
+        if ('post' !== $query->get('post_type')) {
+            return $preempt;
+        }
+
+        if (! $query->is_singular || (int) $query->get('p') <= 0) {
+            return $preempt;
+        }
+
+        $query->is_404 = false;
+
+        return true;
+    }
+
+    public function send_resolved_single_status(): void
+    {
+        if (! is_singular('post')) {
+            return;
+        }
+
+        global $wp_query;
+
+        if (! $wp_query instanceof \WP_Query || (int) $wp_query->get('p') <= 0) {
+            return;
+        }
+
+        $wp_query->is_404 = false;
+
+        if (! headers_sent()) {
+            status_header(200);
+        }
+    }
 }
 
 final class WebinarRouteService
@@ -611,9 +776,31 @@ final class WebinarRouteService
     public function register_hooks(): void
     {
         add_action('init', [$this, 'register_rewrite']);
+        add_action('parse_request', [$this, 'parse_request']);
         add_filter('query_vars', [$this, 'register_query_vars']);
         add_filter('post_type_link', [$this, 'filter_permalink'], 10, 2);
         add_action('pre_get_posts', [$this, 'filter_query']);
+        add_filter('pre_handle_404', [$this, 'prevent_resolved_single_404'], 10, 2);
+        add_action('template_redirect', [$this, 'send_resolved_single_status']);
+    }
+
+    public function parse_request(\WP $wp): void
+    {
+        $request_path = wp_parse_url((string) wp_unslash($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
+
+        if (! is_string($request_path)) {
+            return;
+        }
+
+        $trimmed_path = trim($request_path, '/');
+
+        if (! preg_match('#^providers/webinar/([^/]+)/([^/]+)$#', $trimmed_path, $matches)) {
+            return;
+        }
+
+        $wp->query_vars['post_type'] = 'webinar';
+        $wp->query_vars['_old_id']   = sanitize_text_field($matches[1]);
+        $wp->query_vars['pr_name']   = sanitize_title($matches[2]);
     }
 
     public function register_rewrite(): void
@@ -644,9 +831,10 @@ final class WebinarRouteService
         $old_id = get_post_meta($post->ID, '_old_id', true);
         $pr_name = get_post_meta($post->ID, 'pr_name', true);
         $pr_slug = sanitize_title($pr_name ?: $post->post_name);
+        $route_id = ! empty($old_id) ? $old_id : $post->ID;
 
-        if (! empty($old_id) && ! empty($pr_slug)) {
-            return home_url('/providers/webinar/' . $old_id . '/' . $pr_slug);
+        if (! empty($route_id) && ! empty($pr_slug)) {
+            return home_url('/providers/webinar/' . $route_id . '/' . $pr_slug);
         }
 
         return $post_link;
@@ -682,6 +870,24 @@ final class WebinarRouteService
             ],
         ]);
 
+        if (empty($matched_posts) && ctype_digit((string) $old_id)) {
+            $post_by_id = get_post((int) $old_id);
+
+            if ($post_by_id instanceof \WP_Post && 'webinar' === $post_by_id->post_type && 'publish' === $post_by_id->post_status) {
+                $matched_posts = [$post_by_id->ID];
+            }
+        }
+
+        if (empty($matched_posts)) {
+            $matched_posts = get_posts([
+                'post_type'      => 'webinar',
+                'post_status'    => 'publish',
+                'posts_per_page' => 1,
+                'fields'         => 'ids',
+                'name'           => sanitize_title((string) $pr_name),
+            ]);
+        }
+
         if (empty($matched_posts)) {
             return;
         }
@@ -690,14 +896,12 @@ final class WebinarRouteService
         $matched_pr_name = (string) get_post_meta($matched_post_id, 'pr_name', true);
         $matched_pr_slug = sanitize_title($matched_pr_name ?: get_post_field('post_name', $matched_post_id));
 
-        if ($matched_pr_slug !== sanitize_title((string) $pr_name)) {
-            return;
-        }
-
         $query->set('p', $matched_post_id);
         $query->set('post_type', 'webinar');
         $query->set('post_status', 'publish');
         $query->set('name', get_post_field('post_name', $matched_post_id));
+        $query->set('_old_id', $old_id);
+        $query->set('pr_name', $matched_pr_slug);
         $query->set('posts_per_page', 1);
         $query->is_single = true;
         $query->is_singular = true;
@@ -705,6 +909,44 @@ final class WebinarRouteService
         $query->is_home = false;
         $query->is_post_type_archive = false;
         $query->is_404 = false;
+    }
+
+    public function prevent_resolved_single_404($preempt, \WP_Query $query)
+    {
+        if (! $query->is_main_query()) {
+            return $preempt;
+        }
+
+        if ('webinar' !== $query->get('post_type')) {
+            return $preempt;
+        }
+
+        if (! $query->is_singular || ! $query->get('p')) {
+            return $preempt;
+        }
+
+        $query->is_404 = false;
+
+        return true;
+    }
+
+    public function send_resolved_single_status(): void
+    {
+        if (! is_singular('webinar')) {
+            return;
+        }
+
+        global $wp_query;
+
+        if (! $wp_query instanceof \WP_Query || ! $wp_query->get('p')) {
+            return;
+        }
+
+        $wp_query->is_404 = false;
+
+        if (! headers_sent()) {
+            status_header(200);
+        }
     }
 }
 
@@ -715,9 +957,32 @@ final class GeneticTestingRouteService
     public function register_hooks(): void
     {
         add_action('init', [$this, 'register_rewrite']);
+        add_action('parse_request', [$this, 'parse_request']);
         add_filter('query_vars', [$this, 'register_query_vars']);
         add_filter('post_type_link', [$this, 'filter_permalink'], 10, 2);
         add_action('pre_get_posts', [$this, 'filter_query']);
+        add_filter('pre_handle_404', [$this, 'prevent_resolved_single_404'], 10, 2);
+        add_action('template_redirect', [$this, 'send_resolved_single_status']);
+    }
+
+    public function parse_request(\WP $wp): void
+    {
+        $request_path = wp_parse_url((string) wp_unslash($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
+
+        if (! is_string($request_path)) {
+            return;
+        }
+
+        $trimmed_path = trim($request_path, '/');
+
+        if (! preg_match('#^providers/genetic-testing/([^/]+)/([^/]+)/([^/]+)$#', $trimmed_path, $matches)) {
+            return;
+        }
+
+        $wp->query_vars['post_type']      = 'genetic-testing';
+        $wp->query_vars['_old_id']        = sanitize_text_field($matches[1]);
+        $wp->query_vars['childtaxonomy']  = sanitize_title($matches[2]);
+        $wp->query_vars['pr_name']        = sanitize_title($matches[3]);
     }
 
     public function register_rewrite(): void
@@ -751,9 +1016,10 @@ final class GeneticTestingRouteService
         $pr_name = get_post_meta($post->ID, 'pr_name', true);
         $pr_slug = $this->get_genetic_testing_slug($post);
         $childtaxonomy = $this->get_genetic_testing_term_slug($post->ID);
+        $route_id = ! empty($old_id) ? $old_id : $post->ID;
 
-        if (! empty($old_id) && ! empty($childtaxonomy) && ! empty($pr_slug)) {
-            return home_url('/providers/genetic-testing/' . $old_id . '/' . $childtaxonomy . '/' . $pr_slug);
+        if (! empty($route_id) && ! empty($childtaxonomy) && ! empty($pr_slug)) {
+            return home_url('/providers/genetic-testing/' . $route_id . '/' . $childtaxonomy . '/' . $pr_slug);
         }
 
         return $post_link;
@@ -791,6 +1057,26 @@ final class GeneticTestingRouteService
         ]);
 
         if (empty($matched_posts)) {
+            if (ctype_digit((string) $old_id)) {
+                $post_by_id = get_post((int) $old_id);
+
+                if ($post_by_id instanceof \WP_Post && 'genetic-testing' === $post_by_id->post_type && 'publish' === $post_by_id->post_status) {
+                    $matched_posts = [$post_by_id->ID];
+                }
+            }
+        }
+
+        if (empty($matched_posts)) {
+            $matched_posts = get_posts([
+                'post_type'      => 'genetic-testing',
+                'post_status'    => 'publish',
+                'posts_per_page' => 1,
+                'fields'         => 'ids',
+                'name'           => sanitize_title((string) $pr_name),
+            ]);
+        }
+
+        if (empty($matched_posts)) {
             return;
         }
 
@@ -803,10 +1089,7 @@ final class GeneticTestingRouteService
         $matched_pr_slug = $this->get_genetic_testing_slug($matched_post);
         $matched_term_slug = $this->get_genetic_testing_term_slug($matched_post_id);
 
-        if (
-            $matched_pr_slug !== sanitize_title((string) $pr_name)
-            || $matched_term_slug !== $childtaxonomy
-        ) {
+        if ($matched_term_slug !== $childtaxonomy) {
             return;
         }
 
@@ -814,6 +1097,9 @@ final class GeneticTestingRouteService
         $query->set('post_type', 'genetic-testing');
         $query->set('post_status', 'publish');
         $query->set('name', get_post_field('post_name', $matched_post_id));
+        $query->set('_old_id', $old_id);
+        $query->set('childtaxonomy', $matched_term_slug);
+        $query->set('pr_name', $matched_pr_slug);
         $query->set('posts_per_page', 1);
         $query->is_single = true;
         $query->is_singular = true;
@@ -821,6 +1107,42 @@ final class GeneticTestingRouteService
         $query->is_home = false;
         $query->is_post_type_archive = false;
         $query->is_404 = false;
+    }
+
+    public function prevent_resolved_single_404($preempt, \WP_Query $query)
+    {
+        if (! $query->is_main_query()) {
+            return $preempt;
+        }
+
+        if ('genetic-testing' !== $query->get('post_type')) {
+            return $preempt;
+        }
+
+        if (! $query->is_singular || ! $query->get('p')) {
+            return $preempt;
+        }
+
+        $query->is_404 = false;
+
+        return true;
+    }
+
+    public function send_resolved_single_status(): void
+    {
+        if (! is_singular('genetic-testing')) {
+            return;
+        }
+
+        global $wp_query;
+
+        if (! $wp_query instanceof \WP_Query || ! $wp_query->get('p')) {
+            return;
+        }
+
+        if (! headers_sent()) {
+            status_header(200);
+        }
     }
 
     private function get_genetic_testing_term_slug(int $post_id): string
@@ -880,10 +1202,33 @@ final class PresentationRouteService
     public function register_hooks(): void
     {
         add_action('init', [$this, 'register_rewrite']);
+        add_action('parse_request', [$this, 'parse_request']);
         add_filter('post_type_link', [$this, 'filter_permalink'], 10, 2);
         add_filter('query_vars', [$this, 'register_query_vars']);
         add_action('pre_get_posts', [$this, 'filter_query']);
         add_filter('query_loop_block_query_vars', [$this, 'filter_archive_query_loop_vars'], 10, 2);
+        add_filter('pre_handle_404', [$this, 'prevent_resolved_single_404'], 10, 2);
+        add_action('template_redirect', [$this, 'send_resolved_single_status']);
+    }
+
+    public function parse_request(\WP $wp): void
+    {
+        $request_path = wp_parse_url((string) wp_unslash($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
+
+        if (! is_string($request_path)) {
+            return;
+        }
+
+        $trimmed_path = trim($request_path, '/');
+
+        if (! preg_match('#^science/scientific-presentation/([^/]+)/([^/]+)$#', $trimmed_path, $matches)
+            && ! preg_match('#^scientific-presentation/([^/]+)/([^/]+)$#', $trimmed_path, $matches)) {
+            return;
+        }
+
+        $wp->query_vars['post_type'] = 'presentation';
+        $wp->query_vars['_old_id']   = sanitize_text_field($matches[1]);
+        $wp->query_vars['pr_name']   = sanitize_title($matches[2]);
     }
 
     public function register_rewrite(): void
@@ -905,6 +1250,7 @@ final class PresentationRouteService
         $vars[] = 'conference_id';
         $vars[] = 'speaker';
         $vars[] = 'collaborator';
+        $vars[] = 'presentation-search';
         return $vars;
     }
 
@@ -917,9 +1263,10 @@ final class PresentationRouteService
         $old_id = get_post_meta($post->ID, '_old_id', true);
         $pr_name = get_post_meta($post->ID, 'pr_name', true);
         $pr_slug = sanitize_title($pr_name ?: $post->post_name);
+        $route_id = ! empty($old_id) ? $old_id : $post->ID;
 
-        if (! empty($old_id) && ! empty($pr_slug)) {
-            $post_link = home_url('/scientific-presentation/' . $old_id . '/' . $pr_slug);
+        if (! empty($route_id) && ! empty($pr_slug)) {
+            $post_link = home_url('/science/scientific-presentation/' . $route_id . '/' . $pr_slug);
         }
 
         return $post_link;
@@ -953,6 +1300,26 @@ final class PresentationRouteService
             ]);
 
             if (empty($matched_posts)) {
+                if (ctype_digit((string) $_old_id)) {
+                    $post_by_id = get_post((int) $_old_id);
+
+                    if ($post_by_id instanceof \WP_Post && 'presentation' === $post_by_id->post_type && 'publish' === $post_by_id->post_status) {
+                        $matched_posts = [$post_by_id->ID];
+                    }
+                }
+            }
+
+            if (empty($matched_posts)) {
+                $matched_posts = get_posts([
+                    'post_type'      => 'presentation',
+                    'post_status'    => 'publish',
+                    'posts_per_page' => 1,
+                    'fields'         => 'ids',
+                    'name'           => sanitize_title((string) $pr_name),
+                ]);
+            }
+
+            if (empty($matched_posts)) {
                 return;
             }
 
@@ -960,14 +1327,12 @@ final class PresentationRouteService
             $matched_pr_name = (string) get_post_meta($matched_post_id, 'pr_name', true);
             $matched_pr_slug = sanitize_title($matched_pr_name ?: get_post_field('post_name', $matched_post_id));
 
-            if ($matched_pr_slug !== sanitize_title((string) $pr_name)) {
-                return;
-            }
-
             $query->set('p', $matched_post_id);
             $query->set('post_type', 'presentation');
             $query->set('post_status', 'publish');
             $query->set('name', get_post_field('post_name', $matched_post_id));
+            $query->set('_old_id', $_old_id);
+            $query->set('pr_name', $matched_pr_slug);
             $query->set('posts_per_page', 1);
             $query->is_single = true;
             $query->is_singular = true;
@@ -995,30 +1360,80 @@ final class PresentationRouteService
 
     private function apply_presentation_archive_filters_to_query(\WP_Query $query): void
     {
+        $search_term   = sanitize_text_field((string) $query->get('s'));
         $conference_id = absint($query->get('conference_id'));
         $speaker       = sanitize_text_field((string) $query->get('speaker'));
         $collaborator  = sanitize_text_field((string) $query->get('collaborator'));
 
+        if ('' === $search_term && isset($_GET['presentation-search'])) {
+            $search_term = sanitize_text_field(wp_unslash($_GET['presentation-search']));
+            if ('' !== $search_term) {
+                $query->set('s', $search_term);
+            }
+        }
+
+        if ($conference_id <= 0 && isset($_GET['conference_id'])) {
+            $conference_id = absint(wp_unslash($_GET['conference_id']));
+        }
+
+        if ('' === $speaker && isset($_GET['speaker'])) {
+            $speaker = sanitize_text_field(wp_unslash($_GET['speaker']));
+        }
+
+        if ('' === $collaborator && isset($_GET['collaborator'])) {
+            $collaborator = sanitize_text_field(wp_unslash($_GET['collaborator']));
+        }
+
         $matching_post_ids = $this->get_filtered_presentation_ids($conference_id, $speaker, $collaborator);
         if (null === $matching_post_ids) {
+            $this->apply_presentation_archive_sorting_to_query($query);
             return;
         }
 
         $query->set('post__in', ! empty($matching_post_ids) ? $matching_post_ids : [0]);
+        $this->apply_presentation_archive_sorting_to_query($query);
     }
 
     private function apply_presentation_archive_filters_to_query_vars(array $query): array
     {
+        if (isset($_GET['presentation-search'])) {
+            $query['search'] = sanitize_text_field(wp_unslash($_GET['presentation-search']));
+        }
+
         $conference_id = isset($_GET['conference_id']) ? absint(wp_unslash($_GET['conference_id'])) : 0;
         $speaker       = isset($_GET['speaker']) ? sanitize_text_field(wp_unslash($_GET['speaker'])) : '';
         $collaborator  = isset($_GET['collaborator']) ? sanitize_text_field(wp_unslash($_GET['collaborator'])) : '';
 
         $matching_post_ids = $this->get_filtered_presentation_ids($conference_id, $speaker, $collaborator);
         if (null === $matching_post_ids) {
-            return $query;
+            return $this->apply_presentation_archive_sorting_to_query_vars($query);
         }
 
         $query['post__in'] = ! empty($matching_post_ids) ? $matching_post_ids : [0];
+
+        return $this->apply_presentation_archive_sorting_to_query_vars($query);
+    }
+
+    private function apply_presentation_archive_sorting_to_query(\WP_Query $query): void
+    {
+        $query->set('meta_key', 'start_at');
+        $query->set('orderby', [
+            'meta_value' => 'DESC',
+            'date'       => 'DESC',
+        ]);
+        $query->set('meta_type', 'DATE');
+        $query->set('order', 'DESC');
+    }
+
+    private function apply_presentation_archive_sorting_to_query_vars(array $query): array
+    {
+        $query['meta_key']  = 'start_at';
+        $query['orderby']   = [
+            'meta_value' => 'DESC',
+            'date'       => 'DESC',
+        ];
+        $query['meta_type'] = 'DATE';
+        $query['order']     = 'DESC';
 
         return $query;
     }
@@ -1060,6 +1475,44 @@ final class PresentationRouteService
         }
 
         return array_values(array_unique(array_filter(array_map('absint', $matching_post_ids))));
+    }
+
+    public function prevent_resolved_single_404($preempt, \WP_Query $query)
+    {
+        if (! $query->is_main_query()) {
+            return $preempt;
+        }
+
+        if ('presentation' !== $query->get('post_type')) {
+            return $preempt;
+        }
+
+        if (! $query->is_singular || (int) $query->get('p') <= 0) {
+            return $preempt;
+        }
+
+        $query->is_404 = false;
+
+        return true;
+    }
+
+    public function send_resolved_single_status(): void
+    {
+        if (! is_singular('presentation')) {
+            return;
+        }
+
+        global $wp_query;
+
+        if (! $wp_query instanceof \WP_Query || (int) $wp_query->get('p') <= 0) {
+            return;
+        }
+
+        $wp_query->is_404 = false;
+
+        if (! headers_sent()) {
+            status_header(200);
+        }
     }
 
     /**
@@ -1162,9 +1615,32 @@ final class PosterRouteService
     public function register_hooks(): void
     {
         add_action('init', [$this, 'register_rewrite']);
+        add_action('parse_request', [$this, 'parse_request']);
         add_filter('post_type_link', [$this, 'filter_permalink'], 10, 2);
         add_filter('query_vars', [$this, 'register_query_vars']);
         add_action('pre_get_posts', [$this, 'filter_query']);
+        add_filter('pre_handle_404', [$this, 'prevent_resolved_single_404'], 10, 2);
+        add_action('template_redirect', [$this, 'send_resolved_single_status']);
+    }
+
+    public function parse_request(\WP $wp): void
+    {
+        $request_path = wp_parse_url((string) wp_unslash($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
+
+        if (! is_string($request_path)) {
+            return;
+        }
+
+        $trimmed_path = trim($request_path, '/');
+
+        if (! preg_match('#^science/scientific-poster/([^/]+)/([^/]+)$#', $trimmed_path, $matches)
+            && ! preg_match('#^scientific-poster/([^/]+)/([^/]+)$#', $trimmed_path, $matches)) {
+            return;
+        }
+
+        $wp->query_vars['post_type'] = 'poster';
+        $wp->query_vars['_old_id']   = sanitize_text_field($matches[1]);
+        $wp->query_vars['pr_name']   = sanitize_title($matches[2]);
     }
 
     public function register_rewrite(): void
@@ -1186,6 +1662,7 @@ final class PosterRouteService
         $vars[] = 'conference_id';
         $vars[] = 'poster_author';
         $vars[] = 'collaborator';
+        $vars[] = 'poster-search';
         return $vars;
     }
 
@@ -1195,12 +1672,15 @@ final class PosterRouteService
             return $post_link;
         }
 
+        // New manually created posters often have no legacy ID yet.
+        // Fall back to the real post ID so the custom single route still resolves.
         $old_id = get_post_meta($post->ID, '_old_id', true);
+        $old_id = '' !== (string) $old_id ? $old_id : (string) $post->ID;
         $pr_name = get_post_meta($post->ID, 'pr_name', true);
         $pr_slug = sanitize_title($pr_name ?: $post->post_name);
 
         if (! empty($old_id) && ! empty($pr_slug)) {
-            $post_link = home_url('/scientific-poster/' . $old_id . '/' . $pr_slug);
+            $post_link = home_url('/science/scientific-poster/' . $old_id . '/' . $pr_slug);
         }
 
         return $post_link;
@@ -1209,6 +1689,11 @@ final class PosterRouteService
     public function filter_query(\WP_Query $query): void
     {
         if (! $query->is_main_query()) {
+            return;
+        }
+
+        // Keep front-end archive/single routing logic from altering wp-admin post lists.
+        if (is_admin()) {
             return;
         }
 
@@ -1234,6 +1719,26 @@ final class PosterRouteService
             ]);
 
             if (empty($matched_posts)) {
+                if (ctype_digit((string) $old_id)) {
+                    $post_by_id = get_post((int) $old_id);
+
+                    if ($post_by_id instanceof \WP_Post && 'poster' === $post_by_id->post_type && 'publish' === $post_by_id->post_status) {
+                        $matched_posts = [$post_by_id->ID];
+                    }
+                }
+            }
+
+            if (empty($matched_posts)) {
+                $matched_posts = get_posts([
+                    'post_type'      => 'poster',
+                    'post_status'    => 'publish',
+                    'posts_per_page' => 1,
+                    'fields'         => 'ids',
+                    'name'           => sanitize_title((string) $pr_name),
+                ]);
+            }
+
+            if (empty($matched_posts)) {
                 return;
             }
 
@@ -1241,14 +1746,12 @@ final class PosterRouteService
             $matched_pr_name = (string) get_post_meta($matched_post_id, 'pr_name', true);
             $matched_pr_slug = sanitize_title($matched_pr_name ?: get_post_field('post_name', $matched_post_id));
 
-            if ($matched_pr_slug !== sanitize_title((string) $pr_name)) {
-                return;
-            }
-
             $query->set('p', $matched_post_id);
             $query->set('post_type', 'poster');
             $query->set('post_status', 'publish');
             $query->set('name', get_post_field('post_name', $matched_post_id));
+            $query->set('_old_id', $old_id);
+            $query->set('pr_name', $matched_pr_slug);
             $query->set('posts_per_page', 1);
             $query->is_single = true;
             $query->is_singular = true;
@@ -1259,9 +1762,64 @@ final class PosterRouteService
             return;
         }
 
-        if ($query->is_post_type_archive('poster') || ('poster' === $query->get('post_type') && ! $old_id && ! $pr_name)) {
+        $is_poster_archive_request = $query->is_post_type_archive('poster')
+            || (
+                'poster' === $query->get('post_type')
+                && ! $old_id
+                && ! $pr_name
+                && ! $query->is_singular()
+                && ! $query->is_single()
+                && ! $query->get('name')
+                && (int) $query->get('p') <= 0
+            );
+
+        if ($is_poster_archive_request) {
             $this->apply_poster_archive_filters_to_query($query);
         }
+    }
+
+    public function prevent_resolved_single_404($preempt, \WP_Query $query)
+    {
+        if (! $query->is_main_query()) {
+            return $preempt;
+        }
+
+        if ('poster' !== $query->get('post_type')) {
+            return $preempt;
+        }
+
+        if (! $query->is_singular('poster') && ! $query->is_single()) {
+            return $preempt;
+        }
+
+        if ((int) $query->get('p') <= 0) {
+            return $preempt;
+        }
+
+        $query->is_404 = false;
+        status_header(200);
+
+        return true;
+    }
+
+    public function send_resolved_single_status(): void
+    {
+        if (! is_singular('poster')) {
+            return;
+        }
+
+        global $wp_query;
+
+        if (! $wp_query instanceof \WP_Query) {
+            return;
+        }
+
+        if ((int) $wp_query->get('p') <= 0) {
+            return;
+        }
+
+        $wp_query->is_404 = false;
+        status_header(200);
     }
 
     public function filter_archive_query_loop_vars(array $query, \WP_Block $block): array
@@ -1278,6 +1836,15 @@ final class PosterRouteService
 
     private function apply_poster_archive_filters_to_query(\WP_Query $query): void
     {
+        $search_term = sanitize_text_field((string) $query->get('s'));
+
+        if ('' === $search_term && isset($_GET['poster-search'])) {
+            $search_term = sanitize_text_field(wp_unslash($_GET['poster-search']));
+            if ('' !== $search_term) {
+                $query->set('s', $search_term);
+            }
+        }
+
         $matching_post_ids = $this->get_filtered_poster_ids(
             absint($query->get('conference_id')),
             absint($query->get('poster_author')),
@@ -1285,24 +1852,54 @@ final class PosterRouteService
         );
 
         if (null === $matching_post_ids) {
+            $this->apply_poster_archive_sorting_to_query($query);
             return;
         }
 
         $query->set('post__in', !empty($matching_post_ids) ? $matching_post_ids : [0]);
+        $this->apply_poster_archive_sorting_to_query($query);
     }
 
     private function apply_poster_archive_filters_to_query_vars(array $query): array
     {
+        if (isset($_GET['poster-search'])) {
+            $query['search'] = sanitize_text_field(wp_unslash($_GET['poster-search']));
+        }
+
         $conference_id = isset($_GET['conference_id']) ? absint(wp_unslash($_GET['conference_id'])) : 0;
         $poster_author = isset($_GET['poster_author']) ? absint(wp_unslash($_GET['poster_author'])) : 0;
         $collaborator  = isset($_GET['collaborator']) ? sanitize_text_field(wp_unslash($_GET['collaborator'])) : '';
 
         $matching_post_ids = $this->get_filtered_poster_ids($conference_id, $poster_author, $collaborator);
         if (null === $matching_post_ids) {
-            return $query;
+            return $this->apply_poster_archive_sorting_to_query_vars($query);
         }
 
         $query['post__in'] = !empty($matching_post_ids) ? $matching_post_ids : [0];
+
+        return $this->apply_poster_archive_sorting_to_query_vars($query);
+    }
+
+    private function apply_poster_archive_sorting_to_query(\WP_Query $query): void
+    {
+        $query->set('meta_key', 'start_at');
+        $query->set('orderby', [
+            'meta_value' => 'DESC',
+            'date'       => 'DESC',
+        ]);
+        $query->set('meta_type', 'DATE');
+        $query->set('order', 'DESC');
+    }
+
+    private function apply_poster_archive_sorting_to_query_vars(array $query): array
+    {
+        $query['meta_key']  = 'start_at';
+        $query['orderby']   = [
+            'meta_value' => 'DESC',
+            'date'       => 'DESC',
+        ];
+        $query['meta_type'] = 'DATE';
+        $query['order']     = 'DESC';
 
         return $query;
     }
@@ -1453,10 +2050,30 @@ final class PublicationRouteService
 
     public function register_hooks(): void
     {
+        add_action('parse_request', [$this, 'parse_request']);
         add_filter('post_type_link', [$this, 'filter_permalink'], 10, 2);
         add_filter('query_vars', [$this, 'register_query_vars']);
         add_action('pre_get_posts', [$this, 'filter_query']);
         add_filter('query_loop_block_query_vars', [$this, 'filter_archive_query_loop_vars'], 10, 2);
+    }
+
+    public function parse_request(\WP $wp): void
+    {
+        $request_path = wp_parse_url((string) wp_unslash($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
+
+        if (! is_string($request_path)) {
+            return;
+        }
+
+        $trimmed_path = trim($request_path, '/');
+
+        if (! preg_match('#^science/peer-reviewed-publication/([^/]+)/([^/]+)$#', $trimmed_path, $matches)) {
+            return;
+        }
+
+        $wp->query_vars['post_type'] = 'publication';
+        $wp->query_vars['_old_id']   = sanitize_text_field($matches[1]);
+        $wp->query_vars['pr_name']   = sanitize_title($matches[2]);
     }
 
     public function register_query_vars(array $vars): array
@@ -1467,6 +2084,7 @@ final class PublicationRouteService
         $vars[] = 'topic';
         $vars[] = 'publication_author';
         $vars[] = 'collaborator';
+        $vars[] = 'publication-search';
         return $vars;
     }
 
@@ -1479,9 +2097,10 @@ final class PublicationRouteService
         $old_id = get_post_meta($post->ID, '_old_id', true);
         $pr_name = get_post_meta($post->ID, 'pr_name', true);
         $pr_slug = sanitize_title($pr_name ?: $post->post_name);
+        $route_id = ! empty($old_id) ? $old_id : $post->ID;
 
-        if (! empty($old_id) && ! empty($pr_slug)) {
-            $post_link = home_url('/science/peer-reviewed-publication/' . $old_id . '/' . $pr_slug);
+        if (! empty($route_id) && ! empty($pr_slug)) {
+            $post_link = home_url('/science/peer-reviewed-publication/' . $route_id . '/' . $pr_slug);
         }
 
         return $post_link;
@@ -1515,16 +2134,32 @@ final class PublicationRouteService
             ]);
 
             if (empty($matched_posts)) {
+                if (ctype_digit((string) $old_id)) {
+                    $post_by_id = get_post((int) $old_id);
+
+                    if ($post_by_id instanceof \WP_Post && 'publication' === $post_by_id->post_type && 'publish' === $post_by_id->post_status) {
+                        $matched_posts = [$post_by_id->ID];
+                    }
+                }
+            }
+
+            if (empty($matched_posts)) {
+                $matched_posts = get_posts([
+                    'post_type'      => 'publication',
+                    'post_status'    => 'publish',
+                    'posts_per_page' => 1,
+                    'fields'         => 'ids',
+                    'name'           => sanitize_title((string) $pr_name),
+                ]);
+            }
+
+            if (empty($matched_posts)) {
                 return;
             }
 
             $matched_post_id = (int) $matched_posts[0];
             $matched_pr_name = (string) get_post_meta($matched_post_id, 'pr_name', true);
             $matched_pr_slug = sanitize_title($matched_pr_name ?: get_post_field('post_name', $matched_post_id));
-
-            if ($matched_pr_slug !== sanitize_title((string) $pr_name)) {
-                return;
-            }
 
             $query->set('p', $matched_post_id);
             $query->set('post_type', 'publication');
@@ -1559,21 +2194,35 @@ final class PublicationRouteService
 
     private function apply_publication_archive_filters_to_query(\WP_Query $query): void
     {
+        $search_term        = sanitize_text_field((string) $query->get('s'));
         $specialty_area     = sanitize_title((string) $query->get('specialty_area'));
         $topic              = sanitize_title((string) $query->get('topic'));
         $publication_author = absint($query->get('publication_author'));
         $collaborator       = sanitize_title((string) $query->get('collaborator'));
 
+        if ('' === $search_term && isset($_GET['publication-search'])) {
+            $search_term = sanitize_text_field(wp_unslash($_GET['publication-search']));
+            if ('' !== $search_term) {
+                $query->set('s', $search_term);
+            }
+        }
+
         $matching_post_ids = $this->get_filtered_publication_ids($specialty_area, $topic, $publication_author, $collaborator);
         if (null === $matching_post_ids) {
+            $this->apply_publication_archive_sorting_to_query($query);
             return;
         }
 
         $query->set('post__in', ! empty($matching_post_ids) ? $matching_post_ids : [0]);
+        $this->apply_publication_archive_sorting_to_query($query);
     }
 
     private function apply_publication_archive_filters_to_query_vars(array $query): array
     {
+        if (isset($_GET['publication-search'])) {
+            $query['search'] = sanitize_text_field(wp_unslash($_GET['publication-search']));
+        }
+
         $specialty_area     = isset($_GET['specialty_area']) ? sanitize_title(wp_unslash($_GET['specialty_area'])) : '';
         $topic              = isset($_GET['topic']) ? sanitize_title(wp_unslash($_GET['topic'])) : '';
         $publication_author = isset($_GET['publication_author']) ? absint(wp_unslash($_GET['publication_author'])) : 0;
@@ -1581,10 +2230,32 @@ final class PublicationRouteService
 
         $matching_post_ids = $this->get_filtered_publication_ids($specialty_area, $topic, $publication_author, $collaborator);
         if (null === $matching_post_ids) {
-            return $query;
+            return $this->apply_publication_archive_sorting_to_query_vars($query);
         }
 
         $query['post__in'] = ! empty($matching_post_ids) ? $matching_post_ids : [0];
+
+        return $this->apply_publication_archive_sorting_to_query_vars($query);
+    }
+
+    private function apply_publication_archive_sorting_to_query(\WP_Query $query): void
+    {
+        $query->set('orderby', [
+            'date'  => 'DESC',
+            'title' => 'ASC',
+        ]);
+        $query->set('order', 'DESC');
+        $query->set('post_status', 'publish');
+    }
+
+    private function apply_publication_archive_sorting_to_query_vars(array $query): array
+    {
+        $query['orderby'] = [
+            'date'  => 'DESC',
+            'title' => 'ASC',
+        ];
+        $query['order'] = 'DESC';
+        $query['post_status'] = 'publish';
 
         return $query;
     }

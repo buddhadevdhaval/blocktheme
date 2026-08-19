@@ -23,11 +23,16 @@ import {
 	SelectControl,
 } from '@wordpress/components';
 import { plus } from '@wordpress/icons';
-import { useState, useCallback, useMemo } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { useState, useCallback, useMemo, useEffect } from '@wordpress/element';
+import { __, sprintf } from '@wordpress/i18n';
 
 // Shared imports
-import { useArrayHandlers, cx } from '../_shared/utils';
+import {
+	useArrayHandlers,
+	cx,
+	generateMenuId,
+	ensureArrayItemIds,
+} from '../_shared/utils';
 import {
 	ItemHeader,
 	ImageUploader,
@@ -50,6 +55,7 @@ const TEMPLATE = [
 ];
 
 const DEFAULT_NAV_ITEM = {
+	id: generateMenuId(),
 	label: 'New Item',
 	url: '#',
 	hasMegaMenu: false,
@@ -75,7 +81,7 @@ const DEFAULT_LOGO =
  * @param {Function}                           props.onMove      Move handler.
  * @param {Function}                           props.onRemove    Remove handler.
  * @param {Array<{label:string,value:string}>} props.menuOptions Menu options.
- * @return {JSX.Element} The rendered element.
+ * @return {import('@wordpress/element').WPElement} The rendered element.
  */
 function NavItemEditor( {
 	item,
@@ -113,10 +119,19 @@ function NavItemEditor( {
 			{ item.hasMegaMenu && (
 				<>
 					<SelectControl
-						label={ __( 'Select Mega Menu Instance', 'ambrygen-web' ) }
+						label={ __(
+							'Select Mega Menu Instance',
+							'ambrygen-web'
+						) }
 						value={ item.megaMenuId }
 						options={ [
-							{ label: __( '— Select a Menu —', 'ambrygen-web' ), value: '' },
+							{
+								label: __(
+									'— Select a Menu —',
+									'ambrygen-web'
+								),
+								value: '',
+							},
 							...menuOptions,
 						] }
 						onChange={ ( v ) => onUpdate( index, 'megaMenuId', v ) }
@@ -156,7 +171,7 @@ function NavItemEditor( {
  * @param {Object}   props.item     The navigation item.
  * @param {boolean}  props.isActive If active.
  * @param {Function} props.onClick  Click handler.
- * @return {JSX.Element} The rendered element.
+ * @return {import('@wordpress/element').WPElement} The rendered element.
  */
 function NavItem( { item, isActive, onClick } ) {
 	const classes = cx(
@@ -211,7 +226,7 @@ function NavItem( { item, isActive, onClick } ) {
  * @param {string}      props.logoUrl
  * @param {string}      props.logoAlt
  * @param {Function}    props.onNavClick
- * @return {JSX.Element} The rendered element.
+ * @return {import('@wordpress/element').WPElement} The rendered element.
  */
 function HeaderPreview( {
 	navItems,
@@ -232,7 +247,10 @@ function HeaderPreview( {
 								<img
 									className="header__logo-img header__logo-img--default"
 									src={ logoUrl || DEFAULT_LOGO }
-									alt={ logoAlt || __( 'Site Logo', 'ambrygen-web' ) }
+									alt={
+										logoAlt ||
+										__( 'Site Logo', 'ambrygen-web' )
+									}
 								/>
 							</a>
 						</div>
@@ -244,9 +262,13 @@ function HeaderPreview( {
 									<div className="nav__container">
 										<nav className="nav__menu">
 											<ul className="nav__list">
-												{ navItems.map( ( item, i ) => (
+												{ navItems.map( ( item ) => (
 													<NavItem
-														key={ i }
+														key={
+															item.id ||
+															item.megaMenuId ||
+															item.label
+														}
 														item={ item }
 														isActive={
 															activeMenu ===
@@ -269,7 +291,10 @@ function HeaderPreview( {
 									<input
 										type="text"
 										name="s"
-										placeholder={ __( 'Search', 'ambrygen-web' ) }
+										placeholder={ __(
+											'Search',
+											'ambrygen-web'
+										) }
 										disabled
 									/>
 									<button
@@ -304,7 +329,7 @@ function HeaderPreview( {
  * @param {Object}   props.attributes
  * @param {Function} props.setAttributes
  * @param {string}   props.clientId
- * @return {JSX.Element} The rendered element.
+ * @return {import('@wordpress/element').WPElement} The rendered element.
  */
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
@@ -340,20 +365,36 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const handleAddNav = () => addNav( DEFAULT_NAV_ITEM );
 
+	useEffect( () => {
+		const normalizedNavItems = ensureArrayItemIds( navItems );
+
+		if ( normalizedNavItems.hasChanges ) {
+			setAttributes( { navItems: normalizedNavItems.items } );
+		}
+	}, [ navItems, setAttributes ] );
+
 	// Track active mega menu
 	const [ activeMenuId, setActiveMenuId ] = useState( null );
 
 	// Generate menu options from inner blocks
 	const megaMenuOptions = useMemo(
 		() =>
-			innerBlocks
-				.map( ( b ) => ( {
+			innerBlocks.reduce( ( options, block ) => {
+				const value = block.attributes.menuId || '';
+
+				if ( ! value ) {
+					return options;
+				}
+
+				options.push( {
 					label:
-						b.attributes.menuLabel ||
+						block.attributes.menuLabel ||
 						__( 'Untitled Menu', 'ambrygen-web' ),
-					value: b.attributes.menuId || '',
-				} ) )
-				.filter( ( o ) => o.value ),
+					value,
+				} );
+
+				return options;
+			}, [] ),
 		[ innerBlocks ]
 	);
 
@@ -396,7 +437,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		<>
 			<InspectorControls>
 				{ /* Logo Settings */ }
-				<PanelBody title={ __( 'Logo Settings', 'ambrygen-web' ) } initialOpen={ false }>
+				<PanelBody
+					title={ __( 'Logo Settings', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
 					<MediaUploadCheck>
 						<MediaUpload
 							onSelect={ ( media ) =>
@@ -421,7 +465,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 											logoAlt:
 												media.alt ||
 												media.title ||
-												__( 'Site Logo', 'ambrygen-web' ),
+												__(
+													'Site Logo',
+													'ambrygen-web'
+												),
 										} );
 									} }
 									onRemove={ () =>
@@ -439,16 +486,23 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 
 				{ /* Navigation Items */ }
-				<PanelBody title={ __( 'Navigation Items', 'ambrygen-web' ) } initialOpen>
+				<PanelBody
+					title={ __( 'Navigation Items', 'ambrygen-web' ) }
+					initialOpen
+				>
 					<p className="components-base-control__help">
-						{ __(
-							`Manage navigation items. Current: ${ navItems.length }`,
-							'ambrygen-web'
+						{ sprintf(
+							/* translators: %d: current navigation item count. */
+							__(
+								'Manage navigation items. Current: %d',
+								'ambrygen-web'
+							),
+							navItems.length
 						) }
 					</p>
 					{ navItems.map( ( item, i ) => (
 						<NavItemEditor
-							key={ i }
+							key={ item.id || item.megaMenuId || item.label }
 							item={ item }
 							index={ i }
 							total={ navItems.length }
@@ -469,9 +523,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 
 				{ /* Mega Menu Management */ }
-				<PanelBody title={ __( 'Manage Mega Menus', 'ambrygen-web' ) } initialOpen>
+				<PanelBody
+					title={ __( 'Manage Mega Menus', 'ambrygen-web' ) }
+					initialOpen
+				>
 					<p className="description">
-						{ __( 'Add new mega menu instances to link to.', 'ambrygen-web' ) }
+						{ __(
+							'Add new mega menu instances to link to.',
+							'ambrygen-web'
+						) }
 					</p>
 					<div
 						className="header-editor__add-menu-buttons"
@@ -502,7 +562,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 
 				{ /* CTA Buttons */ }
-				<PanelBody title={ __( 'CTA Buttons', 'ambrygen-web' ) } initialOpen={ false }>
+				<PanelBody
+					title={ __( 'CTA Buttons', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
 					<Field
 						label={ __( 'Login Text', 'ambrygen-web' ) }
 						value={ loginText }
@@ -548,7 +611,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								{ __( 'Editing Menu:', 'ambrygen-web' ) }{ ' ' }
 								{ megaMenuOptions.find(
 									( o ) => o.value === activeMenuId
-								)?.label || __( 'Unknown Menu', 'ambrygen-web' ) }
+								)?.label ||
+									__( 'Unknown Menu', 'ambrygen-web' ) }
 							</span>
 							<button
 								type="button"
@@ -572,7 +636,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						{ ! activeMenuId && (
 							<p className="header-editor__management-info">
 								<strong>
-									{ __( 'Manage Mega Menu Blocks:', 'ambrygen-web' ) }
+									{ __(
+										'Manage Mega Menu Blocks:',
+										'ambrygen-web'
+									) }
 								</strong>{ ' ' }
 								{ __(
 									'Use the "Manage Mega Menus" panel in the sidebar to add new menus. Click a menu item above to edit its linked menu.',

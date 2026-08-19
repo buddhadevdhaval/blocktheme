@@ -37,12 +37,12 @@ import { getThemeAssetUrl } from '../../utils/assets';
 
 const LAYOUT_VARIANTS = [
 	{
-		label: __('Grid View', 'ambrygen-web'),
+		label: __( 'Grid View', 'ambrygen-web' ),
 		value: 'grid-view',
-		image: getThemeAssetUrl('/assets/src/images/our-team/grid-view.png'),
+		image: getThemeAssetUrl( '/assets/src/images/our-team/grid-view.png' ),
 	},
 	{
-		label: __('Slider View', 'ambrygen-web'),
+		label: __( 'Slider View', 'ambrygen-web' ),
 		value: 'slider-view',
 		image: getThemeAssetUrl(
 			'/assets/src/images/our-team/slider-view.png'
@@ -57,24 +57,25 @@ const MAX_SWIPER_INIT_RETRIES = 20;
 const SWIPER_SPACE_BETWEEN = 20;
 const AUTOPLAY_DELAY = 3000;
 const SEARCH_DEBOUNCE_MS = 300;
+const ALLOWED_BLOCKS = [ 'ambrygen/our-team-item' ];
 
-const normalizeVariation = (variation) =>
+const normalizeVariation = ( variation ) =>
 	variation === 'slider-view' ? 'slider-view' : 'grid-view';
 
 const ITEM_BLOCK_NAME = 'ambrygen/our-team-item';
 
-const chunkIds = (ids, size = WP_REST_MAX_PER_PAGE) => {
+const chunkIds = ( ids, size = WP_REST_MAX_PER_PAGE ) => {
 	const chunks = [];
 
-	for (let index = 0; index < ids.length; index += size) {
-		chunks.push(ids.slice(index, index + size));
+	for ( let index = 0; index < ids.length; index += size ) {
+		chunks.push( ids.slice( index, index + size ) );
 	}
 
 	return chunks;
 };
 
-const getPostTitle = (post) => {
-	if (typeof post?.title === 'string') {
+const getPostTitle = ( post ) => {
+	if ( typeof post?.title === 'string' ) {
 		return post.title;
 	}
 
@@ -88,14 +89,14 @@ const getPostTitle = (post) => {
  * @param {Object}   props.attributes    The block attributes.
  * @param {Function} props.setAttributes Function to update block attributes.
  * @param {string}   props.clientId      The block client ID.
- * @return {JSX.Element} The edit component rendering.
+ * @return {import('@wordpress/element').WPElement} The edit component rendering.
  */
-export default function Edit({ attributes, setAttributes, clientId }) {
-	const sliderRef = useRef(null);
-	const swiperInstance = useRef(null);
-	const [memberSearchInput, setMemberSearchInput] = useState('');
-	const [debouncedMemberSearchInput, setDebouncedMemberSearchInput] =
-		useState('');
+export default function Edit( { attributes, setAttributes, clientId } ) {
+	const sliderRef = useRef( null );
+	const swiperInstance = useRef( null );
+	const [ memberSearchInput, setMemberSearchInput ] = useState( '' );
+	const [ debouncedMemberSearchInput, setDebouncedMemberSearchInput ] =
+		useState( '' );
 
 	const {
 		blockId,
@@ -111,39 +112,43 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	} = attributes;
 	const isExample = blockId === 'our-team-example';
 
-	const normalizedVariation = normalizeVariation(variation);
+	const normalizedVariation = normalizeVariation( variation );
 	const isSliderView = normalizedVariation === 'slider-view';
-	const deferredSelectionMode = useDeferredValue(selectionMode);
-	const deferredMemberTypes = useDeferredValue(memberTypes);
+	const deferredSelectionMode = useDeferredValue( selectionMode );
+	const deferredMemberTypes = useDeferredValue( memberTypes );
 	const TagName = headingLevel || 'h2';
-	const blockProps = useBlockProps({
+	const blockProps = useBlockProps( {
 		className: isSliderView ? undefined : 'wrapper',
-	});
-	const allowedBlocks = ['ambrygen/our-team-item'];
-	const blockClass = isSliderView ? 'block-layout our-leadership' : 'block-layout our-team';
+	} );
+	const blockClass = isSliderView
+		? 'block-layout our-leadership'
+		: 'block-layout our-team';
 	const { replaceInnerBlocks, insertBlocks, removeBlocks } =
-		useDispatch('core/block-editor');
+		useDispatch( 'core/block-editor' );
 
 	const memberTypeTerms = useSelect(
-		(select) =>
+		( select ) =>
 			isExample
 				? []
-				:
-			select('core').getEntityRecords('taxonomy', 'member_type', {
-				per_page: WP_REST_MAX_PER_PAGE,
-				hide_empty: false,
-				_fields: 'id,name',
-			}),
-		[isExample]
+				: select( 'core' ).getEntityRecords(
+						'taxonomy',
+						'member_type',
+						{
+							per_page: WP_REST_MAX_PER_PAGE,
+							hide_empty: false,
+							_fields: 'id,name',
+						}
+				  ),
+		[ isExample ]
 	);
 
 	const manualTeamPosts = useSelect(
-		(select) => {
-			if (isExample) {
+		( select ) => {
+			if ( isExample ) {
 				return [];
 			}
 
-			if (isSliderView && selectionMode === 'taxonomy') {
+			if ( isSliderView && selectionMode === 'taxonomy' ) {
 				return [];
 			}
 
@@ -155,37 +160,37 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				_fields: 'id,title',
 			};
 
-			if (debouncedMemberSearchInput) {
+			if ( debouncedMemberSearchInput ) {
 				query.search = debouncedMemberSearchInput;
 			}
 
-			return select('core').getEntityRecords(
+			return select( 'core' ).getEntityRecords(
 				'postType',
 				'author',
 				query
 			);
 		},
-		[isExample, isSliderView, selectionMode, debouncedMemberSearchInput]
+		[ isExample, isSliderView, selectionMode, debouncedMemberSearchInput ]
 	);
 
 	const taxonomyTeamPosts = useSelect(
-		(select) => {
-			if (isExample) {
+		( select ) => {
+			if ( isExample ) {
 				return [];
 			}
 
 			if (
-				!isSliderView ||
+				! isSliderView ||
 				deferredSelectionMode !== 'taxonomy' ||
-				!deferredMemberTypes.length
+				! deferredMemberTypes.length
 			) {
 				return [];
 			}
 
 			const posts = [];
 
-			for (let page = 1; page <= MAX_TEAM_MEMBER_TYPE_PAGES; page++) {
-				const pagePosts = select('core').getEntityRecords(
+			for ( let page = 1; page <= MAX_TEAM_MEMBER_TYPE_PAGES; page++ ) {
+				const pagePosts = select( 'core' ).getEntityRecords(
 					'postType',
 					'author',
 					{
@@ -197,39 +202,39 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					}
 				);
 
-				if (!Array.isArray(pagePosts)) {
+				if ( ! Array.isArray( pagePosts ) ) {
 					return page === 1 ? null : posts;
 				}
 
-				posts.push(...pagePosts);
+				posts.push( ...pagePosts );
 
-				if (pagePosts.length < WP_REST_MAX_PER_PAGE) {
+				if ( pagePosts.length < WP_REST_MAX_PER_PAGE ) {
 					break;
 				}
 			}
 
 			return posts;
 		},
-		[isExample, isSliderView, deferredSelectionMode, deferredMemberTypes]
+		[ isExample, isSliderView, deferredSelectionMode, deferredMemberTypes ]
 	);
 
 	const isResolvingTaxonomyPosts = useSelect(
-		(select) => {
-			if (isExample) {
+		( select ) => {
+			if ( isExample ) {
 				return false;
 			}
 
 			if (
-				!isSliderView ||
+				! isSliderView ||
 				deferredSelectionMode !== 'taxonomy' ||
-				!deferredMemberTypes.length
+				! deferredMemberTypes.length
 			) {
 				return false;
 			}
 
-			const { isResolving } = select('core/data');
+			const { isResolving } = select( 'core/data' );
 
-			for (let page = 1; page <= MAX_TEAM_MEMBER_TYPE_PAGES; page++) {
+			for ( let page = 1; page <= MAX_TEAM_MEMBER_TYPE_PAGES; page++ ) {
 				const query = {
 					per_page: WP_REST_MAX_PER_PAGE,
 					page,
@@ -239,11 +244,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				};
 
 				if (
-					isResolving('core', 'getEntityRecords', [
+					isResolving( 'core', 'getEntityRecords', [
 						'postType',
 						'author',
 						query,
-					])
+					] )
 				) {
 					return true;
 				}
@@ -251,39 +256,48 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 			return false;
 		},
-		[isExample, isSliderView, deferredSelectionMode, deferredMemberTypes]
+		[ isExample, isSliderView, deferredSelectionMode, deferredMemberTypes ]
 	);
 
 	const innerBlocks = useSelect(
-		(select) => (isExample ? [] : select('core/block-editor').getBlocks(clientId)),
-		[clientId, isExample]
+		( select ) =>
+			isExample
+				? []
+				: select( 'core/block-editor' ).getBlocks( clientId ),
+		[ clientId, isExample ]
 	);
 	const selectedPostIds = useMemo(
 		() =>
-			innerBlocks
-				.map((block) => Number(block.attributes?.postId) || 0)
-				.filter(Boolean),
-		[innerBlocks]
+			innerBlocks.reduce( ( ids, block ) => {
+				const postId = Number( block.attributes?.postId ) || 0;
+
+				if ( postId ) {
+					ids.push( postId );
+				}
+
+				return ids;
+			}, [] ),
+		[ innerBlocks ]
 	);
 	const hasReachedMemberTypeLimit =
-		Array.isArray(taxonomyTeamPosts) &&
+		Array.isArray( taxonomyTeamPosts ) &&
 		taxonomyTeamPosts.length >=
-		MAX_TEAM_MEMBER_TYPE_PAGES * WP_REST_MAX_PER_PAGE;
-	const resolvedPostsCache = useRef({});
+			MAX_TEAM_MEMBER_TYPE_PAGES * WP_REST_MAX_PER_PAGE;
+	const resolvedPostsCache = useRef( {} );
 
 	const selectedTeamPostsById = useSelect(
-		(select) => {
-			if (isExample) {
+		( select ) => {
+			if ( isExample ) {
 				return {};
 			}
 
-			if (!selectedPostIds.length) {
+			if ( ! selectedPostIds.length ) {
 				return {};
 			}
 
-			const currentBatch = chunkIds(selectedPostIds).reduce(
-				(postsById, postIds) => {
-					const posts = select('core').getEntityRecords(
+			const currentBatch = chunkIds( selectedPostIds ).reduce(
+				( postsById, postIds ) => {
+					const posts = select( 'core' ).getEntityRecords(
 						'postType',
 						'author',
 						{
@@ -295,11 +309,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						}
 					);
 
-					if (Array.isArray(posts)) {
-						posts.forEach((post) => {
-							postsById[post.id] = post;
-							resolvedPostsCache.current[post.id] = post; // Save to persistent cache
-						});
+					if ( Array.isArray( posts ) ) {
+						posts.forEach( ( post ) => {
+							postsById[ post.id ] = post;
+							resolvedPostsCache.current[ post.id ] = post; // Save to persistent cache
+						} );
 					}
 
 					return postsById;
@@ -313,64 +327,68 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				...currentBatch,
 			};
 		},
-		[isExample, selectedPostIds]
+		[ isExample, selectedPostIds ]
 	);
 	const innerBlockCount = innerBlocks.length;
 	const hasInnerBlocks = innerBlockCount > 0;
-	const memberOptions = useMemo(() => {
-		if (!manualTeamPosts) {
+	const memberOptions = useMemo( () => {
+		if ( ! manualTeamPosts ) {
 			return [];
 		}
 
-		return manualTeamPosts
-			.filter((post) => !selectedPostIds.includes(post.id))
-			.map((post) => {
-				const title = decodeEntities(getPostTitle(post)).trim();
+		return manualTeamPosts.reduce( ( options, post ) => {
+			if ( selectedPostIds.includes( post.id ) ) {
+				return options;
+			}
 
-				return {
-					label:
-						title ||
-						sprintf(
-							/* translators: %d: team member post ID. */
-							__('Team Member #%d', 'ambrygen-web'),
-							post.id
-						),
-					value: String(post.id),
-				};
-			});
-	}, [manualTeamPosts, selectedPostIds]);
+			const postTitle = decodeEntities( getPostTitle( post ) ).trim();
+
+			options.push( {
+				label:
+					postTitle ||
+					sprintf(
+						/* translators: %d: team member post ID. */
+						__( 'Team Member #%d', 'ambrygen-web' ),
+						post.id
+					),
+				value: String( post.id ),
+			} );
+
+			return options;
+		}, [] );
+	}, [ manualTeamPosts, selectedPostIds ] );
 	const selectedMemberOptions = useMemo(
 		() =>
-			selectedPostIds.map((postId) => {
-				const post = selectedTeamPostsById[postId];
-				const title = decodeEntities(getPostTitle(post)).trim();
+			selectedPostIds.map( ( postId ) => {
+				const post = selectedTeamPostsById[ postId ];
+				const postTitle = decodeEntities( getPostTitle( post ) ).trim();
 
 				return {
 					label:
-						title ||
+						postTitle ||
 						sprintf(
 							/* translators: %d: team member post ID. */
-							__('Team Member #%d', 'ambrygen-web'),
+							__( 'Team Member #%d', 'ambrygen-web' ),
 							postId
 						),
 					value: postId,
-					isLoading: !post,
+					isLoading: ! post,
 				};
-			}),
-		[selectedPostIds, selectedTeamPostsById]
+			} ),
+		[ selectedPostIds, selectedTeamPostsById ]
 	);
 	const hasMemberOptions = memberOptions.length > 0;
 
-	const toggleMemberBlock = (postId, isSelected) => {
-		if (isSelected) {
-			if (selectedPostIds.includes(postId)) {
+	const toggleMemberBlock = ( postId, isSelected ) => {
+		if ( isSelected ) {
+			if ( selectedPostIds.includes( postId ) ) {
 				return;
 			}
 
 			insertBlocks(
-				createBlock(ITEM_BLOCK_NAME, {
+				createBlock( ITEM_BLOCK_NAME, {
 					postId,
-				}),
+				} ),
 				innerBlockCount,
 				clientId,
 				false
@@ -378,21 +396,22 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			return;
 		}
 
-		const blocksToRemove = innerBlocks
-			.filter(
-				(block) =>
-					(Number(block.attributes?.postId) || 0) === postId
-			)
-			.map((block) => block.clientId);
+		const blocksToRemove = innerBlocks.reduce( ( clientIds, block ) => {
+			if ( ( Number( block.attributes?.postId ) || 0 ) === postId ) {
+				clientIds.push( block.clientId );
+			}
 
-		if (blocksToRemove.length) {
-			removeBlocks(blocksToRemove, false);
+			return clientIds;
+		}, [] );
+
+		if ( blocksToRemove.length ) {
+			removeBlocks( blocksToRemove, false );
 		}
 	};
 
-	const resetSliderPreview = useCallback(() => {
-		if (swiperInstance.current) {
-			swiperInstance.current.destroy(true, true);
+	const resetSliderPreview = useCallback( () => {
+		if ( swiperInstance.current ) {
+			swiperInstance.current.destroy( true, true );
 			swiperInstance.current = null;
 		}
 
@@ -401,93 +420,104 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			'.block-editor-block-list__layout'
 		);
 
-		sliderEl?.classList.remove('swiper');
-		sliderDiv?.classList.remove('swiper-wrapper');
-		sliderDiv?.removeAttribute('style');
+		sliderEl?.classList.remove( 'swiper' );
+		sliderDiv?.classList.remove( 'swiper-wrapper' );
+		sliderDiv?.removeAttribute( 'style' );
 		sliderDiv
-			?.querySelectorAll('.swiper-slide')
-			.forEach((slide) => slide.removeAttribute('style'));
-	}, []);
+			?.querySelectorAll( '.swiper-slide' )
+			.forEach( ( slide ) => slide.removeAttribute( 'style' ) );
+	}, [] );
 
-	const changeVariation = (value) => {
-		const nextVariation = normalizeVariation(value);
+	const changeVariation = ( value ) => {
+		const nextVariation = normalizeVariation( value );
 
-		if (nextVariation === normalizedVariation) {
+		if ( nextVariation === normalizedVariation ) {
 			return;
 		}
 
 		resetSliderPreview();
 
-		const convertedBlocks = innerBlocks
-			.map((block) => Number(block.attributes?.postId) || 0)
-			.filter(Boolean)
-			.map((postId) =>
-				createBlock(ITEM_BLOCK_NAME, {
-					postId,
-				})
-			);
+		const convertedBlocks = innerBlocks.reduce( ( blocks, block ) => {
+			const postId = Number( block.attributes?.postId ) || 0;
 
-		replaceInnerBlocks(clientId, convertedBlocks, false);
-		setAttributes({
+			if ( postId ) {
+				blocks.push(
+					createBlock( ITEM_BLOCK_NAME, {
+						postId,
+					} )
+				);
+			}
+
+			return blocks;
+		}, [] );
+
+		replaceInnerBlocks( clientId, convertedBlocks, false );
+		setAttributes( {
 			variation: nextVariation,
 			selectionMode: 'manual',
 			memberTypes: [],
-		});
-		setMemberSearchInput('');
+		} );
+		setMemberSearchInput( '' );
 	};
 
-	useUniqueBlockId({
+	useUniqueBlockId( {
 		blockId,
 		clientId,
 		setAttributes,
-		enabled: !isExample,
-	});
+		enabled: ! isExample,
+	} );
 
-	useEffect(() => {
-		if (isExample) {
+	useEffect( () => {
+		if ( isExample ) {
 			return;
 		}
 
 		const timeoutId = setTimeout(
-			() => setDebouncedMemberSearchInput(memberSearchInput.trim()),
+			() => setDebouncedMemberSearchInput( memberSearchInput.trim() ),
 			SEARCH_DEBOUNCE_MS
 		);
 
-		return () => clearTimeout(timeoutId);
-	}, [isExample, memberSearchInput]);
+		return () => clearTimeout( timeoutId );
+	}, [ isExample, memberSearchInput ] );
 
-	useEffect(() => {
-		if (isExample) {
+	useEffect( () => {
+		if ( isExample ) {
 			return;
 		}
 
 		if (
-			!isSliderView ||
+			! isSliderView ||
 			deferredSelectionMode !== 'taxonomy' ||
-			!deferredMemberTypes.length ||
-			!taxonomyTeamPosts ||
+			! deferredMemberTypes.length ||
+			! taxonomyTeamPosts ||
 			isResolvingTaxonomyPosts
 		) {
 			return;
 		}
 
-		const currentPostIds = innerBlocks
-			.map((block) => Number(block.attributes?.postId) || 0)
-			.filter(Boolean);
-		const newPostIds = taxonomyTeamPosts.map((post) => post.id);
+		const currentPostIds = innerBlocks.reduce( ( ids, block ) => {
+			const postId = Number( block.attributes?.postId ) || 0;
+
+			if ( postId ) {
+				ids.push( postId );
+			}
+
+			return ids;
+		}, [] );
+		const newPostIds = taxonomyTeamPosts.map( ( post ) => post.id );
 
 		if (
 			currentPostIds.length === newPostIds.length &&
-			currentPostIds.every((id, index) => id === newPostIds[index])
+			currentPostIds.every( ( id, index ) => id === newPostIds[ index ] )
 		) {
 			return; // No change needed, prevent destructive unmount!
 		}
 
-		const newBlocks = newPostIds.map((postId) =>
-			createBlock(ITEM_BLOCK_NAME, { postId })
+		const newBlocks = newPostIds.map( ( postId ) =>
+			createBlock( ITEM_BLOCK_NAME, { postId } )
 		);
 
-		replaceInnerBlocks(clientId, newBlocks, false);
+		replaceInnerBlocks( clientId, newBlocks, false );
 	}, [
 		isExample,
 		isSliderView,
@@ -498,14 +528,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		clientId,
 		innerBlocks,
 		replaceInnerBlocks,
-	]);
+	] );
 
-	useEffect(() => {
-		if (isExample) {
+	useEffect( () => {
+		if ( isExample ) {
 			return;
 		}
 
-		if (!isSliderView || !hasInnerBlocks) {
+		if ( ! isSliderView || ! hasInnerBlocks ) {
 			return;
 		}
 
@@ -514,7 +544,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		let isMounted = true;
 
 		const initSwiper = async () => {
-			if (!sliderRef.current) {
+			if ( ! sliderRef.current ) {
 				return;
 			}
 
@@ -523,11 +553,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				'.block-editor-block-list__layout'
 			);
 
-			if (!sliderDiv || sliderDiv.children.length === 0) {
-				if (retryCount < MAX_SWIPER_INIT_RETRIES) {
+			if ( ! sliderDiv || sliderDiv.children.length === 0 ) {
+				if ( retryCount < MAX_SWIPER_INIT_RETRIES ) {
 					retryCount++;
 					animationFrameIds.push(
-						requestAnimationFrame(initSwiper)
+						requestAnimationFrame( initSwiper )
 					);
 				}
 				return;
@@ -536,25 +566,25 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			let Swiper;
 
 			try {
-				({ default: Swiper } = await import('swiper/bundle'));
+				( { default: Swiper } = await import( 'swiper/bundle' ) );
 			} catch {
 				return;
 			}
 
-			if (!isMounted) {
+			if ( ! isMounted ) {
 				return;
 			}
 
 			const swiperContainer = sliderDiv.parentElement;
-			swiperContainer.classList.add('swiper');
-			sliderDiv.classList.add('swiper-wrapper');
+			swiperContainer.classList.add( 'swiper' );
+			sliderDiv.classList.add( 'swiper-wrapper' );
 
-			if (swiperInstance.current) {
-				swiperInstance.current.destroy(true, true);
+			if ( swiperInstance.current ) {
+				swiperInstance.current.destroy( true, true );
 				swiperInstance.current = null;
 			}
 
-			swiperInstance.current = new Swiper(swiperContainer, {
+			swiperInstance.current = new Swiper( swiperContainer, {
 				slidesPerView: 3,
 				spaceBetween: SWIPER_SPACE_BETWEEN,
 				loop: false,
@@ -564,33 +594,33 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				allowTouchMove: false,
 				navigation: showNavigation
 					? {
-						nextEl: sliderEl.querySelector('.custom-next'),
-						prevEl: sliderEl.querySelector('.custom-prev'),
-					}
+							nextEl: sliderEl.querySelector( '.custom-next' ),
+							prevEl: sliderEl.querySelector( '.custom-prev' ),
+					  }
 					: false,
 				pagination: showPagination
 					? {
-						el: sliderEl.querySelector('.swiper-pagination'),
-						clickable: true,
-					}
+							el: sliderEl.querySelector( '.swiper-pagination' ),
+							clickable: true,
+					  }
 					: false,
 				autoplay: autoplay
 					? {
-						delay: AUTOPLAY_DELAY,
-						disableOnInteraction: false,
-					}
+							delay: AUTOPLAY_DELAY,
+							disableOnInteraction: false,
+					  }
 					: false,
-			});
+			} );
 		};
 
 		initSwiper();
 
 		return () => {
 			isMounted = false;
-			animationFrameIds.forEach(cancelAnimationFrame);
+			animationFrameIds.forEach( cancelAnimationFrame );
 			animationFrameIds = [];
 
-		resetSliderPreview();
+			resetSliderPreview();
 		};
 	}, [
 		isExample,
@@ -600,21 +630,21 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		autoplay,
 		hasInnerBlocks,
 		resetSliderPreview,
-	]);
+	] );
 
-	useEffect(() => {
-		if (isExample) {
+	useEffect( () => {
+		if ( isExample ) {
 			return;
 		}
 
-		if (!isSliderView || !swiperInstance.current) {
+		if ( ! isSliderView || ! swiperInstance.current ) {
 			return;
 		}
 
-		const animationFrameId = requestAnimationFrame(() => {
+		const animationFrameId = requestAnimationFrame( () => {
 			const swiper = swiperInstance.current;
 
-			if (!swiper || swiper.destroyed) {
+			if ( ! swiper || swiper.destroyed ) {
 				return;
 			}
 
@@ -622,15 +652,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			swiper.pagination?.render?.();
 			swiper.pagination?.update?.();
 			swiper.navigation?.update?.();
-		});
+		} );
 
-		return () => cancelAnimationFrame(animationFrameId);
-	}, [isExample, isSliderView, innerBlockCount]);
+		return () => cancelAnimationFrame( animationFrameId );
+	}, [ isExample, isSliderView, innerBlockCount ] );
 
-	if (isExample) {
+	if ( isExample ) {
 		return (
 			<BlockVariationsExamplePreview
-				variants={LAYOUT_VARIANTS}
+				variants={ LAYOUT_VARIANTS }
 				className="cta-tiles-example-preview"
 				itemClass="cta-tiles-example-preview__item"
 			/>
@@ -641,69 +671,62 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={__('Layout Variation', 'ambrygen-web')}
+					title={ __( 'Layout Variation', 'ambrygen-web' ) }
 					initialOpen
 				>
 					<div
 						className="layout-variant-selector"
 						role="radiogroup"
-						aria-label={__(
-							'Layout Variation',
-							'ambrygen-web'
-						)}
+						aria-label={ __( 'Layout Variation', 'ambrygen-web' ) }
 					>
-						{LAYOUT_VARIANTS.map((item) => (
+						{ LAYOUT_VARIANTS.map( ( item ) => (
 							<button
-								key={item.value}
+								key={ item.value }
 								type="button"
 								role="radio"
-								className={`variant-button ${normalizedVariation === item.value
+								className={ `variant-button ${
+									normalizedVariation === item.value
 										? 'is-selected'
 										: ''
-									}`}
+								}` }
 								aria-checked={
 									normalizedVariation === item.value
 								}
-								aria-label={sprintf(
+								aria-label={ sprintf(
 									/* translators: %s: layout variation label. */
-									__(
-										'Select %s layout',
-										'ambrygen-web'
-									),
+									__( 'Select %s layout', 'ambrygen-web' ),
 									item.label
-								)}
-								onClick={() =>
-									changeVariation(item.value)
-								}
+								) }
+								onClick={ () => changeVariation( item.value ) }
 							>
 								<img
-									src={item.image}
+									src={ item.image }
 									alt=""
 									aria-hidden="true"
 								/>
-								<span>{item.label}</span>
+								<span>{ item.label }</span>
 							</button>
-						))}
+						) ) }
 					</div>
 				</PanelBody>
 
 				<PanelBody
-					title={__('Heading Settings', 'ambrygen-web')}
-					initialOpen={false}
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen={ false }
 				>
 					<TagSelector
-						label={__('Heading Tag', 'ambrygen-web')}
-						value={headingLevel}
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
+						value={ headingLevel }
 						type="heading"
-						onChange={(value) =>
-							setAttributes({ headingLevel: value })
+						onChange={ ( value ) =>
+							setAttributes( { headingLevel: value } )
 						}
 					/>
 				</PanelBody>
 
 				<PanelBody
-					title={__('Team Members', 'ambrygen-web')}
-					initialOpen={false}
+					title={ __( 'Team Members', 'ambrygen-web' ) }
+					initialOpen={ false }
 				>
 					<p
 						className="our-team__member-count"
@@ -711,237 +734,238 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						aria-live="polite"
 						aria-atomic="true"
 					>
-						{sprintf(
+						{ sprintf(
 							/* translators: %d: number of selected team members. */
-							__('%d member(s) selected', 'ambrygen-web'),
+							__( '%d member(s) selected', 'ambrygen-web' ),
 							selectedPostIds.length
-						)}
+						) }
 					</p>
 
-					{isSliderView && selectionMode === 'taxonomy' ? (
+					{ isSliderView && selectionMode === 'taxonomy' ? (
 						<>
 							<p className="our-team__member-help">
-								{__(
+								{ __(
 									'Members are managed by the selected member types.',
 									'ambrygen-web'
-								)}
+								) }
 							</p>
-							{hasReachedMemberTypeLimit && (
+							{ hasReachedMemberTypeLimit && (
 								<Notice
 									status="warning"
-									isDismissible={false}
+									isDismissible={ false }
 								>
-									{sprintf(
+									{ sprintf(
 										/* translators: %d: maximum number of team members loaded by member type. */
 										__(
 											'Only the first %d matching members are loaded. Use manual selection for a smaller curated list.',
 											'ambrygen-web'
 										),
 										MAX_TEAM_MEMBER_TYPE_PAGES *
-										WP_REST_MAX_PER_PAGE
-									)}
+											WP_REST_MAX_PER_PAGE
+									) }
 								</Notice>
-							)}
+							) }
 						</>
 					) : (
 						<MemberPicker
-							isLoading={!manualTeamPosts}
-							options={memberOptions}
-							selectedMembers={selectedMemberOptions}
-							searchValue={memberSearchInput}
-							onSearchChange={setMemberSearchInput}
-							onToggle={toggleMemberBlock}
-							hasOptions={hasMemberOptions}
+							isLoading={ ! manualTeamPosts }
+							options={ memberOptions }
+							selectedMembers={ selectedMemberOptions }
+							searchValue={ memberSearchInput }
+							onSearchChange={ setMemberSearchInput }
+							onToggle={ toggleMemberBlock }
+							hasOptions={ hasMemberOptions }
 						/>
-					)}
+					) }
 				</PanelBody>
 
-				{isSliderView && (
+				{ isSliderView && (
 					<>
 						<PanelBody
-							title={__(
+							title={ __(
 								'Team Selection Mode',
 								'ambrygen-web'
-							)}
-							initialOpen={false}
+							) }
+							initialOpen={ false }
 						>
 							<ToggleControl
-								label={__(
+								label={ __(
 									'Select by Member Type',
 									'ambrygen-web'
-								)}
-								checked={selectionMode === 'taxonomy'}
-								onChange={(enabled) =>
-									setAttributes({
+								) }
+								checked={ selectionMode === 'taxonomy' }
+								onChange={ ( enabled ) =>
+									setAttributes( {
 										selectionMode: enabled
 											? 'taxonomy'
 											: 'manual',
 										memberTypes: [],
-									})
+									} )
 								}
 							/>
 
-							{selectionMode === 'taxonomy' &&
-								(!memberTypeTerms ? (
+							{ selectionMode === 'taxonomy' &&
+								( ! memberTypeTerms ? (
 									<Spinner />
 								) : (
-									memberTypeTerms.map((term) => (
+									memberTypeTerms.map( ( term ) => (
 										<CheckboxControl
-											key={term.id}
-											label={term.name}
-											checked={memberTypes.includes(
+											key={ term.id }
+											label={ term.name }
+											checked={ memberTypes.includes(
 												term.id
-											)}
-											onChange={(checked) =>
-												setAttributes({
+											) }
+											onChange={ ( checked ) =>
+												setAttributes( {
 													memberTypes: checked
 														? [
-															...memberTypes,
-															term.id,
-														]
+																...memberTypes,
+																term.id,
+														  ]
 														: memberTypes.filter(
-															(id) =>
-																id !==
-																term.id
-														),
-												})
+																( id ) =>
+																	id !==
+																	term.id
+														  ),
+												} )
 											}
 										/>
-									))
-								))}
+									) )
+								) ) }
 						</PanelBody>
 
 						<PanelBody
-							title={__('Slider Settings', 'ambrygen-web')}
-							initialOpen={false}
+							title={ __( 'Slider Settings', 'ambrygen-web' ) }
+							initialOpen={ false }
 						>
 							<ToggleControl
-								label={__(
+								label={ __(
 									'Show Navigation',
 									'ambrygen-web'
-								)}
-								checked={showNavigation}
-								onChange={(value) =>
-									setAttributes({ showNavigation: value })
+								) }
+								checked={ showNavigation }
+								onChange={ ( value ) =>
+									setAttributes( { showNavigation: value } )
 								}
 							/>
 							<ToggleControl
-								label={__(
+								label={ __(
 									'Show Pagination',
 									'ambrygen-web'
-								)}
-								checked={showPagination}
-								onChange={(value) =>
-									setAttributes({ showPagination: value })
+								) }
+								checked={ showPagination }
+								onChange={ ( value ) =>
+									setAttributes( { showPagination: value } )
 								}
 							/>
 							<ToggleControl
-								label={__('Autoplay', 'ambrygen-web')}
-								checked={autoplay}
-								onChange={(value) =>
-									setAttributes({ autoplay: value })
+								label={ __( 'Autoplay', 'ambrygen-web' ) }
+								checked={ autoplay }
+								onChange={ ( value ) =>
+									setAttributes( { autoplay: value } )
 								}
 							/>
 						</PanelBody>
 					</>
-				)}
+				) }
 			</InspectorControls>
 
-			<div {...blockProps}>
-				<div className={blockClass}>
-					<div className={`${blockClass}__header block__rowflex`}>
+			<div { ...blockProps }>
+				<div className={ blockClass }>
+					<div className={ `${ blockClass }__header block__rowflex` }>
 						<div className="block__rowflex--col-left">
-						<TagName
-							className={`${blockClass}__title block__rowflex--heading-title heading-3 mb-0`}
+							<TagName
+								className={ `${ blockClass }__title block__rowflex--heading-title heading-3 mb-0` }
+							>
+								<RichText
+									tagName="div"
+									value={ title }
+									onChange={ ( value ) =>
+										setAttributes( { title: value } )
+									}
+									allowedFormats={ [
+										'core/bold',
+										'core/italic',
+										'core/text-color',
+									] }
+									placeholder={ __(
+										'Add Heading…',
+										'ambrygen-web'
+									) }
+								/>
+							</TagName>
+						</div>
+
+						<RichText
+							tagName="div"
+							className={ `${ blockClass }__intro block__rowflex--block-content block-description ${
+								isSliderView ? 'subtitle1-reg' : 'subtitle1'
+							}` }
+							value={ intro }
+							onChange={ ( value ) =>
+								setAttributes( { intro: value } )
+							}
+							placeholder={ __(
+								'Add Description…',
+								'ambrygen-web'
+							) }
+						/>
+					</div>
+
+					<div className="is-style-gl-s50" aria-hidden="true"></div>
+
+					{ isSliderView ? (
+						<div
+							key="slider-view"
+							ref={ sliderRef }
+							className="our-leadership__editor-preview our-leadership-slider swiper"
 						>
-							<RichText
-								tagName="div"
-								value={title}
-								onChange={(value) =>
-									setAttributes({ title: value })
-								}
-								allowedFormats={[
-									'core/bold',
-									'core/italic',
-									'core/text-color',
-								]}
-								placeholder={__(
-									'Add Heading...',
-									'ambrygen-web'
-								)}
+							<InnerBlocks
+								allowedBlocks={ ALLOWED_BLOCKS }
+								orientation="horizontal"
+								renderAppender={ () => false }
 							/>
-						</TagName>
-					</div>
 
-					<RichText
-						tagName="div"
-						className={`${blockClass}__intro block__rowflex--block-content block-description ${isSliderView ? 'subtitle1-reg' : 'subtitle1'
-							}`}
-						value={intro}
-						onChange={(value) =>
-							setAttributes({ intro: value })
-						}
-						placeholder={__(
-							'Add Description...',
-							'ambrygen-web'
-						)}
-					/>
+							{ showPagination && (
+								<div className="swiper-pagination" />
+							) }
+
+							{ showNavigation && (
+								<div className="swiper-buttons">
+									<button
+										type="button"
+										className="custom-prev"
+										aria-label={ __(
+											'Previous slide',
+											'ambrygen-web'
+										) }
+									></button>
+									<button
+										type="button"
+										className="custom-next"
+										aria-label={ __(
+											'Next slide',
+											'ambrygen-web'
+										) }
+									></button>
+								</div>
+							) }
+						</div>
+					) : (
+						<div key="grid-view" className="our-team__grid">
+							<InnerBlocks
+								allowedBlocks={ ALLOWED_BLOCKS }
+								renderAppender={ () => false }
+							/>
+						</div>
+					) }
 				</div>
-
-				<div className="is-style-gl-s50" aria-hidden="true"></div>
-
-				{isSliderView ? (
-					<div
-						key="slider-view"
-						ref={sliderRef}
-						className="our-leadership__editor-preview our-leadership-slider swiper"
-					>
-						<InnerBlocks
-							allowedBlocks={allowedBlocks}
-							orientation="horizontal"
-							renderAppender={() => false}
-						/>
-
-						{showPagination && (
-							<div className="swiper-pagination" />
-						)}
-
-						{showNavigation && (
-							<div className="swiper-buttons">
-								<button
-									type="button"
-									className="custom-prev"
-									aria-label={__(
-										'Previous slide',
-										'ambrygen-web'
-									)}
-								></button>
-								<button
-									type="button"
-									className="custom-next"
-									aria-label={__(
-										'Next slide',
-										'ambrygen-web'
-									)}
-								></button>
-							</div>
-						)}
-					</div>
-				) : (
-					<div key="grid-view" className="our-team__grid">
-						<InnerBlocks
-							allowedBlocks={allowedBlocks}
-							renderAppender={() => false}
-						/>
-					</div>
-				)}
 			</div>
-		</div >
 		</>
 	);
 }
 
-function MemberPicker({
+function MemberPicker( {
 	isLoading,
 	options,
 	selectedMembers,
@@ -949,102 +973,99 @@ function MemberPicker({
 	onSearchChange,
 	onToggle,
 	hasOptions,
-}) {
+} ) {
 	return (
 		<div className="our-team__member-picker">
-			{isLoading ? (
+			{ isLoading ? (
 				<Spinner />
 			) : (
 				<>
-					{selectedMembers.length > 0 && (
+					{ selectedMembers.length > 0 && (
 						<div className="our-team__selected-members">
 							<div className="our-team__member-picker-label">
-								{__('Selected Members', 'ambrygen-web')}
+								{ __( 'Selected Members', 'ambrygen-web' ) }
 							</div>
 							<div
 								className="our-team__selected-member-list"
 								role="list"
-								aria-label={__(
+								aria-label={ __(
 									'Selected team members',
 									'ambrygen-web'
-								)}
+								) }
 							>
-								{selectedMembers.map((member) => (
+								{ selectedMembers.map( ( member ) => (
 									<div
-										key={member.value}
+										key={ member.value }
 										className="our-team__selected-member"
 										role="listitem"
 									>
 										<span>
-											{member.label}
-											{member.isLoading && (
+											{ member.label }
+											{ member.isLoading && (
 												<span className="screen-reader-text">
-													{__(
-														' loading',
+													{ __(
+														'loading',
 														'ambrygen-web'
-													)}
+													) }
 												</span>
-											)}
+											) }
 										</span>
 										<Button
 											isDestructive
 											variant="tertiary"
 											size="small"
-											onClick={() =>
-												onToggle(
-													member.value,
-													false
-												)
+											onClick={ () =>
+												onToggle( member.value, false )
 											}
 										>
-											{__('Remove', 'ambrygen-web')}
+											{ __( 'Remove', 'ambrygen-web' ) }
 										</Button>
 									</div>
-								))}
+								) ) }
 							</div>
 						</div>
-					)}
+					) }
 					<div className="our-team__member-picker-field">
 						<SearchControl
-							label={__('Add Team Member', 'ambrygen-web')}
-							value={searchValue}
-							onChange={onSearchChange}
-							placeholder={__(
+							label={ __( 'Add Team Member', 'ambrygen-web' ) }
+							value={ searchValue }
+							onChange={ onSearchChange }
+							placeholder={ __(
 								'Search team members',
 								'ambrygen-web'
-							)}
+							) }
 						/>
 						<p className="our-team__member-help">
-							{hasOptions
+							{ hasOptions
 								? __(
-									'Search and add members without loading the full team list.',
-									'ambrygen-web'
-								)
+										'Search and add members without loading the full team list.',
+										'ambrygen-web'
+								  )
 								: __(
-									'No matching team members are available to add.',
-									'ambrygen-web'
-								)}
+										'No matching team members are available to add.',
+										'ambrygen-web'
+								  ) }
 						</p>
-						{hasOptions && (
+						{ hasOptions && (
 							<div
 								className="our-team__member-options"
 								role="list"
-								aria-label={__(
+								aria-label={ __(
 									'Available team members to add',
 									'ambrygen-web'
-								)}
+								) }
 							>
-								{options.map((option) => (
+								{ options.map( ( option ) => (
 									<div
-										key={option.value}
+										key={ option.value }
 										className="our-team__member-option"
 										role="listitem"
 									>
-										<span>{option.label}</span>
+										<span>{ option.label }</span>
 										<Button
 											variant="secondary"
 											size="small"
-											onClick={() =>
+											onClick={ () =>
 												onToggle(
 													parseInt(
 														option.value,
@@ -1054,15 +1075,15 @@ function MemberPicker({
 												)
 											}
 										>
-											{__('Add', 'ambrygen-web')}
+											{ __( 'Add', 'ambrygen-web' ) }
 										</Button>
 									</div>
-								))}
+								) ) }
 							</div>
-						)}
+						) }
 					</div>
 				</>
-			)}
+			) }
 		</div>
 	);
 }

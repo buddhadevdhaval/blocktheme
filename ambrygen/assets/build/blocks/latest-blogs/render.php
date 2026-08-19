@@ -16,9 +16,9 @@ defined( 'ABSPATH' ) || exit;
 
 $ambrygen_attributes = is_array( $attributes ?? null ) ? $attributes : array();
 
-$ambrygen_block_id      = $ambrygen_attributes['blockId'] ?? '';
-$ambrygen_title         = $ambrygen_attributes['title'] ?? 'Latest Articles';
-$ambrygen_heading_level = $ambrygen_attributes['headingLevel'] ?? 'h2';
+$ambrygen_block_id       = $ambrygen_attributes['blockId'] ?? '';
+$ambrygen_title          = $ambrygen_attributes['title'] ?? 'Latest Articles';
+$ambrygen_heading_level  = $ambrygen_attributes['headingLevel'] ?? 'h2';
 $ambrygen_posts_per_page = $ambrygen_attributes['postsPerPage'] ?? 6;
 
 $ambrygen_wrapper_args = array(
@@ -30,7 +30,7 @@ if ( $ambrygen_block_id ) {
 }
 
 // Detect archive context
-$ambrygen_is_tag_archive = is_tag();
+$ambrygen_is_tag_archive                      = is_tag();
 $ambrygen_wrapper_args['data-is-tag-archive'] = $ambrygen_is_tag_archive ? 'true' : 'false';
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_args );
@@ -39,11 +39,13 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 $blog_tags = get_tags( array( 'hide_empty' => true ) );
 
 // Get Categories dynamically
-$blog_categories = get_terms( array(
-	'taxonomy'   => 'category',
-	'hide_empty' => true,
-	'exclude'    => get_term_by( 'slug', 'uncategorized', 'category' )->term_id ?? 0,
-) );
+$blog_categories = get_terms(
+	array(
+		'taxonomy'   => 'category',
+		'hide_empty' => true,
+		'exclude'    => get_term_by( 'slug', 'uncategorized', 'category' )->term_id ?? 0,
+	)
+);
 
 $initial_cat_id = ! empty( $blog_categories ) ? $blog_categories[0]->term_id : 0;
 // Prioritize 'Ambry' or 'Ambry News' if they exist as the default
@@ -66,8 +68,8 @@ $ambrygen_current_tag_id = 0;
 
 if ( $ambrygen_is_tag_archive ) {
 	$ambrygen_current_tag_id = get_queried_object_id();
-	$tag_name = get_queried_object()->name;
-	$ambrygen_title = sprintf( __( 'Articles Tagged: %s', 'ambrygen-web' ), $tag_name );
+	$tag_name                = get_queried_object()->name;
+	$ambrygen_title          = sprintf( __( 'Articles Tagged: %s', 'ambrygen-web' ), $tag_name );
 }
 
 // Initial Query (Ambry News by default, or current tag if archive)
@@ -106,9 +108,10 @@ $blogs_query = new WP_Query( $query_args );
 						<div class="is-style-gl-s8" aria-hidden="true"></div>
 						<select id="blog-tags-select" class="blog-filters__select text-md-medium" aria-label="<?php esc_attr_e( 'Filter blog posts by tag', 'ambrygen-web' ); ?>">
 							<option value="0" data-url="<?php echo esc_url( get_post_type_archive_link( 'post' ) ); ?>"><?php esc_html_e( 'All Tags', 'ambrygen-web' ); ?></option>
-							<?php foreach ( $blog_tags as $tag ) :
+							<?php
+							foreach ( $blog_tags as $tag ) :
 								$is_selected = ( (int) $tag->term_id === (int) $ambrygen_current_tag_id );
-								$tag_link = get_term_link( $tag );
+								$tag_link    = get_term_link( $tag );
 								?>
 								<option value="<?php echo esc_attr( $tag->term_id ); ?>" data-url="<?php echo esc_url( $tag_link ); ?>" <?php selected( $is_selected ); ?>><?php echo esc_html( $tag->name ); ?></option>
 							<?php endforeach; ?>
@@ -164,17 +167,25 @@ $blogs_query = new WP_Query( $query_args );
 				<div class="ambrygen-ajax-pagination__content">
 					<?php if ( $blogs_query->have_posts() ) : ?>
 						<div class="blog-listing">
-							<?php while ( $blogs_query->have_posts() ) : $blogs_query->the_post(); ?>
+							<?php
+							while ( $blogs_query->have_posts() ) :
+								$blogs_query->the_post();
+								?>
 								<?php
-								$post_id = get_the_ID();
+								$post_id      = get_the_ID();
 								$thumbnail_id = get_post_thumbnail_id( $post_id );
 								$publish_date = get_the_date( 'F j, Y', $post_id );
 								?>
 								<a href="<?php the_permalink(); ?>" class="blog-listing__card">
 									<div class="blog-listing__image-wrap">
 										<?php
+										$img_id = $thumbnail_id;
+										if ( ! $img_id ) {
+											$img_id = \Ambrygen\Theme\Core\Theme_Options::get_blog_default_image_id();
+										}
+
 										echo Helper::image_with_placeholder(
-											(int) $thumbnail_id,
+											(int) $img_id,
 											'large',
 											array( 'class' => 'blog-listing__image' )
 										);
@@ -195,20 +206,31 @@ $blogs_query = new WP_Query( $query_args );
 											?>
 											<div class="blog-listing__author-block">
 												<?php if ( ! empty( $authors_data[0]['avatar_id'] ) ) : ?>
-													<?php echo Helper::image( $authors_data[0]['avatar_id'], 'thumbnail', array( 'class' => 'blog-listing__author-avatar', 'width' => 36, 'height' => 36 ) ); ?>
-												<?php else: ?>
-													<img class="blog-listing__author-avatar" src="https://i.pravatar.cc/40?img=47" alt="" width="36" height="36" />
+													<?php
+													echo Helper::image(
+														$authors_data[0]['avatar_id'],
+														'thumbnail',
+														array(
+															'class'  => 'blog-listing__author-avatar',
+															'width'  => 36,
+															'height' => 36,
+														)
+													);
+													?>
 												<?php endif; ?>
 												<div class="blog-listing__author-info">
 													<span class="blog-listing__author-name text-small-semibold">
 														<?php
-														$author_names = array_map( function( $author ) {
-															$out = esc_html( $author['name'] );
-															if ( ! empty( $author['designation'] ) ) {
-																$out .= ', ' . esc_html( $author['designation'] );
-															}
-															return $out;
-														}, $authors_data );
+														$author_names = array_map(
+															function( $author ) {
+																$out = esc_html( $author['name'] );
+																if ( ! empty( $author['designation'] ) ) {
+																	  $out .= ', ' . esc_html( $author['designation'] );
+																}
+																return $out;
+															},
+															$authors_data
+														);
 														echo implode( ' | ', $author_names );
 														?>
 													</span>
@@ -223,7 +245,8 @@ $blogs_query = new WP_Query( $query_args );
 											</div>
 											<?php
 											$terms = get_the_terms( $post_id, 'post_tag' );
-											if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) : ?>
+											if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) :
+												?>
 												<div class="body-s blog-listing__category">
 													<?php foreach ( $terms as $term ) : ?>
 														<div class="blog-listing__category__item"><?php echo esc_html( $term->name ); ?></div>
@@ -233,7 +256,10 @@ $blogs_query = new WP_Query( $query_args );
 										</div>
 									</div>
 								</a>
-							<?php endwhile; wp_reset_postdata(); ?>
+								<?php
+							endwhile;
+							wp_reset_postdata();
+							?>
 						</div>
 
 						<div class="is-style-gl-s50" aria-hidden="true"></div>
@@ -247,7 +273,7 @@ $blogs_query = new WP_Query( $query_args );
 							</button>
 						</div>
 					<?php else : ?>
-						<p class="no-results-message text-center text-lg-reg"><?php esc_html_e( 'No blog posts found.', 'ambrygen-web' ); ?></p>
+						<div class="no-results-message text-center no-result-alert"><?php esc_html_e( 'No blog posts found.', 'ambrygen-web' ); ?></div>
 					<?php endif; ?>
 				</div>
 			</div>

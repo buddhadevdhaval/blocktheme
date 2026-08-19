@@ -15,7 +15,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	};
 
 	const initTestimonialsBlock = ( rootSection ) => {
-		let resizeHandler;
+		const resizeHandler = debounce( initMobileSwiper, 250 );
 		let swiperInstance = null;
 		let cleanupObserver = null;
 
@@ -28,28 +28,29 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			}
 		};
 
-	const restoreFocus = ( element ) => {
-		if ( ! element ) {
-			return;
-		}
+		const restoreFocus = ( element ) => {
+			if ( ! element ) {
+				return;
+			}
 
-		const focusTarget =
-			element.matches( focusableSelector )
+			const focusTarget = element.matches( focusableSelector )
 				? element
 				: element.querySelector( focusableSelector );
 
-		if ( focusTarget ) {
-			focusTarget.focus();
-			return;
-		}
+			if ( focusTarget ) {
+				focusTarget.focus();
+				return;
+			}
 
-		element.setAttribute( 'tabindex', '-1' );
-		element.focus();
-		element.removeAttribute( 'tabindex' );
-	};
+			element.setAttribute( 'tabindex', '-1' );
+			element.focus();
+			element.removeAttribute( 'tabindex' );
+		};
 
 		const cleanup = () => {
-			const container = rootSection.querySelector( '.testimonial_slider' );
+			const container = rootSection.querySelector(
+				'.testimonial_slider'
+			);
 
 			if ( resizeHandler ) {
 				window.removeEventListener( 'resize', resizeHandler );
@@ -65,234 +66,243 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			}
 		};
 
-	const getLiveRegionText = ( current, total, rootSection ) => {
-		const template =
-			rootSection?.dataset.testimonialsStatusTemplate ||
-			'Slide %1$d of %2$d';
+		const getLiveRegionText = ( current, total, sectionRoot ) => {
+			const template =
+				sectionRoot?.dataset.testimonialsStatusTemplate ||
+				'Slide %1$d of %2$d';
 
-		return template
-			.replace( '%1$d', current )
-			.replace( '%2$d', total );
-	};
+			return template.replace( '%1$d', current ).replace( '%2$d', total );
+		};
 
-	const updateLiveRegion = ( swiper, container, rootSection ) => {
-		const statusId = rootSection?.dataset.testimonialsStatusId;
-		if ( ! statusId || ! swiper ) {
-			return;
-		}
-
-		const statusElement = container.querySelector( `#${ statusId }` );
-		if ( ! statusElement ) {
-			return;
-		}
-
-		const current = swiper.realIndex + 1;
-		const total = swiper.slides.length;
-
-		statusElement.textContent = getLiveRegionText(
-			current,
-			total,
-			rootSection
-		);
-	};
-
-	const ensureSwiperControls = ( container, rootSection ) => {
-		const statusId = rootSection?.dataset.testimonialsStatusId;
-		const prevLabel =
-			rootSection?.dataset.testimonialsPrevLabel ||
-			'Previous testimonial';
-		const nextLabel =
-			rootSection?.dataset.testimonialsNextLabel ||
-			'Next testimonial';
-
-		if ( statusId && ! container.querySelector( `#${ statusId }` ) ) {
-			const liveRegion = document.createElement( 'div' );
-			liveRegion.className = 'screen-reader-text';
-			liveRegion.id = statusId;
-			liveRegion.setAttribute( 'aria-live', 'polite' );
-			liveRegion.setAttribute( 'aria-atomic', 'true' );
-			liveRegion.textContent = getLiveRegionText( 1, 0, rootSection );
-			container.appendChild( liveRegion );
-		}
-
-		if ( ! container.querySelector( '.swiper-buttons' ) ) {
-			const buttonWrapper = document.createElement( 'div' );
-			buttonWrapper.className = 'swiper-buttons';
-
-			const prevButton = document.createElement( 'button' );
-			prevButton.type = 'button';
-			prevButton.className = 'custom-prev';
-			prevButton.setAttribute( 'aria-label', prevLabel );
-
-			const nextButton = document.createElement( 'button' );
-			nextButton.type = 'button';
-			nextButton.className = 'custom-next';
-			nextButton.setAttribute( 'aria-label', nextLabel );
-
-			if ( statusId ) {
-				prevButton.setAttribute( 'aria-controls', statusId );
-				nextButton.setAttribute( 'aria-controls', statusId );
-			}
-
-			buttonWrapper.appendChild( prevButton );
-			buttonWrapper.appendChild( nextButton );
-			container.appendChild( buttonWrapper );
-		}
-	};
-
-		const initMobileSwiper = () => {
-			const container = rootSection.querySelector( '.testimonial_slider' );
-			const parentGrid = container
-				? container.closest( '.ambry-testimonials__grid' )
-				: rootSection.querySelector( '.ambry-testimonials__grid' );
-		if ( ! parentGrid ) {
-			return;
-		}
-
-		/* =========================
-		 * DESKTOP
-		 * ========================= */
-		if ( window.innerWidth > 767 ) {
-			if ( ! container ) {
+		const updateLiveRegion = ( swiper, container, sectionRoot ) => {
+			const statusId = sectionRoot?.dataset.testimonialsStatusId;
+			if ( ! statusId || ! swiper ) {
 				return;
 			}
 
-			const activeElement = document.activeElement;
-			const wasFocusInSlider =
-				activeElement && container.contains( activeElement );
-			const focusedSlide = wasFocusInSlider
-				? activeElement.closest( '.ambry-testimonials__grid__item' )
-				: null;
-
-			destroySwiper( container );
-
-			// Get all testimonial items
-			const wrapper = container.querySelector(
-				'.ambry-testimonials__wrapper, .swiper-wrapper'
-			);
-			if ( wrapper ) {
-				const slides = Array.from(
-					wrapper.querySelectorAll(
-						'.ambry-testimonials__grid__item'
-					)
-				);
-
-				// Move slides out of wrapper directly into parent grid
-				slides.forEach( ( slide ) => {
-					slide.classList.remove( 'swiper-slide' );
-					slide.style.width = '';
-					slide.style.marginRight = '';
-					parentGrid.appendChild( slide );
-				} );
-
-				if ( wasFocusInSlider ) {
-					restoreFocus(
-						focusedSlide && focusedSlide.isConnected
-							? focusedSlide
-							: slides[ 0 ]
-					);
-				}
-
-				// Remove the container and wrapper divs
-				container.remove();
+			const statusElement = container.querySelector( `#${ statusId }` );
+			if ( ! statusElement ) {
+				return;
 			}
 
-			return;
-		}
+			const current = swiper.realIndex + 1;
+			const total = swiper.slides.length;
 
-		/* =========================
-		 * MOBILE
-		 * ========================= */
-		if ( window.innerWidth <= 768 ) {
-			// Check if swiper container already exists
-			let swiperContainer = rootSection.querySelector(
+			statusElement.textContent = getLiveRegionText(
+				current,
+				total,
+				sectionRoot
+			);
+		};
+
+		const ensureSwiperControls = ( container, sectionRoot ) => {
+			const statusId = sectionRoot?.dataset.testimonialsStatusId;
+			const prevLabel =
+				sectionRoot?.dataset.testimonialsPrevLabel ||
+				'Previous testimonial';
+			const nextLabel =
+				sectionRoot?.dataset.testimonialsNextLabel ||
+				'Next testimonial';
+
+			if ( statusId && ! container.querySelector( `#${ statusId }` ) ) {
+				const liveRegion = document.createElement( 'div' );
+				liveRegion.className = 'screen-reader-text';
+				liveRegion.id = statusId;
+				liveRegion.setAttribute( 'aria-live', 'polite' );
+				liveRegion.setAttribute( 'aria-atomic', 'true' );
+				liveRegion.textContent = getLiveRegionText( 1, 0, sectionRoot );
+				container.appendChild( liveRegion );
+			}
+
+			if ( ! container.querySelector( '.swiper-buttons' ) ) {
+				const buttonWrapper = document.createElement( 'div' );
+				buttonWrapper.className = 'swiper-buttons';
+
+				const prevButton = document.createElement( 'button' );
+				prevButton.type = 'button';
+				prevButton.className = 'custom-prev';
+				prevButton.setAttribute( 'aria-label', prevLabel );
+
+				const nextButton = document.createElement( 'button' );
+				nextButton.type = 'button';
+				nextButton.className = 'custom-next';
+				nextButton.setAttribute( 'aria-label', nextLabel );
+
+				if ( statusId ) {
+					prevButton.setAttribute( 'aria-controls', statusId );
+					nextButton.setAttribute( 'aria-controls', statusId );
+				}
+
+				buttonWrapper.appendChild( prevButton );
+				buttonWrapper.appendChild( nextButton );
+				container.appendChild( buttonWrapper );
+			}
+		};
+
+		function initMobileSwiper() {
+			const container = rootSection.querySelector(
 				'.testimonial_slider'
 			);
-
-			if ( ! swiperContainer ) {
-				// Create swiper container
-				swiperContainer = document.createElement( 'div' );
-				swiperContainer.className = 'testimonial_slider swiper';
-
-				// Create wrapper
-				const swiperWrapper = document.createElement( 'div' );
-				swiperWrapper.className =
-					'ambry-testimonials__wrapper swiper-wrapper';
-
-				// Get all testimonial items from grid
-				const items = Array.from(
-					parentGrid.querySelectorAll(
-						'.ambry-testimonials__grid__item'
-					)
-				);
-
-				// Move items into wrapper
-				items.forEach( ( item ) => {
-					item.classList.add( 'swiper-slide' );
-					swiperWrapper.appendChild( item );
-				} );
-
-				swiperContainer.appendChild( swiperWrapper );
-				parentGrid.appendChild( swiperContainer );
+			const parentGrid = container
+				? container.closest( '.ambry-testimonials__grid' )
+				: rootSection.querySelector( '.ambry-testimonials__grid' );
+			if ( ! parentGrid ) {
+				return;
 			}
 
-			ensureSwiperControls( swiperContainer, rootSection );
-
-			// Initialize swiper if not already initialized
-			if ( ! swiperContainer.swiper ) {
-				const wrapper = swiperContainer.querySelector(
-					'.swiper-wrapper, .ambry-testimonials__wrapper'
-				);
-				const slides = wrapper.children;
-
-				// Ensure swiper classes are present
-				if ( ! wrapper.classList.contains( 'swiper-wrapper' ) ) {
-					wrapper.classList.add( 'swiper-wrapper' );
+			/* =========================
+			 * DESKTOP
+			 * ========================= */
+			if ( window.innerWidth > 767 ) {
+				if ( ! container ) {
+					return;
 				}
 
-				Array.from( slides ).forEach( ( slide ) => {
-					slide.classList.add( 'swiper-slide' );
-				} );
+				const activeElement = container.ownerDocument.activeElement;
+				const wasFocusInSlider =
+					activeElement && container.contains( activeElement );
+				const focusedSlide = wasFocusInSlider
+					? activeElement.closest( '.ambry-testimonials__grid__item' )
+					: null;
 
-				swiperInstance = new Swiper( swiperContainer, {
-					modules: [ Navigation, EffectFade, Keyboard, A11y ],
-					slidesPerView: 1,
-					loop: false,
-					effect: 'fade',
-					fadeEffect: {
-						crossFade: true,
-					},
-					speed: 600,
-					navigation: {
-						nextEl: swiperContainer.querySelector( '.custom-next' ),
-						prevEl: swiperContainer.querySelector( '.custom-prev' ),
-					},
-					keyboard: {
-						enabled: true,
-						onlyInViewport: true,
-					},
-					a11y: {
-						enabled: true,
-						prevSlideMessage: 'Previous testimonial',
-						nextSlideMessage: 'Next testimonial',
-						firstSlideMessage: 'This is the first testimonial',
-						lastSlideMessage: 'This is the last testimonial',
-					},
-				} );
+				destroySwiper( container );
 
-				swiperInstance.on( 'slideChange', () =>
+				// Get all testimonial items
+				const wrapper = container.querySelector(
+					'.ambry-testimonials__wrapper, .swiper-wrapper'
+				);
+				if ( wrapper ) {
+					const slides = Array.from(
+						wrapper.querySelectorAll(
+							'.ambry-testimonials__grid__item'
+						)
+					);
+
+					// Move slides out of wrapper directly into parent grid
+					slides.forEach( ( slide ) => {
+						slide.classList.remove( 'swiper-slide' );
+						slide.style.cssText = '';
+						parentGrid.appendChild( slide );
+					} );
+
+					if ( wasFocusInSlider ) {
+						restoreFocus(
+							focusedSlide && focusedSlide.isConnected
+								? focusedSlide
+								: slides[ 0 ]
+						);
+					}
+
+					// Remove the container and wrapper divs
+					container.remove();
+				}
+
+				return;
+			}
+
+			/* =========================
+			 * MOBILE
+			 * ========================= */
+			if ( window.innerWidth <= 768 ) {
+				// Check if swiper container already exists
+				let swiperContainer = rootSection.querySelector(
+					'.testimonial_slider'
+				);
+
+				if ( ! swiperContainer ) {
+					// Create swiper container
+					swiperContainer = document.createElement( 'div' );
+					swiperContainer.className = 'testimonial_slider swiper';
+
+					// Create wrapper
+					const swiperWrapper = document.createElement( 'div' );
+					swiperWrapper.className =
+						'ambry-testimonials__wrapper swiper-wrapper';
+
+					// Get all testimonial items from grid
+					const items = Array.from(
+						parentGrid.querySelectorAll(
+							'.ambry-testimonials__grid__item'
+						)
+					);
+
+					// Move items into wrapper
+					items.forEach( ( item ) => {
+						item.classList.add( 'swiper-slide' );
+						swiperWrapper.appendChild( item );
+					} );
+
+					swiperContainer.appendChild( swiperWrapper );
+					parentGrid.appendChild( swiperContainer );
+				}
+
+				ensureSwiperControls( swiperContainer, rootSection );
+
+				// Initialize swiper if not already initialized
+				if ( ! swiperContainer.swiper ) {
+					const wrapper = swiperContainer.querySelector(
+						'.swiper-wrapper, .ambry-testimonials__wrapper'
+					);
+					const slides = wrapper.children;
+
+					// Ensure swiper classes are present
+					if ( ! wrapper.classList.contains( 'swiper-wrapper' ) ) {
+						wrapper.classList.add( 'swiper-wrapper' );
+					}
+
+					Array.from( slides ).forEach( ( slide ) => {
+						slide.classList.add( 'swiper-slide' );
+					} );
+
+					swiperInstance = new Swiper( swiperContainer, {
+						modules: [ Navigation, EffectFade, Keyboard, A11y ],
+						slidesPerView: 1,
+						loop: false,
+						effect: 'fade',
+						fadeEffect: {
+							crossFade: true,
+						},
+						speed: 600,
+						navigation: {
+							nextEl: swiperContainer.querySelector(
+								'.custom-next'
+							),
+							prevEl: swiperContainer.querySelector(
+								'.custom-prev'
+							),
+						},
+						keyboard: {
+							enabled: true,
+							onlyInViewport: true,
+						},
+						a11y: {
+							enabled: true,
+							prevSlideMessage: 'Previous testimonial',
+							nextSlideMessage: 'Next testimonial',
+							firstSlideMessage: 'This is the first testimonial',
+							lastSlideMessage: 'This is the last testimonial',
+						},
+					} );
+
+					swiperInstance.on( 'slideChange', () =>
+						updateLiveRegion(
+							swiperInstance,
+							swiperContainer,
+							rootSection
+						)
+					);
 					updateLiveRegion(
 						swiperInstance,
 						swiperContainer,
 						rootSection
-					)
-				);
-				updateLiveRegion( swiperInstance, swiperContainer, rootSection );
+					);
+				}
 			}
 		}
-		};
 
-		const rootGrid = rootSection.querySelector( '.ambry-testimonials__grid' );
+		const rootGrid = rootSection.querySelector(
+			'.ambry-testimonials__grid'
+		);
 
 		if ( rootGrid ) {
 			cleanupObserver = new MutationObserver( () => {
@@ -307,7 +317,6 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			} );
 		}
 
-		resizeHandler = debounce( initMobileSwiper, 250 );
 		initMobileSwiper();
 		window.addEventListener( 'resize', resizeHandler );
 		window.addEventListener( 'beforeunload', cleanup, { once: true } );

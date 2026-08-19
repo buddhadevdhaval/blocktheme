@@ -31,12 +31,10 @@
 	text-transform: uppercase;
 }
 
-// Text-decuration none
 .text-decuration-none {
 	text-decoration: none;
 }
 
-// flex
 
 .d-flex {
 	display: flex;
@@ -264,11 +262,12 @@ picture {
 	justify-content: center;
 
 	.site-btn {
+
 		&.has-right-arrow {
 			flex-direction: column;
 			gap: 8px;
 
-			&:after {
+			&::after {
 				position: relative;
 				transform: rotate(90deg);
 				margin: 0;
@@ -336,8 +335,6 @@ picture {
 	display: inline-flex;
 
 	&::before {
-		background-repeat: no-repeat;
-		background-size: contain;
 		content: "";
 		flex: 12px 0 0;
 		height: 12px;
@@ -359,7 +356,7 @@ picture {
 		border: none;
 		box-shadow: none;
 
-		&:before {
+		&::before {
 			background-image: url(../images/primary700-icons/right-icon.svg);
 		}
 	}
@@ -391,7 +388,31 @@ picture {
 
 
 .wp-block-ambrygen-section-container:has(.icon-grid) {
-    position: relative;
-    overflow: hidden;
+	position: relative;
+	overflow: hidden;
 }
 
+
+
+
+.error-404-content {
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.error-content-title {
+	font-size: clamp(80px, calc(5rem + ((1vw - 7.68px) * 10.3093)), 140px);
+	line-height: 1;
+}
+
+.wp-btn-align-center {
+	justify-content: center;
+	align-items: center;
+}
+
+
+.legal-content-page {
+	word-wrap: break-word;
+}

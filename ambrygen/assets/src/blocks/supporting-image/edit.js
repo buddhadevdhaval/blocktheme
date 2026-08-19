@@ -94,17 +94,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				<div className="supporting-image__chart-card">
 					<div className="supporting-image__chart-image">
 						{ imageUrl ? (
-							<img
-								src={ imageUrl }
-								alt={ imageAlt || '' }
-							/>
+							<img src={ imageUrl } alt={ imageAlt || '' } />
 						) : (
 							<Placeholder
 								icon="format-image"
-								label={ __(
-									'Chart image',
-									'ambrygen-web'
-								) }
+								label={ __( 'Chart image', 'ambrygen-web' ) }
 								instructions={ __(
 									'Upload the supporting image from block settings.',
 									'ambrygen-web'
@@ -122,15 +116,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { heading: value } )
 						}
-						placeholder={ __(
-							'Add Heading...',
-							'ambrygen-web'
-						) }
+						placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 					/>
-					<div
-						className="is-style-gl-s24"
-						aria-hidden="true"
-					></div>
+					<div className="is-style-gl-s24" aria-hidden="true"></div>
 					<RichText
 						tagName="div"
 						className="subtitle1-regular supporting-image__description  block-description"
@@ -138,10 +126,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { description: value } )
 						}
-						placeholder={ __(
-							'Add Description...',
-							'ambrygen-web'
-						) }
+						placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
 					/>
 				</div>
 			</div>

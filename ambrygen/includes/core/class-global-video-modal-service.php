@@ -2,29 +2,36 @@
 
 namespace Ambrygen\Theme\Core;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
-final class GlobalVideoModalService
-{
+/**
+ * Render the shared frontend video modal.
+ */
+final class GlobalVideoModalService {
+
 	use Singleton;
 
-	protected function __construct()
-	{
-		add_action('wp_footer', array($this, 'render_modal'));
+	/**
+	 * Register global video modal hooks.
+	 */
+	protected function __construct() {
+		add_action( 'wp_footer', array( $this, 'render_modal' ) );
 	}
 
-	public function render_modal(): void
-	{
+	/**
+	 * Render the shared video modal markup.
+	 */
+	public function render_modal(): void {
 		?>
 		<div class="modal-popup modal-popup--video global-video-modal" id="global-video-modal" data-video-modal
 			style="display: none;">
 			<div class="modal-popup__overlay"></div>
 			<div class="modal-popup__panel" role="dialog" aria-modal="true" aria-labelledby="global-video-modal-title">
 				<button type="button" class="modal-popup__close"
-					aria-label="<?php esc_attr_e('Close modal', 'ambrygen-web'); ?>">
+					aria-label="<?php esc_attr_e( 'Close modal', 'ambrygen-web' ); ?>">
 					<img decoding="async"
-						src="<?php echo esc_url(get_theme_file_uri('assets/src/images/close-icon.svg')); ?>"
-						alt="<?php esc_attr_e('Close', 'ambrygen-web'); ?>" />
+						src="<?php echo esc_url( get_theme_file_uri( 'assets/src/images/close-icon.svg' ) ); ?>"
+						alt="<?php esc_attr_e( 'Close', 'ambrygen-web' ); ?>" />
 				</button>
 				<div class="modal-content">
 					<div id="global-video-modal-container" class="modal-content__video-wrapper" data-video-modal-container>

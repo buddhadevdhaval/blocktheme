@@ -2,32 +2,26 @@
 /**
  * Render: Tabs Content Block
  *
- * @param array  $attributes The block attributes.
- * @param string $content    The block content.
+ * @param array    $attributes The block attributes.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block instance.
  *
  * @package ambrygen
  */
 
 defined( 'ABSPATH' ) || exit;
 
-$ambrygen_content = trim( (string) ( $content ?? '' ) );
-
-if ( ! $ambrygen_content ) {
+if ( empty( $block->inner_blocks ) ) {
 	return;
 }
 
-$ambrygen_blocks = parse_blocks( $ambrygen_content );
-
 // Prefer the first item explicitly marked as default active; otherwise fall back to first item.
 $ambrygen_has_explicit_default = false;
-foreach ( $ambrygen_blocks as $ambrygen_block ) {
-	if ( ! is_array( $ambrygen_block ) ) {
+foreach ( $block->inner_blocks as $ambrygen_inner_block ) {
+	if ( 'ambrygen/tabs-content-item' !== $ambrygen_inner_block->name ) {
 		continue;
 	}
-	if ( 'ambrygen/tabs-content-item' !== ( $ambrygen_block['blockName'] ?? '' ) ) {
-		continue;
-	}
-	$ambrygen_attrs = is_array( $ambrygen_block['attrs'] ?? null ) ? $ambrygen_block['attrs'] : array();
+	$ambrygen_attrs = is_array( $ambrygen_inner_block->attributes ?? null ) ? $ambrygen_inner_block->attributes : array();
 	if ( ! empty( $ambrygen_attrs['isDefaultActive'] ) ) {
 		$ambrygen_has_explicit_default = true;
 		break;
@@ -37,18 +31,17 @@ foreach ( $ambrygen_blocks as $ambrygen_block ) {
 $ambrygen_found_item = false;
 ?>
 
-<div class="tabs-table-content">
-	<?php foreach ( $ambrygen_blocks as $ambrygen_block ) : ?>
+<div class="tabs-table-content block-layout">
+	<?php foreach ( $block->inner_blocks as $ambrygen_inner_block ) : ?>
 		<?php
-		$ambrygen_html = render_block( $ambrygen_block );
+		$ambrygen_html = $ambrygen_inner_block->render();
 
 		if (
 			! $ambrygen_found_item
-			&& is_array( $ambrygen_block )
-			&& 'ambrygen/tabs-content-item' === ( $ambrygen_block['blockName'] ?? '' )
+			&& 'ambrygen/tabs-content-item' === $ambrygen_inner_block->name
 			&& '' !== trim( $ambrygen_html )
 		) {
-			$ambrygen_attrs = is_array( $ambrygen_block['attrs'] ?? null ) ? $ambrygen_block['attrs'] : array();
+			$ambrygen_attrs             = is_array( $ambrygen_inner_block->attributes ?? null ) ? $ambrygen_inner_block->attributes : array();
 			$ambrygen_is_default_active = (bool) ( $ambrygen_attrs['isDefaultActive'] ?? false );
 
 			// When any tab is explicitly marked, only the marked one gets is-active.
@@ -61,7 +54,10 @@ $ambrygen_found_item = false;
 				$ambrygen_processor = new WP_HTML_Tag_Processor( $ambrygen_html );
 				if ( $ambrygen_processor->next_tag( array( 'class_name' => 'tabs-table-content__item' ) ) ) {
 					$ambrygen_processor->add_class( 'is-active' );
-					$ambrygen_html = $ambrygen_processor->get_updated_html();
+					if ( $ambrygen_processor->next_tag( array( 'class_name' => 'tabs-table-content__header' ) ) ) {
+						$ambrygen_processor->set_attribute( 'aria-expanded', 'true' );
+					}
+					$ambrygen_html       = $ambrygen_processor->get_updated_html();
 					$ambrygen_found_item = true;
 				}
 			} else {
@@ -73,8 +69,14 @@ $ambrygen_found_item = false;
 				);
 
 				if ( is_string( $ambrygen_updated_html ) && $ambrygen_updated_html !== $ambrygen_html ) {
-					$ambrygen_html = $ambrygen_updated_html;
-					$ambrygen_found_item = true;
+					$ambrygen_expanded_html = preg_replace(
+						'/(class=(["\'])[^"\']*\\btabs-table-content__header\\b[^"\']*\\2[^>]*aria-expanded=)(["\'])false\\3/',
+						'$1$3true$3',
+						$ambrygen_updated_html,
+						1
+					);
+					$ambrygen_html          = is_string( $ambrygen_expanded_html ) ? $ambrygen_expanded_html : $ambrygen_updated_html;
+					$ambrygen_found_item    = true;
 				}
 			}
 		}

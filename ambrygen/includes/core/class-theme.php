@@ -13,6 +13,9 @@ use Ambrygen\Theme\Core\Admin\MarketingMaterialTrackingAdminController;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Theme core bootstrap service.
+ */
 final class Theme {
 
 	use Singleton;
@@ -88,11 +91,14 @@ final class Theme {
 	public function load_components(): void {
 		// Frontend + shared components.
 		Helper::instance();
+		Contact_Info_Form_Visibility::instance();
 		GlobalVideoModalService::instance();
 		TeamCacheService::instance();
 		Blocks::instance();
 		BlockVisibilityService::instance();
 		Assets::instance();
+		Canonical_Service::instance();
+		Security_Headers::instance();
 		Patterns::instance();
 		// AJAX Controllers
 		\Ambrygen\Theme\Core\Conferences\ConferenceAjaxController::instance();

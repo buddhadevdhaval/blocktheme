@@ -2,6 +2,7 @@
 @use "../variables/fluid_mixins" as *;
 
 .cardiology-filter {
+
 	&__grid {
 		display: flex;
 		flex-direction: column;
@@ -21,14 +22,6 @@
 		color: var(--theme_cg_blue);
 	}
 
-	&__title {
-		// color: var(--theme_gray_900);
-	}
-
-	&__desc {
-		// color: var(--theme_gray_900);
-	}
-
 	&__items-grid {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
@@ -44,7 +37,7 @@
 		background: #fff;
 		border-radius: 12px;
 		padding: fluid(16, 32);
-		box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+		box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
 		display: flex;
 		flex-direction: column;
 	}
@@ -95,6 +88,7 @@
 
 
 .cardiology-filter__grid {
+
 	.tabs__nav {
 		max-width: 100%;
 		width: 100%;
@@ -127,7 +121,9 @@
 	}
 
 	.gl-data-table-body {
+
 		.gl-data-table {
+
 			.gl-data-table__row {
 				grid-template-columns: 84px 210px 91px 1fr 125px 150px;
 

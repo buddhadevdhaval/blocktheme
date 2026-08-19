@@ -14,7 +14,8 @@
   },
   "supports": {
     "html": false,
-    "anchor": true
+    "anchor": true,
+    "inserter": false
   },
   "usesContext": [
     "postId",

@@ -20,7 +20,7 @@ $media: (
 @function bp($value) {
 
 	// Raw value like 768px
-	@if meta.type-of($value)==number and not math.is-unitless($value) {
+	@if meta.type-of($value) == number and not math.is-unitless($value) {
 
 		@return $value;
 	}

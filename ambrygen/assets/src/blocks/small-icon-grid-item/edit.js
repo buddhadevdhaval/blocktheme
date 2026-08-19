@@ -9,19 +9,14 @@ import { __ } from '@wordpress/i18n';
 import { ImageUploader } from '../_shared/components';
 import { getThemeAssetUrl } from '../../utils/assets';
 
-export default function Edit( { attributes, setAttributes } ) {
-	const {
-		icon = {},
-		title = '',
-		description = '',
-		links = [],
-	} = attributes;
+const PLACEHOLDER_ICON = {
+	url: getThemeAssetUrl( '/assets/src/images/logo.png' ),
+	alt: __( 'Ambrygen logo', 'ambrygen-web' ),
+};
 
-	const placeholderIcon = {
-		url: getThemeAssetUrl( '/assets/src/images/logo.png' ),
-		alt: __( 'Ambrygen logo', 'ambrygen-web' ),
-	};
-	const displayIcon = icon?.url ? icon : placeholderIcon;
+export default function Edit( { attributes, setAttributes } ) {
+	const { icon = {}, title = '', description = '', links = [] } = attributes;
+	const displayIcon = icon?.url ? icon : PLACEHOLDER_ICON;
 
 	const updateLink = ( index, field, value ) => {
 		const updated = [ ...links ];
@@ -85,7 +80,10 @@ export default function Edit( { attributes, setAttributes } ) {
 							color: '#666',
 						} }
 					>
-						{ __( 'Use only 50px x 50px icon size.', 'ambrygen-web' ) }
+						{ __(
+							'Use only 50px x 50px icon size.',
+							'ambrygen-web'
+						) }
 					</p>
 
 					{ links.map( ( link, i ) => (
@@ -101,7 +99,9 @@ export default function Edit( { attributes, setAttributes } ) {
 							<TextControl
 								label={ `Link ${ i + 1 } Label` }
 								value={ link.label }
-								onChange={ ( value ) => updateLink( i, 'label', value ) }
+								onChange={ ( value ) =>
+									updateLink( i, 'label', value )
+								}
 							/>
 
 							<LinkControl
@@ -115,7 +115,9 @@ export default function Edit( { attributes, setAttributes } ) {
 									updated[ i ] = {
 										...updated[ i ],
 										url: newLink.url,
-										target: newLink.opensInNewTab ? '_blank' : '',
+										target: newLink.opensInNewTab
+											? '_blank'
+											: '',
 										rel: newLink.opensInNewTab
 											? 'noopener noreferrer'
 											: '',
@@ -178,15 +180,9 @@ export default function Edit( { attributes, setAttributes } ) {
 				<div className="is-style-gl-s20" aria-hidden="true"></div>
 
 				{ links?.[ 0 ]?.url && links?.[ 0 ]?.label && (
-					<a
-						href={ links[ 0 ].url }
-						target={ links[ 0 ].target || undefined }
-						rel={ links[ 0 ].rel || undefined }
-						className="site-btn is-style-site-text-btn has-right-arrow"
-						onClick={ ( e ) => e.preventDefault() }
-					>
+					<div className="site-btn is-style-site-text-btn has-right-arrow">
 						{ links[ 0 ].label }
-					</a>
+					</div>
 				) }
 			</div>
 		</>

@@ -1,5 +1,5 @@
 ﻿import { useBlockProps } from '@wordpress/block-editor';
-import ServerSideRender from '@wordpress/server-side-render';
+import ServerSideRender from '../_shared/server-side-render';
 
 export default function Edit( { attributes, name } ) {
 	const blockProps = useBlockProps();

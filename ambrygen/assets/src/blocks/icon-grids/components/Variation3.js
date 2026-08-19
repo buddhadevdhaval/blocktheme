@@ -9,10 +9,19 @@ import {
 import { useSelect } from '@wordpress/data';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
+import { generateMenuId, ensureArrayItemIds } from '../../_shared/utils';
 
 export default function Variation3( { attributes, setAttributes } ) {
 	const { heading, headingTag, description, selectedTabs = [] } = attributes;
+
+	useEffect( () => {
+		const normalizedTabs = ensureArrayItemIds( selectedTabs );
+
+		if ( normalizedTabs.hasChanges ) {
+			setAttributes( { selectedTabs: normalizedTabs.items } );
+		}
+	}, [ selectedTabs, setAttributes ] );
 
 	const { terms, hasResolvedTerms } = useSelect( ( select ) => {
 		const { getEntityRecords, hasFinishedResolution } = select( 'core' );
@@ -84,7 +93,10 @@ export default function Variation3( { attributes, setAttributes } ) {
 
 	const addTab = () => {
 		setAttributes( {
-			selectedTabs: [ ...selectedTabs, { text: '', termSlug: 'all' } ],
+			selectedTabs: [
+				...selectedTabs,
+				{ id: generateMenuId(), text: '', termSlug: 'all' },
+			],
 		} );
 	};
 
@@ -117,7 +129,7 @@ export default function Variation3( { attributes, setAttributes } ) {
 				<PanelBody title={ __( 'Tabs Navigation', 'ambrygen-web' ) }>
 					{ selectedTabs.map( ( tab, i ) => (
 						<div
-							key={ i }
+							key={ tab.id || tab.termSlug || tab.text }
 							style={ {
 								marginBottom: 16,
 								border: '1px solid #ccc',
@@ -132,7 +144,10 @@ export default function Variation3( { attributes, setAttributes } ) {
 								}
 							/>
 							<SelectControl
-								label={ __( 'Target Category', 'ambrygen-web' ) }
+								label={ __(
+									'Target Category',
+									'ambrygen-web'
+								) }
 								value={ tab.termSlug }
 								options={ [
 									{
@@ -153,7 +168,7 @@ export default function Variation3( { attributes, setAttributes } ) {
 								help={
 									! hasResolvedTerms
 										? __(
-												'Loading categories...',
+												'Loading categories…',
 												'ambrygen-web'
 										  )
 										: ''
@@ -176,15 +191,15 @@ export default function Variation3( { attributes, setAttributes } ) {
 			<section className="features-tabs">
 				<div className="features-tabs__header block__rowflex">
 					<div className="block__rowflex--col-left">
-					<RichText
-						tagName={ headingTag || 'h2' }
-						className="heading-2 block-title mb-0 block__rowflex--heading-title"
-						value={ heading }
-						onChange={ ( value ) =>
-							setAttributes( { heading: value } )
-						}
-						placeholder="Add Title..."
-					/>
+						<RichText
+							tagName={ headingTag || 'h2' }
+							className="heading-2 block-title mb-0 block__rowflex--heading-title"
+							value={ heading }
+							onChange={ ( value ) =>
+								setAttributes( { heading: value } )
+							}
+							placeholder="Add Title..."
+						/>
 					</div>
 
 					<div className="block__rowflex--block-content subtitle-1-regular">
@@ -206,9 +221,9 @@ export default function Variation3( { attributes, setAttributes } ) {
 				<div className="tabs-content bg-gradient1">
 					<div className="tabs__nav">
 						{ selectedTabs.length > 0 ? (
-							selectedTabs.map( ( tab, index ) => (
+							selectedTabs.map( ( tab ) => (
 								<button
-									key={ index }
+									key={ tab.id || tab.termSlug || tab.text }
 									className={ `tabs__tab text-md-Semibold ${
 										activeTab === tab.termSlug
 											? 'is-active'

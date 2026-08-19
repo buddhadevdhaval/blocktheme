@@ -1,6 +1,8 @@
 <!-- wp:group {"tagName":"section","className":"container-1280 bg-primary_25","layout":{"type":"default"}} -->
 <section class="wp-block-group container-1280 bg-primary_25">
-	<div class="is-style-gl-s50" aria-hidden="true"></div>
+	<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
+	<div style="height:50px" aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
+	<!-- /wp:spacer -->
 	<!-- wp:group {"className":"wrapper","layout":{"type":"default"}} -->
 	<div class="wp-block-group wrapper">
 		<!-- wp:group {"className":"event-carousel","layout":{"type":"default"}} -->
@@ -10,57 +12,19 @@
 			<!-- /wp:heading -->
 
 			<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
-			<div class="is-style-gl-s50" aria-hidden="true"></div>
+			<div style="height:50px" aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
 			<!-- /wp:spacer -->
 
-			<!-- wp:group {"className":"category-filter-search","layout":{"type":"default"}} -->
-			<div class="wp-block-group category-filter-search">
-				<!-- wp:group {"className":"category-filter-search__dropdown","layout":{"type":"default"}} -->
-				<div class="wp-block-group category-filter-search__dropdown">
-					<!-- wp:html -->
-					<div class="tab-dropdown">
-						<button class="dropdown-toggle" id="webinar-dropdown-btn" type="button" aria-expanded="false"
-							aria-controls="webinar-dropdown-menu-past">All Years</button>
-						<ul id="webinar-dropdown-menu-past" class="dropdown-menu">
-							<li><a href="#" aria-current="page">All Years</a></li>
-						</ul>
-					</div>
-					<!-- /wp:html -->
-				</div>
-				<!-- /wp:group -->
-
-				<!-- wp:group {"className":"category-filter-search__tabs","layout":{"type":"default"}} -->
-				<div class="wp-block-group category-filter-search__tabs">
-					<!-- wp:html -->
-					<div class="horizontal-tabs tabs__nav" role="tablist" id="webinar-tabs-past">
-						<button type="button" class="tab-button active tabs__tab text-md-Semibold" data-tag-id="0" role="tab">All</button>
-					</div>
-					<!-- /wp:html -->
-				</div>
-				<!-- /wp:group -->
-
-				<!-- wp:group {"className":"category-filter-search__search","layout":{"type":"default"}} -->
-				<div class="wp-block-group category-filter-search__search">
-					<!-- wp:html -->
-					<form id="category-search-form-past-webinar" role="search" method="get" action="/">
-						<input type="text" name="s" aria-label="Search for:" placeholder="Search">
-						<button class="button" type="submit">Search</button>
-					</form>
-					<!-- /wp:html -->
-				</div>
-				<!-- /wp:group -->
-			</div>
-			<!-- /wp:group -->
+			<!-- wp:ambrygen/webinar-archive-filters {"archiveType":"past"} /-->
 
 			<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
-			<div class="is-style-gl-s50" aria-hidden="true"></div>
+			<div style="height:50px" aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
 			<!-- /wp:spacer -->
 
-			<!-- wp:html -->
-			<div class="ambrygen-ajax-pagination" data-ambrygen-scope="past" data-ambrygen-per-page="8"
-				data-ambrygen-order="DESC" data-ambrygen-post-type="webinar">
-				<div class="ambrygen-ajax-pagination__content">
-					<!-- /wp:html -->
+			<!-- wp:group {"className":"ambrygen-ajax-pagination ambrygen-ajax-pagination--past ambrygen-ajax-pagination--desc ambrygen-ajax-pagination--per-page-8","layout":{"type":"default"}} -->
+			<div class="wp-block-group ambrygen-ajax-pagination ambrygen-ajax-pagination--past ambrygen-ajax-pagination--desc ambrygen-ajax-pagination--per-page-8">
+				<!-- wp:group {"className":"ambrygen-ajax-pagination__content","layout":{"type":"default"}} -->
+				<div class="wp-block-group ambrygen-ajax-pagination__content">
 
 					<!-- wp:query {"queryId":30,"query":{"perPage":8,"postType":"webinar","order":"desc","orderBy":"date","inherit":false}} -->
 					<div class="wp-block-query">
@@ -69,57 +33,22 @@
 						<!-- /wp:post-template -->
 
 						<!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
-						<div class="is-style-gl-s50" aria-hidden="true"></div>
+						<div style="height:64px" aria-hidden="true" class="wp-block-spacer is-style-gl-s64"></div>
 						<!-- /wp:spacer -->
 					</div>
 					<!-- /wp:query -->
 
-					<!-- wp:html -->
-						<div class="pagination-buttons-row">
-							<div class="pagination-container">
-								<div class="desktop-pages">
-									<button id="desktopprev" class="arrow-btn"></button>
-									<div id="paginationList-past" class="pagination-list">
-										<button class="page-btn active">1</button>
-									</div>
-									<button id="desktopnext" class="arrow-btn"></button>
-								</div>
-
-								<div class="mobile-pagination">
-									<button id="prevbtn" class="arrow-btn"></button>
-									<button id="pagetrigger-past" class="page-trigger">1/1</button>
-									<button id="nextbtn" class="arrow-btn"></button>
-								</div>
-
-								<div id="paginationPopup-past" class="pagination-popup">
-									<div class="popup-body">
-										<div id="popupGrid-past" class="popup-grid">
-											<button class="page-btn active">1</button>
-										</div>
-										<button id="popupPrev" class="arrow-btn"></button>
-										<button id="popupNext" class="arrow-btn"></button>
-									</div>
-								</div>
-							</div>
-							<div class="tab-dropdown">
-								<button class="dropdown-toggle" id="category-dropdown-btn-past-perpage" type="button"
-									aria-expanded="false" aria-controls="category-dropdown-menu-past-perpage">8 /
-									page</button>
-								<ul id="category-dropdown-menu-past-perpage" class="dropdown-menu">
-									<li><a href="#" aria-current="page">8 / page</a></li>
-									<li><a href="#">16 / page</a></li>
-									<li><a href="#">24 / page</a></li>
-								</ul>
-							</div>
-						</div>
-					<!-- /wp:html -->
+					<!-- wp:ambrygen/webinar-archive-pagination {"archiveType":"past"} /-->
 				</div>
+				<!-- /wp:group -->
 			</div>
-			<!-- /wp:html -->
+			<!-- /wp:group -->
 		</div>
 		<!-- /wp:group -->
 	</div>
 	<!-- /wp:group -->
-	<div aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
+	<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
+	<div style="height:50px" aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
+	<!-- /wp:spacer -->
 </section>
 <!-- /wp:group -->

@@ -144,8 +144,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								...currentStep,
 								iconUrl: media.url,
 								iconId: media.id || 0,
-								iconAlt:
-									media.alt || currentStep.iconAlt || '',
+								iconAlt: media.alt || currentStep.iconAlt || '',
 						  }
 						: currentStep
 				)
@@ -264,13 +263,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { headingText: value } )
 						}
-						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 					/>
 
-					<div
-						className="is-style-gl-s12"
-						aria-hidden="true"
-					></div>
+					<div className="is-style-gl-s12" aria-hidden="true"></div>
 
 					<RichText
 						tagName="p"
@@ -279,13 +275,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { subtitle: value } )
 						}
-						placeholder={ __(
-							'Add Description...',
-							'ambrygen-web'
-						) }
+						placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
 					/>
 				</div>
-
 
 				<div className="is-style-gl-s32" aria-hidden="true"></div>
 

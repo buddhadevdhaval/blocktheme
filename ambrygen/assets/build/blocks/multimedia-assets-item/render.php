@@ -20,12 +20,12 @@ $ambrygen_image_url     = isset( $ambrygen_attributes['imageUrl'] ) ? esc_url_ra
 $ambrygen_image_alt     = isset( $ambrygen_attributes['imageAlt'] ) ? sanitize_text_field( $ambrygen_attributes['imageAlt'] ) : '';
 $ambrygen_video_title   = $ambrygen_attributes['videoTitle'] ?? '';
 $ambrygen_video_content = isset( $ambrygen_attributes['videoContent'] ) ? wp_kses_post( $ambrygen_attributes['videoContent'] ) : '';
-$ambrygen_cta           = $ambrygen_attributes['cta'] ?? array();
+$ambrygen_cta           = isset( $ambrygen_attributes['cta'] ) && is_array( $ambrygen_attributes['cta'] ) ? $ambrygen_attributes['cta'] : array();
 $ambrygen_files         = $ambrygen_attributes['files'] ?? array();
 
-$ambrygen_cta_text     = $ambrygen_cta['text'] ?? '';
+$ambrygen_cta_text     = isset( $ambrygen_cta['text'] ) ? sanitize_text_field( $ambrygen_cta['text'] ) : '';
 $ambrygen_cta_url      = isset( $ambrygen_cta['url'] ) ? esc_url_raw( $ambrygen_cta['url'] ) : '';
-$ambrygen_cta_target   = isset( $ambrygen_cta['target'] ) ? sanitize_text_field( $ambrygen_cta['target'] ) : '';
+$ambrygen_cta_target   = isset( $ambrygen_cta['target'] ) && '_blank' === $ambrygen_cta['target'] ? '_blank' : '';
 $ambrygen_cta_rel      = isset( $ambrygen_cta['rel'] ) ? sanitize_text_field( $ambrygen_cta['rel'] ) : '';
 $ambrygen_cta_variant  = isset( $ambrygen_cta['variant'] ) ? sanitize_html_class( $ambrygen_cta['variant'] ) : 'dark';
 $ambrygen_is_popup     = ! empty( $ambrygen_cta['isPopup'] );
@@ -44,20 +44,24 @@ $ambrygen_files            = array_values(
 	array_filter(
 		$ambrygen_files,
 		static function ( $file ) {
-			return ! empty( $file['fileUrl'] );
+			return is_array( $file ) && ! empty( $file['fileUrl'] );
 		}
 	)
 );
-$ambrygen_has_text_content = ! empty( $ambrygen_title ) || ! empty( $ambrygen_files );
+$ambrygen_has_title        = '' !== trim( wp_strip_all_tags( $ambrygen_title ) );
+$ambrygen_has_text_content = $ambrygen_has_title || ! empty( $ambrygen_files );
 
-/*
-|--------------------------------------------------------------------------
-| Ensure rel attribute is secure if target=_blank
-|--------------------------------------------------------------------------
-*/
-if ( '_blank' === $ambrygen_cta_target && empty( $ambrygen_cta_rel ) ) {
-	$ambrygen_cta_rel = 'noopener noreferrer';
+if ( $ambrygen_cta_rel ) {
+	$ambrygen_cta_rel = preg_split( '/\s+/', $ambrygen_cta_rel, -1, PREG_SPLIT_NO_EMPTY );
+} else {
+	$ambrygen_cta_rel = array();
 }
+
+if ( '_blank' === $ambrygen_cta_target ) {
+	$ambrygen_cta_rel = array_merge( $ambrygen_cta_rel, array( 'noopener', 'noreferrer' ) );
+}
+
+$ambrygen_cta_rel = implode( ' ', array_unique( array_filter( $ambrygen_cta_rel ) ) );
 
 $ambrygen_wrapper_attrs = get_block_wrapper_attributes( array( 'class' => 'approach-card js-gsap-fade' ) );
 
@@ -90,9 +94,10 @@ if ( $ambrygen_is_popup && 'video' === $ambrygen_popup_type ) {
 					$ambrygen_image_url,
 					'medium_large',
 					array(
-						'class'   => 'card-image',
-						'loading' => 'lazy',
-						'alt'     => $ambrygen_image_alt,
+						'class'    => 'card-image',
+						'loading'  => 'lazy',
+						'decoding' => 'async',
+						'alt'      => $ambrygen_image_alt,
 					),
 					true
 				);
@@ -103,7 +108,7 @@ if ( $ambrygen_is_popup && 'video' === $ambrygen_popup_type ) {
 				<div class="is-style-gl-s24" aria-hidden="true"></div>
 			<?php endif; ?>
 				<div class="approach-card__text-content">
-					<?php if ( ! empty( $ambrygen_title ) ) : ?>
+					<?php if ( $ambrygen_has_title ) : ?>
 						<h3 class="approach-card__title heading-5 mb-0">
 							<?php
 							echo wp_kses(
@@ -133,7 +138,7 @@ if ( $ambrygen_is_popup && 'video' === $ambrygen_popup_type ) {
 												download
 											>
 												<?php if ( $file_size_type ) : ?>
-														<?php echo esc_html( $file_size_type ); ?>
+													<?php echo esc_html( $file_size_type ); ?>
 												<?php endif; ?>
 											</a>
 										</div>
@@ -155,6 +160,9 @@ if ( $ambrygen_is_popup && 'video' === $ambrygen_popup_type ) {
 					<button
 						type="button"
 						class="approach-card__cta <?php echo esc_attr( $ambrygen_cta_variant ); ?> site-btn has-video-arrow"
+						aria-haspopup="dialog"
+						aria-expanded="false"
+						aria-controls="ambry-global-video-modal"
 						data-video-type="<?php echo esc_attr( $ambrygen_video_type ); ?>"
 						data-video-title="<?php echo esc_attr( $ambrygen_video_title_popup ); ?>"
 						data-video-content="<?php echo esc_attr( $ambrygen_video_content ); ?>"
@@ -180,7 +188,10 @@ if ( $ambrygen_is_popup && 'video' === $ambrygen_popup_type ) {
 				<?php elseif ( $ambrygen_is_popup && 'form' === $ambrygen_popup_type ) : ?>
 					<button
 						type="button"
-						class="approach-card__cta <?php echo esc_attr( $ambrygen_cta_variant ); ?> site-btn has-right-arrow"
+						class="approach-card__cta <?php echo esc_attr( $ambrygen_cta_variant ); ?> site-btn has-form-arrow has-right-arrow"
+						aria-haspopup="dialog"
+						aria-expanded="false"
+						aria-controls="ambry-global-video-modal"
 						data-form-title="<?php echo esc_attr( $ambrygen_form_title ); ?>"
 						data-form-content="<?php echo esc_attr( $ambrygen_form_content ); ?>"
 					>

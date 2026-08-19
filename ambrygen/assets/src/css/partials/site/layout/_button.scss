@@ -42,21 +42,20 @@
 	font-weight: 600;
 	letter-spacing: -.24px;
 	line-height: 1.5;
-	outline: none;
 	overflow: hidden;
 	padding: 12px 20px;
 	position: relative;
 	text-align: center;
 	text-decoration: none;
 	text-transform: capitalize;
-	transition: .35s;
+	transition: background-color 0.35s, color 0.35s, border-color 0.35s, box-shadow 0.35s;
 	align-items: center;
 	height: auto;
 	margin: 0;
 
 	&:hover {
 		background-color: var(--theme_color_primary);
-		color: #fff;
+		color: var(--theme_white);
 		border-color: transparent;
 	}
 
@@ -87,6 +86,7 @@
 	}
 
 	&.has-right-arrow {
+
 		&::after {
 			background-image: var(--btn-arrow-right-url);
 			background-repeat: no-repeat;
@@ -97,7 +97,7 @@
 			margin-left: 17px;
 			position: relative;
 			top: -1px;
-			transition: all 0.2s ease-in-out;
+			transition: background-image 0.2s ease-in-out;
 			width: 12px;
 
 			@include bp.max(md) {
@@ -107,6 +107,7 @@
 	}
 
 	&.has-download-arrow {
+
 		&::after {
 			background-image: var(--btn-arrow-download-url);
 			background-repeat: no-repeat;
@@ -117,7 +118,7 @@
 			margin-left: 17px;
 			position: relative;
 			top: -1px;
-			transition: all 0.2s ease-in-out;
+			transition: background-image 0.2s ease-in-out;
 			width: 20px;
 
 			@include bp.max(md) {
@@ -127,6 +128,7 @@
 	}
 
 	&.has-video-arrow {
+
 		&::after {
 			background-image: var(--btn-arrow-video-url);
 			background-repeat: no-repeat;
@@ -137,7 +139,7 @@
 			margin-left: 17px;
 			position: relative;
 			top: -1px;
-			transition: all 0.2s ease-in-out;
+			transition: background-image 0.2s ease-in-out;
 			width: 20px;
 
 			@include bp.max(md) {
@@ -148,33 +150,38 @@
 }
 
 @mixin site-secondary-btn {
-	background-color: #e6f7fd;
-	color: #005e7f;
+	background-color: var(--theme_primary_25);
+	color: var(--theme_lynx_screen_blue);
 
 	&:hover {
-		background-color: #b0e5f8;
-		color: #005e7f;
+		background-color: var(--theme_lightblue);
+		color: var(--theme_lynx_screen_blue);
 	}
 
-	&:focus {
+	&:focus-visible {
 		background-color: var(--theme_lynx_screen_blue);
 		box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05), 0 0 0 4px var(--theme_lightblue);
-		color: #FFF;
+		color: var(--theme_white);
+		outline: 2px solid var(--theme_lynx_screen_blue);
+		outline-offset: 2px;
 	}
 
 	&.has-right-arrow {
+
 		&::after {
 			background-image: var(--secondary-btn-arrow-right-url);
 		}
 	}
 
 	&.has-download-arrow {
+
 		&::after {
 			background-image: var(--secondary-btn-arrow-download-url);
 		}
 	}
 
 	&.has-video-arrow {
+
 		&::after {
 			background-image: var(--secondary-btn-arrow-video-url);
 		}
@@ -198,11 +205,13 @@
 	}
 
 	&.has-right-arrow {
+
 		&::after {
 			background-image: var(--tertiary-btn-arrow-right-url);
 		}
 
 		&:hover {
+
 			&::after {
 				background-image: var(--tertiary-hover-btn-arrow-right-url);
 			}
@@ -210,11 +219,13 @@
 	}
 
 	&.has-download-arrow {
+
 		&::after {
 			background-image: var(--tertiary-btn-arrow-download-url);
 		}
 
 		&:hover {
+
 			&::after {
 				background-image: var(--tertiary-hover-btn-arrow-download-url);
 			}
@@ -222,11 +233,13 @@
 	}
 
 	&.has-video-arrow {
+
 		&::after {
 			background-image: var(--tertiary-btn-arrow-video-url);
 		}
 
 		&:hover {
+
 			&::after {
 				background-image: var(--tertiary-hover-btn-arrow-video-url);
 			}
@@ -257,11 +270,13 @@
 	}
 
 	&.has-right-arrow {
+
 		&::after {
 			background-image: var(--text-btn-arrow-right-url);
 		}
 
 		&:hover {
+
 			&::after {
 				background-image: var(--text-hover-btn-arrow-right-url);
 			}
@@ -269,11 +284,13 @@
 	}
 
 	&.has-download-arrow {
+
 		&::after {
 			background-image: var(--text-btn-arrow-download-url);
 		}
 
 		&:hover {
+
 			&::after {
 				background-image: var(--text-hover-btn-arrow-download-url);
 			}
@@ -281,11 +298,13 @@
 	}
 
 	&.has-video-arrow {
+
 		&::after {
 			background-image: var(--text-btn-arrow-video-url);
 		}
 
 		&:hover {
+
 			&::after {
 				background-image: var(--text-hover-btn-arrow-video-url);
 			}
@@ -295,33 +314,40 @@
 
 
 %site-btn-base {
+
 	@include site-btn-style;
 
 	&.is-style-site-tertiary-btn {
+
 		@include site-tertiary-btn-style;
 	}
 
 	&.is-style-site-secondary-btn {
+
 		@include site-secondary-btn;
 	}
 
 	&.is-style-site-text-btn {
+
 		@include site-text-btn;
 	}
 }
 
 .site-btn {
+
 	@extend %site-btn-base;
 }
 
 .wp-block-button {
 
 	.wp-block-button__link {
+
 		@extend %site-btn-base;
 	}
 
 	// Right Arrow
 	&.has-right-arrow .wp-block-button__link {
+
 		&::after {
 			background-image: var(--btn-arrow-right-url);
 			background-repeat: no-repeat;
@@ -338,6 +364,7 @@
 
 	// Download Arrow
 	&.has-download-arrow .wp-block-button__link {
+
 		&::after {
 			background-image: var(--btn-arrow-download-url);
 			background-repeat: no-repeat;
@@ -354,6 +381,7 @@
 
 	// Video Arrow
 	&.has-video-arrow .wp-block-button__link {
+
 		&::after {
 			background-image: var(--btn-arrow-video-url);
 			background-repeat: no-repeat;
@@ -372,6 +400,7 @@
 	&.is-style-site-secondary-btn {
 
 		.wp-block-button__link {
+
 			@include site-secondary-btn;
 		}
 
@@ -391,6 +420,7 @@
 	&.is-style-site-tertiary-btn {
 
 		.wp-block-button__link {
+
 			@include site-tertiary-btn-style;
 		}
 
@@ -422,6 +452,7 @@
 	&.is-style-site-text-btn {
 
 		.wp-block-button__link {
+
 			@include site-text-btn;
 		}
 
@@ -478,13 +509,5 @@ button[disabled] {
 
 	@include bp.max(sm) {
 		flex-direction: column;
-	}
-
-	.wp-block-button {
-		.wp-element-button {
-			@include bp.max(sm) {
-				// justify-content: center;
-			}
-		}
 	}
 }

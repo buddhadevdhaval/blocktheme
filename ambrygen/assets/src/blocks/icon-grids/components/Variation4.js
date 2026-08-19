@@ -28,15 +28,9 @@ export default function Variation4( { attributes, setAttributes, template } ) {
 					/>
 				</div>
 				{ hasCta && (
-					<a
-						href={ link.url }
-						className="site-btn is-style-site-text-btn has-right-arrow text-14 js-gsap-fade"
-						target={ link.target || undefined }
-						rel={ link.rel || undefined }
-						onClick={ ( event ) => event.preventDefault() }
-					>
+					<div className="site-btn is-style-site-text-btn has-right-arrow text-14 js-gsap-fade">
 						{ link.text }
-					</a>
+					</div>
 				) }
 			</div>
 

@@ -29,7 +29,6 @@
         padding: 4px;
         color: var(--theme_gray_900);
         cursor: pointer;
-        display: flex;
         align-items: center;
         justify-content: center;
         transition: transform 0.3s ease;
@@ -67,6 +66,7 @@
         }
 
         .cs-wp-filters.is-open & {
+
             @include bp.max(md) {
                 display: block;
                 animation: fadeIn 0.3s ease-in-out;

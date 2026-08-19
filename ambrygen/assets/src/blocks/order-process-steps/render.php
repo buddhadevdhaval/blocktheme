@@ -15,13 +15,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Ambrygen\Theme\Core\Helper;
 
-$ambrygen_attributes = is_array( $attributes ) ? $attributes : array();
-$ambrygen_block_id   = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
-$ambrygen_heading_tag = Helper::get_heading_tag( $ambrygen_attributes['headingTag'] ?? 'h2', 'h2' );
-$ambrygen_heading     = isset( $ambrygen_attributes['headingText'] ) ? $ambrygen_attributes['headingText'] : '';
-$ambrygen_subtitle    = isset( $ambrygen_attributes['subtitle'] ) ? $ambrygen_attributes['subtitle'] : '';
-$ambrygen_steps       = isset( $ambrygen_attributes['steps'] ) && is_array( $ambrygen_attributes['steps'] ) ? $ambrygen_attributes['steps'] : array();
-$ambrygen_steps       = array_values(
+$ambrygen_attributes   = is_array( $attributes ) ? $attributes : array();
+$ambrygen_block_id     = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
+$ambrygen_heading_tag  = Helper::get_heading_tag( $ambrygen_attributes['headingTag'] ?? 'h2', 'h2' );
+$ambrygen_heading      = isset( $ambrygen_attributes['headingText'] ) ? $ambrygen_attributes['headingText'] : '';
+$ambrygen_subtitle     = isset( $ambrygen_attributes['subtitle'] ) ? $ambrygen_attributes['subtitle'] : '';
+$ambrygen_steps        = isset( $ambrygen_attributes['steps'] ) && is_array( $ambrygen_attributes['steps'] ) ? $ambrygen_attributes['steps'] : array();
+$ambrygen_steps        = array_values(
 	array_filter(
 		$ambrygen_steps,
 		static function ( $ambrygen_step ) {

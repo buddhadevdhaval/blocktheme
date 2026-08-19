@@ -19,7 +19,9 @@ const TEMPLATE = [
 
 export default function Edit( { attributes } ) {
 	const { activeTabId } = attributes;
-	const blockProps = useBlockProps( { className: 'tabs-table-content block-layout' } );
+	const blockProps = useBlockProps( {
+		className: 'tabs-table-content block-layout',
+	} );
 
 	if ( activeTabId === 'example-block-preview' ) {
 		return (

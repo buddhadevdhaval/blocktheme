@@ -54,9 +54,10 @@
 			document.querySelectorAll(
 				'.wp-block-ambrygen-stats-counter, .counter-block'
 			)
-		)
-			.map( ( block ) => block.querySelector( '.stats-counter' ) )
-			.filter( Boolean );
+		).flatMap( ( block ) => {
+			const counter = block.querySelector( '.stats-counter' );
+			return counter ? [ counter ] : [];
+		} );
 
 		if ( ! statsCounters.length ) {
 			return;

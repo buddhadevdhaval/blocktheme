@@ -66,7 +66,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const isImageRight =
 		currentImagePosition === 'right' ||
 		currentImagePosition === 'iot-block__rtl';
-	const imagePositionClass = ( variation === 'simple-content-with-image' && isImageRight ) || variation === 'title-content-with-image' ? 'iot-block__rtl' : '';
+	const imagePositionClass =
+		( variation === 'simple-content-with-image' && isImageRight ) ||
+		variation === 'title-content-with-image'
+			? 'iot-block__rtl'
+			: '';
 
 	const defaultPlaceholder = useMemo(
 		() => DEFAULT_IMAGES().placeholder,
@@ -74,7 +78,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	);
 	const resolvedImageUrl = imageUrl || defaultPlaceholder?.url || '';
 
-	const borderClass = variation === 'title-content-with-image' && borderRequired ? 'iot-block--border' : '';
+	const borderClass =
+		variation === 'title-content-with-image' && borderRequired
+			? 'iot-block--border'
+			: '';
 	const topAlignClass = contentTopAlign ? 'has-top-align' : '';
 
 	let imageSizeClass = '';
@@ -93,17 +100,23 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			{
 				label: __( 'Simple Content with Image', 'ambrygen-web' ),
 				value: 'simple-content-with-image',
-				image: getThemeAssetUrl( '/assets/src/images/image-alongside-text/simple-image-alongside-text.png' ),
+				image: getThemeAssetUrl(
+					'/assets/src/images/image-alongside-text/simple-image-alongside-text.png'
+				),
 			},
 			{
 				label: __( 'Title Content with Image', 'ambrygen-web' ),
 				value: 'title-content-with-image',
-				image: getThemeAssetUrl( '/assets/src/images/image-alongside-text/title-image-alongside-text.png' ),
+				image: getThemeAssetUrl(
+					'/assets/src/images/image-alongside-text/title-image-alongside-text.png'
+				),
 			},
 			{
 				label: __( 'Profile Content with Image', 'ambrygen-web' ),
 				value: 'profile-content-with-image',
-				image: getThemeAssetUrl( '/assets/src/images/image-alongside-text/profile-image-alongside-text.png' ),
+				image: getThemeAssetUrl(
+					'/assets/src/images/image-alongside-text/profile-image-alongside-text.png'
+				),
 			},
 		],
 		[]
@@ -160,7 +173,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 										: ''
 								}` }
 								onClick={ () => {
-									setAttributes( { variation: variant.value } );
+									setAttributes( {
+										variation: variant.value,
+									} );
 								} }
 							>
 								{ variant.image && (
@@ -175,7 +190,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					</div>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) } initialOpen={ false }>
+				<PanelBody
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag }
@@ -185,10 +203,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						type="heading"
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'Content Settings', 'ambrygen-web' ) } initialOpen={ true }>
+				<PanelBody
+					title={ __( 'Content Settings', 'ambrygen-web' ) }
+					initialOpen={ true }
+				>
 					{ variation === 'simple-content-with-image' && (
 						<ToggleControl
-							label={ __( 'Show Image on right', 'ambrygen-web' ) }
+							label={ __(
+								'Show Image on right',
+								'ambrygen-web'
+							) }
 							checked={ isImageRight }
 							onChange={ ( value ) =>
 								setAttributes( {
@@ -513,11 +537,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 							<div className="iot-block__button  two-btn-row">
 								{ buttons.map(
-									( button, index ) =>
+									( button ) =>
 										button.text &&
 										button.url && (
 											<a
-												key={ index }
+												key={ `${ button.url }-${
+													button.text
+												}-${ button.variant || '' }` }
 												href={ button.url }
 												target={
 													button.target || undefined

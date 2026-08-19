@@ -6,6 +6,7 @@
 @use "../../css/partials/variables/fluid_mixins" as *;
 
 .wp-block-ambrygen-link-list {
+
 	&.download-list {
 
 		&.collaborators-list {
@@ -76,7 +77,6 @@
 
 				&::after {
 					content: "";
-					display: block;
 					width: 36px;
 					height: 36px;
 					flex: 36px 0 0;
@@ -113,7 +113,7 @@
 						color: var(--theme_lightblue);
 					}
 
-					&:after {
+					&::after {
 						background-image: url(../../images/primary700-icons/right-arrow.svg);
 						border-color: var(--theme_cg_blue);
 					}

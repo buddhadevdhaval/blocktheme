@@ -1,7 +1,7 @@
 <?php
 use Ambrygen\Theme\Core\Blocks\BlockRenderService;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 $post_id = 0;
 
@@ -21,4 +21,4 @@ if ( ! $post_id ) {
 	return;
 }
 
-echo BlockRenderService::instance()->render_webinar_grid_card($post_id);
+echo BlockRenderService::instance()->render_webinar_grid_card( $post_id );

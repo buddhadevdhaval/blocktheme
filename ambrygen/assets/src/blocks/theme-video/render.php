@@ -121,7 +121,7 @@ if ( '_blank' === $theme_video_link_target ) {
 			array( 'noopener', 'noreferrer' )
 		)
 	);
-	$theme_video_link_rel = implode( ' ', $theme_video_link_rel_tokens );
+	$theme_video_link_rel        = implode( ' ', $theme_video_link_rel_tokens );
 }
 
 $theme_video_link_aria_label = '';

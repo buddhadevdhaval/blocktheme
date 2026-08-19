@@ -18,11 +18,11 @@ import {
 const CONTENT_TEMPLATE = [
 	[
 		'core/paragraph',
-		{ placeholder: __( 'Add paragraph...', 'ambrygen-web' ) },
+		{ placeholder: __( 'Add paragraph…', 'ambrygen-web' ) },
 	],
 ];
 
-export default function Edit({ attributes, setAttributes, clientId }) {
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
 		blockId,
 		headline,
@@ -47,7 +47,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		idPrefix: 'headline-alongside-text',
 	} );
 
-	const hasInnerBlocks = useSelect(
+	useSelect(
 		( select ) => {
 			if ( isExample ) {
 				return false;
@@ -60,10 +60,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		[ clientId, isExample ]
 	);
 
-	const blockProps = useBlockProps({
-		className: `heading-content-section  block-layout ${isMediumText ? 'variation-medium-text' : ''
-			}`,
-	});
+	const blockProps = useBlockProps( {
+		className: `heading-content-section  block-layout ${
+			isMediumText ? 'variation-medium-text' : ''
+		}`,
+	} );
 
 	if ( isExample ) {
 		return (
@@ -78,111 +79,113 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={__('Heading Settings', 'ambrygen-web')}
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
 					initialOpen
 				>
 					<TagSelector
-						label={__('Heading Tag', 'ambrygen-web')}
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						type="heading"
-						value={displayHeadlineTag}
-						onChange={(value) =>
-							setAttributes({
+						value={ displayHeadlineTag }
+						onChange={ ( value ) =>
+							setAttributes( {
 								headlineTag: value,
 								titleTag: value,
-							})
+							} )
 						}
 					/>
 				</PanelBody>
 				<PanelBody
-					title={__('Background Settings', 'ambrygen-web')}
+					title={ __( 'Background Settings', 'ambrygen-web' ) }
 				>
 					<ImageUploader
-						label={__('Background Image', 'ambrygen-web')}
-						url={backgroundImage}
-						onSelect={(media) =>
-							setAttributes({
+						label={ __( 'Background Image', 'ambrygen-web' ) }
+						url={ backgroundImage }
+						onSelect={ ( media ) =>
+							setAttributes( {
 								backgroundImage: media.url,
 								backgroundImageId: media.id,
 								backgroundImageAlt: media.alt || '',
-							})
+							} )
 						}
-						onRemove={() =>
-							setAttributes({
+						onRemove={ () =>
+							setAttributes( {
 								backgroundImage: '',
 								backgroundImageId: 0,
 								backgroundImageAlt: '',
-							})
+							} )
 						}
 					/>
 				</PanelBody>
 			</InspectorControls>
 
-			<div {...blockProps}>
-				{backgroundImage && (
+			<div { ...blockProps }>
+				{ backgroundImage && (
 					<div className="block-bg-image">
 						<img
-							src={backgroundImage}
-							alt={backgroundImageAlt}
+							src={ backgroundImage }
+							alt={ backgroundImageAlt }
 						/>
 					</div>
-				)}
-				<div
-					className="heading-content-section__inner block__rowflex is-horizontal"
-				>
-
-					<div className='block__rowflex--col-left'>
+				) }
+				<div className="heading-content-section__inner block__rowflex is-horizontal">
+					<div className="block__rowflex--col-left">
 						<RichText
-							tagName={displayHeadlineTag}
+							tagName={ displayHeadlineTag }
 							className="heading-content-section__title heading-3 block-title mb-0 block__rowflex--heading-title"
-							value={displayHeadline}
-							onChange={(value) =>
-								setAttributes({
+							value={ displayHeadline }
+							onChange={ ( value ) =>
+								setAttributes( {
 									headline: value,
 									title: value,
-								})
+								} )
 							}
-							allowedFormats={[
+							allowedFormats={ [
 								'core/bold',
 								'core/italic',
 								'core/text-color',
 								'ambrygen/tooltip',
-							]}
-							placeholder={__('Add Heading...', 'ambrygen-web')}
+							] }
+							placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 						/>
 					</div>
-					<div className='heading-content-wrapper'>
+					<div className="heading-content-wrapper">
 						<div className="heading-content-section__description block__rowflex--block-content block-description">
 							<RichText
 								tagName="div"
-								value={description}
-								onChange={(value) =>
-									setAttributes({ description: value })
+								value={ description }
+								onChange={ ( value ) =>
+									setAttributes( { description: value } )
 								}
-								allowedFormats={[
+								allowedFormats={ [
 									'core/bold',
 									'core/italic',
 									'core/link',
 									'ambrygen/tooltip',
-								]}
-								placeholder={__(
-									'Add Description...',
+								] }
+								placeholder={ __(
+									'Add Description…',
 									'ambrygen-web'
-								)}
+								) }
 							/>
 						</div>
 						<div className="heading-content-section__content js-gsap-fade">
-							<div className="is-style-gl-s24" aria-hidden="true"></div>
+							<div
+								className="is-style-gl-s24"
+								aria-hidden="true"
+							></div>
 							<InnerBlocks
-								allowedBlocks={[
+								allowedBlocks={ [
 									'core/paragraph',
 									'core/list',
 									'core/buttons',
 									'core/button',
 									'core/spacer',
-								]}
-								template={CONTENT_TEMPLATE}
-								templateLock={false}
-								renderAppender={InnerBlocks.ButtonBlockAppender}
+								] }
+								template={ CONTENT_TEMPLATE }
+								templateLock={ false }
+								renderAppender={
+									InnerBlocks.ButtonBlockAppender
+								}
 							/>
 						</div>
 					</div>

@@ -17,7 +17,6 @@ header {
 .header {
 
 	&__inner {
-		// padding: 16px 0;
 		padding: 0;
 		gap: 26px;
 		align-items: center;
@@ -27,25 +26,9 @@ header {
 			gap: 20px;
 		}
 
-		// &:has(.nav__overlay.open) {
-
-		// 	.nav__menu-btn {
-
-		// 		.nav__menu-btn-line:first-child {
-		// 			transform: translateY(5px) translateX(0) rotate(-45deg);
-		// 		}
-
-		// 		.nav__menu-btn-line:nth-child(2) {
-		// 			opacity: 0;
-		// 		}
-
-		// 		.nav__menu-btn-line:nth-child(3) {
-		// 			transform: translateY(-5px) translateX(0) rotate(45deg);
-		// 		}
-		// 	}
-		// }
-
-
+		@include bp.max(sm) {
+			gap: 14px;
+		}
 	}
 
 	&__logo {
@@ -69,6 +52,11 @@ header {
 			flex: 238px 0 0;
 		}
 
+		@include bp.max(sm) {
+			flex: 128px 0 0;
+			width: 128px;
+		}
+
 		figure {
 			margin: 0;
 		}
@@ -79,7 +67,7 @@ header {
 		}
 
 		img {
-			height: 24px;
+			//height: 24px;
 			max-width: 100%;
 
 			/* Scale up logo for 4K screens */
@@ -102,6 +90,7 @@ header {
 		.header__search {
 			display: block;
 			padding: 24px 24px;
+			position: relative;
 
 			@include bp.min(md) {
 				display: none;
@@ -111,10 +100,6 @@ header {
 
 				input {
 					width: 100%;
-				}
-
-				button {
-					// top: 12px;
 				}
 			}
 		}
@@ -132,18 +117,26 @@ header {
 	.user-icon {
 
 		.user-icon-click {
-			background: transparent;
 			height: inherit;
-			outline: none;
-			border: none;
-			padding: 0;
 			margin: 0;
-			display: block;
+			padding: 8px 20px;
+
+			@include bp.max(sm) {
+				padding: 4px 8px;
+				border-radius: 6px;
+			}
+
+			&:after {
+				@include bp.max(sm) {
+					display: none;
+				}
+			}
 		}
 
 		img {
 			display: block;
 			width: 32px;
+
 
 			@include bp.max(xl-large) {
 				width: 24px;
@@ -159,23 +152,46 @@ header {
 	&__search {
 
 		@include bp.max(md) {
-			// display: none;
+			display: none;
 		}
 
-		.morphing-btn-input,
-		.morphing-btn-submit {
+		.morphing-btn-input {
+
 			@include bp.max(md) {
-				display: none;
+				padding-right: 60px;
+				height: 50px;
+			}
+		}
+
+
+		.morphing-btn-submit {
+
+			@include bp.max(md) {
+				background-color: transparent;
+				font-size: 0;
+				box-shadow: none;
+				padding: 0;
+				margin: 0;
+				border: none;
+				background-image: url(../images/search-icon.svg);
+				background-repeat: no-repeat;
+				background-size: 20px;
+				width: 20px;
+				display: block;
+				position: absolute;
+				right: 15px;
+				top: 15px;
+				height: 20px;
 			}
 		}
 
 		.morphing-btn-label {
+
 			@include bp.max(md) {
 				font-size: 0;
 				margin-bottom: 0;
-				display: flex;
 				align-items: center;
-				// filter: brightness(0) saturate(100%) invert(40%) sepia(92%) saturate(6663%) hue-rotate(180deg) brightness(94%) contrast(101%);
+				display: none;
 			}
 		}
 
@@ -187,7 +203,7 @@ header {
 				&::-webkit-input-placeholder,
 				&::-moz-placeholder,
 				&:-ms-input-placeholder {
-					color: #000;
+					color: var(--theme_black);
 					opacity: 1;
 				}
 			}

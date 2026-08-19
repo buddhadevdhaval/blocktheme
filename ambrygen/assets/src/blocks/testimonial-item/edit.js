@@ -10,7 +10,12 @@ import { useDispatch, useSelect } from '@wordpress/data';
 
 import { DEFAULT_IMAGES, ImageUploader } from '../_shared/components';
 
-export default function Edit( { attributes, setAttributes, context, clientId } ) {
+export default function Edit( {
+	attributes,
+	setAttributes,
+	context,
+	clientId,
+} ) {
 	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
 	const fallbackImage = defaults?.placeholder || {};
 	const { logo, logoAlt, quote, author, role } = attributes;
@@ -142,7 +147,7 @@ export default function Edit( { attributes, setAttributes, context, clientId } )
 					tagName="blockquote"
 					value={ quote }
 					onChange={ ( value ) => setAttributes( { quote: value } ) }
-					placeholder={ __( 'Add Description...', 'ambrygen-web' ) }
+					placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
 					className="ambry-testimonials__grid__item__quote body2-reg"
 				/>
 
@@ -153,7 +158,7 @@ export default function Edit( { attributes, setAttributes, context, clientId } )
 						onChange={ ( value ) =>
 							setAttributes( { author: value } )
 						}
-						placeholder={ __( 'Add Author name...', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Author name…', 'ambrygen-web' ) }
 						className="ambry-testimonials__layout__author-details__author body2-medium"
 					/>
 
@@ -163,7 +168,7 @@ export default function Edit( { attributes, setAttributes, context, clientId } )
 						onChange={ ( value ) =>
 							setAttributes( { role: value } )
 						}
-						placeholder={ __( 'Add Designation...', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Designation…', 'ambrygen-web' ) }
 						className="ambry-testimonials__layout__author-details__role body2-medium"
 					/>
 				</cite>

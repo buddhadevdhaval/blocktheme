@@ -30,12 +30,13 @@
       "type": "string",
       "default": ""
     },
-    "variation": {
-      "type": "string",
-      "default": "variation-4"
+    "link": {
+      "type": "object",
+      "default": {}
     },
     "blockId": {
-      "type": "string"
+      "type": "string",
+      "default": ""
     },
     "backgroundImage": {
       "type": "object",
@@ -50,12 +51,10 @@
       "default": false
     }
   },
-  "providesContext": {
-    "ambrygen/variation": "variation"
-  },
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
   "textdomain": "ambrygen-web",
   "render": "file:./render.php",
   "example": {

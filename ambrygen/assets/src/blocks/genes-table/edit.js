@@ -26,7 +26,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	}, [ clientId, blockId, setAttributes ] );
 
 	const resolvedBlockId = blockId || `section-${ clientId.slice( 0, 8 ) }`;
-	const blockProps = useBlockProps( { className: 'gl-data-table genes-table block-layout' } );
+	const blockProps = useBlockProps( {
+		className: 'gl-data-table genes-table block-layout',
+	} );
 
 	return (
 		<>
@@ -49,8 +51,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					<RichText
 						tagName="h3"
 						value={ cardTitle }
-						onChange={ ( value ) => setAttributes( { cardTitle: value } ) }
-						placeholder={ __( 'Card title...', 'ambrygen-web' ) }
+						onChange={ ( value ) =>
+							setAttributes( { cardTitle: value } )
+						}
+						placeholder={ __( 'Card title…', 'ambrygen-web' ) }
 						className="gl-data-table__card-title"
 					/>
 				</div>
@@ -61,12 +65,18 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							tagName="span"
 							value={
 								eyebrowText ||
-								__( 'Search by genes, Test name, or Code', 'ambrygen-web' )
+								__(
+									'Search by genes, Test name, or Code',
+									'ambrygen-web'
+								)
 							}
 							onChange={ ( value ) =>
 								setAttributes( { eyebrowText: value } )
 							}
-							placeholder={ __( 'Eyebrow text...', 'ambrygen-web' ) }
+							placeholder={ __(
+								'Eyebrow text…',
+								'ambrygen-web'
+							) }
 							withoutInteractiveFormatting
 						/>
 					</div>
@@ -94,12 +104,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								tagName="span"
 								value={
 									placeholder ||
-									__( 'Search genes...', 'ambrygen-web' )
+									__( 'Search genes…', 'ambrygen-web' )
 								}
 								onChange={ ( value ) =>
 									setAttributes( { placeholder: value } )
 								}
-								placeholder={ __( 'Search placeholder...', 'ambrygen-web' ) }
+								placeholder={ __(
+									'Search placeholder…',
+									'ambrygen-web'
+								) }
 								withoutInteractiveFormatting
 							/>
 						</div>
@@ -107,6 +120,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							type="submit"
 							className="genes-table__search-button"
 							value={ __( 'Search', 'ambrygen-web' ) }
+							readOnly
 							disabled
 						/>
 					</form>
@@ -118,12 +132,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							onChange={ ( value ) =>
 								setAttributes( { instructionText: value } )
 							}
-							placeholder={ __( 'Instruction text...', 'ambrygen-web' ) }
+							placeholder={ __(
+								'Instruction text…',
+								'ambrygen-web'
+							) }
 							withoutInteractiveFormatting
 						/>
 					</div>
 				</div>
-				<div class="is-style-gl-s24" aria-hidden="true"></div>
+				<div className="is-style-gl-s24" aria-hidden="true"></div>
 				<div className="gl-data-table__grid">
 					<div className="gl-data-table__row gl-data-table__row--header">
 						<div className="gl-data-table__cell">
@@ -160,11 +177,17 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								onChange={ ( value ) =>
 									setAttributes( { noResultsText: value } )
 								}
-								placeholder={ __( 'No results text...', 'ambrygen-web' ) }
+								placeholder={ __(
+									'No results text…',
+									'ambrygen-web'
+								) }
 								withoutInteractiveFormatting
 							/>
 						</div>
-						<div className="gl-data-table__cell" data-label="Isoform">
+						<div
+							className="gl-data-table__cell"
+							data-label="Isoform"
+						>
 							-
 						</div>
 						<div
@@ -173,7 +196,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						>
 							-
 						</div>
-						<div className="gl-data-table__cell" data-label="Total CDS">
+						<div
+							className="gl-data-table__cell"
+							data-label="Total CDS"
+						>
 							-
 						</div>
 						<div
@@ -194,7 +220,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { footnoteText: value } )
 						}
-						placeholder={ __( 'Footnote...', 'ambrygen-web' ) }
+						placeholder={ __( 'Footnote…', 'ambrygen-web' ) }
 					/>
 				</div>
 			</div>

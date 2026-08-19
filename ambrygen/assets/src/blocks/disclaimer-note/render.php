@@ -13,8 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$ambrygen_heading = $attributes['heading'] ?? '';
-$ambrygen_content = $attributes['content'] ?? '';
+$ambrygen_heading     = $attributes['heading'] ?? '';
+$ambrygen_content     = $attributes['content'] ?? '';
 $ambrygen_has_heading = '' !== trim( wp_strip_all_tags( $ambrygen_heading ) );
 
 if (

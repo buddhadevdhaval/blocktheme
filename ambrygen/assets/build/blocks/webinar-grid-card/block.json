@@ -8,10 +8,20 @@
   "description": "Renders a webinar card for grid view.",
   "supports": {
     "html": false,
-    "reusable": false
+    "reusable": false,
+    "inserter": false
   },
   "parent": [
     "core/post-template"
+  ],
+  "attributes": {
+    "previewPostId": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "usesContext": [
+    "postId"
   ],
   "editorScript": "file:./index.js",
   "render": "file:./render.php",

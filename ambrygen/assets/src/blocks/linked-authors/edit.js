@@ -16,10 +16,19 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-			<div className="genetic-linked-authors-placeholder" style={{ padding: '20px', border: '1px dashed #ccc', textAlign: 'center' }}>
+			<div
+				className="genetic-linked-authors-placeholder"
+				style={ {
+					padding: '20px',
+					border: '1px dashed #ccc',
+					textAlign: 'center',
+				} }
+			>
 				<strong>[Genetic Linked Authors]</strong>
 				<p>{ title || 'Authors' }</p>
-				<small>Displays authors linked via "Linked Posts" meta.</small>
+				<small>
+					Displays authors linked via &quot;Linked Posts&quot; meta.
+				</small>
 			</div>
 		</div>
 	);

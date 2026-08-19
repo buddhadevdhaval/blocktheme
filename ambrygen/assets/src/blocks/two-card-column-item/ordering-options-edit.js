@@ -37,7 +37,7 @@ export default function OrderingOptionsEdit( {
 						onChange={ ( value ) =>
 							setAttributes( { sectiontitle: value } )
 						}
-						placeholder={ __( 'Add Title...', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Title…', 'ambrygen-web' ) }
 						allowedFormats={ [] }
 					/>
 
@@ -49,7 +49,7 @@ export default function OrderingOptionsEdit( {
 							setAttributes( { description: value } )
 						}
 						placeholder={ __(
-							'Add Short Description...',
+							'Add Short Description…',
 							'ambrygen-web'
 						) }
 					/>

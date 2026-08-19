@@ -9,8 +9,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { ImageUploader } from '../_shared/components';
 import { getThemeAssetUrl } from '../../utils/assets';
 
-const getSafeHttpUrl = ( url ) =>
-	/^https?:\/\//i.test( url ) ? url : '';
+const getSafeHttpUrl = ( url ) => ( /^https?:\/\//i.test( url ) ? url : '' );
 
 export default function Edit( { attributes, setAttributes } ) {
 	const {
@@ -26,7 +25,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		: {
 				url: getThemeAssetUrl( '/assets/src/images/logo.png' ),
 				alt: __( 'Ambrygen logo', 'ambrygen-web' ),
-			};
+		  };
 
 	const updateLink = ( index, field, value ) => {
 		const updated = [ ...links ];
@@ -73,8 +72,10 @@ export default function Edit( { attributes, setAttributes } ) {
 					<TextControl
 						label={ __( 'Count', 'ambrygen-web' ) }
 						value={ count }
-						onChange={ ( value ) => setAttributes( { count: value } ) }
-						placeholder={ __( 'Add Count...', 'ambrygen-web' ) }
+						onChange={ ( value ) =>
+							setAttributes( { count: value } )
+						}
+						placeholder={ __( 'Add Count…', 'ambrygen-web' ) }
 					/>
 
 					<ImageUploader
@@ -101,7 +102,10 @@ export default function Edit( { attributes, setAttributes } ) {
 							color: '#666',
 						} }
 					>
-						{ __( 'Use only 50px x 50px icon size.', 'ambrygen-web' ) }
+						{ __(
+							'Use only 50px x 50px icon size.',
+							'ambrygen-web'
+						) }
 					</p>
 
 					{ links.map( ( link, i ) => (
@@ -116,11 +120,14 @@ export default function Edit( { attributes, setAttributes } ) {
 						>
 							<TextControl
 								label={ sprintf(
+									/* translators: %d: link number. */
 									__( 'Link %d Label', 'ambrygen-web' ),
 									i + 1
 								) }
 								value={ link.label }
-								onChange={ ( val ) => updateLink( i, 'label', val ) }
+								onChange={ ( val ) =>
+									updateLink( i, 'label', val )
+								}
 							/>
 
 							<LinkControl
@@ -129,13 +136,17 @@ export default function Edit( { attributes, setAttributes } ) {
 									opensInNewTab: link.target === '_blank',
 								} }
 								onChange={ ( newLink ) => {
-									const safeUrl = getSafeHttpUrl( newLink.url );
+									const safeUrl = getSafeHttpUrl(
+										newLink.url
+									);
 									const updated = [ ...links ];
 
 									updated[ i ] = {
 										...updated[ i ],
 										url: safeUrl,
-										target: newLink.opensInNewTab ? '_blank' : '',
+										target: newLink.opensInNewTab
+											? '_blank'
+											: '',
 										rel: newLink.opensInNewTab
 											? 'noopener noreferrer'
 											: '',
@@ -181,20 +192,26 @@ export default function Edit( { attributes, setAttributes } ) {
 							tagName="div"
 							className="subtitle1-sbold info-list__title"
 							value={ title }
-							onChange={ ( value ) => setAttributes( { title: value } ) }
-							placeholder={ __( 'Add Title...', 'ambrygen-web' ) }
+							onChange={ ( value ) =>
+								setAttributes( { title: value } )
+							}
+							placeholder={ __( 'Add Title…', 'ambrygen-web' ) }
 						/>
 
-						{ count && (
+						{ Boolean( count ) && (
 							<div className="info-list__count subtitle2-sbold">
 								{ sprintf(
+									/* translators: %s: test count value. */
 									__( '%s Tests', 'ambrygen-web' ),
 									count
 								) }
 							</div>
 						) }
 
-						<div className="is-style-gl-s8" aria-hidden="true"></div>
+						<div
+							className="is-style-gl-s8"
+							aria-hidden="true"
+						></div>
 
 						<RichText
 							tagName="div"
@@ -203,10 +220,16 @@ export default function Edit( { attributes, setAttributes } ) {
 							onChange={ ( value ) =>
 								setAttributes( { description: value } )
 							}
-							placeholder={ __( 'Add Short Description...', 'ambrygen-web' ) }
+							placeholder={ __(
+								'Add Short Description…',
+								'ambrygen-web'
+							) }
 						/>
 
-						<div className="is-style-gl-s16" aria-hidden="true"></div>
+						<div
+							className="is-style-gl-s16"
+							aria-hidden="true"
+						></div>
 
 						<div className="info-list__links">
 							{ links.map(
@@ -217,9 +240,7 @@ export default function Edit( { attributes, setAttributes } ) {
 											key={ link._key || i }
 											className="info-list__link-col"
 										>
-											<div
-												className="info-list__link site-btn is-style-site-text-btn has-right-arrow text-14"
-											>
+											<div className="info-list__link site-btn is-style-site-text-btn has-right-arrow text-14">
 												{ link.label }
 											</div>
 										</div>

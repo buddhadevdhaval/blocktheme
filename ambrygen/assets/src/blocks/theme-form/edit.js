@@ -73,7 +73,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								value: 'iframe',
 							},
 							{
-								label: __( 'HTML Contact Form', 'ambrygen-web' ),
+								label: __(
+									'HTML Contact Form',
+									'ambrygen-web'
+								),
 								value: 'html',
 							},
 						] }
@@ -100,7 +103,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					value={ title }
 					allowedFormats={ [ 'core/text-color' ] }
 					onChange={ ( value ) => setAttributes( { title: value } ) }
-					placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+					placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 				/>
 
 				<div className="is-style-gl-s24" aria-hidden="true"></div>
@@ -113,7 +116,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { content: value } )
 						}
-						placeholder={ __( 'Add Description...', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
 					/>
 				</div>
 			</div>

@@ -26,10 +26,11 @@ if ( ! $ambrygen_term || is_wp_error( $ambrygen_term ) ) {
 	return;
 }
 
-$ambrygen_name        = wp_strip_all_tags( $ambrygen_term->name );
-$ambrygen_description = term_description( $ambrygen_term, 'collaborator' );
-$ambrygen_image_id    = absint( get_term_meta( $ambrygen_term->term_id, 'term_image', true ) );
-$ambrygen_website_url = esc_url( (string) get_term_meta( $ambrygen_term->term_id, 'link', true ) );
+$ambrygen_name          = wp_strip_all_tags( $ambrygen_term->name );
+$ambrygen_description   = term_description( $ambrygen_term, 'collaborator' );
+$ambrygen_image_id      = absint( get_term_meta( $ambrygen_term->term_id, 'term_image', true ) );
+$ambrygen_show_image    = ! isset( $attributes['showImage'] ) || (bool) $attributes['showImage'];
+$ambrygen_website_url   = esc_url( (string) get_term_meta( $ambrygen_term->term_id, 'link', true ) );
 $ambrygen_website_label = '';
 
 if ( ! empty( $ambrygen_website_url ) ) {
@@ -127,20 +128,23 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 	</div>
 
 	<div class="timeline-block__content-card collaborator-card__layout">
-		<div class="timeline-block__image collaborator-card__media">
-			<?php
-			echo wp_kses_post(
-				Helper::image_with_placeholder(
-					$ambrygen_image_id,
-					'medium',
-					array(
-						'class' => 'collaborator-card__image',
-						'alt'   => $ambrygen_name,
-					)
-				)
-			);
-			?>
-		</div>
+		<?php if ( $ambrygen_show_image ) : ?>
+			<div class="timeline-block__image collaborator-card__media">
+				
+					<?php
+					echo wp_kses_post(
+						Helper::image_with_placeholder(
+							$ambrygen_image_id,
+							'medium',
+							array(
+								'class' => 'collaborator-card__image',
+								'alt'   => $ambrygen_name,
+							)
+						)
+					);
+					?>
+			</div>
+		<?php endif; ?>
 
 		<div class="timeline-block__text-content collaborator-card__content">
 			<h3 class="subtitle1-sbold mb-0 timeline-block__text-title collaborator-card__title">

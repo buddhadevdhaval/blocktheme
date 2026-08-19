@@ -37,9 +37,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	);
 	const selectedPostIds = useMemo(
 		() =>
-			innerBlocks
-				.map( ( block ) => Number( block.attributes?.postId ) || 0 )
-				.filter( Boolean ),
+			innerBlocks.reduce( ( ids, block ) => {
+				const postId = Number( block.attributes?.postId ) || 0;
+
+				if ( postId ) {
+					ids.push( postId );
+				}
+
+				return ids;
+			}, [] ),
 		[ innerBlocks ]
 	);
 
@@ -99,9 +105,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			return [];
 		}
 
-		return webinarPosts
-			.filter( ( post ) => ! selectedPostIds.includes( post.id ) )
-			.map( ( post ) => ( {
+		return webinarPosts.reduce( ( options, post ) => {
+			if ( selectedPostIds.includes( post.id ) ) {
+				return options;
+			}
+
+			options.push( {
 				label:
 					decodeEntities( post?.title?.rendered || '' ).trim() ||
 					sprintf(
@@ -110,7 +119,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						post.id
 					),
 				value: post.id,
-			} ) );
+			} );
+
+			return options;
+		}, [] );
 	}, [ webinarPosts, selectedPostIds ] );
 
 	const selectedWebinarOptions = useMemo(
@@ -169,12 +181,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			return;
 		}
 
-		const blocksToRemove = innerBlocks
-			.filter(
-				( block ) =>
-					( Number( block.attributes?.postId ) || 0 ) === postId
-			)
-			.map( ( block ) => block.clientId );
+		const blocksToRemove = innerBlocks.reduce( ( clientIds, block ) => {
+			if ( ( Number( block.attributes?.postId ) || 0 ) === postId ) {
+				clientIds.push( block.clientId );
+			}
+
+			return clientIds;
+		}, [] );
 
 		if ( blocksToRemove.length ) {
 			removeBlocks( blocksToRemove, false );
@@ -223,7 +236,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						hasOptions={ webinarOptions.length > 0 }
 					/>
 				</PanelBody>
-				
 			</InspectorControls>
 			<div { ...blockProps }>
 				<div className="webinars__content event-carousel">
@@ -231,8 +243,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						tagName={ HeadingTag }
 						className="heading-3 block-title mb-0"
 						value={ title }
-						onChange={ ( value ) => setAttributes( { title: value } ) }
-						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+						onChange={ ( value ) =>
+							setAttributes( { title: value } )
+						}
+						placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 					/>
 				</div>
 
@@ -251,7 +265,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						{ selectedPostIds.length === 0 && (
 							<Placeholder
 								icon="video-alt"
-								label={ __( 'No webinars selected', 'ambrygen-web' ) }
+								label={ __(
+									'No webinars selected',
+									'ambrygen-web'
+								) }
 								instructions={ __(
 									'Use the Webinar Items panel in the block sidebar to search and add webinars.',
 									'ambrygen-web'
@@ -304,7 +321,7 @@ function WebinarPicker( {
 											{ webinar.isLoading && (
 												<span className="screen-reader-text">
 													{ __(
-														' loading',
+														'loading',
 														'ambrygen-web'
 													) }
 												</span>

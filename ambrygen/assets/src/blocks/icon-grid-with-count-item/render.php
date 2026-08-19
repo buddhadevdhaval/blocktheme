@@ -13,18 +13,18 @@ use Ambrygen\Theme\Core\Helper;
 
 defined( 'ABSPATH' ) || exit;
 
-$ambrygen_attributes     = $attributes ?? array();
-$ambrygen_title_raw      = $ambrygen_attributes['title'] ?? '';
-$ambrygen_title          = wp_strip_all_tags( $ambrygen_title_raw );
-$ambrygen_count          = 0;
-$ambrygen_img_id         = 0;
-$ambrygen_term_url       = '';
-$ambrygen_termlinktext   = '';
-$ambrygen_custom_name    = isset( $ambrygen_attributes['customName'] ) ? sanitize_text_field( $ambrygen_attributes['customName'] ) : '';
-$ambrygen_custom_count   = isset( $ambrygen_attributes['customCount'] ) ? sanitize_text_field( $ambrygen_attributes['customCount'] ) : '';
-$ambrygen_custom_link    = is_array( $ambrygen_attributes['customLink'] ?? null ) ? $ambrygen_attributes['customLink'] : array();
-$ambrygen_link_target    = ! empty( $ambrygen_custom_link['opensInNewTab'] ) ? '_blank' : '';
-$ambrygen_link_rel       = $ambrygen_link_target ? 'noopener noreferrer' : '';
+$ambrygen_attributes   = $attributes ?? array();
+$ambrygen_title_raw    = $ambrygen_attributes['title'] ?? '';
+$ambrygen_title        = wp_strip_all_tags( $ambrygen_title_raw );
+$ambrygen_count        = 0;
+$ambrygen_img_id       = 0;
+$ambrygen_term_url     = '';
+$ambrygen_termlinktext = '';
+$ambrygen_custom_name  = isset( $ambrygen_attributes['customName'] ) ? sanitize_text_field( $ambrygen_attributes['customName'] ) : '';
+$ambrygen_custom_count = isset( $ambrygen_attributes['customCount'] ) ? sanitize_text_field( $ambrygen_attributes['customCount'] ) : '';
+$ambrygen_custom_link  = is_array( $ambrygen_attributes['customLink'] ?? null ) ? $ambrygen_attributes['customLink'] : array();
+$ambrygen_link_target  = ! empty( $ambrygen_custom_link['opensInNewTab'] ) ? '_blank' : '';
+$ambrygen_link_rel     = $ambrygen_link_target ? 'noopener noreferrer' : '';
 
 $ambrygen_termlinktext = ! empty( $ambrygen_attributes['termlinktext'] )
 	? sanitize_text_field( $ambrygen_attributes['termlinktext'] )

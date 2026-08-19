@@ -1,26 +1,68 @@
 <!-- wp:template-part {"slug":"header"} /-->
 
-<!-- wp:group {"tagName":"main","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"default"}} -->
-<main class="wp-block-group" style="padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--50)">
-	<!-- wp:group {"layout":{"type":"constrained"}} -->
-	<div class="wp-block-group">
-		<!-- wp:heading {"level":1,"align":"center"} -->
-		<h1 class="wp-block-heading has-text-align-center"><?php echo esc_html_e( 'Page not found', 'ambrygen' ); ?></h1>
-		<!-- /wp:heading -->
-		
-		<!-- wp:paragraph {"align":"center"} -->
-		<p class="has-text-align-center"><?php echo esc_html_e( 'The page you are looking for does not exist.', 'ambrygen' ); ?></p>
-		<!-- /wp:paragraph -->
-		
-		<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
-		<div class="wp-block-buttons">
-			<!-- wp:button -->
-			<div class="wp-block-button">
-				<a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo esc_html_e( 'Go Home', 'ambrygen' ); ?></a>
+<!-- wp:group {"tagName":"main","style":{"spacing":{"padding":{"top":"0","bottom":"0","left":"0","right":"0"}}},"layout":{"type":"default"}} -->
+<main class="wp-block-group">
+	<!-- wp:group {"className":"container-1280","layout":{"type":"default"}} -->
+	<div class="wp-block-group container-1280">
+		<!-- wp:group {"className":"wrapper","layout":{"type":"default"}} -->
+		<div class="wp-block-group wrapper">
+			<!-- wp:group {"className":"center-align error-page-hero","layout":{"type":"default"}} -->
+			<div class="wp-block-group center-align error-page-hero">
+				<!-- wp:group {"className":"is-style-gl-s72","layout":{"type":"default"}} /-->
+
+				<!-- wp:group {"className":"wrapper","layout":{"type":"default"}} -->
+				<div class="wp-block-group wrapper">
+					<!-- wp:heading {"level":1,"className":"block-title mb-0 heading-1"} -->
+					<h1 class="wp-block-heading block-title mb-0 heading-1">Page not found</h1>
+					<!-- /wp:heading -->
+
+					<!-- wp:group {"className":"is-style-gl-s24","layout":{"type":"default"}} /-->
+
+					<!-- wp:group {"className":"banner-text","layout":{"type":"default"}} -->
+					<div class="wp-block-group banner-text">
+						<!-- wp:heading {"level":2,"className":"heading-5 mb-0 block-title"} -->
+						<h2 class="wp-block-heading heading-5 mb-0 block-title">404</h2>
+						<!-- /wp:heading -->
+					</div>
+					<!-- /wp:group -->
+
+					<!-- wp:group {"className":"is-style-gl-s20","layout":{"type":"default"}} /-->
+
+					<!-- wp:group {"className":"error-404 not-found center-align","layout":{"type":"default"}} -->
+					<div class="wp-block-group error-404 not-found center-align">
+						<!-- wp:group {"className":"page-content","layout":{"type":"default"}} -->
+						<div class="wp-block-group page-content">
+							<!-- wp:paragraph -->
+							<p>Oops! The page you are looking for couldn’t be found.</p>
+							<!-- /wp:paragraph -->
+						</div>
+						<!-- /wp:group -->
+
+						<!-- wp:group {"className":"is-style-gl-s32","layout":{"type":"default"}} /-->
+
+						<!-- wp:group {"className":"back-btn","layout":{"type":"default"}} -->
+						<div class="wp-block-group back-btn">
+							<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
+							<div class="wp-block-buttons">
+								<!-- wp:button {"className":"site-btn has-right-arrow"} -->
+								<div class="wp-block-button">
+									<a class="site-btn has-right-arrow" href="#" title="Back to Home" role="button" aria-label="Button">Back to Home</a>
+								</div>
+								<!-- /wp:button -->
+							</div>
+							<!-- /wp:buttons -->
+						</div>
+						<!-- /wp:group -->
+					</div>
+					<!-- /wp:group -->
+				</div>
+				<!-- /wp:group -->
+
+				<!-- wp:group {"className":"is-style-gl-s72","layout":{"type":"default"}} /-->
 			</div>
-			<!-- /wp:button -->
+			<!-- /wp:group -->
 		</div>
-		<!-- /wp:buttons -->
+		<!-- /wp:group -->
 	</div>
 	<!-- /wp:group -->
 </main>

@@ -7,8 +7,8 @@ defined( 'ABSPATH' ) || exit;
 
 use Ambrygen\Theme\Core\Helper;
 
-$ambrygen_block_id = isset( $attributes['blockId'] ) ? sanitize_html_class( $attributes['blockId'] ) : '';
-$ambrygen_title    = $attributes['title'] ?? '';
+$ambrygen_block_id    = isset( $attributes['blockId'] ) ? sanitize_html_class( $attributes['blockId'] ) : '';
+$ambrygen_title       = $attributes['title'] ?? '';
 $ambrygen_heading_tag = Helper::get_heading_tag( $attributes['headingTag'] ?? 'h2', 'h2' );
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes(

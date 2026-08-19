@@ -27,33 +27,53 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Shared taxonomies -- no post type registered, only taxonomies.
  *
- * slug() returns '' so the engine skips register_post_type() for this class.
+ * Slug() returns '' so the engine skips register_post_type() for this class.
  */
 class SharedTaxonomies extends AbstractPostType {
 
+	/**
+	 * Get the post type slug.
+	 *
+	 * @return string
+	 */
 	public function slug(): string {
 		return '';
 	}
 
+	/**
+	 * Get the plural post type label.
+	 *
+	 * @return string
+	 */
 	public function label(): string {
 		return '';
 	}
 
+	/**
+	 * Get the singular post type label.
+	 *
+	 * @return string
+	 */
 	public function singular_label(): string {
 		return '';
 	}
 
+	/**
+	 * Get registered taxonomies.
+	 *
+	 * @return array
+	 */
 	public function taxonomies(): array {
 		return array(
 			array(
 				'slug'         => 'post_tag',
-				'object_types' => array( 'conferences', 'booths', 'addresses', 'webinar','press-releases','publication','genetic-testing','marketing_material' ),
+				'object_types' => array( 'conferences', 'booths', 'addresses', 'webinar', 'press-releases', 'publication', 'genetic-testing', 'marketing_material' ),
 				'use_existing' => true,
 			),
 			array(
 				'slug'         => 'poster_category',
 				'hierarchical' => true,
-				'object_types' => array( 'presentation', 'poster', 'webinar','publication','genetic-testing','marketing_material','product_version' ),
+				'object_types' => array( 'presentation', 'poster', 'webinar', 'publication', 'genetic-testing', 'marketing_material', 'product_version' ),
 				'labels'       => array(
 					'name'          => __( 'Categories', 'ambrygen-web' ),
 					'singular_name' => __( 'Category', 'ambrygen-web' ),
@@ -71,7 +91,7 @@ class SharedTaxonomies extends AbstractPostType {
 			array(
 				'slug'         => 'collaborator',
 				'hierarchical' => true,
-				'object_types' => array( 'presentations', 'poster', 'webinar','publication','presentation' ),
+				'object_types' => array( 'presentations', 'poster', 'webinar', 'publication', 'presentation' ),
 				'labels'       => array(
 					'name'          => __( 'Collaborators', 'ambrygen-web' ),
 					'singular_name' => __( 'Collaborator', 'ambrygen-web' ),
@@ -88,7 +108,7 @@ class SharedTaxonomies extends AbstractPostType {
 			array(
 				'slug'         => 'gene',
 				'hierarchical' => true,
-				'object_types' => array( 'product_version','marketing_material','genetic-testing' ),
+				'object_types' => array( 'product_version', 'marketing_material' ),
 				'labels'       => array(
 					'name'          => __( 'Genes', 'ambrygen-web' ),
 					'singular_name' => __( 'Gene', 'ambrygen-web' ),
@@ -102,7 +122,7 @@ class SharedTaxonomies extends AbstractPostType {
 				),
 				'show_in_rest' => true,
 				'meta_fields'  => array(
-					'is_active'                   => array(
+					'is_active'                            => array(
 						'label'    => __( 'Is Active', 'ambrygen-web' ),
 						'type'     => 'select',
 						'options'  => array(
@@ -111,64 +131,64 @@ class SharedTaxonomies extends AbstractPostType {
 						),
 						'sanitize' => 'absint',
 					),
-					'full_name'                   => array(
+					'full_name'                            => array(
 						'label' => __( 'Full Name', 'ambrygen-web' ),
 						'type'  => 'text',
 					),
-					'description'                 => array(
+					'description'                          => array(
 						'label' => __( 'Description', 'ambrygen-web' ),
 						'type'  => 'textarea',
 					),
-					'inheritance_models'         => array(
+					'inheritance_models'                   => array(
 						'label'    => __( 'Inheritance Models', 'ambrygen-web' ),
 						'type'     => 'text',
 						'multiple' => true,
 					),
-					'inheritance_model_cx_note'  => array(
+					'inheritance_model_cx_note'            => array(
 						'label' => __( 'Inheritance Model CX Note', 'ambrygen-web' ),
 						'type'  => 'text',
 					),
-					'in_house'                   => array(
+					'in_house'                             => array(
 						'label'    => __( 'In House', 'ambrygen-web' ),
 						'type'     => 'checkbox',
 						'value'    => '1',
 						'sanitize' => 'absint',
 					),
-					'penetrance_degree'          => array(
+					'penetrance_degree'                    => array(
 						'label' => __( 'Penetrance Degree', 'ambrygen-web' ),
 						'type'  => 'text',
 					),
-					'penetrance_percentage'      => array(
+					'penetrance_percentage'                => array(
 						'label' => __( 'Penetrance Percentage', 'ambrygen-web' ),
 						'type'  => 'text',
 					),
-					'penetrance_expressivity'    => array(
+					'penetrance_expressivity'              => array(
 						'label' => __( 'Penetrance Expressivity', 'ambrygen-web' ),
 						'type'  => 'text',
 					),
-					'penetrance_age_related'     => array(
+					'penetrance_age_related'               => array(
 						'label' => __( 'Penetrance Age Related', 'ambrygen-web' ),
 						'type'  => 'text',
 					),
-					'aliases'                    => array(
+					'aliases'                              => array(
 						'label'    => __( 'Aliases', 'ambrygen-web' ),
 						'type'     => 'text',
 						'multiple' => true,
 					),
-					'ref_seq_summary'            => array(
+					'ref_seq_summary'                      => array(
 						'label'    => __( 'Ref Seq Summary', 'ambrygen-web' ),
 						'type'     => 'wysiwyg',
 						'sanitize' => 'wp_kses_post',
 					),
-					'isoform'                    => array(
+					'isoform'                              => array(
 						'label' => __( 'Isoform', 'ambrygen-web' ),
 						'type'  => 'text',
 					),
-					'covered_cds_count'          => array(
+					'covered_cds_count'                    => array(
 						'label' => __( 'Covered CDS Count', 'ambrygen-web' ),
 						'type'  => 'text',
 					),
-					'cds_count'                  => array(
+					'cds_count'                            => array(
 						'label' => __( 'CDS Count', 'ambrygen-web' ),
 						'type'  => 'text',
 					),
@@ -179,28 +199,33 @@ class SharedTaxonomies extends AbstractPostType {
 						'sanitize'    => 'absint',
 						'description' => __( 'Enable custom genes count content for this gene on product version listings.', 'ambrygen-web' ),
 					),
-					'static_count'               => array(
+					'static_count'                         => array(
 						'label'       => __( 'Genes Count', 'ambrygen-web' ),
 						'type'        => 'text',
 						'description' => __( 'Count value to show when Genes count is enabled.', 'ambrygen-web' ),
 					),
-					'static_count_before_text'   => array(
+					'static_count_badge_label'             => array(
+						'label'       => __( 'Genes Badge Label', 'ambrygen-web' ),
+						'type'        => 'text',
+						'description' => __( 'Optional badge label shown instead of the default Gene/Genes text.', 'ambrygen-web' ),
+					),
+					'static_count_before_text'             => array(
 						'label'       => __( 'Before Genes Count Text', 'ambrygen-web' ),
 						'type'        => 'text',
 						'description' => __( 'Optional text displayed before the static count.', 'ambrygen-web' ),
 					),
-					'static_count_after_text'    => array(
+					'static_count_after_text'              => array(
 						'label'       => __( 'After Genes Count Text', 'ambrygen-web' ),
 						'type'        => 'text',
 						'description' => __( 'Optional text displayed after the static count.', 'ambrygen-web' ),
 					),
-					'static_count_link'          => array(
+					'static_count_link'                    => array(
 						'label'       => __( 'Genes Count Link', 'ambrygen-web' ),
 						'type'        => 'url',
 						'sanitize'    => 'esc_url_raw',
 						'description' => __( 'Optional link shown with the genes count content.', 'ambrygen-web' ),
 					),
-					'static_count_link_text'     => array(
+					'static_count_link_text'               => array(
 						'label'       => __( 'Genes Count Link Text', 'ambrygen-web' ),
 						'type'        => 'text',
 						'description' => __( 'Link label for the genes count link.', 'ambrygen-web' ),

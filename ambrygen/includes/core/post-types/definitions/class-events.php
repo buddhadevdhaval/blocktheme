@@ -18,37 +18,65 @@ defined( 'ABSPATH' ) || exit;
  */
 class Events extends AbstractPostType {
 
+	/**
+	 * Get the post type slug.
+	 *
+	 * @return string
+	 */
 	public function slug(): string {
 		return 'event';
 	}
 
+	/**
+	 * Get the plural post type label.
+	 *
+	 * @return string
+	 */
 	public function label(): string {
 		return __( 'Events', 'ambrygen' );
 	}
 
+	/**
+	 * Get the singular post type label.
+	 *
+	 * @return string
+	 */
 	public function singular_label(): string {
 		return __( 'Event', 'ambrygen' );
 	}
 
+	/**
+	 * Get the admin menu icon.
+	 *
+	 * @return string
+	 */
 	public function menu_icon(): string {
 		return 'dashicons-calendar-alt';
 	}
 
+	/**
+	 * Get registered meta fields.
+	 *
+	 * @return array
+	 */
 	public function meta_fields(): array {
 		return array(
 			'address_id'        => array(
 				'label'    => __( 'Address ID', 'ambrygen' ),
 				'type'     => 'number',
 				'sanitize' => 'absint',
+				'hidden'   => true,
 			),
 			'trade_show_id'     => array(
 				'label'    => __( 'Trade Show ID', 'ambrygen' ),
 				'type'     => 'number',
 				'sanitize' => 'absint',
+				'hidden'   => true,
 			),
 			'updated_at'        => array(
-				'label' => __( 'Updated At', 'ambrygen' ),
-				'type'  => 'text',
+				'label'  => __( 'Updated At', 'ambrygen' ),
+				'type'   => 'text',
+				'hidden' => true,
 			),
 			'is_active'         => array(
 				'label' => __( 'Is Active', 'ambrygen' ),
@@ -63,6 +91,7 @@ class Events extends AbstractPostType {
 				'label'    => __( 'Type ID', 'ambrygen' ),
 				'type'     => 'number',
 				'sanitize' => 'absint',
+				'hidden'   => true,
 			),
 			'capacity'          => array(
 				'label'    => __( 'Capacity', 'ambrygen' ),

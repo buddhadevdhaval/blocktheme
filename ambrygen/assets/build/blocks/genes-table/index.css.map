@@ -1,1 +1,0 @@
-{"version":3,"file":"genes-table/index.css","mappings":";;;AAAA;EACC;AACD,C","sources":["webpack://ambrygen/./assets/src/blocks/genes-table/editor.scss"],"sourcesContent":[".wp-block-ambrygen-genes-table {\n\t/* No editor-only styles needed right now. */\n}\n"],"names":[],"ignoreList":[],"sourceRoot":""}

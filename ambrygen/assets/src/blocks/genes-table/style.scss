@@ -1,49 +1,8 @@
 @use "../../css/partials/variables/breakpoints" as bp;
 @use "../../css/partials/variables/fluid_mixins" as *;
 
-
-
-// .genes-table__search {
-// 	background-color: var(--theme_primary_25);
-// 	border-radius: 24px;
-// 	padding: fluid(16, 50);
-
-// 	.kicker-text {
-// 		text-align: center;
-// 		color: var(--theme_cg_blue);
-// 	}
-
-
-
-// 	form {
-// 		position: relative;
-// 		max-width: 640px;
-// 		margin: 0 auto;
-
-// 		@include bp.max(md) {
-// 			max-width: 100%;
-// 		}
-
-// 		.genes-table__search-button {
-// 			background-image: url(../../images/search-icon.svg);
-// 			background-color: transparent;
-// 			background-repeat: no-repeat;
-// 			background-size: 20px;
-// 			border: none;
-// 			font-size: 0;
-// 			height: 20px;
-// 			margin: 0;
-// 			padding: 0;
-// 			position: absolute;
-// 			right: 16px;
-// 			top: 14px;
-// 			width: 20px;
-// 		}
-// 	}
-// }
-
-
 .genes-table {
+
 	&__instruction {
 		text-align: center;
 	}
@@ -59,6 +18,5 @@
 		border-radius: 32px;
 		border: 1px solid var(--theme_gray_200);
 		background: var(--theme_gray_25);
-		// margin: 24px 0 0 0;
 	}
 }

@@ -53,7 +53,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 				const order = editorSelect.getBlockOrder( rootId );
 				const rootBlock = editorSelect.getBlock( rootId );
-				const currentActiveTabId = rootBlock?.attributes?.activeTabId || '';
+				const currentActiveTabId =
+					rootBlock?.attributes?.activeTabId || '';
 
 				if ( ! Array.isArray( order ) || order.length === 0 ) {
 					return {
@@ -82,7 +83,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const shouldShowActive = Boolean(
 		( activeTabId && activeTabId === clientId ) ||
 			( ! activeTabId &&
-				( isDefaultActive || ( isFirstItem && ! hasAnyDefaultActive ) ) )
+				( isDefaultActive ||
+					( isFirstItem && ! hasAnyDefaultActive ) ) )
 	);
 
 	const handleHeaderClick = () => {
@@ -103,7 +105,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Tab Settings', 'ambrygen-web' ) } initialOpen>
+				<PanelBody
+					title={ __( 'Tab Settings', 'ambrygen-web' ) }
+					initialOpen
+				>
 					<ToggleControl
 						label={ __( 'Default active tab', 'ambrygen-web' ) }
 						checked={ !! isDefaultActive }
@@ -132,8 +137,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						tagName="div"
 						className="subtitle1-sbold tabs-table-content__title"
 						value={ heading }
-						onChange={ ( value ) => setAttributes( { heading: value } ) }
-						placeholder={ __( 'Tab heading...', 'ambrygen-web' ) }
+						onChange={ ( value ) =>
+							setAttributes( { heading: value } )
+						}
+						placeholder={ __( 'Tab heading…', 'ambrygen-web' ) }
 						withoutInteractiveFormatting={ true }
 					/>
 				</div>

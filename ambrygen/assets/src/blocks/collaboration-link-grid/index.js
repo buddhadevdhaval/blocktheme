@@ -4,8 +4,8 @@ import Edit from './edit';
 import './style.scss';
 import metadata from './block.json';
 
-registerBlockType(metadata.name, {
+registerBlockType( metadata.name, {
 	...metadata,
 	edit: Edit,
 	save: () => <InnerBlocks.Content />,
-});
+} );

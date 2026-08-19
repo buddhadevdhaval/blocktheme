@@ -12,6 +12,9 @@ use WP_Post;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Conference query service.
+ */
 final class ConferenceQueryService {
 
 	use Singleton;
@@ -48,6 +51,16 @@ final class ConferenceQueryService {
 				continue;
 			}
 
+			$allowed_statuses = array( 'publish' );
+
+			if ( current_user_can( 'read_post', $post->ID ) ) {
+				$allowed_statuses[] = 'private';
+			}
+
+			if ( ! in_array( $post->post_status, $allowed_statuses, true ) ) {
+				continue;
+			}
+
 			$linked_posts[] = $post;
 		}
 
@@ -77,9 +90,8 @@ final class ConferenceQueryService {
 	 *
 	 * @return bool
 	 */
-	public function has_in_progress_conferences(): bool
-	{
-		$today = date('Y-m-d');
+	public function has_in_progress_conferences(): bool {
+		$today = date( 'Y-m-d' );
 
 		$args = array(
 			'post_type'      => 'conferences',
@@ -103,7 +115,7 @@ final class ConferenceQueryService {
 			),
 		);
 
-		$query = new \WP_Query($args);
+		$query = new \WP_Query( $args );
 		return $query->have_posts();
 	}
 }

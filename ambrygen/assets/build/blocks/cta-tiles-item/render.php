@@ -21,11 +21,11 @@ $ambrygen_image_alt = isset( $attributes['imageAlt'] ) ? sanitize_text_field( $a
 $ambrygen_title     = $attributes['title'] ?? '';
 $ambrygen_desc      = $attributes['description'] ?? '';
 
-$ambrygen_link_array   = isset( $attributes['link'] ) && is_array( $attributes['link'] ) ? $attributes['link'] : array();
-$ambrygen_link         = $ambrygen_link_array['url'] ?? '';
-$ambrygen_link_text    = isset( $ambrygen_link_array['text'] ) ? sanitize_text_field( $ambrygen_link_array['text'] ) : '';
-$ambrygen_link_target  = isset( $ambrygen_link_array['target'] ) ? sanitize_text_field( $ambrygen_link_array['target'] ) : '';
-$ambrygen_link_rel     = isset( $ambrygen_link_array['rel'] ) ? sanitize_text_field( $ambrygen_link_array['rel'] ) : '';
+$ambrygen_link_array  = isset( $attributes['link'] ) && is_array( $attributes['link'] ) ? $attributes['link'] : array();
+$ambrygen_link        = $ambrygen_link_array['url'] ?? '';
+$ambrygen_link_text   = isset( $ambrygen_link_array['text'] ) ? sanitize_text_field( $ambrygen_link_array['text'] ) : '';
+$ambrygen_link_target = isset( $ambrygen_link_array['target'] ) ? sanitize_text_field( $ambrygen_link_array['target'] ) : '';
+$ambrygen_link_rel    = isset( $ambrygen_link_array['rel'] ) ? sanitize_text_field( $ambrygen_link_array['rel'] ) : '';
 
 if ( '_blank' !== $ambrygen_link_target ) {
 	$ambrygen_link_target = '';
@@ -61,7 +61,7 @@ $ambrygen_link_label = $ambrygen_link_text ? $ambrygen_link_text : wp_strip_all_
 if ( ! $ambrygen_link_label ) {
 	$ambrygen_link_label = __( 'Learn more', 'ambrygen-web' );
 }
-$cta_aria_label = $ambrygen_link_text && $ambrygen_title
+$cta_aria_label       = $ambrygen_link_text && $ambrygen_title
 	? $ambrygen_link_text . ' ' . wp_strip_all_tags( $ambrygen_title )
 	: $ambrygen_link_label;
 $cta_accessible_label = trim( $cta_aria_label );
@@ -72,11 +72,10 @@ if ( '_blank' === $ambrygen_link_target ) {
 }
 
 /**
- * Wrapper tag logic (unchanged)
+ * Wrapper tag logic.
  */
-$ambrygen_wrapper_tag = ( 'image-only-title' === $ambrygen_cta_tiles_variation && ! empty( $ambrygen_link ) )
-	? 'a'
-	: 'div';
+$ambrygen_wrapper_tag     = ! empty( $ambrygen_link ) ? 'a' : 'div';
+$ambrygen_is_wrapper_link = 'a' === $ambrygen_wrapper_tag;
 
 /**
  * Wrapper attributes
@@ -89,7 +88,7 @@ $ambrygen_wrapper_attrs = array(
  * WCAG 2.4.4: Accessible link name for wrapper anchor
  */
 if ( 'a' === $ambrygen_wrapper_tag ) {
-	$ambrygen_wrapper_attrs['href'] = $ambrygen_link;
+	$ambrygen_wrapper_attrs['href']       = $ambrygen_link;
 	$ambrygen_wrapper_attrs['aria-label'] = $cta_accessible_label;
 
 	if ( $ambrygen_link_target ) {
@@ -132,7 +131,7 @@ if ( 'a' === $ambrygen_wrapper_tag ) {
 	<?php if ( $ambrygen_has_card_info ) : ?>
 		<div class="card-info">
 			<?php if ( $ambrygen_title ) : ?>
-				<div class="link-btn mb-0 heading-5">
+				<div class="link-btn mb-0 heading-5 block-inside-title">
 					<?php
 							echo wp_kses(
 								$ambrygen_title,
@@ -143,7 +142,7 @@ if ( 'a' === $ambrygen_wrapper_tag ) {
 			<?php endif; ?>
 
 			<?php if ( $ambrygen_has_description ) : ?>
-				<div class="card-description <?php echo ( 'image-title-description' === $ambrygen_cta_tiles_variation || 'image-title-description-icon' === $ambrygen_cta_tiles_variation ) ? 'body2-reg' : 'text-small'; ?> ">
+				<div class="card-description block-inside-description <?php echo ( 'image-title-description' === $ambrygen_cta_tiles_variation || 'image-title-description-icon' === $ambrygen_cta_tiles_variation ) ? 'body2-reg' : 'text-small'; ?> ">
 					<?php echo wp_kses_post( $ambrygen_desc ); ?>
 				</div>
 			<?php endif; ?>
@@ -152,19 +151,25 @@ if ( 'a' === $ambrygen_wrapper_tag ) {
 			if ( ( 'image-title-description' === $ambrygen_cta_tiles_variation && $ambrygen_link ) || ( 'image-title-description-icon' === $ambrygen_cta_tiles_variation && $ambrygen_link ) ) :
 				?>
 				<div class="card-cta-wrapper">
-					<a
-						href="<?php echo esc_url( $ambrygen_link ); ?>"
-						<?php if ( $ambrygen_link_target ) : ?>
-							target="<?php echo esc_attr( $ambrygen_link_target ); ?>"
-						<?php endif; ?>
-						<?php if ( $ambrygen_link_rel ) : ?>
-							rel="<?php echo esc_attr( $ambrygen_link_rel ); ?>"
-						<?php endif; ?>
-						aria-label="<?php echo esc_attr( $cta_accessible_label ); ?>"
-						class="site-btn is-style-site-text-btn has-right-arrow"
-					>
-						<?php echo esc_html( $ambrygen_link_label ); ?>
-					</a>
+					<?php if ( $ambrygen_is_wrapper_link ) : ?>
+						<span class="site-btn is-style-site-text-btn has-right-arrow">
+							<?php echo esc_html( $ambrygen_link_label ); ?>
+						</span>
+					<?php else : ?>
+						<a
+							href="<?php echo esc_url( $ambrygen_link ); ?>"
+							<?php if ( $ambrygen_link_target ) : ?>
+								target="<?php echo esc_attr( $ambrygen_link_target ); ?>"
+							<?php endif; ?>
+							<?php if ( $ambrygen_link_rel ) : ?>
+								rel="<?php echo esc_attr( $ambrygen_link_rel ); ?>"
+							<?php endif; ?>
+							aria-label="<?php echo esc_attr( $cta_accessible_label ); ?>"
+							class="site-btn is-style-site-text-btn has-right-arrow"
+						>
+							<?php echo esc_html( $ambrygen_link_label ); ?>
+						</a>
+					<?php endif; ?>
 				</div>
 
 				<?php

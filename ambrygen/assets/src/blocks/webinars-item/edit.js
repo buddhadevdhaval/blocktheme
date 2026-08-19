@@ -1,8 +1,5 @@
 import { useBlockProps } from '@wordpress/block-editor';
-import {
-	Placeholder,
-	Spinner,
-} from '@wordpress/components';
+import { Placeholder, Spinner } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
@@ -72,13 +69,15 @@ const formatWebinarTime = ( dateString ) => {
 			return '';
 		}
 
-		return date.toLocaleTimeString( 'en-US', {
-			hour: 'numeric',
-			minute: '2-digit',
-			hour12: true,
-			timeZone: 'America/Los_Angeles',
-			timeZoneName: 'short',
-		} ).toLowerCase();
+		return date
+			.toLocaleTimeString( 'en-US', {
+				hour: 'numeric',
+				minute: '2-digit',
+				hour12: true,
+				timeZone: 'America/Los_Angeles',
+				timeZoneName: 'short',
+			} )
+			.toLowerCase();
 	} catch {
 		return '';
 	}
@@ -93,7 +92,8 @@ const formatWebinarTime = ( dateString ) => {
  *
  * @param {Object} props            Component props.
  * @param {Object} props.attributes Block attributes.
- * @return {JSX.Element} Editor UI.
+ * @param {string} props.clientId   Block client ID.
+ * @return {import('@wordpress/element').WPElement} Editor UI.
  */
 export default function Edit( { attributes, clientId } ) {
 	const { postId } = attributes;
@@ -104,35 +104,33 @@ export default function Edit( { attributes, clientId } ) {
 		[ clientId ]
 	);
 
-	const selectedQuery = { _fields: 'id,title,featured_media,meta' };
-
 	const selectedWebinar = useSelect(
-		(select) => {
-			if (!postId) {
+		( select ) => {
+			if ( ! postId ) {
 				return null;
 			}
-			return select('core').getEntityRecord(
+			return select( 'core' ).getEntityRecord(
 				'postType',
 				'webinar',
 				postId,
-				selectedQuery
+				{ _fields: 'id,title,featured_media,meta' }
 			);
 		},
-		[postId]
+		[ postId ]
 	);
 
 	const featuredImage = useSelect(
-		(select) => {
+		( select ) => {
 			const mediaId = selectedWebinar?.featured_media;
-			if (!mediaId) {
+			if ( ! mediaId ) {
 				return null;
 			}
-			const media = select('core').getMedia(mediaId, {
+			const media = select( 'core' ).getMedia( mediaId, {
 				_fields: 'id,source_url',
-			});
+			} );
 			return media?.source_url ?? null;
 		},
-		[selectedWebinar?.featured_media]
+		[ selectedWebinar?.featured_media ]
 	);
 
 	const subtitle = selectedWebinar?.meta?.subtitle || '';
@@ -161,7 +159,7 @@ export default function Edit( { attributes, clientId } ) {
 					instructions={ __(
 						'Choose a webinar from the parent block sidebar panel.',
 						'ambrygen-web'
-					)}
+					) }
 				/>
 			</div>
 		);
@@ -221,30 +219,36 @@ export default function Edit( { attributes, clientId } ) {
 							</div>
 						</div>
 
-						<div className="is-style-gl-s16" aria-hidden="true"></div>
+						<div
+							className="is-style-gl-s16"
+							aria-hidden="true"
+						></div>
 
-						{ !!subtitle && (
+						{ !! subtitle && (
 							<div className="event-carousel__description text-md-medium">
 								{ subtitle }
 							</div>
 						) }
 
-						<div className="is-style-gl-s16" aria-hidden="true"></div>
+						<div
+							className="is-style-gl-s16"
+							aria-hidden="true"
+						></div>
 
 						<div className="event-carousel__details flag-details">
-							{ !!dateDisplay && (
+							{ !! dateDisplay && (
 								<div className="text-md-medium event-carousel__date-info flag-info flag-date-info">
 									<span className="event-carousel__meta-list-icon flag-icon"></span>
 									{ dateDisplay }
 								</div>
 							) }
-							{ !!timeDisplay && (
+							{ !! timeDisplay && (
 								<div className="text-md-medium event-carousel__time-info flag-info flag-time-info">
 									<span className="event-carousel__meta-list-icon flag-icon"></span>
 									{ timeDisplay }
 								</div>
 							) }
-							{ !!durationDisplay && (
+							{ !! durationDisplay && (
 								<div className="text-md-medium event-carousel__duration flag-info flag-duration-info">
 									<span className="event-carousel__meta-list-icon flag-icon"></span>
 									{ durationDisplay }
@@ -269,7 +273,7 @@ export default function Edit( { attributes, clientId } ) {
 						</div>
 					</div>
 				</div>
-			)}
+			) }
 		</div>
 	);
 }

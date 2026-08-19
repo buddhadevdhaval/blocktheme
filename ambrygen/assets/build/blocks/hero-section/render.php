@@ -26,16 +26,17 @@ $ambrygen_slides           = isset( $ambrygen_attributes['slides'] ) && is_array
 $ambrygen_show_slider_nav  = isset( $ambrygen_attributes['showSliderNav'] ) ? (bool) $ambrygen_attributes['showSliderNav'] : true;
 $ambrygen_show_slider_dots = isset( $ambrygen_attributes['showSliderDots'] ) ? (bool) $ambrygen_attributes['showSliderDots'] : true;
 $ambrygen_autoplay         = isset( $ambrygen_attributes['autoplay'] ) ? (bool) $ambrygen_attributes['autoplay'] : false;
+$ambrygen_show_pause_button = isset( $ambrygen_attributes['showPauseButton'] ) ? (bool) $ambrygen_attributes['showPauseButton'] : true;
 $ambrygen_autoplay_delay   = isset( $ambrygen_attributes['autoplayDelay'] ) ? absint( $ambrygen_attributes['autoplayDelay'] ) : 5000;
 $ambrygen_show_small_image = isset( $ambrygen_attributes['showSmallImage'] ) ? (bool) $ambrygen_attributes['showSmallImage'] : false;
 $ambrygen_slides           = array_values(
 	array_filter(
 		$ambrygen_slides,
 		static function ( $ambrygen_slide ) {
-			$ambrygen_slide            = is_array( $ambrygen_slide ) ? $ambrygen_slide : array();
-			$ambrygen_primary_button   = isset( $ambrygen_slide['primarybutton'] ) && is_array( $ambrygen_slide['primarybutton'] ) ? $ambrygen_slide['primarybutton'] : array();
-			$ambrygen_secondary_button = isset( $ambrygen_slide['secondarybutton'] ) && is_array( $ambrygen_slide['secondarybutton'] ) ? $ambrygen_slide['secondarybutton'] : array();
-			$ambrygen_has_primary_cta  = ! empty( $ambrygen_primary_button['text'] ) && ! empty( $ambrygen_primary_button['url'] );
+			$ambrygen_slide             = is_array( $ambrygen_slide ) ? $ambrygen_slide : array();
+			$ambrygen_primary_button    = isset( $ambrygen_slide['primarybutton'] ) && is_array( $ambrygen_slide['primarybutton'] ) ? $ambrygen_slide['primarybutton'] : array();
+			$ambrygen_secondary_button  = isset( $ambrygen_slide['secondarybutton'] ) && is_array( $ambrygen_slide['secondarybutton'] ) ? $ambrygen_slide['secondarybutton'] : array();
+			$ambrygen_has_primary_cta   = ! empty( $ambrygen_primary_button['text'] ) && ! empty( $ambrygen_primary_button['url'] );
 			$ambrygen_has_secondary_cta = ! empty( $ambrygen_secondary_button['text'] ) && ! empty( $ambrygen_secondary_button['url'] );
 
 			return ! empty( $ambrygen_slide['backgroundImage'] )
@@ -53,6 +54,7 @@ $ambrygen_slide_count      = count( $ambrygen_slides );
 $ambrygen_has_slider       = $ambrygen_slide_count > 1;
 $ambrygen_autoplay_delay   = max( 1000, min( 10000, $ambrygen_autoplay_delay ) );
 $ambrygen_autoplay         = $ambrygen_autoplay && $ambrygen_has_slider;
+$ambrygen_show_pause_button = $ambrygen_show_pause_button && $ambrygen_autoplay;
 $ambrygen_show_slider_nav  = $ambrygen_show_slider_nav && $ambrygen_has_slider;
 $ambrygen_show_slider_dots = $ambrygen_show_slider_dots && $ambrygen_has_slider;
 
@@ -69,6 +71,11 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 );
 $ambrygen_index              = 0;
 $ambrygen_slides_region_id   = wp_unique_id( 'hero-section-slides-' );
+$ambrygen_archive_heading    = '';
+
+if ( is_tax( 'poster_category' ) ) {
+	$ambrygen_archive_heading = single_term_title( '', false );
+}
 
 if ( ! $ambrygen_slide_count ) {
 	return;
@@ -86,7 +93,7 @@ if ( ! $ambrygen_slide_count ) {
 			aria-live="polite"
 		<?php endif; ?>
 	>
-		<?php if ( $ambrygen_autoplay ) : ?>
+		<?php if ( $ambrygen_show_pause_button ) : ?>
 			<div
 				class="hero-section__autoplay-controls"
 				role="group"
@@ -145,6 +152,9 @@ if ( ! $ambrygen_slide_count ) {
 				$ambrygen_overlay_image_2_alt = isset( $ambrygen_slide['overlayImage2Alt'] ) ? sanitize_text_field( $ambrygen_slide['overlayImage2Alt'] ) : '';
 
 				$ambrygen_heading = $ambrygen_slide['heading'] ?? '';
+				if ( '' === trim( wp_strip_all_tags( $ambrygen_heading ) ) && '' !== $ambrygen_archive_heading ) {
+					$ambrygen_heading = $ambrygen_archive_heading;
+				}
 				$ambrygen_content = $ambrygen_slide['content'] ?? '';
 				$ambrygen_eyebrow = $ambrygen_slide['eyebrow'] ?? '';
 
@@ -198,8 +208,8 @@ if ( ! $ambrygen_slide_count ) {
 
 				$ambrygen_heading_tag = isset( $ambrygen_slide['headingTag'] )
 					? strtolower( $ambrygen_slide['headingTag'] )
-					: 'h2';
-				$ambrygen_heading_tag = Helper::get_heading_tag( $ambrygen_heading_tag, 'h2' );
+					: 'h1';
+				$ambrygen_heading_tag = Helper::get_heading_tag( $ambrygen_heading_tag, 'h1' );
 
 				$ambrygen_heading_tag_escaped = tag_escape( $ambrygen_heading_tag );
 				$ambrygen_heading_id          = 'hero-heading-' . $ambrygen_index;

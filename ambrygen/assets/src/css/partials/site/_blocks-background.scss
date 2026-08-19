@@ -9,7 +9,10 @@
 	}
 }
 
-@include bg-scope("primary", --theme_color_primary) {}
+@include bg-scope("primary", --theme_color_primary) {
+
+	/* Inside Classes SCSS will goes here */
+}
 
 @include bg-scope("secondary", --theme_color_secondary) {
 
@@ -67,24 +70,24 @@
 	.wp-block-button.is-style-site-secondary-btn {
 
 		.wp-block-button__link {
-			background-color: #FFF;
-			color: #005e7f;
+			background-color: var(--theme_white);
+			color: var(--theme_primary_800);
 
 			&:hover {
-				background-color: #b0e5f8;
-				color: #005e7f;
+				background-color: var(--theme_lightblue);
+				color: var(--theme_primary_800);
 			}
 		}
 	}
 
 	// Optional: also support frontend buttons
 	.site-btn.is-style-site-secondary-btn {
-		background-color: #FFF;
-		color: #005e7f;
+		background-color: var(--theme_white);
+		color: var(--theme_primary_800);
 
 		&:hover {
-			background-color: #b0e5f8;
-			color: #005e7f;
+			background-color: var(--theme_lightblue);
+			color: var(--theme_primary_800);
 		}
 	}
 }
@@ -104,6 +107,7 @@
 @include bg-scope("primary_700", --theme_cg_blue) {
 
 	.editor-styles-wrapper & {
+
 		a:not(.site-btn) {
 			color: var(--theme_white);
 		}
@@ -131,14 +135,6 @@
 
 	.hero-kicker {
 		color: var(--theme_primary_200);
-	}
-
-	.block-editor-rich-text__editable {
-		// color: var(--theme_white);
-
-		span {
-			// color: var(--theme_white);
-		}
 	}
 
 	.wp-block-button.is-style-site-btn-style {
@@ -176,13 +172,16 @@
 		}
 
 		&.has-right-arrow {
+
 			.wp-block-button__link {
-				&:after {
+
+				&::after {
 					background-image: url(../images/primary100-icons/right-icon.svg);
 				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/right-icon.svg);
 					}
 				}
@@ -190,13 +189,16 @@
 		}
 
 		&.has-download-arrow {
+
 			.wp-block-button__link {
-				&:after {
+
+				&::after {
 					background-image: url(../images/primary100-icons/download-arrow.svg);
 				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/download-arrow.svg);
 					}
 				}
@@ -204,13 +206,16 @@
 		}
 
 		&.has-video-arrow {
+
 			.wp-block-button__link {
-				&:after {
+
+				&::after {
 					background-image: url(../images/primary100-icons/play-circle-arrow.svg);
 				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/play-circle-arrow.svg);
 					}
 				}
@@ -226,36 +231,42 @@
 		}
 
 		&.has-right-arrow {
-			&:after {
+
+			&::after {
 				background-image: url(../images/primary100-icons/right-icon.svg);
 			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/right-icon.svg);
 				}
 			}
 		}
 
 		&.has-download-arrow {
-			&:after {
+
+			&::after {
 				background-image: url(../images/primary100-icons/download-arrow.svg);
 			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/download-arrow.svg);
 				}
 			}
 		}
 
 		&.has-video-arrow {
-			&:after {
+
+			&::after {
 				background-image: url(../images/primary100-icons/play-circle-arrow.svg);
 			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/play-circle-arrow.svg);
 				}
 			}
@@ -344,8 +355,6 @@
 		color: var(--theme_gray_200);
 
 		a {
-			// color: var(--theme_gray_200);
-			// border-color: var(--theme_gray_200);
 			border-color: var(--theme_primary_200);
 			color: var(--theme_primary_200);
 
@@ -372,7 +381,6 @@
 		color: var(--theme_white);
 	}
 
-	// .editor-styles-wrapper .bg-primary_800 .block-editor-block-list__layout ul {}
 
 	ul:not(.ordering-options *),
 	.block-editor-block-list__layout ul:not(.ordering-options *) {
@@ -424,13 +432,16 @@
 		}
 
 		&.has-right-arrow {
+
 			.wp-block-button__link {
-				&:after {
+
+				&::after {
 					background-image: url(../images/primary800-icons/right-icon.svg);
 				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/right-icon.svg);
 					}
 				}
@@ -438,13 +449,16 @@
 		}
 
 		&.has-download-arrow {
+
 			.wp-block-button__link {
-				&:after {
+
+				&::after {
 					background-image: url(../images/primary800-icons/download-arrow.svg);
 				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/download-arrow.svg);
 					}
 				}
@@ -452,13 +466,16 @@
 		}
 
 		&.has-video-arrow {
+
 			.wp-block-button__link {
-				&:after {
+
+				&::after {
 					background-image: url(../images/primary800-icons/play-circle-arrow.svg);
 				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/play-circle-arrow.svg);
 					}
 				}
@@ -477,36 +494,42 @@
 		}
 
 		&.has-right-arrow {
-			&:after {
+
+			&::after {
 				background-image: url(../images/primary800-icons/right-icon.svg);
 			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/right-icon.svg);
 				}
 			}
 		}
 
 		&.has-download-arrow {
-			&:after {
+
+			&::after {
 				background-image: url(../images/primary800-icons/download-arrow.svg);
 			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/download-arrow.svg);
 				}
 			}
 		}
 
 		&.has-video-arrow {
-			&:after {
+
+			&::after {
 				background-image: url(../images/primary800-icons/play-circle-arrow.svg);
 			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/play-circle-arrow.svg);
 				}
 			}
@@ -525,13 +548,16 @@
 		}
 
 		&.has-right-arrow {
+
 			.wp-block-button__link {
-				&:after {
+
+				&::after {
 					background-image: url(../images/primary100-icons/right-icon.svg);
 				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/right-icon.svg);
 					}
 				}
@@ -539,13 +565,16 @@
 		}
 
 		&.has-download-arrow {
+
 			.wp-block-button__link {
-				&:after {
+
+				&::after {
 					background-image: url(../images/primary100-icons/download-arrow.svg);
 				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/download-arrow.svg);
 					}
 				}
@@ -553,13 +582,16 @@
 		}
 
 		&.has-video-arrow {
+
 			.wp-block-button__link {
-				&:after {
+
+				&::after {
 					background-image: url(../images/primary100-icons/play-circle-arrow.svg);
 				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/play-circle-arrow.svg);
 					}
 				}
@@ -575,36 +607,42 @@
 		}
 
 		&.has-right-arrow {
-			&:after {
+
+			&::after {
 				background-image: url(../images/primary100-icons/right-icon.svg);
 			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/right-icon.svg);
 				}
 			}
 		}
 
 		&.has-download-arrow {
-			&:after {
+
+			&::after {
 				background-image: url(../images/primary100-icons/download-arrow.svg);
 			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/download-arrow.svg);
 				}
 			}
 		}
 
 		&.has-video-arrow {
-			&:after {
+
+			&::after {
 				background-image: url(../images/primary100-icons/play-circle-arrow.svg);
 			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/play-circle-arrow.svg);
 				}
 			}
@@ -612,12 +650,12 @@
 	}
 
 	.block-editor-button-block-appender:not(.ordering-options *) {
-		box-shadow: inset 0 0 0 1px #FFF;
-		color: #FFF;
+		box-shadow: inset 0 0 0 1px var(--theme_white);
+		color: var(--theme_white);
 
 		&:hover {
-			box-shadow: inset 0 0 0 1px #FFF;
-			color: #FFF;
+			box-shadow: inset 0 0 0 1px var(--theme_white);
+			color: var(--theme_white);
 		}
 	}
 
@@ -628,23 +666,20 @@
 	.wp-block-button.is-style-site-secondary-btn {
 
 		.wp-block-button__link {
-			// color: var(--theme_primary_100);
 
 			&:hover {
 				background-color: var(--theme_lynx_screen_blue);
-				color: #FFF;
-				// color: var(--theme_white);
+				color: var(--theme_white);
 			}
 		}
 
 		&.has-right-arrow {
+
 			.wp-block-button__link {
-				&:after {
-					// background-image: url(../images/primary100-icons/right-icon.svg);
-				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/right-icon.svg);
 					}
 				}
@@ -652,13 +687,12 @@
 		}
 
 		&.has-download-arrow {
+
 			.wp-block-button__link {
-				&:after {
-					// background-image: url(../images/primary100-icons/download-arrow.svg);
-				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/download-arrow.svg);
 					}
 				}
@@ -666,13 +700,12 @@
 		}
 
 		&.has-video-arrow {
+
 			.wp-block-button__link {
-				&:after {
-					// background-image: url(../images/primary100-icons/play-circle-arrow.svg);
-				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/play-circle-arrow.svg);
 					}
 				}
@@ -681,45 +714,37 @@
 	}
 
 	.site-btn.is-style-site-secondary-btn {
-		// color: var(--theme_primary_100);
 
 		&:hover {
-			// color: var(--theme_white);
 			background-color: var(--theme_lynx_screen_blue);
-			color: #FFF;
+			color: var(--theme_white);
 		}
 
 		&.has-right-arrow {
-			&:after {
-				// background-image: url(../images/primary100-icons/right-icon.svg);
-			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/right-icon.svg);
 				}
 			}
 		}
 
 		&.has-download-arrow {
-			&:after {
-				// background-image: url(../images/primary100-icons/download-arrow.svg);
-			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/download-arrow.svg);
 				}
 			}
 		}
 
 		&.has-video-arrow {
-			&:after {
-				// background-image: url(../images/primary100-icons/play-circle-arrow.svg);
-			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/play-circle-arrow.svg);
 				}
 			}
@@ -728,14 +753,15 @@
 }
 
 @include bg-scope("gradient1", --theme_gradient1) {
+
 	.wp-block-button.is-style-site-secondary-btn {
 
 		.wp-block-button__link {
 			background-color: var(--theme_gray_200);
 
 			&:hover {
-				background-color: #b0e5f8;
-				color: #005e7f;
+				background-color: var(--theme_lightblue);
+				color: var(--theme_primary_800);
 			}
 		}
 	}
@@ -744,8 +770,8 @@
 		background-color: var(--theme_gray_200);
 
 		&:hover {
-			background-color: #b0e5f8;
-			color: #005e7f;
+			background-color: var(--theme_lightblue);
+			color: var(--theme_primary_800);
 		}
 	}
 }
@@ -767,13 +793,16 @@
 		}
 
 		&.has-right-arrow {
+
 			.wp-block-button__link {
-				&:after {
+
+				&::after {
 					background-image: url(../images/primary800-icons/right-icon.svg);
 				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/right-icon.svg);
 					}
 				}
@@ -781,13 +810,16 @@
 		}
 
 		&.has-download-arrow {
+
 			.wp-block-button__link {
-				&:after {
+
+				&::after {
 					background-image: url(../images/primary800-icons/download-arrow.svg);
 				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/download-arrow.svg);
 					}
 				}
@@ -795,13 +827,16 @@
 		}
 
 		&.has-video-arrow {
+
 			.wp-block-button__link {
-				&:after {
+
+				&::after {
 					background-image: url(../images/primary800-icons/play-circle-arrow.svg);
 				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/play-circle-arrow.svg);
 					}
 				}
@@ -822,36 +857,42 @@
 		}
 
 		&.has-right-arrow {
-			&:after {
+
+			&::after {
 				background-image: url(../images/primary800-icons/right-icon.svg);
 			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/right-icon.svg);
 				}
 			}
 		}
 
 		&.has-download-arrow {
-			&:after {
+
+			&::after {
 				background-image: url(../images/primary800-icons/download-arrow.svg);
 			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/download-arrow.svg);
 				}
 			}
 		}
 
 		&.has-video-arrow {
-			&:after {
+
+			&::after {
 				background-image: url(../images/primary800-icons/play-circle-arrow.svg);
 			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/play-circle-arrow.svg);
 				}
 			}
@@ -872,13 +913,16 @@
 		}
 
 		&.has-right-arrow {
+
 			.wp-block-button__link {
-				&:after {
+
+				&::after {
 					background-image: url(../images/primary100-icons/right-icon.svg);
 				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/right-icon.svg);
 					}
 				}
@@ -886,13 +930,16 @@
 		}
 
 		&.has-download-arrow {
+
 			.wp-block-button__link {
-				&:after {
+
+				&::after {
 					background-image: url(../images/primary100-icons/download-arrow.svg);
 				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/download-arrow.svg);
 					}
 				}
@@ -900,13 +947,16 @@
 		}
 
 		&.has-video-arrow {
+
 			.wp-block-button__link {
-				&:after {
+
+				&::after {
 					background-image: url(../images/primary100-icons/play-circle-arrow.svg);
 				}
 
 				&:hover {
-					&:after {
+
+					&::after {
 						background-image: url(../images/white-icons/play-circle-arrow.svg);
 					}
 				}
@@ -922,36 +972,42 @@
 		}
 
 		&.has-right-arrow {
-			&:after {
+
+			&::after {
 				background-image: url(../images/primary100-icons/right-icon.svg);
 			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/right-icon.svg);
 				}
 			}
 		}
 
 		&.has-download-arrow {
-			&:after {
+
+			&::after {
 				background-image: url(../images/primary100-icons/download-arrow.svg);
 			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/download-arrow.svg);
 				}
 			}
 		}
 
 		&.has-video-arrow {
-			&:after {
+
+			&::after {
 				background-image: url(../images/primary100-icons/play-circle-arrow.svg);
 			}
 
 			&:hover {
-				&:after {
+
+				&::after {
 					background-image: url(../images/white-icons/play-circle-arrow.svg);
 				}
 			}
@@ -979,6 +1035,7 @@
 	}
 
 	.components-button {
+
 		&.is-secondary {
 			background-color: var(--theme_gray_200);
 			color: var(--theme_cg_blue);
@@ -1007,7 +1064,7 @@
 
 		&.is-primary {
 			background-color: var(--theme_white);
-			color: #000;
+			color: var(--theme_black);
 			font-weight: 600;
 		}
 	}
@@ -1041,6 +1098,7 @@
 	}
 
 	ul:not(.ordering-options *) {
+
 		li {
 			color: var(--theme_primary_white);
 
@@ -1104,11 +1162,6 @@
 
 .block-bg {
 
-	// .block-layout {
-	// 	padding: fluid(32, 50);
-	// 	border-radius: fluid(24, 32);
-	// }
-
 	&.bg-secondary {
 		background-color: transparent;
 
@@ -1119,11 +1172,6 @@
 }
 
 .block-bg {
-
-	// .block-layout {
-	// 	padding: fluid(32, 50);
-	// 	border-radius: fluid(24, 32);
-	// }
 
 	&.bg-primary_25 {
 		background-color: transparent;

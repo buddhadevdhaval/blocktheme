@@ -85,7 +85,10 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				entry.target
 					.querySelectorAll( NUMBER_SELECTOR )
 					.forEach( ( element, index ) => {
-						setTimeout( () => animateCounter( element ), index * 150 );
+						setTimeout(
+							() => animateCounter( element ),
+							index * 150
+						);
 					} );
 
 				observer.unobserve( entry.target );

@@ -26,7 +26,7 @@ $ambrygen_attributes = ( isset( $attributes ) && is_array( $attributes ) ) ? $at
 /**
  * Retrieve attributes with defaults.
  */
-$ambrygen_logo_id = ! empty( $ambrygen_attributes['logoId'] )
+$ambrygen_logo_id  = ! empty( $ambrygen_attributes['logoId'] )
 	? absint( $ambrygen_attributes['logoId'] )
 	: 0;
 $ambrygen_logo_url = ! empty( $ambrygen_attributes['logo'] )
@@ -44,7 +44,7 @@ $ambrygen_author = ! empty( $ambrygen_attributes['author'] )
 	? $ambrygen_attributes['author']
 	: '';
 
-$ambrygen_role = ! empty( $ambrygen_attributes['role'] )
+$ambrygen_role       = ! empty( $ambrygen_attributes['role'] )
 	? $ambrygen_attributes['role']
 	: '';
 $ambrygen_has_quote  = '' !== trim( wp_strip_all_tags( $ambrygen_quote ) );
@@ -62,10 +62,10 @@ $ambrygen_main_image_id = ! empty( $ambrygen_context['ambrygen/mainImageId'] )
 	? absint( $ambrygen_context['ambrygen/mainImageId'] )
 	: 0;
 
-$ambrygen_main_image_url = ! empty( $ambrygen_context['ambrygen/mainImage'] )
+$ambrygen_main_image_url    = ! empty( $ambrygen_context['ambrygen/mainImage'] )
 	? esc_url_raw( $ambrygen_context['ambrygen/mainImage'] )
 	: '';
-$ambrygen_main_image_alt = ! empty( $ambrygen_context['ambrygen/mainImageAlt'] )
+$ambrygen_main_image_alt    = ! empty( $ambrygen_context['ambrygen/mainImageAlt'] )
 	? sanitize_text_field( $ambrygen_context['ambrygen/mainImageAlt'] )
 	: '';
 $ambrygen_main_image_markup = Helper::image_from_source(

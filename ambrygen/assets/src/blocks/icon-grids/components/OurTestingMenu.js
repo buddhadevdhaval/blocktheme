@@ -40,16 +40,16 @@ export default function OurTestingMenu( {
 				</PanelBody>
 			</InspectorControls>
 			<div className="our-testing-menu__header block__rowflex">
-				<div className='block__rowflex--col-left'>
-				<RichText
-					tagName={ headingTag || 'h2' }
-					className="block-title block__rowflex--heading-title heading-3 mb-0"
-					value={ heading }
-					onChange={ ( value ) =>
-						setAttributes( { heading: value } )
-					}
-					placeholder="Add Title..."
-				/>
+				<div className="block__rowflex--col-left">
+					<RichText
+						tagName={ headingTag || 'h2' }
+						className="block-title block__rowflex--heading-title heading-3 mb-0"
+						value={ heading }
+						onChange={ ( value ) =>
+							setAttributes( { heading: value } )
+						}
+						placeholder="Add Title..."
+					/>
 				</div>
 				<div className="block__rowflex--block-content subtitle1-reg">
 					<RichText
@@ -63,13 +63,7 @@ export default function OurTestingMenu( {
 
 					<div className="block_rowflex-link">
 						{ link?.url && link?.text && (
-							<a
-								href={ link.url }
-								target={ link.target || undefined }
-								rel={ link.rel || undefined }
-								className="site-btn is-style-site-text-btn has-right-arrow"
-								onClick={ ( e ) => e.preventDefault() }
-							>
+							<div className="site-btn is-style-site-text-btn has-right-arrow">
 								{ link.text }
 								{ link.target === '_blank' && (
 									<span className="screen-reader-text">
@@ -79,7 +73,7 @@ export default function OurTestingMenu( {
 										) }
 									</span>
 								) }
-							</a>
+							</div>
 						) }
 					</div>
 				</div>
@@ -96,4 +90,3 @@ export default function OurTestingMenu( {
 		</>
 	);
 }
-

@@ -9,4 +9,3 @@ registerBlockType( metadata.name, {
 	edit: Edit,
 	save: () => null,
 } );
-

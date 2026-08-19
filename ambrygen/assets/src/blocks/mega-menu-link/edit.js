@@ -149,11 +149,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						label={ __( 'Move Down', 'ambrygen-web' ) }
 					/>
 				</div>
-				<a
-					href={ url }
-					className="nav__item--mega-menu__submenu-inner--link submenu-inner-link"
-					onClick={ ( e ) => e.preventDefault() }
-				>
+				<div className="nav__item--mega-menu__submenu-inner--link submenu-inner-link">
 					{ iconUrl && (
 						<div className="nav__item--mega-menu__submenu-inner--icon">
 							<img src={ iconUrl } alt="" />
@@ -168,7 +164,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						}
 						placeholder={ __( 'Link Label', 'ambrygen-web' ) }
 					/>
-				</a>
+				</div>
 			</li>
 		</>
 	);

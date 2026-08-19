@@ -135,7 +135,10 @@ export default function Edit( { attributes, setAttributes } ) {
 								value: 'embed',
 							},
 							{
-								label: __( 'Upload video (MP4)', 'ambrygen-web' ),
+								label: __(
+									'Upload video (MP4)',
+									'ambrygen-web'
+								),
 								value: 'mp4',
 							},
 						] }
@@ -179,7 +182,10 @@ export default function Edit( { attributes, setAttributes } ) {
 											onClick={ open }
 										>
 											{ videoUrl
-												? __( 'Replace Video', 'ambrygen-web' )
+												? __(
+														'Replace Video',
+														'ambrygen-web'
+												  )
 												: __(
 														'Select / Upload Video',
 														'ambrygen-web'
@@ -330,7 +336,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						} )
 					}
 					allowedFormats={ [] }
-					placeholder={ __( 'Add video title...', 'ambrygen-web' ) }
+					placeholder={ __( 'Add video title…', 'ambrygen-web' ) }
 				/>
 				<RichText
 					tagName="div"
@@ -344,7 +350,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					}
 					allowedFormats={ [ 'core/link' ] }
 					placeholder={ __(
-						'Add video description...',
+						'Add video description…',
 						'ambrygen-web'
 					) }
 				/>

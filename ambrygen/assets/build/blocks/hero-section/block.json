@@ -16,6 +16,10 @@
     "carousel"
   ],
   "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
     "slides": {
       "type": "array",
       "items": {
@@ -147,6 +151,10 @@
       "type": "boolean",
       "default": true
     },
+    "showPauseButton": {
+      "type": "boolean",
+      "default": true
+    },
     "autoplayDelay": {
       "type": "number",
       "default": 5000
@@ -164,42 +172,7 @@
   "textdomain": "ambrygen-web",
   "example": {
     "attributes": {
-      "slides": [
-        {
-          "backgroundImage": "",
-          "backgroundImageId": 0,
-          "backgroundImageAlt": "",
-          "overlayImage1": "",
-          "overlayImage1Id": 0,
-          "eyebrow": "",
-          "overlayImage1Alt": "",
-          "headingTag": "h2",
-          "overlayImage2": "",
-          "overlayImage2Id": 0,
-          "overlayImage2Alt": "",
-          "heading": "Industry-leading genetic testing",
-          "content": "For over 25 years our high-quality, accessible genetic testing solutions have shaped important care decisions that patients and families make with their healthcare providers.",
-          "primarybutton": {
-            "url": "#",
-            "text": "Start Your Order",
-            "target": "",
-            "rel": "",
-            "variant": "is-style-site-tertiary-btn"
-          },
-          "secondarybutton": {
-            "url": "#",
-            "text": "Who We Are",
-            "target": "",
-            "rel": "",
-            "variant": "dark"
-          }
-        }
-      ],
-      "showSliderNav": true,
-      "showSliderDots": true,
-      "autoplay": true,
-      "autoplayDelay": 5000,
-      "showSmallImage": false
+      "blockId": "hero-section-example"
     }
   }
 }

@@ -1,1 +1,0 @@
-{"version":3,"file":"testimonial-item/style-index.css","mappings":";;;AAAA;EACC;AACD,C","sources":["webpack://ambrygen/./assets/src/blocks/testimonial-item/style.scss"],"sourcesContent":[".ambry-testimonials__grid__item {\n\theight: 100%;\n}\n"],"names":[],"ignoreList":[],"sourceRoot":""}

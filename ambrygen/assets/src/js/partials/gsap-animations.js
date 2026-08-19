@@ -1,9 +1,5 @@
 /**
  * Global GSAP Scroll Animations
- *
- * Targets any element with the class `js-gsap-fade` across the site.
- * No per-block JS needed — just add the class to any HTML element in render.php.
- *
  * Usage in render.php:
  *   <div class="my-block__item js-gsap-fade">...</div>
  */
@@ -19,22 +15,31 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		return;
 	}
 
-	gsap.set( fadeItems, { y: 15, opacity: 0 } );
+	const prefersReducedMotion = window.matchMedia(
+		'(prefers-reduced-motion: reduce)'
+	).matches;
+
+	if ( prefersReducedMotion ) {
+		gsap.set( fadeItems, { opacity: 1, y: 0, clearProps: 'all' } );
+		return;
+	}
+
+	gsap.set( fadeItems, { y: 8, opacity: 0 } );
 
 	ScrollTrigger.batch( fadeItems, {
-		interval: 0.15,
-		batchMax: 4,
+		interval: 0.1,
+		batchMax: 6,
 		onEnter: ( batch ) => {
 			gsap.to( batch, {
 				opacity: 1,
 				y: 0,
-				duration: 0.6,
-				stagger: 0.15,
-				ease: 'power2.out',
+				duration: 0.35,
+				stagger: 0.05,
+				ease: 'power1.out',
 				overwrite: true,
 				clearProps: 'all',
 			} );
 		},
-		start: 'top 85%',
+		start: 'top 95%',
 	} );
 } );

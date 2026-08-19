@@ -1,10 +1,12 @@
 import { useBlockProps } from '@wordpress/block-editor';
 import { Placeholder, Spinner } from '@wordpress/components';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import { ServerSideRender } from '../_shared/server-side-render';
 
 export default function Edit( { attributes, context, name } ) {
 	const blockProps = useBlockProps();
-	const previewPostId = Number( attributes?.previewPostId || context?.postId || 0 );
+	const previewPostId = Number(
+		attributes?.previewPostId || context?.postId || 0
+	);
 
 	if ( ! previewPostId ) {
 		return (

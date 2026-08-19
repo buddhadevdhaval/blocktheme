@@ -3,7 +3,9 @@
  */
 
 document.addEventListener( 'DOMContentLoaded', () => {
-	const accordionWraps = document.querySelectorAll( '.genetic-testing-table-wrap' );
+	const accordionWraps = document.querySelectorAll(
+		'.genetic-testing-table-wrap'
+	);
 
 	accordionWraps.forEach( ( wrap ) => {
 		const toggles = wrap.querySelectorAll( '.js-accordion-toggle' );
@@ -28,9 +30,12 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				event.preventDefault();
 				event.stopPropagation();
 
-				if ( isAnimating ) return;
+				if ( isAnimating ) {
+					return;
+				}
 
-				const isOpen = toggle.getAttribute( 'data-amb-open' ) === 'true';
+				const isOpen =
+					toggle.getAttribute( 'data-amb-open' ) === 'true';
 
 				if ( isOpen ) {
 					shrink();
@@ -44,7 +49,9 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				const startHeight = `${ content.offsetHeight }px`;
 				const endHeight = '0px';
 
-				if ( animation ) animation.cancel();
+				if ( animation ) {
+					animation.cancel();
+				}
 
 				content.style.overflow = 'hidden';
 				animation = content.animate(
@@ -75,10 +82,12 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				isAnimating = true;
 				contentRow.hidden = false;
 				content.classList.add( 'in' );
-				
+
 				const targetHeight = `${ content.scrollHeight }px`;
-				
-				if ( animation ) animation.cancel();
+
+				if ( animation ) {
+					animation.cancel();
+				}
 
 				content.style.overflow = 'hidden';
 				animation = content.animate(
@@ -104,8 +113,12 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			};
 
 			// Initialize default state
-			const initialOpen = toggle.getAttribute( 'data-amb-open' ) === 'true';
-			toggle.setAttribute( 'aria-expanded', initialOpen ? 'true' : 'false' );
+			const initialOpen =
+				toggle.getAttribute( 'data-amb-open' ) === 'true';
+			toggle.setAttribute(
+				'aria-expanded',
+				initialOpen ? 'true' : 'false'
+			);
 			contentRow.hidden = ! initialOpen;
 			if ( initialOpen ) {
 				content.classList.add( 'in' );

@@ -2,6 +2,7 @@
 @use "../../variables/fluid_mixins" as *;
 
 .cs-wp-post-date {
+
 	time {
 		position: relative;
 		padding-left: 30px;
@@ -46,12 +47,13 @@
 	}
 
 	&.flag-time-format {
+
 		time {
 			position: relative;
 			display: flex;
 			gap: 8px;
 
-			&:before {
+			&::before {
 				content: "";
 				display: block;
 				width: 20px;
@@ -66,7 +68,6 @@
 
 	.flag-info {
 		display: flex;
-		// align-items: center;
 		gap: 10px;
 		font-size: var(--theme_font_size_8);
 
@@ -79,48 +80,56 @@
 		}
 
 		&.flag-date-info {
+
 			.flag-icon {
 				background-image: url(../images/primary700-icons/calendar-check-icon.svg);
 			}
 		}
 
 		&.flag-time-info {
+
 			.flag-icon {
 				background-image: url(../images/primary700-icons/clock-icon.svg);
 			}
 		}
 
 		&.flag-duration-info {
+
 			.flag-icon {
 				background-image: url(../images/primary700-icons/duration-icon.svg);
 			}
 		}
 
 		&.flag-book-info {
+
 			.flag-icon {
 				background-image: url(../images/primary700-icons/book-icon.svg);
 			}
 		}
 
 		&.flag-flask-info {
+
 			.flag-icon {
 				background-image: url(../images/primary700-icons/flask-icon.svg);
 			}
 		}
 
 		&.flag-conference-info {
+
 			.flag-icon {
 				background-image: url(../images/primary700-icons/conference-icon.svg);
 			}
 		}
 
 		&.flag-author-info {
+
 			.flag-icon {
 				background-image: url(../images/primary700-icons/author-icon.svg);
 			}
 		}
 
 		&.flag-marker-pin {
+
 			.flag-icon {
 				background-image: url(../images/primary700-icons/marker-pin-variation-icon.svg);
 			}

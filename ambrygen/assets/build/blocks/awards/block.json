@@ -34,6 +34,14 @@
     },
     "headingTag": {
       "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
       "default": "h2"
     },
     "description": {
@@ -64,7 +72,7 @@
   },
   "example": {
     "attributes": {
-      "description": "<p>Recognition and awards from our team and community.</p>"
+      "blockId": "example-block-preview"
     }
   }
 }

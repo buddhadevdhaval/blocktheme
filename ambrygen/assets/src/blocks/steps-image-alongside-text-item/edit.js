@@ -61,18 +61,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		},
 		[ setAttributes ]
 	);
-	const linkRel = useMemo( () => {
-		const parts = ( cta?.rel || '' ).split( ' ' ).filter( Boolean );
-
-		if ( cta?.target === '_blank' ) {
-			return [ ...new Set( [ ...parts, 'noopener', 'noreferrer' ] ) ].join(
-				' '
-			);
-		}
-
-		return parts.join( ' ' );
-	}, [ cta?.rel, cta?.target ] );
-
 	return (
 		<>
 			<InspectorControls>
@@ -89,7 +77,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 					<ImageUploader
 						label={ __( 'Card Image', 'ambrygen-web' ) }
-						url={ imageUrl || "" }
+						url={ imageUrl || '' }
 						onSelect={ handleImageSelect }
 						onRemove={ () =>
 							setAttributes( {
@@ -118,7 +106,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			<div { ...blockProps }>
 				<div className="vertical-tabs__header">
 					<div className="caption-semi-bold vertical-tabs__step-label block-description">
-						{ `${ __( 'Step', 'ambrygen-web' ) } ${ stepNumber + 1 }` }
+						{ `${ __( 'Step', 'ambrygen-web' ) } ${
+							stepNumber + 1
+						}` }
 					</div>
 
 					<RichText
@@ -131,7 +121,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								sectiontitle: '',
 							} )
 						}
-						placeholder={ __( 'Add Step Title...', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Step Title…', 'ambrygen-web' ) }
 						allowedFormats={ [] }
 					/>
 
@@ -143,22 +133,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							setAttributes( { description: value } )
 						}
 						placeholder={ __(
-							'Add Step Description...',
+							'Add Step Description…',
 							'ambrygen-web'
 						) }
 					/>
 					{ cta?.url && (
 						<>
 							<div className="is-style-gl-s20"></div>
-							<a
-								href={ cta.url }
-								className="features-tabs__view-link site-btn is-style-site-text-btn has-right-arrow"
-								onClick={ ( event ) => event.preventDefault() }
-								target={ cta?.target || undefined }
-								rel={ linkRel || undefined }
-							>
+							<div className="features-tabs__view-link site-btn is-style-site-text-btn has-right-arrow">
 								{ cta?.text || cta.url }
-							</a>
+							</div>
 						</>
 					) }
 				</div>

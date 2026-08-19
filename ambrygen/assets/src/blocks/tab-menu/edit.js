@@ -9,9 +9,14 @@ import {
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { ItemHeader, PanelItem, Field } from '../_shared/components';
-import { useArrayHandlers } from '../_shared/utils';
+import {
+	useArrayHandlers,
+	generateMenuId,
+	ensureArrayItemIds,
+} from '../_shared/utils';
 
 const DEFAULT_TAB = {
+	id: generateMenuId(),
 	label: '',
 	targetId: '',
 	targetClientId: '',
@@ -31,6 +36,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 	}, [ clientId, blockId, setAttributes ] );
 
+	useEffect( () => {
+		const normalizedTabs = ensureArrayItemIds( tabs );
+
+		if ( normalizedTabs.hasChanges ) {
+			setAttributes( { tabs: normalizedTabs.items } );
+		}
+	}, [ tabs, setAttributes ] );
+
 	const targetOptions = useSelect( ( select ) => {
 		const { getBlocks } = select( 'core/block-editor' );
 
@@ -49,35 +62,35 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 		return [
 			{ label: __( 'Select Section', 'ambrygen-web' ), value: '' },
-			...allBlocks
-				.map( ( block ) => ( {
-					...block,
-					targetId:
-						block.attributes?.anchor ||
-						block.attributes?.blockId ||
-						'',
-				} ) )
-				.filter( ( block ) => block.targetId )
-				.map( ( block ) => {
-					const blockType = wp.blocks.getBlockType( block.name );
-					const blockTitle = blockType?.title || block.name;
-					const stripHTML = ( str ) =>
-						str ? str.replace( /<[^>]+>/g, '' ) : '';
-					const heading =
-						stripHTML( block.attributes?.heading ) ||
-						stripHTML( block.attributes?.title ) ||
-						stripHTML( block.attributes?.sectionTitle ) ||
-						stripHTML( block.attributes?.sectiontitle ) ||
-						null;
+			...allBlocks.reduce( ( options, block ) => {
+				const targetId =
+					block.attributes?.anchor || block.attributes?.blockId || '';
 
-					return {
-						label: heading
-							? `${ blockTitle } - ${ heading }`
-							: `${ blockTitle } - ${ block.targetId }`,
-						value: block.targetId,
-						clientId: block.clientId,
-					};
-				} ),
+				if ( ! targetId ) {
+					return options;
+				}
+
+				const blockType = wp.blocks.getBlockType( block.name );
+				const blockTitle = blockType?.title || block.name;
+				const stripHTML = ( str ) =>
+					str ? str.replace( /<[^>]+>/g, '' ) : '';
+				const heading =
+					stripHTML( block.attributes?.heading ) ||
+					stripHTML( block.attributes?.title ) ||
+					stripHTML( block.attributes?.sectionTitle ) ||
+					stripHTML( block.attributes?.sectiontitle ) ||
+					null;
+
+				options.push( {
+					label: heading
+						? `${ blockTitle } - ${ heading }`
+						: `${ blockTitle } - ${ targetId }`,
+					value: targetId,
+					clientId: block.clientId,
+				} );
+
+				return options;
+			}, [] ),
 		];
 	} );
 
@@ -87,12 +100,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 
 		const targetIdByClientId = new Map(
-			targetOptions
-				.filter(
-					( option ) =>
-						option.clientId && option.value && option.value !== ''
-				)
-				.map( ( option ) => [ option.clientId, option.value ] )
+			targetOptions.reduce( ( pairs, option ) => {
+				if ( option.clientId && option.value && option.value !== '' ) {
+					pairs.push( [ option.clientId, option.value ] );
+				}
+
+				return pairs;
+			}, [] )
 		);
 
 		const optionsByValue = new Map();
@@ -203,7 +217,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					) }
 
 					{ tabs.map( ( tab, index ) => (
-						<PanelItem key={ index }>
+						<PanelItem key={ tab.id || tab.targetId || tab.label }>
 							<ItemHeader
 								index={ index }
 								label={ tab.label }
@@ -292,7 +306,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					) }
 					{ tabs.map( ( tab, index ) => (
 						<button
-							key={ index }
+							key={ tab.id || tab.targetId || tab.label }
 							type="button"
 							className={ ` tab-button tab-menu-section__tab ${
 								tab.isActive ||

@@ -1,10 +1,12 @@
 @use "../../css/partials/variables/breakpoints" as bp;
 
 .steps-iot-block {
+
 	.vertical-tabs {
 		grid-template-columns: clamp(420px, calc(26.25rem + ((1vw - 9.93px) * 39.2157)), 560px) 1fr;
 
 		.vertical-tabs__item {
+
 			@include bp.max(lg) {
 				background: var(--theme_gray_100);
 				margin-bottom: 20px;
@@ -14,12 +16,14 @@
 			}
 
 			&:last-child {
+
 				@include bp.max(lg) {
 					margin-bottom: 0;
 				}
 			}
 
 			.vertical-tabs__header {
+
 				@include bp.max(lg) {
 					padding-top: 0;
 					max-width: 100%;
@@ -27,6 +31,7 @@
 			}
 
 			.vertical-tabs__content {
+
 				@include bp.max(lg) {
 					margin: 0;
 					animation: inherit;

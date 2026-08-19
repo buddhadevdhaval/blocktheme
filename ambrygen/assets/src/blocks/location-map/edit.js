@@ -178,7 +178,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const removeLocationMapItem = ( index ) => {
 		setAttributes( {
-			locations: locations.filter( ( loc, itemIndex ) => itemIndex !== index ),
+			locations: locations.filter(
+				( loc, itemIndex ) => itemIndex !== index
+			),
 		} );
 	};
 
@@ -203,7 +205,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	};
 
 	const filledLocations = locations.filter( hasLocationMapItemContent );
-	const previewLocations = filledLocations.length ? filledLocations : locations.slice( 0, 2 );
+	const previewLocations = filledLocations.length
+		? filledLocations
+		: locations.slice( 0, 2 );
 
 	if ( isExample ) {
 		return (
@@ -219,7 +223,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			<InspectorControls>
 				<PanelBody
 					title={ __( 'Heading Settings', 'ambrygen-web' ) }
-					initialOpen={false}
+					initialOpen={ false }
 				>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
@@ -231,7 +235,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Map Settings', 'ambrygen-web' ) } initialOpen={false}>
+				<PanelBody
+					title={ __( 'Map Settings', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
 					<PanelRow>
 						<TextControl
 							label={ __( 'Iframe', 'ambrygen-web' ) }
@@ -245,7 +252,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					</PanelRow>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Locations', 'ambrygen-web' ) } initialOpen>
+				<PanelBody
+					title={ __( 'Locations', 'ambrygen-web' ) }
+					initialOpen
+				>
 					{ locations.map( ( loc, index ) => (
 						<div key={ loc.id }>
 							<ItemHeader
@@ -254,10 +264,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								total={ locations.length }
 								prefix="LOCATION"
 								onMove={ ( itemIndex, dir ) =>
-									moveLocationMapItem(
-										itemIndex,
-										dir
-									)
+									moveLocationMapItem( itemIndex, dir )
 								}
 								onRemove={ ( itemIndex ) =>
 									removeLocationMapItem( itemIndex )
@@ -269,7 +276,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								label={ __( 'Title', 'ambrygen-web' ) }
 								value={ loc.name }
 								onChange={ ( value ) =>
-									updateLocationMapItem( index, 'name', value )
+									updateLocationMapItem(
+										index,
+										'name',
+										value
+									)
 								}
 							/>
 							<TextControl
@@ -320,7 +331,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						tagName={ HeadingTag }
 						value={ title }
 						onChange={ onChangeLocationMapTitle }
-						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 						allowedFormats={ [
 							'core/bold',
 							'core/italic',
@@ -335,18 +346,17 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						{ previewLocations.map( ( loc ) => (
 							<div className="location-list" key={ loc.id }>
 								<div className="location-title text-xl-semibold">
-									{ loc.name || __(
-										'Add Title...',
-										'ambrygen-web'
-									) }
+									{ loc.name ||
+										__( 'Add Title…', 'ambrygen-web' ) }
 								</div>
 								<div className="location-description text-medium">
-									{ loc.address || __(
-										'Add Address...',
-										'ambrygen-web'
-									) }
+									{ loc.address ||
+										__( 'Add Address…', 'ambrygen-web' ) }
 								</div>
-								<div className="is-style-gl-s24" aria-hidden="true"></div>
+								<div
+									className="is-style-gl-s24"
+									aria-hidden="true"
+								></div>
 							</div>
 						) ) }
 					</div>

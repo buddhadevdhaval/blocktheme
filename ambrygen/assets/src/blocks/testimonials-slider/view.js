@@ -18,7 +18,9 @@ const initTestimonialSliders = () => {
 			return;
 		}
 
-		const sliderRoot = sliderElement.closest( '.testimonial-slider__swiper' );
+		const sliderRoot = sliderElement.closest(
+			'.testimonial-slider__swiper'
+		);
 		if ( ! sliderRoot ) {
 			return;
 		}

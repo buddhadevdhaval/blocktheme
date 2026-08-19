@@ -17,15 +17,15 @@ $ambrygen_attributes = is_array( $attributes ) ? $attributes : array();
 $ambrygen_icon       = isset( $ambrygen_attributes['icon'] ) && is_array( $ambrygen_attributes['icon'] ) ? $ambrygen_attributes['icon'] : array();
 $ambrygen_cta        = isset( $ambrygen_attributes['cta'] ) && is_array( $ambrygen_attributes['cta'] ) ? $ambrygen_attributes['cta'] : array();
 
-$ambrygen_title      = isset( $ambrygen_cta['text'] ) ? sanitize_text_field( $ambrygen_cta['text'] ) : '';
-$ambrygen_url_raw    = isset( $ambrygen_cta['url'] ) ? trim( (string) $ambrygen_cta['url'] ) : '';
-$ambrygen_url        = $ambrygen_url_raw ? esc_url_raw( $ambrygen_url_raw ) : '';
-$ambrygen_target     = isset( $ambrygen_cta['target'] ) && '_blank' === $ambrygen_cta['target'] ? '_blank' : '';
-$ambrygen_rel        = isset( $ambrygen_cta['rel'] ) ? sanitize_text_field( $ambrygen_cta['rel'] ) : '';
-$ambrygen_rel_parts  = $ambrygen_rel ? preg_split( '/\s+/', $ambrygen_rel, -1, PREG_SPLIT_NO_EMPTY ) : array();
-$ambrygen_icon_id    = isset( $ambrygen_icon['id'] ) ? absint( $ambrygen_icon['id'] ) : 0;
-$ambrygen_icon_url   = isset( $ambrygen_icon['url'] ) ? esc_url_raw( $ambrygen_icon['url'] ) : '';
-$ambrygen_icon_alt   = isset( $ambrygen_icon['alt'] ) ? sanitize_text_field( $ambrygen_icon['alt'] ) : '';
+$ambrygen_title       = isset( $ambrygen_cta['text'] ) ? sanitize_text_field( $ambrygen_cta['text'] ) : '';
+$ambrygen_url_raw     = isset( $ambrygen_cta['url'] ) ? trim( (string) $ambrygen_cta['url'] ) : '';
+$ambrygen_url         = $ambrygen_url_raw ? esc_url_raw( $ambrygen_url_raw ) : '';
+$ambrygen_target      = isset( $ambrygen_cta['target'] ) && '_blank' === $ambrygen_cta['target'] ? '_blank' : '';
+$ambrygen_rel         = isset( $ambrygen_cta['rel'] ) ? sanitize_text_field( $ambrygen_cta['rel'] ) : '';
+$ambrygen_rel_parts   = $ambrygen_rel ? preg_split( '/\s+/', $ambrygen_rel, -1, PREG_SPLIT_NO_EMPTY ) : array();
+$ambrygen_icon_id     = isset( $ambrygen_icon['id'] ) ? absint( $ambrygen_icon['id'] ) : 0;
+$ambrygen_icon_url    = isset( $ambrygen_icon['url'] ) ? esc_url_raw( $ambrygen_icon['url'] ) : '';
+$ambrygen_icon_alt    = isset( $ambrygen_icon['alt'] ) ? sanitize_text_field( $ambrygen_icon['alt'] ) : '';
 $ambrygen_wrapper_tag = $ambrygen_url ? 'a' : 'div';
 
 if ( '_blank' === $ambrygen_target ) {

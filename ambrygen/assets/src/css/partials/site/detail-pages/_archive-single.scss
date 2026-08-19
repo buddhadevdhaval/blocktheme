@@ -2,22 +2,25 @@
 @use "../../variables/fluid_mixins" as *;
 
 .variation-hero-single {
+
 	.wp-block-post-title {
 		max-width: 1080px;
 	}
 }
 
 .single {
+
 	.terms-info-details {
 		border-left: 2px solid var(--theme_cg_blue);
 		border-right: none;
 		border-top: none;
 		border-bottom: none;
 		border-radius: 0;
-		padding: 0 0px 0 fluid(24, 40);
+		padding: 0 0 0 fluid(24, 40);
 	}
 
 	.single-details-content {
+
 		.wp-block-post-content {
 			margin-top: 24px;
 		}
@@ -157,7 +160,6 @@
 	&__controls {
 		display: flex;
 		align-items: center;
-		justify-content: flex-end;
 		gap: 16px;
 		margin-top: 0;
 		position: absolute;

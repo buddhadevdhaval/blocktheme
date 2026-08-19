@@ -8,14 +8,22 @@
   "icon": "button",
   "description": "Displays the dynamic webinar registration button from the post meta.",
   "supports": {
-    "html": false
+    "html": false,
+    "inserter": false
   },
   "attributes": {
     "newTab": {
       "type": "boolean",
       "default": true
+    },
+    "previewPostId": {
+      "type": "number",
+      "default": 0
     }
   },
+  "usesContext": [
+    "postId"
+  ],
   "textdomain": "ambrygen-web",
   "editorScript": "file:./index.js",
   "render": "file:./render.php"

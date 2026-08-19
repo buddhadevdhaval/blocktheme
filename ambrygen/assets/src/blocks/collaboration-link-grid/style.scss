@@ -10,6 +10,7 @@
 
 
 	&.variation-grid-view {
+
 		.download-list__inner {
 			display: grid;
 			grid-template-columns: 1fr;
@@ -73,6 +74,80 @@
 					background-image: url(../../images/primary700-icons/right-arrow.svg);
 					border-color: var(--theme_cg_blue);
 				}
+			}
+		}
+	}
+
+	&.variation-with-accordion {
+
+		.download-list__title-wrap {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 16px;
+		}
+
+		.download-list__toggle {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 36px;
+			height: 36px;
+			padding: 0;
+			background: transparent;
+			border: 0;
+			box-shadow: none;
+			cursor: pointer;
+
+			&:hover,
+			&:focus-visible {
+				outline: none;
+			}
+
+			&:focus-visible {
+				outline: 2px solid var(--theme_cg_blue);
+				outline-offset: 2px;
+				border-radius: 4px;
+			}
+
+			.download-list__toggle-icon {
+				position: relative;
+				flex: 36px 0 0;
+				align-self: center;
+				display: flex;
+				border-radius: unset;
+				box-shadow: none;
+
+				&::after {
+					content: "";
+					position: relative;
+					width: 36px;
+					height: 36px;
+					background-image: url(../../images/plus-circle.svg);
+					background-size: cover;
+					background-position: center;
+				}
+			}
+
+			&[aria-expanded="true"] {
+
+				.download-list__toggle-icon::after {
+					background-image: url(../../images/minus-circle.svg);
+				}
+			}
+		}
+
+		.download-list__inner {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 40px;
+			align-items: start;
+		}
+
+		.download-list__items {
+
+			&.is-collapsed {
+				display: none;
 			}
 		}
 	}

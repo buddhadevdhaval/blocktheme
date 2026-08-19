@@ -67,6 +67,40 @@
         "properties": {
           "id": {
             "type": "string"
+          },
+          "parentTermId": {
+            "type": "number"
+          },
+          "parentTermIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "termId": {
+            "type": "number"
+          },
+          "termSlug": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "subTermIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "featuredProductVersionIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "featuredProductVersionOrderCustomized": {
+            "type": "boolean",
+            "default": false
           }
         }
       }

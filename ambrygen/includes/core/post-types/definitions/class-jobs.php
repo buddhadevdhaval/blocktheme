@@ -20,22 +20,47 @@ defined( 'ABSPATH' ) || exit;
  */
 class Jobs extends AbstractPostType {
 
+	/**
+	 * Get the post type slug.
+	 *
+	 * @return string
+	 */
 	public function slug(): string {
 		return 'jobs';
 	}
 
+	/**
+	 * Get the plural post type label.
+	 *
+	 * @return string
+	 */
 	public function label(): string {
 		return __( 'Jobs', 'ambrygen' );
 	}
 
+	/**
+	 * Get the singular post type label.
+	 *
+	 * @return string
+	 */
 	public function singular_label(): string {
 		return __( 'Job', 'ambrygen' );
 	}
 
+	/**
+	 * Get the admin menu icon.
+	 *
+	 * @return string
+	 */
 	public function menu_icon(): string {
 		return 'dashicons-briefcase';
 	}
 
+	/**
+	 * Get registered taxonomies.
+	 *
+	 * @return array
+	 */
 	public function taxonomies(): array {
 		return array(
 			array(

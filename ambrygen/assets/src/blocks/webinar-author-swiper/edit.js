@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { PanelBody } from '@wordpress/components';
 import { ImageUploader } from '../_shared/components';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import { ServerSideRender } from '../_shared/server-side-render';
 
 export default function Edit( { attributes, setAttributes, context, name } ) {
 	const { overlayTopImage, overlayBottomImage } = attributes;
@@ -12,7 +12,9 @@ export default function Edit( { attributes, setAttributes, context, name } ) {
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
-				<PanelBody title={ __( 'Decorative Graphics', 'ambrygen-web' ) }>
+				<PanelBody
+					title={ __( 'Decorative Graphics', 'ambrygen-web' ) }
+				>
 					<ImageUploader
 						url={ overlayTopImage }
 						onSelect={ ( img ) =>

@@ -2,73 +2,84 @@
 
 <!-- wp:group {"tagName":"main","className":"wp-block-group","htmlId":"main-content"} -->
 <main id="main-content" class="wp-block-group">
-	<!-- wp:group {"tagName":"section","className":"container-1136"} -->
-
-	<section
-		class="wp-block-group container-1280 bg-primary_25 variation-hero-single"
-	>
+	<!-- wp:group {"tagName":"section","className":"container-1280 bg-primary_25 variation-hero-single"} -->
+	<section class="wp-block-group container-1280 bg-primary_25 variation-hero-single">
 		<!-- wp:group {"className":"wrapper"} -->
 		<div class="wp-block-group wrapper">
 			<!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
-			<div class="is-style-gl-s72" aria-hidden="true"></div>
+			<div style="height:64px" aria-hidden="true" class="wp-block-spacer is-style-gl-s64"></div>
 			<!-- /wp:spacer -->
 
 			<!-- wp:group {"className":"back-link"} -->
 			<div class="wp-block-group back-link">
-				<a
-					class="site-btn is-style-site-text-btn has-icon prev-icon"
-					href="#"
-					>Back to Posters</a
-				>
+				<!-- wp:paragraph -->
+				<p><a class="back-button" href="#">Back to Posters</a></p>
+				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->
 
 			<!-- wp:spacer {"height":"24px","className":"is-style-gl-s24"} -->
-			<div class="is-style-gl-s24" aria-hidden="true"></div>
+			<div style="height:24px" aria-hidden="true" class="wp-block-spacer is-style-gl-s24"></div>
 			<!-- /wp:spacer -->
 
 			<!-- wp:post-title {"level":1,"className":"heading-2 mb-0 block-title"} /-->
 
 			<!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
-			<div class="is-style-gl-s72" aria-hidden="true"></div>
+			<div style="height:64px" aria-hidden="true" class="wp-block-spacer is-style-gl-s64"></div>
 			<!-- /wp:spacer -->
 		</div>
 		<!-- /wp:group -->
 	</section>
+	<!-- /wp:group -->
 
+	<!-- wp:group {"tagName":"section","className":"container-1136"} -->
 	<section class="wp-block-group container-980 single-main-content">
-		<!-- wp:spacer {"height":"72px","className":"is-style-gl-s16"} -->
-		<div class="is-style-gl-s72" aria-hidden="true"></div>
+		<!-- wp:spacer {"height":"72px","className":"is-style-gl-s72"} -->
+		<div style="height:72px" aria-hidden="true" class="wp-block-spacer is-style-gl-s72"></div>
 		<!-- /wp:spacer -->
+
 		<!-- wp:group {"className":"wrapper"} -->
 		<div class="wp-block-group wrapper">
-			<div class="terms-info-details">
-				<!-- wp:post-terms {"term":"poster_category","separator":" ","className":"lists-item-category taxonomy-poster_category poster-archive__item-category listing-archive__item-category"} /-->
+			<!-- wp:group {"className":"terms-info-details listing-archive__item"} -->
+			<div class="wp-block-group terms-info-details listing-archive__item">
+				<!-- wp:ambrygen/poster-category-list /-->
 
-				<!-- wp:spacer {"height":"16px","className":"is-style-gl-s16"} -->
-				<div class="is-style-gl-s24" aria-hidden="true"></div>
+				<!-- wp:spacer {"height":"24px","className":"is-style-gl-s24"} -->
+				<div style="height:24px" aria-hidden="true" class="wp-block-spacer is-style-gl-s24"></div>
 				<!-- /wp:spacer -->
 
 				<!-- wp:ambrygen/poster-meta /-->
 
-				<!-- wp:spacer {"height":"16px","className":"is-style-gl-s16"} -->
-				<div class="is-style-gl-s24" aria-hidden="true"></div>
+				<!-- wp:spacer {"height":"24px","className":"is-style-gl-s24"} -->
+				<div style="height:24px" aria-hidden="true" class="wp-block-spacer is-style-gl-s24"></div>
 				<!-- /wp:spacer -->
 
-				<!-- wp:post-terms {"term":"collaborator","prefix":"Collaborators: ","separator":"; ","className":"single-poster-collaborators text-md-regular mb-0 poster-archive__item-collaborators listing-archive__item-collaborators"} /-->
-			</div>
+				<!-- wp:post-terms {"term":"collaborator","prefix":"Collaborators: ","separator":", ","className":"single-poster-collaborators"} /-->
 
-			<div class="single-details-content">
+				<!-- wp:spacer {"height":"24px","className":"is-style-gl-s24"} -->
+				<div style="height:24px" aria-hidden="true" class="wp-block-spacer is-style-gl-s24"></div>
+				<!-- /wp:spacer -->
+			</div>
+			<!-- /wp:group -->
+
+			<!-- wp:group {"className":"single-details-content"} -->
+			<div class="wp-block-group single-details-content">
 				<!-- wp:post-content {"layout":{"type":"default"}} /-->
 				<!-- wp:ambrygen/poster-pdf-files /-->
 			</div>
+			<!-- /wp:group -->
 		</div>
 		<!-- /wp:group -->
-		<!-- wp:spacer {"height":"72px","className":"is-style-gl-s16"} -->
-		<div class="is-style-gl-s72" aria-hidden="true"></div>
+
+		<!-- wp:spacer {"height":"72px","className":"is-style-gl-s72"} -->
+		<div style="height:72px" aria-hidden="true" class="wp-block-spacer is-style-gl-s72"></div>
 		<!-- /wp:spacer -->
 	</section>
 	<!-- /wp:group -->
+	<!-- wp:ambrygen/section-container -->
+	<!-- wp:ambrygen/contact-info-form /-->
+	<!-- /wp:ambrygen/section-container -->
+
 </main>
 <!-- /wp:group -->
 

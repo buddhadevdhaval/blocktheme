@@ -12,6 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Register and enqueue compiled theme assets.
+ */
 final class Assets {
 
 	use Singleton;
@@ -46,6 +49,36 @@ final class Assets {
 		add_action( 'enqueue_block_editor_assets', array( $this, 'register_assets' ), 5 );
 		add_action( 'enqueue_block_editor_assets', array( $this, 'editor' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin' ), 10 );
+		add_filter( 'style_loader_tag', array( $this, 'defer_non_critical_styles' ), 10, 4 );
+		add_action( 'wp_head', array( $this, 'preload_fonts' ), 1 );
+	}
+
+	/**
+	 * Emit font preload hints so the browser discovers Inter before parsing CSS.
+	 */
+	public function preload_fonts(): void {
+		if ( is_admin() || ! wp_style_is( 'ambrygen-theme-styles', 'enqueued' ) ) {
+			return;
+		}
+
+		$font_url = esc_url( $this->get_preload_font_url() );
+		echo '<link rel="preload" href="' . $font_url . '" as="font" type="font/woff2" crossorigin="anonymous">' . "\n";
+	}
+
+	/**
+	 * Resolve the compiled Inter font URL so the preload matches the CSS request.
+	 *
+	 * @return string
+	 */
+	private function get_preload_font_url(): string {
+		$compiled_fonts = glob( AMBRYGEN_BUILD_DIR . '/fonts/Inter-VariableFont_opsz,wght*.woff2' );
+
+		if ( ! empty( $compiled_fonts ) ) {
+			$font_file = basename( $compiled_fonts[0] );
+			return AMBRYGEN_BUILD_URI . '/fonts/' . $font_file;
+		}
+
+		return AMBRYGEN_URI . '/assets/src/fonts/Inter-VariableFont_opsz,wght.woff2';
 	}
 
 	/**
@@ -79,8 +112,8 @@ final class Assets {
 	/**
 	 * Get a version string for a file (mtime fallback).
 	 *
-	 * @param string            $file File path relative to build directory.
-	 * @param string|int|bool   $ver  Optional explicit version.
+	 * @param string          $file File path relative to build directory.
+	 * @param string|int|bool $ver  Optional explicit version.
 	 * @return string|false
 	 */
 	private function get_file_version( string $file, $ver = false ) {
@@ -175,7 +208,6 @@ final class Assets {
 		wp_enqueue_style( 'ambrygen-scripts-styles' );
 		wp_enqueue_script( 'ambrygen-scripts' );
 
-		
 			wp_localize_script(
 				'ambrygen-scripts',
 				'ambrygenAjax',
@@ -184,33 +216,89 @@ final class Assets {
 					'nonce'   => wp_create_nonce( 'ambrygen-ajax' ),
 				)
 			);
-	
+
+	}
+
+	/**
+	 * Defer non-critical theme stylesheets until after initial paint.
+	 *
+	 * @param string $html   The link tag markup.
+	 * @param string $handle Style handle.
+	 * @param string $href   Style URL.
+	 * @param string $media  Media attribute.
+	 * @return string
+	 */
+	public function defer_non_critical_styles( string $html, string $handle, string $href, string $media ): string {
+		if ( is_admin() ) {
+			return $html;
+		}
+
+		$deferred_handles = apply_filters(
+			'ambrygen_deferred_style_handles',
+			array(
+				'ambrygen-scripts-styles',
+			)
+		);
+
+		if ( ! in_array( $handle, $deferred_handles, true ) ) {
+			return $html;
+		}
+
+		$media_attr = $media ? $media : 'all';
+
+		return sprintf(
+			"<link rel='preload' href='%s' as='style' onload=\"this.onload=null;this.rel='stylesheet';this.media='%s'\" />\n<noscript><link rel='stylesheet' id='%s-css' href='%s' media='%s' /></noscript>\n",
+			esc_url( $href ),
+			esc_attr( $media_attr ),
+			esc_attr( $handle ),
+			esc_url( $href ),
+			esc_attr( $media_attr )
+		);
 	}
 
 		/**
-	 * Frontend assets
-	 */
+		 * Frontend assets
+		 */
 	public function admin(): void {
-		//admin globle 
-		$this->register_script( 'ambrygen-admin-scripts', 'admin.min.js', array( 'jquery', 'media-editor' ) );
+		// admin globle
+		if ( ! $this->register_script( 'ambrygen-admin-scripts', 'admin.min.js', array( 'jquery', 'media-editor' ) ) ) {
+			$source_file = AMBRYGEN_DIR . '/assets/src/js/vendors/admin-scripts.js';
+
+			if ( file_exists( $source_file ) ) {
+				wp_register_script(
+					'ambrygen-admin-scripts',
+					AMBRYGEN_URI . '/assets/src/js/vendors/admin-scripts.js',
+					array( 'jquery', 'media-editor' ),
+					(string) filemtime( $source_file ),
+					true
+				);
+			}
+		}
+
 		wp_enqueue_script( 'ambrygen-admin-scripts' );
 
 		wp_localize_script(
 			'ambrygen-admin-scripts',
 			'ambrygenAdminAjax',
 			array(
-				'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
-				'nonce'          => wp_create_nonce( 'ambrygen_post_search' ),
-				'trackingNonce'  => wp_create_nonce( 'ambrygen_marketing_material_tracking' ),
+				'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
+				'nonce'         => wp_create_nonce( 'ambrygen_post_search' ),
+				'termNonce'     => wp_create_nonce( 'ambrygen_term_search' ),
+				'trackingNonce' => wp_create_nonce( 'ambrygen_marketing_material_tracking' ),
 			)
 		);
 	}
-	
+
 
 	/**
 	 * Block editor assets
 	 */
 	public function editor(): void {
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+
+		if ( ! $screen || 'post' !== $screen->base ) {
+			return;
+		}
 
 		wp_enqueue_style( 'ambrygen-editor' );
 		wp_enqueue_script( 'ambrygen-editor' );

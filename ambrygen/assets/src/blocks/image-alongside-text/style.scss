@@ -52,6 +52,7 @@ section:has(.iot-block__bg-image) {
 	}
 
 	&.size-311x311 {
+
 		.iot-block__image {
 			width: fluid(311, 311);
 			height: fluid(311, 311);
@@ -66,8 +67,6 @@ section:has(.iot-block__bg-image) {
 	}
 
 	&.size-578x564 {
-		// padding: fluid(32, 50);
-		// border-radius: fluid(24, 32);
 
 		.iot-block__image {
 			height: fluid(205, 396);
@@ -125,7 +124,6 @@ section:has(.iot-block__bg-image) {
 	&.iot-block--border {
 
 		.iot-block__image {
-			// background-color: var(--theme_gray_900);
 			border: 6px solid var(--theme_gray_900);
 			border-radius: fluid(16, 24);
 

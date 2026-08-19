@@ -20,10 +20,7 @@ const initAccordionItem = ( accordion ) => {
 	let isClosing = false;
 	let isExpanding = false;
 
-	summary.setAttribute(
-		'aria-expanded',
-		accordion.open ? 'true' : 'false'
-	);
+	summary.setAttribute( 'aria-expanded', accordion.open ? 'true' : 'false' );
 
 	const onAnimationFinish = ( open ) => {
 		accordion.open = open;
@@ -114,7 +111,9 @@ const initAccordionItem = ( accordion ) => {
 };
 
 document.addEventListener( 'DOMContentLoaded', () => {
-	const blocks = document.querySelectorAll( '.wp-block-ambrygen-faq-accordion' );
+	const blocks = document.querySelectorAll(
+		'.wp-block-ambrygen-faq-accordion'
+	);
 
 	blocks.forEach( ( block ) => {
 		block

@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $authors_data = array();
-$post_id = get_the_ID();
+$post_id      = get_the_ID();
 if ( ! $post_id ) {
 	return;
 }
@@ -76,7 +76,7 @@ if ( empty( $authors ) ) {
 	return;
 }
 
-$title = $attributes['title'] ?? '';
+$title              = $attributes['title'] ?? '';
 $wrapper_attributes = get_block_wrapper_attributes( array( 'class' => 'genetic-linked-authors' ) );
 ?>
 
@@ -104,12 +104,12 @@ $wrapper_attributes = get_block_wrapper_attributes( array( 'class' => 'genetic-l
 						<div class="author-card__designation text-sm-regular text-gray-400"><?php echo esc_html( $designation ); ?></div>
 					<?php endif; ?>
 					<?php if ( ! empty( $attributes['showExcerpt'] ) ) : ?>
-						<?php 
+						<?php
 							$excerpt = $author['excerpt'] ?? '';
-							if ( $excerpt ) : 
-						?>
+						if ( $excerpt ) :
+							?>
 							<div class="author-card__excerpt body2 mt-2 text-gray-400">
-								<?php echo wp_kses_post( $excerpt ); ?>
+							<?php echo wp_kses_post( $excerpt ); ?>
 							</div>
 						<?php endif; ?>
 					<?php endif; ?>

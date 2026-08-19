@@ -3,11 +3,8 @@ import {
 	getActiveFormat,
 	applyFormat,
 	removeFormat,
-} from '@wordpress/rich-text';
-import {
-	RichTextToolbarButton,
-	LinkControl,
-} from '@wordpress/block-editor';
+} from '../_shared/rich-text';
+import { RichTextToolbarButton, LinkControl } from '@wordpress/block-editor';
 import {
 	Modal,
 	TextControl,
@@ -44,6 +41,92 @@ function stripNestedTooltipMarkup( html ) {
 		} );
 
 	return template.innerHTML;
+}
+
+function sanitizeEditorTooltipMarkup( html ) {
+	if ( ! html ) {
+		return document.createDocumentFragment();
+	}
+
+	const parser = new window.DOMParser();
+	const doc = parser.parseFromString( `<div>${ html }</div>`, 'text/html' );
+	const root = doc.body.firstElementChild;
+	const allowedTags = new Set( [
+		'A',
+		'B',
+		'BR',
+		'DIV',
+		'EM',
+		'I',
+		'LI',
+		'OL',
+		'P',
+		'SMALL',
+		'SPAN',
+		'STRONG',
+		'SUP',
+		'UL',
+	] );
+	const allowedAttrs = new Set( [ 'href', 'target', 'rel' ] );
+
+	const walk = ( node ) => {
+		if ( node.nodeType !== Node.ELEMENT_NODE ) {
+			[ ...node.childNodes ].forEach( walk );
+			return;
+		}
+
+		const el = /** @type {Element} */ ( node );
+
+		if ( el.classList.contains( 'ambrygen-tooltip' ) ) {
+			const parent = el.parentNode;
+			if ( parent ) {
+				while ( el.firstChild ) {
+					parent.insertBefore( el.firstChild, el );
+				}
+				parent.removeChild( el );
+			}
+			return;
+		}
+
+		if ( ! allowedTags.has( el.tagName ) ) {
+			const parent = el.parentNode;
+			if ( parent ) {
+				while ( el.firstChild ) {
+					parent.insertBefore( el.firstChild, el );
+				}
+				parent.removeChild( el );
+			}
+			return;
+		}
+
+		[ ...el.attributes ].forEach( ( attr ) => {
+			const name = attr.name.toLowerCase();
+			if ( ! allowedAttrs.has( name ) ) {
+				el.removeAttribute( attr.name );
+			}
+		} );
+
+		if ( el.tagName === 'A' ) {
+			const href = el.getAttribute( 'href' ) || '';
+			const isSafe = /^(https?:|mailto:|tel:|#|\/)/i.test( href );
+			if ( ! isSafe ) {
+				el.removeAttribute( 'href' );
+			}
+		}
+
+		[ ...el.childNodes ].forEach( walk );
+	};
+
+	if ( root ) {
+		[ ...root.childNodes ].forEach( walk );
+	}
+
+	const fragment = document.createDocumentFragment();
+	while ( root?.firstChild ) {
+		fragment.appendChild( root.firstChild );
+	}
+
+	return fragment;
 }
 
 function stripHtml( html ) {
@@ -96,7 +179,6 @@ function generateTooltipId() {
 function TooltipFormatEdit( { value, onChange } ) {
 	const [ isOpen, setIsOpen ] = useState( false );
 	const [ tooltipTitle, setTooltipTitle ] = useState( '' );
-	const [ tooltipDescription, setTooltipDescription ] = useState( '' );
 	const [ tooltipId, setTooltipId ] = useState( '' );
 	const [ isLinkModalOpen, setIsLinkModalOpen ] = useState( false );
 	const [ pendingLink, setPendingLink ] = useState( {
@@ -129,24 +211,27 @@ function TooltipFormatEdit( { value, onChange } ) {
 		const content =
 			decoded || formatAtOpen?.attributes?.[ 'data-tooltip' ] || '';
 
-		setTooltipDescription( content );
-
 		setTimeout( () => {
 			if ( editorRef.current ) {
-				editorRef.current.innerHTML = content;
+				editorRef.current.replaceChildren(
+					sanitizeEditorTooltipMarkup( content )
+				);
 			}
 		}, 0 );
 	}, [ isOpen, value ] );
 
-	const syncEditorContent = () => {
-		if ( editorRef.current ) {
-			setTooltipDescription( editorRef.current.innerHTML );
-		}
+	const getEditorSelection = () => {
+		const editorDocument = editorRef.current?.ownerDocument;
+		return editorDocument?.defaultView?.getSelection?.() || null;
 	};
 
 	const saveSelection = () => {
-		const selection = window.getSelection();
-		if ( ! selection || selection.rangeCount === 0 || ! editorRef.current ) {
+		const selection = getEditorSelection();
+		if (
+			! selection ||
+			selection.rangeCount === 0 ||
+			! editorRef.current
+		) {
 			return;
 		}
 
@@ -165,7 +250,7 @@ function TooltipFormatEdit( { value, onChange } ) {
 	};
 
 	const restoreSelection = () => {
-		const selection = window.getSelection();
+		const selection = getEditorSelection();
 		if ( ! selection || ! savedSelectionRef.current ) {
 			return;
 		}
@@ -181,8 +266,11 @@ function TooltipFormatEdit( { value, onChange } ) {
 
 		editorRef.current.focus();
 		restoreSelection();
-		document.execCommand( command, false, commandValue );
-		syncEditorContent();
+		editorRef.current.ownerDocument.execCommand(
+			command,
+			false,
+			commandValue
+		);
 	};
 
 	const applyPendingLink = () => {
@@ -194,7 +282,7 @@ function TooltipFormatEdit( { value, onChange } ) {
 		exec( 'createLink', pendingLink.url );
 
 		if ( editorRef.current ) {
-			const selection = window.getSelection();
+			const selection = getEditorSelection();
 			if ( selection && selection.anchorNode ) {
 				let node = selection.anchorNode;
 				if ( node.nodeType === 3 ) {
@@ -223,7 +311,6 @@ function TooltipFormatEdit( { value, onChange } ) {
 			}
 		}
 
-		syncEditorContent();
 		setIsLinkModalOpen( false );
 	};
 
@@ -293,7 +380,10 @@ function TooltipFormatEdit( { value, onChange } ) {
 							) }
 							value={ tooltipTitle }
 							onChange={ setTooltipTitle }
-							placeholder={ __( 'Example: Helpful tip', 'ambrygen-web' ) }
+							placeholder={ __(
+								'Example: Helpful tip',
+								'ambrygen-web'
+							) }
 						/>
 					</div>
 
@@ -334,19 +424,25 @@ function TooltipFormatEdit( { value, onChange } ) {
 									<ToolbarButton
 										icon="editor-bold"
 										label={ __( 'Bold', 'ambrygen-web' ) }
-										onMouseDown={ ( event ) => event.preventDefault() }
+										onMouseDown={ ( event ) =>
+											event.preventDefault()
+										}
 										onClick={ () => exec( 'bold' ) }
 									/>
 									<ToolbarButton
 										icon="editor-italic"
 										label={ __( 'Italic', 'ambrygen-web' ) }
-										onMouseDown={ ( event ) => event.preventDefault() }
+										onMouseDown={ ( event ) =>
+											event.preventDefault()
+										}
 										onClick={ () => exec( 'italic' ) }
 									/>
 									<ToolbarButton
 										icon="admin-links"
 										label={ __( 'Link', 'ambrygen-web' ) }
-										onMouseDown={ ( event ) => event.preventDefault() }
+										onMouseDown={ ( event ) =>
+											event.preventDefault()
+										}
 										onClick={ () => {
 											saveSelection();
 											setPendingLink( {
@@ -359,8 +455,13 @@ function TooltipFormatEdit( { value, onChange } ) {
 									/>
 									<ToolbarButton
 										icon="editor-unlink"
-										label={ __( 'Remove link', 'ambrygen-web' ) }
-										onMouseDown={ ( event ) => event.preventDefault() }
+										label={ __(
+											'Remove link',
+											'ambrygen-web'
+										) }
+										onMouseDown={ ( event ) =>
+											event.preventDefault()
+										}
 										onClick={ () => exec( 'unlink' ) }
 									/>
 								</ToolbarGroup>
@@ -369,9 +470,9 @@ function TooltipFormatEdit( { value, onChange } ) {
 							<div
 								ref={ editorRef }
 								contentEditable
+								role="textbox"
+								tabIndex={ 0 }
 								suppressContentEditableWarning
-								onInput={ syncEditorContent }
-								onBlur={ syncEditorContent }
 								onMouseUp={ saveSelection }
 								onKeyUp={ saveSelection }
 								onFocus={ saveSelection }
@@ -382,7 +483,6 @@ function TooltipFormatEdit( { value, onChange } ) {
 								style={ {
 									minHeight: '140px',
 									padding: '12px',
-									outline: 'none',
 								} }
 							/>
 						</div>
@@ -432,7 +532,9 @@ function TooltipFormatEdit( { value, onChange } ) {
 								</Button>
 								<Button
 									variant="secondary"
-									onClick={ () => setIsLinkModalOpen( false ) }
+									onClick={ () =>
+										setIsLinkModalOpen( false )
+									}
 								>
 									{ __( 'Cancel', 'ambrygen-web' ) }
 								</Button>

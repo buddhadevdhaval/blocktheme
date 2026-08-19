@@ -26,8 +26,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const { collaboratorTerms, hasResolved, isResolving } = useSelect(
 		( select ) => {
-			const { getEntityRecords, isResolving, hasFinishedResolution } =
-				select( 'core' );
+			const {
+				getEntityRecords,
+				isResolving: isResolvingRecords,
+				hasFinishedResolution,
+			} = select( 'core' );
 			const query = {
 				per_page: -1,
 				orderby: 'name',
@@ -38,7 +41,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			return {
 				collaboratorTerms:
 					getEntityRecords( 'taxonomy', 'collaborator', query ) || [],
-				isResolving: isResolving( 'getEntityRecords', [
+				isResolving: isResolvingRecords( 'getEntityRecords', [
 					'taxonomy',
 					'collaborator',
 					query,
@@ -75,10 +78,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const collaboratorSuggestions = collaboratorOptions.map(
 		( term ) => term.name
 	);
-	const selectedCollaboratorNames = innerBlocks
-		.filter( ( block ) => block.attributes?.isNameLocked )
-		.map( ( block ) => block.attributes?.text )
-		.filter( Boolean );
+	const selectedCollaboratorNames = innerBlocks.reduce( ( names, block ) => {
+		if ( ! block.attributes?.isNameLocked || ! block.attributes?.text ) {
+			return names;
+		}
+
+		names.push( block.attributes.text );
+		return names;
+	}, [] );
 
 	const manualTemplateBlocks = TEMPLATE.map( ( [ name, blockAttributes ] ) =>
 		createBlock( name, blockAttributes )
@@ -89,12 +96,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			( block ) => ! block.attributes?.isNameLocked
 		);
 
-		const collaboratorBlocks = names
-			.map( ( name ) =>
-				collaboratorOptions.find( ( item ) => item.name === name )
-			)
-			.filter( Boolean )
-			.map( ( term ) =>
+		const collaboratorBlocks = names.reduce( ( blocks, name ) => {
+			const term = collaboratorOptions.find(
+				( item ) => item.name === name
+			);
+
+			if ( ! term ) {
+				return blocks;
+			}
+
+			blocks.push(
 				createBlock( 'ambrygen/collaborators-item', {
 					text: term.name || '',
 					url: term.meta?.link || '',
@@ -102,6 +113,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					isNameLocked: true,
 				} )
 			);
+
+			return blocks;
+		}, [] );
 
 		replaceInnerBlocks(
 			clientId,
@@ -119,7 +133,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 
 		previousSelectionMode.current = selectionMode;
-	}, [ selectionMode, clientId ] );
+	}, [ selectionMode, clientId, manualTemplateBlocks, replaceInnerBlocks ] );
 
 	return (
 		<Fragment>
@@ -171,7 +185,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							}
 							placeholder="Description"
 						/>
-						<div className="is-style-gl-s12" aria-hidden="true"></div>
+						<div
+							className="is-style-gl-s12"
+							aria-hidden="true"
+						></div>
 						<div className="download-list__content">
 							<RichText
 								tagName="h2"
@@ -185,63 +202,77 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						</div>
 					</div>
 					<div className="download-list__items">
-					{ isLoadingTerms && <Spinner /> }
-					{ termsLoaded && Array.isArray( terms ) && terms.length === 0 && (
-						<Notice status="warning" isDismissible={ false }>
-							No collaborator terms with a non-empty link and assigned posts are available.
-						</Notice>
-					) }
-					{ termsError && (
-						<Notice status="error" isDismissible={ false }>
-							Unable to load collaborator terms with link meta.
-						</Notice>
-					) }
-					{ selectionMode === 'manual' ? (
-						<>
-							<Notice status="info" isDismissible={ false }>
-								Search collaborator terms below to add linked collaboration items. You can also keep manual items in this list.
-							</Notice>
-							<InnerBlocks
-								allowedBlocks={ ALLOWED_BLOCKS }
-								template={ TEMPLATE }
-								orientation="vertical"
-								renderAppender={ false }
-							/>
-						</>
-					) : (
-						<div className="collaborators-list__linked-preview">
-							{ termsLoaded && Array.isArray( terms ) && terms.length > 0 && (
-								<Notice status="info" isDismissible={ false }>
-									Collaborator items are loaded from collaborator terms and shown automatically.
+						{ isLoadingTerms && <Spinner /> }
+						{ termsLoaded &&
+							Array.isArray( terms ) &&
+							terms.length === 0 && (
+								<Notice
+									status="warning"
+									isDismissible={ false }
+								>
+									No collaborator terms with a non-empty link
+									and assigned posts are available.
 								</Notice>
 							) }
-							<div className="download-list__items">
-								{ Array.isArray( terms ) &&
-									terms.map( ( term ) => (
-										<div
-											key={ term.id }
-											className="download-list__item wp-block-ambrygen-collaborators-item"
+						{ termsError && (
+							<Notice status="error" isDismissible={ false }>
+								Unable to load collaborator terms with link
+								meta.
+							</Notice>
+						) }
+						{ selectionMode === 'manual' ? (
+							<>
+								<Notice status="info" isDismissible={ false }>
+									Search collaborator terms below to add
+									linked collaboration items. You can also
+									keep manual items in this list.
+								</Notice>
+								<InnerBlocks
+									allowedBlocks={ ALLOWED_BLOCKS }
+									template={ TEMPLATE }
+									orientation="vertical"
+									renderAppender={ false }
+								/>
+							</>
+						) : (
+							<div className="collaborators-list__linked-preview">
+								{ termsLoaded &&
+									Array.isArray( terms ) &&
+									terms.length > 0 && (
+										<Notice
+											status="info"
+											isDismissible={ false }
 										>
-											<a
-												href={ term?.meta?.link || '#' }
-												onClick={ ( event ) =>
-													event.preventDefault()
-												}
+											Collaborator items are loaded from
+											collaborator terms and shown
+											automatically.
+										</Notice>
+									) }
+								<div className="download-list__items">
+									{ Array.isArray( terms ) &&
+										terms.map( ( term ) => (
+											<div
+												key={ term.id }
+												className="download-list__item wp-block-ambrygen-collaborators-item"
 											>
-												<span className="download-list__item-text">
-													{ term.name || '' }
-												</span>
-											</a>
-										</div>
-									) ) }
+												<div className="download-list__item-link">
+													<span className="download-list__item-text">
+														{ term.name || '' }
+													</span>
+												</div>
+											</div>
+										) ) }
+								</div>
 							</div>
-						</div>
-					) }
-					{ selectionMode === 'link-all' && innerBlocks.length > 0 && (
-						<Notice status="info" isDismissible={ false }>
-							Existing manual child blocks are ignored while Link All is active. Switch back to Manual to edit them again.
-						</Notice>
-					) }
+						) }
+						{ selectionMode === 'link-all' &&
+							innerBlocks.length > 0 && (
+								<Notice status="info" isDismissible={ false }>
+									Existing manual child blocks are ignored
+									while Link All is active. Switch back to
+									Manual to edit them again.
+								</Notice>
+							) }
 					</div>
 				</div>
 			</div>

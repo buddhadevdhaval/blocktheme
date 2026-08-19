@@ -51,7 +51,7 @@ input[list],
 input[type="string"],
 select,
 textarea {
-	transition: all 0.2s ease-in-out;
+	transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 	background: var(--theme_white);
 	border: 1px solid var(--theme_gray_300);
 	border-radius: 10px;
@@ -65,14 +65,12 @@ textarea {
 	line-height: 1.2;
 	margin: 0;
 	max-width: 100%;
-	outline: none;
 	padding: 14px 16px;
 	width: 100%;
 
-	&:focus {
+	&:focus-visible {
 		background-color: var(--theme_white);
 		border-color: var(--theme_cg_blue);
-		// box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
 	}
 
 	@media (width <=640px) {
@@ -96,10 +94,19 @@ input:focus::placeholder {
 	opacity: 1;
 }
 
-input[type="text"]:disabled {
+input[type="text"]:disabled,
+input[type="email"]:disabled,
+input[type="number"]:disabled,
+input[type="tel"]:disabled,
+input[type="url"]:disabled,
+input[type="password"]:disabled,
+select:disabled,
+textarea:disabled {
 	background-color: var(--theme_gray_50);
 	box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
 	border: 1px solid transparent;
+	cursor: not-allowed;
+	opacity: 0.7;
 }
 
 input[type="hidden"],
@@ -182,9 +189,9 @@ select {
 	white-space: nowrap;
 	overflow: hidden;
 	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+	padding-right: 35px;
 
-	&:focus {
-		outline: none;
+	&:focus-visible {
 		border-color: var(--theme_color_primary);
 		box-shadow: 0 0 0 3px rgba(0, 155, 210, 0.15);
 	}

@@ -23,6 +23,7 @@
 			}
 
 			img {
+
 				.block-editor__container & {
 					height: 100%;
 				}
@@ -188,10 +189,6 @@
 			min-height: 518px;
 		}
 
-		// @include bp.between(lg, xxl) {
-		// 	min-height: 518px;
-		// }
-
 		@include bp.max(lg) {
 			margin: 0;
 			max-width: 100%;
@@ -326,7 +323,7 @@
 		.hero-section__autoplay-controls {
 			position: absolute;
 			right: 24px;
-			top: 24px;
+			top: 14px;
 			z-index: 2;
 		}
 

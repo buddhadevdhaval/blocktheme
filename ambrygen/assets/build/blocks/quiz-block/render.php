@@ -86,7 +86,7 @@ $ambrygen_card_labelledby    = $ambrygen_heading_id ? $ambrygen_heading_id : $am
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() output is escaped by WordPress core. ?>>
 	<div class="risk-checklist__header">
 		<?php if ( '' !== $ambrygen_eyebrow_text ) : ?>
-			<div class="overline-text risk-checklist__eyebrow hero-kicker">
+			<div class="overline-text risk-checklist__eyebrow hero-kicker js-gsap-fade">
 				<?php echo wp_kses_post( $ambrygen_eyebrow_text ); ?>
 			</div>
 		<?php endif; ?>
@@ -96,7 +96,7 @@ $ambrygen_card_labelledby    = $ambrygen_heading_id ? $ambrygen_heading_id : $am
 		<?php endif; ?>
 
 		<?php if ( '' !== $ambrygen_heading ) : ?>
-			<<?php echo tag_escape( $ambrygen_heading_tag ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-4 block-title mb-0">
+			<<?php echo tag_escape( $ambrygen_heading_tag ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-4 block-title mb-0 risk-checklist__heading js-gsap-fade">
 				<?php echo wp_kses( $ambrygen_heading, Helper::allowed_heading_html() ); ?>
 			</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 		<?php endif; ?>
@@ -123,7 +123,7 @@ $ambrygen_card_labelledby    = $ambrygen_heading_id ? $ambrygen_heading_id : $am
 					<?php if ( $ambrygen_card_title_id ) : ?>
 						id="<?php echo esc_attr( $ambrygen_card_title_id ); ?>"
 					<?php endif; ?>
-					class="heading-5 risk-checklist__card-title mb-0"
+					class="heading-5 risk-checklist__card-title mb-0 js-gsap-fade block-inside-title"
 				>
 					<?php echo wp_kses_post( $ambrygen_card_title ); ?>
 				</h3>
@@ -134,19 +134,19 @@ $ambrygen_card_labelledby    = $ambrygen_heading_id ? $ambrygen_heading_id : $am
 			<?php endif; ?>
 
 			<?php if ( '' !== $ambrygen_card_subtitle ) : ?>
-				<div class="subtitle2-sbold risk-checklist__card-subtitle">
+				<div class="subtitle2-sbold risk-checklist__card-subtitle js-gsap-fade">
 					<?php echo wp_kses_post( $ambrygen_card_subtitle ); ?>
 				</div>
 			<?php endif; ?>
 		</div>
 
 		<div class="risk-checklist__card-body">
-			<div class="screen-reader-text">
+			<div class="screen-reader-text js-gsap-fade">
 				<?php esc_html_e( 'Select any items that apply to you. Results will update automatically as you make selections.', 'ambrygen-web' ); ?>
 			</div>
 
 				<?php if ( empty( $ambrygen_checklist ) ) : ?>
-				<div class="risk-checklist__empty-message">
+				<div class="risk-checklist__empty-message js-gsap-fade">
 					<?php esc_html_e( 'No checklist items have been added yet.', 'ambrygen-web' ); ?>
 				</div>
 				<?php else : ?>
@@ -167,7 +167,7 @@ $ambrygen_card_labelledby    = $ambrygen_heading_id ? $ambrygen_heading_id : $am
 						? sanitize_html_class( $ambrygen_id_base . '-' . (string) $ambrygen_item['id'] )
 						: wp_unique_id( 'risk-checklist-item-' );
 						?>
-					<div class="risk-checklist__item">
+					<div class="risk-checklist__item js-gsap-fade">
 						<label class="risk-checklist__item-label" for="<?php echo esc_attr( $ambrygen_item_id ); ?>">
 							<input
 								id="<?php echo esc_attr( $ambrygen_item_id ); ?>"
@@ -190,7 +190,7 @@ $ambrygen_card_labelledby    = $ambrygen_heading_id ? $ambrygen_heading_id : $am
 
 			<?php if ( $ambrygen_has_no_risk_text ) : ?>
 				<div
-					class="risk-checklist__result risk-checklist__result--no-risk"
+					class="risk-checklist__result risk-checklist__result--no-risk js-gsap-fade"
 					role="status"
 					aria-live="polite"
 					aria-atomic="true"
@@ -204,7 +204,7 @@ $ambrygen_card_labelledby    = $ambrygen_heading_id ? $ambrygen_heading_id : $am
 			<?php if ( $ambrygen_has_at_risk_text ) : ?>
 				<div class="is-style-gl-s24" aria-hidden="true"></div>
 				<div
-					class="risk-checklist__result risk-checklist__result--at-risk<?php echo $ambrygen_has_no_risk_text ? ' risk-checklist__result--hidden' : ''; ?>"
+					class="risk-checklist__result js-gsap-fade risk-checklist__result--at-risk<?php echo $ambrygen_has_no_risk_text ? ' risk-checklist__result--hidden' : ''; ?>"
 					role="status"
 					aria-live="polite"
 					aria-atomic="true"
@@ -219,7 +219,7 @@ $ambrygen_card_labelledby    = $ambrygen_heading_id ? $ambrygen_heading_id : $am
 
 	<?php if ( ! empty( $ambrygen_valid_buttons ) ) : ?>
 		<div class="is-style-gl-s32" aria-hidden="true"></div>
-		<div class="risk-checklist__cta">
+		<div class="risk-checklist__cta js-gsap-fade">
 			<?php foreach ( $ambrygen_valid_buttons as $ambrygen_button ) : ?>
 				<?php
 				$ambrygen_button_text      = sanitize_text_field( (string) $ambrygen_button['text'] );

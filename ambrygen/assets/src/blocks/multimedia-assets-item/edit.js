@@ -290,10 +290,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 						{ ! cta.isPopup && (
 							<CtaButtonField
-								label={ __(
-									'',
-									'ambrygen-web'
-								) }
+								label={ __( '', 'ambrygen-web' ) }
 								value={ cta }
 								showVariant={ true }
 								onChange={ ( value ) =>
@@ -482,7 +479,7 @@ export default function Edit( { attributes, setAttributes } ) {
 										setAttributes( { formContent: value } )
 									}
 									placeholder={ __(
-										'Form Content...',
+										'Form Content…',
 										'ambrygen-web'
 									) }
 									className="form-content-editor"
@@ -633,7 +630,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									setAttributes( { sectiontitle: value } )
 								}
 								placeholder={ __(
-									'Add Title...',
+									'Add Title…',
 									'ambrygen-web'
 								) }
 								allowedFormats={ [ 'core/text-color' ] }
@@ -666,10 +663,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						</div>
 					</div>
 
-					<div
-						className="is-style-gl-s32"
-						aria-hidden="true"
-					></div>
+					<div className="is-style-gl-s32" aria-hidden="true"></div>
 
 					{ /* CTA Preview */ }
 					{ cta?.text && (
@@ -685,9 +679,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									cta.isPopup && cta.popupType === 'form'
 										? ' has-form-arrow has-right-arrow'
 										: ''
-								}${
-									! cta.isPopup ? ' has-right-arrow' : ''
-								}` }
+								}${ ! cta.isPopup ? ' has-right-arrow' : '' }` }
 								role="presentation"
 							>
 								{ cta.text }

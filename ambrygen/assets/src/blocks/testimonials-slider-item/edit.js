@@ -1,4 +1,8 @@
-import { InspectorControls, RichText, useBlockProps } from '@wordpress/block-editor';
+import {
+	InspectorControls,
+	RichText,
+	useBlockProps,
+} from '@wordpress/block-editor';
 import { PanelBody } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
@@ -69,9 +73,9 @@ export default function Edit( { attributes, setAttributes } ) {
 
 				<div className="testimonial-slider__author">
 					{ hasAuthorDetails && imageUrl && (
-							<div className="testimonial-slider__author--image">
-								<img src={ imageUrl } alt={ imageAlt } />
-							</div>
+						<div className="testimonial-slider__author--image">
+							<img src={ imageUrl } alt={ imageAlt } />
+						</div>
 					) }
 
 					<div className="testimonial-slider__author--content">
@@ -83,7 +87,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								setAttributes( { authorName: value } )
 							}
 							placeholder={ __(
-								'Enter author name...',
+								'Enter author name…',
 								'ambrygen-web'
 							) }
 						/>
@@ -95,7 +99,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								setAttributes( { authorRole: value } )
 							}
 							placeholder={ __(
-								'Enter author role...',
+								'Enter author role…',
 								'ambrygen-web'
 							) }
 						/>

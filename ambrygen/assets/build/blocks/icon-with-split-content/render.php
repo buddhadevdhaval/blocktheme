@@ -13,7 +13,30 @@ use Ambrygen\Theme\Core\Helper;
 
 defined( 'ABSPATH' ) || exit;
 
+if ( ! function_exists( 'ambrygen_icon_with_split_content_normalize_text' ) ) {
+	/**
+	 * Normalize plain text values while preserving word spacing from legacy HTML.
+	 *
+	 * @param mixed $text Raw text value.
+	 * @return string
+	 */
+	function ambrygen_icon_with_split_content_normalize_text( $text ) {
+		$text = is_scalar( $text ) ? (string) $text : '';
+
+		if ( '' === $text ) {
+			return '';
+		}
+
+		$text = wp_specialchars_decode( $text, ENT_QUOTES );
+		$text = preg_replace( '/<[^>]*>/', ' ', $text );
+		$text = wp_strip_all_tags( $text );
+
+		return trim( preg_replace( '/\s+/u', ' ', $text ) );
+	}
+}
+
 $ambrygen_attributes  = is_array( $attributes ) ? $attributes : array();
+$ambrygen_block_id    = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
 $ambrygen_anchor      = isset( $ambrygen_attributes['anchor'] ) ? sanitize_html_class( $ambrygen_attributes['anchor'] ) : '';
 $ambrygen_heading     = $ambrygen_attributes['heading'] ?? '';
 $ambrygen_heading_tag = Helper::get_heading_tag(
@@ -26,19 +49,24 @@ $ambrygen_has_heading = '' !== trim( wp_strip_all_tags( $ambrygen_heading ) );
 $ambrygen_has_desc    = '' !== trim( wp_strip_all_tags( $ambrygen_description ) );
 $ambrygen_heading_id  = wp_unique_id( 'symptoms-heading-' );
 
+if ( $ambrygen_anchor ) {
+	$ambrygen_heading_id = $ambrygen_anchor . '-heading';
+} elseif ( $ambrygen_block_id ) {
+	$ambrygen_heading_id = $ambrygen_block_id . '-heading';
+}
+
 $ambrygen_wrapper_args = array(
-	'class' => 'symptoms',
+	'class' => 'symptoms block-layout',
+	'role'  => 'region',
 );
 
-if ( $ambrygen_anchor ) {
-	$ambrygen_wrapper_args['id'] = $ambrygen_anchor;
+if ( $ambrygen_anchor || $ambrygen_block_id ) {
+	$ambrygen_wrapper_args['id'] = $ambrygen_anchor ?: $ambrygen_block_id;
 }
 
 if ( $ambrygen_has_heading ) {
-	$ambrygen_wrapper_args['role']            = 'region';
 	$ambrygen_wrapper_args['aria-labelledby'] = $ambrygen_heading_id;
 } else {
-	$ambrygen_wrapper_args['role']       = 'region';
 	$ambrygen_wrapper_args['aria-label'] = __( 'Icon with split content', 'ambrygen-web' );
 }
 
@@ -54,11 +82,11 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 				<?php foreach ( $ambrygen_items as $ambrygen_item ) : ?>
 					<?php
 					$ambrygen_icon_id  = isset( $ambrygen_item['iconId'] ) ? absint( $ambrygen_item['iconId'] ) : 0;
-					$ambrygen_icon_url = isset( $ambrygen_item['iconUrl'] ) ? esc_url_raw( $ambrygen_item['iconUrl'] ) : '';
+					$ambrygen_icon_url = isset( $ambrygen_item['iconUrl'] ) ? $ambrygen_item['iconUrl'] : '';
 					$ambrygen_icon_alt = isset( $ambrygen_item['iconAlt'] ) ? sanitize_text_field( $ambrygen_item['iconAlt'] ) : '';
-					$ambrygen_text     = isset( $ambrygen_item['text'] ) ? sanitize_text_field( $ambrygen_item['text'] ) : '';
+					$ambrygen_text     = isset( $ambrygen_item['text'] ) ? ambrygen_icon_with_split_content_normalize_text( $ambrygen_item['text'] ) : '';
 					?>
-					<div class="symptoms__item">
+					<div class="symptoms__item js-gsap-fade">
 						<?php if ( $ambrygen_icon_id || $ambrygen_icon_url ) : ?>
 							<?php
 							// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() escapes attributes and returns wp_kses_post()-sanitized image markup.
@@ -88,7 +116,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 
 		<div class="symptoms__right">
 			<?php if ( $ambrygen_has_heading ) : ?>
-				<<?php echo tag_escape( $ambrygen_heading_tag ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-4 block-title mb-0 symptoms__title">
+				<<?php echo tag_escape( $ambrygen_heading_tag ); ?> id="<?php echo esc_attr( $ambrygen_heading_id ); ?>" class="heading-4 block-title mb-0 symptoms__title js-gsap-fade">
 					<?php echo wp_kses( $ambrygen_heading, Helper::allowed_heading_html() ); ?>
 				</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 			<?php endif; ?>
@@ -98,7 +126,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes(
 			<?php endif; ?>
 
 			<?php if ( $ambrygen_has_desc ) : ?>
-				<div class="subtitle1-regular symptoms__desc">
+				<div class="subtitle1-regular symptoms__desc js-gsap-fade">
 					<?php echo wp_kses_post( $ambrygen_description ); ?>
 				</div>
 			<?php endif; ?>

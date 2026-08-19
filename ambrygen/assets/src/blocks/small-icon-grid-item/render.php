@@ -40,10 +40,10 @@ $ambrygen_richtext_allowed = array(
 	'sup'    => array(),
 );
 
-$ambrygen_attributes = $attributes ?? array();
-$ambrygen_title_raw  = $ambrygen_attributes['title'] ?? '';
-$ambrygen_title      = wp_strip_all_tags( $ambrygen_title_raw );
-$ambrygen_links      = is_array( $ambrygen_attributes['links'] ?? null )
+$ambrygen_attributes    = $attributes ?? array();
+$ambrygen_title_raw     = $ambrygen_attributes['title'] ?? '';
+$ambrygen_title         = wp_strip_all_tags( $ambrygen_title_raw );
+$ambrygen_links         = is_array( $ambrygen_attributes['links'] ?? null )
 	? $ambrygen_attributes['links']
 	: array();
 $ambrygen_visible_links = array_values(
@@ -54,13 +54,13 @@ $ambrygen_visible_links = array_values(
 		}
 	)
 );
-$ambrygen_icon       = is_array( $ambrygen_attributes['icon'] ?? null )
+$ambrygen_icon          = is_array( $ambrygen_attributes['icon'] ?? null )
 	? $ambrygen_attributes['icon']
 	: array();
-$ambrygen_icon_id    = isset( $ambrygen_icon['id'] ) ? absint( $ambrygen_icon['id'] ) : 0;
-$ambrygen_icon_url   = isset( $ambrygen_icon['url'] ) ? esc_url( $ambrygen_icon['url'] ) : '';
-$ambrygen_icon_alt   = isset( $ambrygen_icon['alt'] ) ? sanitize_text_field( $ambrygen_icon['alt'] ) : '';
-$ambrygen_has_icon   = $ambrygen_icon_id || $ambrygen_icon_url;
+$ambrygen_icon_id       = isset( $ambrygen_icon['id'] ) ? absint( $ambrygen_icon['id'] ) : 0;
+$ambrygen_icon_url      = isset( $ambrygen_icon['url'] ) ? esc_url( $ambrygen_icon['url'] ) : '';
+$ambrygen_icon_alt      = isset( $ambrygen_icon['alt'] ) ? sanitize_text_field( $ambrygen_icon['alt'] ) : '';
+$ambrygen_has_icon      = $ambrygen_icon_id || $ambrygen_icon_url;
 
 // Keep the pre-fallback flag for the empty-block early return, but always render
 // a fallback logo for cards that have other content and no explicit icon selected.

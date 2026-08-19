@@ -55,7 +55,7 @@
     },
     "posterImage": {
       "type": "object",
-      "default": null
+      "default": {}
     },
     "headingTag": {
       "type": "string",
@@ -85,6 +85,10 @@
       "type": "number",
       "default": 0
     },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
     "isHeaderVertical": {
       "type": "boolean",
       "default": false
@@ -97,24 +101,7 @@
   "viewScript": "file:./view.js",
   "example": {
     "attributes": {
-      "heading": "Transforming Healthcare with Genetic Insight",
-      "description": "This is a sample preview content for this block in the inserter.",
-      "showDescription": true,
-      "link": {
-        "url": "https://example.com",
-        "text": "Learn More",
-        "target": "_self",
-        "rel": "",
-        "variant": "primary"
-      },
-      "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
-      "videoType": "embed",
-      "posterImage": "/wp-content/themes/ambrygen/assets/src/images/ambrygen-default-image.png",
-      "headingTag": "h2",
-      "iframeUrl": "https://www.youtube.com/embed/ysz5S6PUM-U",
-      "showImage": false,
-      "imageUrl": "",
-      "imageId": 0
+      "blockId": "example-block-preview"
     }
   }
 }

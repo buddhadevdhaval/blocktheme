@@ -14,17 +14,10 @@ if ( ! is_admin() && get_post_type() !== 'post' ) {
 	return;
 }
 
-// Fetch only tags that have at least one published post attached.
-$tags = get_terms(
-	array(
-		'taxonomy'   => 'post_tag',
-		'hide_empty' => true,
-		'orderby'    => 'name',
-		'order'      => 'ASC',
-	)
-);
+// Get tags for the current post.
+$tags = get_the_tags();
 
-if ( is_wp_error( $tags ) || empty( $tags ) ) {
+if ( ! $tags || is_wp_error( $tags ) ) {
 	return;
 }
 ?>

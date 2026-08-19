@@ -25,7 +25,8 @@ import { createElement } from '@wordpress/element';
  *
  * @param {Object} props            Block properties.
  * @param {Object} props.attributes Block attributes.
- * @return {JSX.Element} Saved block markup.
+ * @param {string} props.className  Additional CSS classes.
+ * @return {import('@wordpress/element').WPElement} Saved block markup.
  */
 export default function Save( { attributes, className = '' } ) {
 	const {

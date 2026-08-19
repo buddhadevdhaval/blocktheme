@@ -5,29 +5,3 @@
  */
 
 
-// .wp-block-ambrygen-section-container {
-// 	position: relative;
-// 	overflow: hidden;
-
-// 	&[style*="--section-container-bg-image"]::before {
-// 		content: "";
-// 		position: absolute;
-// 		inset: 0;
-// 		background-image: var( --section-container-bg-image );
-// 		background-repeat: no-repeat;
-// 		background-size: cover;
-// 		background-position: center;
-// 		opacity: 0.2;
-// 		pointer-events: none;
-// 		z-index: 0;
-// 	}
-
-// 	&.block-bg[style*="--section-container-bg-image"]::before {
-// 		background-attachment: fixed;
-// 	}
-
-// 	> .wrapper {
-// 		position: relative;
-// 		z-index: 1;
-// 	}
-// }

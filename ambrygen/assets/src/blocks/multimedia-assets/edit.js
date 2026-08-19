@@ -6,21 +6,14 @@ import {
 } from '@wordpress/block-editor';
 import { PanelBody } from '@wordpress/components';
 
-import {
-	TagSelector,
-	BlockExamplePreview,
-} from '../_shared/components';
+import { TagSelector, BlockExamplePreview } from '../_shared/components';
 import { useUniqueBlockId } from '../_shared/hooks';
 import { __ } from '@wordpress/i18n';
 
 const ALLOWED_BLOCKS = [ 'ambrygen/multimedia-assets-item' ];
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const {
-		heading,
-		headingTag,
-		blockId,
-	} = attributes;
+	const { heading, headingTag, blockId } = attributes;
 	const isExample = blockId === 'example-block-preview';
 
 	useUniqueBlockId( {
@@ -40,7 +33,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		return (
 			<BlockExamplePreview
 				className="example-block-preview"
-				imagePath="/assets/src/images/multimedia-assets/preview.png"				
+				imagePath="/assets/src/images/multimedia-assets/preview.png"
 			/>
 		);
 	}
@@ -63,9 +56,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 			</InspectorControls>
 			<div { ...blockProps }>
-				<div
-					className="our-approach__header block__rowflex is-vertical"
-				>
+				<div className="our-approach__header block__rowflex is-vertical">
 					<div className="block-title mb-0 block__rowflex--heading-title js-gsap-fade our-approach__header__left">
 						<RichText
 							tagName={ HeadingTag }
@@ -75,7 +66,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								setAttributes( { heading: value } )
 							}
 							allowedFormats={ [ 'core/text-color' ] }
-							placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+							placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 						/>
 					</div>
 				</div>

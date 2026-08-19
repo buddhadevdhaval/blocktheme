@@ -6,10 +6,7 @@ import {
 import { useMemo } from '@wordpress/element';
 import { PanelBody } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import {
-	ImageUploader,
-	DEFAULT_IMAGES,
-} from '../_shared/components';
+import { ImageUploader, DEFAULT_IMAGES } from '../_shared/components';
 import OrderingOptionsEdit from './ordering-options-edit';
 
 const VARIATION_VALUES = {
@@ -24,7 +21,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 
 	const blockProps = useBlockProps( {
 		className: isVariation2
-			? 'block-layout ordering-options__card'
+			? 'ordering-options__card'
 			: 'block-layout cta-tiles-with-content__item',
 	} );
 
@@ -86,7 +83,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 									setAttributes( { sectiontitle: value } )
 								}
 								placeholder={ __(
-									'Add Title...',
+									'Add Title…',
 									'ambrygen-web'
 								) }
 								allowedFormats={ [] }
@@ -100,7 +97,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 									setAttributes( { description: value } )
 								}
 								placeholder={ __(
-									'Add Short Description...',
+									'Add Short Description…',
 									'ambrygen-web'
 								) }
 							/>

@@ -64,7 +64,7 @@ if ( '_blank' === $ambrygen_cta_target ) {
 	$ambrygen_cta_rel_parts = array_merge( $ambrygen_cta_rel_parts, array( 'noopener', 'noreferrer' ) );
 }
 
-$ambrygen_cta_rel      = implode( ' ', array_unique( array_filter( $ambrygen_cta_rel_parts ) ) );
+$ambrygen_cta_rel       = implode( ' ', array_unique( array_filter( $ambrygen_cta_rel_parts ) ) );
 $ambrygen_wrapper_attrs = get_block_wrapper_attributes( array( 'class' => 'three-column-card js-gsap-fade' ) );
 
 // Video specific logic.

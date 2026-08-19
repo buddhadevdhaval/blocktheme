@@ -3,9 +3,7 @@ import {
 	RichText,
 	useBlockProps,
 } from '@wordpress/block-editor';
-import { createBlock } from '@wordpress/blocks';
 import {
-	Button,
 	FormTokenField,
 	Notice,
 	PanelBody,
@@ -13,14 +11,9 @@ import {
 	ToggleControl,
 } from '@wordpress/components';
 import { useEffect, useMemo } from '@wordpress/element';
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useSelect } from '@wordpress/data';
 import { __, sprintf } from '@wordpress/i18n';
-import {
-	CtaButtonField,
-	ItemHeader,
-	TagSelector,
-	BlockExamplePreview,
-} from '../_shared/components';
+import { TagSelector, BlockExamplePreview } from '../_shared/components';
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
@@ -31,21 +24,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		selectAllCollaborators = true,
 		collaboratorIds = [],
 	} = attributes;
-
-	if ( blockId === 'collaboration-link-grid-example' ) {
-		return (
-			<BlockExamplePreview
-				imagePath="/assets/src/images/cta-tiles-with-3-card/default-image.png"
-			/>
-		);
-	}
-
-	const {
-		insertBlock,
-		removeBlocks,
-		replaceInnerBlocks,
-		updateBlockAttributes,
-	} = useDispatch( 'core/block-editor' );
 
 	useEffect( () => {
 		const clientIdSuffix = clientId.slice( 0, 8 );
@@ -96,55 +74,77 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const collaboratorOptions = collaboratorTerms || [];
 	const linkedCollaboratorTerms = collaboratorOptions.filter(
-		( term ) => typeof term?.meta?.link === 'string' && term.meta.link.trim()
+		( term ) =>
+			typeof term?.meta?.link === 'string' && term.meta.link.trim()
 	);
-	const visibleCollaboratorTerms = selectAllCollaborators
-			? linkedCollaboratorTerms.filter(
-					( term ) => ! collaboratorIds.includes( term.id )
-			  )
-			: collaboratorIds.length
-			? linkedCollaboratorTerms.filter( ( term ) =>
-					collaboratorIds.includes( term.id )
-			  )
-			: [];
+	let visibleCollaboratorTerms = [];
+	if ( selectAllCollaborators ) {
+		visibleCollaboratorTerms = linkedCollaboratorTerms.filter(
+			( term ) => ! collaboratorIds.includes( term.id )
+		);
+	} else if ( collaboratorIds.length ) {
+		visibleCollaboratorTerms = linkedCollaboratorTerms.filter( ( term ) =>
+			collaboratorIds.includes( term.id )
+		);
+	}
 	const suggestions = linkedCollaboratorTerms.map( ( term ) => term.name );
 
-	const selectedCollaboratorNames = collaboratorIds
-		.map( ( id ) => {
-			const term = linkedCollaboratorTerms.find(
-				( item ) => item.id === id
-			);
-			return term ? term.name : null;
-		} )
-		.filter( Boolean );
+	const selectedCollaboratorNames = collaboratorIds.flatMap( ( id ) => {
+		const term = linkedCollaboratorTerms.find( ( item ) => item.id === id );
+		return term ? [ term.name ] : [];
+	} );
 
 	const onCollaboratorsChange = ( names ) => {
-		const newIds = names
-			.map( ( name ) => {
-				const term = linkedCollaboratorTerms.find(
-					( item ) => item.name === name
-				);
-				return term ? term.id : null;
-			} )
-			.filter( Boolean );
+		const newIds = names.flatMap( ( name ) => {
+			const term = linkedCollaboratorTerms.find(
+				( item ) => item.name === name
+			);
+			return term ? [ term.id ] : [];
+		} );
 
 		setAttributes( { collaboratorIds: newIds } );
 	};
-
-
 
 	const blockProps = useBlockProps( {
 		className: 'download-list block-layout variation-grid-view',
 		id: anchor || blockId,
 	} );
 
+	if ( blockId === 'collaboration-link-grid-example' ) {
+		return (
+			<BlockExamplePreview imagePath="/assets/src/images/cta-tiles-with-3-card/default-image.png" />
+		);
+	}
 
+	let itemsContent = <Spinner />;
+	if ( isResolvingTerms ) {
+		itemsContent = <Spinner />;
+	} else if ( visibleCollaboratorTerms.length ) {
+		itemsContent = visibleCollaboratorTerms.map( ( term ) => (
+			<div key={ term.id } className="download-list__grid-item">
+				<div
+					className="download-list__grid-link"
+					aria-label={ sprintf(
+						/* translators: %s: collaborator name. */
+						__( '%s (opens in a new tab)', 'ambrygen-web' ),
+						term.name
+					) }
+				>
+					{ term.name }
+				</div>
+			</div>
+		) );
+	} else if ( hasResolvedTerms ) {
+		itemsContent = (
+			<Notice status="warning" isDismissible={ false }>
+				{ __( 'No collaborator terms found.', 'ambrygen-web' ) }
+			</Notice>
+		);
+	}
 
 	return (
 		<div { ...blockProps }>
 			<InspectorControls>
-
-
 				<PanelBody
 					title={ __( 'Heading Settings', 'ambrygen-web' ) }
 					initialOpen={ false }
@@ -153,51 +153,56 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag }
 						type="heading"
-						onChange={ ( val ) => setAttributes( { headingTag: val } ) }
+						onChange={ ( val ) =>
+							setAttributes( { headingTag: val } )
+						}
 					/>
 				</PanelBody>
-
-
 
 				<PanelBody
 					title={ __( 'Collaborators', 'ambrygen-web' ) }
 					initialOpen={ true }
 				>
-						<ToggleControl
-							label={ __( 'Select all collaborators', 'ambrygen-web' ) }
-							checked={ selectAllCollaborators }
-							onChange={ ( value ) =>
-								setAttributes( {
-									selectAllCollaborators: value,
-									collaboratorIds: [],
-								} )
-							}
-						/>
-						{ selectAllCollaborators ? (
-							<FormTokenField
-								label={ __( 'Remove collaborators', 'ambrygen-web' ) }
-								value={ selectedCollaboratorNames }
-								suggestions={ suggestions }
-								onChange={ onCollaboratorsChange }
-								placeholder={ __(
-									'Remove collaborators...',
-									'ambrygen-web'
-								) }
-							/>
-						) : (
-							<FormTokenField
-								label={ __( 'Collaborators', 'ambrygen-web' ) }
-								value={ selectedCollaboratorNames }
-								suggestions={ suggestions }
-								onChange={ onCollaboratorsChange }
-								placeholder={ __(
-									'Select collaborators...',
-									'ambrygen-web'
-								) }
-							/>
+					<ToggleControl
+						label={ __(
+							'Select all collaborators',
+							'ambrygen-web'
 						) }
-					</PanelBody>
-
+						checked={ selectAllCollaborators }
+						onChange={ ( value ) =>
+							setAttributes( {
+								selectAllCollaborators: value,
+								collaboratorIds: [],
+							} )
+						}
+					/>
+					{ selectAllCollaborators ? (
+						<FormTokenField
+							label={ __(
+								'Remove collaborators',
+								'ambrygen-web'
+							) }
+							value={ selectedCollaboratorNames }
+							suggestions={ suggestions }
+							onChange={ onCollaboratorsChange }
+							placeholder={ __(
+								'Remove collaborators…',
+								'ambrygen-web'
+							) }
+						/>
+					) : (
+						<FormTokenField
+							label={ __( 'Collaborators', 'ambrygen-web' ) }
+							value={ selectedCollaboratorNames }
+							suggestions={ suggestions }
+							onChange={ onCollaboratorsChange }
+							placeholder={ __(
+								'Select collaborators…',
+								'ambrygen-web'
+							) }
+						/>
+					) }
+				</PanelBody>
 			</InspectorControls>
 
 			<div className="download-list__inner">
@@ -206,48 +211,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						tagName={ headingTag }
 						className="download-list__title heading-3 block-title mb-0"
 						value={ title }
-						placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+						placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 						onChange={ ( val ) => setAttributes( { title: val } ) }
 						allowedFormats={ [ 'core/bold', 'core/italic' ] }
 					/>
 				</div>
 
-				<div className="download-list__items">
-					{ isResolvingTerms ? (
-						<Spinner />
-					) : visibleCollaboratorTerms.length ? (
-						visibleCollaboratorTerms.map( ( term ) => (
-							<div
-								key={ term.id }
-								className="download-list__grid-item"
-							>
-								<a
-									href={ term.meta.link }
-									className="download-list__grid-link"
-									target="_blank"
-									rel="noopener noreferrer"
-									aria-label={ sprintf(
-										/* translators: %s: collaborator name. */
-										__(
-											'%s (opens in a new tab)',
-											'ambrygen-web'
-										),
-										term.name
-									) }
-									onClick={ ( event ) => event.preventDefault() }
-								>
-									{ term.name }
-								</a>
-							</div>
-						) )
-					) : hasResolvedTerms ? (
-						<Notice status="warning" isDismissible={ false }>
-							{ __( 'No collaborator terms found.', 'ambrygen-web' ) }
-						</Notice>
-					) : (
-						<Spinner />
-					) }
-				</div>
+				<div className="download-list__items">{ itemsContent }</div>
 			</div>
 		</div>
 	);

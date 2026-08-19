@@ -6,7 +6,9 @@
 }
 
 .block-layout {
+
 	&:has(.icon-grid-block) {
+
 		.block-bg-image {
 			position: absolute;
 			left: 0;
@@ -34,7 +36,7 @@
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		width: 100%;
-		gap: fluid(18, 24);
+		gap: fluid(18, 20);
 		position: relative;
 
 		@include bp.between(md, xl) {
@@ -50,6 +52,7 @@
 
 // Ensure the item cards have correct styles when inside this block
 .info-list {
+
 	&__card {
 		background: var(--theme_primary_white);
 		border: 1px solid var(--theme_gray_201);
@@ -57,14 +60,22 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: fluid(8, 18);
-		padding: fluid(14, 24);
+		padding: fluid(14, 20);
 		height: 100%;
+
+		@include bp.max(370px) {
+			flex-direction: column;
+		}
 	}
 
 	&__image {
 		display: flex;
 		flex: fluid(54, 120) 0 0;
 		justify-content: center;
+
+		@include bp.between(xl, xxxl) {
+			flex: 78px 0 0;
+		}
 
 		@include bp.max(xl-large) {
 			justify-content: inherit;
@@ -100,10 +111,16 @@
 		padding: 0;
 		border: 0;
 		overflow-wrap: anywhere;
+		text-transform: none;
+
+		&.site-btn {
+			text-transform: none;
+		}
 	}
 }
 
 .variation-grid-post {
+
 	.info-list-block__header {
 		text-align: center;
 	}

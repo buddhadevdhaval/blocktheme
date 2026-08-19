@@ -9,13 +9,13 @@ import { __ } from '@wordpress/i18n';
 import { BlockExamplePreview, TagSelector } from '../_shared/components';
 import { useUniqueBlockId } from '../_shared/hooks';
 
-const createDefaultCta = () => ({
+const createDefaultCta = () => ( {
 	text: '',
 	url: '',
 	target: '',
 	rel: '',
 	variant: 'dark',
-});
+} );
 
 const TEMPLATE = [
 	[
@@ -53,21 +53,21 @@ const TEMPLATE = [
 	],
 ];
 
-export default function Edit({ attributes, setAttributes, clientId }) {
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { blockId, heading, headingTag, description } = attributes;
 	const isExample = blockId === 'additional-links-example';
-	const blockProps = useBlockProps({
+	const blockProps = useBlockProps( {
 		className: 'additional-links block-layout',
-	});
+	} );
 
-	useUniqueBlockId({
+	useUniqueBlockId( {
 		blockId,
 		clientId,
-		enabled: !isExample,
+		enabled: ! isExample,
 		setAttributes,
-	});
+	} );
 
-	if (isExample) {
+	if ( isExample ) {
 		return (
 			<BlockExamplePreview
 				className="additional-links-example-preview"
@@ -77,51 +77,53 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	}
 
 	return (
-		<div {...blockProps}>
+		<div { ...blockProps }>
 			<InspectorControls>
 				<PanelBody
-					title={__('Heading Settings', 'ambrygen-web')}
-					initialOpen={true}
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen={ true }
 				>
 					<TagSelector
-						label={__('Heading Tag', 'ambrygen-web')}
-						value={headingTag}
+						label={ __( 'Heading Tag', 'ambrygen-web' ) }
+						value={ headingTag }
 						type="heading"
-						onChange={(val) =>
-							setAttributes({ headingTag: val })
+						onChange={ ( val ) =>
+							setAttributes( { headingTag: val } )
 						}
 					/>
 				</PanelBody>
 			</InspectorControls>
 
 			<div className="careers-highlight__header block__rowflex">
-				<div className='block__rowflex--col-left'>
+				<div className="block__rowflex--col-left">
 					<RichText
-						tagName={headingTag}
+						tagName={ headingTag }
 						className="careers-highlight__title block__rowflex--heading-title heading-4 mb-0 block-title"
-						value={heading}
-						placeholder={__('Add Heading...', 'ambrygen-web')}
-						allowedFormats={[
+						value={ heading }
+						placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
+						allowedFormats={ [
 							'core/bold',
 							'core/italic',
 							'core/text-color',
-						]}
-						onChange={(val) => setAttributes({ heading: val })}
+						] }
+						onChange={ ( val ) =>
+							setAttributes( { heading: val } )
+						}
 					/>
 				</div>
 				<RichText
 					tagName="div"
 					className="careers-highlight__intro block__rowflex--block-content subtitle1-reg block-description"
-					value={description}
-					placeholder={__('Add Description...', 'ambrygen-web')}
-					allowedFormats={[
+					value={ description }
+					placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
+					allowedFormats={ [
 						'core/bold',
 						'core/italic',
 						'core/link',
 						'core/text-color',
-					]}
-					onChange={(val) =>
-						setAttributes({ description: val })
+					] }
+					onChange={ ( val ) =>
+						setAttributes( { description: val } )
 					}
 				/>
 				<div className="is-style-gl-s50"></div>
@@ -129,9 +131,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 			<div className="wp-additional-link__cards">
 				<InnerBlocks
-					allowedBlocks={['ambrygen/additional-links-item']}
-					template={TEMPLATE}
-					templateLock={false}
+					allowedBlocks={ [ 'ambrygen/additional-links-item' ] }
+					template={ TEMPLATE }
+					templateLock={ false }
 				/>
 			</div>
 		</div>

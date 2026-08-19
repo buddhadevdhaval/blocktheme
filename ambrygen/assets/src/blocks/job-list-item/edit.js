@@ -83,9 +83,10 @@ export default function Edit( { attributes, context } ) {
 		[ jobLocationTermIds ]
 	);
 
-	const jobTypeLabel = useMemo( () => getTermLabel( jobTypeTerms ), [
-		jobTypeTerms,
-	] );
+	const jobTypeLabel = useMemo(
+		() => getTermLabel( jobTypeTerms ),
+		[ jobTypeTerms ]
+	);
 
 	const jobLocationLabel = useMemo(
 		() => getTermLabel( jobLocationTerms ),
@@ -95,7 +96,12 @@ export default function Edit( { attributes, context } ) {
 	return (
 		<div { ...useBlockProps( { className: 'careers-highlight__job' } ) }>
 			{ ! postId && (
-				<p>{ __( 'Select jobs from the Careers block settings.', 'ambrygen-web' ) }</p>
+				<p>
+					{ __(
+						'Select jobs from the Careers block settings.',
+						'ambrygen-web'
+					) }
+				</p>
 			) }
 
 			{ postId && selectedPost && (

@@ -55,7 +55,18 @@ $bio = $author['bio'] ?? '';
 	<div class="post-author">
 		<div class="post-author__avatar">
 			<?php if ( ! empty( $author['avatar_id'] ) ) : ?>
-				<?php echo Helper::image( $author['avatar_id'], 'thumbnail', array( 'class' => 'post-author__image', 'width' => 100, 'height' => 100, 'alt' => $display_name ) ); ?>
+				<?php
+				echo Helper::image(
+					$author['avatar_id'],
+					'thumbnail',
+					array(
+						'class'  => 'post-author__image',
+						'width'  => 100,
+						'height' => 100,
+						'alt'    => $display_name,
+					)
+				);
+				?>
 			<?php else : ?>
 				<img src="<?php echo esc_url( get_theme_file_uri( 'assets/src/images/icn_user_profile.svg' ) ); ?>" alt="" class="post-author__image" width="100" height="100">
 			<?php endif; ?>

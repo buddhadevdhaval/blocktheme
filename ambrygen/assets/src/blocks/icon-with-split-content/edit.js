@@ -5,12 +5,7 @@ import {
 	useBlockProps,
 } from '@wordpress/block-editor';
 import { Fragment, useEffect } from '@wordpress/element';
-import {
-	Button,
-	Notice,
-	PanelBody,
-	TextControl,
-} from '@wordpress/components';
+import { Button, Notice, PanelBody, TextControl } from '@wordpress/components';
 
 import {
 	BlockExamplePreview,
@@ -59,7 +54,10 @@ function normalizeItemsWithIds( items = [] ) {
 }
 
 function sanitizePlainText( text = '' ) {
-	return text.replace( /<[^>]*>/g, ' ' ).replace( /\s+/g, ' ' ).trim();
+	return text
+		.replace( /<[^>]*>/g, ' ' )
+		.replace( /\s+/g, ' ' )
+		.trim();
 }
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
@@ -234,10 +232,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						) }
 
 						{ items.map( ( item ) => (
-							<div
-								key={ item.id }
-								className="symptoms__item"
-							>
+							<div key={ item.id } className="symptoms__item">
 								{ item.iconUrl && (
 									<img
 										src={ item.iconUrl }
@@ -261,10 +256,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							onChange={ ( value ) =>
 								setAttributes( { heading: value } )
 							}
-							placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+							placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 						/>
 
-						<div className="is-style-gl-s12" aria-hidden="true"></div>
+						<div
+							className="is-style-gl-s12"
+							aria-hidden="true"
+						></div>
 
 						<RichText
 							tagName="div"
@@ -273,7 +271,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							onChange={ ( value ) =>
 								setAttributes( { description: value } )
 							}
-							placeholder={ __( 'Add Description...', 'ambrygen-web' ) }
+							placeholder={ __(
+								'Add Description…',
+								'ambrygen-web'
+							) }
 						/>
 					</div>
 				</div>

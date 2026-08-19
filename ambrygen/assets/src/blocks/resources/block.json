@@ -109,6 +109,12 @@
 					"url": {
 						"type": "string"
 					},
+					"target": {
+						"type": "string"
+					},
+					"rel": {
+						"type": "string"
+					},
 					"imageId": {
 						"type": "integer"
 					},

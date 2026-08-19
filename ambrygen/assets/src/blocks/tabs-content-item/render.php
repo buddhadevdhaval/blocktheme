@@ -10,14 +10,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$ambrygen_attributes  = is_array( $attributes ?? null ) ? $attributes : array();
-$ambrygen_heading     = isset( $ambrygen_attributes['heading'] ) ? sanitize_text_field( $ambrygen_attributes['heading'] ) : '';
-$ambrygen_item_id     = isset( $ambrygen_attributes['itemId'] ) ? sanitize_html_class( $ambrygen_attributes['itemId'] ) : '';
+$ambrygen_attributes = is_array( $attributes ?? null ) ? $attributes : array();
+$ambrygen_heading    = isset( $ambrygen_attributes['heading'] ) ? sanitize_text_field( $ambrygen_attributes['heading'] ) : '';
+$ambrygen_item_id    = isset( $ambrygen_attributes['itemId'] ) ? sanitize_html_class( $ambrygen_attributes['itemId'] ) : '';
 
-$ambrygen_content_html = trim( (string) ( $content ?? '' ) );
+$ambrygen_content_html      = trim( (string) ( $content ?? '' ) );
 $ambrygen_is_default_active = isset( $ambrygen_attributes['isDefaultActive'] ) ? (bool) $ambrygen_attributes['isDefaultActive'] : false;
-$ambrygen_class_name = 'tabs-table-content__item' . ( $ambrygen_is_default_active ? ' is-active' : '' );
-$ambrygen_content_id = $ambrygen_item_id ? $ambrygen_item_id . '-content' : '';
+$ambrygen_class_name        = 'tabs-table-content__item' . ( $ambrygen_is_default_active ? ' is-active' : '' );
+$ambrygen_content_id        = $ambrygen_item_id ? $ambrygen_item_id . '-content' : '';
 ?>
 
 <div

@@ -19,27 +19,27 @@ if ( ! $post_id ) {
 	return;
 }
 
-$size = isset($attributes['sizeSlug']) ? (string) $attributes['sizeSlug'] : 'full';
-$class = isset($attributes['className']) ? (string) $attributes['className'] : '';
-$is_link = ! empty($attributes['isLink']);
+$size    = isset( $attributes['sizeSlug'] ) ? (string) $attributes['sizeSlug'] : 'full';
+$class   = isset( $attributes['className'] ) ? (string) $attributes['className'] : '';
+$is_link = ! empty( $attributes['isLink'] );
 
 $image_html = Helper::image_with_placeholder(
-	get_post_thumbnail_id($post_id),
+	get_post_thumbnail_id( $post_id ),
 	$size,
 	array(
 		'class' => $class,
 	)
 );
 
-if (! $is_link) {
+if ( ! $is_link ) {
 	echo $image_html;
 	return;
 }
 
-$permalink = get_permalink($post_id);
-if (! $permalink) {
+$permalink = get_permalink( $post_id );
+if ( ! $permalink ) {
 	echo $image_html;
 	return;
 }
 
-echo '<a href="' . esc_url($permalink) . '">' . $image_html . '</a>';
+echo '<a href="' . esc_url( $permalink ) . '">' . $image_html . '</a>';

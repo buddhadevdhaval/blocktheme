@@ -8,7 +8,8 @@
   "description": "Renders linked presentations list.",
   "supports": {
     "html": false,
-    "reusable": false
+    "reusable": false,
+    "inserter": false
   },
   "editorScript": "file:./index.js",
   "render": "file:./render.php",

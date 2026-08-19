@@ -59,7 +59,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							/>
 						</TagName>
 
-						<div className="is-style-gl-s24" aria-hidden="true"></div>
+						<div
+							className="is-style-gl-s24"
+							aria-hidden="true"
+						></div>
 
 						<RichText
 							tagName="div"
@@ -88,4 +91,3 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		</>
 	);
 }
-

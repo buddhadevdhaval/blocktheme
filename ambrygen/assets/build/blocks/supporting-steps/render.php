@@ -39,9 +39,9 @@ $ambrygen_steps = array_values(
 	array_filter(
 		$ambrygen_steps,
 		static function ( $ambrygen_step ) {
-			$ambrygen_step_icon_id = isset( $ambrygen_step['iconId'] ) ? absint( $ambrygen_step['iconId'] ) : 0;
-			$ambrygen_step_icon_url = isset( $ambrygen_step['iconUrl'] ) ? (string) $ambrygen_step['iconUrl'] : '';
-			$ambrygen_step_label   = $ambrygen_step['label'] ?? '';
+			$ambrygen_step_icon_id  = isset( $ambrygen_step['iconId'] ) ? absint( $ambrygen_step['iconId'] ) : 0;
+			$ambrygen_step_icon_url = isset( $ambrygen_step['iconUrl'] ) ? esc_url_raw( $ambrygen_step['iconUrl'] ) : '';
+			$ambrygen_step_label    = $ambrygen_step['label'] ?? '';
 
 			return $ambrygen_step_icon_id || $ambrygen_step_icon_url || $ambrygen_step_label;
 		}
@@ -72,7 +72,7 @@ if ( empty( $ambrygen_steps ) && ( $ambrygen_is_stats_view ? ! $ambrygen_has_sta
 }
 
 $ambrygen_wrapper_args = array(
-	'class' => $ambrygen_is_stats_view ? 'supporting-steps variation-stats-view' : 'supporting-steps',
+	'class' => $ambrygen_is_stats_view ? 'block-layout supporting-steps variation-stats-view' : 'supporting-steps  block-layout',
 );
 
 if ( $ambrygen_anchor ) {
@@ -89,12 +89,12 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 		<div class="supporting-steps__steps">
 			<?php foreach ( $ambrygen_steps as $ambrygen_step ) : ?>
 				<?php
-				$ambrygen_step_icon_id = isset( $ambrygen_step['iconId'] ) ? absint( $ambrygen_step['iconId'] ) : 0;
-				$ambrygen_step_icon_url = isset( $ambrygen_step['iconUrl'] ) ? (string) $ambrygen_step['iconUrl'] : '';
+				$ambrygen_step_icon_id  = isset( $ambrygen_step['iconId'] ) ? absint( $ambrygen_step['iconId'] ) : 0;
+				$ambrygen_step_icon_url = isset( $ambrygen_step['iconUrl'] ) ? esc_url_raw( $ambrygen_step['iconUrl'] ) : '';
 				$ambrygen_step_icon_alt = isset( $ambrygen_step['iconAlt'] ) ? sanitize_text_field( $ambrygen_step['iconAlt'] ) : '';
-				$ambrygen_step_label   = $ambrygen_step['label'] ?? '';
+				$ambrygen_step_label    = $ambrygen_step['label'] ?? '';
 				?>
-				<div class="supporting-steps__step-card">
+				<div class="supporting-steps__step-card js-gsap-fade">
 					<?php if ( $ambrygen_step_icon_id || $ambrygen_step_icon_url ) : ?>
 						<div class="supporting-steps__step-icon">
 							<?php
@@ -128,13 +128,13 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 		<?php if ( $ambrygen_has_stats_content ) : ?>
 			<div class="supporting-steps__content">
 				<?php if ( $ambrygen_heading ) : ?>
-					<<?php echo tag_escape( $ambrygen_heading_tag ); ?> class="supporting-steps__turnaround-label">
+					<<?php echo tag_escape( $ambrygen_heading_tag ); ?> class="supporting-steps__turnaround-label js-gsap-fade">
 						<?php echo wp_kses( $ambrygen_heading, Helper::allowed_heading_html() ); ?>
 					</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 				<?php endif; ?>
 
 				<?php if ( $ambrygen_heading2 ) : ?>
-					<div class="supporting-steps__turnaround-value">
+					<div class="supporting-steps__turnaround-value js-gsap-fade">
 						<?php echo wp_kses_post( $ambrygen_heading2 ); ?>
 					</div>
 				<?php endif; ?>
@@ -147,7 +147,7 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 							$ambrygen_stat_value   = $ambrygen_stat['stats'] ?? '';
 							$ambrygen_stat_postfix = $ambrygen_stat['postfix'] ?? '';
 							?>
-							<div class="supporting-steps__stats-item">
+							<div class="supporting-steps__stats-item js-gsap-fade">
 								<?php if ( $ambrygen_stat_label ) : ?>
 									<div class="supporting-steps__stats-label subtitle1-sbold"><?php echo wp_kses_post( $ambrygen_stat_label ); ?></div>
 								<?php endif; ?>
@@ -172,19 +172,19 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 		<?php if ( $ambrygen_has_text_content ) : ?>
 			<div class="supporting-steps__content">
 				<?php if ( $ambrygen_heading ) : ?>
-					<<?php echo tag_escape( $ambrygen_heading_tag ); ?> class="supporting-steps__turnaround-label">
+					<<?php echo tag_escape( $ambrygen_heading_tag ); ?> class="supporting-steps__turnaround-label js-gsap-fade">
 						<?php echo wp_kses( $ambrygen_heading, Helper::allowed_heading_html() ); ?>
 					</<?php echo tag_escape( $ambrygen_heading_tag ); ?>>
 				<?php endif; ?>
 
 				<?php if ( $ambrygen_heading2 ) : ?>
-					<div class="supporting-steps__turnaround-value">
+					<div class="supporting-steps__turnaround-value js-gsap-fade">
 						<?php echo wp_kses_post( $ambrygen_heading2 ); ?>
 					</div>
 				<?php endif; ?>
 
 				<?php if ( $ambrygen_description ) : ?>
-					<div class="subtitle1-regular supporting-steps__description">
+					<div class="subtitle1-regular supporting-steps__description block-description js-gsap-fade">
 						<?php echo wp_kses_post( $ambrygen_description ); ?>
 					</div>
 				<?php endif; ?>

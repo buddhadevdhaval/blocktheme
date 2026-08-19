@@ -6,204 +6,244 @@ use Ambrygen\Theme\Core\Helper;
 use Ambrygen\Theme\Core\Singleton;
 use WP_Post;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
-final class ConferenceLinkService
-{
-    use Singleton;
+/**
+ * Conference-linked content helper service.
+ */
+final class ConferenceLinkService {
 
-    public function get_linked_posts_by_type(int $post_id, string $post_type = ''): array
-    {
-        return ConferenceQueryService::instance()->get_linked_posts_by_type($post_id, $post_type);
-    }
+	use Singleton;
 
-    public function get_meet_the_expert_entries(int $post_id): array
-    {
-        $source_ids = [$post_id];
-        $linked_ids = get_post_meta($post_id, 'linked_posts', true);
+	/**
+	 * Get conference-linked posts, optionally filtered by type.
+	 *
+	 * @param int    $post_id   Conference post ID.
+	 * @param string $post_type Optional post type filter.
+	 * @return array
+	 */
+	public function get_linked_posts_by_type( int $post_id, string $post_type = '' ): array {
+		return ConferenceQueryService::instance()->get_linked_posts_by_type( $post_id, $post_type );
+	}
 
-        if (! empty($linked_ids)) {
-            if (! is_array($linked_ids)) {
-                $linked_ids = [$linked_ids];
-            }
+	/**
+	 * Build normalized meet-the-expert entries for a conference.
+	 *
+	 * @param int $post_id Conference post ID.
+	 * @return array
+	 */
+	public function get_meet_the_expert_entries( int $post_id ): array {
+		$source_ids = array( $post_id );
+		$linked_ids = get_post_meta( $post_id, 'linked_posts', true );
 
-            foreach ($linked_ids as $linked_id) {
-                $linked_id = absint($linked_id);
-                if ($linked_id > 0 && 'event' === get_post_type($linked_id) && ! in_array($linked_id, $source_ids, true)) {
-                    $source_ids[] = $linked_id;
-                }
-            }
-        }
+		if ( ! empty( $linked_ids ) ) {
+			if ( ! is_array( $linked_ids ) ) {
+				$linked_ids = array( $linked_ids );
+			}
 
-        $entries = [];
+			foreach ( $linked_ids as $linked_id ) {
+				$linked_id = absint( $linked_id );
+				if ( $linked_id > 0 && 'event' === get_post_type( $linked_id ) && ! in_array( $linked_id, $source_ids, true ) ) {
+					$source_ids[] = $linked_id;
+				}
+			}
+		}
 
-        foreach ($source_ids as $source_id) {
-            $rows = get_post_meta($source_id, 'meet_the_experts', true);
-            $has_valid_rows = false;
+		$entries = array();
 
-            if (is_array($rows)) {
-                foreach ($rows as $row) {
-                    if (! is_array($row)) {
-                        continue;
-                    }
+		foreach ( $source_ids as $source_id ) {
+			$rows           = get_post_meta( $source_id, 'meet_the_experts', true );
+			$has_valid_rows = false;
 
-                    $session_date = isset($row['session_date']) ? sanitize_text_field((string) $row['session_date']) : '';
-                    $session_time = isset($row['session_time']) ? sanitize_text_field((string) $row['session_time']) : '';
-                    $members_raw  = isset($row['members']) && is_array($row['members']) ? $row['members'] : [];
+			if ( is_array( $rows ) ) {
+				foreach ( $rows as $row ) {
+					if ( ! is_array( $row ) ) {
+						continue;
+					}
 
-                    if (empty($members_raw) && (isset($row['name']) || isset($row['designation']) || isset($row['bio']) || isset($row['image_id']))) {
-                        $members_raw = [$row];
-                    }
+					$session_date = isset( $row['session_date'] ) ? sanitize_text_field( (string) $row['session_date'] ) : '';
+					$session_time = isset( $row['session_time'] ) ? sanitize_text_field( (string) $row['session_time'] ) : '';
+					$members_raw  = isset( $row['members'] ) && is_array( $row['members'] ) ? $row['members'] : array();
 
-                    $members = [];
+					if ( empty( $members_raw ) && ( isset( $row['name'] ) || isset( $row['designation'] ) || isset( $row['bio'] ) || isset( $row['image_id'] ) ) ) {
+						$members_raw = array( $row );
+					}
 
-                    foreach ($members_raw as $member_row) {
-                        if (! is_array($member_row)) {
-                            continue;
-                        }
+					$members = array();
 
-                        $name        = isset($member_row['name']) ? sanitize_text_field((string) $member_row['name']) : '';
-                        $designation = isset($member_row['designation']) ? sanitize_text_field((string) $member_row['designation']) : '';
-                        $bio         = isset($member_row['bio']) ? wp_kses_post((string) $member_row['bio']) : '';
-                        $image_id    = isset($member_row['image_id']) ? absint($member_row['image_id']) : 0;
+					foreach ( $members_raw as $member_row ) {
+						if ( ! is_array( $member_row ) ) {
+							continue;
+						}
 
-                        if ('' === $name && '' === $designation && '' === trim(wp_strip_all_tags($bio)) && 0 === $image_id) {
-                            continue;
-                        }
+						$name        = isset( $member_row['name'] ) ? sanitize_text_field( (string) $member_row['name'] ) : '';
+						$designation = isset( $member_row['designation'] ) ? sanitize_text_field( (string) $member_row['designation'] ) : '';
+						$bio         = isset( $member_row['bio'] ) ? wp_kses_post( (string) $member_row['bio'] ) : '';
+						$image_id    = isset( $member_row['image_id'] ) ? absint( $member_row['image_id'] ) : 0;
 
-                        $members[] = [
-                            'name'        => $name,
-                            'designation' => $designation,
-                            'bio'         => $bio,
-                            'image_html'  => $image_id > 0
-                                ? wp_get_attachment_image($image_id, 'medium', false, ['class' => 'speaker-card__image'])
-                                : '',
-                        ];
-                    }
+						if ( '' === $name && '' === $designation && '' === trim( wp_strip_all_tags( $bio ) ) && 0 === $image_id ) {
+							continue;
+						}
 
-                    if (empty($members) && '' === $session_date && '' === $session_time) {
-                        continue;
-                    }
+						$members[] = array(
+							'name'        => $name,
+							'designation' => $designation,
+							'bio'         => $bio,
+							'image_html'  => $image_id > 0
+								? wp_get_attachment_image( $image_id, 'medium', false, array( 'class' => 'speaker-card__image' ) )
+								: '',
+						);
+					}
 
-                    $entries[] = [
-                        'session_date' => $session_date ? gmdate('Y-m-d', strtotime($session_date)) : '',
-                        'session_time' => $session_time,
-                        'members'      => $members,
-                        'content'      => '',
-                        'source_id'    => $source_id,
-                    ];
+					if ( empty( $members ) && '' === $session_date && '' === $session_time ) {
+						continue;
+					}
 
-                    $has_valid_rows = true;
-                }
-            }
+					$entries[] = array(
+						'session_date' => $session_date ? gmdate( 'Y-m-d', strtotime( $session_date ) ) : '',
+						'session_time' => $session_time,
+						'members'      => $members,
+						'content'      => '',
+						'source_id'    => $source_id,
+					);
 
-            if (! $has_valid_rows) {
-                $post = get_post($source_id);
+					$has_valid_rows = true;
+				}
+			}
 
-                if ($post instanceof WP_Post && '' !== trim($post->post_content)) {
-                    $entries[] = [
-                        'session_date' => '',
-                        'session_time' => '',
-                        'members'      => [],
-                        'content'      => apply_filters('the_content', $post->post_content),
-                        'source_id'    => $source_id,
-                    ];
-                }
-            }
-        }
+			if ( ! $has_valid_rows ) {
+				$post = get_post( $source_id );
 
-        return $entries;
-    }
+				if ( $post instanceof WP_Post && '' !== trim( $post->post_content ) ) {
+					$entries[] = array(
+						'session_date' => '',
+						'session_time' => '',
+						'members'      => array(),
+						'content'      => apply_filters( 'the_content', $post->post_content ),
+						'source_id'    => $source_id,
+					);
+				}
+			}
+		}
 
-    public function get_linked_booth_label(int $post_id): string
-    {
-        $terms = get_the_terms($post_id, 'booth_tag');
-        if (! empty($terms) && ! is_wp_error($terms)) {
-            $term = reset($terms);
-            $name = $term->name;
+		return $entries;
+	}
 
-            if ($name) {
-                if (is_numeric($name)) {
-                    return sprintf('Booth #%s', $name);
-                }
-                if (false === stripos($name, 'Booth')) {
-                    return sprintf('Booth %s', $name);
-                }
-                return $name;
-            }
-        }
+	/**
+	 * Get the linked booth label for a conference card.
+	 *
+	 * @param int $post_id Conference post ID.
+	 * @return string
+	 */
+	public function get_linked_booth_label( int $post_id ): string {
+		$terms = get_the_terms( $post_id, 'booth_tag' );
+		if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+			$term = reset( $terms );
+			$name = $term->name;
 
-        $linked_posts = get_post_meta($post_id, 'linked_posts', false);
-        if (empty($linked_posts)) {
-            return '';
-        }
+			if ( $name ) {
+				if ( is_numeric( $name ) ) {
+					return sprintf( 'Booth #%s', $name );
+				}
+				if ( false === stripos( $name, 'Booth' ) ) {
+					return sprintf( 'Booth %s', $name );
+				}
+				return $name;
+			}
+		}
 
-        foreach ($linked_posts as $linked_id) {
-            if ('booths' === get_post_type($linked_id)) {
-                $title = get_the_title($linked_id);
-                if ($title) {
-                    if (is_numeric($title)) {
-                        return sprintf('Booth #%s', $title);
-                    }
-                    if (false === stripos($title, 'Booth')) {
-                        return sprintf('Booth %s', $title);
-                    }
-                    return $title;
-                }
-            }
-        }
+		$linked_posts = get_post_meta( $post_id, 'linked_posts', false );
+		if ( empty( $linked_posts ) ) {
+			return '';
+		}
 
-        return '';
-    }
+		foreach ( $linked_posts as $linked_id ) {
+			if ( 'booths' === get_post_type( $linked_id ) ) {
+				$title = get_the_title( $linked_id );
+				if ( $title ) {
+					if ( is_numeric( $title ) ) {
+						return sprintf( 'Booth #%s', $title );
+					}
+					if ( false === stripos( $title, 'Booth' ) ) {
+						return sprintf( 'Booth %s', $title );
+					}
+					return $title;
+				}
+			}
+		}
 
-    public function get_trade_show_booth_tag(int $trade_show_id): string
-    {
-        if ($trade_show_id <= 0) {
-            return '';
-        }
+		return '';
+	}
 
-        $terms = get_the_terms($trade_show_id, 'booth_tag');
-        if (! empty($terms) && ! is_wp_error($terms)) {
-            $term = reset($terms);
-            if ($term && ! empty($term->name)) {
-                $name = (string) $term->name;
+	/**
+	 * Get the trade show booth tag for a linked trade show.
+	 *
+	 * @param int $trade_show_id Trade show post ID.
+	 * @return string
+	 */
+	public function get_trade_show_booth_tag( int $trade_show_id ): string {
+		if ( $trade_show_id <= 0 ) {
+			return '';
+		}
 
-                if (is_numeric($name)) {
-                    return sprintf('Booth #%s', $name);
-                }
+		$terms = get_the_terms( $trade_show_id, 'booth_tag' );
+		if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+			$term = reset( $terms );
+			if ( $term && ! empty( $term->name ) ) {
+				$name = (string) $term->name;
 
-                if (false === stripos($name, 'Booth')) {
-                    return sprintf('Booth %s', $name);
-                }
+				if ( is_numeric( $name ) ) {
+					return sprintf( 'Booth #%s', $name );
+				}
 
-                return $name;
-            }
-        }
+				if ( false === stripos( $name, 'Booth' ) ) {
+					return sprintf( 'Booth %s', $name );
+				}
 
-        return '';
-    }
+				return $name;
+			}
+		}
 
-    public function get_linked_event_posts(int $post_id): array
-    {
-        return $this->get_linked_posts_by_type($post_id, 'event');
-    }
+		return '';
+	}
 
-    public function format_meta_list_value($value): string
-    {
-        if (empty($value)) {
-            return '';
-        }
+	/**
+	 * Get event posts linked to a conference.
+	 *
+	 * @param int $post_id Conference post ID.
+	 * @return array
+	 */
+	public function get_linked_event_posts( int $post_id ): array {
+		return $this->get_linked_posts_by_type( $post_id, 'event' );
+	}
 
-        if (is_string($value)) {
-            return $value;
-        }
+	/**
+	 * Format a meta list value for display.
+	 *
+	 * @param mixed $value Raw meta value.
+	 * @return string
+	 */
+	public function format_meta_list_value( $value ): string {
+		if ( empty( $value ) ) {
+			return '';
+		}
 
-        if (is_array($value)) {
-            return implode(', ', array_filter($value, static function ($item) {
-                return ! empty($item);
-            }));
-        }
+		if ( is_string( $value ) ) {
+			return $value;
+		}
 
-        return '';
-    }
+		if ( is_array( $value ) ) {
+			return implode(
+				', ',
+				array_filter(
+					$value,
+					static function ( $item ) {
+						return ! empty( $item );
+					}
+				)
+			);
+		}
+
+		return '';
+	}
 }

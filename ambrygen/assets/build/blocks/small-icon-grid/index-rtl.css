@@ -1,12 +1,1 @@
-/*!**********************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./assets/src/blocks/small-icon-grid/editor.scss ***!
-  \**********************************************************************************************************************************************************************************************************************************************************************/
-.wp-block.icon-grid .icon-grid__list {
-  display: block;
-}
-.wp-block.icon-grid .icon-grid__list .block-editor-block-list__layout {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(48px, 3rem + (1vw - 7.67px) * 2.7444, 64px) clamp(64px, 4rem + (1vw - 7.67px) * 6.175, 100px);
-  justify-content: center;
-}
+.wp-block.icon-grid .icon-grid__list{display:block}.wp-block.icon-grid .icon-grid__list .block-editor-block-list__layout{display:flex;flex-wrap:wrap;gap:clamp(48px,3rem + (1vw - 7.67px)*2.7444,64px) clamp(64px,4rem + (1vw - 7.67px)*6.175,100px);justify-content:center}.wp-block.icon-grid:has(.block-bg-image){position:static}.wp-block.icon-grid .block-bg-image img{height:100%!important}

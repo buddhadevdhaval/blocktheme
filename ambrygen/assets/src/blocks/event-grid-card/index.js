@@ -12,13 +12,12 @@ registerBlockType( BLOCK_NAME, {
 } );
 
 const unsubscribe = subscribe( () => {
-	const editSite = select( 'core/edit-site' );
-	const editPost = select( 'core/editor' );
-
-	if ( editSite?.getEditedPostType?.() ) {
+	if ( select( 'core/edit-site' )?.getEditedPostType?.() ) {
 		unsubscribe();
 		return;
 	}
+
+	const editPost = select( 'core/editor' );
 
 	if ( ! editPost?.getCurrentPostType ) {
 		return;

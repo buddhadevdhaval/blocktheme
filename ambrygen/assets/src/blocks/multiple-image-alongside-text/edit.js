@@ -45,15 +45,35 @@ import {
 const VALID_HEADING_LEVELS = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ];
 const MAX_STATS = 4;
 const MAX_IMAGES = 4;
-const VARIATIONS = [
-	'stats-view',
-	'text-view',
-	'normal-view',
-];
+const VARIATIONS = [ 'stats-view', 'text-view', 'normal-view' ];
 const TEXT_ALIGNMENTS = [
 	{ label: __( 'Left', 'ambrygen-web' ), value: 'left' },
 	{ label: __( 'Center', 'ambrygen-web' ), value: 'center' },
 	{ label: __( 'Right', 'ambrygen-web' ), value: 'right' },
+];
+
+const LAYOUT_VARIANTS = [
+	{
+		label: __( 'Stats View', 'ambrygen-web' ),
+		value: 'stats-view',
+		image: getThemeAssetUrl(
+			'/assets/src/images/multiple-image-alongside-text/states-view.png'
+		),
+	},
+	{
+		label: __( 'Text View', 'ambrygen-web' ),
+		value: 'text-view',
+		image: getThemeAssetUrl(
+			'/assets/src/images/multiple-image-alongside-text/stats-view-without-image.png'
+		),
+	},
+	{
+		label: __( 'Normal View', 'ambrygen-web' ),
+		value: 'normal-view',
+		image: getThemeAssetUrl(
+			'/assets/src/images/multiple-image-alongside-text/normal-view.png'
+		),
+	},
 ];
 
 const createStatId = () =>
@@ -118,7 +138,9 @@ function StatControls( { stat, updateStat } ) {
 			<TextControl
 				label={ __( 'Postfix', 'ambrygen-web' ) }
 				value={ stat.postfix }
-				onChange={ ( value ) => updateStat( stat.id, 'postfix', value ) }
+				onChange={ ( value ) =>
+					updateStat( stat.id, 'postfix', value )
+				}
 			/>
 			<TextControl
 				label={ __( 'Label', 'ambrygen-web' ) }
@@ -150,7 +172,7 @@ function StatControls( { stat, updateStat } ) {
  * @param {Object}   props.attributes    Block attributes.
  * @param {Function} props.setAttributes Function to update attributes.
  * @param {string}   props.clientId      Unique block client ID.
- * @return {JSX.Element} Block editor interface element.
+ * @return {import('@wordpress/element').WPElement} Block editor interface element.
  */
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
@@ -180,28 +202,28 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	)
 		? textAlignment
 		: 'left';
-	const sourceStats = Array.isArray( stats ) ? stats : [];
+	const sourceStats = useMemo(
+		() => ( Array.isArray( stats ) ? stats : [] ),
+		[ stats ]
+	);
 	const statsLength = sourceStats.length;
 	const hasMissingStatIds = sourceStats.some( ( stat ) => ! stat?.id );
 	const visibleStats = sourceStats.slice( 0, MAX_STATS );
 	const sourceImages = Array.isArray( images ) ? images : [];
 	const sourceImagesKey = JSON.stringify( sourceImages );
-	const normalizedImages = useMemo(
-		() => {
-			const parsedImages = JSON.parse( sourceImagesKey || '[]' );
+	const normalizedImages = useMemo( () => {
+		const parsedImages = JSON.parse( sourceImagesKey || '[]' );
 
-			return Array.from( { length: MAX_IMAGES }, ( _value, index ) => {
-				const sourceImage = parsedImages[ index ];
+		return Array.from( { length: MAX_IMAGES }, ( _value, index ) => {
+			const sourceImage = parsedImages[ index ];
 
-				if ( ! sourceImage ) {
-					return normalizeImage();
-				}
+			if ( ! sourceImage ) {
+				return normalizeImage();
+			}
 
-				return normalizeImage( sourceImage );
-			} );
-		},
-		[ sourceImagesKey ]
-	);
+			return normalizeImage( sourceImage );
+		} );
+	}, [ sourceImagesKey ] );
 	const visibleImageCount = isNormalView ? MAX_IMAGES : 3;
 	const visibleImages = normalizedImages.slice( 0, visibleImageCount );
 
@@ -302,43 +324,29 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		: `multiple-image-alongside-text__heading ${ headingClass } mb-0`;
 	const showStats = isStatsView;
 	const hasVisibleStats = showStats && visibleStats.length > 0;
-	const previewImages = visibleImages
-		.map( ( image, index ) => ( {
-			key: `preview-image-slot-${ index + 1 }`,
-			url: image.url || placeholderImage.url || '',
-			alt:
-				image.alt ||
-				placeholderImage.alt ||
-				`${ __( 'Foreground image', 'ambrygen-web' ) } ${
-					index + 1
-				}`,
-			isPlaceholder: ! image.url,
-			isFullImage: ! isNormalView && index === 2,
-		} ) )
-		.filter( ( image ) => image.url );
-	const layoutVariants = [
-		{
-			label: __( 'Stats View', 'ambrygen-web' ),
-			value: 'stats-view',
-			image: getThemeAssetUrl(
-				'/assets/src/images/multiple-image-alongside-text/states-view.png'
-			),
+	const previewImages = visibleImages.reduce(
+		( previewList, image, index ) => {
+			const previewImage = {
+				key: `preview-image-slot-${ index + 1 }`,
+				url: image.url || placeholderImage.url || '',
+				alt:
+					image.alt ||
+					placeholderImage.alt ||
+					`${ __( 'Foreground image', 'ambrygen-web' ) } ${
+						index + 1
+					}`,
+				isPlaceholder: ! image.url,
+				isFullImage: ! isNormalView && index === 2,
+			};
+
+			if ( previewImage.url ) {
+				previewList.push( previewImage );
+			}
+
+			return previewList;
 		},
-		{
-			label: __( 'Text View', 'ambrygen-web' ),
-			value: 'text-view',
-			image: getThemeAssetUrl(
-				'/assets/src/images/multiple-image-alongside-text/stats-view-without-image.png'
-			),
-		},
-		{
-			label: __( 'Normal View', 'ambrygen-web' ),
-			value: 'normal-view',
-			image: getThemeAssetUrl(
-				'/assets/src/images/multiple-image-alongside-text/normal-view.png'
-			),
-		},
-	];
+		[]
+	);
 
 	useUniqueBlockId( {
 		blockId,
@@ -382,7 +390,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	if ( isExample ) {
 		return (
 			<BlockVariationsExamplePreview
-				variants={ layoutVariants }
+				variants={ LAYOUT_VARIANTS }
 				className="cta-tiles-example-preview"
 				itemClass="cta-tiles-example-preview__item"
 			/>
@@ -397,7 +405,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					initialOpen
 				>
 					<div className="layout-variant-selector">
-						{ layoutVariants.map( ( variant ) => (
+						{ LAYOUT_VARIANTS.map( ( variant ) => (
 							<button
 								key={ variant.value }
 								type="button"
@@ -440,7 +448,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						initialOpen={ false }
 					>
 						<SelectControl
-							label={ __( 'Heading and Body Text', 'ambrygen-web' ) }
+							label={ __(
+								'Heading and Body Text',
+								'ambrygen-web'
+							) }
 							value={ normalizedTextAlignment }
 							options={ TEXT_ALIGNMENTS }
 							onChange={ ( value ) =>
@@ -476,9 +487,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						{ visibleImages.map( ( image, index ) => (
 							<ImageUploader
 								key={ `foreground-image-${ index + 1 }` }
-								label={ `${
-									__( 'Foreground Image', 'ambrygen-web' )
-								} ${ index + 1 }` }
+								label={ `${ __(
+									'Foreground Image',
+									'ambrygen-web'
+								) } ${ index + 1 }` }
 								url={ image.url }
 								onSelect={ ( media ) =>
 									updateImage( index, media )
@@ -505,10 +517,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									total={ visibleStats.length }
 									prefix="STAT"
 									onMove={ ( itemIndex, dir ) =>
-										moveStat( visibleStats[ itemIndex ].id, dir )
+										moveStat(
+											visibleStats[ itemIndex ].id,
+											dir
+										)
 									}
 									onRemove={ ( itemIndex ) =>
-										removeStat( visibleStats[ itemIndex ].id )
+										removeStat(
+											visibleStats[ itemIndex ].id
+										)
 									}
 									minCount={ 1 }
 								/>
@@ -565,9 +582,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							</div>
 						</div>
 					) }
-					<div
-						className="multiple-image-alongside-text__col multiple-image-alongside-text__col--content"
-					>
+					<div className="multiple-image-alongside-text__col multiple-image-alongside-text__col--content">
 						<div className="multiple-image-alongside-text__content">
 							<RichText
 								tagName={ HeadingTag }
@@ -578,10 +593,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								}
 								allowedFormats={ [ 'core/text-color' ] }
 								placeholder={ __(
-									'Add Heading...',
+									'Add Heading…',
 									'ambrygen-web'
 								) }
-								aria-label={ __( 'Block heading', 'ambrygen-web' ) }
+								aria-label={ __(
+									'Block heading',
+									'ambrygen-web'
+								) }
 							/>
 							<div
 								className="is-style-gl-s24"
@@ -595,7 +613,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 										setAttributes( { content: value } )
 									}
 									placeholder={ __(
-										'Add Description...',
+										'Add Description…',
 										'ambrygen-web'
 									) }
 									aria-label={ __(

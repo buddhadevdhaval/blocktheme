@@ -127,7 +127,13 @@ export function ItemHeader( {
 				gap: '8px',
 			} }
 		>
-			<strong style={ { flex: '1 1 auto', overflow: 'hidden', textOverflow: 'ellipsis' } }>
+			<strong
+				style={ {
+					flex: '1 1 auto',
+					overflow: 'hidden',
+					textOverflow: 'ellipsis',
+				} }
+			>
 				{ prefix } { index + 1 }:{ ' ' }
 				{ label || __( 'Untitled', 'ambrygen-web' ) }
 			</strong>
@@ -277,6 +283,20 @@ const panelItemStyle = {
 	borderRadius: '4px',
 };
 
+const TAG_SELECTOR_HEADING_TAGS = [
+	{ label: 'H1', value: 'h1' },
+	{ label: 'H2', value: 'h2' },
+	{ label: 'H3', value: 'h3' },
+	{ label: 'H4', value: 'h4' },
+	{ label: 'H5', value: 'h5' },
+	{ label: 'H6', value: 'h6' },
+];
+
+const TAG_SELECTOR_TEXT_TAGS = [
+	{ label: __( 'Paragraph', 'ambrygen-web' ), value: 'p' },
+	{ label: __( 'Div', 'ambrygen-web' ), value: 'div' },
+];
+
 /**
  * Styled panel item container.
  *
@@ -379,10 +399,10 @@ export function ImagePlaceholder( {
 /**
  * Shared single-image preview for inserter examples.
  *
- * @param {Object} props            Component props.
- * @param {string} props.imagePath  Theme-relative image path.
- * @param {string} props.className  Preview wrapper class.
- * @param {number} props.width      Preview image width.
+ * @param {Object} props           Component props.
+ * @param {string} props.imagePath Theme-relative image path.
+ * @param {string} props.className Preview wrapper class.
+ * @param {number} props.width     Preview image width.
  */
 export function BlockExamplePreview( {
 	imagePath,
@@ -403,10 +423,10 @@ export function BlockExamplePreview( {
 /**
  * Shared multi-variation preview for inserter examples.
  *
- * @param {Object}  props           Component props.
- * @param {Array}   props.variants  Variation items with image and value.
- * @param {string}  props.className Preview wrapper class.
- * @param {string}  props.itemClass Preview item class.
+ * @param {Object} props           Component props.
+ * @param {Array}  props.variants  Variation items with image and value.
+ * @param {string} props.className Preview wrapper class.
+ * @param {string} props.itemClass Preview item class.
  */
 export function BlockVariationsExamplePreview( {
 	variants = [],
@@ -454,26 +474,12 @@ export function TagSelector( {
 } ) {
 	let options = [];
 
-	const headingTags = [
-		{ label: 'H1', value: 'h1' },
-		{ label: 'H2', value: 'h2' },
-		{ label: 'H3', value: 'h3' },
-		{ label: 'H4', value: 'h4' },
-		{ label: 'H5', value: 'h5' },
-		{ label: 'H6', value: 'h6' },
-	];
-
-	const textTags = [
-		{ label: __( 'Paragraph', 'ambrygen-web' ), value: 'p' },
-		{ label: __( 'Div', 'ambrygen-web' ), value: 'div' },
-	];
-
 	if ( type === 'heading' ) {
-		options = headingTags;
+		options = TAG_SELECTOR_HEADING_TAGS;
 	} else if ( type === 'text' ) {
-		options = textTags;
+		options = TAG_SELECTOR_TEXT_TAGS;
 	} else {
-		options = [ ...headingTags, ...textTags ];
+		options = [ ...TAG_SELECTOR_HEADING_TAGS, ...TAG_SELECTOR_TEXT_TAGS ];
 	}
 
 	return (
@@ -513,7 +519,6 @@ export function CtaButtonField( {
 	variantLabel = __( 'Button Style', 'ambrygen-web' ),
 	showNewTab = true,
 } ) {
-
 	const updateValue = ( updates ) => {
 		onChange( {
 			...value,
@@ -571,7 +576,9 @@ export function CtaButtonField( {
 			) }
 
 			<LinkControl
-				key={ `${ label }-${ value?.url || 'empty' }-${ value?.target || 'same-tab' }` }
+				key={ `${ label }-${ value?.url || 'empty' }-${
+					value?.target || 'same-tab'
+				}` }
 				value={ linkValue }
 				settings={ [] }
 				onChange={ ( newLink ) => {

@@ -12,25 +12,25 @@ use Ambrygen\Theme\Core\Helper;
 $ambrygen_can_collect_descendants = is_callable( array( Helper::class, 'collect_poster_category_descendants' ) );
 $ambrygen_can_build_item_data     = is_callable( array( Helper::class, 'get_test_catalog_with_table_item_data' ) );
 
-$ambrygen_attributes = is_array( $attributes ?? null ) ? $attributes : array();
-$ambrygen_block_id = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
-$ambrygen_search_label = isset( $ambrygen_attributes['searchLabel'] ) ? (string) $ambrygen_attributes['searchLabel'] : '';
-$ambrygen_search_placeholder = isset( $ambrygen_attributes['searchPlaceholder'] ) ? (string) $ambrygen_attributes['searchPlaceholder'] : '';
-$ambrygen_featured_eyebrow = isset( $ambrygen_attributes['featuredEyebrow'] ) ? (string) $ambrygen_attributes['featuredEyebrow'] : '';
-$ambrygen_featured_title = isset( $ambrygen_attributes['featuredTitle'] ) ? (string) $ambrygen_attributes['featuredTitle'] : '';
+$ambrygen_attributes           = is_array( $attributes ?? null ) ? $attributes : array();
+$ambrygen_block_id             = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
+$ambrygen_search_label         = isset( $ambrygen_attributes['searchLabel'] ) ? (string) $ambrygen_attributes['searchLabel'] : '';
+$ambrygen_search_placeholder   = isset( $ambrygen_attributes['searchPlaceholder'] ) ? (string) $ambrygen_attributes['searchPlaceholder'] : '';
+$ambrygen_featured_eyebrow     = isset( $ambrygen_attributes['featuredEyebrow'] ) ? (string) $ambrygen_attributes['featuredEyebrow'] : '';
+$ambrygen_featured_title       = isset( $ambrygen_attributes['featuredTitle'] ) ? (string) $ambrygen_attributes['featuredTitle'] : '';
 $ambrygen_featured_description = isset( $ambrygen_attributes['featuredDescription'] ) ? (string) $ambrygen_attributes['featuredDescription'] : '';
-$ambrygen_table_eyebrow = isset( $ambrygen_attributes['tableEyebrow'] ) ? (string) $ambrygen_attributes['tableEyebrow'] : '';
-$ambrygen_table_title = isset( $ambrygen_attributes['tableTitle'] ) ? (string) $ambrygen_attributes['tableTitle'] : '';
-$ambrygen_table_description = isset( $ambrygen_attributes['tableDescription'] ) ? (string) $ambrygen_attributes['tableDescription'] : '';
-$ambrygen_hide_table = ! empty( $ambrygen_attributes['hideTable'] );
-$ambrygen_heading_level = Helper::get_heading_tag(
+$ambrygen_table_eyebrow        = isset( $ambrygen_attributes['tableEyebrow'] ) ? (string) $ambrygen_attributes['tableEyebrow'] : '';
+$ambrygen_table_title          = isset( $ambrygen_attributes['tableTitle'] ) ? (string) $ambrygen_attributes['tableTitle'] : '';
+$ambrygen_table_description    = isset( $ambrygen_attributes['tableDescription'] ) ? (string) $ambrygen_attributes['tableDescription'] : '';
+$ambrygen_hide_table           = ! empty( $ambrygen_attributes['hideTable'] );
+$ambrygen_heading_level        = Helper::get_heading_tag(
 	isset( $ambrygen_attributes['headingLevel'] ) ? (string) $ambrygen_attributes['headingLevel'] : 'h2',
 	'h2'
 );
-$ambrygen_tabs = isset( $ambrygen_attributes['selectedTabs'] ) && is_array( $ambrygen_attributes['selectedTabs'] )
+$ambrygen_tabs                 = isset( $ambrygen_attributes['selectedTabs'] ) && is_array( $ambrygen_attributes['selectedTabs'] )
 	? array_values( $ambrygen_attributes['selectedTabs'] )
 	: array();
-$ambrygen_wrapper_args = array(
+$ambrygen_wrapper_args         = array(
 	'class' => 'block-layout test-catalog-with-table-block',
 );
 
@@ -40,15 +40,15 @@ if ( $ambrygen_block_id ) {
 
 $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_args );
 
-$ambrygen_all_table_items = array();
-$ambrygen_order_url       = home_url( '/providers/ordering-process' );
-$ambrygen_has_search_label = '' !== trim( wp_strip_all_tags( $ambrygen_search_label ) );
-$ambrygen_has_featured_eyebrow = '' !== trim( wp_strip_all_tags( $ambrygen_featured_eyebrow ) );
-$ambrygen_has_featured_title = '' !== trim( wp_strip_all_tags( $ambrygen_featured_title ) );
+$ambrygen_all_table_items          = array();
+$ambrygen_order_url                = home_url( '/providers/ordering-process' );
+$ambrygen_has_search_label         = '' !== trim( wp_strip_all_tags( $ambrygen_search_label ) );
+$ambrygen_has_featured_eyebrow     = '' !== trim( wp_strip_all_tags( $ambrygen_featured_eyebrow ) );
+$ambrygen_has_featured_title       = '' !== trim( wp_strip_all_tags( $ambrygen_featured_title ) );
 $ambrygen_has_featured_description = '' !== trim( wp_strip_all_tags( $ambrygen_featured_description ) );
-$ambrygen_has_table_eyebrow = '' !== trim( wp_strip_all_tags( $ambrygen_table_eyebrow ) );
-$ambrygen_has_table_title = '' !== trim( wp_strip_all_tags( $ambrygen_table_title ) );
-$ambrygen_has_table_description = '' !== trim( wp_strip_all_tags( $ambrygen_table_description ) );
+$ambrygen_has_table_eyebrow        = '' !== trim( wp_strip_all_tags( $ambrygen_table_eyebrow ) );
+$ambrygen_has_table_title          = '' !== trim( wp_strip_all_tags( $ambrygen_table_title ) );
+$ambrygen_has_table_description    = '' !== trim( wp_strip_all_tags( $ambrygen_table_description ) );
 
 ?>
 
@@ -132,9 +132,9 @@ $ambrygen_has_table_description = '' !== trim( wp_strip_all_tags( $ambrygen_tabl
 						<div class="tabs__panels">
 							<?php foreach ( $ambrygen_tabs as $ambrygen_index => $ambrygen_tab ) : ?>
 								<?php
-								$ambrygen_term_id = absint( $ambrygen_tab['termId'] ?? 0 );
-								$ambrygen_tab_slug = sanitize_title( (string) ( $ambrygen_tab['termSlug'] ?? '' ) );
-								$ambrygen_sub_term_ids = isset( $ambrygen_tab['subTermIds'] ) && is_array( $ambrygen_tab['subTermIds'] )
+								$ambrygen_term_id         = absint( $ambrygen_tab['termId'] ?? 0 );
+								$ambrygen_tab_slug        = sanitize_title( (string) ( $ambrygen_tab['termSlug'] ?? '' ) );
+								$ambrygen_sub_term_ids    = isset( $ambrygen_tab['subTermIds'] ) && is_array( $ambrygen_tab['subTermIds'] )
 									? array_values( array_filter( array_map( 'absint', $ambrygen_tab['subTermIds'] ) ) )
 									: array();
 								$ambrygen_parent_term_ids = isset( $ambrygen_tab['parentTermIds'] ) && is_array( $ambrygen_tab['parentTermIds'] )
@@ -161,10 +161,10 @@ $ambrygen_has_table_description = '' !== trim( wp_strip_all_tags( $ambrygen_tabl
 										? Helper::collect_poster_category_descendants( $ambrygen_term_id )
 										: array( $ambrygen_term_id );
 								}
-								$ambrygen_query_term_ids = array_values( array_unique( array_filter( $ambrygen_query_term_ids ) ) );
+								$ambrygen_query_term_ids     = array_values( array_unique( array_filter( $ambrygen_query_term_ids ) ) );
 								$ambrygen_card_category_name = (string) ( $ambrygen_tab['text'] ?? '' );
 								if ( ! empty( $ambrygen_sub_term_ids ) ) {
-									$ambrygen_sub_term_names   = array();
+									$ambrygen_sub_term_names    = array();
 									$ambrygen_fetched_sub_terms = get_terms(
 										array(
 											'taxonomy'   => 'poster_category',
@@ -192,9 +192,9 @@ $ambrygen_has_table_description = '' !== trim( wp_strip_all_tags( $ambrygen_tabl
 								if ( ! empty( $ambrygen_query_term_ids ) ) {
 									$ambrygen_query_args['tax_query'] = array(
 										array(
-											'taxonomy'         => 'poster_category',
-											'field'            => 'term_id',
-											'terms'            => $ambrygen_query_term_ids,
+											'taxonomy' => 'poster_category',
+											'field'    => 'term_id',
+											'terms'    => $ambrygen_query_term_ids,
 											'include_children' => true,
 										),
 									);
@@ -222,22 +222,58 @@ $ambrygen_has_table_description = '' !== trim( wp_strip_all_tags( $ambrygen_tabl
 								foreach ( $ambrygen_items as $ambrygen_item ) {
 									$ambrygen_all_table_items[ (int) $ambrygen_item['id'] ] = $ambrygen_item;
 								}
-								$ambrygen_featured_ids = isset( $ambrygen_tab['featuredProductVersionIds'] ) && is_array( $ambrygen_tab['featuredProductVersionIds'] ) ? array_map( 'absint', $ambrygen_tab['featuredProductVersionIds'] ) : array();
-								$ambrygen_featured_items = array_values( array_filter( $ambrygen_items, static function ( array $ambrygen_item ) use ( $ambrygen_featured_ids ): bool {
-									return in_array( (int) $ambrygen_item['id'], $ambrygen_featured_ids, true );
-								} ) );
+								$ambrygen_featured_ids   = isset( $ambrygen_tab['featuredProductVersionIds'] ) && is_array( $ambrygen_tab['featuredProductVersionIds'] ) ? array_map( 'absint', $ambrygen_tab['featuredProductVersionIds'] ) : array();
+								$ambrygen_has_custom_featured_order = ! empty( $ambrygen_tab['featuredProductVersionOrderCustomized'] );
+								if ( $ambrygen_has_custom_featured_order ) {
+									$ambrygen_items_by_id    = array();
+									foreach ( $ambrygen_items as $ambrygen_item ) {
+										$ambrygen_item_id = isset( $ambrygen_item['id'] ) ? absint( $ambrygen_item['id'] ) : 0;
+										if ( $ambrygen_item_id > 0 ) {
+											$ambrygen_items_by_id[ $ambrygen_item_id ] = $ambrygen_item;
+										}
+									}
+									$ambrygen_featured_items = array();
+									foreach ( $ambrygen_featured_ids as $ambrygen_featured_id ) {
+										if ( isset( $ambrygen_items_by_id[ $ambrygen_featured_id ] ) ) {
+											$ambrygen_featured_items[] = $ambrygen_items_by_id[ $ambrygen_featured_id ];
+										}
+									}
+								} else {
+									$ambrygen_featured_items = array_values(
+										array_filter(
+											$ambrygen_items,
+											static function ( array $ambrygen_item ) use ( $ambrygen_featured_ids ): bool {
+												return in_array( (int) $ambrygen_item['id'], $ambrygen_featured_ids, true );
+											}
+										)
+									);
+								}
 								?>
 								<div class="tabs__panel<?php echo 0 === $ambrygen_index ? ' is-active' : ''; ?>" id="<?php echo esc_attr( $ambrygen_tab_slug ); ?>" role="tabpanel" aria-labelledby="<?php echo esc_attr( 'tab-btn-' . $ambrygen_tab_slug ); ?>" <?php echo 0 === $ambrygen_index ? '' : 'hidden'; ?>>
 									<div class="cardiology-filter__items-grid">
 										<?php foreach ( $ambrygen_featured_items as $ambrygen_item ) : ?>
-											<div class="cardiology-filter__card" data-search-text="<?php echo esc_attr( $ambrygen_item['search_text'] ); ?>">
-												<?php if ( $ambrygen_card_category_name ) : ?><div class="body2-semibold cardiology-filter__card-category"><?php echo esc_html( $ambrygen_card_category_name ); ?></div><div class="is-style-gl-s4"></div><?php endif; ?>
+											<div
+												class="cardiology-filter__card"
+												data-product-id="<?php echo esc_attr( (string) ( $ambrygen_item['id'] ?? '' ) ); ?>"
+												data-search-text="<?php echo esc_attr( $ambrygen_item['search_text'] ); ?>"
+												data-search-title="<?php echo esc_attr( $ambrygen_item['search_title'] ?? '' ); ?>"
+												data-search-code="<?php echo esc_attr( $ambrygen_item['search_code_text'] ?? '' ); ?>"
+												data-search-genes="<?php echo esc_attr( $ambrygen_item['search_gene_text'] ?? '' ); ?>"
+												data-search-category="<?php echo esc_attr( $ambrygen_item['search_category_text'] ?? '' ); ?>"
+											>
+												<?php
+												if ( $ambrygen_card_category_name ) :
+													?>
+													<div class="body2-semibold cardiology-filter__card-category"><?php echo esc_html( $ambrygen_card_category_name ); ?></div><div class="is-style-gl-s4"></div><?php endif; ?>
 												<div class="cardiology-filter__card-info">
 													<div class="subtitle1-sbold cardiology-filter__card-name"><?php echo esc_html( $ambrygen_item['title'] ); ?></div>
 													<div class="cardiology-filter__card-badge text-small-medium"><?php echo esc_html( (string) ( $ambrygen_item['gene_badge'] ?? '' ) ); ?></div>
 												</div>
 												<div class="is-style-gl-s12"></div>
-												<?php if ( $ambrygen_item['summary'] ) : ?><div class="body1 cardiology-filter__card-text"><?php echo esc_html( $ambrygen_item['summary'] ); ?></div><?php endif; ?>
+												<?php
+												if ( $ambrygen_item['summary'] ) :
+													?>
+													<div class="body1 cardiology-filter__card-text"><?php echo esc_html( $ambrygen_item['summary'] ); ?></div><?php endif; ?>
 												<div class="is-style-gl-s24"></div>
 												<div class="cardiology-filter__card-actions">
 													<a href="<?php echo esc_url( $ambrygen_order_url ); ?>" class="site-btn has-right-arrow btn-small"><?php esc_html_e( 'Order', 'ambrygen-web' ); ?></a>
@@ -301,14 +337,26 @@ $ambrygen_has_table_description = '' !== trim( wp_strip_all_tags( $ambrygen_tabl
 									<div class="gl-data-table__cell"><span class="screen-reader-text"><?php esc_html_e( 'Order', 'ambrygen-web' ); ?></span></div>
 								</div>
 								<?php foreach ( array_values( $ambrygen_all_table_items ) as $ambrygen_item ) : ?>
-									<div class="gl-data-table__row" data-search-text="<?php echo esc_attr( $ambrygen_item['search_text'] ); ?>">
+									<div
+										class="gl-data-table__row"
+										data-product-id="<?php echo esc_attr( (string) ( $ambrygen_item['id'] ?? '' ) ); ?>"
+										data-search-text="<?php echo esc_attr( $ambrygen_item['search_text'] ); ?>"
+										data-search-title="<?php echo esc_attr( $ambrygen_item['search_title'] ?? '' ); ?>"
+										data-search-code="<?php echo esc_attr( $ambrygen_item['search_code_text'] ?? '' ); ?>"
+										data-search-genes="<?php echo esc_attr( $ambrygen_item['search_gene_text'] ?? '' ); ?>"
+										data-search-category="<?php echo esc_attr( $ambrygen_item['search_category_text'] ?? '' ); ?>"
+									>
 										<div class="gl-data-table__cell" data-label="Code"><?php echo esc_html( $ambrygen_item['test_code'] ); ?></div>
 										<div class="gl-data-table__cell gl-data-table__cell--name" data-label="Test Name">
 											<?php echo esc_html( $ambrygen_item['title'] ); ?>
 										
 										</div>
 										<div class="gl-data-table__cell" data-label="Genes"><?php echo esc_html( (string) $ambrygen_item['gene_badge_compact'] ); ?></div>
-										<div class="gl-data-table__cell" data-label="Gene List (Abbreviated)"><?php echo wp_kses_post( (string) ( $ambrygen_item['gene_list_excerpt_html'] ?? '' ) ); ?><?php if ( empty( $ambrygen_item['gene_list_excerpt_html'] ) && count( $ambrygen_item['gene_list'] ) > 14 ) : ?>&hellip;<?php endif; ?></div>
+										<div class="gl-data-table__cell" data-label="Gene List (Abbreviated)"><?php echo wp_kses_post( (string) ( $ambrygen_item['gene_list_excerpt_html'] ?? '' ) ); ?>
+										<?php
+										if ( empty( $ambrygen_item['gene_list_excerpt_html'] ) && count( $ambrygen_item['gene_list'] ) > 14 ) :
+											?>
+											&hellip;<?php endif; ?></div>
 										<div class="gl-data-table__cell gl-data-table__cell--highlight" data-label="Turnaround"><?php echo esc_html( $ambrygen_item['turnaround'] ); ?></div>
 										<div class="gl-data-table__cell" data-label="Order"><a href="<?php echo esc_url( $ambrygen_order_url ); ?>" class="site-btn has-right-arrow btn-small"><?php esc_html_e( 'Order', 'ambrygen-web' ); ?></a></div>
 									</div>

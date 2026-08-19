@@ -3,7 +3,6 @@
 .ambrygen-tooltip {
 	position: relative;
 	color: var(--theme_link_color);
-	// border-bottom: 1px solid var(--theme_link_border_color);
 	font-weight: 700;
 
 	.bg-primary_800 & {
@@ -16,7 +15,6 @@
 
 	&:hover {
 		color: var(--theme_link_color_hover);
-		// border-color: var(--theme_link_border_color_hover);
 
 		.bg-blue-gradient & {
 			color: var(--theme_lightblue);
@@ -24,7 +22,6 @@
 
 		.bg-primary_800 & {
 			color: var(--theme_white);
-			// border-color: var(--theme_white);
 		}
 	}
 
@@ -67,7 +64,7 @@
 		background-color: var(--theme_link_color);
 	}
 
-	&:before {
+	&::before {
 		content: "";
 		display: block;
 		width: 28px;
@@ -104,6 +101,7 @@
 
 	a {
 		padding-bottom: 1px;
+
 		&:hover {
 			color: var(--theme_primary_white);
 			border-color: var(--theme_primary_white);
@@ -116,6 +114,7 @@
 }
 
 @include bp.max(480px) {
+
 	.ambrygen-tooltip__content {
 		--ambrygen-tooltip-arrow-left: auto;
 		left: 50%;
@@ -124,7 +123,7 @@
 		min-width: 0;
 		max-width: calc(100vw - 32px);
 
-		&:before {
+		&::before {
 			right: 50%;
 			transform: translateX(50%);
 		}

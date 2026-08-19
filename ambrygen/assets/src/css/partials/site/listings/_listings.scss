@@ -38,7 +38,7 @@
 				padding: 0;
 				margin: 0;
 
-				&:before {
+				&::before {
 					display: none;
 				}
 			}
@@ -62,9 +62,7 @@
 		transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 
 		&:hover {
-			// border-color: var(--theme_blue_200);
 			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05), 0 16px 40px rgba(0, 0, 0, 0.08);
-			// transform: translateY(-2px);
 
 			.poster-archive__item-title {
 				color: var(--theme_color_primary);
@@ -142,7 +140,6 @@
 		}
 
 		.wp-block-post-terms__prefix {
-			// font-size: 14px;
 			font-weight: 600;
 		}
 
@@ -168,6 +165,7 @@
 	// ── Empty / No-Results State ───────────────────────────────────────────
 
 	&__empty {
+
 		.block-content {
 			font-size: var(--theme_font_size_9);
 			color: var(--theme_signal);
@@ -183,13 +181,14 @@
 	margin: 0;
 
 	&.has-separator {
+
 		.listings-items {
 			display: inline;
 
 			.item-card {
 				display: inline;
 
-				&:after {
+				&::after {
 					content: "";
 					display: inline-block;
 					width: 6px;
@@ -333,6 +332,7 @@
 	}
 
 	.category-item {
+
 		a {
 			display: inline-flex;
 			align-items: center;
@@ -354,7 +354,7 @@
 				background-color: var(--success-50);
 			}
 
-			&:before {
+			&::before {
 				content: "";
 				position: absolute;
 				left: 8px;
@@ -377,104 +377,112 @@
 
 
 		&:nth-child(2) {
+
 			a {
 				border-color: var(--theme_primary_200);
 				background-color: var(--theme_clear_skies);
 				color: var(--theme_link_color);
 
 				.tag-dot,
-				&:before {
+				&::before {
 					background-color: var(--theme_link_color);
 				}
 			}
 		}
 
 		&:nth-child(3) {
+
 			a {
 				border-color: var(--indigo-200);
 				color: var(--indigo-700);
 				background-color: var(--indigo-50);
 
 				.tag-dot,
-				&:before {
+				&::before {
 					background-color: var(--indigo-700);
 				}
 			}
 		}
 
 		&:nth-child(4) {
+
 			a {
 				background: var(--theme_badge_primary_bg);
 				border: 1px solid var(--theme_badge_primary_border);
 				color: var(--theme_badge_primary_color);
 
 				.tag-dot,
-				&:before {
+				&::before {
 					background-color: var(--theme_badge_primary_color);
 				}
 			}
 		}
 
 		&:nth-child(5) {
+
 			a {
 				border-color: var(--pink-200);
 				color: var(--pink-700);
 				background-color: var(--pink-50);
 
 				.tag-dot,
-				&:before {
+				&::before {
 					background-color: var(--pink-700);
 				}
 			}
 		}
 
 		&:nth-child(6) {
+
 			a {
 				border-color: var(--gray-blue-200);
 				color: var(--gray-blue-700);
 				background-color: var(--gray-blue-50);
 
 				.tag-dot,
-				&:before {
+				&::before {
 					background-color: var(--gray-blue-700);
 				}
 			}
 		}
 
 		&:nth-child(7) {
+
 			a {
 				border-color: var(--orange-200);
 				color: var(--orange-700);
 				background-color: var(--orange-50);
 
 				.tag-dot,
-				&:before {
+				&::before {
 					background-color: var(--orange-700);
 				}
 			}
 		}
 
 		&:nth-child(8) {
+
 			a {
 				background: var(--theme_badge_secondary_bg);
 				border: 1px solid var(--theme_badge_secondary_border);
 				color: var(--theme_badge_secondary_color);
 
 				.tag-dot,
-				&:before {
+				&::before {
 					background-color: var(--theme_badge_secondary_color);
 				}
 			}
 		}
 
 		&:nth-child(9) {
+
 			a {
 				background: var(--theme_badge_teritary_bg);
 				border: 1px solid var(--theme_badge_teritary_border);
 				color: var(--theme_badge_teritary_color);
 
 				.tag-dot,
-				&:before {
+				&::before {
 					background-color: var(--theme_badge_teritary_color);
 				}
 			}

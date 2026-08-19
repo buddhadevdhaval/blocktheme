@@ -30,7 +30,6 @@
         }
 
         .modal-popup__close {
-            position: relative;
             top: -50px;
             right: 0;
             margin-left: auto;
@@ -95,8 +94,12 @@
     }
 
     .modal-content {
-        max-height: 80vh;
+        max-height: 70vh;
         overflow-y: auto;
+
+        @media screen and (orientation: landscape) and (max-height: 640px) {
+            max-height: 50vh;
+        }
     }
 
     &__title {

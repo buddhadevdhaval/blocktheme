@@ -1,1 +1,0 @@
-{"version":3,"file":"multimedia-logo/index.css","mappings":";;;AAEC;EACC;AADF,C","sources":["webpack://ambrygen/./assets/src/blocks/multimedia-logo/editor.scss"],"sourcesContent":[".logo-section {\n\n\t.logo-section__downloads-link {\n\t\tcursor: default;\n\t}\n}\n"],"names":[],"ignoreList":[],"sourceRoot":""}

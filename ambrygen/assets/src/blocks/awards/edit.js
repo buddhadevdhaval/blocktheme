@@ -5,10 +5,7 @@ import {
 	useBlockProps,
 } from '@wordpress/block-editor';
 import { Fragment, useEffect } from '@wordpress/element';
-import {
-	Button,
-	PanelBody,
-} from '@wordpress/components';
+import { Button, PanelBody } from '@wordpress/components';
 
 import {
 	BlockExamplePreview,
@@ -132,11 +129,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		);
 		const newIndex = currentIndex + direction;
 
-		if (
-			currentIndex < 0 ||
-			newIndex < 0 ||
-			newIndex >= awards.length
-		) {
+		if ( currentIndex < 0 || newIndex < 0 || newIndex >= awards.length ) {
 			return;
 		}
 
@@ -171,7 +164,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					{ awards.map( ( award, index ) => (
 						<div
 							key={ award.id }
-							style={ { border: '1px solid #ddd', padding: '12px', marginBottom: '12px', borderRadius: '4px', backgroundColor: '#fff' } }
+							style={ {
+								border: '1px solid #ddd',
+								padding: '12px',
+								marginBottom: '12px',
+								borderRadius: '4px',
+								backgroundColor: '#fff',
+							} }
 						>
 							<ItemHeader
 								index={ index }
@@ -180,7 +179,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								}
 								total={ awards.length }
 								onMove={ ( itemIndex, direction ) =>
-									moveAward( awards[ itemIndex ].id, direction )
+									moveAward(
+										awards[ itemIndex ].id,
+										direction
+									)
 								}
 								onRemove={ ( itemIndex ) =>
 									removeAward( awards[ itemIndex ].id )
@@ -218,7 +220,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						{ __( 'Add Award', 'ambrygen-web' ) }
 					</Button>
 				</PanelBody>
-
 			</InspectorControls>
 
 			<div { ...blockProps }>
@@ -231,7 +232,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							onChange={ ( value ) =>
 								setAttributes( { title: value } )
 							}
-							placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+							placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 						/>
 						<RichText
 							tagName="div"
@@ -241,17 +242,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								setAttributes( { description: value } )
 							}
 							placeholder={ __(
-								'Add Description...',
+								'Add Description…',
 								'ambrygen-web'
 							) }
 						/>
 					</div>
 				</div>
 
-				<div
-					className="is-style-gl-s50"
-					aria-hidden="true"
-				></div>
+				<div className="is-style-gl-s50" aria-hidden="true"></div>
 				{ hasAwards && (
 					<>
 						<div className="marquee-slide">

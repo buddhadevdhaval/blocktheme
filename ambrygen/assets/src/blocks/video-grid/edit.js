@@ -9,10 +9,7 @@ import {
 import { PanelBody } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { useEffect } from '@wordpress/element';
-import {
-	BlockExamplePreview,
-	TagSelector,
-} from '../_shared/components';
+import { BlockExamplePreview, TagSelector } from '../_shared/components';
 import { useUniqueBlockId } from '../_shared/hooks';
 
 const ALLOWED_BLOCKS = [ 'ambrygen/video-grid-item' ];
@@ -21,11 +18,7 @@ const TEMPLATE = [
 	[ 'ambrygen/video-grid-item' ],
 ];
 
-export default function Edit( {
-	attributes,
-	setAttributes,
-	clientId,
-} ) {
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
 		blockId,
 		subheading = '',
@@ -35,8 +28,6 @@ export default function Edit( {
 	} = attributes;
 	const HeadingTag = headingTag || 'h2';
 
-	const hasContent = ( value ) =>
-		value?.replace( /<[^>]+>/g, '' ).trim().length > 0;
 	const isExample = blockId === 'video-grid-example';
 
 	const innerBlocksCount = useSelect(
@@ -62,6 +53,12 @@ export default function Edit( {
 
 	const layoutClass = 'variation-team';
 
+	const blockProps = useBlockProps( {
+		className: `block-layout image-grid-block video-grid wp-block-ambrygen-gallery block-${ variation } ${ layoutClass } grid-column${
+			innerBlocksCount >= 3 ? 3 : 2
+		}`,
+	} );
+
 	if ( isExample ) {
 		return (
 			<BlockExamplePreview
@@ -71,18 +68,10 @@ export default function Edit( {
 		);
 	}
 
-	const blockProps = useBlockProps( {
-		className: `block-layout image-grid-block video-grid wp-block-ambrygen-gallery block-${ variation } ${ layoutClass } grid-column${
-			innerBlocksCount >= 3 ? 3 : 2
-		}`,
-	} );
-
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody
-					title={ __( 'Heading Settings', 'ambrygen-web' ) }
-				>
+				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) }>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag }
@@ -106,10 +95,7 @@ export default function Edit( {
 									subheading: value,
 								} )
 							}
-							placeholder={ __(
-								'Add Heading...',
-								'ambrygen-web'
-							) }
+							placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 						/>
 						<div
 							className="is-style-gl-s16"
@@ -125,16 +111,13 @@ export default function Edit( {
 								} )
 							}
 							placeholder={ __(
-								'Add Description...',
+								'Add Description…',
 								'ambrygen-web'
 							) }
 						/>
 					</div>
 
-					<div
-						className="is-style-gl-s50"
-						aria-hidden="true"
-					></div>
+					<div className="is-style-gl-s50" aria-hidden="true"></div>
 
 					<div className="videos__cards">
 						<BlockContextProvider

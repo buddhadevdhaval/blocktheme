@@ -29,6 +29,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	} );
 
 	const HeadingTag = headingTag || 'h2';
+	const blockProps = useBlockProps( {
+		className: 'card-result-block block-layout',
+	} );
 
 	if ( isExample ) {
 		return (
@@ -39,18 +42,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		);
 	}
 
-	const blockProps = useBlockProps( {
-		className: 'card-result-block block-layout',
-	} );
 	const gridClassName =
 		innerBlockCount >= 4
 			? 'principles-steps__grid col-4'
 			: 'principles-steps__grid';
-	const hasEyebrow = !! eyebrowText;
-	const hasHeading = !! heading;
-	const hasDescription = !! subtitle;
-	const hasHeaderContent = hasEyebrow || hasHeading || hasDescription;
-	const hasBottomDescription = !! footContent;
 
 	return (
 		<>
@@ -79,9 +74,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							onChange={ ( value ) =>
 								setAttributes( { eyebrowText: value } )
 							}
-							placeholder={ __( 'Add Eyebrow Text...', 'ambrygen-web' ) }
+							placeholder={ __(
+								'Add Eyebrow Text…',
+								'ambrygen-web'
+							) }
 						/>
-						<div className="is-style-gl-s12" aria-hidden="true"></div>
+						<div
+							className="is-style-gl-s12"
+							aria-hidden="true"
+						></div>
 						<RichText
 							tagName={ HeadingTag }
 							className="heading-4 block-title mb-0 principles-steps__title"
@@ -89,9 +90,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							onChange={ ( value ) =>
 								setAttributes( { heading: value } )
 							}
-							placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+							placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 						/>
-						<div className="is-style-gl-s12" aria-hidden="true"></div>
+						<div
+							className="is-style-gl-s12"
+							aria-hidden="true"
+						></div>
 						<RichText
 							tagName="div"
 							className="block-description body1 principles-steps__subtitle"
@@ -99,7 +103,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							onChange={ ( value ) =>
 								setAttributes( { subtitle: value } )
 							}
-							placeholder={ __( 'Add Description...', 'ambrygen-web' ) }
+							placeholder={ __(
+								'Add Description…',
+								'ambrygen-web'
+							) }
 						/>
 					</div>
 
@@ -126,7 +133,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { footContent: value } )
 						}
-						placeholder={ __( 'Bottom Description', 'ambrygen-web' ) }
+						placeholder={ __(
+							'Bottom Description',
+							'ambrygen-web'
+						) }
 					/>
 				</div>
 			</div>

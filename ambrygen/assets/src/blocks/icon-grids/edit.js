@@ -37,7 +37,7 @@ const TEMPLATE = [
 		'ambrygen/icon-grids-item',
 		{
 			title: '',
-			links: [{ label: '', url: '' }],
+			links: [ { label: '', url: '' } ],
 		},
 	],
 ];
@@ -47,43 +47,44 @@ const TEMPLATE_SINGLE = [
 		'ambrygen/icon-grids-item',
 		{
 			title: '',
-			links: [{ label: '', url: '' }],
+			links: [ { label: '', url: '' } ],
 		},
 	],
 ];
 
-export default function Edit({ attributes, setAttributes, clientId }) {
+const VARIANT_CLASS_MAP = {
+	'icon-grid': 'block-layout info-list__row info-list-block',
+	'our-testing-menu': 'our-testing-menu',
+	'variation-3': 'variation-3',
+	'variation-4': 'icon-grid',
+	'variation-5': 'block-layout info-list__row info-list-block',
+};
+
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { blockId, variation, isLargeIcon } = attributes;
 
-	useEffect(() => {
-		const expectedId = `section-${clientId.slice(0, 8)}`;
+	useEffect( () => {
+		const expectedId = `section-${ clientId.slice( 0, 8 ) }`;
 
-		if (!blockId) {
-			setAttributes({
+		if ( ! blockId ) {
+			setAttributes( {
 				blockId: expectedId,
-			});
+			} );
 		}
-	}, [blockId, clientId, setAttributes]);
+	}, [ blockId, clientId, setAttributes ] );
 
-	const VARIANT_CLASS_MAP = {
-		'icon-grid': 'block-layout info-list__row info-list-block',
-		'our-testing-menu': 'our-testing-menu',
-		'variation-3': 'variation-3',
-		'variation-4': 'icon-grid',
-		'variation-5': 'block-layout info-list__row info-list-block',
-	};
-
-	const blockProps = useBlockProps({
-		className: `${VARIANT_CLASS_MAP[variation] || ''} ${isLargeIcon ? 'style-large-icons' : ''
-			}`,
+	const blockProps = useBlockProps( {
+		className: `${ VARIANT_CLASS_MAP[ variation ] || '' } ${
+			isLargeIcon ? 'style-large-icons' : ''
+		}`,
 		style: attributes.backgroundImage?.url
 			? {
-				backgroundImage: `url(${attributes.backgroundImage.url})`,
-				backgroundSize: 'cover',
-				backgroundPosition: 'center',
-			}
+					backgroundImage: `url(${ attributes.backgroundImage.url })`,
+					backgroundSize: 'cover',
+					backgroundPosition: 'center',
+			  }
 			: {},
-	});
+	} );
 
 	const selectedTemplate =
 		variation === 'our-testing-menu' ? TEMPLATE_SINGLE : TEMPLATE;
@@ -132,99 +133,104 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={__('Layout Variation', 'ambrygen-web')}>
+				<PanelBody title={ __( 'Layout Variation', 'ambrygen-web' ) }>
 					<div className="layout-variant-selector">
-						{VARIANTS.map((variant) => (
+						{ VARIANTS.map( ( variant ) => (
 							<button
-								key={variant.value}
+								key={ variant.value }
 								type="button"
-								className={`variant-button ${variation === variant.value
-									? 'is-selected'
-									: ''
-									}`}
-								aria-pressed={variation === variant.value}
-								onClick={() =>
-									setAttributes({
+								className={ `variant-button ${
+									variation === variant.value
+										? 'is-selected'
+										: ''
+								}` }
+								aria-pressed={ variation === variant.value }
+								onClick={ () =>
+									setAttributes( {
 										variation: variant.value,
-									})
+									} )
 								}
 							>
 								<img
-									src={variant.image}
-									alt={variant.label}
+									src={ variant.image }
+									alt={ variant.label }
 								/>
-								<span>{variant.label}</span>
+								<span>{ variant.label }</span>
 							</button>
-						))}
+						) ) }
 					</div>
 				</PanelBody>
 
-				<PanelBody title={__('Settings', 'ambrygen-web')}>
+				<PanelBody title={ __( 'Settings', 'ambrygen-web' ) }>
 					<ToggleControl
-						label={__('Large Icons', 'ambrygen-web')}
-						checked={isLargeIcon}
-						onChange={(value) =>
-							setAttributes({ isLargeIcon: value })
+						label={ __( 'Large Icons', 'ambrygen-web' ) }
+						checked={ isLargeIcon }
+						onChange={ ( value ) =>
+							setAttributes( { isLargeIcon: value } )
 						}
 					/>
 					<ImageUploader
-						url={attributes.backgroundImage?.url}
+						url={ attributes.backgroundImage?.url }
 						label="Background Image"
-						onSelect={(media) =>
-							setAttributes({
+						onSelect={ ( media ) =>
+							setAttributes( {
 								backgroundImage: {
 									id: media.id,
 									url: media.url,
 									alt: media.alt || media.title,
 								},
-							})
+							} )
 						}
-						onRemove={() => setAttributes({ backgroundImage: {} })}
+						onRemove={ () =>
+							setAttributes( { backgroundImage: {} } )
+						}
 					/>
 					<CtaButtonField
-						label={__('CTA Button', 'ambrygen-web')}
-						value={attributes.link || {}}
-						onChange={(value) => setAttributes({ link: value })}
+						label={ __( 'CTA Button', 'ambrygen-web' ) }
+						value={ attributes.link || {} }
+						onChange={ ( value ) =>
+							setAttributes( { link: value } )
+						}
 					/>
 				</PanelBody>
 			</InspectorControls>
-			<div {...blockProps}>
-				{variation === 'our-testing-menu' && (
+			<div { ...blockProps }>
+				{ variation === 'our-testing-menu' && (
 					<OurTestingMenu
-						attributes={attributes}
-						setAttributes={setAttributes}
-						template={selectedTemplate}
+						attributes={ attributes }
+						setAttributes={ setAttributes }
+						template={ selectedTemplate }
 					/>
-				)}
+				) }
 
-				{variation === 'variation-3' && (
+				{ variation === 'variation-3' && (
 					<Variation3
-						attributes={attributes}
-						setAttributes={setAttributes}
+						attributes={ attributes }
+						setAttributes={ setAttributes }
 					/>
-				)}
+				) }
 
-				{variation === 'variation-4' && (
+				{ variation === 'variation-4' && (
 					<Variation4
-						attributes={attributes}
-						setAttributes={setAttributes}
-						template={selectedTemplate}
+						attributes={ attributes }
+						setAttributes={ setAttributes }
+						template={ selectedTemplate }
 					/>
-				)}
+				) }
 
-				{variation === 'variation-5' && (
+				{ variation === 'variation-5' && (
 					<Variation5
-						attributes={attributes}
-						setAttributes={setAttributes}
-						template={selectedTemplate}
+						attributes={ attributes }
+						setAttributes={ setAttributes }
+						template={ selectedTemplate }
 					/>
-				)}
-				{variation !== 'our-testing-menu' &&
+				) }
+				{ variation !== 'our-testing-menu' &&
 					variation !== 'variation-4' &&
 					variation !== 'variation-3' &&
 					variation !== 'variation-5' && (
-						<Default template={selectedTemplate} />
-					)}
+						<Default template={ selectedTemplate } />
+					) }
 			</div>
 		</>
 	);

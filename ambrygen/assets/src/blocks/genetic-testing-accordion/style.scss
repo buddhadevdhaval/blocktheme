@@ -17,7 +17,7 @@
 	}
 
 	.amb-genetic-toggle {
-		background-color: var(--theme_amb_dark_blue); // Dark blue
+		background-color: var(--theme_amb_dark_blue);
 		cursor: pointer;
 		transition: background-color 0.2s ease;
 
@@ -36,13 +36,14 @@
 			display: inline-block;
 				border-right: 2px solid var(--theme_white);
 				border-bottom: 2px solid var(--theme_white);
-			transform: rotate(45deg); // Down-like
+			transform: rotate(45deg);
 			transition: transform 0.3s ease;
 		}
 
 		&[data-amb-open="true"] {
+
 			.icon-chevron-right-chunky-white {
-				transform: rotate(-135deg); // Up-like
+				transform: rotate(-135deg);
 			}
 		}
 	}
@@ -63,6 +64,7 @@
 
 	// Nested Table Styles
 	.amb-genetic-content .table {
+
 		tr {
 			border-bottom: 1px solid var(--theme_amb_border_ebebeb);
 
@@ -82,10 +84,12 @@
 
 		.product-title {
 			width: 20%;
+
 			a {
 					color: var(--theme_amb_blue_006494);
 				text-decoration: none;
 				font-weight: 700;
+
 				&:hover {
 					text-decoration: underline;
 				}
@@ -140,7 +144,9 @@
 
 // Mobile responsiveness
 @media (max-width: 767px) {
+
 	.genetic-testing-table-wrap {
+
 		.amb-genetic-content .table {
 			display: block;
 

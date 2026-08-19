@@ -76,7 +76,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							} )
 						}
 						textPlaceholder={ __(
-							'Enter link text...',
+							'Enter link text…',
 							'ambrygen-web'
 						) }
 						showVariant={ false }

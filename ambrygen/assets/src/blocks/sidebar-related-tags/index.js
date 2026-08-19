@@ -15,13 +15,12 @@ registerBlockType( BLOCK_NAME, {
  * Instead of unregistering (which breaks existing content), we hide it from the inserter.
  */
 const unsubscribe = subscribe( () => {
-	const editSite = select( 'core/edit-site' );
-	const editPost = select( 'core/editor' );
-
-	if ( editSite?.getEditedPostType?.() ) {
+	if ( select( 'core/edit-site' )?.getEditedPostType?.() ) {
 		unsubscribe();
 		return;
 	}
+
+	const editPost = select( 'core/editor' );
 
 	if ( ! editPost?.getCurrentPostType ) {
 		return;

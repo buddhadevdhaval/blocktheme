@@ -12,4 +12,3 @@ registerBlockType( metadata.name, {
 	edit: Edit,
 	save: () => <InnerBlocks.Content />,
 } );
-

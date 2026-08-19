@@ -25,9 +25,38 @@ final class ScienceRouteService
     public function register_hooks(): void
     {
         add_action('init', [$this, 'register_rewrites']);
+        add_action('parse_request', [$this, 'parse_request']);
         add_filter('post_type_archive_link', [$this, 'filter_archive_link'], 10, 2);
         add_filter('post_type_link', [$this, 'filter_single_link'], 20, 2);
         add_filter('query_vars', [$this, 'register_query_vars']);
+    }
+
+    public function parse_request(\WP $wp): void
+    {
+        $request_path = wp_parse_url((string) wp_unslash($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
+
+        if (! is_string($request_path)) {
+            return;
+        }
+
+        $trimmed_path = trim($request_path, '/');
+
+        foreach (array_keys($this->post_type_archive_slugs) as $post_type) {
+            $archive_path = trim($this->get_archive_path($post_type), '/');
+            if ('' === $archive_path) {
+                continue;
+            }
+
+            if ($trimmed_path === $archive_path) {
+                $this->apply_archive_request($wp, $post_type);
+                return;
+            }
+
+            if (preg_match('#^' . preg_quote($archive_path, '#') . '/page/([0-9]{1,})$#', $trimmed_path, $matches)) {
+                $this->apply_archive_request($wp, $post_type, absint($matches[1]));
+                return;
+            }
+        }
     }
 
     public function register_query_vars(array $vars): array
@@ -247,5 +276,15 @@ final class ScienceRouteService
         $vars[] = 'topic';
         $vars[] = 'collaborator';
         return $vars;
+    }
+
+    private function apply_archive_request(\WP $wp, string $post_type, int $paged = 0): void
+    {
+        $wp->query_vars['post_type'] = $post_type;
+        unset($wp->query_vars['pagename'], $wp->query_vars['page_id'], $wp->query_vars['name']);
+
+        if ($paged > 1) {
+            $wp->query_vars['paged'] = $paged;
+        }
     }
 }

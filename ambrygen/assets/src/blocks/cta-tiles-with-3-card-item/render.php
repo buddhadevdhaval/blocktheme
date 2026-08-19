@@ -41,10 +41,10 @@ $ambrygen_rel_parts = $ambrygen_link_rel
 
 $ambrygen_new_tab_text = '';
 
-$ambrygen_plain_title = $ambrygen_title
+$ambrygen_plain_title  = $ambrygen_title
 	? html_entity_decode( wp_strip_all_tags( $ambrygen_title ), ENT_QUOTES, 'UTF-8' )
 	: '';
-$ambrygen_plain_desc  = $ambrygen_description
+$ambrygen_plain_desc   = $ambrygen_description
 	? html_entity_decode( wp_trim_words( wp_strip_all_tags( $ambrygen_description ), 10, '' ), ENT_QUOTES, 'UTF-8' )
 	: '';
 $ambrygen_aria_context = $ambrygen_plain_title ? $ambrygen_plain_title : $ambrygen_plain_desc;

@@ -16,31 +16,61 @@ defined( 'ABSPATH' ) || exit;
  */
 class MarketingMaterials extends AbstractPostType {
 
+	/**
+	 * Get the post type slug.
+	 *
+	 * @return string
+	 */
 	public function slug(): string {
 		return 'marketing_material';
 	}
 
+	/**
+	 * Get the plural post type label.
+	 *
+	 * @return string
+	 */
 	public function label(): string {
 		return __( 'Marketing Materials', 'ambrygen-web' );
 	}
 
+	/**
+	 * Get the singular post type label.
+	 *
+	 * @return string
+	 */
 	public function singular_label(): string {
 		return __( 'Marketing Material', 'ambrygen-web' );
 	}
 
+	/**
+	 * Get the admin menu icon.
+	 *
+	 * @return string
+	 */
 	public function menu_icon(): string {
 		return 'dashicons-megaphone';
 	}
 
+	/**
+	 * Get additional post type arguments.
+	 *
+	 * @return array
+	 */
 	public function extra_args(): array {
 		return array(
-			'rewrite' => array(
+			'rewrite'     => array(
 				'slug' => 'marketing-material',
 			),
 			'has_archive' => 'marketing-material',
 		);
 	}
 
+	/**
+	 * Get registered taxonomies.
+	 *
+	 * @return array
+	 */
 	public function taxonomies(): array {
 		return array(
 			array(
@@ -76,6 +106,11 @@ class MarketingMaterials extends AbstractPostType {
 		);
 	}
 
+	/**
+	 * Get registered meta fields.
+	 *
+	 * @return array
+	 */
 	public function meta_fields(): array {
 		return array(
 			'marketing_material_files' => array(

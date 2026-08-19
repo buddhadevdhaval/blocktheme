@@ -2,7 +2,7 @@ import { useBlockProps } from '@wordpress/block-editor';
 import { TextControl } from '@wordpress/components';
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { text, url, linkTarget, isNameLocked } = attributes;
+	const { text, isNameLocked } = attributes;
 	const blockProps = useBlockProps( {
 		className: 'download-list__item',
 	} );
@@ -10,16 +10,11 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<div { ...blockProps }>
 			{ isNameLocked ? (
-				<a
-					href={ url || '#' }
-					target={ linkTarget || undefined }
-					rel={ linkTarget === '_blank' ? 'noopener noreferrer' : undefined }
-					onClick={ ( event ) => event.preventDefault() }
-				>
+				<div className="download-list__item-link">
 					<span className="download-list__item-text">
 						{ text || '' }
 					</span>
-				</a>
+				</div>
 			) : (
 				<TextControl
 					value={ text }

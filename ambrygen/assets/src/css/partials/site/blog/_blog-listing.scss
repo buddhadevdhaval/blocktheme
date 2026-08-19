@@ -177,7 +177,6 @@
 		display: block;
 	}
 
-	&__meta {}
 
 	.flag-details .flag-info {
 		font-size: 17px;
@@ -219,6 +218,7 @@
 		}
 
 		>a {
+
 			&:hover {
 				border-color: var(--theme_cg_blue);
 			}
@@ -259,6 +259,7 @@
 // ============================================================
 
 .blog-listing-header {
+
 	.block-title {
 		text-align: center;
 	}
@@ -329,19 +330,16 @@
 			border-color: var(--theme_color_primary);
 			box-shadow: 0 0 0 3px rgba(0, 155, 210, 0.15);
 		}
-
-		@include bp.max(lg) {
-			// width: 100%;
-			// min-width: 0;
-		}
 	}
 
 	&__tabs-wrap {
+
 		@include bp.max(lg) {
 			order: 3;
 			white-space: nowrap;
 			overflow-y: auto;
 		}
+
 		.tabs__nav {
 			margin: 0;
 			display: flex;
@@ -350,6 +348,7 @@
 	}
 
 	.search-bar-block {
+
 		@include bp.max(lg) {
 			width: 100%;
 		}

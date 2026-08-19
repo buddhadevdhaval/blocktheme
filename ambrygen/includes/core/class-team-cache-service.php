@@ -2,24 +2,33 @@
 
 namespace Ambrygen\Theme\Core;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
-final class TeamCacheService
-{
+/**
+ * Invalidate cached team-member data when author posts change.
+ */
+final class TeamCacheService {
+
 	use Singleton;
 
-	protected function __construct()
-	{
-		add_action('save_post_author', array($this, 'invalidate_team_member_cache'));
-		add_action('delete_post', array($this, 'invalidate_team_member_cache'));
+	/**
+	 * Register team member cache invalidation hooks.
+	 */
+	protected function __construct() {
+		add_action( 'save_post_author', array( $this, 'invalidate_team_member_cache' ) );
+		add_action( 'delete_post', array( $this, 'invalidate_team_member_cache' ) );
 	}
 
-	public function invalidate_team_member_cache($post_id): void
-	{
-		if ('author' !== get_post_type($post_id)) {
+	/**
+	 * Clear cached team member data when author posts change.
+	 *
+	 * @param int $post_id Post ID being updated or deleted.
+	 */
+	public function invalidate_team_member_cache( $post_id ): void {
+		if ( 'author' !== get_post_type( $post_id ) ) {
 			return;
 		}
 
-		wp_cache_delete('team_member_' . absint($post_id), 'ambrygen_team');
+		wp_cache_delete( 'team_member_' . absint( $post_id ), 'ambrygen_team' );
 	}
 }

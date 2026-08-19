@@ -2,6 +2,7 @@
 @use "../../css/partials/variables/fluid_mixins" as *;
 
 .order-process-steps {
+
 	&__header {
 		text-align: center;
 	}
@@ -15,12 +16,12 @@
 		gap: 30px;
 		width: 100%;
 		display: grid;
-		// grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 		grid-template-columns: repeat(4, 1fr);
 
 
 		@include bp.min(xl) {
-			.order-process-steps__step:nth-child(4n + 1):before {
+
+			.order-process-steps__step:nth-child(4n + 1)::before {
 				display: none;
 			}
 		}
@@ -28,7 +29,7 @@
 		@include bp.max(xl) {
 			grid-template-columns: repeat(3, 1fr);
 
-			.order-process-steps__step:nth-child(3n + 1):before {
+			.order-process-steps__step:nth-child(3n + 1)::before {
 				display: none;
 			}
 		}
@@ -36,7 +37,7 @@
 		@include bp.max(lg) {
 			grid-template-columns: repeat(2, 1fr);
 
-			.order-process-steps__step:nth-child(odd):before {
+			.order-process-steps__step:nth-child(odd)::before {
 				display: none;
 			}
 		}

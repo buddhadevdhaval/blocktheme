@@ -45,7 +45,7 @@ import { ImageUploader } from '../_shared/components';
  * @param {Object}   props          Component properties.
  * @param {string}   props.value    Current container width value.
  * @param {Function} props.onChange Callback when width changes.
- * @return {JSX.Element} ContainerWidthControl component.
+ * @return {import('@wordpress/element').WPElement} ContainerWidthControl component.
  */
 function ContainerWidthControl( { value, onChange } ) {
 	return (
@@ -88,7 +88,7 @@ function ContainerWidthControl( { value, onChange } ) {
  * @param {Object}   props          Component properties.
  * @param {string}   props.value    Current background style value.
  * @param {Function} props.onChange Callback when style changes.
- * @return {JSX.Element} BackgroundStyleControl component.
+ * @return {import('@wordpress/element').WPElement} BackgroundStyleControl component.
  */
 function BackgroundStyleControl( { value, onChange } ) {
 	return (
@@ -149,9 +149,10 @@ function BackgroundStyleControl( { value, onChange } ) {
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
  *
  * @param {Object}   props               Block properties.
+ * @param {string}   props.className     Additional CSS classes.
  * @param {Object}   props.attributes    Block attributes.
  * @param {Function} props.setAttributes Function to update attributes.
- * @return {JSX.Element} Block editor interface element.
+ * @return {import('@wordpress/element').WPElement} Block editor interface element.
  */
 export default function Edit( { attributes, setAttributes, className = '' } ) {
 	const {

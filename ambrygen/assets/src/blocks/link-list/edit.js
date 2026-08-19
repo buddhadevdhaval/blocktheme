@@ -37,6 +37,17 @@ const normalizeLinks = ( links = [] ) =>
 		rel: link?.rel || '',
 	} ) );
 
+const ITEMS_ALLOWED_BLOCKS = [
+	'core/paragraph',
+	'core/buttons',
+	'core/button',
+	'core/spacer',
+];
+
+const ITEMS_TEMPLATE = [
+	[ 'core/paragraph', { placeholder: __( 'Add content…', 'ambrygen-web' ) } ],
+];
+
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { blockId, anchor, title, headingTag, links = [] } = attributes;
 	const isExample = blockId === 'example-block-preview';
@@ -124,20 +135,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		id: anchor || blockId,
 	} );
 
-	const itemsAllowedBlocks = [
-		'core/paragraph',
-		'core/buttons',
-		'core/button',
-		'core/spacer',
-	];
-
-	const itemsTemplate = [
-		[
-			'core/paragraph',
-			{ placeholder: __( 'Add content...', 'ambrygen-web' ) },
-		],
-	];
-
 	if ( isExample ) {
 		return (
 			<BlockExamplePreview
@@ -212,7 +209,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							tagName={ headingTag }
 							className="download-list__title heading-3 block-title mb-0"
 							value={ title }
-							placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+							placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 							onChange={ ( val ) =>
 								setAttributes( { title: val } )
 							}
@@ -220,8 +217,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						/>
 
 						<InnerBlocks
-							allowedBlocks={ itemsAllowedBlocks }
-							template={ itemsTemplate }
+							allowedBlocks={ ITEMS_ALLOWED_BLOCKS }
+							template={ ITEMS_TEMPLATE }
 							templateLock={ false }
 						/>
 					</div>
@@ -233,10 +230,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							<div className="download-list__item-link">
 								<span className="download-list__item-text">
 									{ link.text ||
-										__(
-											'Add Link Text...',
-											'ambrygen-web'
-										) }
+										__( 'Add Link Text…', 'ambrygen-web' ) }
 								</span>
 							</div>
 						</div>

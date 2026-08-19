@@ -3,12 +3,8 @@ import {
 	RichText,
 	useBlockProps,
 } from '@wordpress/block-editor';
-import {
-	Button,
-	PanelBody,
-	TextControl,
-} from '@wordpress/components';
-import { useEffect, useRef } from '@wordpress/element';
+import { Button, PanelBody, TextControl } from '@wordpress/components';
+import { useEffect, useMemo, useRef } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { getThemeAssetUrl } from '../../utils/assets';
 import { useUniqueBlockId } from '../_shared/hooks';
@@ -107,7 +103,9 @@ function StatControls( { stat, updateStat } ) {
 			<TextControl
 				label={ __( 'Postfix', 'ambrygen-web' ) }
 				value={ stat.postfix }
-				onChange={ ( value ) => updateStat( stat.id, 'postfix', value ) }
+				onChange={ ( value ) =>
+					updateStat( stat.id, 'postfix', value )
+				}
 			/>
 		</div>
 	);
@@ -147,11 +145,17 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const isExample = blockId === 'supporting-steps-example';
 	const HeadingTag = headingTag || 'h2';
 	const hasInitializedDefaultStep = useRef( false );
-	const sourceSteps = Array.isArray( steps ) ? steps : [];
+	const sourceSteps = useMemo(
+		() => ( Array.isArray( steps ) ? steps : [] ),
+		[ steps ]
+	);
 	const stepsLength = sourceSteps.length;
 	const hasMissingStepIds = sourceSteps.some( ( step ) => ! step?.id );
 	const visibleSteps = sourceSteps.slice( 0, MAX_STEPS );
-	const sourceStats = Array.isArray( stats ) ? stats : [];
+	const sourceStats = useMemo(
+		() => ( Array.isArray( stats ) ? stats : [] ),
+		[ stats ]
+	);
 	const statsLength = sourceStats.length;
 	const hasMissingStatIds = sourceStats.some( ( stat ) => ! stat?.id );
 	const visibleStats = sourceStats.slice( 0, MAX_STATS );
@@ -207,7 +211,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	] );
 
 	const blockProps = useBlockProps( {
-		className: `block-layout supporting-steps${ isStatsView ? ' variation-stats-view' : '' }`,
+		className: `block-layout supporting-steps${
+			isStatsView ? ' variation-stats-view' : ''
+		}`,
 		id: anchor || blockId || undefined,
 	} );
 
@@ -389,10 +395,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									} )
 								}
 							>
-								<img
-									src={ variant.image }
-									alt=""
-								/>
+								<img src={ variant.image } alt="" />
 								<span>{ variant.label }</span>
 							</button>
 						) ) }
@@ -428,7 +431,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								total={ visibleSteps.length }
 								prefix="STEP"
 								onMove={ ( itemIndex, dir ) =>
-									moveStep( visibleSteps[ itemIndex ].id, dir )
+									moveStep(
+										visibleSteps[ itemIndex ].id,
+										dir
+									)
 								}
 								onRemove={ ( itemIndex ) =>
 									removeStep( visibleSteps[ itemIndex ].id )
@@ -468,10 +474,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									total={ visibleStats.length }
 									prefix="STAT"
 									onMove={ ( itemIndex, dir ) =>
-										moveStat( visibleStats[ itemIndex ].id, dir )
+										moveStat(
+											visibleStats[ itemIndex ].id,
+											dir
+										)
 									}
 									onRemove={ ( itemIndex ) =>
-										removeStat( visibleStats[ itemIndex ].id )
+										removeStat(
+											visibleStats[ itemIndex ].id
+										)
 									}
 									minCount={ 1 }
 								/>
@@ -532,7 +543,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									setAttributes( { heading: value } )
 								}
 								placeholder={ __(
-									'Add Heading...',
+									'Add Heading…',
 									'ambrygen-web'
 								) }
 							/>
@@ -570,8 +581,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 															'stat',
 															'ambrygen-web'
 														) }
-												</span>
-												{ ' ' }
+												</span>{ ' ' }
 												<span className="supporting-steps__stats-postfix">
 													{ stat.postfix ||
 														__(
@@ -621,7 +631,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									} )
 								}
 								placeholder={ __(
-									'Add Description...',
+									'Add Description…',
 									'ambrygen-web'
 								) }
 							/>

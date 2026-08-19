@@ -253,19 +253,15 @@ const initTabMenuBlocks = function () {
 
 				if ( shouldScroll ) {
 					const scrollTarget = hashTarget || matchedPair.target;
-					const targetPosition = getTargetScrollPosition(
-						scrollTarget
-					);
+					const targetPosition =
+						getTargetScrollPosition( scrollTarget );
 					const currentPosition = window.pageYOffset;
 
 					if ( Math.abs( currentPosition - targetPosition ) < 12 ) {
 						return;
 					}
 
-					scrollToTarget(
-						scrollTarget,
-						'smooth'
-					);
+					scrollToTarget( scrollTarget, 'smooth' );
 				}
 			};
 			const handleInitialHashNavigation = function () {
@@ -352,7 +348,10 @@ const initTabMenuBlocks = function () {
 					pendingHashNavigationTarget = clickedPair.target.id;
 					syncHash( clickedPair.target.id );
 
-					if ( tabBehavior === 'scroll' || tabBehavior === 'tab-mode' ) {
+					if (
+						tabBehavior === 'scroll' ||
+						tabBehavior === 'tab-mode'
+					) {
 						scrollToTarget( clickedPair.target );
 					}
 				} );

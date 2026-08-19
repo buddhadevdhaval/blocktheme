@@ -75,11 +75,37 @@
 		}
 	}
 
+
+	.newsletter__content-block__description-text {
+		text-decoration: none;
+		border: none;
+		outline: none;
+
+		a {
+			text-decoration: none;
+			border: none;
+			outline: none;
+			color: var(--theme_primary_200);
+
+			&:hover {
+				color: var(--theme_white);
+			}
+		}
+	}
+
 	&__content-block {
 		grid-column: span 6;
 
 		@include bp.max(md) {
 			grid-column: span 12;
+		}
+
+		&__description-text {
+			a {
+				text-decoration: none;
+				border: none;
+				outline: none;
+			}
 		}
 	}
 

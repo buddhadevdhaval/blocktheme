@@ -55,18 +55,33 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			} );
 
 			nav.addEventListener( 'keydown', ( event ) => {
-				const idx = buttons.indexOf( document.activeElement );
-				if ( idx === -1 ) return;
+				const activeElement = nav.ownerDocument.activeElement;
+				const idx = buttons.indexOf( activeElement );
+				if ( idx === -1 ) {
+					return;
+				}
 				let next = -1;
-				if ( event.key === 'ArrowRight' ) next = ( idx + 1 ) % buttons.length;
-				if ( event.key === 'ArrowLeft' ) next = ( idx - 1 + buttons.length ) % buttons.length;
-				if ( event.key === 'Home' ) next = 0;
-				if ( event.key === 'End' ) next = buttons.length - 1;
+				if ( event.key === 'ArrowRight' ) {
+					next = ( idx + 1 ) % buttons.length;
+				}
+				if ( event.key === 'ArrowLeft' ) {
+					next = ( idx - 1 + buttons.length ) % buttons.length;
+				}
+				if ( event.key === 'Home' ) {
+					next = 0;
+				}
+				if ( event.key === 'End' ) {
+					next = buttons.length - 1;
+				}
 				if ( next !== -1 ) {
 					event.preventDefault();
-					buttons.forEach( ( b, i ) => b.setAttribute( 'tabindex', i === next ? '0' : '-1' ) );
+					buttons.forEach( ( b, i ) =>
+						b.setAttribute( 'tabindex', i === next ? '0' : '-1' )
+					);
 					buttons[ next ].focus();
-					activateTab( buttons[ next ].getAttribute( 'data-tab-target' ) || '' );
+					activateTab(
+						buttons[ next ].getAttribute( 'data-tab-target' ) || ''
+					);
 				}
 			} );
 		}
@@ -86,16 +101,14 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			trackingLinks.forEach( ( link ) => {
 				const materialId = link.getAttribute( 'data-material-id' );
 				const fileId = link.getAttribute( 'data-file-id' );
-				const dedupeKey = [ pageId || pagePath, materialId, fileId ].join(
-					':'
-				);
+				const dedupeKey = [
+					pageId || pagePath,
+					materialId,
+					fileId,
+				].join( ':' );
 				const storageKey = `${ storagePrefix }${ nowKey }:${ dedupeKey }`;
 
-				if (
-					! materialId ||
-					! fileId ||
-					dedupe.has( dedupeKey )
-				) {
+				if ( ! materialId || ! fileId || dedupe.has( dedupeKey ) ) {
 					return;
 				}
 
@@ -141,13 +154,19 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			}
 		}
 
-		if ( clickEndpoint && typeof fetch === 'function' && trackingLinks.length ) {
+		if (
+			clickEndpoint &&
+			typeof fetch === 'function' &&
+			trackingLinks.length
+		) {
 			trackingLinks.forEach( ( link ) => {
 				link.addEventListener( 'click', () => {
 					const materialId = Number(
 						link.getAttribute( 'data-material-id' )
 					);
-					const fileId = Number( link.getAttribute( 'data-file-id' ) );
+					const fileId = Number(
+						link.getAttribute( 'data-file-id' )
+					);
 
 					if ( ! materialId || ! fileId ) {
 						return;

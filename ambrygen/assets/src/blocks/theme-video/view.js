@@ -31,8 +31,8 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 	const setVideoSize = ( videoWrapper ) => {
 		videoWrapper.style.aspectRatio = '16 / 9';
-		videoWrapper.style.backgroundColor = '#1a1a1a';
-		videoWrapper.style.borderRadius = '12px';
+		videoWrapper.style.backgroundColor = 'transparent';
+		videoWrapper.style.borderRadius = '16px';
 		videoWrapper.style.overflow = 'hidden';
 		videoWrapper.style.position = 'relative';
 		videoWrapper.style.width = '100%';
@@ -60,7 +60,12 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		const playIconWrap = toggleWrap?.querySelector( '.play-icon' );
 		const pauseIconWrap = toggleWrap?.querySelector( '.pause-icon' );
 
-		if ( ! videoTrigger || ! toggleWrap || ! playIconWrap || ! pauseIconWrap ) {
+		if (
+			! videoTrigger ||
+			! toggleWrap ||
+			! playIconWrap ||
+			! pauseIconWrap
+		) {
 			return;
 		}
 
@@ -98,6 +103,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			}
 
 			modal.classList.remove( 'is-active' );
+			document.body.classList.remove( 'no-overflow' );
 			videoTrigger.setAttribute( 'aria-expanded', 'false' );
 			modal
 				.querySelector( '.modal-content__video-wrapper' )
@@ -165,6 +171,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			videoWrapper.replaceChildren( modalMedia );
 			videoTrigger.setAttribute( 'aria-expanded', 'true' );
 			modal.classList.add( 'is-active' );
+			document.body.classList.add( 'no-overflow' );
 
 			if ( video ) {
 				modalMedia.play().catch( () => {} );

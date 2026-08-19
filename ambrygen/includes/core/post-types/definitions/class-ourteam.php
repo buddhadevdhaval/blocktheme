@@ -20,26 +20,56 @@ defined( 'ABSPATH' ) || exit;
  */
 class OurTeam extends AbstractPostType {
 
+	/**
+	 * Get the post type slug.
+	 *
+	 * @return string
+	 */
 	public function slug(): string {
 		return 'our_team';
 	}
 
+	/**
+	 * Get the plural post type label.
+	 *
+	 * @return string
+	 */
 	public function label(): string {
 		return __( 'Our Team', 'ambrygen' );
 	}
 
+	/**
+	 * Get the singular post type label.
+	 *
+	 * @return string
+	 */
 	public function singular_label(): string {
 		return __( 'Team Member', 'ambrygen' );
 	}
 
+	/**
+	 * Get the admin menu icon.
+	 *
+	 * @return string
+	 */
 	public function menu_icon(): string {
 		return 'dashicons-groups';
 	}
 
+	/**
+	 * Get supported post features.
+	 *
+	 * @return array
+	 */
 	public function supports(): array {
 		return array( 'title', 'thumbnail', 'custom-fields' );
 	}
 
+	/**
+	 * Get registered taxonomies.
+	 *
+	 * @return array
+	 */
 	public function taxonomies(): array {
 		return array(
 			array(
@@ -58,6 +88,11 @@ class OurTeam extends AbstractPostType {
 		);
 	}
 
+	/**
+	 * Get registered meta fields.
+	 *
+	 * @return array
+	 */
 	public function meta_fields(): array {
 		return array(
 			'designation'  => array(
@@ -69,13 +104,13 @@ class OurTeam extends AbstractPostType {
 				'type'  => 'media_gallery',
 			),
 			'small_image'  => array(
-				'label' => __( 'Small Image', 'ambrygen' ),
-				'type'  => 'media_file',
+				'label'    => __( 'Small Image', 'ambrygen' ),
+				'type'     => 'media_file',
 				'sanitize' => 'absint',
 			),
 			'large_image'  => array(
-				'label' => __( 'Large Image', 'ambrygen' ),
-				'type'  => 'media_file',
+				'label'    => __( 'Large Image', 'ambrygen' ),
+				'type'     => 'media_file',
 				'sanitize' => 'absint',
 			),
 		);

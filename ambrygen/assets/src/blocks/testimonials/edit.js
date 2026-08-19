@@ -26,7 +26,7 @@ import { useUniqueBlockId } from '../_shared/hooks';
  * @param {Object}   props.attributes    Block attributes
  * @param {Function} props.setAttributes Function to update block attributes
  * @param {string}   props.clientId      Block client ID
- * @return {JSX.Element} Block editor interface
+ * @return {import('@wordpress/element').WPElement} Block editor interface
  */
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const ITEM_BLOCK_NAME = 'ambrygen/testimonial-item';
@@ -132,7 +132,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	return (
 		<section { ...blockProps }>
 			<InspectorControls>
-				<PanelBody title={ __( 'Heading Settings', 'ambrygen-web' ) } initialOpen={ false }>
+				<PanelBody
+					title={ __( 'Heading Settings', 'ambrygen-web' ) }
+					initialOpen={ false }
+				>
 					<TagSelector
 						label={ __( 'Heading Tag', 'ambrygen-web' ) }
 						value={ headingTag || 'h2' }
@@ -162,7 +165,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 					<ImageUploader
 						url={ secondaryImage }
-						label={ __( 'Bottom Right Overlay Image', 'ambrygen-web' ) }
+						label={ __(
+							'Bottom Right Overlay Image',
+							'ambrygen-web'
+						) }
 						onSelect={ ( media ) =>
 							updateImage( media, 'secondaryImage' )
 						}
@@ -178,32 +184,32 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			</InspectorControls>
 
 			<div className="ambry-testimonials__graphic-images">
-				   { overlayImage && (
-					   <div className="ambry-testimonials__graphic-images__overlay-left ambry-testimonials__graphic-images__img-block">
-						   <img
-							   src={ overlayImage }
-							   className="overlay__img"
-							   alt={ overlayImageAlt || '' }
-						   />
-					   </div>
-				   ) }
+				{ overlayImage && (
+					<div className="ambry-testimonials__graphic-images__overlay-left ambry-testimonials__graphic-images__img-block">
+						<img
+							src={ overlayImage }
+							className="overlay__img"
+							alt={ overlayImageAlt || '' }
+						/>
+					</div>
+				) }
 
-				   { secondaryImage && (
-					   <div className="ambry-testimonials__graphic-images__overlay-right ambry-testimonials__graphic-images__img-block">
-						   <img
-							   src={ secondaryImage }
-							   className="overlay__img"
-							   alt={ secondaryImageAlt || '' }
-						   />
-					   </div>
-				   ) }
+				{ secondaryImage && (
+					<div className="ambry-testimonials__graphic-images__overlay-right ambry-testimonials__graphic-images__img-block">
+						<img
+							src={ secondaryImage }
+							className="overlay__img"
+							alt={ secondaryImageAlt || '' }
+						/>
+					</div>
+				) }
 			</div>
 
 			<RichText
 				tagName={ Tag }
 				value={ heading }
 				onChange={ ( value ) => setAttributes( { heading: value } ) }
-				placeholder={ __( 'Add Heading...', 'ambrygen-web' ) }
+				placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 				className="ambry-testimonials__heading"
 			/>
 

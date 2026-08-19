@@ -9,10 +9,12 @@
 
 
 .faq__answer-list {
+
 	li {
 		display: flex;
 		gap: 10px;
 		justify-content: space-between;
+
 		.actions-button {
 			flex: auto 0 0;
 			padding-right: 10px;
@@ -21,7 +23,9 @@
 }
 
 .faq {
+
 	.faq__item {
+
 		.faq__icon {
 			display: none;
 		}

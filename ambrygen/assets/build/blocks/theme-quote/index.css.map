@@ -1,1 +1,0 @@
-{"version":3,"file":"theme-quote/index.css","mappings":";;;AAAA;EACC;AACD,C","sources":["webpack://ambrygen/./assets/src/blocks/theme-quote/editor.scss"],"sourcesContent":[".theme-quote {\n\tposition: relative;\n}\n"],"names":[],"ignoreList":[],"sourceRoot":""}

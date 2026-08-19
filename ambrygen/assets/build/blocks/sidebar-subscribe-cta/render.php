@@ -19,8 +19,8 @@ if ( get_post_type() !== 'post' ) {
 		<div class="subscribe-card-cta__subtitle"><?php echo esc_html( $subtitle ); ?></div>
 	</div>
 	<!-- <form class="subscribe-card-cta__form">
-		<input type="email" class="subscribe-card-cta__input" placeholder="olivia@xyz.com" aria-label="<?php //esc_attr_e( 'Email address', 'ambrygen-web' ); ?>">
-		<button type="submit" class="subscribe-card-cta__submit site-btn"><?php //esc_html_e( 'Sign Up Now', 'ambrygen-web' ); ?></button>
+		<input type="email" class="subscribe-card-cta__input" placeholder="olivia@xyz.com" aria-label="<?php // esc_attr_e( 'Email address', 'ambrygen-web' ); ?>">
+		<button type="submit" class="subscribe-card-cta__submit site-btn"><?php // esc_html_e( 'Sign Up Now', 'ambrygen-web' ); ?></button>
 	</form> -->
 	<a href="/contact-us" class="subscribe-card-cta__submit site-btn">
 		<?php esc_html_e( 'Contact Us', 'ambrygen-web' ); ?>

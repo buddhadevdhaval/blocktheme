@@ -9,7 +9,11 @@ import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { ImageUploader, TagSelector } from '../_shared/components';
 
-const ALLOWED_INNER_BLOCKS = [ 'core/paragraph', 'core/buttons', 'core/button' ];
+const ALLOWED_INNER_BLOCKS = [
+	'core/paragraph',
+	'core/buttons',
+	'core/button',
+];
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
@@ -28,7 +32,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const HeadingTag = headingTag || 'h3';
 	const hasDescription = useSelect(
 		( select ) => {
-			const innerBlocks = select( 'core/block-editor' ).getBlocks( clientId );
+			const innerBlocks =
+				select( 'core/block-editor' ).getBlocks( clientId );
 
 			if ( ! innerBlocks || innerBlocks.length === 0 ) {
 				return false;
@@ -125,7 +130,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						<div className="principles-steps__card-icon">
 							<img src={ imageUrl } alt={ imageAlt || '' } />
 						</div>
-						<div className="is-style-gl-s20" aria-hidden="true"></div>
+						<div
+							className="is-style-gl-s20"
+							aria-hidden="true"
+						></div>
 					</>
 				) }
 				<div className="principles-steps__card-content">
@@ -136,7 +144,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { title: value } )
 						}
-						placeholder={ __( 'Add Card Heading...', 'ambrygen-web' ) }
+						placeholder={ __(
+							'Add Card Heading…',
+							'ambrygen-web'
+						) }
 					/>
 					<div className="is-style-gl-s8" aria-hidden="true"></div>
 					<RichText
@@ -146,7 +157,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { summary: value } )
 						}
-						placeholder={ __( 'Add Card Sub Heading...', 'ambrygen-web' ) }
+						placeholder={ __(
+							'Add Card Sub Heading…',
+							'ambrygen-web'
+						) }
 					/>
 					<div className="is-style-gl-s16" aria-hidden="true"></div>
 					<div className="principles-steps__card-description">

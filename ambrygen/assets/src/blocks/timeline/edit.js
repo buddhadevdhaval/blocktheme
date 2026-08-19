@@ -65,10 +65,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { title: value } )
 						}
-						placeholder={ __(
-							'Add Heading...',
-							'ambrygen-web'
-						) }
+						placeholder={ __( 'Add Heading…', 'ambrygen-web' ) }
 					/>
 					<div className="is-style-gl-s24" aria-hidden="true"></div>
 					<RichText
@@ -78,10 +75,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						onChange={ ( value ) =>
 							setAttributes( { description: value } )
 						}
-						placeholder={ __(
-							'Add Description...',
-							'ambrygen-web'
-						) }
+						placeholder={ __( 'Add Description…', 'ambrygen-web' ) }
 					/>
 				</div>
 

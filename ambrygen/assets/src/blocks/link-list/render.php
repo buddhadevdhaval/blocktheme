@@ -13,12 +13,12 @@ use Ambrygen\Theme\Core\Helper;
 
 defined( 'ABSPATH' ) || exit;
 
-$ambrygen_anchor           = isset( $attributes['anchor'] ) ? sanitize_html_class( $attributes['anchor'] ) : '';
-$ambrygen_block_id         = isset( $attributes['blockId'] ) ? sanitize_html_class( $attributes['blockId'] ) : '';
-$ambrygen_title            = isset( $attributes['title'] ) ? $attributes['title'] : '';
-$ambrygen_links            = is_array( $attributes['links'] ?? null ) ? $attributes['links'] : array();
-$ambrygen_heading_tag      = Helper::get_heading_tag( $attributes['headingTag'] ?? 'h2', 'h2' );
-$ambrygen_heading_id       = wp_unique_id( 'download-list-heading-' );
+$ambrygen_anchor      = isset( $attributes['anchor'] ) ? sanitize_html_class( $attributes['anchor'] ) : '';
+$ambrygen_block_id    = isset( $attributes['blockId'] ) ? sanitize_html_class( $attributes['blockId'] ) : '';
+$ambrygen_title       = isset( $attributes['title'] ) ? $attributes['title'] : '';
+$ambrygen_links       = is_array( $attributes['links'] ?? null ) ? $attributes['links'] : array();
+$ambrygen_heading_tag = Helper::get_heading_tag( $attributes['headingTag'] ?? 'h2', 'h2' );
+$ambrygen_heading_id  = wp_unique_id( 'download-list-heading-' );
 
 $ambrygen_slot_blocks = array(
 	'content' => array(),
@@ -26,7 +26,7 @@ $ambrygen_slot_blocks = array(
 
 if ( isset( $block ) && $block instanceof WP_Block && ! empty( $block->parsed_block['innerBlocks'] ) ) {
 	foreach ( $block->parsed_block['innerBlocks'] as $inner_block ) {
-		$slot = $inner_block['attrs']['__experimentalSlotName'] ?? '';
+		$slot       = $inner_block['attrs']['__experimentalSlotName'] ?? '';
 		$block_name = $inner_block['blockName'] ?? '';
 
 		if ( ! $slot ) {
@@ -116,11 +116,11 @@ $wrapper_attributes = get_block_wrapper_attributes( $wrapper_args );
 
 						$ambrygen_rel_parts[] = 'noopener';
 						$ambrygen_rel_parts[] = 'noreferrer';
-						$ambrygen_rel = implode(
+						$ambrygen_rel         = implode(
 							' ',
 							array_unique( $ambrygen_rel_parts )
 						);
-						$ambrygen_label = sprintf(
+						$ambrygen_label       = sprintf(
 							/* translators: %s: link label. */
 							__( '%s (opens in a new tab)', 'ambrygen-web' ),
 							$ambrygen_label

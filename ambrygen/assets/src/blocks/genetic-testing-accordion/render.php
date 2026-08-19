@@ -50,20 +50,22 @@ if ( empty( $ambrygen_post_ids ) ) {
 }
 
 // 2. Query posts and group by category
-$ambrygen_posts = get_posts( array(
-	'post_type'      => 'genetic-testing',
-	'post__in'       => $ambrygen_post_ids,
-	'orderby'        => 'post__in',
-	'posts_per_page' => -1,
-	'post_status'    => 'publish',
-) );
+$ambrygen_posts = get_posts(
+	array(
+		'post_type'      => 'genetic-testing',
+		'post__in'       => $ambrygen_post_ids,
+		'orderby'        => 'post__in',
+		'posts_per_page' => -1,
+		'post_status'    => 'publish',
+	)
+);
 
 $ambrygen_grouped_posts = array();
 
 foreach ( $ambrygen_posts as $ambrygen_post ) {
 	$ambrygen_categories = get_the_terms( $ambrygen_post->ID, 'poster_category' );
-	$ambrygen_cat_name   = ! empty( $ambrygen_categories ) && ! is_wp_error( $ambrygen_categories ) 
-		? $ambrygen_categories[0]->name 
+	$ambrygen_cat_name   = ! empty( $ambrygen_categories ) && ! is_wp_error( $ambrygen_categories )
+		? $ambrygen_categories[0]->name
 		: __( 'General', 'ambrygen-web' );
 
 	if ( ! isset( $ambrygen_grouped_posts[ $ambrygen_cat_name ] ) ) {
@@ -72,11 +74,13 @@ foreach ( $ambrygen_posts as $ambrygen_post ) {
 	$ambrygen_grouped_posts[ $ambrygen_cat_name ][] = $ambrygen_post;
 }
 
-$ambrygen_unique_id = wp_unique_id('gen-');
-$ambrygen_wrapper_attributes = get_block_wrapper_attributes( array(
-	'class' => 'genetic-testing-accordion genetic-testing-table-wrap',
-	'id'    => $ambrygen_unique_id,
-) );
+$ambrygen_unique_id          = wp_unique_id( 'gen-' );
+$ambrygen_wrapper_attributes = get_block_wrapper_attributes(
+	array(
+		'class' => 'genetic-testing-accordion genetic-testing-table-wrap',
+		'id'    => $ambrygen_unique_id,
+	)
+);
 ?>
 
 <div <?php echo $ambrygen_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
@@ -89,9 +93,9 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( array(
 
 	<table class="table genetic-testing-accordion__table">
 		<tbody>
-			<?php 
+			<?php
 			$ambrygen_group_index = 0;
-			foreach ( $ambrygen_grouped_posts as $ambrygen_category => $ambrygen_cat_posts ) : 
+			foreach ( $ambrygen_grouped_posts as $ambrygen_category => $ambrygen_cat_posts ) :
 				$ambrygen_group_index++;
 				$ambrygen_target_id = $ambrygen_unique_id . '-group-' . $ambrygen_group_index;
 				?>
@@ -117,7 +121,8 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( array(
 						<div class="amb-genetic-content in js-accordion-content" id="<?php echo esc_attr( $ambrygen_target_id ); ?>">
 							<table class="table">
 								<tbody>
-									<?php foreach ( $ambrygen_cat_posts as $ambrygen_item_post ) : 
+									<?php
+									foreach ( $ambrygen_cat_posts as $ambrygen_item_post ) :
 										$ambrygen_item_id = $ambrygen_item_post->ID;
 										// Static placeholders
 										$ambrygen_gene_count      = '40';

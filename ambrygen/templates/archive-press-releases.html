@@ -9,7 +9,7 @@
 		<!-- wp:group {"className":"wrapper"} -->
 		<div class="wp-block-group wrapper">
 			<!-- wp:spacer {"height":"64px","className":"is-style-gl-s50"} -->
-			<div class="is-style-gl-s50" aria-hidden="true"></div>
+			<div style="height:64px" aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
 			<!-- /wp:spacer -->
 
 			<!-- wp:columns {"verticalAlignment":"center","className":"press-releases__header"} -->
@@ -25,39 +25,25 @@
 			<!-- /wp:columns -->
 
 			<!-- wp:spacer {"height":"24px","className":"is-style-gl-s24"} -->
-			<div class="is-style-gl-s50" aria-hidden="true"></div>
+			<div style="height:24px" aria-hidden="true" class="wp-block-spacer is-style-gl-s24"></div>
 			<!-- /wp:spacer -->
 
 			<!-- wp:query {"queryId":0,"query":{"perPage":10,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true},"className":"press-releases__query listing-archive__query"} -->
 			<div class="wp-block-query press-releases__query listing-archive__query">
 
-				<!-- wp:post-template {"className":"press-releases__list"} -->
+				<!-- wp:post-template {"className":"press-releases__list","__unstablePreviewPosts":3} -->
 				<!-- wp:group {"style":{"spacing":{"blockGap":"16px"}},"layout":{"type":"default"},"className":"press-releases__item listing-archive__item"} -->
 				<div class="wp-block-group press-releases__item listing-archive__item">
-					<!-- wp:post-date {"format":"l M d Y","className":"text-md-regular press-releases__item-date cs-wp-post-date flag-details"} /-->
-
+					<!-- wp:ambrygen/dynamic-post-date {"format":"l M d Y","className":"text-md-regular press-releases__item-date cs-wp-post-date flag-details"} /-->
 					<!-- wp:post-title {"isLink":true,"level":3,"className":"heading-5 mb-0 press-releases__item-title listing-archive__item-title"} /-->
-
-					<!-- wp:post-excerpt {"moreText":"","className":"text-md-regular mb-0 press-releases__item-excerpt"} /-->
-
+					<!-- wp:ambrygen/dynamic-excerpt {"className":"text-md-regular mb-0 press-releases__item-excerpt"} /-->
 					<!-- wp:read-more {"content":"Read more","className":"site-btn btn-medium is-style-site-trailing-icon press-releases__item-read-more"} /-->
 				</div>
 				<!-- /wp:group -->
-
 				<!-- /wp:post-template -->
 
-				<!-- wp:query-no-results {"className":"press-releases__no-results"} -->
-				<!-- wp:group {"className":"press-releases__empty listing-archive__empty"} -->
-				<div class="wp-block-group press-releases__empty listing-archive__empty">
-					<!-- wp:paragraph {"className":"press-releases__no-results-text"} -->
-					<div class="press-releases__no-results-text block-content">No posts found.</div>
-					<!-- /wp:paragraph -->
-				</div>
-				<!-- /wp:group -->
-				<!-- /wp:query-no-results -->
-
 				<!-- wp:spacer {"height":"64px","className":"is-style-gl-s50"} -->
-				<div class="is-style-gl-s50" aria-hidden="true"></div>
+				<div style="height:64px" aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
 				<!-- /wp:spacer -->
 
 				<!-- wp:group {"className":"pagination-buttons-row press-releases__pagination","layout":{"type":"default"}} -->
@@ -79,7 +65,7 @@
 			<!-- /wp:query -->
 
 			<!-- wp:spacer {"height":"64px","className":"is-style-gl-s50"} -->
-			<div class="is-style-gl-s50" aria-hidden="true"></div>
+			<div style="height:64px" aria-hidden="true" class="wp-block-spacer is-style-gl-s50"></div>
 			<!-- /wp:spacer -->
 		</div>
 		<!-- /wp:group -->
@@ -88,6 +74,8 @@
 </main>
 <!-- /wp:group -->
 
-<!-- wp:ambrygen/newsletter-form /-->
-
+<!-- wp:ambrygen/section-container -->
+<!-- wp:ambrygen/contact-info-form /-->
+<!-- /wp:ambrygen/section-container -->
+ 
 <!-- wp:template-part {"slug":"footer"} /-->

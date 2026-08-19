@@ -34,7 +34,6 @@ h6,
 
 	span,
 	mark {
-		background-color: transparent;
 		color: var(--theme_cg_blue);
 		margin: 0;
 		padding: 0;
@@ -84,10 +83,6 @@ h4,
 	font-size: var(--theme_font_size_4);
 	letter-spacing: 0.72px;
 	line-height: 1.22;
-
-	@include bp.max(md) {
-		// letter-spacing: 0.56px;
-	}
 }
 
 h5,
@@ -119,10 +114,6 @@ h6,
 	letter-spacing: 1px;
 	line-height: 1.53846;
 	text-transform: uppercase;
-
-	@include bp.max(md) {
-		// letter-spacing: 0.40px;
-	}
 }
 
 .body1 {
@@ -130,10 +121,6 @@ h6,
 	font-weight: 400;
 	letter-spacing: -0.08px;
 	line-height: 1.50;
-
-	@include bp.max(md) {
-		// letter-spacing: -0.22px;
-	}
 }
 
 .body1-sbold {
@@ -141,10 +128,6 @@ h6,
 	font-weight: 600;
 	letter-spacing: -0.08px;
 	line-height: 1.50;
-
-	@include bp.max(md) {
-		// letter-spacing: -0.22px;
-	}
 }
 
 .body2-reg {
@@ -152,10 +135,6 @@ h6,
 	font-weight: 400;
 	letter-spacing: -0.21px;
 	line-height: 1.42;
-
-	@include bp.max(md) {
-		// letter-spacing: -0.19px;
-	}
 }
 
 .body2 {
@@ -163,10 +142,6 @@ h6,
 	font-weight: 300;
 	letter-spacing: -0.21px;
 	line-height: 1.42;
-
-	@include bp.max(md) {
-		// letter-spacing: -0.19px;
-	}
 }
 
 .body2-medium {
@@ -250,10 +225,6 @@ h6,
 	font-weight: 300;
 	letter-spacing: -0.18px;
 	line-height: 1.50;
-
-	@include bp.max(md) {
-		// letter-spacing: -0.14px;
-	}
 }
 
 .caption-regular {
@@ -261,10 +232,6 @@ h6,
 	font-weight: 400;
 	letter-spacing: -0.18px;
 	line-height: 1.50;
-
-	@include bp.max(md) {
-		// letter-spacing: -0.14px;
-	}
 }
 
 .caption-semi-bold {
@@ -272,10 +239,6 @@ h6,
 	font-weight: 600;
 	letter-spacing: -0.18px;
 	line-height: 1.50;
-
-	@include bp.max(md) {
-		// letter-spacing: -0.14px;
-	}
 }
 
 .text-small {
@@ -305,10 +268,6 @@ h6,
 	letter-spacing: 1px;
 	line-height: 1.25;
 	text-transform: uppercase;
-
-	@include bp.max(md) {
-		// letter-spacing: -0.40px;
-	}
 }
 
 .text-md-medium {

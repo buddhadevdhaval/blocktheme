@@ -8,8 +8,18 @@
   "icon": "share",
   "description": "Displays social sharing links with the designer's custom structure.",
   "supports": {
-    "html": false
+    "html": false,
+    "inserter": false
   },
+  "attributes": {
+    "previewPostId": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "usesContext": [
+    "postId"
+  ],
   "textdomain": "ambrygen-web",
   "editorScript": "file:./index.js",
   "render": "file:./render.php"

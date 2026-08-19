@@ -11,156 +11,265 @@
 
 use Ambrygen\Theme\Core\Helper;
 
-	// Block attributes.
-	$theme_video_attributes       = $attributes ?? array();
-	$theme_video_block_id         = $theme_video_attributes['blockId'] ?? '';
-	$theme_video_link             = isset( $theme_video_attributes['link'] ) && is_array( $theme_video_attributes['link'] )
+$theme_video_attributes = $attributes ?? array();
+
+$theme_video_block_id = isset( $theme_video_attributes['blockId'] )
+	? sanitize_html_class( $theme_video_attributes['blockId'] )
+	: '';
+
+$theme_video_link = isset( $theme_video_attributes['link'] ) && is_array( $theme_video_attributes['link'] )
 	? $theme_video_attributes['link']
 	: array();
-	$theme_video_heading          = $theme_video_attributes['heading'] ?? '';
-	$theme_video_heading_tag      = $theme_video_attributes['headingTag'] ?? 'h2';
-	$theme_video_description      = $theme_video_attributes['description'] ?? '';
-	$theme_video_show_description = isset( $theme_video_attributes['showDescription'] ) ? (bool) $theme_video_attributes['showDescription'] : true;
-	$theme_video_video_url        = $theme_video_attributes['videoUrl'] ?? '';
-	$theme_video_video_type       = $theme_video_attributes['videoType'] ?? 'embed';
-	$theme_video_iframe_url       = $theme_video_attributes['iframeUrl'] ?? '';
-	$theme_video_image_url        = $theme_video_attributes['imageUrl'] ?? '';
-	$theme_video_image_id         = absint( $theme_video_attributes['imageId'] ?? 0 );
-	$theme_video_show_image       = ! empty( $theme_video_attributes['showImage'] );
-	$theme_video_is_header_vertical = ! empty( $theme_video_attributes['isHeaderVertical'] );
 
-	$theme_video_poster_image = isset( $theme_video_attributes['posterImage'] ) && is_array( $theme_video_attributes['posterImage'] )
+$theme_video_heading = isset( $theme_video_attributes['heading'] )
+	? $theme_video_attributes['heading']
+	: '';
+
+$theme_video_heading_tag = Helper::get_heading_tag(
+	$theme_video_attributes['headingTag'] ?? 'h2',
+	'h2'
+);
+
+$theme_video_description = isset( $theme_video_attributes['description'] )
+	? $theme_video_attributes['description']
+	: '';
+
+$theme_video_show_description = isset( $theme_video_attributes['showDescription'] )
+	? (bool) $theme_video_attributes['showDescription']
+	: true;
+
+$theme_video_video_url = isset( $theme_video_attributes['videoUrl'] )
+	? esc_url_raw( $theme_video_attributes['videoUrl'] )
+	: '';
+
+$theme_video_video_type = isset( $theme_video_attributes['videoType'] )
+	? sanitize_text_field( $theme_video_attributes['videoType'] )
+	: 'embed';
+
+$theme_video_iframe_url = isset( $theme_video_attributes['iframeUrl'] )
+	? esc_url_raw( $theme_video_attributes['iframeUrl'] )
+	: '';
+
+$theme_video_image_url = isset( $theme_video_attributes['imageUrl'] )
+	? esc_url_raw( $theme_video_attributes['imageUrl'] )
+	: '';
+
+$theme_video_image_id = isset( $theme_video_attributes['imageId'] )
+	? absint( $theme_video_attributes['imageId'] )
+	: 0;
+
+$theme_video_image_alt = isset( $theme_video_attributes['imageAlt'] )
+	? sanitize_text_field( $theme_video_attributes['imageAlt'] )
+	: '';
+
+$theme_video_show_image         = ! empty( $theme_video_attributes['showImage'] );
+$theme_video_is_header_vertical = ! empty( $theme_video_attributes['isHeaderVertical'] );
+
+$theme_video_poster_image = isset( $theme_video_attributes['posterImage'] ) && is_array( $theme_video_attributes['posterImage'] )
 	? $theme_video_attributes['posterImage']
 	: array();
 
-	$theme_video_poster_image_id = isset( $theme_video_poster_image['id'] )
-	? (int) $theme_video_poster_image['id']
+$theme_video_poster_image_id = isset( $theme_video_poster_image['id'] )
+	? absint( $theme_video_poster_image['id'] )
 	: 0;
 
-	$theme_video_poster_url = isset( $theme_video_poster_image['url'] )
-	? esc_url( $theme_video_poster_image['url'] )
+$theme_video_poster_url = isset( $theme_video_poster_image['url'] )
+	? esc_url_raw( $theme_video_poster_image['url'] )
 	: '';
 
-	$theme_video_iframe_src = Helper::get_iframe_src( $theme_video_iframe_url );
+$theme_video_poster_alt = isset( $theme_video_poster_image['alt'] )
+	? sanitize_text_field( $theme_video_poster_image['alt'] )
+	: '';
 
-	// Determine iframe source.
+$theme_video_iframe_src = Helper::get_iframe_src( $theme_video_iframe_url );
 
-	// Extract URLs from image objects.
-	$theme_video_wrapper_attributes = get_block_wrapper_attributes(
-		$theme_video_block_id
-		? array(
-			'class' => 'features-media',
-			'id'    => $theme_video_block_id,
-		)
-		: array(
-			'class' => 'features-media',
-		)
-	);
-	$theme_video_play_icon_src      = get_theme_file_uri( 'assets/src/images/play-icon.svg' );
-	$theme_video_pause_icon_src     = get_theme_file_uri( 'assets/src/images/pause-icon.svg' );
-	$theme_video_link_target        = ! empty( $theme_video_link['target'] )
-	? esc_attr( $theme_video_link['target'] )
+$theme_video_wrapper_args = array(
+	'class' => 'features-media block-layout',
+);
+
+if ( $theme_video_block_id ) {
+	$theme_video_wrapper_args['id'] = $theme_video_block_id;
+}
+
+$theme_video_wrapper_attributes = get_block_wrapper_attributes( $theme_video_wrapper_args );
+
+$theme_video_play_icon_src  = get_theme_file_uri( 'assets/src/images/play-icon.svg' );
+$theme_video_pause_icon_src = get_theme_file_uri( 'assets/src/images/pause-icon.svg' );
+
+$theme_video_link_url = isset( $theme_video_link['url'] )
+	? esc_url_raw( $theme_video_link['url'] )
+	: '';
+
+$theme_video_link_text = isset( $theme_video_link['text'] )
+	? sanitize_text_field( $theme_video_link['text'] )
+	: '';
+
+$theme_video_link_target = isset( $theme_video_link['target'] ) && '_blank' === $theme_video_link['target']
+	? '_blank'
 	: '_self';
 
-	?>
+$theme_video_link_rel = isset( $theme_video_link['rel'] )
+	? sanitize_text_field( $theme_video_link['rel'] )
+	: '';
+
+if ( '_blank' === $theme_video_link_target ) {
+	$theme_video_link_rel_tokens = preg_split( '/\s+/', $theme_video_link_rel, -1, PREG_SPLIT_NO_EMPTY );
+	$theme_video_link_rel_tokens = is_array( $theme_video_link_rel_tokens ) ? $theme_video_link_rel_tokens : array();
+	$theme_video_link_rel_tokens = array_unique(
+		array_merge(
+			$theme_video_link_rel_tokens,
+			array( 'noopener', 'noreferrer' )
+		)
+	);
+	$theme_video_link_rel        = implode( ' ', $theme_video_link_rel_tokens );
+}
+
+$theme_video_link_aria_label = '';
+
+if ( '_blank' === $theme_video_link_target && $theme_video_link_text ) {
+	/* translators: %s: link text. */
+	$theme_video_link_aria_label = sprintf(
+		__( '%s (opens in a new tab)', 'ambrygen-web' ),
+		$theme_video_link_text
+	);
+}
+
+?>
 
 <div <?php echo $theme_video_wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Generated by get_block_wrapper_attributes(). ?>>
-	<div class="features-media__header block__rowflex is-<?php echo $theme_video_is_header_vertical ? 'vertical' : 'horizontal'; ?>">
-		<<?php echo esc_html( $theme_video_heading_tag ); ?> class="block-title block__rowflex--heading-title heading-2 mb-0 js-gsap-fade">
-				<?php
-					echo wp_kses(
-						$theme_video_heading,
-						Helper::allowed_heading_html()
-					);
-					?>
-		</<?php echo esc_html( $theme_video_heading_tag ); ?>>
-		<?php if ( $theme_video_show_description && $theme_video_description ) : ?>
-		<div class="block__rowflex--block-content subtitle1-reg js-gsap-fade">
-			<p><?php echo wp_kses_post( $theme_video_description ); ?></p>
-			<?php if ( ! empty( $theme_video_link ) && ! empty( $theme_video_link['text'] ) && ! empty( $theme_video_link['url'] ) ) : ?>
-			<div class="block_rowflex-link js-gsap-fade">
-				<a
-					href="<?php echo esc_url( $theme_video_link['url'] ); ?>"
-					class="site-btn is-style-site-text-btn has-right-arrow"
-					target="<?php echo esc_attr( $theme_video_link_target ); ?>"
-					<?php echo( '_blank' === $theme_video_link_target ) ? 'rel="noopener noreferrer"' : ''; ?>
-				>
-					<?php echo esc_html( $theme_video_link['text'] ); ?>
-				</a>
+	<div class="features-media__header block__rowflex is-<?php echo esc_attr( $theme_video_is_header_vertical ? 'vertical' : 'horizontal' ); ?>">
+		<div class="block__rowflex--col-left">
+			<<?php echo esc_html( $theme_video_heading_tag ); ?> class="block-title block__rowflex--heading-title heading-2 mb-0 js-gsap-fade">
+				<?php echo wp_kses( $theme_video_heading, Helper::allowed_heading_html() ); ?>
+			</<?php echo esc_html( $theme_video_heading_tag ); ?>>
+		</div>
+		<?php if ( ( $theme_video_show_description && $theme_video_description ) || ( $theme_video_link_text && $theme_video_link_url ) ) : ?>
+			<div class="block__rowflex--block-content subtitle1-reg js-gsap-fade">
+				<?php if ( $theme_video_show_description && $theme_video_description ) : ?>
+					<p><?php echo wp_kses_post( $theme_video_description ); ?></p>
+				<?php endif; ?>
+				<?php if ( $theme_video_link_text && $theme_video_link_url ) : ?>
+					<div class="block_rowflex-link js-gsap-fade">
+						<a
+							href="<?php echo esc_url( $theme_video_link_url ); ?>"
+							class="site-btn is-style-site-text-btn has-right-arrow"
+							target="<?php echo esc_attr( $theme_video_link_target ); ?>"
+							<?php if ( $theme_video_link_rel ) : ?>
+								rel="<?php echo esc_attr( $theme_video_link_rel ); ?>"
+							<?php endif; ?>
+							<?php if ( $theme_video_link_aria_label ) : ?>
+								aria-label="<?php echo esc_attr( $theme_video_link_aria_label ); ?>"
+							<?php endif; ?>
+						>
+							<?php echo esc_html( $theme_video_link_text ); ?>
+						</a>
+					</div>
+				<?php endif; ?>
 			</div>
 		<?php endif; ?>
-		</div>
-		<?php endif; ?>
-
 	</div>
 
 	<div class="is-style-gl-s50" aria-hidden="true"></div>
 
-	<!-- <div class="features-media__video media_video"> -->
 	<?php if ( $theme_video_show_image ) : ?>
 		<div class="features-media has-image js-gsap-fade">
 			<?php
-				echo Helper::image_with_placeholder( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					$theme_video_image_id,
-					'full',
-					array(
-						'class'   => 'features-media__image',
-						'loading' => 'lazy',
-					)
-				);
-
+			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() escapes attributes and returns wp_kses_post()-sanitized image markup.
+			echo Helper::image_from_source(
+				$theme_video_image_id,
+				$theme_video_image_url,
+				'full',
+				array(
+					'class'   => 'features-media__image',
+					'alt'     => $theme_video_image_alt,
+					'loading' => 'lazy',
+				),
+				true
+			);
+			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 		</div>
 	<?php endif; ?>
-	<?php if ( ! $theme_video_show_image && ( ( 'embed' === $theme_video_video_type && $theme_video_iframe_src ) || ( 'mp4' === $theme_video_video_type && $theme_video_video_url ) ) ) : ?>
 
-	<div class="features-media__video media_video js-gsap-fade">
-		<?php if ( ! $theme_video_show_image && 'embed' === $theme_video_video_type && $theme_video_iframe_src ) : ?>
-			<div class="features-media__video-wrapper features-media__video-wrapper--iframe">
+	<?php if ( ! $theme_video_show_image && ( ( 'embed' === $theme_video_video_type && $theme_video_iframe_src ) || ( 'mp4' === $theme_video_video_type && $theme_video_video_url ) ) ) : ?>
+		<div class="features-media__video media_video js-gsap-fade">
+			<?php if ( $theme_video_poster_image_id || $theme_video_poster_url ) : ?>
+				<div class="videos__cards-item-thumbnail">
+					<?php
+					// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper::image_from_source() escapes attributes and returns wp_kses_post()-sanitized image markup.
+					echo Helper::image_from_source(
+						$theme_video_poster_image_id,
+						$theme_video_poster_url,
+						'large',
+						array(
+							'class'   => 'videos__cards-item-thumbnail-img',
+							'alt'     => $theme_video_poster_alt,
+							'loading' => 'lazy',
+						)
+					);
+					// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
+					?>
+				</div>
+			<?php endif; ?>
+
+			<?php if ( 'embed' === $theme_video_video_type && $theme_video_iframe_src ) : ?>
+				<div class="features-media__video-wrapper features-media__video-wrapper--iframe">
 					<iframe
 						src="<?php echo esc_url( $theme_video_iframe_src ); ?>"
-						title="<?php esc_attr_e( 'Theme video', 'ambrygen' ); ?>"
+						title="<?php esc_attr_e( 'Theme video', 'ambrygen-web' ); ?>"
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 						allowfullscreen
 						class="features-media__iframe"
+						tabindex="-1"
+						aria-hidden="true"
 					></iframe>
 
-					<div class="play-icon-video">
-							<div class="play-icon circle-icon">
-								<img src="<?php echo esc_url( $theme_video_play_icon_src ); ?>" class="play-icon__img" alt="Play Icon">
-							</div>
-							<div class="pause-icon circle-icon">
-								<img src="<?php echo esc_url( $theme_video_pause_icon_src ); ?>" class="pause-icon__img" alt="Pause Icon">
-							</div>
+					<div
+						class="play-icon-video"
+						aria-hidden="true"
+					>
+						<div class="play-icon circle-icon">
+							<img src="<?php echo esc_url( $theme_video_play_icon_src ); ?>" class="play-icon__img" alt="" aria-hidden="true">
+						</div>
+						<div class="pause-icon circle-icon" aria-hidden="true">
+							<img src="<?php echo esc_url( $theme_video_pause_icon_src ); ?>" class="pause-icon__img" alt="" aria-hidden="true">
+						</div>
 					</div>
-			</div>
-		<?php endif; ?>
+				</div>
+			<?php endif; ?>
 
-		<?php if ( ! $theme_video_show_image && 'mp4' === $theme_video_video_type && $theme_video_video_url ) : ?>
-			<div class="features-media__video-wrapper">
-				<video
-					class="videos"
-					playsinline
-					muted
-					preload="metadata"
-					loop
-					poster="<?php echo esc_url( $theme_video_poster_url ); ?>"
-					controls
-				>
-					<source src="<?php echo esc_url( $theme_video_video_url ); ?>" type="video/mp4">
-					<?php esc_html_e( 'Your browser does not support the video tag.', 'ambrygen' ); ?>
-				</video>
+			<?php if ( 'mp4' === $theme_video_video_type && $theme_video_video_url ) : ?>
+				<div class="features-media__video-wrapper">
+					<video
+						class="videos"
+						playsinline
+						muted
+						preload="metadata"
+						loop
+						controls
+						tabindex="-1"
+						aria-hidden="true"
+						<?php if ( $theme_video_poster_url ) : ?>
+							poster="<?php echo esc_url( $theme_video_poster_url ); ?>"
+						<?php endif; ?>
+					>
+						<source src="<?php echo esc_url( $theme_video_video_url ); ?>" type="video/mp4">
+						<?php esc_html_e( 'Your browser does not support the video tag.', 'ambrygen-web' ); ?>
+					</video>
 
-					<div class="play-icon-video">
-							<div class="play-icon circle-icon">
-								<img src="<?php echo esc_url( $theme_video_play_icon_src ); ?>" class="play-icon__img" alt="Play Icon">
-							</div>
-							<div class="pause-icon circle-icon">
-								<img src="<?php echo esc_url( $theme_video_pause_icon_src ); ?>" class="pause-icon__img" alt="Pause Icon">
-							</div>
+					<div
+						class="play-icon-video"
+						aria-hidden="true"
+					>
+						<div class="play-icon circle-icon">
+							<img src="<?php echo esc_url( $theme_video_play_icon_src ); ?>" class="play-icon__img" alt="" aria-hidden="true">
+						</div>
+						<div class="pause-icon circle-icon" aria-hidden="true">
+							<img src="<?php echo esc_url( $theme_video_pause_icon_src ); ?>" class="pause-icon__img" alt="" aria-hidden="true">
+						</div>
 					</div>
-			</div>
-		<?php endif; ?>
-	</div>
+				</div>
+			<?php endif; ?>
+		</div>
 	<?php endif; ?>
 </div>

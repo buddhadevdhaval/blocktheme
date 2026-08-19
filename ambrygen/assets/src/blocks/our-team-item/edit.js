@@ -18,7 +18,7 @@ import { DEFAULT_IMAGES } from '../_shared/components';
  * @param {Object}   props.attributes    The block attributes.
  * @param {Function} props.setAttributes Function to update block attributes.
  * @param {string}   props.clientId      The block client ID.
- * @return {JSX.Element} The edit component rendering.
+ * @return {import('@wordpress/element').WPElement} The edit component rendering.
  */
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { postId = 0 } = attributes;
@@ -40,28 +40,33 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		[ clientId ]
 	);
 	const isSliderView = parentVariation === 'slider-view';
-	const classPrefix = isSliderView ? 'our-leadership' : 'our-team block-layout';
+	const classPrefix = isSliderView
+		? 'our-leadership'
+		: 'our-team block-layout';
 
 	// Search for team members based on searchInput.
-	const teamMembers = useSelect( ( select ) => {
-		const query = {
-			per_page: 20,
-			orderby: 'title',
-			status: 'publish',
-			order: 'asc',
-			_fields: 'id,title',
-		};
+	const teamMembers = useSelect(
+		( select ) => {
+			const query = {
+				per_page: 20,
+				orderby: 'title',
+				status: 'publish',
+				order: 'asc',
+				_fields: 'id,title',
+			};
 
-		if ( searchInput ) {
-			query.search = searchInput;
-		}
+			if ( searchInput ) {
+				query.search = searchInput;
+			}
 
-		return select( 'core' ).getEntityRecords(
-			'postType',
-			'author',
-			query
-		);
-	}, [ searchInput ] );
+			return select( 'core' ).getEntityRecords(
+				'postType',
+				'author',
+				query
+			);
+		},
+		[ searchInput ]
+	);
 
 	// Get current selected post details.
 	const selectedPost = useSelect(
@@ -107,13 +112,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			return [];
 		}
 
-		return teamMembers
-			.map( ( post ) => ( {
-				label: decodeEntities(
-					post?.title?.rendered || post?.title?.raw || ''
-				),
-				value: post.id,
-			} ) );
+		return teamMembers.map( ( post ) => ( {
+			label: decodeEntities(
+				post?.title?.rendered || post?.title?.raw || ''
+			),
+			value: post.id,
+		} ) );
 	}, [ teamMembers ] );
 
 	const blockProps = useBlockProps( {
@@ -183,7 +187,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			{ hasSelectedPost &&
 				selectedPost &&
 				( () => {
-					const imageUrl = media?.source_url || defaults?.placeholder?.url;
+					const imageUrl =
+						media?.source_url || defaults?.placeholder?.url;
 					const designation =
 						selectedPost.meta?.user_designation ||
 						selectedPost.meta?.designation ||
@@ -191,7 +196,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 					const cardContent = (
 						<>
-							<div className={ `${ classPrefix }__image-wrapper` }>
+							<div
+								className={ `${ classPrefix }__image-wrapper` }
+							>
 								<img
 									src={ imageUrl }
 									alt={ decodeEntities(

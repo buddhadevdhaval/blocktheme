@@ -16,34 +16,7 @@
 			<div style="height:50px" class="wp-block-spacer is-style-gl-s50" aria-hidden="true"></div>
 			<!-- /wp:spacer -->
 
-			<!-- wp:group {"className":"category-filter-search","layout":{"type":"default"}} -->
-			<div class="wp-block-group category-filter-search">
-				<!-- wp:group {"className":"category-filter-search__dropdown","layout":{"type":"default"}} -->
-				<div class="wp-block-group category-filter-search__dropdown"></div>
-				<!-- /wp:group -->
-
-				<!-- wp:group {"className":"category-filter-search__tabs","layout":{"type":"default"}} -->
-				<div class="wp-block-group category-filter-search__tabs">
-					<!-- wp:html -->
-					<div class="horizontal-tabs tabs__nav" role="tablist" id="conference-tabs-upcoming">
-						<button type="button" class="tab-button active is-active tabs__tab text-md-Semibold" data-tag-id="0" role="tab" aria-selected="true">All</button>
-					</div>
-					<!-- /wp:html -->
-				</div>
-				<!-- /wp:group -->
-
-				<!-- wp:group {"className":"category-filter-search__search","layout":{"type":"default"}} -->
-				<div class="wp-block-group category-filter-search__search">
-					<!-- wp:html -->
-					<form id="category-search-form" role="search" method="get" action="/">
-						<input type="text" name="s" aria-label="Search for:" placeholder="Search">
-						<button class="button" type="submit">Search</button>
-					</form>
-					<!-- /wp:html -->
-				</div>
-				<!-- /wp:group -->
-			</div>
-			<!-- /wp:group -->
+			<!-- wp:ambrygen/conference-archive-filters {"archiveType":"upcoming"} /-->
 
 			<!-- wp:spacer {"height":"50px","className":"is-style-gl-s50"} -->
 			<div style="height:50px" class="wp-block-spacer is-style-gl-s50" aria-hidden="true"></div>
@@ -60,51 +33,14 @@
 						<!-- wp:ambrygen/event-grid-card /-->
 						<!-- /wp:post-template -->
 
-						<!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
-						<div style="height:64px" class="wp-block-spacer is-style-gl-s64" aria-hidden="true"></div>
-						<!-- /wp:spacer -->
-
-						<!-- wp:html -->
-						<div class="pagination-buttons-row">
-							<div class="pagination-container">
-								<div class="desktop-pages">
-									<button id="desktopprev" class="arrow-btn"></button>
-									<div id="paginationList-upcoming" class="pagination-list">
-										<button class="page-btn active">1</button>
-									</div>
-									<button id="desktopnext" class="arrow-btn"></button>
-								</div>
-
-								<div class="mobile-pagination">
-									<button id="prevbtn" class="arrow-btn"></button>
-									<button id="pagetrigger-upcoming" class="page-trigger">1/1</button>
-									<button id="nextbtn" class="arrow-btn"></button>
-								</div>
-
-								<div id="paginationPopup-upcoming" class="pagination-popup">
-									<div class="popup-body">
-										<div id="popupGrid-upcoming" class="popup-grid">
-											<button class="page-btn active">1</button>
-										</div>
-										<button id="popupPrev" class="arrow-btn"></button>
-										<button id="popupNext" class="arrow-btn"></button>
-									</div>
-								</div>
-							</div>
-							<div class="tab-dropdown">
-								<button class="dropdown-toggle" id="category-dropdown-btn-upcoming-perpage"
-									type="button" aria-expanded="false"
-									aria-controls="category-dropdown-menu-upcoming-perpage">8 / page</button>
-								<ul id="category-dropdown-menu-upcoming-perpage" class="dropdown-menu">
-									<li style="animation-delay: 0s;"><a href="#" aria-current="page">8 / page</a></li>
-									<li style="animation-delay: 0.1s;"><a href="#">16 / page</a></li>
-									<li style="animation-delay: 0.2s;"><a href="#">24 / page</a></li>
-								</ul>
-							</div>
-						</div>
-						<!-- /wp:html -->
 					</div>
 					<!-- /wp:query -->
+
+					<!-- wp:spacer {"height":"64px","className":"is-style-gl-s64"} -->
+					<div style="height:64px" class="wp-block-spacer is-style-gl-s64" aria-hidden="true"></div>
+					<!-- /wp:spacer -->
+
+					<!-- wp:ambrygen/conference-archive-pagination {"archiveType":"upcoming"} /-->
 
 				</div>
 				<!-- /wp:group -->

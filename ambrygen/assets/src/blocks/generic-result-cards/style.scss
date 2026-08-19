@@ -17,6 +17,7 @@
 
 
 		&--columns-4 {
+
 			@include bp.min(xxxl) {
 				gap: fluid(18, 36);
 			}
@@ -31,12 +32,14 @@
 		flex-direction: column;
 		align-items: center;
 		text-align: left;
+
 		/* the layout inside is left-aligned but icon is centered */
 
 		&-icon {
 			width: 100px;
 			height: 100px;
 			margin: 0 auto;
+
 			/* Ensure icon is centered */
 
 			img {
@@ -173,6 +176,7 @@
 			}
 
 			p {
+
 				body &,
 				body .bg-primary &,
 				body .bg-secondary &,

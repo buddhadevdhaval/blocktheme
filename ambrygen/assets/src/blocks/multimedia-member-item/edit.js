@@ -65,15 +65,21 @@ const normalizeMemberMediaMeta = ( metaValue ) => {
 
 	const asArray = Array.isArray( parsed ) ? parsed : [ parsed ];
 
-	return asArray
-		.map( ( item ) => ( {
+	return asArray.reduce( ( items, item ) => {
+		const normalizedItem = {
 			imageId: getIdFromUnknown( item ),
 			imageUrl: getUrlFromUnknown( item ),
-		} ) )
-		.filter( ( item ) => item.imageId || item.imageUrl );
+		};
+
+		if ( normalizedItem.imageId || normalizedItem.imageUrl ) {
+			items.push( normalizedItem );
+		}
+
+		return items;
+	}, [] );
 };
 
-export default function Edit( { attributes, clientId } ) {
+export default function Edit( { attributes } ) {
 	const { postId } = attributes;
 	const defaults = useMemo( () => DEFAULT_IMAGES(), [] );
 
@@ -105,7 +111,13 @@ export default function Edit( { attributes, clientId } ) {
 
 	const memberMediaIds = useMemo(
 		() =>
-			memberMediaItems.map( ( item ) => item.imageId ).filter( Boolean ),
+			memberMediaItems.reduce( ( ids, item ) => {
+				if ( item.imageId ) {
+					ids.push( item.imageId );
+				}
+
+				return ids;
+			}, [] ),
 		[ memberMediaItems ]
 	);
 
@@ -125,36 +137,36 @@ export default function Edit( { attributes, clientId } ) {
 		if ( memberMediaItems.length > 0 ) {
 			const keyCounts = new Map();
 
-			return memberMediaItems
-				.map( ( item, index ) => {
-					const media = resolution[ index ];
-					const url =
-						item.imageUrl ||
-						media?.source_url ||
-						media?.sizes?.full?.url ||
-						'';
-					const alt = media?.alt_text || media?.title?.rendered || '';
+			return memberMediaItems.flatMap( ( item, index ) => {
+				const media = resolution[ index ];
+				const url =
+					item.imageUrl ||
+					media?.source_url ||
+					media?.sizes?.full?.url ||
+					'';
+				const alt = media?.alt_text || media?.title?.rendered || '';
 
-					if ( ! url ) {
-						return null;
-					}
+				if ( ! url ) {
+					return [];
+				}
 
-					const keyBase = item.imageId
-						? `id-${ item.imageId }`
-						: `url-${ url }`;
-					const nextCount = ( keyCounts.get( keyBase ) || 0 ) + 1;
-					keyCounts.set( keyBase, nextCount );
+				const keyBase = item.imageId
+					? `id-${ item.imageId }`
+					: `url-${ url }`;
+				const nextCount = ( keyCounts.get( keyBase ) || 0 ) + 1;
+				keyCounts.set( keyBase, nextCount );
 
-					return {
+				return [
+					{
 						key:
 							nextCount === 1
 								? keyBase
 								: `${ keyBase }-${ nextCount }`,
 						url,
 						alt: decodeEntities( alt ),
-					};
-				} )
-				.filter( Boolean );
+					},
+				];
+			} );
 		}
 
 		const fallbackUrl = featuredMediaUrl || defaults?.placeholder?.url;
@@ -183,9 +195,7 @@ export default function Edit( { attributes, clientId } ) {
 	const shouldShowNavigation = hasMultipleMediaItems;
 
 	return (
-		<div
-			{ ...useBlockProps( { className: 'multimedia-member__item' } ) }
-		>
+		<div { ...useBlockProps( { className: 'multimedia-member__item' } ) }>
 			{ postId && ! selectedPost && <Spinner /> }
 
 			{ ! postId && (
@@ -250,7 +260,8 @@ export default function Edit( { attributes, clientId } ) {
 								className="is-style-gl-s10"
 								aria-hidden="true"
 							></div>
-							{ ( selectedPost.meta?.user_designation || selectedPost.meta?.designation ) && (
+							{ ( selectedPost.meta?.user_designation ||
+								selectedPost.meta?.designation ) && (
 								<span className="multimedia-member__role subtitle2">
 									{ decodeEntities(
 										selectedPost.meta?.user_designation ||

@@ -15,10 +15,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $ambrygen_attributes = is_array( $attributes ) ? $attributes : array();
 
-$ambrygen_block_id = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
+$ambrygen_block_id  = isset( $ambrygen_attributes['blockId'] ) ? sanitize_html_class( $ambrygen_attributes['blockId'] ) : '';
 $ambrygen_variation = isset( $ambrygen_attributes['variation'] ) ? (string) $ambrygen_attributes['variation'] : 'variation-1';
 $ambrygen_variation = in_array( $ambrygen_variation, array( 'variation-1', 'variation-2' ), true ) ? $ambrygen_variation : 'variation-1';
-$ambrygen_counters = isset( $ambrygen_attributes['counters'] ) && is_array( $ambrygen_attributes['counters'] )
+$ambrygen_counters  = isset( $ambrygen_attributes['counters'] ) && is_array( $ambrygen_attributes['counters'] )
 	? $ambrygen_attributes['counters']
 	: array();
 
@@ -95,14 +95,14 @@ $ambrygen_wrapper_attributes = get_block_wrapper_attributes( $ambrygen_wrapper_a
 		<div class="stats-counter" role="list">
 			<?php foreach ( $ambrygen_valid_counters as $ambrygen_counter ) : ?>
 				<?php
-				$ambrygen_prefix      = $ambrygen_counter['prefix'];
-				$ambrygen_number      = $ambrygen_counter['number'];
-				$ambrygen_postfix     = $ambrygen_counter['postfix'];
-				$ambrygen_label       = $ambrygen_counter['label'];
-				$ambrygen_description = $ambrygen_counter['description'];
-				$ambrygen_clean_number = preg_replace( '/[^0-9]/', '', $ambrygen_number );
+				$ambrygen_prefix         = $ambrygen_counter['prefix'];
+				$ambrygen_number         = $ambrygen_counter['number'];
+				$ambrygen_postfix        = $ambrygen_counter['postfix'];
+				$ambrygen_label          = $ambrygen_counter['label'];
+				$ambrygen_description    = $ambrygen_counter['description'];
+				$ambrygen_clean_number   = preg_replace( '/[^0-9]/', '', $ambrygen_number );
 				$ambrygen_display_number = $ambrygen_clean_number ? number_format( (int) $ambrygen_clean_number ) : '0';
-				$ambrygen_aria_label = trim(
+				$ambrygen_aria_label     = trim(
 					$ambrygen_prefix .
 					$ambrygen_number .
 					$ambrygen_postfix .

@@ -329,10 +329,7 @@ export default function Edit( { attributes, setAttributes, context } ) {
 
 						{ ( ! isVariationTwo || ! cta.isPopup ) && (
 							<CtaButtonField
-								label={ __(
-									'',
-									'ambrygen-web'
-								) }
+								label={ __( '', 'ambrygen-web' ) }
 								value={ cta }
 								showVariant={ true }
 								onChange={ ( value ) =>
@@ -376,157 +373,176 @@ export default function Edit( { attributes, setAttributes, context } ) {
 										}
 									/>
 
-								<SelectControl
-									label={ __( 'Video Type', 'ambrygen-web' ) }
-									value={ cta.videoType || 'embed' }
-									options={ [
-										{
-											label: __(
-												'Embed (Youtube/Vimeo)',
-												'ambrygen-web'
-											),
-											value: 'embed',
-										},
-										{
-											label: __(
-												'MP4 File',
-												'ambrygen-web'
-											),
-											value: 'mp4',
-										},
-									] }
-									onChange={ ( value ) =>
-										setAttributes( {
-											cta: { ...cta, videoType: value },
-										} )
-									}
-								/>
-
-								{ cta.videoType === 'mp4' ? (
-									<div style={ { marginBottom: '16px' } }>
-										<MediaUploadCheck>
-											<MediaUpload
-												onSelect={ updateVideoMedia }
-												allowedTypes={ [ 'video' ] }
-												value={ cta.videoUrl }
-												render={ ( { open } ) => (
-													<Button
-														variant="secondary"
-														onClick={ open }
-														style={ {
-															width: '100%',
-															justifyContent:
-																'center',
-															marginBottom: '8px',
-														} }
-													>
-														{ cta.videoUrl
-															? __(
-																	'Replace Video',
-																	'ambrygen-web'
-															  )
-															: __(
-																	'Select / Upload Video',
-																	'ambrygen-web'
-															  ) }
-													</Button>
-												) }
-											/>
-										</MediaUploadCheck>
-										<TextControl
-											label={ __(
-												'MP4 Video URL',
-												'ambrygen-web'
-											) }
-											value={ cta.videoUrl || '' }
-											onChange={ ( value ) =>
-												setAttributes( {
-													cta: {
-														...cta,
-														videoUrl: value,
-													},
-												} )
-											}
-										/>
-									</div>
-								) : (
-									<TextControl
+									<SelectControl
 										label={ __(
-											'Embed URL',
+											'Video Type',
 											'ambrygen-web'
 										) }
-										value={ cta.iframeUrl || '' }
+										value={ cta.videoType || 'embed' }
+										options={ [
+											{
+												label: __(
+													'Embed (Youtube/Vimeo)',
+													'ambrygen-web'
+												),
+												value: 'embed',
+											},
+											{
+												label: __(
+													'MP4 File',
+													'ambrygen-web'
+												),
+												value: 'mp4',
+											},
+										] }
 										onChange={ ( value ) =>
 											setAttributes( {
 												cta: {
 													...cta,
-													iframeUrl: value,
+													videoType: value,
 												},
 											} )
 										}
-										help={ __(
-											'Paste YouTube/Vimeo or iframe embed URL.',
-											'ambrygen-web'
-										) }
 									/>
-								) }
-							</div>
-						) }
+
+									{ cta.videoType === 'mp4' ? (
+										<div style={ { marginBottom: '16px' } }>
+											<MediaUploadCheck>
+												<MediaUpload
+													onSelect={
+														updateVideoMedia
+													}
+													allowedTypes={ [ 'video' ] }
+													value={ cta.videoUrl }
+													render={ ( { open } ) => (
+														<Button
+															variant="secondary"
+															onClick={ open }
+															style={ {
+																width: '100%',
+																justifyContent:
+																	'center',
+																marginBottom:
+																	'8px',
+															} }
+														>
+															{ cta.videoUrl
+																? __(
+																		'Replace Video',
+																		'ambrygen-web'
+																  )
+																: __(
+																		'Select / Upload Video',
+																		'ambrygen-web'
+																  ) }
+														</Button>
+													) }
+												/>
+											</MediaUploadCheck>
+											<TextControl
+												label={ __(
+													'MP4 Video URL',
+													'ambrygen-web'
+												) }
+												value={ cta.videoUrl || '' }
+												onChange={ ( value ) =>
+													setAttributes( {
+														cta: {
+															...cta,
+															videoUrl: value,
+														},
+													} )
+												}
+											/>
+										</div>
+									) : (
+										<TextControl
+											label={ __(
+												'Embed URL',
+												'ambrygen-web'
+											) }
+											value={ cta.iframeUrl || '' }
+											onChange={ ( value ) =>
+												setAttributes( {
+													cta: {
+														...cta,
+														iframeUrl: value,
+													},
+												} )
+											}
+											help={ __(
+												'Paste YouTube/Vimeo or iframe embed URL.',
+												'ambrygen-web'
+											) }
+										/>
+									) }
+								</div>
+							) }
 
 						{ isVariationTwo &&
 							!! cta.isPopup &&
 							cta.popupType === 'form' && (
-							<div
-								style={ {
-									marginTop: '16px',
-									paddingTop: '16px',
-									borderTop: '1px solid #ccc',
-								} }
-							>
-								<p
+								<div
 									style={ {
-										marginBottom: '8px',
-										fontWeight: '500',
+										marginTop: '16px',
+										paddingTop: '16px',
+										borderTop: '1px solid #ccc',
 									} }
 								>
-									{ __( 'Form Settings', 'ambrygen-web' ) }
-								</p>
+									<p
+										style={ {
+											marginBottom: '8px',
+											fontWeight: '500',
+										} }
+									>
+										{ __(
+											'Form Settings',
+											'ambrygen-web'
+										) }
+									</p>
 
-								<TextControl
-									label={ __(
-										'Button Text',
-										'ambrygen-web'
-									) }
-									value={ cta.text || '' }
-									onChange={ ( value ) =>
-										setAttributes( {
-											cta: { ...cta, text: value },
-										} )
-									}
-								/>
+									<TextControl
+										label={ __(
+											'Button Text',
+											'ambrygen-web'
+										) }
+										value={ cta.text || '' }
+										onChange={ ( value ) =>
+											setAttributes( {
+												cta: { ...cta, text: value },
+											} )
+										}
+									/>
 
-								<TextControl
-									label={ __( 'Form Title', 'ambrygen-web' ) }
-									value={ formTitle || '' }
-									onChange={ ( value ) =>
-										setAttributes( { formTitle: value } )
-									}
-								/>
+									<TextControl
+										label={ __(
+											'Form Title',
+											'ambrygen-web'
+										) }
+										value={ formTitle || '' }
+										onChange={ ( value ) =>
+											setAttributes( {
+												formTitle: value,
+											} )
+										}
+									/>
 
-								<RichText
-									tagName="div"
-									value={ formContent || '' }
-									onChange={ ( value ) =>
-										setAttributes( { formContent: value } )
-									}
-									placeholder={ __(
-										'Form Content...',
-										'ambrygen-web'
-									) }
-									className="form-content-editor"
-								/>
-							</div>
-						) }
+									<RichText
+										tagName="div"
+										value={ formContent || '' }
+										onChange={ ( value ) =>
+											setAttributes( {
+												formContent: value,
+											} )
+										}
+										placeholder={ __(
+											'Form Content…',
+											'ambrygen-web'
+										) }
+										className="form-content-editor"
+									/>
+								</div>
+							) }
 					</BaseControl>
 				</PanelBody>
 

@@ -1,0 +1,28 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ambrygen/genetic-testing-test-details-custom-field",
+	"version": "1.0.0",
+	"title": "Genetic Testing Test Details Custom Field",
+	"category": "ambrygen",
+	"description": "Displays the test_description custom field for genetic testing posts.",
+	"attributes": {
+		"previewPostId": {
+			"type": "number",
+			"default": 0
+		},
+		"blockId": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "ambrygen-web",
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"usesContext": [
+		"postId"
+	]
+}

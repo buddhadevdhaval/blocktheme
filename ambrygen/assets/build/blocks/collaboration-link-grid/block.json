@@ -1,0 +1,76 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/collaboration-link-grid",
+  "version": "0.1.0",
+  "title": "Collaboration Link Grid",
+  "category": "ambrygen",
+  "description": "A list of resource downloads with a side heading.",
+  "attributes": {
+    "variation": {
+      "type": "string",
+      "enum": [
+        "grid-view"
+      ],
+      "default": "grid-view"
+    },
+    "selectAllCollaborators": {
+      "type": "boolean",
+      "default": true
+    },
+    "collaboratorIds": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "number"
+      }
+    },
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
+      "default": "h2"
+    },
+    "blockId": {
+      "type": "string"
+    }
+  },
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "example": {
+    "attributes": {
+      "blockId": "collaboration-link-grid-example"
+    }
+  },
+  "variations": [
+    {
+      "name": "grid-view",
+      "title": "Grid View",
+      "description": "Load all collaborator taxonomy terms and link each item to its term archive.",
+      "attributes": {
+        "variation": "grid-view"
+      },
+      "scope": [
+        "inserter"
+      ]
+    }
+  ],
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "viewScript": "file:./view.js"
+}

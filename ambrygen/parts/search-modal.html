@@ -1,0 +1,73 @@
+<!-- wp:group {"className":"search-modal-wrapper","layout":{"type":"default"}} -->
+<div class="wp-block-group search-modal-wrapper">
+    <div id="global-search-modal" class="modal-popup search-modal" style="display: none;">
+        <div class="modal-popup__overlay"></div>
+        <div class="modal-popup__panel search-modal__panel">
+            <button type="button" class="modal-popup__close search-modal__close" aria-label="Close search">
+                <img src="/wp-content/themes/ambrygen/assets/src/images/close-icon.svg" alt="Close" />
+            </button>
+
+            <div class="search-modal__container container-1340">
+                <div class="search-modal__header">
+                    <div class="search-modal__field-wrapper">
+                        <input type="text" id="global-search-input" class="search-modal__input" placeholder="Search..."
+                            autocomplete="off">
+                        <div class="search-modal__submit-icon">
+                            <img src="/wp-content/themes/ambrygen/assets/src/images/search-icon.svg" alt="Search" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="search-modal__body row">
+                    <div class="search-modal__results-col">
+                        <div class="search-modal__results-title heading-4 mb-0">Search Results</div>
+                        <div class="search-modal__stats body2-reg" style="display: none;">
+                            <span id="search-results-count">0</span> Results. Page <span
+                                id="search-current-page">1</span> of <span id="search-total-pages">1</span>
+                        </div>
+
+                        <div class="search-modal__filters horizontal-tabs">
+                            <!-- Desktop Filters injected here -->
+                        </div>
+
+                        <div class="tabs__mobile-nav search-modal__filters-mobile">
+                            <select class="tabs__select text-md-sbold" aria-label="Select search category">
+                                <!-- Mobile Options injected here -->
+                            </select>
+                        </div>
+
+                        <div id="search-results-list" class="search-modal__results-list">
+                            <div class="search-modal__initial-message body1-reg">Start your search...</div>
+                        </div>
+
+                        <div id="search-loading" class="search-modal__loading" style="display: none;">
+                            <div class="spinner"></div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="search-modal__sidebar-col">
+                        <div class="sidebar-widget order-widget search-modal__sidebar-widget">
+                            <div class="widget-content">
+                                <h3 class="heading-6 mb-0 order-widget__title">Helpful Links</h3>
+								<div class="is-style-gl-s16" aria-hidden="true"></div>
+                                <div class="order-widget__grid">
+                                    <div class="order-widget__action text-xs-bold">Order a Sample Kit</div>
+                                    <div class="order-widget__action text-xs-bold">Forms</div>
+                                    <div class="order-widget__action text-xs-bold">Contact Us</div>
+                                    <div class="order-widget__action text-xs-bold">Test Menu</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				<div id="search-pagination" class="search-modal__pagination" style="display: none;">
+					<button id="search-prev" class="site-btn is-style-site-secondary-btn">Previous</button>
+					<button id="search-next" class="site-btn is-style-site-secondary-btn">Next</button>
+				</div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /wp:group -->

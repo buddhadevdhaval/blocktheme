@@ -1,0 +1,45 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/large-icon-grid-item",
+  "title": "Large Icon Grid Item",
+  "category": "ambrygen",
+  "icon": "format-image",
+  "parent": [
+    "ambrygen/large-icon-grid"
+  ],
+  "description": "Individual item for the large icon grid block",
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
+  "attributes": {
+    "icon": {
+      "type": "object",
+      "default": {
+        "url": "",
+        "id": 0,
+        "alt": ""
+      }
+    },
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "links": {
+      "type": "array",
+      "default": []
+    },
+    "count": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "editorScript": "file:./index.js",
+  "textdomain": "ambrygen-web",
+  "render": "file:./render.php"
+}

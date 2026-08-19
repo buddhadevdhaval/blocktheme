@@ -1,0 +1,284 @@
+@use "../variables/breakpoints" as bp;
+@use "../variables/fluid_mixins" as *;
+
+body {
+
+	#onetrust-consent-sdk #onetrust-pc-sdk h3,
+	#onetrust-consent-sdk #onetrust-pc-sdk h4,
+	#onetrust-consent-sdk #onetrust-pc-sdk h5,
+	#onetrust-consent-sdk #onetrust-pc-sdk h6,
+	#onetrust-consent-sdk #onetrust-pc-sdk #ot-pc-title,
+	#onetrust-consent-sdk #onetrust-pc-sdk .ot-li-title,
+	#onetrust-consent-sdk #onetrust-pc-sdk #ot-pc-lst #ot-lst-title h3 {
+		color: var(--theme_primary_800);
+	}
+
+	#onetrust-pc-sdk .ot-plus-minus span {
+		background: var(--theme_primary_800);
+	}
+
+	#onetrust-consent-sdk #onetrust-pc-sdk p,
+	#onetrust-consent-sdk #onetrust-pc-sdk #ot-ven-lst .ot-ven-opts p,
+	#onetrust-consent-sdk #onetrust-pc-sdk #ot-pc-desc,
+	#onetrust-consent-sdk #onetrust-pc-sdk .ot-sel-all-hdr span,
+	#onetrust-consent-sdk #onetrust-pc-sdk #ot-host-lst .ot-host-info,
+	#onetrust-consent-sdk #onetrust-pc-sdk #ot-fltr-modal #modal-header,
+	#onetrust-consent-sdk #onetrust-pc-sdk .ot-checkbox label span,
+	#onetrust-consent-sdk #onetrust-pc-sdk #ot-pc-lst #ot-sel-blk p,
+	#onetrust-consent-sdk #onetrust-pc-sdk #ot-pc-lst #ot-lst-title p[aria-level="3"],
+	#onetrust-consent-sdk #onetrust-pc-sdk #ot-pc-lst .back-btn-handler p,
+	#onetrust-consent-sdk #onetrust-pc-sdk #ot-pc-lst .ot-ven-name,
+	#onetrust-consent-sdk #onetrust-pc-sdk #ot-pc-lst #ot-ven-lst .consent-category,
+	#onetrust-consent-sdk #onetrust-pc-sdk .ot-leg-btn-container .ot-inactive-leg-btn,
+	#onetrust-consent-sdk #onetrust-pc-sdk .ot-label-status,
+	#onetrust-consent-sdk #onetrust-pc-sdk .ot-chkbox label span,
+	#onetrust-consent-sdk #onetrust-pc-sdk #clear-filters-handler,
+	#onetrust-consent-sdk #onetrust-pc-sdk .ot-optout-signal {
+		color: var(--theme_body_color);
+	}
+
+	#onetrust-consent-sdk #onetrust-pc-sdk .ot-acc-grpcntr.ot-acc-txt,
+	#onetrust-consent-sdk #onetrust-pc-sdk .ot-acc-txt .ot-subgrp-tgl .ot-switch.ot-toggle {
+		background-color: #FFF;
+	}
+
+	#onetrust-pc-sdk {
+
+		#ot-pc-title {
+			color: var(--theme_primary_800);
+		}
+
+		#onetrust-pc-sdk {
+
+			button {
+				color: var(--theme_gray_900);
+			}
+		}
+	}
+
+
+	#onetrust-consent-sdk {
+
+		#onetrust-pc-sdk *:focus,
+		#onetrust-pc-sdk .ot-vlst-cntr>a:focus {
+			outline: none;
+			box-shadow: inherit;
+		}
+
+		#onetrust-policy-text {
+			color: var(--theme_body_color);
+			font-family: var(--font__main);
+			font-size: var(--theme_font_size_13);
+
+			a[href] {
+				border-bottom: 1px solid var(--theme_link_border_color);
+				color: var(--theme_link_color);
+				text-decoration: none;
+
+				&:hover {
+					border-color: var(--theme_link_border_color_hover);
+					color: var(--theme_link_color_hover);
+				}
+			}
+		}
+
+		#onetrust-policy {
+			margin: 0;
+		}
+
+		#onetrust-group-container {
+			width: 100%;
+			float: none;
+			clear: both;
+		}
+
+
+		.ot-sdk-container {
+			width: 100%;
+			max-width: 100%;
+			padding: 0;
+
+			.ot-sdk-row {
+				display: flex;
+				margin: 16px auto;
+				max-width: 1400px;
+				padding-left: 30px;
+				padding-right: 30px;
+				box-sizing: border-box;
+
+				@include bp.max(lg) {
+					display: block;
+				}
+
+				* {
+					box-sizing: border-box;
+				}
+
+				#onetrust-group-container {
+					width: auto;
+					margin-right: 20px;
+					flex: 1 0 0;
+					display: block;
+
+					@include bp.max(lg) {
+						margin-right: 0;
+					}
+				}
+
+				#onetrust-button-group-parent {
+					width: auto;
+					margin: 0;
+					display: flex;
+					justify-content: flex-end;
+					align-items: center;
+					flex: auto 0 0;
+					position: relative !important;
+					left: auto !important;
+					top: auto !important;
+					padding: 0 !important;
+					transform: inherit;
+					float: none;
+
+					@include bp.max(lg) {
+						display: block;
+						margin-top: 16px;
+					}
+				}
+
+				#onetrust-banner-sdk #onetrust-policy {
+					margin: 0;
+
+					@include bp.min(1024px) {
+						margin-left: 0;
+					}
+				}
+
+			}
+		}
+
+		#onetrust-button-group {
+			display: flex;
+			flex-wrap: wrap;
+			width: 100%;
+			gap: 10px;
+			justify-content: flex-end;
+
+			@include bp.max(lg) {
+				justify-content: flex-start;
+			}
+
+			@include bp.min(769px) {
+				margin-right: 0;
+			}
+		}
+
+		#onetrust-accept-btn-handler {
+			background-color: var(--theme_cg_blue);
+			border: 1px solid transparent;
+			border-radius: 8px;
+			box-shadow: 0 1px 2px 0 rgba(16, 24, 40, .05);
+			color: var(--theme_button_color);
+			display: inline-flex;
+			font-size: var(--theme_font_size_12);
+			font-weight: 600;
+			letter-spacing: -.24px;
+			line-height: 1.5;
+			overflow: hidden;
+			padding: 10px 16px;
+			position: relative;
+			text-align: center;
+			text-decoration: none;
+			text-transform: capitalize;
+			transition: background-color 0.35s, color 0.35s, border-color 0.35s, box-shadow 0.35s;
+			align-items: center;
+			height: auto;
+			margin: 0 !important;
+			justify-content: center;
+
+			&:hover {
+				background-color: var(--theme_color_primary);
+				color: #fff;
+				border-color: transparent;
+			}
+		}
+
+		#onetrust-pc-btn-handler {
+
+			&.cookie-setting-link {
+				background-color: var(--theme_white);
+				border: 1px solid var(--theme_gray_300);
+				box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+				color: var(--theme_gray_700);
+				border-radius: 8px;
+				display: inline-flex;
+				font-size: var(--theme_font_size_12);
+				font-weight: 600;
+				letter-spacing: -.24px;
+				line-height: 1.5;
+				overflow: hidden;
+				padding: 10px 16px;
+				position: relative;
+				text-align: center;
+				text-decoration: none;
+				text-transform: capitalize;
+				transition: background-color 0.35s, color 0.35s, border-color 0.35s, box-shadow 0.35s;
+				align-items: center;
+				height: auto;
+				margin: 0 !important;
+				justify-content: center;
+
+				&:hover {
+					border-color: var(--theme_color_primary);
+					color: var(--theme_color_primary);
+				}
+			}
+		}
+
+	}
+
+	#onetrust-pc-sdk .ot-tgl input:checked+.ot-switch .ot-switch-nob {
+		background-color: var(--theme_color_primary);
+	}
+
+	#onetrust-consent-sdk #onetrust-pc-sdk .ot-tgl input:checked+.ot-switch .ot-switch-nob {
+		background-color: var(--theme_color_primary);
+	}
+
+	#onetrust-pc-sdk .ot-vs-list .ot-always-active,
+	#onetrust-pc-sdk .ot-cat-grp .ot-always-active {
+		color: var(--theme_color_primary);
+	}
+
+
+	#onetrust-consent-sdk #onetrust-pc-sdk button:not(#clear-filters-handler):not(.ot-close-icon):not(#filter-btn-handler):not(.ot-remove-objection-handler):not(.ot-obj-leg-btn-handler):not([aria-expanded]):not(.ot-link-btn),
+	#onetrust-consent-sdk #onetrust-pc-sdk .ot-leg-btn-container .ot-active-leg-btn {
+		background-color: var(--theme_cg_blue);
+		border: 1px solid transparent;
+		border-radius: 8px;
+		box-shadow: 0 1px 2px 0 rgba(16, 24, 40, .05);
+		color: var(--theme_button_color);
+		display: inline-flex;
+		font-size: var(--theme_font_size_12);
+		font-weight: 600;
+		letter-spacing: -.24px;
+		line-height: 1.5;
+		overflow: hidden;
+		padding: 10px 16px;
+		position: relative;
+		text-align: center;
+		text-decoration: none;
+		text-transform: capitalize;
+		transition: background-color 0.35s, color 0.35s, border-color 0.35s, box-shadow 0.35s;
+		align-items: center;
+		height: auto;
+		width: auto;
+		justify-content: center;
+
+		&:hover {
+			background-color: var(--theme_color_primary);
+			color: #fff;
+			border-color: transparent;
+		}
+	}
+
+}

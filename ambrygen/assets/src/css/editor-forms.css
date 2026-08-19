@@ -1,0 +1,227 @@
+.cs-wpblock-form-layout {
+	display: grid;
+	grid-template-columns: repeat(12, 1fr);
+	gap: 20px;
+}
+
+.cs-wpblock-form-layout .form-field {
+	grid-column: span 6;
+}
+
+.cs-wpblock-form-layout .form-field-poster_pdf_repeater,
+.cs-wpblock-form-layout .full-width-layout,
+.cs-wpblock-form-layout .form-field-event_meet_expert_repeater {
+	grid-column: span 12;
+}
+
+.cs-wpblock-form-layout .form-field-poster_pdf_repeater .ambrygen-mm-rows {
+	display: grid;
+	grid-template-columns: repeat(12, 1fr);
+	gap: 20px;
+}
+
+.cs-wpblock-form-layout .form-field-poster_pdf_repeater .ambrygen-mm-rows .ambrygen-mm-row {
+	grid-column: span 6;
+	padding: 20px;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	background: #fff;
+}
+
+.cs-wpblock-form-layout .form-field-marketing_material_repeater .ambrygen-mm-repeater .ambrygen-mm-rows .ambrygen-mm-row {
+	padding: 20px;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	background: #fff;
+}
+
+.cs-wpblock-form-layout .form-field-poster_pdf_repeater .ambrygen-mm-rows .ambrygen-mm-row .ambrygen-mm-add-row {
+	display: none;
+}
+
+.cs-wpblock-form-layout .form-field-poster_pdf_repeater .ambrygen-mm-rows .ambrygen-mm-row:last-child .ambrygen-mm-add-row {
+	display: inline-flex;
+}
+
+.cs-wpblock-form-layout .field-wrapper-product_stats_footer {
+	margin-top: 10px;
+}
+
+.cs-wpblock-form-layout .form-field.form-field-post_relationship {
+	grid-column: span 12;
+	border-top: 1px solid var(--theme_gray_400);
+	padding-top: 24px;
+	margin-top: 12px;
+}
+
+.cs-wpblock-form-layout .form-field.form-field-post_relationship .ambrygen-linked-posts ul li {
+	font-size: 14px;
+	cursor: grab;
+}
+
+.cs-wpblock-form-layout .form-field.form-field-post_relationship .ambrygen-linked-posts ul li::before {
+	top: 6px;
+}
+
+.cs-wpblock-form-layout .form-field.form-field-checkbox {
+	grid-column: span 12;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.cs-wpblock-form-layout .form-field.form-field-checkbox label {
+	margin-bottom: 0;
+	flex: 0 0 auto;
+}
+
+.cs-wpblock-form-layout .form-field label {
+	font-size: 14px;
+	font-weight: 500;
+	margin-bottom: 10px;
+	display: block;
+}
+
+.cs-wpblock-form-layout .form-field input[type="checkbox"] {
+	margin: 0;
+}
+
+.cs-wpblock-form-layout .form-field input[type="text"],
+.cs-wpblock-form-layout .form-field input[type="number"],
+.cs-wpblock-form-layout .form-field input[type="email"],
+.cs-wpblock-form-layout .form-field input[type="tel"],
+.cs-wpblock-form-layout .form-field input[type="url"],
+.cs-wpblock-form-layout .form-field input[type="search"],
+.cs-wpblock-form-layout .form-field input[type="password"],
+.cs-wpblock-form-layout .form-field input[type="time"],
+.cs-wpblock-form-layout .form-field input[type="date"],
+.cs-wpblock-form-layout .form-field input[type="datetime-local"],
+.cs-wpblock-form-layout .form-field input[type="week"],
+.cs-wpblock-form-layout .form-field input[type="month"],
+.cs-wpblock-form-layout .form-field input[type="file"],
+.cs-wpblock-form-layout .form-field input[type="range"],
+.cs-wpblock-form-layout .form-field input[list],
+.cs-wpblock-form-layout .form-field input[type="string"],
+.cs-wpblock-form-layout .form-field select,
+.cs-wpblock-form-layout .form-field textarea {
+	width: 100%;
+	max-width: 100%;
+}
+
+
+.cs-wpblock-form-layout.ambrygen-genetic-testing-meta-box .form-field.form-field-post_relationship {
+	border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+.cs-wpblock-form-layout.ambrygen-genetic-testing-meta-box .ambrygen-meta-section .form-field {
+	margin-bottom: 16px;
+}
+
+.cs-wpblock-form-layout.ambrygen-genetic-testing-meta-box .ambrygen-meta-section .form-field:last-child {
+	margin-bottom: 0;
+}
+
+.cs-wpblock-form-layout .wp-core-ui.wp-editor-wrap .wp-editor-tabs button {
+	margin-top: 0;
+}
+
+
+.cs-wpblock-form-layout .form-field-button {
+	margin-top: 10px;
+	display: flex;
+	gap: 10px;
+}
+
+
+.cs-wpblock-form-layout .form-field-button .theme-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 6px;
+	border: 1px solid transparent;
+	cursor: pointer;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+	transition: all 0.2s ease;
+	padding: 6px 12px;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: normal;
+	background-color: var(--theme_blue);
+	color: #fff;
+	height: auto;
+}
+
+.cs-wpblock-form-layout .form-field-button .theme-button.is-secondary {
+	color: #004085;
+	background-color: #cce5ff;
+	border-color: #b8daff;
+}
+
+.cs-wpblock-form-layout .form-field-button .theme-button.is-destructive {
+	color: #721c24;
+	background-color: #f8d7da;
+	border-color: #f5c6cb;
+	line-height: normal;
+	padding: 6px 12px;
+}
+
+
+.search-filter-lists ul li {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.search-filter-lists ul li .btn-is-secondary {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 6px;
+	border: 1px solid #b8daff;
+	cursor: pointer;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+	transition: all 0.2s ease;
+	padding: 6px 12px;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: normal;
+	height: auto;
+	color: #004085;
+	background-color: #cce5ff;
+	min-height: inherit;
+	margin-left: 10px;
+}
+
+
+
+.cs-wpblock-form-layout .form-field-marketing_material_repeater {
+	grid-column: span 12;
+}
+
+.cs-wpblock-form-layout .form-field-marketing_material_repeater .ambrygen-mm-repeater .ambrygen-mm-rows {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 30px;
+}
+
+
+.ambrygen-gene-selector-panel__results .components-base-control {
+	margin-top: 5px;
+}
+
+.ambrygen-gene-selector-panel__selected {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.ambrygen-gene-selector-panel__selected .ambrygen-gene-selector-panel__label {
+	margin-bottom: 6px;
+}
+
+.ambrygen-gene-selector-panel__selected .ambrygen-gene-selector-panel__selected-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
+}

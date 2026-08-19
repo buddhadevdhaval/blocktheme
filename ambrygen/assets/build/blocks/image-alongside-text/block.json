@@ -1,0 +1,178 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/image-alongside-text",
+  "title": "Image Alongside Text",
+  "category": "ambrygen",
+  "icon": "align-wide",
+  "description": "A Image Alongside Text block with heading, content, image, and multiple layout options (standard, overlap, stacked).",
+  "textdomain": "ambrygen-web",
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "heading": {
+      "type": "string",
+      "default": ""
+    },
+    "subheading": {
+      "type": "string",
+      "default": ""
+    },
+    "eyebrowText": {
+      "type": "string",
+      "default": ""
+    },
+    "headingTag": {
+      "type": "string",
+      "enum": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
+      "default": "h2"
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "imageId": {
+      "type": "number",
+      "default": 0
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundImageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "backgroundImageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "topIconUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "topIconId": {
+      "type": "number",
+      "default": 0
+    },
+    "topIconAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "imagePosition": {
+      "type": "string",
+      "default": "right"
+    },
+    "layoutStyle": {
+      "type": "string",
+      "default": "standard",
+      "enum": [
+        "standard",
+        "overlap",
+        "stacked"
+      ]
+    },
+    "contentTopAlign": {
+      "type": "boolean",
+      "default": false
+    },
+    "variation": {
+      "type": "string",
+      "default": "simple-content-with-image",
+      "enum": [
+        "simple-content-with-image",
+        "title-content-with-image",
+        "profile-content-with-image"
+      ]
+    },
+    "content": {
+      "type": "string",
+      "default": ""
+    },
+    "buttons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "default": ""
+          },
+          "url": {
+            "type": "string",
+            "default": ""
+          },
+          "variant": {
+            "type": "string",
+            "default": ""
+          },
+          "target": {
+            "type": "string",
+            "default": ""
+          },
+          "rel": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      },
+      "default": [
+        {
+          "text": "",
+          "url": "",
+          "variant": "site-btn",
+          "target": "",
+          "rel": ""
+        },
+        {
+          "text": "",
+          "url": "",
+          "variant": "site-btn is-style-site-tertiary-btn",
+          "target": "",
+          "rel": ""
+        }
+      ]
+    },
+    "borderRequired": {
+      "type": "boolean",
+      "default": false
+    },
+    "isOriginalImage": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "example": {
+    "attributes": {
+      "blockId": "image-alongside-text-example"
+    }
+  }
+}

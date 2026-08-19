@@ -1,0 +1,1 @@
+.icon-card-grid__grid{display:block}.icon-card-grid__grid>.block-editor-inner-blocks>.block-editor-block-list__layout{display:grid;gap:24px;grid-template-columns:1fr}@media(min-width:768px){.icon-card-grid__grid>.block-editor-inner-blocks>.block-editor-block-list__layout{grid-template-columns:repeat(2,1fr)}}

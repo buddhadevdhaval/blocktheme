@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "ambrygen/dynamic-excerpt",
+  "version": "1.0.0",
+  "title": "Dynamic Excerpt",
+  "category": "ambrygen",
+  "description": "Displays the post excerpt with a reliable editor preview fallback.",
+  "attributes": {
+    "previewExcerpt": {
+      "type": "string",
+      "default": "This is a sample excerpt for the editor preview. It will be replaced by the actual post content or excerpt on the frontend if available."
+    },
+    "className": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "supports": {
+    "html": false,
+    "inserter": false,
+    "className": true
+  },
+  "textdomain": "ambrygen-web",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "usesContext": [
+    "postId"
+  ]
+}
